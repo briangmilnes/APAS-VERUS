@@ -1,129 +1,155 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS/src/Chap39/
-Codebase: /home/milnes/projects/APAS-VERUS
+Path: /home/milnes/projects/APAS-VERUS-agent1/src/Chap39/
+Codebase: /home/milnes/projects/APAS-VERUS-agent1
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS/src/Chap39/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent1/src/Chap39/analyses/veracity-review-verus-style.log
 
 Checking 4 files...
 
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [12] no traits (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [20] no traits defined
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [23] free fn type bounds match trait
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:84: warning: [18] fn new_param_treap_arc should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:85: warning: [18] fn new_param_treap_arc should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:132: warning: [18] fn priority_for should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:143: warning: [18] fn tree_priority should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:153: warning: [18] fn tree_size should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:163: warning: [18] fn make_node should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:173: warning: [18] fn join_with_priority should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:198: warning: [18] fn split_inner should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:221: warning: [18] fn join_pair_inner should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:237: warning: [18] fn union_inner should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:253: warning: [18] fn intersect_inner should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:273: warning: [18] fn difference_inner should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:293: warning: [18] fn filter_inner should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:314: warning: [18] fn filter_parallel should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:323: warning: [18] fn reduce_inner should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:347: warning: [18] fn reduce_parallel should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:357: warning: [18] fn collect_in_order should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:373: warning: [18] trait ParamTreapTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:494: warning: [18] impl ParamTreapTrait for ParamTreap < T > should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:85: warning: [23] free fn new_param_treap_arc param T has bounds `MtKey` but trait ParamTreapTrait has `MtKey + 'static`
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:132: warning: [23] free fn priority_for param T has bounds `MtKey` but trait ParamTreapTrait has `MtKey + 'static`
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:143: warning: [23] free fn tree_priority param T has bounds `MtKey` but trait ParamTreapTrait has `MtKey + 'static`
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:153: warning: [23] free fn tree_size param T has bounds `MtKey` but trait ParamTreapTrait has `MtKey + 'static`
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:163: warning: [23] free fn make_node param T has bounds `MtKey` but trait ParamTreapTrait has `MtKey + 'static`
 
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:128: warning: [23] free fn minimum_inner param T has bounds `MtKey + 'static` but trait BSTSetTreapMtEphTrait has `MtKey`
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:144: warning: [23] free fn maximum_inner param T has bounds `MtKey + 'static` but trait BSTSetTreapMtEphTrait has `MtKey`
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:143: warning: [23] free fn minimum_inner param T has bounds `MtKey + 'static` but trait BSTSetTreapMtEphTrait has `MtKey`
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:165: warning: [23] free fn maximum_inner param T has bounds `MtKey + 'static` but trait BSTSetTreapMtEphTrait has `MtKey`
 
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1: warning: [11] Set usage should have vstd::set::group_set_axioms in broadcast use
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:233: warning: [12] trait BSTTreapMtEphTrait fn height should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:79: warning: [18] impl View for BSTTreapMtEph < T > should come before impls (expected view impls before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:86: warning: [18] spec fn spec_bsttreapmteph_link_wf should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:93: warning: [18] spec fn spec_contains_link should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:109: warning: [18] proof fn lemma_bst_decompose should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:123: warning: [18] proof fn lemma_contains_left should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:129: warning: [18] proof fn lemma_contains_right should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:135: warning: [18] proof fn lemma_contains_root should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:140: warning: [18] proof fn lemma_height_le_size should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:157: warning: [18] proof fn lemma_size_wf_child_bounded should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:181: warning: [18] proof fn lemma_wf_assemble_node should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:193: warning: [18] trait LinkTrait should come before impls (expected traits before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:206: warning: [18] trait BSTTreapMtEphTrait should come before impls (expected traits before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:338: warning: [18] fn size_link should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:348: warning: [18] fn update should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:363: warning: [18] fn rotate_left should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:437: warning: [18] fn rotate_right should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:513: warning: [18] fn insert_link should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:618: warning: [18] fn delete_link should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:802: warning: [18] fn find_link should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:832: warning: [18] fn min_link should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:857: warning: [18] fn max_link should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:880: warning: [18] fn height_link should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:909: warning: [18] fn in_order_collect should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:923: warning: [18] fn pre_order_collect should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:935: warning: [18] impl BSTTreapMtEphTrait for BSTTreapMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1053: warning: [18] impl Default for BSTTreapMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:86: warning: [22] free spec fn spec_bsttreapmteph_link_wf should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:93: warning: [22] free spec fn spec_contains_link should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:86: warning: [23] free fn spec_bsttreapmteph_link_wf param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:302: warning: [23] free fn clone_link param T has bounds `StTInMtT + Ord + Clone` but trait LinkTrait has `StTInMtT + Ord`
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:363: warning: [23] free fn rotate_left param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:437: warning: [23] free fn rotate_right param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:513: warning: [23] free fn insert_link param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:618: warning: [23] free fn delete_link param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1: warning: [11] Set usage should have vstd::set::group_set_axioms in broadcast use
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:283: warning: [12] trait BSTTreapMtEphTrait fn height should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:78: warning: [18] impl View for BSTTreapMtEph < T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:85: warning: [18] spec fn spec_bsttreapmteph_link_wf should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:92: warning: [18] spec fn spec_contains_link should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:106: warning: [18] spec fn spec_set_of_link should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:122: warning: [18] proof fn lemma_bst_decompose should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:136: warning: [18] proof fn lemma_contains_left should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:142: warning: [18] proof fn lemma_contains_right should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:148: warning: [18] proof fn lemma_contains_root should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:154: warning: [18] proof fn lemma_contains_implies_in_set should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:175: warning: [18] proof fn lemma_set_of_link_finite should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:188: warning: [18] proof fn lemma_height_le_size should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:205: warning: [18] proof fn lemma_size_wf_child_bounded should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:229: warning: [18] proof fn lemma_wf_assemble_node should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:241: warning: [18] trait LinkTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:254: warning: [18] trait BSTTreapMtEphTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:388: warning: [18] fn size_link should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:398: warning: [18] fn update should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:413: warning: [18] fn rotate_left should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:487: warning: [18] fn rotate_right should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:563: warning: [18] fn insert_link should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:668: warning: [18] fn delete_link should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:852: warning: [18] fn find_link should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:916: warning: [18] fn min_link should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:941: warning: [18] fn max_link should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:964: warning: [18] fn height_link should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:993: warning: [18] fn in_order_collect should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1007: warning: [18] fn pre_order_collect should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1019: warning: [18] impl BSTTreapMtEphTrait for BSTTreapMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1146: warning: [18] impl Default for BSTTreapMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:85: warning: [22] free spec fn spec_bsttreapmteph_link_wf should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:92: warning: [22] free spec fn spec_contains_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:106: warning: [22] free spec fn spec_set_of_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:85: warning: [23] free fn spec_bsttreapmteph_link_wf param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:352: warning: [23] free fn clone_link param T has bounds `StTInMtT + Ord + Clone` but trait LinkTrait has `StTInMtT + Ord`
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:413: warning: [23] free fn rotate_left param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:487: warning: [23] free fn rotate_right param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:563: warning: [23] free fn insert_link param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:668: warning: [23] free fn delete_link param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:852: warning: [23] free fn find_link param T has bounds `StTInMtT + Ord + IsLtTransitive` but trait LinkTrait has `StTInMtT + Ord`
 
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [15] Clone inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [23] free fn type bounds match trait
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:56: warning: [22] free spec fn spec_contains_link should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1: info: [15] Clone inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:56: warning: [22] free spec fn spec_contains_link should be an abstract signature in a trait with body in the impl
 
 ════════════════════════════════════════════════════════════════
-Summary: 68 passed, 40 warnings in 4 files (checked 4 files)
+Summary: 67 passed, 67 warnings in 4 files (checked 4 files)
 ════════════════════════════════════════════════════════════════

@@ -1,147 +1,156 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS/src/Chap45/
-Codebase: /home/milnes/projects/APAS-VERUS
+Path: /home/milnes/projects/APAS-VERUS-agent1/src/Chap45/
+Codebase: /home/milnes/projects/APAS-VERUS-agent1
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS/src/Chap45/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent1/src/Chap45/analyses/veracity-review-verus-style.log
 
 Checking 7 files...
 
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:1: info: [24] copyright line present
 
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [23] free fn type bounds match trait
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:254: warning: [18] proof fn lemma_swap_preserves_multiset should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:150: warning: [18] spec fn spec_almost_exec_heap should come before proof fns/broadcast groups (expected spec fns before proof fns/broadcast groups)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:330: warning: [18] proof fn lemma_swap_preserves_multiset should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:359: warning: [18] proof fn lemma_le_preserved_by_multiset_eq should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:150: warning: [22] free spec fn spec_almost_exec_heap should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:359: warning: [23] free fn lemma_le_preserved_by_multiset_eq param T has bounds `TotalOrder` but trait BinaryHeapPQTrait has `StT + Ord + TotalOrder`
 
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS/src/Chap45/Example45_2.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:32: warning: [12] trait Example45_2Trait fn example_45_2_textbook_example should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:33: warning: [12] trait Example45_2Trait fn example_45_2_reverse_sorted should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:34: warning: [12] trait Example45_2Trait fn example_45_2_already_sorted should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:35: warning: [12] trait Example45_2Trait fn example_45_2_duplicates should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:36: warning: [12] trait Example45_2Trait fn example_45_2_single_element should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:37: warning: [12] trait Example45_2Trait fn example_45_2_empty should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:38: warning: [12] trait Example45_2Trait fn example_45_2_efficiency_demonstration should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/Example45_2.rs:39: warning: [12] trait Example45_2Trait fn run_example_45_2 should have requires/ensures
 
-/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:1: info: [0] the user has reviewed this file and accepted its styling as is
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:1: info: [0] the user has reviewed this file and accepted its styling as is
 
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [23] free fn type bounds match trait
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:104: warning: [18] proof fn lemma_total_size_monotone should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:115: warning: [18] proof fn lemma_heap_root_is_min should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:176: warning: [18] proof fn lemma_rank_le_size should come before impls (expected proof fns/broadcast groups before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:191: warning: [18] trait LeftistHeapNodeSpec should come before impls (expected traits before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:202: warning: [18] trait LeftistHeapNodeTrait should come before impls (expected traits before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:258: warning: [18] trait LeftistHeapPQTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:103: warning: [18] proof fn lemma_total_size_monotone should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:114: warning: [18] proof fn lemma_heap_root_is_min should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:175: warning: [18] proof fn lemma_rank_le_size should come before impls (expected proof fns/broadcast groups before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:190: warning: [18] trait LeftistHeapNodeSpec should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:201: warning: [18] trait LeftistHeapNodeTrait should come before impls (expected traits before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:257: warning: [18] trait LeftistHeapPQTrait should come before impls (expected traits before impls)
 
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1: info: [24] copyright line present
 
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [22] spec fns: all in traits as abstract signatures
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:1: info: [22] spec fns: all in traits as abstract signatures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:1: info: [24] copyright line present
 
 ════════════════════════════════════════════════════════════════
-Summary: 113 passed, 7 warnings in 2 files (checked 7 files)
+Summary: 110 passed, 19 warnings in 3 files (checked 7 files)
 ════════════════════════════════════════════════════════════════

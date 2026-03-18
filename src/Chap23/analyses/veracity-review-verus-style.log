@@ -1,95 +1,95 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS/src/Chap23/
-Codebase: /home/milnes/projects/APAS-VERUS
+Path: /home/milnes/projects/APAS-VERUS-agent1/src/Chap23/
+Codebase: /home/milnes/projects/APAS-VERUS-agent1
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS/src/Chap23/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent1/src/Chap23/analyses/veracity-review-verus-style.log
 
 Checking 2 files...
 
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:1: info: [14] Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:1: info: [15] Eq, PartialEq, Clone inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:60: warning: [14] struct BalBinTree should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:66: warning: [14] struct BalBinNode should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:487: warning: [14] struct InOrderIter should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:487: warning: [14] struct InOrderIter should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:493: warning: [14] struct PreOrderIter should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:493: warning: [14] struct PreOrderIter should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:499: warning: [14] struct PostOrderIter should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:499: warning: [14] struct PostOrderIter should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:526: warning: [14] struct InOrderGhostIterator should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:526: warning: [14] struct InOrderGhostIterator should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:533: warning: [14] struct PreOrderGhostIterator should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:533: warning: [14] struct PreOrderGhostIterator should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:540: warning: [14] struct PostOrderGhostIterator should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:540: warning: [14] struct PostOrderGhostIterator should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:487: warning: [18] struct InOrderIter should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:493: warning: [18] struct PreOrderIter should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:499: warning: [18] struct PostOrderIter should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:503: warning: [18] impl View for InOrderIter < T > should come before impls (expected view impls before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:510: warning: [18] impl View for PreOrderIter < T > should come before impls (expected view impls before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:517: warning: [18] impl View for PostOrderIter < T > should come before impls (expected view impls before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:526: warning: [18] struct InOrderGhostIterator should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:533: warning: [18] struct PreOrderGhostIterator should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:540: warning: [18] struct PostOrderGhostIterator should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:545: warning: [18] impl View for InOrderGhostIterator < T > should come before impls (expected view impls before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:550: warning: [18] impl View for PreOrderGhostIterator < T > should come before impls (expected view impls before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:555: warning: [18] impl View for PostOrderGhostIterator < T > should come before impls (expected view impls before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:764: warning: [18] impl PartialEqSpecImpl for BalBinTree < T > should come before iterators (expected impls before iterators)
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:770: warning: [18] impl PartialEqSpecImpl for BalBinNode < T > should come before iterators (expected impls before iterators)
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:807: warning: [18] fn clone_tree should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:75: warning: [22] free spec fn in_order_iter_invariant should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:79: warning: [22] free spec fn pre_order_iter_invariant should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:83: warning: [22] free spec fn post_order_iter_invariant should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS/src/Chap23/BalBinTreeStEph.rs:807: warning: [23] free fn clone_tree param T has bounds `Clone` but trait BalBinTreeTrait has `(none)`
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:1: info: [15] Eq, PartialEq, Clone inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:59: warning: [14] struct BalBinTree should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:65: warning: [14] struct BalBinNode should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:486: warning: [14] struct InOrderIter should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:486: warning: [14] struct InOrderIter should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:492: warning: [14] struct PreOrderIter should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:492: warning: [14] struct PreOrderIter should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:498: warning: [14] struct PostOrderIter should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:498: warning: [14] struct PostOrderIter should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:525: warning: [14] struct InOrderGhostIterator should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:525: warning: [14] struct InOrderGhostIterator should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:532: warning: [14] struct PreOrderGhostIterator should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:532: warning: [14] struct PreOrderGhostIterator should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:539: warning: [14] struct PostOrderGhostIterator should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:539: warning: [14] struct PostOrderGhostIterator should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:486: warning: [18] struct InOrderIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:492: warning: [18] struct PreOrderIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:498: warning: [18] struct PostOrderIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:502: warning: [18] impl View for InOrderIter < T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:509: warning: [18] impl View for PreOrderIter < T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:516: warning: [18] impl View for PostOrderIter < T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:525: warning: [18] struct InOrderGhostIterator should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:532: warning: [18] struct PreOrderGhostIterator should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:539: warning: [18] struct PostOrderGhostIterator should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:544: warning: [18] impl View for InOrderGhostIterator < T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:549: warning: [18] impl View for PreOrderGhostIterator < T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:554: warning: [18] impl View for PostOrderGhostIterator < T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:769: warning: [18] impl PartialEqSpecImpl for BalBinTree < T > should come before iterators (expected impls before iterators)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:775: warning: [18] impl PartialEqSpecImpl for BalBinNode < T > should come before iterators (expected impls before iterators)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:819: warning: [18] fn clone_tree should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:74: warning: [22] free spec fn in_order_iter_invariant should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:78: warning: [22] free spec fn pre_order_iter_invariant should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:82: warning: [22] free spec fn post_order_iter_invariant should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/BalBinTreeStEph.rs:819: warning: [23] free fn clone_tree param T has bounds `Clone` but trait BalBinTreeTrait has `(none)`
 
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1: info: [14] Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1: info: [17] Iterator<PrimTreeSeqStS>, IntoIterator<PrimTreeSeqStS>, runtime test exists, proof test exists
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1: info: [23] free fn type bounds match trait
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:69: warning: [14] struct PrimTreeSeqStS should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:75: warning: [14] struct PrimTreeSeqStTree should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:83: warning: [14] struct PrimTreeSeqStTreeView should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:83: warning: [14] struct PrimTreeSeqStTreeView should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:758: warning: [14] struct PrimTreeSeqStIter should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:758: warning: [14] struct PrimTreeSeqStIter should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:769: warning: [14] struct PrimTreeSeqStGhostIterator should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:769: warning: [14] struct PrimTreeSeqStGhostIterator should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:758: warning: [18] struct PrimTreeSeqStIter should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:762: warning: [18] impl View for PrimTreeSeqStIter < 'a , T > should come before impls (expected view impls before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:769: warning: [18] struct PrimTreeSeqStGhostIterator should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:775: warning: [18] impl View for PrimTreeSeqStGhostIterator < 'a , T > should come before impls (expected view impls before impls)
-/home/milnes/projects/APAS-VERUS/src/Chap23/PrimTreeSeqStPer.rs:115: warning: [22] free spec fn prim_tree_seq_iter_invariant should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1: info: [14] Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1: info: [17] Iterator<PrimTreeSeqStS>, IntoIterator<PrimTreeSeqStS>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:68: warning: [14] struct PrimTreeSeqStS should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:74: warning: [14] struct PrimTreeSeqStTree should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:82: warning: [14] struct PrimTreeSeqStTreeView should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:82: warning: [14] struct PrimTreeSeqStTreeView should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:757: warning: [14] struct PrimTreeSeqStIter should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:757: warning: [14] struct PrimTreeSeqStIter should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:768: warning: [14] struct PrimTreeSeqStGhostIterator should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:768: warning: [14] struct PrimTreeSeqStGhostIterator should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:757: warning: [18] struct PrimTreeSeqStIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:761: warning: [18] impl View for PrimTreeSeqStIter < 'a , T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:768: warning: [18] struct PrimTreeSeqStGhostIterator should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:774: warning: [18] impl View for PrimTreeSeqStGhostIterator < 'a , T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap23/PrimTreeSeqStPer.rs:114: warning: [22] free spec fn prim_tree_seq_iter_invariant should be an abstract signature in a trait with body in the impl
 
 ════════════════════════════════════════════════════════════════
 Summary: 33 passed, 46 warnings in 2 files (checked 2 files)

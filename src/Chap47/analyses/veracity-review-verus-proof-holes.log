@@ -21,14 +21,14 @@ Table of Contents:
 =================================================================
 
 ⚠ ChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:144: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:144: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        140 |             fn clone(&self) -> (cloned: Self)
             ...
        142 |             {
        143 |                 let cloned = ChainEntry { chain: self.chain.clone(), _phantom: PhantomData };
        145 |                 cloned
        146 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:154: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ChainedHashTable.rs:154: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        150 |             fn eq(&self, other: &Self) -> (equal: bool)
             ...
        152 |             {
@@ -36,63 +36,63 @@ Table of Contents:
        155 |                 equal
        156 |             }
 ❌ DoubleHashFlatHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:96: error: assume() [algorithmic] - assume(forall |j: int| 0 <= j < m as int
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:96: error: assume() [algorithmic] - assume(forall |j: int| 0 <= j < m as int
         90 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
             ...
         94 |             // Bridge: wf existential uses our runtime step.
         95 |             proof {
         97 |                     && #[trigger] spec_flat_has_key(table.table@[j], key) ==> {
         98 |                     let hh = (table.spec_hash@)(key) as int % (m as int);
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:149: error: assume() [algorithmic] - proof { assume(eq == spec_flat_has_key(table.table@[slot as 
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:149: error: assume() [algorithmic] - proof { assume(eq == spec_flat_has_key(table.table@[slot as 
         90 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
             ...
        147 |                     FlatEntry::Occupied(k, _v) => {
        148 |                         let eq = k == key;
        150 |                         if eq {
        151 |                             // Overwrite existing key.
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:362: error: assume(false) - assume(false); // Table full: unreachable with load factor < — needs diverge(); use `assume(false); diverge()`
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:362: error: assume(false) - assume(false); // Table full: unreachable with load factor < — needs diverge(); use `assume(false); diverge()`
         90 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
             ...
        360 |             // Exhausted all m positions.
        361 |             proof {
        363 |             }
        364 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:375: error: assume() [algorithmic] - assume(forall |j: int| 0 <= j < m as int
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:375: error: assume() [algorithmic] - assume(forall |j: int| 0 <= j < m as int
        368 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
             ...
        373 |             // uses our runtime step. The wf existential witness s == step.
        374 |             proof {
        376 |                     && #[trigger] spec_flat_has_key(table.table@[j], *key) ==> {
        377 |                     let hh = (table.spec_hash@)(*key) as int % (m as int);
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:425: error: assume() [algorithmic] - proof { assume(eq == spec_flat_has_key(table.table@[slot as 
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:425: error: assume() [algorithmic] - proof { assume(eq == spec_flat_has_key(table.table@[slot as 
        368 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
             ...
        423 |                     FlatEntry::Occupied(k, v) => {
        424 |                         let eq = k == *key;
        426 |                         if eq {
        427 |                             proof {
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:521: error: assume() [algorithmic] - assume(forall |j: int| 0 <= j < m as int
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:521: error: assume() [algorithmic] - assume(forall |j: int| 0 <= j < m as int
        515 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
             ...
        519 |             // Bridge: wf existential uses our runtime step.
        520 |             proof {
        522 |                     && #[trigger] spec_flat_has_key(table.table@[j], *key) ==> {
        523 |                     let hh = (table.spec_hash@)(*key) as int % (m as int);
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:573: error: assume() [algorithmic] - proof { assume(eq == spec_flat_has_key(table.table@[slot as 
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:573: error: assume() [algorithmic] - proof { assume(eq == spec_flat_has_key(table.table@[slot as 
        515 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
             ...
        571 |                     FlatEntry::Occupied(k, _v) => {
        572 |                         let eq = k == *key;
        574 |                         if eq {
        575 |                             let ghost old_table_seq = table.table@;
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:807: error: assume() [algorithmic] - assume(key == pairs@[j as int].0);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:807: error: assume() [algorithmic] - assume(key == pairs@[j as int].0);
        703 |         fn resize(
             ...
        805 |                 let value = pairs[j].1.clone();
        806 |                 proof {
        808 |                     assume(value == pairs@[j as int].1);
        809 |                 }
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:808: error: assume() [algorithmic] - assume(value == pairs@[j as int].1);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/DoubleHashFlatHashTableStEph.rs:808: error: assume() [algorithmic] - assume(value == pairs@[j as int].1);
        703 |         fn resize(
             ...
        806 |                 proof {
@@ -103,7 +103,7 @@ Table of Contents:
       1 × assume(false)
       8 × assume()
 ⚠ FlatHashTable.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:205: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/FlatHashTable.rs:205: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        197 |         fn clone(&self) -> (cloned: Self)
             ...
        203 |                 FlatEntry::Deleted => FlatEntry::Deleted,
@@ -111,42 +111,42 @@ Table of Contents:
        206 |             c
        207 |         }
 ❌ LinProbFlatHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:132: error: assume() [algorithmic] - proof { assume(eq == spec_flat_has_key(table.table@[slot as 
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:132: error: assume() [algorithmic] - proof { assume(eq == spec_flat_has_key(table.table@[slot as 
         93 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
             ...
        130 |                     FlatEntry::Occupied(k, _v) => {
        131 |                         let eq = k == key;
        133 |                         if eq {
        134 |                             // Overwrite existing key at this slot.
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:348: error: assume(false) - assume(false); // Table full: unreachable with load factor < — needs diverge(); use `assume(false); diverge()`
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:348: error: assume(false) - assume(false); // Table full: unreachable with load factor < — needs diverge(); use `assume(false); diverge()`
         93 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
             ...
        346 |             // This is unreachable with proper load factor management (resize before full).
        347 |             proof {
        349 |             }
        350 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:391: error: assume() [algorithmic] - proof { assume(eq == spec_flat_has_key(table.table@[slot as 
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:391: error: assume() [algorithmic] - proof { assume(eq == spec_flat_has_key(table.table@[slot as 
        354 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
             ...
        389 |                     FlatEntry::Occupied(k, v) => {
        390 |                         let eq = k == *key;
        392 |                         if eq {
        393 |                             proof {
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:497: error: assume() [algorithmic] - proof { assume(eq == spec_flat_has_key(table.table@[slot as 
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:497: error: assume() [algorithmic] - proof { assume(eq == spec_flat_has_key(table.table@[slot as 
        459 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
             ...
        495 |                     FlatEntry::Occupied(k, _v) => {
        496 |                         let eq = k == *key;
        498 |                         if eq {
        499 |                             let ghost old_table_seq = table.table@;
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:715: error: assume() [algorithmic] - assume(key == pairs@[j as int].0); // Clone bridge for Key.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:715: error: assume() [algorithmic] - assume(key == pairs@[j as int].0); // Clone bridge for Key.
        609 |         fn resize(
             ...
        713 |                 let value = pairs[j].1.clone();
        714 |                 proof {
        716 |                     assume(value == pairs@[j as int].1); // Clone bridge for Value.
        717 |                 }
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinProbFlatHashTableStEph.rs:716: error: assume() [algorithmic] - assume(value == pairs@[j as int].1); // Clone bridge for Val
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinProbFlatHashTableStEph.rs:716: error: assume() [algorithmic] - assume(value == pairs@[j as int].1); // Clone bridge for Val
        609 |         fn resize(
             ...
        714 |                 proof {
@@ -158,84 +158,84 @@ Table of Contents:
       5 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ LinkedListChainedHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:55: error: assume() [algorithmic] - assume(k == entry.seq@[i as int].0); // Clone bridge for Key
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:55: error: assume() [algorithmic] - assume(k == entry.seq@[i as int].0); // Clone bridge for Key
         37 |         fn clone_linked_list_entry<Key: Clone, Value: Clone>(
             ...
         53 |                 let v = entry.seq[i].1.clone();
         54 |                 proof {
         56 |                     assume(v == entry.seq@[i as int].1); // Clone bridge for Value.
         57 |                 }
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:56: error: assume() [algorithmic] - assume(v == entry.seq@[i as int].1); // Clone bridge for Val
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:56: error: assume() [algorithmic] - assume(v == entry.seq@[i as int].1); // Clone bridge for Val
         37 |         fn clone_linked_list_entry<Key: Clone, Value: Clone>(
             ...
         54 |                 proof {
         55 |                     assume(k == entry.seq@[i as int].0); // Clone bridge for Key.
         57 |                 }
         58 |                 new_seq.push((k, v));
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:190: error: assume() [algorithmic] - proof { assume(eq == (bucket_seq@[scan_i as int].0 == key));
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:190: error: assume() [algorithmic] - proof { assume(eq == (bucket_seq@[scan_i as int].0 == key));
        162 |             fn insert(table: &mut HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: Key, value: Value) {
             ...
        188 |                 {
        189 |                     let eq = bucket_seq[scan_i].0 == key;
        191 |                     if eq {
        192 |                         existed = true;
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:283: error: assume() [algorithmic] - proof { assume(eq == (bv[i as int].0 == *key)); } // Eq brid
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:283: error: assume() [algorithmic] - proof { assume(eq == (bv[i as int].0 == *key)); } // Eq brid
        254 |             fn lookup(table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
             ...
        281 |                     i = i - 1;
        282 |                     let eq = table.table[index].seq[i].0 == *key;
        284 |                     if eq {
        285 |                         let v = table.table[index].seq[i].1.clone();
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:286: error: assume() [algorithmic] - proof { assume(v == bv[i as int].1); } // Clone bridge.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:286: error: assume() [algorithmic] - proof { assume(v == bv[i as int].1); } // Clone bridge.
        254 |             fn lookup(table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
             ...
        284 |                     if eq {
        285 |                         let v = table.table[index].seq[i].1.clone();
        287 |                         proof {
        288 |                             lemma_seq_pairs_last_key_gives_value::<Key, Value>(
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:344: error: assume() [algorithmic] - proof { assume(eq == (bucket_seq@[i as int].0 == *key)); } /
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:344: error: assume() [algorithmic] - proof { assume(eq == (bucket_seq@[i as int].0 == *key)); } /
        311 |             fn delete(table: &mut HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
             ...
        342 |                 {
        343 |                     let eq = bucket_seq[i].0 == *key;
        345 | 
        346 |                     proof {
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:357: error: assume() [algorithmic] - assume(k == bucket_seq@[i as int].0); // Clone bridge for Ke
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:357: error: assume() [algorithmic] - assume(k == bucket_seq@[i as int].0); // Clone bridge for Ke
        311 |             fn delete(table: &mut HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
             ...
        355 |                         let v = bucket_seq[i].1.clone();
        356 |                         proof {
        358 |                             assume(v == bucket_seq@[i as int].1); // Clone bridge for Value.
        359 |                         }
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:358: error: assume() [algorithmic] - assume(v == bucket_seq@[i as int].1); // Clone bridge for Va
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:358: error: assume() [algorithmic] - assume(v == bucket_seq@[i as int].1); // Clone bridge for Va
        311 |             fn delete(table: &mut HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
             ...
        356 |                         proof {
        357 |                             assume(k == bucket_seq@[i as int].0); // Clone bridge for Key.
        359 |                         }
        360 |                         let ghost old_new_seq = new_seq@;
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:469: error: assume() [algorithmic] - assume(k == chain[j as int].0);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:469: error: assume() [algorithmic] - assume(k == chain[j as int].0);
        433 |             fn resize(
             ...
        467 |                         let v = table.table[i].seq[j].1.clone();
        468 |                         proof {
        470 |                             assume(v == chain[j as int].1);
        471 |                         }
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:470: error: assume() [algorithmic] - assume(v == chain[j as int].1);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:470: error: assume() [algorithmic] - assume(v == chain[j as int].1);
        433 |             fn resize(
             ...
        468 |                         proof {
        469 |                             assume(k == chain[j as int].0);
        471 |                         }
        472 |                         pairs.push((k, v));
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:566: error: assume() [algorithmic] - assume(key == pairs@[m as int].0);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:566: error: assume() [algorithmic] - assume(key == pairs@[m as int].0);
        433 |             fn resize(
             ...
        564 |                     let value = pairs[m].1.clone();
        565 |                     proof {
        567 |                         assume(value == pairs@[m as int].1);
        568 |                     }
-/home/milnes/projects/APAS-VERUS/src/Chap47/LinkedListChainedHashTableStEph.rs:567: error: assume() [algorithmic] - assume(value == pairs@[m as int].1);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/LinkedListChainedHashTableStEph.rs:567: error: assume() [algorithmic] - assume(value == pairs@[m as int].1);
        433 |             fn resize(
             ...
        565 |                     proof {
@@ -246,107 +246,107 @@ Table of Contents:
       12 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ ParaHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:463: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:463: error: external_body - #[verifier::external_body]
        464 |     pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (index: usize)
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:572: error: fn_missing_wf_ensures - fn createTable — ensures should include table.spec_hashtable_wf() for return type HashTable
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:572: error: fn_missing_wf_ensures - fn createTable — ensures should include table.spec_hashtable_wf() for return type HashTable
        564 |         open spec fn spec_impl_wf(table: &HashTable<Key, Value, Entry, Metrics, H>) -> bool {
             ...
        570 |         /// - APAS: Work O(m), Span O(m) where m is initial size.
        571 |         /// - Claude-Opus-4.6: Work O(m), Span O(m) — agrees with APAS; iterates m times to create entries.
        573 |             requires
        574 |                 initial_size > 0,
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:623: error: fn_missing_wf_requires - fn insert — requires should include table.spec_hashtable_wf() for input type HashTable
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:623: error: fn_missing_wf_requires - fn insert — requires should include table.spec_hashtable_wf() for input type HashTable
        572 |         fn createTable(hash_fn: H, initial_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (table: HashTable<Key, Value, Entry, Metrics, H>)
             ...
        621 |         /// - APAS: Work O(1) expected, Span O(1).
        622 |         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
        624 |             requires
        625 |                 Self::spec_impl_wf(old(table)),
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:637: error: fn_missing_wf_requires - fn lookup — requires should include table.spec_hashtable_wf() for input type HashTable
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:637: error: fn_missing_wf_requires - fn lookup — requires should include table.spec_hashtable_wf() for input type HashTable
        623 |         fn insert(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)
             ...
        635 |         /// - APAS: Work O(1) expected, Span O(1).
        636 |         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
        638 |             requires
        639 |                 Self::spec_impl_wf(table),
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:647: error: fn_missing_wf_requires - fn delete — requires should include table.spec_hashtable_wf() for input type HashTable
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:647: error: fn_missing_wf_requires - fn delete — requires should include table.spec_hashtable_wf() for input type HashTable
        637 |         fn lookup(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (found: Option<Value>)
             ...
        645 |         /// - APAS: Work O(1) expected, Span O(1).
        646 |         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
        648 |             requires
        649 |                 Self::spec_impl_wf(old(table)),
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:660: error: fn_missing_wf_requires - fn metrics — requires should include table.spec_hashtable_wf() for input type HashTable
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:660: error: fn_missing_wf_requires - fn metrics — requires should include table.spec_hashtable_wf() for input type HashTable
        647 |         fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
             ...
        658 |         /// - APAS: N/A — Verus-specific scaffolding.
        659 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
        661 |             requires Self::spec_impl_wf(table),
        662 |             ensures m == &table.metrics,
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:669: error: fn_missing_wf_requires - fn loadAndSize — requires should include table.spec_hashtable_wf() for input type HashTable
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:669: error: fn_missing_wf_requires - fn loadAndSize — requires should include table.spec_hashtable_wf() for input type HashTable
        660 |         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
             ...
        667 |         /// - APAS: Work O(1), Span O(1).
        668 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads only.
        670 |             requires Self::spec_impl_wf(table),
        671 |             ensures
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:686: error: fn_missing_wf_requires - fn resize — requires should include table.spec_hashtable_wf() for input type HashTable
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:686: error: fn_missing_wf_requires - fn resize — requires should include table.spec_hashtable_wf() for input type HashTable
        669 |         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
             ...
        684 |         ///   m is old size, m' is new size.
        685 |         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
        687 |             requires
        688 |                 new_size > 0,
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:686: error: fn_missing_wf_ensures - fn resize — ensures should include resized.spec_hashtable_wf() for return type HashTable
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:686: error: fn_missing_wf_ensures - fn resize — ensures should include resized.spec_hashtable_wf() for return type HashTable
        669 |         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
             ...
        684 |         ///   m is old size, m' is new size.
        685 |         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
        687 |             requires
        688 |                 new_size > 0,
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:493: info: structural_false_positive OPAQUE_EXTERNAL compute_second_hash — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/ParaHashTableStEph.rs:493: info: structural_false_positive OPAQUE_EXTERNAL compute_second_hash — #[verifier::external_body] [medium]
    Holes: 1 total
       1 × external_body
    Info: 1 × structural_false_positive
       1 × OPAQUE_EXTERNAL
    Proof functions: 12 total (12 clean, 0 holed)
 ❌ QuadProbFlatHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:110: error: assume() [algorithmic] - proof { assume(eq == spec_flat_has_key(table.table@[slot as 
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:110: error: assume() [algorithmic] - proof { assume(eq == spec_flat_has_key(table.table@[slot as 
         75 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
             ...
        108 |                     FlatEntry::Occupied(k, _v) => {
        109 |                         let eq = k == key;
        111 |                         if eq {
        112 |                             // Overwrite existing key.
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:366: error: assume(false) - assume(false); // Table full: unreachable with load factor < — needs diverge(); use `assume(false); diverge()`
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:366: error: assume(false) - assume(false); // Table full: unreachable with load factor < — needs diverge(); use `assume(false); diverge()`
         75 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
             ...
        364 |             // Exhausted all m positions.
        365 |             proof {
        367 |             }
        368 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:404: error: assume() [algorithmic] - proof { assume(eq == spec_flat_has_key(table.table@[slot as 
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:404: error: assume() [algorithmic] - proof { assume(eq == spec_flat_has_key(table.table@[slot as 
        372 |         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
             ...
        402 |                     FlatEntry::Occupied(k, v) => {
        403 |                         let eq = k == *key;
        405 |                         if eq {
        406 |                             proof {
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:563: error: assume() [algorithmic] - proof { assume(eq == spec_flat_has_key(table.table@[slot as 
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:563: error: assume() [algorithmic] - proof { assume(eq == spec_flat_has_key(table.table@[slot as 
        529 |         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
             ...
        561 |                     FlatEntry::Occupied(k, _v) => {
        562 |                         let eq = k == *key;
        564 |                         if eq {
        565 |                             let ghost old_table_seq = table.table@;
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:835: error: assume() [algorithmic] - assume(key == pairs@[j as int].0);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:835: error: assume() [algorithmic] - assume(key == pairs@[j as int].0);
        731 |         fn resize(
             ...
        833 |                 let value = pairs[j].1.clone();
        834 |                 proof {
        836 |                     assume(value == pairs@[j as int].1);
        837 |                 }
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:836: error: assume() [algorithmic] - assume(value == pairs@[j as int].1);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/QuadProbFlatHashTableStEph.rs:836: error: assume() [algorithmic] - assume(value == pairs@[j as int].1);
        731 |         fn resize(
             ...
        834 |                 proof {
@@ -357,58 +357,58 @@ Table of Contents:
       1 × assume(false)
       5 × assume()
 ❌ StructChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:124: error: assume() [algorithmic] - proof { assume(eq == (nk == key)); } // Eq bridge.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:124: error: assume() [algorithmic] - proof { assume(eq == (nk == key)); } // Eq bridge.
        104 |         fn chain_insert<Key: PartialEq, Value>(
             ...
        122 |                     let Node { key: nk, value: nv, next: nn } = *node;
        123 |                     let eq = nk == key;
        125 |                     if eq {
        126 |                         let out = Some(Box::new(Node { key, value, next: nn }));
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:163: error: assume() [algorithmic] - proof { assume(eq == (node.key == *key)); } // Eq bridge.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:163: error: assume() [algorithmic] - proof { assume(eq == (node.key == *key)); } // Eq bridge.
        145 |         fn chain_lookup<Key: PartialEq, Value: Clone>(
             ...
        161 |                 Some(node) => {
        162 |                     let eq = node.key == *key;
        164 |                     if eq {
        165 |                         let v = node.value.clone();
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:167: error: assume() [algorithmic] - assume(v == node.value); // Clone bridge.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:167: error: assume() [algorithmic] - assume(v == node.value); // Clone bridge.
        145 |         fn chain_lookup<Key: PartialEq, Value: Clone>(
             ...
        165 |                         let v = node.value.clone();
        166 |                         proof {
        168 |                             reveal_with_fuel(spec_chain_to_map, 2);
        169 |                         }
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:205: error: assume() [algorithmic] - proof { assume(eq == (nk == *key)); } // Eq bridge.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:205: error: assume() [algorithmic] - proof { assume(eq == (nk == *key)); } // Eq bridge.
        186 |         fn chain_delete<Key: PartialEq, Value>(
             ...
        203 |                     let Node { key: nk, value: nv, next: nn } = *node;
        204 |                     let eq = nk == *key;
        206 |                     let (new_next, tail_deleted) = chain_delete(nn, key);
        207 |                     if eq {
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:398: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:398: error: external_body - #[verifier::external_body]
        399 |             fn resize(
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:495: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:495: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        483 |             fn clone(&self) -> (cloned: Self)
             ...
        493 |                     },
        494 |                 };
        496 |                 cloned
        497 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:512: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:512: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        501 |             fn eq(&self, other: &Self) -> (equal: bool)
             ...
        510 |                         _ => false,
        511 |                     };
        513 |                 equal
        514 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:529: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:529: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        520 |             fn clone(&self) -> (cloned: Self)
             ...
        527 |                     },
        528 |                 };
        530 |                 cloned
        531 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:543: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/StructChainedHashTable.rs:543: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        535 |             fn eq(&self, other: &Self) -> (equal: bool)
             ...
        541 |                     _ => false,
@@ -420,84 +420,84 @@ Table of Contents:
       1 × external_body
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ VecChainedHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:53: error: assume() [algorithmic] - assume(k == pairs@[i as int].0); // Clone bridge for Key.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:53: error: assume() [algorithmic] - assume(k == pairs@[i as int].0); // Clone bridge for Key.
         37 |         fn clone_vec_pairs<Key: Clone, Value: Clone>(pairs: &Vec<(Key, Value)>) -> (cloned: Vec<(Key, Value)>)
             ...
         51 |                 let v = pairs[i].1.clone();
         52 |                 proof {
         54 |                     assume(v == pairs@[i as int].1); // Clone bridge for Value.
         55 |                 }
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:54: error: assume() [algorithmic] - assume(v == pairs@[i as int].1); // Clone bridge for Value.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:54: error: assume() [algorithmic] - assume(v == pairs@[i as int].1); // Clone bridge for Value.
         37 |         fn clone_vec_pairs<Key: Clone, Value: Clone>(pairs: &Vec<(Key, Value)>) -> (cloned: Vec<(Key, Value)>)
             ...
         52 |                 proof {
         53 |                     assume(k == pairs@[i as int].0); // Clone bridge for Key.
         55 |                 }
         56 |                 new_vec.push((k, v));
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:191: error: assume() [algorithmic] - proof { assume(eq == (bucket@[scan_i as int].0 == key)); } /
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:191: error: assume() [algorithmic] - proof { assume(eq == (bucket@[scan_i as int].0 == key)); } /
        164 |             fn insert(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: Key, value: Value) {
             ...
        189 |                 {
        190 |                     let eq = bucket[scan_i].0 == key;
        192 |                     if eq {
        193 |                         existed = true;
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:285: error: assume() [algorithmic] - proof { assume(eq == (bv[i as int].0 == *key)); } // Eq brid
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:285: error: assume() [algorithmic] - proof { assume(eq == (bv[i as int].0 == *key)); } // Eq brid
        254 |             fn lookup(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
             ...
        283 |                     i = i - 1;
        284 |                     let eq = table.table[index][i].0 == *key;
        286 |                     if eq {
        287 |                         let v = table.table[index][i].1.clone();
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:288: error: assume() [algorithmic] - proof { assume(v == bv[i as int].1); } // Clone bridge.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:288: error: assume() [algorithmic] - proof { assume(v == bv[i as int].1); } // Clone bridge.
        254 |             fn lookup(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
             ...
        286 |                     if eq {
        287 |                         let v = table.table[index][i].1.clone();
        289 |                         proof {
        290 |                             lemma_seq_pairs_last_key_gives_value::<Key, Value>(
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:345: error: assume() [algorithmic] - proof { assume(eq == (bucket@[i as int].0 == *key)); } // Eq
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:345: error: assume() [algorithmic] - proof { assume(eq == (bucket@[i as int].0 == *key)); } // Eq
        313 |             fn delete(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
             ...
        343 |                 {
        344 |                     let eq = bucket[i].0 == *key;
        346 | 
        347 |                     proof {
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:358: error: assume() [algorithmic] - assume(k == bucket@[i as int].0); // Clone bridge for Key.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:358: error: assume() [algorithmic] - assume(k == bucket@[i as int].0); // Clone bridge for Key.
        313 |             fn delete(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
             ...
        356 |                         let v = bucket[i].1.clone();
        357 |                         proof {
        359 |                             assume(v == bucket@[i as int].1); // Clone bridge for Value.
        360 |                         }
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:359: error: assume() [algorithmic] - assume(v == bucket@[i as int].1); // Clone bridge for Value.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:359: error: assume() [algorithmic] - assume(v == bucket@[i as int].1); // Clone bridge for Value.
        313 |             fn delete(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
             ...
        357 |                         proof {
        358 |                             assume(k == bucket@[i as int].0); // Clone bridge for Key.
        360 |                         }
        361 |                         let ghost old_new_bucket = new_bucket@;
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:472: error: assume() [algorithmic] - assume(k == chain[j as int].0);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:472: error: assume() [algorithmic] - assume(k == chain[j as int].0);
        436 |             fn resize(
             ...
        470 |                         let v = table.table[i][j].1.clone();
        471 |                         proof {
        473 |                             assume(v == chain[j as int].1);
        474 |                         }
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:473: error: assume() [algorithmic] - assume(v == chain[j as int].1);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:473: error: assume() [algorithmic] - assume(v == chain[j as int].1);
        436 |             fn resize(
             ...
        471 |                         proof {
        472 |                             assume(k == chain[j as int].0);
        474 |                         }
        475 |                         pairs.push((k, v));
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:568: error: assume() [algorithmic] - assume(key == pairs@[m as int].0);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:568: error: assume() [algorithmic] - assume(key == pairs@[m as int].0);
        436 |             fn resize(
             ...
        566 |                     let value = pairs[m].1.clone();
        567 |                     proof {
        569 |                         assume(value == pairs@[m as int].1);
        570 |                     }
-/home/milnes/projects/APAS-VERUS/src/Chap47/VecChainedHashTableStEph.rs:569: error: assume() [algorithmic] - assume(value == pairs@[m as int].1);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap47/VecChainedHashTableStEph.rs:569: error: assume() [algorithmic] - assume(value == pairs@[m as int].1);
        436 |             fn resize(
             ...
        567 |                     proof {
@@ -579,8 +579,8 @@ Structural (info only): 1
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 14:02:21 -07:00
-Ended:     2026-03-18 14:02:21 -07:00
-Duration:  150ms
+Started:   2026-03-18 14:23:34 -07:00
+Ended:     2026-03-18 14:23:34 -07:00
+Duration:  71ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log
