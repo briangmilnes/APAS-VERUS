@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap59/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap59/JohnsonStEphI64.rs
 Full output: src/Chap59/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,26 +20,6 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-✓ JohnsonMtEphF64.rs
-❌ JohnsonMtEphI64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:49: error: external_body - #[verifier::external_body]
-        50 |     #[cfg(not(verus_keep_ghost))]
-        51 |     pub fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> AllPairsResultStEphI64 {
-/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:80: error: external_body - #[verifier::external_body]
-        81 |     #[cfg(not(verus_keep_ghost))]
-        82 |     fn parallel_dijkstra_all(
-/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:142: error: external_body - #[verifier::external_body]
-       143 |     #[cfg(not(verus_keep_ghost))]
-       144 |     fn add_dummy_source(graph: &WeightedDirGraphStEphI128<usize>, n: usize) -> (WeightedDirGraphStEphI128<usize>, usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:169: error: external_body - #[verifier::external_body]
-       170 |     #[cfg(not(verus_keep_ghost))]
-       171 |     fn reweight_graph(
-/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:196: error: external_body - #[verifier::external_body]
-       197 |     #[cfg(not(verus_keep_ghost))]
-       198 |     fn create_negative_cycle_result(n: usize) -> AllPairsResultStEphI64 {
-   Holes: 5 total
-      5 × external_body
-✓ JohnsonStEphF64.rs
 ❌ JohnsonStEphI64.rs
 /home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:437: error: assume() [algorithmic] - proof { assume(reweighted@.A.len() * 2 + 2 <= usize::MAX as 
        366 |     pub fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>)
@@ -80,18 +60,12 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
-JohnsonMtEphF64  depends upon only clean modules
-JohnsonMtEphI64  depends upon only clean modules
-JohnsonStEphF64  depends upon only clean modules
 JohnsonStEphI64  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
-JohnsonMtEphF64.rs  depends upon only clean modules
-JohnsonMtEphI64.rs  depends upon only clean modules
-JohnsonStEphF64.rs  depends upon only clean modules
 JohnsonStEphI64.rs  depends upon only clean modules
 
 =================================================================
@@ -99,9 +73,9 @@ JohnsonStEphI64.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   2 clean (no holes, no errors; 50%)
-   2 holed (holes or errors, 50%)
-   4 total
+   0 clean (no holes, no errors; 0%)
+   1 holed (holes or errors, 100%)
+   1 total
 
 Proof Functions:
    0 clean (0%)
@@ -109,16 +83,15 @@ Proof Functions:
    0 total
 
 Function Specs:
-   11 exec fns with complete spec (requires+ensures) (78%)
-   3 exec fns missing spec (21%)
+   5 exec fns with complete spec (requires+ensures) (62%)
+   3 exec fns missing spec (37%)
    0 proof/spec fns clean (0%)
    0 proof/spec fns with holes (0%)
-   14 total fns
+   8 total fns
 
 
-Holes Found: 6 (actionable)
-   1 × assume() (16%)
-   5 × external_body (83%)
+Holes Found: 1 (actionable)
+   1 × assume() (100%)
 
 Warnings: 3 total
    3 × fn_missing_requires
@@ -127,9 +100,8 @@ Warnings: 3 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 11:46:47 -07:00
-Ended:     2026-03-18 11:46:47 -07:00
-Duration:  7ms
+Started:   2026-03-18 14:02:36 -07:00
+Ended:     2026-03-18 14:02:36 -07:00
+Duration:  12ms
 
 Full output: src/Chap59/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap59/analyses/veracity-review-verus-proof-holes.log

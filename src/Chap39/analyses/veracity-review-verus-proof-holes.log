@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap39/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap39/BSTTreapMtEph.rs
 Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,85 +20,6 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ BSTParaTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:67: error: external_body - #[verifier::external_body]
-        68 |         open spec fn view(&self) -> Set<T::V> {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:142: error: external_body - #[verifier::external_body]
-       143 |     fn tree_priority<T: MtKey>(tree: &ParamTreap<T>) -> i64 {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:152: error: external_body - #[verifier::external_body]
-       153 |     fn tree_size<T: MtKey>(tree: &ParamTreap<T>) -> usize {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:162: error: external_body - #[verifier::external_body]
-       163 |     fn make_node<T: MtKey>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> ParamTreap<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:172: error: external_body - #[verifier::external_body]
-       173 |     fn join_with_priority<T: MtKey + 'static>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> ParamTreap<T>
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:197: error: external_body - #[verifier::external_body]
-       198 |     fn split_inner<T: MtKey + 'static>(tree: &ParamTreap<T>, key: &T) -> (ParamTreap<T>, bool, ParamTreap<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:220: error: external_body - #[verifier::external_body]
-       221 |     fn join_pair_inner<T: MtKey + 'static>(left: ParamTreap<T>, right: ParamTreap<T>) -> ParamTreap<T>
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:236: error: external_body - #[verifier::external_body]
-       237 |     fn union_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> ParamTreap<T>
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:252: error: external_body - #[verifier::external_body]
-       253 |     fn intersect_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> ParamTreap<T>
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:272: error: external_body - #[verifier::external_body]
-       273 |     fn difference_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> ParamTreap<T>
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:292: error: external_body - #[verifier::external_body]
-       293 |     fn filter_inner<T: MtKey + 'static, F: Pred<T>>(tree: &ParamTreap<T>, predicate: &Arc<F>) -> ParamTreap<T>
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:313: error: external_body - #[verifier::external_body]
-       314 |     fn filter_parallel<T: MtKey + 'static, F: Pred<T>>(tree: &ParamTreap<T>, predicate: F) -> ParamTreap<T>
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:322: error: external_body - #[verifier::external_body]
-       323 |     fn reduce_inner<T: MtKey + 'static, F>(tree: &ParamTreap<T>, op: &Arc<F>, identity: T) -> T
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:346: error: external_body - #[verifier::external_body]
-       347 |     fn reduce_parallel<T: MtKey + 'static, F>(tree: &ParamTreap<T>, op: F, base: T) -> T
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:356: error: external_body - #[verifier::external_body]
-       357 |     fn collect_in_order<T: MtKey + 'static>(tree: &ParamTreap<T>, out: &mut Vec<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:507: error: assume() [algorithmic] - proof { assume(tree@.finite() && tree@.len() == 0); }
-       501 |         fn new() -> (tree: Self)
-            ...
-       505 |                 root: new_param_treap_arc(None),
-       506 |             };
-       508 |             tree
-       509 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:537: error: assume() [algorithmic] - assume(
-       522 |         fn expose_with_priority(&self) -> (parts: Option<(ParamTreap<T>, T, i64, ParamTreap<T>)>) {
-            ...
-       535 |             handle.release_read();
-       536 |             proof {
-       538 |                     self@.finite()
-       539 |                     && (result is None ==> self@.len() == 0)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:555: error: external_body - #[verifier::external_body]
-       556 |         fn join_mid(exposed: Exposed<T>) -> (tree: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:663: error: assume() [algorithmic] - assume(
-       638 |         fn find(&self, key: &T) -> (found: Option<T>) {
-            ...
-       661 |             }
-       662 |             proof {
-       664 |                     (result matches Some(v) ==> v@ == key@ && self@.contains(v@))
-       665 |                     && (result is None ==> !self@.contains(key@))
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:673: error: external_body - #[verifier::external_body]
-       674 |         fn split(&self, key: &T) -> (parts: (Self, bool, Self)) { split_inner(self, key) }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:678: error: external_body - #[verifier::external_body]
-       679 |         fn join_pair(&self, other: Self) -> (joined: Self) { join_pair_inner(self.clone(), other) }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:683: error: external_body - #[verifier::external_body]
-       684 |         fn union(&self, other: &Self) -> (combined: Self) { union_inner(self, other) }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:688: error: external_body - #[verifier::external_body]
-       689 |         fn intersect(&self, other: &Self) -> (common: Self) { intersect_inner(self, other) }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:693: error: external_body - #[verifier::external_body]
-       694 |         fn difference(&self, other: &Self) -> (diff: Self) { difference_inner(self, other) }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:698: error: external_body - #[verifier::external_body]
-       699 |         fn filter<F: Pred<T>>(
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:707: error: external_body - #[verifier::external_body]
-       708 |         fn reduce<F>(&self, op: F, base: T) -> (reduced: T)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:717: error: external_body - #[verifier::external_body]
-       718 |         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:131: info: structural_false_positive OPAQUE_EXTERNAL priority_for — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:576: info: structural_false_positive RWLOCK_GHOST size — proof { assume(self@.finite() && count == self@.len()); } [medium]
-   Holes: 27 total
-      3 × assume()
-      24 × external_body
-   Info: 2 × structural_false_positive
-      1 × RWLOCK_GHOST
-      1 × OPAQUE_EXTERNAL
-✓ BSTSetTreapMtEph.rs
 ⚠ BSTTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:353: warning: requires_true - requires true — vacuous precondition
        351 | 
@@ -158,8 +79,6 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1117: info: structural_false_positive RWLOCK_GHOST maximum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1129: info: structural_false_positive RWLOCK_GHOST in_order — proof { assume(ordered@.len() == self@.len()); } [medium]
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1141: info: structural_false_positive RWLOCK_GHOST pre_order — proof { assume(preordered@.len() == self@.len()); } [medium]
-✓ BSTTreapStEph.rs
-   16 clean proof functions
 
 =================================================================
 2. Depends Upon
@@ -169,67 +88,53 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
-BSTParaTreapMtEph  depends upon only clean modules
-BSTSetTreapMtEph  depends upon only clean modules
 BSTTreapMtEph  depends upon only clean modules
-BSTTreapStEph  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
-BSTParaTreapMtEph.rs  depends upon only clean modules
-BSTSetTreapMtEph.rs  depends upon only clean modules
 BSTTreapMtEph.rs  depends upon only clean modules
-BSTTreapStEph.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   3 clean (no holes, no errors; 75%)
-   1 holed (holes or errors, 25%)
-   4 total
+   1 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
+   1 total
 
 Proof Functions:
-   25 clean (100%)
+   9 clean (100%)
    0 holed (0%)
-   25 total
+   9 total
 
 Function Specs:
-   191 exec fns with complete spec (requires+ensures) (69%)
+   40 exec fns with complete spec (requires+ensures) (60%)
    0 exec fns missing spec (0%)
-   84 proof/spec fns clean (30%)
+   26 proof/spec fns clean (39%)
    0 proof/spec fns with holes (0%)
-   275 total fns
+   66 total fns
 
 
-Holes Found: 27 (actionable)
-   3 × assume() (11%)
-   24 × external_body (88%)
+Holes Found: 0 (actionable)
 
 Warnings: 8 total
    2 × requires_true
    6 × assume_eq_clone_workaround
 
-Structural (info only): 8
-   7 × RWLOCK_GHOST
-   1 × OPAQUE_EXTERNAL
+Structural (info only): 6
+   6 × RWLOCK_GHOST
+
+No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 11:46:46 -07:00
-Ended:     2026-03-18 11:46:46 -07:00
-Duration:  38ms
-
-Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log
-============================
-
-Started:   2026-03-18 11:46:46 -07:00
-Ended:     2026-03-18 11:46:46 -07:00
-Duration:  38ms
+Started:   2026-03-18 14:02:41 -07:00
+Ended:     2026-03-18 14:02:41 -07:00
+Duration:  30ms
 
 Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log
