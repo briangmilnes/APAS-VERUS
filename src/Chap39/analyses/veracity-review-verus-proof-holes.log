@@ -49,7 +49,7 @@ Table of Contents:
       10 × external_body
    Info: 4 total
 ✓ BSTSetTreapMtEph.rs
-❌ BSTTreapMtEph.rs
+⚠ BSTTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:354: warning: requires_true - requires true — vacuous precondition
        352 | 
        353 |     fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
@@ -73,7 +73,6 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1179: info: accept()
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:1185: info: accept()
    Info: 12 total
-   Proof functions: 9 total (9 clean, 0 holed)
 ✓ BSTTreapStEph.rs
    16 clean proof functions
 
@@ -134,13 +133,9 @@ Accepted (reviewed): 16 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 12:35:30 -07:00
-Ended:     2026-03-17 12:35:30 -07:00
-Duration:  46ms
+Started:   2026-03-17 19:54:33 -07:00
+Ended:     2026-03-17 19:54:33 -07:00
+Duration:  33ms
 
 Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log
-
-Ended:     2026-03-17 12:35:30 -07:00
-Duration:  46ms
-
-Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap39/analyses/veracity-review-verus-proof-holes.log

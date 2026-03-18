@@ -154,7 +154,7 @@ pub mod OrderedTableMtPer {
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
                 first matches Some(k) ==> self@.dom().contains(k@),
-                first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(v, t);
+                first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + last)
@@ -164,7 +164,7 @@ pub mod OrderedTableMtPer {
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
                 last matches Some(k) ==> self@.dom().contains(k@),
-                last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> TotalOrder::le(t, v);
+                last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + scan)
@@ -174,7 +174,7 @@ pub mod OrderedTableMtPer {
                 self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
-                predecessor matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
+                predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + scan)
@@ -184,7 +184,7 @@ pub mod OrderedTableMtPer {
                 self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
-                successor matches Some(v) ==> forall|t: K| self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
+                successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + partition)
@@ -209,7 +209,7 @@ pub mod OrderedTableMtPer {
             ensures
                 self@.dom().finite(),
                 rank <= self@.dom().len(),
-                rank as int == self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
+                rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + index)
@@ -219,7 +219,7 @@ pub mod OrderedTableMtPer {
                 self@.dom().finite(),
                 i >= self@.dom().len() ==> selected matches None,
                 selected matches Some(k) ==> self@.dom().contains(k@),
-                selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
+                selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + partition)
@@ -399,46 +399,46 @@ pub mod OrderedTableMtPer {
             from_st_table(result)
         }
 
-        #[verifier::external_body]
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
         {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let first = inner.first_key();
+            proof { assume(inner@ =~= self@); }
             read_handle.release_read();
             first
         }
 
-        #[verifier::external_body]
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
         {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let last = inner.last_key();
+            proof { assume(inner@ =~= self@); }
             read_handle.release_read();
             last
         }
 
-        #[verifier::external_body]
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
         {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let predecessor = inner.previous_key(k);
+            proof { assume(inner@ =~= self@); }
             read_handle.release_read();
             predecessor
         }
 
-        #[verifier::external_body]
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
         {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let successor = inner.next_key(k);
+            proof { assume(inner@ =~= self@); }
             read_handle.release_read();
             successor
         }
@@ -479,24 +479,24 @@ pub mod OrderedTableMtPer {
             from_st_table(range)
         }
 
-        #[verifier::external_body]
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
         {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let rank = inner.rank_key(k);
+            proof { assume(inner@ =~= self@); }
             read_handle.release_read();
             rank
         }
 
-        #[verifier::external_body]
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
         {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let selected = inner.select_key(i);
+            proof { assume(inner@ =~= self@); }
             read_handle.release_read();
             selected
         }

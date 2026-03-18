@@ -26,14 +26,14 @@ Table of Contents:
        102 |         fn cmp(&self, other: &Self) -> Ordering {
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:118: error: external_body - #[verifier::external_body]
        119 |         fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:202: error: assume() - assume(BinaryHeapPQ::<PQEntry>::spec_is_exec_heap(pq.spec_se
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:202: error: assume() [algorithmic] - assume(BinaryHeapPQ::<PQEntry>::spec_is_exec_heap(pq.spec_se
        155 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
             ...
        200 |             assert(pq@.len() * 2 <= usize::MAX as int);
        201 |             proof {
        203 |             }
        204 |             let (new_pq, min_elem) = pq.delete_min();
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:243: error: assume() - proof { assume(remaining_budget > 0); }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:243: error: assume() [algorithmic] - proof { assume(remaining_budget > 0); }
        155 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
             ...
        241 |                                         assert(pq@.len() + 1 <= usize::MAX as int);
@@ -118,9 +118,12 @@ Real Actionable Holes: 2 (4 total - 2 structural FPs in count)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 12:35:30 -07:00
-Ended:     2026-03-17 12:35:30 -07:00
-Duration:  8ms
+Started:   2026-03-17 19:54:33 -07:00
+Ended:     2026-03-17 19:54:33 -07:00
+Duration:  6ms
 
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
+ 19:54:33 -07:00
+Duration:  6ms
+
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log

@@ -140,7 +140,7 @@ broadcast use {
                 self@.finite(),
                 self@.len() == 0 <==> first matches None,
                 first matches Some(v) ==> self@.contains(v@),
-                first matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(v, t);
+                first matches Some(v) ==> forall|t: T| self@.contains(t@) ==> #[trigger] TotalOrder::le(v, t);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then returns last element
         fn last(&self) -> (last: Option<T>)
@@ -150,7 +150,7 @@ broadcast use {
                 self@.finite(),
                 self@.len() == 0 <==> last matches None,
                 last matches Some(v) ==> self@.contains(v@),
-                last matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(t, v);
+                last matches Some(v) ==> forall|t: T| self@.contains(t@) ==> #[trigger] TotalOrder::le(t, v);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then scans for predecessor
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
@@ -160,7 +160,7 @@ broadcast use {
                 self@.finite(),
                 predecessor matches Some(v) ==> self@.contains(v@),
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
-                predecessor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
+                predecessor matches Some(v) ==> forall|t: T| #![trigger t@] self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then scans for successor
         fn next(&self, k: &T) -> (successor: Option<T>)
@@ -170,7 +170,7 @@ broadcast use {
                 self@.finite(),
                 successor matches Some(v) ==> self@.contains(v@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
-                successor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
+                successor matches Some(v) ==> forall|t: T| #![trigger t@] self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then partitions into two sets
         fn split(&self, k: &T) -> (split: (Self, B, Self))
@@ -186,7 +186,7 @@ broadcast use {
                 split.0@.disjoint(split.2@),
                 !split.0@.contains(k@),
                 !split.2@.contains(k@),
-                forall|x| self@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@;
+                forall|x| #[trigger] self@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@;
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- delegates to union (sequential)
         fn join(left: &Self, right: &Self) -> (joined: Self)
@@ -208,7 +208,7 @@ broadcast use {
             ensures
                 self@.finite(),
                 rank <= self@.len(),
-                rank as int == self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
+                rank as int == self@.filter(|x: T::V| exists|t: T| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then indexes
         fn select(&self, i: usize) -> (selected: Option<T>)
@@ -218,7 +218,7 @@ broadcast use {
                 self@.finite(),
                 i >= self@.len() ==> selected matches None,
                 selected matches Some(v) ==> self@.contains(v@),
-                selected matches Some(v) ==> self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
+                selected matches Some(v) ==> self@.filter(|x: T::V| exists|t: T| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then partitions by rank (verified with loop invariant)
         fn split_rank(&self, i: usize) -> (split: (Self, Self))
@@ -231,7 +231,7 @@ broadcast use {
                 split.0@.subset_of(self@),
                 split.1@.subset_of(self@),
                 split.0@.disjoint(split.1@),
-                forall|x| self@.contains(x) ==> split.0@.contains(x) || split.1@.contains(x);
+                forall|x| #[trigger] self@.contains(x) ==> split.0@.contains(x) || split.1@.contains(x);
     }
 
     // 9. impls
@@ -341,7 +341,7 @@ broadcast use {
                 self@.finite(),
                 self@.len() == 0 <==> first matches None,
                 first matches Some(v) ==> self@.contains(v@),
-                first matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(v, t),
+                first matches Some(v) ==> forall|t: T| self@.contains(t@) ==> #[trigger] TotalOrder::le(v, t),
         {
             let len = self.base_set.elements.length();
             if len == 0 { None } else { Some(self.base_set.elements.nth(0).clone_plus()) }
@@ -354,7 +354,7 @@ broadcast use {
                 self@.finite(),
                 self@.len() == 0 <==> last matches None,
                 last matches Some(v) ==> self@.contains(v@),
-                last matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(t, v),
+                last matches Some(v) ==> forall|t: T| self@.contains(t@) ==> #[trigger] TotalOrder::le(t, v),
         {
             let len = self.base_set.elements.length();
             if len == 0 { None } else { Some(self.base_set.elements.nth(len - 1).clone_plus()) }
@@ -367,7 +367,7 @@ broadcast use {
                 self@.finite(),
                 predecessor matches Some(v) ==> self@.contains(v@),
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
-                predecessor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v),
+                predecessor matches Some(v) ==> forall|t: T| #![trigger t@] self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v),
         {
             let elements = &self.base_set.elements;
             let size = elements.length();
@@ -385,7 +385,7 @@ broadcast use {
                 self@.finite(),
                 successor matches Some(v) ==> self@.contains(v@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
-                successor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t),
+                successor matches Some(v) ==> forall|t: T| #![trigger t@] self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t),
         {
             let elements = &self.base_set.elements;
             let size = elements.length();
@@ -409,7 +409,7 @@ broadcast use {
                 split.0@.disjoint(split.2@),
                 !split.0@.contains(k@),
                 !split.2@.contains(k@),
-                forall|x| self@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@,
+                forall|x| #[trigger] self@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@,
         {
             let seq = self.to_seq();
 
@@ -499,7 +499,7 @@ broadcast use {
             ensures
                 self@.finite(),
                 rank <= self@.len(),
-                rank as int == self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len(),
+                rank as int == self@.filter(|x: T::V| exists|t: T| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len(),
         {
             let elements = &self.base_set.elements;
             let size = elements.length();
@@ -518,7 +518,7 @@ broadcast use {
                 self@.finite(),
                 i >= self@.len() ==> selected matches None,
                 selected matches Some(v) ==> self@.contains(v@),
-                selected matches Some(v) ==> self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int,
+                selected matches Some(v) ==> self@.filter(|x: T::V| exists|t: T| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int,
         {
             let sz = self.size();
             if i >= sz { None } else { Some(self.base_set.elements.nth(i).clone_plus()) }
@@ -534,7 +534,7 @@ broadcast use {
                 split.0@.subset_of(self@),
                 split.1@.subset_of(self@),
                 split.0@.disjoint(split.1@),
-                forall|x| self@.contains(x) ==> split.0@.contains(x) || split.1@.contains(x),
+                forall|x| #[trigger] self@.contains(x) ==> split.0@.contains(x) || split.1@.contains(x),
         {
             let elements = &self.base_set.elements;
             let size = elements.length();

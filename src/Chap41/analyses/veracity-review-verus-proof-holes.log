@@ -21,7 +21,7 @@ Table of Contents:
 =================================================================
 
 ❌ AVLTreeSetMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtEph.rs:245: error: assume() - proof { assume(count == self@.len()); }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtEph.rs:245: error: assume() [rwlock:reader] - proof { assume(count == self@.len()); }
        241 |         fn size(&self) -> (count: usize)
             ...
        243 |             let handle = self.inner.acquire_read();
@@ -59,6 +59,7 @@ Table of Contents:
        375 |             {
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtEph.rs:461: info: accept()
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtEph.rs:546: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtEph.rs:245: info: structural_false_positive RWLOCK_GHOST size [medium]
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtEph.rs:622: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph [high]
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtEph.rs:623: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph [high]
    Holes: 8 total
@@ -99,14 +100,14 @@ Table of Contents:
       8 × external_body
    Info: 4 total
 ❌ AVLTreeSetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetStEph.rs:1059: error: assume() - assume(new_vec@.len() < usize::MAX);
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetStEph.rs:1059: error: assume() [algorithmic] - assume(new_vec@.len() < usize::MAX);
        885 |         fn insert(&mut self, x: T)
             ...
       1057 |                     lemma_wf_implies_len_bound::<T>(&self.elements.root);
       1058 |                     assert(self.elements@.len() < usize::MAX);
       1060 |                 }
       1061 |                 self.elements = AVLTreeSeqStEphS::from_vec(new_vec);
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetStEph.rs:1334: error: assume() - assume(new_vec@.len() < usize::MAX);
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetStEph.rs:1334: error: assume() [algorithmic] - assume(new_vec@.len() < usize::MAX);
       1131 |         fn insert_sorted(&mut self, x: T)
             ...
       1332 |                     lemma_wf_implies_len_bound::<T>(&self.elements.root);
@@ -204,6 +205,8 @@ Function Specs:
 
 Holes Found: 22 total
    3 × assume() (13%)
+      2 × algorithmic
+      1 × rwlock:reader
    2 × unsafe impl (9%)
    17 × external_body (77%)
 
@@ -213,23 +216,24 @@ Warnings: 3 total
 Accepted (reviewed): 18 total
    18 × accept()
 
-Structural False Positives: 3 detected (language limitations, not missing proof)
+Structural False Positives: 4 detected (language limitations, not missing proof)
    2 × UNSAFE_SEND_SYNC
+   1 × RWLOCK_GHOST
    1 × STD_TRAIT_IMPL
 
-Real Actionable Holes: 19 (22 total - 3 structural FPs in count)
+Real Actionable Holes: 18 (22 total - 4 structural FPs in count)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 12:35:30 -07:00
-Ended:     2026-03-17 12:35:30 -07:00
-Duration:  79ms
+Started:   2026-03-17 19:54:33 -07:00
+Ended:     2026-03-17 19:54:33 -07:00
+Duration:  61ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
- 2026-03-17 12:35:30 -07:00
-Ended:     2026-03-17 12:35:30 -07:00
-Duration:  79ms
+ 2026-03-17 19:54:33 -07:00
+Ended:     2026-03-17 19:54:33 -07:00
+Duration:  61ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log

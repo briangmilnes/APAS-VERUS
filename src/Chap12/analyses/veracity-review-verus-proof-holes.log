@@ -92,8 +92,8 @@ Holes Found: 0 total
 Accepted (reviewed): 19 total
    13 × external_body_accept_hole
    4 × unsafe_block_accept_hole
-   1 × external_accept_hole
    1 × trivial_spec_wf
+   1 × external_accept_hole
 
 No proof holes or warnings found! All proofs are complete.
 
@@ -101,12 +101,12 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-17 12:35:29 -07:00
-Ended:     2026-03-17 12:35:29 -07:00
+Started:   2026-03-17 19:54:32 -07:00
+Ended:     2026-03-17 19:54:32 -07:00
 Duration:  4ms
 
 Full output: src/Chap12/analyses/veracity-review-verus-proof-holes.log
-12:35:29 -07:00
+ 19:54:32 -07:00
 Duration:  4ms
 
 Full output: src/Chap12/analyses/veracity-review-verus-proof-holes.log

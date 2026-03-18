@@ -67,7 +67,7 @@ pub mod OrderedSetMtEph {
     // Helper: construct Mt wrapper from St set (used by split/get_range/split_rank/from_seq).
     fn from_st<T: MtKey + 'static>(inner: OrderedSetStEph<T>) -> (s: OrderedSetMtEph<T>)
         requires inner.spec_orderedsetsteph_wf(), inner@.finite()
-        ensures s@ == inner@, s@.finite()
+        ensures s@ == inner@, s@.finite(), s.spec_orderedsetmteph_wf()
     {
         let ghost view = inner@;
         OrderedSetMtEph {
@@ -161,7 +161,7 @@ pub mod OrderedSetMtEph {
                 self@.finite(),
                 self@.len() == 0 <==> first matches None,
                 first matches Some(v) ==> self@.contains(v@),
-                first matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(v, t);
+                first matches Some(v) ==> forall|t: T| self@.contains(t@) ==> #[trigger] TotalOrder::le(v, t);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + last)
         fn last(&self) -> (last: Option<T>)
@@ -170,7 +170,7 @@ pub mod OrderedSetMtEph {
                 self@.finite(),
                 self@.len() == 0 <==> last matches None,
                 last matches Some(v) ==> self@.contains(v@),
-                last matches Some(v) ==> forall|t: T| self@.contains(t@) ==> TotalOrder::le(t, v);
+                last matches Some(v) ==> forall|t: T| self@.contains(t@) ==> #[trigger] TotalOrder::le(t, v);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + scan)
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
@@ -179,7 +179,7 @@ pub mod OrderedSetMtEph {
                 self@.finite(),
                 predecessor matches Some(v) ==> self@.contains(v@),
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
-                predecessor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
+                predecessor matches Some(v) ==> forall|t: T| #![trigger t@] self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + scan)
         fn next(&self, k: &T) -> (successor: Option<T>)
@@ -188,7 +188,7 @@ pub mod OrderedSetMtEph {
                 self@.finite(),
                 successor matches Some(v) ==> self@.contains(v@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
-                successor matches Some(v) ==> forall|t: T| self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
+                successor matches Some(v) ==> forall|t: T| #![trigger t@] self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + partition)
         fn split(&mut self, k: &T) -> (split: (Self, B, Self))
@@ -209,7 +209,7 @@ pub mod OrderedSetMtEph {
             ensures
                 self@.finite(),
                 rank <= self@.len(),
-                rank as int == self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
+                rank as int == self@.filter(|x: T::V| exists|t: T| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + index)
         fn select(&self, i: usize) -> (selected: Option<T>)
@@ -218,7 +218,7 @@ pub mod OrderedSetMtEph {
                 self@.finite(),
                 i >= self@.len() ==> selected matches None,
                 selected matches Some(v) ==> self@.contains(v@),
-                selected matches Some(v) ==> self@.filter(|x: T::V| exists|t: T| t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
+                selected matches Some(v) ==> self@.filter(|x: T::V| exists|t: T| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + partition)
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
@@ -375,46 +375,46 @@ pub mod OrderedSetMtEph {
             from_st(inner)
         }
 
-        #[verifier::external_body]
         fn first(&self) -> (first: Option<T>)
             where T: TotalOrder
         {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let first = inner.first();
+            proof { assume(inner@ =~= self@); }
             read_handle.release_read();
             first
         }
 
-        #[verifier::external_body]
         fn last(&self) -> (last: Option<T>)
             where T: TotalOrder
         {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let last = inner.last();
+            proof { assume(inner@ =~= self@); }
             read_handle.release_read();
             last
         }
 
-        #[verifier::external_body]
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
             where T: TotalOrder
         {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let predecessor = inner.previous(k);
+            proof { assume(inner@ =~= self@); }
             read_handle.release_read();
             predecessor
         }
 
-        #[verifier::external_body]
         fn next(&self, k: &T) -> (successor: Option<T>)
             where T: TotalOrder
         {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let successor = inner.next(k);
+            proof { assume(inner@ =~= self@); }
             read_handle.release_read();
             successor
         }
@@ -456,24 +456,24 @@ pub mod OrderedSetMtEph {
             from_st(range)
         }
 
-        #[verifier::external_body]
         fn rank(&self, k: &T) -> (rank: usize)
             where T: TotalOrder
         {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let rank = inner.rank(k);
+            proof { assume(inner@ =~= self@); }
             read_handle.release_read();
             rank
         }
 
-        #[verifier::external_body]
         fn select(&self, i: usize) -> (selected: Option<T>)
             where T: TotalOrder
         {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let selected = inner.select(i);
+            proof { assume(inner@ =~= self@); }
             read_handle.release_read();
             selected
         }
