@@ -11,6 +11,8 @@ pub mod OrderedTableMtEph {
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Chap42::TableMtEph::TableMtEph::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap42::TableStPer::TableStPer::lemma_entries_to_map_len;
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
@@ -256,6 +258,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then counts elements < k
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
+            requires self.spec_orderedtablemteph_wf(), obeys_view_eq::<K>()
             ensures
                 self@.dom().finite(),
                 rank <= self@.dom().len(),
@@ -265,6 +268,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then indexes
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
+            requires self.spec_orderedtablemteph_wf(), obeys_view_eq::<K>()
             ensures
                 self@.dom().finite(),
                 i >= self@.dom().len() ==> selected matches None,
@@ -938,18 +942,122 @@ broadcast use {
             from_sorted_entries(range_seq)
         }
 
-        #[verifier::external_body]
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
+            ensures
+                self@.dom().finite(),
+                rank <= self@.dom().len(),
+                rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len(),
         {
-            let entries = self.base_table.entries();
-            let n = entries.length();
+            assert(obeys_feq_full_trigger::<Pair<K, V>>());
+            assert(obeys_feq_full_trigger::<K>());
+            let len = self.base_table.entries.length();
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
+            let ghost no_dups = spec_keys_no_dups(self.base_table.entries@);
             let mut count: usize = 0;
-            for i in 0..n {
-                let pair = entries.nth(i);
-                if pair.0 < *k {
-                    count += 1;
+            let ghost mut less_idx: Set<int> = Set::empty();
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len as nat == self.base_table.entries.spec_len(),
+                    spec_keys_no_dups(self.base_table.entries@),
+                    obeys_feq_full::<K>(),
+                    count as nat == less_idx.len(),
+                    less_idx.finite(),
+                    count <= i,
+                    forall|j: int| #[trigger] less_idx.contains(j) <==>
+                        (0 <= j < i
+                            && TotalOrder::le(self.base_table.entries.spec_index(j).0, *k)
+                            && self.base_table.entries.spec_index(j).0 != *k),
+                decreases len - i,
+            {
+                let pair = self.base_table.entries.nth(i);
+                let c = TotalOrder::cmp(&pair.0, k);
+                match c {
+                    core::cmp::Ordering::Less => {
+                        proof {
+                            assert(!less_idx.contains(i as int));
+                            less_idx = less_idx.insert(i as int);
+                            assert(less_idx.len() == count as nat + 1) by {
+                                vstd::set::axiom_set_insert_len(less_idx.remove(i as int), i as int);
+                            };
+                        }
+                        count = count + 1;
+                    },
+                    core::cmp::Ordering::Equal => {
+                    },
+                    core::cmp::Ordering::Greater => {
+                        proof {
+                            if TotalOrder::le(self.base_table.entries.spec_index(i as int).0, *k) {
+                                K::antisymmetric(self.base_table.entries.spec_index(i as int).0, *k);
+                            }
+                        }
+                    },
                 }
+                i = i + 1;
+            }
+            proof {
+                let pred = |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@;
+                let less_keys: Set<K::V> = Set::new(|kv: K::V|
+                    exists|j: int| #[trigger] less_idx.contains(j) && self.base_table.entries@[j].0 == kv);
+                assert(less_keys =~= self@.dom().filter(pred)) by {
+                    assert forall|kv: K::V| #[trigger] less_keys.contains(kv)
+                        implies self@.dom().filter(pred).contains(kv) by {
+                        let j = choose|j: int| less_idx.contains(j) && (#[trigger] self.base_table.entries@[j]).0 == kv;
+                        assert(0 <= j < len);
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(self.base_table.entries@, j);
+                        let t = self.base_table.entries.spec_index(j).0;
+                        assert(t@ == kv);
+                        assert(TotalOrder::le(t, *k) && t != *k);
+                        assert(t@ != k@);
+                    };
+                    assert forall|kv: K::V| #[trigger] self@.dom().filter(pred).contains(kv)
+                        implies less_keys.contains(kv) by {
+                        assert(self@.dom().contains(kv) && pred(kv));
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.base_table.entries@, kv);
+                        let j = choose|j: int| 0 <= j < self.base_table.entries@.len()
+                            && (#[trigger] self.base_table.entries@[j]).0 == kv;
+                        let t = choose|t: K| #![trigger t@] t@ == kv && TotalOrder::le(t, *k) && t@ != k@;
+                        assert(self.base_table.entries.spec_index(j).0@ == t@);
+                        assert(self.base_table.entries.spec_index(j).0 == t);
+                        assert(TotalOrder::le(self.base_table.entries.spec_index(j).0, *k));
+                        assert(self.base_table.entries.spec_index(j).0 != *k);
+                        assert(less_idx.contains(j));
+                    };
+                };
+                // Cardinality: j -> entries@[j].0 is injective on less_idx (from spec_keys_no_dups).
+                let f = |j: int| self.base_table.entries@[j].0;
+                assert(vstd::relations::injective_on(f, less_idx)) by {
+                    assert forall|j1: int, j2: int|
+                        less_idx.contains(j1) && less_idx.contains(j2) && #[trigger] f(j1) == #[trigger] f(j2)
+                        implies j1 == j2 by {
+                        // Both j1 and j2 are valid indices with entries@[j1].0 == entries@[j2].0.
+                        // From spec_keys_no_dups: distinct indices have distinct keys.
+                        if j1 != j2 {
+                            let (lo, hi) = if j1 < j2 { (j1, j2) } else { (j2, j1) };
+                            assert(0 <= lo && lo < hi && hi < self.base_table.entries@.len());
+                            assert(self.base_table.entries@[lo].0 != self.base_table.entries@[hi].0);
+                        }
+                    };
+                };
+                assert(less_idx.map(f) =~= less_keys) by {
+                    assert forall|kv: K::V| #[trigger] less_idx.map(f).contains(kv)
+                        implies less_keys.contains(kv) by {
+                        let j = choose|j: int| less_idx.contains(j) && f(j) == kv;
+                        assert(less_idx.contains(j) && self.base_table.entries@[j].0 == kv);
+                    };
+                    assert forall|kv: K::V| #[trigger] less_keys.contains(kv)
+                        implies less_idx.map(f).contains(kv) by {
+                        let j = choose|j: int| #[trigger] less_idx.contains(j) && self.base_table.entries@[j].0 == kv;
+                        assert(less_idx.contains(j) && f(j) == kv);
+                    };
+                };
+                vstd::set_lib::lemma_map_size::<int, K::V>(less_idx, less_keys, f);
+                assert(count as int == self@.dom().filter(pred).len());
+                // rank <= dom().len(): filter is a subset of dom.
+                assert(self@.dom().filter(pred).subset_of(self@.dom()));
+                vstd::set_lib::lemma_len_subset::<K::V>(self@.dom().filter(pred), self@.dom());
             }
             count
         }
