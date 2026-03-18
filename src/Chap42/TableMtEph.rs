@@ -127,7 +127,7 @@ broadcast use {
     }
 
     // If a key is in spec_entries_to_map, it appears in the seq.
-    proof fn lemma_entries_to_map_key_in_seq<KV, VV>(entries: Seq<(KV, VV)>, k: KV)
+    pub proof fn lemma_entries_to_map_key_in_seq<KV, VV>(entries: Seq<(KV, VV)>, k: KV)
         requires spec_entries_to_map(entries).contains_key(k)
         ensures exists|i: int| 0 <= i < entries.len() && (#[trigger] entries[i]).0 == k
         decreases entries.len()
@@ -146,7 +146,7 @@ broadcast use {
     }
 
     // If entries[idx] has key k, the map contains k.
-    proof fn lemma_entries_to_map_contains_key<KV, VV>(entries: Seq<(KV, VV)>, idx: int)
+    pub proof fn lemma_entries_to_map_contains_key<KV, VV>(entries: Seq<(KV, VV)>, idx: int)
         requires 0 <= idx < entries.len()
         ensures spec_entries_to_map(entries).contains_key(entries[idx].0)
         decreases entries.len()

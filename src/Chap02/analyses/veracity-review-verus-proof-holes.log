@@ -23,17 +23,17 @@ Table of Contents:
 ✓ FibonacciHFScheduler.rs
    5 clean proof functions
 ℹ HFSchedulerMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:83: info: external_type_specification_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:84: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:95: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:151: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:19: info: struct_outside_verus_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:25: info: enum_outside_verus_accept_hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:83: info: external_type_specification_accept_hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:84: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:95: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:151: info: accept()
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:19: info: struct_outside_verus_accept_hole
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:25: info: enum_outside_verus_accept_hole
    Info: 6 total
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:105: info: structural_false_positive THREAD_SPAWN join — #[verifier::external_body] // accept hole [high]
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:132: info: structural_false_positive THREAD_SPAWN spawn_join — #[verifier::external_body] // accept hole [high]
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:163: info: structural_false_positive THREAD_SPAWN spawn — #[verifier::external_body] // accept hole [high]
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:185: info: structural_false_positive THREAD_SPAWN wait — #[verifier::external_body] // accept hole [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:105: info: structural_false_positive THREAD_SPAWN join — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:132: info: structural_false_positive THREAD_SPAWN spawn_join — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:163: info: structural_false_positive THREAD_SPAWN spawn — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap02/HFSchedulerMtEph.rs:185: info: structural_false_positive THREAD_SPAWN wait — #[verifier::external_body] // accept hole [medium]
    Info: 4 × structural_false_positive
 
 =================================================================
@@ -81,9 +81,9 @@ Holes Found: 0 (actionable)
 Accepted (reviewed): 6 total
    2 × external_body_accept_hole
    1 × enum_outside_verus_accept_hole
+   1 × accept()
    1 × struct_outside_verus_accept_hole
    1 × external_type_specification_accept_hole
-   1 × accept()
 
 Structural (info only): 4
    4 × THREAD_SPAWN
@@ -94,9 +94,12 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 08:33:09 -07:00
-Ended:     2026-03-18 08:33:09 -07:00
-Duration:  5ms
+Started:   2026-03-18 09:04:27 -07:00
+Ended:     2026-03-18 09:04:27 -07:00
+Duration:  3ms
 
 Full output: src/Chap02/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap02/analyses/veracity-review-verus-proof-holes.log
+-18 09:04:27 -07:00
+Duration:  3ms
+
+Full output: src/Chap02/analyses/veracity-review-verus-proof-holes.log
