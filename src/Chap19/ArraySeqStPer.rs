@@ -1028,6 +1028,14 @@ pub mod ArraySeqStPer {
             requires 0 <= i < self.spec_len()
             ensures #[trigger] self.seq@[i] == self.spec_index(i)
         {}
+    }
+
+    impl<T: View> ArraySeqStPerS<T> {
+        /// Connects view indexing with spec_index: self@[i] == self.spec_index(i)@.
+        pub proof fn lemma_view_index(&self, i: int)
+            requires 0 <= i < self.spec_len()
+            ensures self@[i] == self.spec_index(i)@
+        {}
 
         /// Returns an iterator over the sequence elements.
         pub fn iter(&self) -> (it: ArraySeqStPerIter<'_, T>)
