@@ -331,7 +331,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then partitions by key
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized,
-            requires old(self).spec_augorderedtablesteph_wf(),
+            requires old(self).spec_augorderedtablesteph_wf(), obeys_view_eq::<K>(),
             ensures
                 self@.dom().finite(),
                 old(self)@.dom().finite(),
@@ -362,6 +362,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then counts elements < k
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
+            requires self.spec_augorderedtablesteph_wf(), obeys_view_eq::<K>(),
             ensures
                 self@.dom().finite(),
                 rank <= self@.dom().len(),
@@ -370,6 +371,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then indexes
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
+            requires self.spec_augorderedtablesteph_wf(), obeys_view_eq::<K>(),
             ensures
                 self@.dom().finite(),
                 i >= self@.dom().len() ==> selected matches None,

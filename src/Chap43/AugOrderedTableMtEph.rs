@@ -207,6 +207,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- filters base table linearly, then recalculates reduction O(n)
         fn filter<G: Fn(&K, &V) -> B + Send + Sync + 'static>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
             requires
+                self.spec_augorderedtablemteph_wf(),
                 forall|k: &K, v: &V| f.requires((k, v)),
                 forall|k: K, v: V, keep: bool| f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
             ensures filtered@.dom().finite();
@@ -281,6 +282,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- delegates to base table split + recalculates reductions
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized,
+            requires old(self).spec_augorderedtablemteph_wf(), obeys_view_eq::<K>(),
             ensures self@.dom().finite();
         /// - APAS: Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) -- delegates to base table join + recalculates reduction
@@ -294,6 +296,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- external_body, delegates to base table which collects+sorts+counts
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
+            requires self.spec_augorderedtablemteph_wf(), obeys_view_eq::<K>(),
             ensures
                 self@.dom().finite(),
                 rank <= self@.dom().len(),
@@ -302,6 +305,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- external_body, delegates to base table which collects+sorts+selects
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
+            requires self.spec_augorderedtablemteph_wf(), obeys_view_eq::<K>(),
             ensures
                 self@.dom().finite(),
                 i >= self@.dom().len() ==> selected matches None,

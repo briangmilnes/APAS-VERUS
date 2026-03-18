@@ -22,30 +22,7 @@ Table of Contents:
 
 ✓ SpanTreeMtEph.rs
 ✓ SpanTreeStEph.rs
-❌ TSPApproxStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:93: error: external_body - #[verifier::external_body]
-        94 |     #[cfg(not(verus_keep_ghost))]
-        95 |     pub fn euler_tour<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:111: error: external_body - #[verifier::external_body]
-       112 |     #[cfg(not(verus_keep_ghost))]
-       113 |     fn euler_tour_dfs<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:175: error: external_body - #[verifier::external_body]
-       176 |     #[cfg(not(verus_keep_ghost))]
-       177 |     pub fn shortcut_tour<V: HashOrd>(euler_tour: &[V]) -> Vec<V> {
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:206: error: external_body - #[verifier::external_body]
-       207 |     #[cfg(not(verus_keep_ghost))]
-       208 |     pub fn tour_weight<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:229: error: external_body - #[verifier::external_body]
-       230 |     #[cfg(not(verus_keep_ghost))]
-       231 |     fn get_neighbors<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>, v: &V) -> SetStEph<V> {
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:246: error: external_body - #[verifier::external_body]
-       247 |     #[cfg(not(verus_keep_ghost))]
-       248 |     fn get_edge_weight<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:280: error: external_body - #[verifier::external_body]
-       281 |     #[cfg(not(verus_keep_ghost))]
-       282 |     pub fn approx_metric_tsp<V: HashOrd>(
-   Holes: 7 total
-      7 × external_body
+✓ TSPApproxStEph.rs
 
 =================================================================
 2. Depends Upon
@@ -72,8 +49,8 @@ TSPApproxStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   2 clean (no holes, no errors; 66%)
-   1 holed (holes or errors, 33%)
+   3 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    3 total
 
 Proof Functions:
@@ -82,23 +59,24 @@ Proof Functions:
    0 total
 
 Function Specs:
-   16 exec fns with complete spec (requires+ensures) (80%)
+   9 exec fns with complete spec (requires+ensures) (69%)
    0 exec fns missing spec (0%)
-   4 proof/spec fns clean (20%)
+   4 proof/spec fns clean (30%)
    0 proof/spec fns with holes (0%)
-   20 total fns
+   13 total fns
 
 
-Holes Found: 7 (actionable)
-   7 × external_body (100%)
+Holes Found: 0 (actionable)
+
+No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 11:13:53 -07:00
-Ended:     2026-03-18 11:13:53 -07:00
-Duration:  9ms
+Started:   2026-03-18 11:10:37 -07:00
+Ended:     2026-03-18 11:10:37 -07:00
+Duration:  3ms
 
 Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap64/analyses/veracity-review-verus-proof-holes.log

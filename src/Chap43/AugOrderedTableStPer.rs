@@ -361,7 +361,7 @@ broadcast use {
             where Self: Sized
             requires
                 self.spec_augorderedtablestper_wf(),
-
+                obeys_view_eq::<K>(),
             ensures
                 self@.dom().finite(),
                 parts.0@.dom().finite(),
@@ -401,6 +401,9 @@ broadcast use {
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- collects entries, sorts, counts predecessors
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
+            requires
+                self.spec_augorderedtablestper_wf(),
+                obeys_view_eq::<K>(),
             ensures
                 self@.dom().finite(),
                 rank <= self@.dom().len(),
@@ -409,6 +412,9 @@ broadcast use {
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- collects entries, sorts, selects by index
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
+            requires
+                self.spec_augorderedtablestper_wf(),
+                obeys_view_eq::<K>(),
             ensures
                 self@.dom().finite(),
                 i >= self@.dom().len() ==> selected matches None,

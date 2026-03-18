@@ -23,21 +23,8 @@ Table of Contents:
 ✓ DivConReduceMtPer.rs
    3 clean proof functions
 ✓ DivConReduceStPer.rs
-❌ ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:607: error: external_body - #[verifier::external_body]
-       608 |     fn point_distance(a: &Point, b: &Point) -> f64 {
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:615: error: external_body - #[verifier::external_body]
-       616 |         fn distance(&self, other: &Point) -> f64 {
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:649: error: external_body - #[verifier::external_body]
-       650 |     pub fn find_best_swap_impl(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (usize, usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:657: error: external_body - #[verifier::external_body]
-       658 |     fn find_best_swap_par(
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:622: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
-   Holes: 4 total
-      4 × external_body
-   Info: 1 × structural_false_positive
-      1 × OPAQUE_EXTERNAL
-   Proof functions: 4 total (4 clean, 0 holed)
+✓ ETSPMtEph.rs
+   4 clean proof functions
 ✓ ETSPStEph.rs
    3 clean proof functions
 ✓ MergeSortMtPer.rs
@@ -84,8 +71,8 @@ ScanDCStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   7 clean (no holes, no errors; 87%)
-   1 holed (holes or errors, 12%)
+   8 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    8 total
 
 Proof Functions:
@@ -94,29 +81,24 @@ Proof Functions:
    17 total
 
 Function Specs:
-   57 exec fns with complete spec (requires+ensures) (49%)
+   51 exec fns with complete spec (requires+ensures) (46%)
    0 exec fns missing spec (0%)
-   59 proof/spec fns clean (50%)
+   59 proof/spec fns clean (53%)
    0 proof/spec fns with holes (0%)
-   116 total fns
+   110 total fns
 
 
-Holes Found: 4 (actionable)
-   4 × external_body (100%)
+Holes Found: 0 (actionable)
 
-Structural (info only): 1
-   1 × OPAQUE_EXTERNAL
+No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 11:13:52 -07:00
-Ended:     2026-03-18 11:13:52 -07:00
-Duration:  30ms
+Started:   2026-03-18 11:10:36 -07:00
+Ended:     2026-03-18 11:10:36 -07:00
+Duration:  31ms
 
 Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
-6-03-18 11:13:52 -07:00
-Duration:  30ms
-
-Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap26/analyses/veracity-review-verus-proof-holes.log

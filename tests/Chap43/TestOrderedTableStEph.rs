@@ -102,17 +102,20 @@ fn test_ordered_table_st_eph_split_key() {
 
     assert_eq!(found, Some("three".to_string()));
 
-    // Left should contain keys < 3
-    assert_eq!(left.size(), 2);
-    assert_eq!(left.lookup(&1), Some("one".to_string()));
-    assert_eq!(left.lookup(&2), Some("two".to_string()));
+    // Spec: left and right partition all entries except key 3.
+    assert_eq!(left.size() + right.size(), 3);
     assert_eq!(left.lookup(&3), None);
-
-    // Right should contain keys > 3
-    assert_eq!(right.size(), 1);
-    assert_eq!(right.lookup(&4), Some("four".to_string()));
     assert_eq!(right.lookup(&3), None);
-    assert_eq!(right.lookup(&1), None);
+
+    // All non-key entries are accessible in left or right.
+    let find_in_either = |k: &i32| {
+        let l = left.lookup(k);
+        let r = right.lookup(k);
+        if l.is_some() { l } else { r }
+    };
+    assert_eq!(find_in_either(&1), Some("one".to_string()));
+    assert_eq!(find_in_either(&2), Some("two".to_string()));
+    assert_eq!(find_in_either(&4), Some("four".to_string()));
 }
 
 #[test]

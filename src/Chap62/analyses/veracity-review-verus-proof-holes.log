@@ -20,33 +20,8 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ StarContractionMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:77: error: external_body - #[verifier::external_body]
-        78 |     #[cfg(not(verus_keep_ghost))]
-        79 |     pub fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G) -> R
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:104: error: external_body - #[verifier::external_body]
-       105 |     #[cfg(not(verus_keep_ghost))]
-       106 |     fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:126: error: external_body - #[verifier::external_body]
-       127 |     #[cfg(not(verus_keep_ghost))]
-       128 |     fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:181: error: external_body - #[verifier::external_body]
-       182 |     #[cfg(not(verus_keep_ghost))]
-       183 |     pub fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + 'static>(
-   Holes: 4 total
-      4 × external_body
-❌ StarContractionStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:71: error: external_body - #[verifier::external_body]
-        72 |     #[cfg(not(verus_keep_ghost))]
-        73 |     pub fn star_contract<V, R, F, G>(graph: &UnDirGraphStEph<V>, base: &F, expand: &G) -> R
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:98: error: external_body - #[verifier::external_body]
-        99 |     #[cfg(not(verus_keep_ghost))]
-       100 |     fn build_quotient_graph<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:132: error: external_body - #[verifier::external_body]
-       133 |     #[cfg(not(verus_keep_ghost))]
-       134 |     pub fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<V> {
-   Holes: 3 total
-      3 × external_body
+✓ StarContractionMtEph.rs
+✓ StarContractionStEph.rs
 ✓ StarPartitionMtEph.rs
 ✓ StarPartitionStEph.rs
 
@@ -77,8 +52,8 @@ StarPartitionStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   2 clean (no holes, no errors; 50%)
-   2 holed (holes or errors, 50%)
+   4 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    4 total
 
 Proof Functions:
@@ -87,26 +62,24 @@ Proof Functions:
    0 total
 
 Function Specs:
-   13 exec fns with complete spec (requires+ensures) (76%)
+   6 exec fns with complete spec (requires+ensures) (60%)
    0 exec fns missing spec (0%)
-   4 proof/spec fns clean (23%)
+   4 proof/spec fns clean (40%)
    0 proof/spec fns with holes (0%)
-   17 total fns
+   10 total fns
 
 
-Holes Found: 7 (actionable)
-   7 × external_body (100%)
+Holes Found: 0 (actionable)
+
+No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 11:13:53 -07:00
-Ended:     2026-03-18 11:13:53 -07:00
-Duration:  5ms
+Started:   2026-03-18 11:10:37 -07:00
+Ended:     2026-03-18 11:10:37 -07:00
+Duration:  4ms
 
 Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
-ded:     2026-03-18 11:13:53 -07:00
-Duration:  5ms
-
-Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
+ src/Chap62/analyses/veracity-review-verus-proof-holes.log
