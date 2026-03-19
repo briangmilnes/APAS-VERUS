@@ -189,6 +189,7 @@ pub mod DijkstraStEphU64 {
         let mut visited = SetStEph::<usize>::empty();
         let mut pq = BinaryHeapPQ::<PQEntry>::singleton(pq_entry_new(0, source));
         let ghost mut remaining_budget: int = m as int;
+        let ghost mut used_edges: Set<(usize, usize, i128)> = Set::empty();
 
         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
         while !pq.is_empty()
@@ -204,13 +205,15 @@ pub mod DijkstraStEphU64 {
                 graph@.A.len() * 2 + 2 <= usize::MAX as int,
                 remaining_budget >= 0,
                 pq@.len() + remaining_budget <= m as int + 1,
+                BinaryHeapPQ::<PQEntry>::spec_is_exec_heap(pq.spec_seq()),
+                used_edges.subset_of(graph@.A),
+                used_edges.finite(),
+                used_edges.len() as int == m as int - remaining_budget,
+                forall |e: (usize, usize, i128)| #[trigger] used_edges.contains(e) ==> visited@.contains(e.0),
         {
             // PQ size bound from budget invariant:
             // pq@.len() <= m + 1, and (m + 1) * 2 = m * 2 + 2 <= usize::MAX.
             assert(pq@.len() * 2 <= usize::MAX as int);
-            proof {
-                assume(BinaryHeapPQ::<PQEntry>::spec_is_exec_heap(pq.spec_seq()));
-            }
             let (new_pq, min_elem) = pq.delete_min();
             pq = new_pq;
 
@@ -229,6 +232,19 @@ pub mod DijkstraStEphU64 {
                     let neighbors = graph.out_neighbors_weighed(&v);
                     let mut it = neighbors.iter();
 
+                    // Pre-compute: every iterator element corresponds to a graph edge.
+                    proof {
+                        assert forall |j: int| 0 <= j < it@.1.len()
+                            implies graph@.A.contains((v, (#[trigger] it@.1[j])@.0, it@.1[j]@.1))
+                        by {
+                            // iter() ensures neighbors@.contains(it@.1[j]@).
+                            // out_neighbors_weighed ensures neighbors@.contains(p) ==>
+                            //   graph@.A.contains((v, p.0, p.1)).
+                            assert(neighbors@.contains(it@.1[j]@));
+                        };
+                    }
+
+                    #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                     loop
                         invariant
                             sssp.spec_distances().len() == n as int,
@@ -239,6 +255,17 @@ pub mod DijkstraStEphU64 {
                             graph@.A.len() * 2 + 2 <= usize::MAX as int,
                             remaining_budget >= 0,
                             pq@.len() + remaining_budget <= m as int,
+                            BinaryHeapPQ::<PQEntry>::spec_is_exec_heap(pq.spec_seq()),
+                            used_edges.subset_of(graph@.A),
+                            used_edges.finite(),
+                            used_edges.len() as int == m as int - remaining_budget,
+                            it@.1.no_duplicates(),
+                            visited@.contains(v),
+                            forall |e: (usize, usize, i128)| #[trigger] used_edges.contains(e) ==> visited@.contains(e.0),
+                            forall |j: int| 0 <= j < it@.1.len() ==>
+                                graph@.A.contains((v, (#[trigger] it@.1[j])@.0, it@.1[j]@.1)),
+                            forall |e: (usize, usize, i128)| #[trigger] used_edges.contains(e) ==>
+                                (e.0 != v || (exists |j: int| 0 <= j < it@.0 && #[trigger] it@.1[j]@ == (e.1, e.2))),
                     {
                         match it.next() {
                             None => break,
@@ -249,10 +276,25 @@ pub mod DijkstraStEphU64 {
                                     let new_dist = dist.wrapping_add((*weight) as i64);
                                     if new_dist < u_dist {
                                         assert(pq@.len() + 1 <= usize::MAX as int);
-                                        // Budget: total Dijkstra PQ inserts <= |E|.
-                                        proof { assume(remaining_budget > 0); }
+                                        proof {
+                                            // Each PQ insert uses a unique graph edge.
+                                            let new_edge: (usize, usize, i128) = (v, *u, *weight);
+                                            let ghost pos = (it@.0 - 1) as int;
+                                            // From graph-edge invariant: it@.1[pos] yields a graph edge.
+                                            assert(graph@.A.contains((v, it@.1[pos]@.0, it@.1[pos]@.1)));
+                                            assert(graph@.A.contains(new_edge));
+                                            assert(!used_edges.contains(new_edge));
+                                            let new_used = used_edges.insert(new_edge);
+                                            assert(new_used.subset_of(graph@.A));
+                                            assert(new_used.finite());
+                                            vstd::set_lib::lemma_len_subset::<(usize, usize, i128)>(new_used, graph@.A);
+                                            assert(remaining_budget > 0);
+                                        }
                                         pq = pq.insert(pq_entry_new(new_dist, *u));
-                                        proof { remaining_budget = remaining_budget - 1; }
+                                        proof {
+                                            used_edges = used_edges.insert((v, *u, *weight));
+                                            remaining_budget = remaining_budget - 1;
+                                        }
                                         sssp.set_predecessor(*u, v);
                                     }
                                 }

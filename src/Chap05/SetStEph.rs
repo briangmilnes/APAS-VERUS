@@ -138,7 +138,8 @@ verus! {
             ensures
                 it@.0 == 0int,
                 it@.1.map(|i: int, k: T| k@).to_set() == self@,
-                it@.1.no_duplicates();
+                it@.1.no_duplicates(),
+                forall |j: int| 0 <= j < it@.1.len() ==> self@.contains(#[trigger] it@.1[j]@);
 
         /// - APAS: N/A — conversion utility, not in prose.
         /// - Claude-Opus-4.6: Work Θ(|self|), Span Θ(|self|) — iterates set, clones each element.
@@ -336,7 +337,15 @@ verus! {
 
         fn iter<'a>(&'a self) -> (it: SetStEphIter<'a, T>) {
             let inner = self.elements.iter();
-            proof { lemma_seq_map_to_set_equality(inner@.1, self@); }
+            proof {
+                lemma_seq_map_to_set_equality(inner@.1, self@);
+                // Derive element-wise membership from HashSetWithViewPlus iter postcondition.
+                assert forall |j: int| 0 <= j < inner@.1.len()
+                    implies self@.contains(#[trigger] inner@.1[j]@)
+                by {
+                    assert(inner@.1.contains(inner@.1[j]));
+                };
+            }
             SetStEphIter { inner }
         }
 

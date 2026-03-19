@@ -21,42 +21,42 @@ Table of Contents:
 =================================================================
 
 ❌ BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:144: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:144: error: external_body - #[verifier::external_body]
        145 |     fn hash_coin_flips_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:179: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:179: error: external_body - #[verifier::external_body]
        180 |     fn compute_remaining_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:217: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:217: error: external_body - #[verifier::external_body]
        218 |     fn collect_mst_labels_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:255: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:255: error: external_body - #[verifier::external_body]
        256 |     fn build_partition_map_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:300: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:300: error: external_body - #[verifier::external_body]
        301 |     pub fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:356: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:356: error: external_body - #[verifier::external_body]
        357 |     pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:395: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:395: error: external_body - #[verifier::external_body]
        396 |     fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:451: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:451: error: external_body - #[verifier::external_body]
        452 |     pub fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:510: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:510: error: external_body - #[verifier::external_body]
        511 |     fn reroute_edges_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:556: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:556: error: external_body - #[verifier::external_body]
        557 |     pub fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:571: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:571: error: external_body - #[verifier::external_body]
        572 |     pub fn mst_weight<V: StT + Hash>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:51: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:51: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         47 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
         49 |         {
         50 |             let r = self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3;
         52 |             r
         53 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:130: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:130: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
    Holes: 11 total
       11 × external_body
    Info: 1 × structural_false_positive
       1 × OPAQUE_EXTERNAL
 ⚠ BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:66: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaStEph.rs:66: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         62 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
         64 |         {
@@ -117,12 +117,9 @@ Structural (info only): 1
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 20:46:09 -07:00
-Ended:     2026-03-18 20:46:09 -07:00
-Duration:  10ms
+Started:   2026-03-18 21:00:04 -07:00
+Ended:     2026-03-18 21:00:04 -07:00
+Duration:  13ms
 
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
-2026-03-18 20:46:09 -07:00
-Duration:  10ms
-
-Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
+c/Chap66/analyses/veracity-review-verus-proof-holes.log
