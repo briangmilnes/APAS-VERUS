@@ -69,6 +69,21 @@ pub mod StructChainedHashTable {
             }
         }
 
+        /// True when no key appears more than once in the chain.
+        pub open spec fn spec_chain_keys_unique<Key, Value>(
+            chain: Option<Box<Node<Key, Value>>>,
+        ) -> bool
+            decreases chain,
+        {
+            match chain {
+                None => true,
+                Some(node) => {
+                    !spec_chain_to_map(node.next).dom().contains(node.key)
+                    && spec_chain_keys_unique(node.next)
+                },
+            }
+        }
+
         // 7. proof fns
 
         proof fn _struct_chained_hash_table_verified() {}
@@ -116,12 +131,16 @@ pub mod StructChainedHashTable {
                 result.0 is Some,
                 spec_chain_to_map(result.0) == spec_chain_to_map(chain).insert(key, value),
                 result.1 == spec_chain_to_map(chain).dom().contains(key),
+                spec_chain_keys_unique(chain) ==> spec_chain_keys_unique(result.0),
             decreases chain,
         {
             match chain {
                 None => {
                     let out = Some(Box::new(Node { key, value, next: None }));
-                    proof { reveal_with_fuel(spec_chain_to_map, 2); }
+                    proof {
+                        reveal_with_fuel(spec_chain_to_map, 2);
+                        reveal_with_fuel(spec_chain_keys_unique, 2);
+                    }
                     (out, false)
                 }
                 Some(node) => {
@@ -130,15 +149,24 @@ pub mod StructChainedHashTable {
                     let eq = feq(&nk, &key);
                     if eq {
                         let out = Some(Box::new(Node { key, value, next: nn }));
-                        proof { reveal_with_fuel(spec_chain_to_map, 2); }
+                        proof {
+                            reveal_with_fuel(spec_chain_to_map, 2);
+                            reveal_with_fuel(spec_chain_keys_unique, 2);
+                        }
                         (out, true)
                     } else {
                         let (updated, existed) = chain_insert(nn, key, value);
                         let out = Some(Box::new(Node { key: nk, value: nv, next: updated }));
                         proof {
                             reveal_with_fuel(spec_chain_to_map, 2);
+                            reveal_with_fuel(spec_chain_keys_unique, 2);
                             assert(spec_chain_to_map(nn).insert(key, value).insert(nk, nv)
                                 =~= spec_chain_to_map(nn).insert(nk, nv).insert(key, value));
+                            // Uniqueness: nk not in updated's map domain.
+                            // spec_chain_to_map(updated) == spec_chain_to_map(nn).insert(key, value)
+                            // nk ∉ spec_chain_to_map(nn).dom() (from unique(chain)) and nk != key.
+                            assert(spec_chain_to_map(updated).dom() =~=
+                                spec_chain_to_map(nn).dom().insert(key));
                         }
                         (out, existed)
                     }
@@ -197,6 +225,7 @@ pub mod StructChainedHashTable {
                     == spec_chain_to_map(chain).remove(*key),
                 remaining_and_deleted.1
                     == spec_chain_to_map(chain).dom().contains(*key),
+                spec_chain_keys_unique(chain) ==> spec_chain_keys_unique(remaining_and_deleted.0),
             decreases chain,
         {
             match chain {
@@ -212,6 +241,7 @@ pub mod StructChainedHashTable {
                     if eq {
                         proof {
                             reveal_with_fuel(spec_chain_to_map, 2);
+                            reveal_with_fuel(spec_chain_keys_unique, 2);
                             assert(spec_chain_to_map(nn).insert(*key, nv).remove(*key)
                                 =~= spec_chain_to_map(nn).remove(*key));
                         }
@@ -220,8 +250,12 @@ pub mod StructChainedHashTable {
                         let out = Some(Box::new(Node { key: nk, value: nv, next: new_next }));
                         proof {
                             reveal_with_fuel(spec_chain_to_map, 2);
+                            reveal_with_fuel(spec_chain_keys_unique, 2);
                             assert(spec_chain_to_map(nn).insert(nk, nv).remove(*key)
                                 =~= spec_chain_to_map(nn).remove(*key).insert(nk, nv));
+                            // nk ∉ dom(spec_chain_to_map(new_next)): remove can only shrink domain.
+                            assert(spec_chain_to_map(new_next).dom() =~=
+                                spec_chain_to_map(nn).dom().remove(*key));
                         }
                         (out, tail_deleted)
                     }
@@ -275,6 +309,13 @@ pub mod StructChainedHashTable {
             ParaHashTableStEphTrait<Key, Value, ChainList<Key, Value>, Metrics, H>
             for StructChainedHashTableStEph
         {
+            /// Strengthened well-formedness: spec_hashtable_wf plus per-chain key uniqueness.
+            open spec fn spec_impl_wf(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>) -> bool {
+                spec_hashtable_wf(table)
+                && forall |j: int| 0 <= j < table.table@.len()
+                    ==> spec_chain_keys_unique(#[trigger] table.table@[j].head)
+            }
+
             /// - APAS: Work O(n) worst, Span O(n).
             /// - Claude-Opus-4.6: Work O(n) worst, Span O(n) — hash, clone chain, insert into clone, set back.
             fn insert(table: &mut HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: Key, value: Value) {
@@ -305,6 +346,13 @@ pub mod StructChainedHashTable {
                     assert forall |j: int, k: Key| 0 <= j < table.table@.len()
                         && j != (table.spec_hash@)(k) as int % table.current_size as int
                         implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k) by {
+                        if j != index as int {
+                            assert(table.table@[j] == old_table[j]);
+                        }
+                    }
+                    // Chain uniqueness preserved.
+                    assert forall |j: int| 0 <= j < table.table@.len()
+                        implies spec_chain_keys_unique(#[trigger] table.table@[j].head) by {
                         if j != index as int {
                             assert(table.table@[j] == old_table[j]);
                         }
@@ -381,6 +429,13 @@ pub mod StructChainedHashTable {
                             assert(table.table@[j] == old_table[j]);
                         }
                     }
+                    // Chain uniqueness preserved.
+                    assert forall |j: int| 0 <= j < table.table@.len()
+                        implies spec_chain_keys_unique(#[trigger] table.table@[j].head) by {
+                        if j != index as int {
+                            assert(table.table@[j] == old_table[j]);
+                        }
+                    }
 
                     // Prove found == old(table)@.dom().contains(*key).
                     if found {
@@ -400,45 +455,294 @@ pub mod StructChainedHashTable {
 
             /// - APAS: Work O(n + m + m'), Span O(n + m + m').
             /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — traverses all chains, creates m' lists, reinserts.
-            #[verifier::external_body]
             fn resize(
                 table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>,
                 new_size: usize,
             ) -> (resized: HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>) {
-                // Phase 1: collect all pairs from all chains.
+                // Phase 1: collect all (key, value) pairs from all chains.
                 let mut pairs: Vec<(Key, Value)> = Vec::new();
                 let mut i: usize = 0;
+                let ghost mut pairs_map = Map::<Key, Value>::empty();
+
                 while i < table.table.len()
                     invariant
                         i <= table.table@.len(),
                         table.table@.len() == table.current_size as int,
+                        Self::spec_impl_wf(table),
+                        new_size > 0,
+                        pairs_map =~= spec_seq_pairs_to_map::<Key, Value>(pairs@),
+                        forall |k: Key| #[trigger] pairs_map.dom().contains(k) ==> (
+                            (table.spec_hash@)(k) as int % (table.current_size as int) < (i as int)
+                            && table.table@[(table.spec_hash@)(k) as int % (table.current_size as int)]
+                                .spec_entry_to_map().dom().contains(k)
+                            && pairs_map[k] == table.table@[
+                                (table.spec_hash@)(k) as int % (table.current_size as int)
+                            ].spec_entry_to_map()[k]
+                        ),
+                        forall |j: int, k: Key| 0 <= j < (i as int)
+                            && #[trigger] table.table@[j].spec_entry_to_map().dom().contains(k)
+                            ==> pairs_map.dom().contains(k),
                     decreases table.table.len() - i,
                 {
-                    // Traverse the linked list for this bucket using to_seq on the chain.
                     let chain_clone = table.table[i].clone();
                     let mut current = chain_clone.head;
+                    let ghost original_chain = table.table@[i as int].head;
+                    let ghost mut inner_collected = Map::<Key, Value>::empty();
+                    let ghost old_outer_pairs_map = pairs_map;
+
                     while current.is_some()
+                        invariant
+                            spec_chain_keys_unique(current),
+                            inner_collected.union_prefer_right(spec_chain_to_map(current))
+                                =~= spec_chain_to_map(original_chain),
+                            forall |k: Key| #[trigger] inner_collected.dom().contains(k)
+                                ==> !spec_chain_to_map(current).dom().contains(k),
+                            pairs_map =~= spec_seq_pairs_to_map::<Key, Value>(pairs@),
+                            pairs_map =~= old_outer_pairs_map.union_prefer_right(inner_collected),
+                            forall |k: Key| #[trigger] inner_collected.dom().contains(k)
+                                ==> !old_outer_pairs_map.dom().contains(k),
+                            // Immutable context.
+                            Self::spec_impl_wf(table),
+                            i < table.table@.len(),
+                            table.table@.len() == table.current_size as int,
+                            table.current_size > 0,
+                            new_size > 0,
+                            original_chain == table.table@[i as int].head,
+                            forall |k: Key| #[trigger] old_outer_pairs_map.dom().contains(k) ==> (
+                                (table.spec_hash@)(k) as int % (table.current_size as int) < (i as int)
+                                && table.table@[
+                                    (table.spec_hash@)(k) as int % (table.current_size as int)
+                                ].spec_entry_to_map().dom().contains(k)
+                                && old_outer_pairs_map[k] == table.table@[
+                                    (table.spec_hash@)(k) as int % (table.current_size as int)
+                                ].spec_entry_to_map()[k]
+                            ),
+                            forall |j: int, k: Key| 0 <= j < (i as int)
+                                && #[trigger] table.table@[j].spec_entry_to_map().dom().contains(k)
+                                ==> old_outer_pairs_map.dom().contains(k),
                         decreases current,
                     {
-                        let node = current.unwrap();
-                        pairs.push((node.key.clone(), node.value.clone()));
-                        current = node.next;
+                        let node_box = current.unwrap();
+                        let Node { key: nk, value: nv, next: nn } = *node_box;
+                        let ck = clone_elem(&nk);
+                        let cv = clone_elem(&nv);
+                        let ghost old_pairs = pairs@;
+                        let ghost old_inner = inner_collected;
+
+                        pairs.push((ck, cv));
+
+                        proof {
+                            reveal_with_fuel(spec_chain_to_map, 2);
+                            reveal_with_fuel(spec_chain_keys_unique, 2);
+
+                            // nk is in entry[i] (from the chain partition).
+                            assert(spec_chain_to_map(original_chain).dom().contains(nk));
+                            assert(table.table@[i as int].spec_entry_to_map().dom().contains(nk));
+                            // By wf contrapositive: i == hash(nk) % size.
+                            assert(
+                                (table.spec_hash@)(nk) as int % (table.current_size as int)
+                                    == (i as int)
+                            );
+                            // nk not in old_outer (which has keys from buckets < i only).
+                            assert(!old_outer_pairs_map.dom().contains(nk));
+
+                            // Update ghost state.
+                            inner_collected = old_inner.insert(nk, nv);
+                            pairs_map = pairs_map.insert(nk, nv);
+
+                            // Maintain pairs_map =~= spec_seq_pairs_to_map(pairs@).
+                            assert(pairs@ =~= old_pairs.push((nk, nv)));
+                            assert(pairs@.drop_last() =~= old_pairs);
+                            assert(pairs@.last() == (nk, nv));
+
+                            // Maintain pairs_map =~= old_outer.upr(inner_collected).
+                            // M.upr(N).insert(k,v) =~= M.upr(N.insert(k,v)).
+                            assert(
+                                old_outer_pairs_map.union_prefer_right(old_inner).insert(nk, nv)
+                                =~= old_outer_pairs_map.union_prefer_right(
+                                    old_inner.insert(nk, nv)
+                                )
+                            );
+
+                            // Maintain chain partition invariant.
+                            // inner.insert(nk,nv).upr(chain_to_map(nn))
+                            //   = inner.upr(chain_to_map(nn)).insert(nk,nv)  [nk ∉ chain_to_map(nn)]
+                            assert(
+                                old_inner.insert(nk, nv)
+                                    .union_prefer_right(spec_chain_to_map(nn))
+                                =~= old_inner
+                                    .union_prefer_right(spec_chain_to_map(nn))
+                                    .insert(nk, nv)
+                            );
+
+                            // Maintain inner/current disjointness.
+                            assert forall |k: Key|
+                                #[trigger] inner_collected.dom().contains(k)
+                                implies !spec_chain_to_map(nn).dom().contains(k)
+                            by {
+                                if k == nk {
+                                    // By chain uniqueness: nk ∉ chain_to_map(nn).
+                                } else {
+                                    // k ∈ old_inner, k ∉ chain_to_map(old_current).
+                                    // chain_to_map(nn) ⊂ chain_to_map(old_current),
+                                    // so k ∉ chain_to_map(nn).
+                                    assert(
+                                        spec_chain_to_map(nn).dom().contains(k) ==>
+                                        spec_chain_to_map(nn)
+                                            .insert(nk, nv).dom().contains(k)
+                                    );
+                                }
+                            }
+                        }
+
+                        current = nn;
                     }
+
+                    proof {
+                        // After inner loop: current == None.
+                        reveal_with_fuel(spec_chain_to_map, 1);
+                        // inner_collected.upr(Map::empty()) =~= inner_collected
+                        //   =~= chain_to_map(original_chain).
+                        assert(inner_collected =~= spec_chain_to_map(original_chain));
+                        assert(pairs_map =~= old_outer_pairs_map.union_prefer_right(
+                            spec_chain_to_map(original_chain)
+                        ));
+
+                        // Re-establish outer forward invariant at i+1.
+                        assert forall |k: Key| #[trigger] pairs_map.dom().contains(k) implies (
+                            (table.spec_hash@)(k) as int % (table.current_size as int)
+                                < ((i + 1) as int)
+                            && table.table@[
+                                (table.spec_hash@)(k) as int % (table.current_size as int)
+                            ].spec_entry_to_map().dom().contains(k)
+                            && pairs_map[k] == table.table@[
+                                (table.spec_hash@)(k) as int % (table.current_size as int)
+                            ].spec_entry_to_map()[k]
+                        ) by {
+                            let bucket = (table.spec_hash@)(k) as int
+                                % (table.current_size as int);
+                            if inner_collected.dom().contains(k) {
+                                // k from bucket i. hash(k)%size == i.
+                                assert(table.table@[i as int]
+                                    .spec_entry_to_map().dom().contains(k));
+                                assert(bucket == i as int);
+                                // pairs_map[k] via upr: inner_collected wins.
+                                assert(pairs_map[k] == inner_collected[k]);
+                                assert(inner_collected[k] ==
+                                    spec_chain_to_map(original_chain)[k]);
+                            } else {
+                                // k from old_outer. Preserved.
+                                assert(old_outer_pairs_map.dom().contains(k));
+                                assert(pairs_map[k] == old_outer_pairs_map[k]);
+                            }
+                        }
+
+                        // Re-establish outer backward invariant at i+1.
+                        assert forall |j: int, k: Key| 0 <= j < ((i + 1) as int)
+                            && #[trigger] table.table@[j]
+                                .spec_entry_to_map().dom().contains(k)
+                            implies pairs_map.dom().contains(k)
+                        by {
+                            if j < (i as int) {
+                                assert(old_outer_pairs_map.dom().contains(k));
+                            } else {
+                                // j == i. k in entry[i] = chain_to_map(original_chain).
+                                assert(inner_collected.dom().contains(k));
+                            }
+                        }
+                    }
+
                     i = i + 1;
                 }
 
-                // Phase 2: create new table.
+                proof {
+                    // After Phase 1: pairs_map =~= table@.
+                    assert forall |k: Key|
+                        pairs_map.dom().contains(k) <==>
+                        (#[trigger] spec_table_to_map::<Key, Value, ChainList<Key, Value>>(
+                            table.table@
+                        )).dom().contains(k)
+                    by {
+                        if pairs_map.dom().contains(k) {
+                            let bucket = (table.spec_hash@)(k) as int
+                                % (table.current_size as int);
+                            assert(table.table@[bucket]
+                                .spec_entry_to_map().dom().contains(k));
+                            assert forall |jj: int|
+                                0 <= jj < table.table@.len() && jj != bucket
+                                implies !#[trigger] table.table@[jj]
+                                    .spec_entry_to_map().dom().contains(k)
+                            by {}
+                            lemma_table_to_map_unique_entry_value::<
+                                Key, Value, ChainList<Key, Value>,
+                            >(table.table@, bucket, k);
+                        }
+                        if spec_table_to_map::<Key, Value, ChainList<Key, Value>>(
+                            table.table@
+                        ).dom().contains(k)
+                            && !pairs_map.dom().contains(k)
+                        {
+                            assert forall |j: int| 0 <= j < table.table@.len()
+                                implies !#[trigger] table.table@[j]
+                                    .spec_entry_to_map().dom().contains(k)
+                            by {}
+                            lemma_table_to_map_not_contains::<
+                                Key, Value, ChainList<Key, Value>,
+                            >(table.table@, k);
+                        }
+                    }
+                    assert forall |k: Key|
+                        #[trigger] pairs_map.dom().contains(k)
+                        && spec_table_to_map::<Key, Value, ChainList<Key, Value>>(
+                            table.table@
+                        ).dom().contains(k)
+                        implies pairs_map[k] == spec_table_to_map::<
+                            Key, Value, ChainList<Key, Value>,
+                        >(table.table@)[k]
+                    by {
+                        let bucket = (table.spec_hash@)(k) as int
+                            % (table.current_size as int);
+                        assert forall |jj: int|
+                            0 <= jj < table.table@.len() && jj != bucket
+                            implies !#[trigger] table.table@[jj]
+                                .spec_entry_to_map().dom().contains(k)
+                        by {}
+                        lemma_table_to_map_unique_entry_value::<
+                            Key, Value, ChainList<Key, Value>,
+                        >(table.table@, bucket, k);
+                    }
+                    assert(pairs_map =~= table@);
+                }
+
+                // Phase 2: create new empty table.
                 let mut new_table_vec: Vec<ChainList<Key, Value>> = Vec::new();
                 let mut k: usize = 0;
                 while k < new_size
                     invariant
                         k <= new_size,
                         new_table_vec@.len() == k as int,
+                        spec_table_to_map::<Key, Value, ChainList<Key, Value>>(new_table_vec@)
+                            == Map::<Key, Value>::empty(),
+                        forall |j: int| 0 <= j < new_table_vec@.len() ==>
+                            (#[trigger] new_table_vec@[j]).spec_entry_to_map()
+                                == Map::<Key, Value>::empty(),
+                        forall |j: int| 0 <= j < new_table_vec@.len() ==>
+                            spec_chain_keys_unique((#[trigger] new_table_vec@[j]).head),
                     decreases new_size - k,
                 {
+                    let ghost old_vec = new_table_vec@;
                     new_table_vec.push(ChainList { head: None });
+                    proof {
+                        reveal_with_fuel(spec_chain_keys_unique, 1);
+                        reveal_with_fuel(spec_chain_to_map, 1);
+                        lemma_table_to_map_push_empty::<Key, Value, ChainList<Key, Value>>(
+                            old_vec, new_table_vec@.last(),
+                        );
+                        assert(new_table_vec@ =~= old_vec.push(new_table_vec@.last()));
+                    }
                     k = k + 1;
                 }
+
                 let mut new_table = HashTable {
                     table: new_table_vec,
                     hash_fn: table.hash_fn.clone(),
@@ -450,21 +754,57 @@ pub mod StructChainedHashTable {
                     _phantom: PhantomData,
                 };
 
-                // Phase 3: reinsert all pairs.
+                proof {
+                    // Establish spec_impl_wf for the empty new table.
+                    assert forall |kk: Key, j: int|
+                        0 <= j < new_table.table@.len()
+                        && j != (new_table.spec_hash@)(kk) as int
+                            % (new_table.current_size as int)
+                        implies !#[trigger] new_table.table@[j]
+                            .spec_entry_to_map().dom().contains(kk)
+                    by {}
+                    assert(new_table@ =~= Map::<Key, Value>::empty());
+                    assert(spec_seq_pairs_to_map::<Key, Value>(
+                        pairs@.subrange(0, 0int)
+                    ) =~= Map::<Key, Value>::empty());
+                }
+
+                // Phase 3: reinsert all collected pairs.
                 let mut m: usize = 0;
                 while m < pairs.len()
                     invariant
                         m <= pairs@.len(),
                         new_size > 0,
                         new_table.current_size == new_size,
-                        new_table.table@.len() == new_table.current_size as int,
+                        new_table.table@.len() == new_size as int,
                         new_table.num_elements <= m,
+                        Self::spec_impl_wf(&new_table),
+                        new_table.spec_hash == table.spec_hash,
+                        new_table@ =~= spec_seq_pairs_to_map::<Key, Value>(
+                            pairs@.subrange(0, m as int)
+                        ),
                     decreases pairs.len() - m,
                 {
-                    let key = pairs[m].0.clone();
-                    let value = pairs[m].1.clone();
+                    let key = clone_elem(&pairs[m].0);
+                    let value = clone_elem(&pairs[m].1);
                     Self::insert(&mut new_table, key, value);
+                    proof {
+                        assert(
+                            pairs@.subrange(0, (m + 1) as int).drop_last()
+                            =~= pairs@.subrange(0, m as int)
+                        );
+                        assert(
+                            pairs@.subrange(0, (m + 1) as int).last()
+                            == pairs@[m as int]
+                        );
+                    }
                     m = m + 1;
+                }
+
+                proof {
+                    assert(pairs@.subrange(0, pairs@.len() as int) =~= pairs@);
+                    // new_table@ =~= spec_seq_pairs_to_map(pairs@) =~= pairs_map =~= table@.
+                    assert(new_table@ =~= table@);
                 }
 
                 new_table
