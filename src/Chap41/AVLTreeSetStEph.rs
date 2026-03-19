@@ -272,6 +272,33 @@ broadcast use {
                 self.spec_avltreesetsteph_wf();
     }
 
+    pub trait AVLTreeSetStEphTotalOrderTrait<T: StT + Ord + TotalOrder>: AVLTreeSetStEphTrait<T> {
+        /// The backing sequence is sorted under TotalOrder::le.
+        spec fn spec_elements_sorted(&self) -> bool;
+        /// The value-level backing sequence.
+        spec fn spec_values_seq(&self) -> Seq<T>;
+        /// Insert preserving sortedness.
+        fn insert_sorted(&mut self, x: T)
+            requires
+                old(self).spec_avltreesetsteph_wf(),
+                old(self).spec_elements_sorted(),
+                obeys_feq_full::<T>(),
+            ensures
+                self@ == old(self)@.insert(x@),
+                self.spec_avltreesetsteph_wf(),
+                self.spec_elements_sorted();
+        /// Delete preserving sortedness.
+        fn delete_sorted(&mut self, x: &T)
+            requires
+                old(self).spec_avltreesetsteph_wf(),
+                old(self).spec_elements_sorted(),
+                obeys_feq_full::<T>(),
+            ensures
+                self@ == old(self)@.remove(x@),
+                self.spec_avltreesetsteph_wf(),
+                self.spec_elements_sorted();
+    }
+
 
     // 9. impls
 
@@ -1113,29 +1140,21 @@ broadcast use {
     }
 
 
-    // 9. impls (TotalOrder-gated inherent methods)
+    // 9. impls (TotalOrder-gated trait impl)
 
-    impl<T: StT + Ord + TotalOrder> AVLTreeSetStEph<T> {
+    impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTotalOrderTrait<T> for AVLTreeSetStEph<T> {
         /// The backing sequence is sorted under TotalOrder::le.
-        pub open spec fn spec_elements_sorted(&self) -> bool {
+        open spec fn spec_elements_sorted(&self) -> bool {
             spec_seq_sorted(spec_inorder_values(self.elements.root))
         }
 
         /// The value-level backing sequence.
-        pub open spec fn spec_values_seq(&self) -> Seq<T> {
+        open spec fn spec_values_seq(&self) -> Seq<T> {
             spec_inorder_values(self.elements.root)
         }
 
         /// Insert preserving sortedness.
         fn insert_sorted(&mut self, x: T)
-            requires
-                old(self).spec_avltreesetsteph_wf(),
-                old(self).spec_elements_sorted(),
-                obeys_feq_full::<T>(),
-            ensures
-                self@ == old(self)@.insert(x@),
-                self.spec_avltreesetsteph_wf(),
-                self.spec_elements_sorted(),
         {
             let ghost x_view = x@;
             let ghost old_seq_len = self.elements@.len();
@@ -1462,14 +1481,6 @@ broadcast use {
 
         /// Delete preserving sortedness.
         fn delete_sorted(&mut self, x: &T)
-            requires
-                old(self).spec_avltreesetsteph_wf(),
-                old(self).spec_elements_sorted(),
-                obeys_feq_full::<T>(),
-            ensures
-                self@ == old(self)@.remove(x@),
-                self.spec_avltreesetsteph_wf(),
-                self.spec_elements_sorted(),
         {
             assert(obeys_feq_full_trigger::<T>());
             let n = self.elements.length();

@@ -327,6 +327,7 @@ pub mod JohnsonStEphI64 {
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2).
     fn create_negative_cycle_result(n: usize) -> (result: AllPairsResultStEphI64)
+        requires n < usize::MAX,
         ensures
             result.spec_n() == n,
             result.spec_distances_len() == n as nat,
