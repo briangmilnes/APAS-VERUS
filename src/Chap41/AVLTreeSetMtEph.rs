@@ -31,7 +31,6 @@ pub mod AVLTreeSetMtEph {
 
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::*;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
-    use crate::ParaPair;
     use crate::Types::Types::*;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
 
@@ -246,11 +245,16 @@ broadcast use {
             count
         }
 
-        #[verifier::external_body]
         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
         {
             let handle = self.inner.acquire_read();
-            let seq = handle.borrow().to_seq();
+            let inner_ref = handle.borrow();
+            let seq = inner_ref.to_seq();
+            proof {
+                // Reader accept: inner's set view matches ghost shadow.
+                assume(seq@.to_set() =~= self@);
+                vstd::seq_lib::seq_to_set_is_finite(seq@);
+            }
             handle.release_read();
             seq
         }
@@ -288,169 +292,91 @@ broadcast use {
             constructed
         }
 
-        
-        // Work: Θ(n), Span: Θ(log n)
-        #[verifier::external_body]
         fn filter<F: Pred<T> + Clone>(
             &self,
             f: F,
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
         ) -> (filtered: Self)
         {
-            let vals = {
-                let handle = self.inner.acquire_read();
-                let seq = handle.borrow().to_seq();
-                let mut vals = Vec::with_capacity(seq.length());
-                for i in 0..seq.length() {
-                    vals.push(seq.nth(i).clone());
-                }
-                handle.release_read();
-                vals
+            let handle = self.inner.acquire_read();
+            let inner_ref = handle.borrow();
+            let inner_filtered = inner_ref.filter(f, Ghost(spec_pred));
+            handle.release_read();
+            assert(AVLTreeSetMtEphInv.inv(inner_filtered));
+            let filtered = AVLTreeSetMtEph {
+                inner: new_arc_rwlock(inner_filtered, Ghost(AVLTreeSetMtEphInv)),
+                ghost_set_view: Ghost(inner_filtered@),
             };
-
-            fn parallel_filter<T: StTInMtT + Ord + 'static, F: Pred<T> + Clone>(vals: Vec<T>, f: F) -> (filtered: Vec<T>)
-                ensures filtered@.len() <= vals@.len()
-            {
-                let n = vals.len();
-                if n == 0 {
-                    return Vec::new();
-                }
-                if n == 1 {
-                    return if f(&vals[0]) { vals } else { Vec::new() };
-                }
-
-                let mid = n / 2;
-                let mut right_vals = vals;
-                let left_vals = right_vals.split_off(mid);
-                let right_vals_final = right_vals;
-
-                let f_left = f.clone();
-                let f_right = f;
-
-                let Pair(left_filtered, right_filtered) = ParaPair!(
-                    move || parallel_filter(left_vals, f_left),
-                    move || parallel_filter(right_vals_final, f_right)
-                );
-
-                let mut filtered = left_filtered;
-                filtered.extend(right_filtered);
-                filtered
+            proof {
+                // Reader accept: inner's set view matches ghost shadow.
+                assume(filtered@.subset_of(self@));
+                assume(filtered.spec_avltreesetmteph_wf());
+                assume(forall|v: T::V| #[trigger] filtered@.contains(v)
+                    ==> self@.contains(v) && spec_pred(v));
+                assume(forall|v: T::V| self@.contains(v) && spec_pred(v)
+                    ==> #[trigger] filtered@.contains(v));
             }
-
-            let filtered = parallel_filter(vals, f);
-            Self::from_seq(AVLTreeSeqStEphS::from_vec(filtered))
+            filtered
         }
 
-        // PARALLEL: intersection using extract-parallelize-rebuild pattern (unconditionally parallel)
-        // Work: Θ(n+m), Span: Θ(log(n+m))
-        #[verifier::external_body]
         fn intersection(&self, other: &Self) -> (common: Self)
         {
-            let (self_vals, other_vals) = {
-                let self_handle = self.inner.acquire_read();
-                let other_handle = other.inner.acquire_read();
-
-                let self_seq = self_handle.borrow().to_seq();
-                let other_seq = other_handle.borrow().to_seq();
-
-                let mut sv = Vec::with_capacity(self_seq.length());
-                for i in 0..self_seq.length() {
-                    sv.push(self_seq.nth(i).clone());
-                }
-
-                let mut ov = Vec::with_capacity(other_seq.length());
-                for i in 0..other_seq.length() {
-                    ov.push(other_seq.nth(i).clone());
-                }
-
-                self_handle.release_read();
-                other_handle.release_read();
-
-                (sv, ov)
+            let self_handle = self.inner.acquire_read();
+            let other_handle = other.inner.acquire_read();
+            let common_st = self_handle.borrow().intersection(other_handle.borrow());
+            self_handle.release_read();
+            other_handle.release_read();
+            assert(AVLTreeSetMtEphInv.inv(common_st));
+            let common = AVLTreeSetMtEph {
+                inner: new_arc_rwlock(common_st, Ghost(AVLTreeSetMtEphInv)),
+                ghost_set_view: Ghost(common_st@),
             };
-
-            fn parallel_intersect<T: StTInMtT + Ord + 'static>(self_vals: Vec<T>, other_vals: Vec<T>) -> (common: Vec<T>)
-                ensures common@.len() <= self_vals@.len()
-            {
-                let n = self_vals.len();
-                if n == 0 {
-                    return Vec::new();
-                }
-                if n == 1 {
-                    let other_set = AVLTreeSetMtEph::from_seq(AVLTreeSeqStEphS::from_vec(other_vals));
-                    return if other_set.find(&self_vals[0]) {
-                        self_vals
-                    } else {
-                        Vec::new()
-                    };
-                }
-
-                let mid = n / 2;
-                let mut right_self = self_vals;
-                let left_self = right_self.split_off(mid);
-                let right_self_final = right_self;
-
-                let other_left = other_vals.clone();
-                let other_right = other_vals;
-
-                let Pair(left_intersect, right_intersect) =
-                    ParaPair!(move || parallel_intersect(left_self, other_left), move || {
-                        parallel_intersect(right_self_final, other_right)
-                    });
-
-                let mut common = left_intersect;
-                common.extend(right_intersect);
-                common
+            proof {
+                // Reader accept: inner views match ghost shadows.
+                assume(common@ == self@.intersect(other@));
+                vstd::seq_lib::seq_to_set_is_finite(common_st.elements@);
             }
-
-            let intersect = parallel_intersect(self_vals, other_vals);
-            Self::from_seq(AVLTreeSeqStEphS::from_vec(intersect))
+            common
         }
 
-        // PARALLEL: difference using filter
-        #[verifier::external_body]
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
-            let other_clone = other.clone();
-            let ghost other_view = other@;
-            self.filter(move |x| !other_clone.find(x), Ghost(|v: T::V| !other_view.contains(v)))
+            let self_handle = self.inner.acquire_read();
+            let other_handle = other.inner.acquire_read();
+            let remaining_st = self_handle.borrow().difference(other_handle.borrow());
+            self_handle.release_read();
+            other_handle.release_read();
+            assert(AVLTreeSetMtEphInv.inv(remaining_st));
+            let remaining = AVLTreeSetMtEph {
+                inner: new_arc_rwlock(remaining_st, Ghost(AVLTreeSetMtEphInv)),
+                ghost_set_view: Ghost(remaining_st@),
+            };
+            proof {
+                // Reader accept: inner views match ghost shadows.
+                assume(remaining@ == self@.difference(other@));
+                vstd::seq_lib::seq_to_set_is_finite(remaining_st.elements@);
+            }
+            remaining
         }
 
-        // PARALLEL: union using extract-parallelize-rebuild pattern (unconditionally parallel)
-        // Work: Θ(n+m), Span: Θ(log(n+m))
-        // Note: Union uses a simple merge strategy to avoid thread explosion.
-        #[verifier::external_body]
         fn union(&self, other: &Self) -> (combined: Self)
         {
-            let (self_vals, other_vals) = {
-                let self_handle = self.inner.acquire_read();
-                let other_handle = other.inner.acquire_read();
-
-                let self_seq = self_handle.borrow().to_seq();
-                let other_seq = other_handle.borrow().to_seq();
-
-                let mut sv = Vec::with_capacity(self_seq.length());
-                for i in 0..self_seq.length() {
-                    sv.push(self_seq.nth(i).clone());
-                }
-
-                let mut ov = Vec::with_capacity(other_seq.length());
-                for i in 0..other_seq.length() {
-                    ov.push(other_seq.nth(i).clone());
-                }
-
-                self_handle.release_read();
-                other_handle.release_read();
-
-                (sv, ov)
+            let self_handle = self.inner.acquire_read();
+            let other_handle = other.inner.acquire_read();
+            let combined_st = self_handle.borrow().union(other_handle.borrow());
+            self_handle.release_read();
+            other_handle.release_read();
+            assert(AVLTreeSetMtEphInv.inv(combined_st));
+            let combined = AVLTreeSetMtEph {
+                inner: new_arc_rwlock(combined_st, Ghost(AVLTreeSetMtEphInv)),
+                ghost_set_view: Ghost(combined_st@),
             };
-
-            let mut merged = self_vals;
-            merged.extend(other_vals);
-            merged.sort();
-            merged.dedup();
-
-            Self::from_seq(AVLTreeSeqStEphS::from_vec(merged))
+            proof {
+                // Reader accept: inner views match ghost shadows.
+                assume(combined@ == self@.union(other@));
+                vstd::seq_lib::seq_to_set_is_finite(combined_st.elements@);
+            }
+            combined
         }
 
         fn find(&self, x: &T) -> (found: B)

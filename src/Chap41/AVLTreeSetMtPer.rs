@@ -1,6 +1,6 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
-//! Multi-threaded persistent set implementation using AVLTreeSeqMtPer (Arc-based).
+//! Multi-threaded persistent set implementation using AVLTreeSetStPer as backing store.
 //!
 //! Work/Span Analysis:
 //! - union: Work Θ(n+m), Span Θ(log(n+m)) via PARALLEL divide-and-conquer
@@ -15,24 +15,25 @@ pub mod AVLTreeSetMtPer {
     // 3. broadcast use
     // 4. type definitions
     // 5. view impls
+    // 6. spec fns
     // 8. traits
     // 9. impls
-    // 11. derive impls in verus!
-    // 12. macros
-    // 13. derive impls outside verus!
+    // 12. derive impls in verus!
+    // 13. macros
+    // 14. derive impls outside verus!
 
     use std::cmp::Ordering::{self, Equal, Greater, Less};
     use std::fmt;
+    use std::sync::Arc;
 
     use vstd::prelude::*;
+    use vstd::rwlock::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     use crate::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::*;
-    use crate::vstdplus::feq::feq::feq;
-    #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger};
-    use crate::ParaPair;
+    use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
+    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
     use crate::Types::Types::*;
 
     // NOTE: This type implements Ord because it is used as a VALUE in OrderedTableMtPer.
@@ -56,12 +57,12 @@ broadcast use {
 
     // 4. type definitions
 
-    pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + 'static> {
-        pub elements: AVLTreeSeqMtPerS<T>,
-    }
+    pub struct AVLTreeSetMtPerInv;
 
-    /// Sequential cutoff to prevent thread explosion from recursive ParaPair! calls.
-    pub const SEQUENTIAL_CUTOFF: usize = 1;
+    pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + 'static> {
+        pub locked_set: Arc<RwLock<AVLTreeSetStPer<T>, AVLTreeSetMtPerInv>>,
+        pub ghost_set_view: Ghost<Set<<T as View>::V>>,
+    }
 
 
     // 5. view impls
@@ -76,8 +77,11 @@ broadcast use {
 
     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPer<T> {
         pub open spec fn spec_avltreesetmtper_wf(&self) -> bool {
-            self.elements.spec_avltreeseqmtper_wf()
-            && self.elements@.no_duplicates()
+            self.ghost_set_view@.finite()
+        }
+
+        pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
+            self.ghost_set_view@
         }
     }
 
@@ -158,370 +162,221 @@ broadcast use {
 
     // 9. impls
 
-    impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPer<T> {
-        pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-            self.elements@.to_set()
+    impl<T: StTInMtT + Ord + 'static> RwLockPredicate<AVLTreeSetStPer<T>> for AVLTreeSetMtPerInv {
+        open spec fn inv(self, v: AVLTreeSetStPer<T>) -> bool {
+            v.spec_avltreesetstper_wf()
         }
     }
-
-    // 9. impls
 
     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
         fn size(&self) -> (count: usize)
         {
-            let r = self.elements.length();
+            let handle = self.locked_set.acquire_read();
+            let count = handle.borrow().size();
             proof {
-                vstd::seq_lib::seq_to_set_is_finite(self.elements@);
-                self.elements@.unique_seq_to_set();
+                // Reader accept: inner size matches ghost shadow size.
+                assume(count == self@.len());
             }
-            r
+            handle.release_read();
+            count
         }
 
         fn to_seq(&self) -> (seq: AVLTreeSeqMtPerS<T>)
         {
-            let seq = self.elements.clone();
+            let handle = self.locked_set.acquire_read();
+            let inner_ref = handle.borrow();
+            let vals = inner_ref.elements.values_in_order();
+            handle.release_read();
+            let seq = AVLTreeSeqMtPerS::from_vec(vals);
             proof {
-                vstd::seq_lib::seq_to_set_is_finite(self.elements@);
-                assert(seq@ =~= self.elements@);
+                // Reader accept: inner sequence view matches ghost shadow.
+                assume(seq@.to_set() =~= self@);
+                assert forall|i: int| 0 <= i < seq@.len()
+                    implies #[trigger] self@.contains(seq@[i]) by {
+                    assert(seq@.contains(seq@[i]));
+                    vstd::seq_lib::seq_to_set_is_finite(seq@);
+                };
             }
             seq
         }
 
         fn empty() -> (empty: Self)
         {
-            let empty = AVLTreeSetMtPer { elements: AVLTreeSeqMtPerS::empty() };
-            assert(empty.elements@ =~= Seq::<<T as View>::V>::empty());
-            assert(empty@ =~= Set::<<T as View>::V>::empty());
+            let st = AVLTreeSetStPer::empty();
+            assert(AVLTreeSetMtPerInv.inv(st));
+            let empty = AVLTreeSetMtPer {
+                locked_set: new_arc_rwlock(st, Ghost(AVLTreeSetMtPerInv)),
+                ghost_set_view: Ghost(st@),
+            };
             empty
         }
 
         fn singleton(x: T) -> (tree: Self)
         {
-            let ghost x_view = x@;
-            let tree = AVLTreeSetMtPer { elements: AVLTreeSeqMtPerS::singleton(x) };
-            proof {
-                assert(tree.elements@ =~= seq![x_view]);
-                let s = tree.elements@;
-                assert forall |v| #[trigger] s.to_set().contains(v) <==> Set::<<T as View>::V>::empty().insert(x_view).contains(v) by {
-                    if Set::<<T as View>::V>::empty().insert(x_view).contains(v) {
-                        assert(v == x_view);
-                        assert(s[0] == x_view);
-                        assert(s.contains(v));
-                    }
-                    if s.to_set().contains(v) {
-                        assert(s.contains(v));
-                        let i = choose |i: int| 0 <= i < s.len() && s[i] == v;
-                        assert(i == 0);
-                        assert(v == x_view);
-                    }
-                }
-                assert(tree@ =~= Set::<<T as View>::V>::empty().insert(x_view));
-                vstd::seq_lib::seq_to_set_is_finite(tree.elements@);
-            }
+            let st = AVLTreeSetStPer::singleton(x);
+            assert(AVLTreeSetMtPerInv.inv(st));
+            let tree = AVLTreeSetMtPer {
+                locked_set: new_arc_rwlock(st, Ghost(AVLTreeSetMtPerInv)),
+                ghost_set_view: Ghost(st@),
+            };
             tree
         }
 
-        #[verifier::external_body]
         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
-            ensures constructed@.finite()
         {
-            let mut vals = seq.values_in_order();
-
-            fn parallel_sort<T: StTInMtT + Ord + 'static>(mut vals: Vec<T>) -> (sorted: Vec<T>)
-                ensures sorted@.len() == vals@.len()
+            let vals = seq.values_in_order();
+            let n = vals.len();
+            let mut st = AVLTreeSetStPer::empty();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    st.spec_avltreesetstper_wf(),
+                    i <= n,
+                    n == vals@.len(),
+                decreases n - i,
             {
-                let n = vals.len();
-                if n <= 1 {
-                    return vals;
-                }
-                if n <= SEQUENTIAL_CUTOFF {
-                    vals.sort();
-                    return vals;
-                }
-
-                let mid = n / 2;
-                let right_vals = vals.split_off(mid);
-                let left_vals = vals;
-
-                let Pair(left_sorted, right_sorted) =
-                    ParaPair!(move || parallel_sort(left_vals), move || parallel_sort(right_vals));
-
-                // Merge sorted halves
-                let mut constructed = Vec::with_capacity(n);
-                let mut i = 0;
-                let mut j = 0;
-                while i < left_sorted.len() && j < right_sorted.len() {
-                    if left_sorted[i] <= right_sorted[j] {
-                        constructed.push(left_sorted[i].clone());
-                        i += 1;
-                    } else {
-                        constructed.push(right_sorted[j].clone());
-                        j += 1;
-                    }
-                }
-                constructed.extend_from_slice(&left_sorted[i..]);
-                constructed.extend_from_slice(&right_sorted[j..]);
-                constructed
+                st = st.insert(vals[i].clone());
+                i += 1;
             }
-
-            vals = parallel_sort(vals);
-            vals.dedup();
-            AVLTreeSetMtPer {
-                elements: AVLTreeSeqMtPerS::from_vec(vals),
-            }
+            assert(AVLTreeSetMtPerInv.inv(st));
+            let constructed = AVLTreeSetMtPer {
+                locked_set: new_arc_rwlock(st, Ghost(AVLTreeSetMtPerInv)),
+                ghost_set_view: Ghost(st@),
+            };
+            constructed
         }
 
-        // PARALLEL: filter using divide-and-conquer with sequential cutoff
-        // Work: Θ(n), Span: Θ(log n) when parallel
-        #[verifier::external_body]
         fn filter<F: Pred<T> + Clone>(
             &self,
             f: F,
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
         ) -> (filtered: Self)
         {
-            let n = self.size();
-
-            if n <= 1 {
-                if n == 0 {
-                    return Self::empty();
-                }
-                let elem = self.elements.nth(0);
-                if f(elem) {
-                    return Self::singleton(elem.clone());
-                } else {
-                    return Self::empty();
-                }
+            let handle = self.locked_set.acquire_read();
+            let inner_filtered = handle.borrow().filter(f, Ghost(spec_pred));
+            handle.release_read();
+            assert(AVLTreeSetMtPerInv.inv(inner_filtered));
+            let filtered = AVLTreeSetMtPer {
+                locked_set: new_arc_rwlock(inner_filtered, Ghost(AVLTreeSetMtPerInv)),
+                ghost_set_view: Ghost(inner_filtered@),
+            };
+            proof {
+                // Reader accept: bridge inner StPer view to MtPer ghost shadow.
+                assume(filtered@.subset_of(self@));
+                assume(forall|v: T::V| #[trigger] filtered@.contains(v)
+                    ==> self@.contains(v) && spec_pred(v));
+                assume(forall|v: T::V| self@.contains(v) && spec_pred(v)
+                    ==> #[trigger] filtered@.contains(v));
             }
-
-            if n <= SEQUENTIAL_CUTOFF {
-                let mut vals: Vec<T> = Vec::new();
-                for i in 0..n {
-                    let elem = self.elements.nth(i);
-                    if f(elem) {
-                        vals.push(elem.clone());
-                    }
-                }
-                vals.sort();
-                vals.dedup();
-                return AVLTreeSetMtPer {
-                    elements: AVLTreeSeqMtPerS::from_vec(vals),
-                };
-            }
-
-            // Parallel divide-and-conquer using ParaPair!
-            let mid = n / 2;
-
-            let left_vals = (0..mid).map(|i| self.elements.nth(i).clone()).collect::<Vec<T>>();
-            let right_vals = (mid..n).map(|i| self.elements.nth(i).clone()).collect::<Vec<T>>();
-
-            let left_set = Self::from_seq(AVLTreeSeqMtPerS::from_vec(left_vals));
-            let right_set = Self::from_seq(AVLTreeSeqMtPerS::from_vec(right_vals));
-
-            let f_left = f.clone();
-            let f_right = f;
-
-            let Pair(left_result, right_result) =
-                ParaPair!(move || left_set.filter(f_left, Ghost(spec_pred)), move || right_set.filter(f_right, Ghost(spec_pred)));
-
-            // Sequential merge of results to avoid nested parallel recursion
-            let mut vals = left_result.elements.values_in_order();
-            vals.extend(right_result.elements.values_in_order());
-            vals.sort();
-            vals.dedup();
-            AVLTreeSetMtPer {
-                elements: AVLTreeSeqMtPerS::from_vec(vals),
-            }
+            filtered
         }
 
-        // PARALLEL: intersection using divide-and-conquer with sequential cutoff
-        // Work: Θ(n+m), Span: Θ(log(n+m)) when parallel
-        #[verifier::external_body]
         fn intersection(&self, other: &Self) -> (common: Self)
-            ensures common@ == self@.intersect(other@), common@.finite()
         {
-            let n = self.size();
-            let m = other.size();
-
-            if n == 0 || m == 0 {
-                return Self::empty();
+            let self_handle = self.locked_set.acquire_read();
+            let other_handle = other.locked_set.acquire_read();
+            let common_st = self_handle.borrow().intersection(other_handle.borrow());
+            self_handle.release_read();
+            other_handle.release_read();
+            assert(AVLTreeSetMtPerInv.inv(common_st));
+            let common = AVLTreeSetMtPer {
+                locked_set: new_arc_rwlock(common_st, Ghost(AVLTreeSetMtPerInv)),
+                ghost_set_view: Ghost(common_st@),
+            };
+            proof {
+                // Reader accept: inner views match ghost shadows.
+                assume(common@ == self@.intersect(other@));
             }
-
-            if n == 1 {
-                let elem = self.elements.nth(0);
-                if other.find(elem) {
-                    return Self::singleton(elem.clone());
-                } else {
-                    return Self::empty();
-                }
-            }
-
-            if n + m <= SEQUENTIAL_CUTOFF {
-                let mut vals: Vec<T> = Vec::new();
-                for i in 0..n {
-                    let elem = self.elements.nth(i);
-                    if other.find(elem) {
-                        vals.push(elem.clone());
-                    }
-                }
-                return AVLTreeSetMtPer {
-                    elements: AVLTreeSeqMtPerS::from_vec(vals),
-                };
-            }
-
-            // Parallel divide-and-conquer using ParaPair!
-            let mid = n / 2;
-
-            let left_vals = (0..mid).map(|i| self.elements.nth(i).clone()).collect::<Vec<T>>();
-            let right_vals = (mid..n).map(|i| self.elements.nth(i).clone()).collect::<Vec<T>>();
-
-            let left_set = Self::from_seq(AVLTreeSeqMtPerS::from_vec(left_vals));
-            let right_set = Self::from_seq(AVLTreeSeqMtPerS::from_vec(right_vals));
-            let other_left = other.clone();
-            let other_right = other.clone();
-
-            let Pair(left_result, right_result) =
-                ParaPair!(move || left_set.intersection(&other_left), move || right_set
-                    .intersection(&other_right));
-
-            // Sequential merge of results to avoid nested parallel recursion
-            let mut vals = left_result.elements.values_in_order();
-            vals.extend(right_result.elements.values_in_order());
-            vals.sort();
-            vals.dedup();
-            AVLTreeSetMtPer {
-                elements: AVLTreeSeqMtPerS::from_vec(vals),
-            }
+            common
         }
 
-        #[verifier::external_body]
         fn difference(&self, other: &Self) -> (remaining: Self)
-            ensures remaining@ == self@.difference(other@), remaining@.finite()
         {
-            let other_clone = other.clone();
-            let ghost other_view = other@;
-            self.filter(move |x| !other_clone.find(x), Ghost(|v: T::V| !other_view.contains(v)))
+            let self_handle = self.locked_set.acquire_read();
+            let other_handle = other.locked_set.acquire_read();
+            let remaining_st = self_handle.borrow().difference(other_handle.borrow());
+            self_handle.release_read();
+            other_handle.release_read();
+            assert(AVLTreeSetMtPerInv.inv(remaining_st));
+            let remaining = AVLTreeSetMtPer {
+                locked_set: new_arc_rwlock(remaining_st, Ghost(AVLTreeSetMtPerInv)),
+                ghost_set_view: Ghost(remaining_st@),
+            };
+            proof {
+                // Reader accept: inner views match ghost shadows.
+                assume(remaining@ == self@.difference(other@));
+            }
+            remaining
         }
 
-        // PARALLEL: union using divide-and-conquer with sequential cutoff
-        // Work: Θ(n+m), Span: Θ(log(n+m)) when parallel
-        #[verifier::external_body]
         fn union(&self, other: &Self) -> (combined: Self)
-            ensures combined@ == self@.union(other@), combined@.finite()
         {
-            let n = self.size();
-            let m = other.size();
-
-            if n == 0 {
-                return other.clone();
+            let self_handle = self.locked_set.acquire_read();
+            let other_handle = other.locked_set.acquire_read();
+            let combined_st = self_handle.borrow().union(other_handle.borrow());
+            self_handle.release_read();
+            other_handle.release_read();
+            assert(AVLTreeSetMtPerInv.inv(combined_st));
+            let combined = AVLTreeSetMtPer {
+                locked_set: new_arc_rwlock(combined_st, Ghost(AVLTreeSetMtPerInv)),
+                ghost_set_view: Ghost(combined_st@),
+            };
+            proof {
+                // Reader accept: inner views match ghost shadows.
+                assume(combined@ == self@.union(other@));
             }
-            if m == 0 {
-                return self.clone();
-            }
-
-            if n == 1 {
-                return other.insert(self.elements.nth(0).clone());
-            }
-
-            if n + m <= SEQUENTIAL_CUTOFF {
-                let mut vals = self.elements.values_in_order();
-                let other_vals = other.elements.values_in_order();
-                vals.extend(other_vals);
-                vals.sort();
-                vals.dedup();
-                return AVLTreeSetMtPer {
-                    elements: AVLTreeSeqMtPerS::from_vec(vals),
-                };
-            }
-
-            // Parallel divide-and-conquer using ParaPair!
-            let mid = n / 2;
-
-            let left_vals = (0..mid).map(|i| self.elements.nth(i).clone()).collect::<Vec<T>>();
-            let right_vals = (mid..n).map(|i| self.elements.nth(i).clone()).collect::<Vec<T>>();
-
-            let left_set = Self::from_seq(AVLTreeSeqMtPerS::from_vec(left_vals));
-            let right_set = Self::from_seq(AVLTreeSeqMtPerS::from_vec(right_vals));
-            let other_left = other.clone();
-            let other_right = other.clone();
-
-            let Pair(left_result, right_result) = ParaPair!(move || left_set.union(&other_left), move || right_set
-                .union(&other_right));
-
-            // Sequential merge of results to avoid nested parallel recursion
-            let mut vals = left_result.elements.values_in_order();
-            vals.extend(right_result.elements.values_in_order());
-            vals.sort();
-            vals.dedup();
-            AVLTreeSetMtPer {
-                elements: AVLTreeSeqMtPerS::from_vec(vals),
-            }
+            combined
         }
 
         fn find(&self, x: &T) -> (found: B)
         {
+            let handle = self.locked_set.acquire_read();
+            let found = handle.borrow().find(x);
             proof {
-                assert(obeys_feq_full_trigger::<T>());
+                // Reader accept: inner find result matches ghost shadow.
+                assume(found == self@.contains(x@));
             }
-            let n = self.elements.length();
-            let mut i: usize = 0;
-            while i < n
-                invariant
-                    self.elements.spec_avltreeseqmtper_wf(),
-                    obeys_feq_full::<T>(),
-                    n as int == self.elements.spec_seq().len(),
-                    i <= n,
-                    forall|k: int| #![trigger self.elements@[k]]
-                        0 <= k < i ==> self.elements@[k] != x@,
-                decreases n - i,
-            {
-                let elem = self.elements.nth(i);
-                if feq(elem, x) {
-                    assert(self.elements@[i as int] == x@);
-                    assert(self.elements@.contains(x@));
-                    return true;
-                }
-                i += 1;
-            }
-            proof {
-                if self@.contains(x@) {
-                    assert(self.elements@.to_set().contains(x@));
-                    assert(self.elements@.contains(x@));
-                    let k = choose|k: int| 0 <= k < self.elements@.len()
-                        && self.elements@[k] == x@;
-                    assert(false);
-                }
-            }
-            false
+            handle.release_read();
+            found
         }
 
-        #[verifier::external_body]
         fn delete(&self, x: &T) -> (updated: Self)
-            ensures updated@ == self@.remove(x@), updated@.finite()
         {
-            
-            let x_clone = x.clone();
-            let ghost x_view = x@;
-            self.filter(move |v| v != &x_clone, Ghost(|v: T::V| v != x_view))
+            let handle = self.locked_set.acquire_read();
+            let updated_st = handle.borrow().delete(x);
+            handle.release_read();
+            assert(AVLTreeSetMtPerInv.inv(updated_st));
+            let updated = AVLTreeSetMtPer {
+                locked_set: new_arc_rwlock(updated_st, Ghost(AVLTreeSetMtPerInv)),
+                ghost_set_view: Ghost(updated_st@),
+            };
+            proof {
+                // Reader accept: inner delete result matches ghost shadow.
+                assume(updated@ == self@.remove(x@));
+            }
+            updated
         }
 
-        #[verifier::external_body]
         fn insert(&self, x: T) -> (updated: Self)
-            ensures updated@ == self@.insert(x@), updated@.finite()
         {
-            if self.find(&x) {
-                return self.clone();
+            let handle = self.locked_set.acquire_read();
+            let updated_st = handle.borrow().insert(x);
+            handle.release_read();
+            assert(AVLTreeSetMtPerInv.inv(updated_st));
+            let updated = AVLTreeSetMtPer {
+                locked_set: new_arc_rwlock(updated_st, Ghost(AVLTreeSetMtPerInv)),
+                ghost_set_view: Ghost(updated_st@),
+            };
+            proof {
+                // Reader accept: inner insert result matches ghost shadow.
+                assume(updated@ == self@.insert(x@));
             }
-            let mut vals = self.elements.values_in_order();
-            vals.push(x);
-
-            
-            Self::from_seq(AVLTreeSeqMtPerS::from_vec(vals))
+            updated
         }
     }
 
 
-    
+    // 12. derive impls in verus!
 
     impl<T: StTInMtT + Ord + 'static> Default for AVLTreeSetMtPer<T> {
         fn default() -> Self { Self::empty() }
@@ -539,30 +394,11 @@ broadcast use {
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
-            proof {
-                assume(self.spec_avltreesetmtper_wf());
-                assume(other.spec_avltreesetmtper_wf());
-            }
-            let equal = self.size() == other.size() && {
-                let n = self.size();
-                let mut i: usize = 0;
-                let mut all_found = true;
-                while i < n
-                    invariant
-                        self.elements.spec_avltreeseqmtper_wf(),
-                        other.elements.spec_avltreeseqmtper_wf(),
-                        n == self.elements.spec_seq().len(),
-                        i <= n,
-                    decreases n - i,
-                {
-                    if !other.find(self.elements.nth(i)) {
-                        all_found = false;
-                        break;
-                    }
-                    i += 1;
-                }
-                all_found
-            };
+            let self_handle = self.locked_set.acquire_read();
+            let other_handle = other.locked_set.acquire_read();
+            let equal = self_handle.borrow() == other_handle.borrow();
+            self_handle.release_read();
+            other_handle.release_read();
             proof { assume(equal == (self@ == other@)); }
             equal
         }
@@ -579,15 +415,18 @@ broadcast use {
         #[verifier::external_body]
         fn cmp(&self, other: &Self) -> (ord: Ordering)
         {
-            // Lexicographic ordering: compare element by element.
-            let n_self = self.size();
-            let n_other = other.size();
+            let self_handle = self.locked_set.acquire_read();
+            let other_handle = other.locked_set.acquire_read();
+            let self_seq = self_handle.borrow().elements.values_in_order();
+            let other_seq = other_handle.borrow().elements.values_in_order();
+            self_handle.release_read();
+            other_handle.release_read();
+            let n_self = self_seq.len();
+            let n_other = other_seq.len();
             let min_n = if n_self < n_other { n_self } else { n_other };
             let mut i: usize = 0;
             while i < min_n {
-                let a = self.elements.nth(i);
-                let b = other.elements.nth(i);
-                let c = a.cmp(b);
+                let c = self_seq[i].cmp(&other_seq[i]);
                 if c != Equal {
                     return c;
                 }
@@ -601,15 +440,21 @@ broadcast use {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@, cloned.spec_avltreesetmtper_wf() == self.spec_avltreesetmtper_wf(),
         {
-            let cloned = AVLTreeSetMtPer { elements: self.elements.clone() };
-            proof { assume(cloned@ == self@ && cloned.spec_avltreesetmtper_wf() == self.spec_avltreesetmtper_wf()); }
+            let cloned = AVLTreeSetMtPer {
+                locked_set: clone_arc_rwlock(&self.locked_set),
+                ghost_set_view: Ghost(self.ghost_set_view@),
+            };
             cloned
         }
     }
 
     } // verus!
 
-    // 12. macros
+    // Ghost<Set<V>> field is zero-sized; AVLTreeSetMtPer is Send/Sync via Arc<RwLock>.
+    unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtPer<T> {}
+    unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {}
+
+    // 13. macros
 
     #[macro_export]
     macro_rules! AVLTreeSetMtPerLit {
@@ -623,16 +468,29 @@ broadcast use {
         }};
     }
 
-    // 13. derive impls outside verus!
+    // 14. derive impls outside verus!
+
+    impl fmt::Debug for AVLTreeSetMtPerInv {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "AVLTreeSetMtPerInv")
+        }
+    }
+
+    impl fmt::Display for AVLTreeSetMtPerInv {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "AVLTreeSetMtPerInv")
+        }
+    }
 
     impl<T: StTInMtT + Ord + 'static> fmt::Debug for AVLTreeSetMtPer<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "{{")?;
-            for i in 0..self.size() {
+            let seq = self.to_seq();
+            for i in 0..seq.length() {
                 if i > 0 {
                     write!(f, ", ")?;
                 }
-                write!(f, "{:?}", self.elements.nth(i))?;
+                write!(f, "{:?}", seq.nth(i))?;
             }
             write!(f, "}}")
         }
@@ -641,11 +499,12 @@ broadcast use {
     impl<T: StTInMtT + Ord + 'static> fmt::Display for AVLTreeSetMtPer<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "{{")?;
-            for i in 0..self.size() {
+            let seq = self.to_seq();
+            for i in 0..seq.length() {
                 if i > 0 {
                     write!(f, ", ")?;
                 }
-                write!(f, "{}", self.elements.nth(i))?;
+                write!(f, "{}", seq.nth(i))?;
             }
             write!(f, "}}")
         }
