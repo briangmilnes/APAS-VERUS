@@ -68,15 +68,16 @@ pub mod PrimStEph {
 
         /// Compute total weight of MST.
         /// APAS: Work O(m), Span O(1)
-        fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64;
+        fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64
+            requires mst.spec_setsteph_wf();
     }
 
     /// Module-level function to create a new PQEntry.
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
-    fn pq_entry_new<V: HashOrd>(priority: WrappedF64, vertex: V, parent: Option<V>) -> PQEntry<V> {
+    fn pq_entry_new<V: HashOrd>(priority: WrappedF64, vertex: V, parent: Option<V>) -> (entry: PQEntry<V>)
+        ensures entry.priority == priority, entry.vertex == vertex, entry.parent == parent,
+    {
         PQEntry {
             priority,
             vertex,
@@ -153,15 +154,25 @@ pub mod PrimStEph {
     /// Compute total MST weight.
     /// - APAS: (no cost stated) — utility function
     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
-    #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
-    pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64 {
-        let mut total = zero_dist();
-        for edge in mst_edges.iter() {
-            let LabEdge(_u, _v, w) = edge;
-            total += *w;
+    pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64
+        requires mst_edges.spec_setsteph_wf(),
+    {
+        let mut total = WrappedF64 { val: 0.0 };
+        let mut it = mst_edges.iter();
+        let ghost le_seq = it@.1;
+        loop
+            invariant
+                it@.0 <= le_seq.len(),
+                it@.1 == le_seq,
+            decreases le_seq.len() - it@.0,
+        {
+            match it.next() {
+                None => return total,
+                Some(edge) => {
+                    total = WrappedF64 { val: total.val + edge.2.val };
+                },
+            }
         }
-        total
     }
 
     } // verus!

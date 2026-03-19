@@ -20,19 +20,45 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-✓ KruskalStEph.rs
+❌ KruskalStEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/KruskalStEph.rs:73: error: cfg_hidden_exec - #[cfg(not(verus_keep_ghost))]
+        74 |     pub fn kruskal_mst<V: HashOrd>(
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/KruskalStEph.rs:117: error: fn_missing_ensures - fn mst_weight — exec fn should have ensures
+        74 |     pub fn kruskal_mst<V: HashOrd>(
+            ...
+       115 |     /// - APAS: (no cost stated) — utility function
+       116 |     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
+       118 |         requires mst_edges.spec_setsteph_wf(),
+       119 |     {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/KruskalStEph.rs:142: error: fn_missing_ensures - fn verify_mst_size — exec fn should have ensures
+       117 |     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64
+            ...
+       140 |     /// - APAS: (no cost stated) — validation utility
+       141 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+       143 |         n_vertices: N,
+       144 |         mst_edges: &SetStEph<LabEdge<V, WrappedF64>>,
+   Holes: 1 total
+      1 × cfg_hidden_exec
 ❌ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:77: error: external_body - #[verifier::external_body]
-        78 |     #[cfg(not(verus_keep_ghost))]
-        79 |     fn pq_entry_new<V: HashOrd>(priority: WrappedF64, vertex: V, parent: Option<V>) -> PQEntry<V> {
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:100: error: external_body - #[verifier::external_body]
-       101 |     #[cfg(not(verus_keep_ghost))]
-       102 |     pub fn prim_mst<V: HashOrd + Display>(
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:156: error: external_body - #[verifier::external_body]
-       157 |     #[cfg(not(verus_keep_ghost))]
-       158 |     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64 {
-   Holes: 3 total
-      3 × external_body
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/PrimStEph.rs:101: error: external_body - #[verifier::external_body]
+       102 |     #[cfg(not(verus_keep_ghost))]
+       103 |     pub fn prim_mst<V: HashOrd + Display>(
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/PrimStEph.rs:78: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
+        71 |         fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64
+            ...
+        76 |     /// - APAS: N/A — Verus-specific scaffolding.
+        77 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        79 |         ensures entry.priority == priority, entry.vertex == vertex, entry.parent == parent,
+        80 |     {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/PrimStEph.rs:157: error: fn_missing_ensures - fn mst_weight — exec fn should have ensures
+       103 |     pub fn prim_mst<V: HashOrd + Display>(
+            ...
+       155 |     /// - APAS: (no cost stated) — utility function
+       156 |     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
+       158 |         requires mst_edges.spec_setsteph_wf(),
+       159 |     {
+   Holes: 1 total
+      1 × external_body
 ✓ UnionFindStEph.rs
 
 =================================================================
@@ -60,8 +86,8 @@ UnionFindStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   2 clean (no holes, no errors; 66%)
-   1 holed (holes or errors, 33%)
+   1 clean (no holes, no errors; 33%)
+   2 holed (holes or errors, 66%)
    3 total
 
 Proof Functions:
@@ -70,26 +96,31 @@ Proof Functions:
    0 total
 
 Function Specs:
-   20 exec fns with complete spec (requires+ensures) (76%)
-   0 exec fns missing spec (0%)
-   6 proof/spec fns clean (23%)
+   18 exec fns with complete spec (requires+ensures) (64%)
+   4 exec fns missing spec (14%)
+   6 proof/spec fns clean (21%)
    0 proof/spec fns with holes (0%)
-   26 total fns
+   28 total fns
 
 
-Holes Found: 3 (actionable)
-   3 × external_body (100%)
+Holes Found: 2 (actionable)
+   1 × external_body (50%)
+   1 × cfg_hidden_exec (50%)
+
+Warnings: 4 total
+   1 × fn_missing_requires
+   3 × fn_missing_ensures
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 08:21:56 -07:00
-Ended:     2026-03-19 08:21:56 -07:00
-Duration:  6ms
+Started:   2026-03-19 11:06:17 -07:00
+Ended:     2026-03-19 11:06:17 -07:00
+Duration:  7ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-26-03-19 08:21:56 -07:00
-Duration:  6ms
+
+Duration:  7ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log

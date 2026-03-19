@@ -43,7 +43,8 @@ pub mod KruskalStEph {
 
         /// Compute total weight of MST.
         /// APAS: Work O(m), Span O(1)
-        fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64;
+        fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64
+            requires mst.spec_setsteph_wf();
 
         /// Verify MST has correct size.
         /// APAS: Work O(1), Span O(1)
@@ -51,7 +52,7 @@ pub mod KruskalStEph {
             graph: &LabUnDirGraphStEph<V, WrappedF64>,
             mst: &SetStEph<LabEdge<V, WrappedF64>>,
         ) -> B
-            requires Self::spec_kruskalsteph_wf(graph);
+            requires Self::spec_kruskalsteph_wf(graph), mst.spec_setsteph_wf();
     }
 
     } // verus!
@@ -106,29 +107,47 @@ pub mod KruskalStEph {
         mst_edges
     }
 
+    verus! {
+
+    // 9. impls
+
     /// Compute total MST weight.
     /// - APAS: (no cost stated) — utility function
     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
-    #[cfg(not(verus_keep_ghost))]
-    pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64 {
-        let mut total = zero_dist();
-        for edge in mst_edges.iter() {
-            let LabEdge(_u, _v, w) = edge;
-            total += *w;
+    pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64
+        requires mst_edges.spec_setsteph_wf(),
+    {
+        let mut total = WrappedF64 { val: 0.0 };
+        let mut it = mst_edges.iter();
+        let ghost le_seq = it@.1;
+        loop
+            invariant
+                it@.0 <= le_seq.len(),
+                it@.1 == le_seq,
+            decreases le_seq.len() - it@.0,
+        {
+            match it.next() {
+                None => return total,
+                Some(edge) => {
+                    total = WrappedF64 { val: total.val + edge.2.val };
+                },
+            }
         }
-        total
     }
 
     /// Verify MST has correct number of edges.
     /// A valid MST of n vertices should have n-1 edges.
     /// - APAS: (no cost stated) — validation utility
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    #[cfg(not(verus_keep_ghost))]
     pub fn verify_mst_size<V: HashOrd>(
         n_vertices: N,
         mst_edges: &SetStEph<LabEdge<V, WrappedF64>>,
-    ) -> B {
+    ) -> B
+        requires mst_edges.spec_setsteph_wf(),
+    {
         let expected_edges = if n_vertices > 0 { n_vertices - 1 } else { 0 };
         mst_edges.size() == expected_edges
     }
+
+    } // verus!
 }

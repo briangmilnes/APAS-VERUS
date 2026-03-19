@@ -24,15 +24,15 @@ Table of Contents:
    3 clean proof functions
 ✓ DivConReduceStPer.rs
 ❌ ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:607: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:607: error: external_body - #[verifier::external_body]
        608 |     fn point_distance(a: &Point, b: &Point) -> f64 {
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:615: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:615: error: external_body - #[verifier::external_body]
        616 |         fn distance(&self, other: &Point) -> f64 {
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:649: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:649: error: external_body - #[verifier::external_body]
        650 |     pub fn find_best_swap_impl(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (usize, usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:657: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:657: error: external_body - #[verifier::external_body]
        658 |     fn find_best_swap_par(
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:622: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap26/ETSPMtEph.rs:622: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
    Holes: 4 total
       4 × external_body
    Info: 1 × structural_false_positive
@@ -111,12 +111,12 @@ Structural (info only): 1
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 08:21:55 -07:00
-Ended:     2026-03-19 08:21:55 -07:00
-Duration:  33ms
+Started:   2026-03-19 11:06:15 -07:00
+Ended:     2026-03-19 11:06:15 -07:00
+Duration:  36ms
 
 Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
-6-03-19 08:21:55 -07:00
-Duration:  33ms
+    2026-03-19 11:06:15 -07:00
+Duration:  36ms
 
 Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
