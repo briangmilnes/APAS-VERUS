@@ -165,6 +165,7 @@ broadcast use {
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
+                !old(self)@.contains_key(k@) ==> old(self)@.dom().len() + 1 < usize::MAX as nat,
             ensures
                 self@.contains_key(k@),
                 self@.dom() =~= old(self)@.dom().insert(k@),

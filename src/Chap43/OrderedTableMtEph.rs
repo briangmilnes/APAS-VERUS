@@ -351,6 +351,7 @@ broadcast use {
         fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: F) {
             let ghost old_view = self.ghost_locked_table@;
             let (mut locked_val, write_handle) = self.locked_table.acquire_write();
+            proof { assume(!locked_val@.contains_key(k@) ==> locked_val@.dom().len() + 1 < usize::MAX as nat); }
             locked_val.insert(k, v, combine);
             proof { assume(locked_val.spec_orderedtablesteph_wf()); }
             let ghost new_view = locked_val@;
