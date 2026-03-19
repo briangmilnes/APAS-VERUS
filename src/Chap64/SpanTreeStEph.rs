@@ -46,31 +46,11 @@ pub mod SpanTreeStEph {
             requires Self::spec_spantreesteph_wf(graph);
     }
 
-    } // verus!
-
-    /// Exercise 64.2: Spanning Tree via Star Contraction
-    ///
-    /// Computes a spanning tree by recursively applying star contraction and
-    /// collecting all edges from star partitions.
-    ///
-    /// Algorithm:
-    /// 1. Base case: If no edges, return empty edge set
-    /// 2. Compute star partition (centers and partition map)
-    /// 3. Add all edges from partition map to spanning tree
-    /// 4. Build quotient graph
-    /// 5. Recursively compute spanning tree of quotient
-    /// 6. Map quotient tree edges back to original edges
+    /// Exercise 64.2: Spanning Tree via Star Contraction.
     ///
     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS.
-    ///   Expand closure scans original edges per quotient edge (O(E_q * E) per round),
-    ///   but total across O(lg n) rounds stays within APAS bound since edges shrink.
-    ///
-    /// Arguments:
-    /// - graph: The undirected graph
-    ///
-    /// Returns:
-    /// - Set of edges forming a spanning tree
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>> {
         // Base: no edges means no spanning tree edges (isolated vertices)
@@ -123,17 +103,11 @@ pub mod SpanTreeStEph {
         star_contract(graph, &base, &expand)
     }
 
-    /// Verify that result is a valid spanning tree
-    ///
-    /// Checks:
-    /// 1. All vertices are included
-    /// 2. Exactly |V| - 1 edges
-    /// 3. All edges are from original graph
+    /// Verify that result is a valid spanning tree.
     ///
     /// - APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: Work O(|V| + |E_tree|), Span O(|V| + |E_tree|) — linear scan of tree edges.
-    ///
-    /// Returns true if valid spanning tree
+    /// - Claude-Opus-4.6: Work O(|V| + |E_tree|), Span O(|V| + |E_tree|).
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn verify_spanning_tree<V: HashOrd>(graph: &UnDirGraphStEph<V>, tree_edges: &SetStEph<Edge<V>>) -> B {
         let n = graph.sizeV();
@@ -155,4 +129,6 @@ pub mod SpanTreeStEph {
 
         true
     }
+
+    } // verus!
 }

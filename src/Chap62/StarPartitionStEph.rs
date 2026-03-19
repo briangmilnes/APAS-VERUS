@@ -39,27 +39,14 @@ pub mod StarPartitionStEph {
             requires Self::spec_starpartitionsteph_wf(graph);
     }
 
-    } // verus!
-
     #[cfg(not(verus_keep_ghost))]
     pub type T<V> = UnDirGraphStEph<V>;
 
-    /// Sequential Star Partition using greedy selection
-    ///
-    /// Constructs a star partition by iteratively selecting vertices:
-    /// 1. Pick an arbitrary unprocessed vertex v as a star center
-    /// 2. Add all neighbors of v as satellites
-    /// 3. Remove v and its satellites from consideration
-    /// 4. Repeat until all vertices are processed
+    /// Sequential Star Partition using greedy selection.
     ///
     /// - APAS: Work Θ(n + m), Span Θ(n + m)
     /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — agrees with APAS.
-    ///
-    /// Arguments:
-    /// - graph: The undirected graph to partition
-    ///
-    /// Returns:
-    /// - (centers, partition_map): Set of center vertices and mapping from each vertex to its center
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>) {
         let mut partition_map = HashMap::<V, V>::new();
@@ -86,4 +73,6 @@ pub mod StarPartitionStEph {
 
         (centers, partition_map)
     }
+
+    } // verus!
 }

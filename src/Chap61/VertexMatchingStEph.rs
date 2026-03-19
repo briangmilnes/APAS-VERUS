@@ -45,21 +45,11 @@ pub mod VertexMatchingStEph {
             requires Self::spec_vertexmatchingsteph_wf(graph);
     }
 
-    } // verus!
-
     /// Algorithm 61.3: Greedy Vertex Matching
-    ///
-    /// Iterates over edges sequentially, adding each edge to the matching
-    /// if neither endpoint is already matched.
     ///
     /// - APAS: Work Θ(|E|), Span Θ(|E|)
     /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — agrees with APAS
-    ///
-    /// Arguments:
-    /// - graph: The undirected graph
-    ///
-    /// Returns:
-    /// - A set of edges forming a vertex matching (no two edges share an endpoint)
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn greedy_matching<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>> {
         let mut matching: SetStEph<Edge<V>> = SetLit![];
@@ -80,20 +70,9 @@ pub mod VertexMatchingStEph {
 
     /// Baseline Sequential Version of Parallel Matching
     ///
-    /// Simulates the parallel matching algorithm (Algorithm 61.4) sequentially
-    /// by flipping a coin for each edge and selecting edges where:
-    /// - The coin is heads (probability 1/2)
-    /// - All adjacent edges are tails
-    ///
     /// - APAS: (no cost stated — sequential baseline of Algorithm 61.4)
-    /// - Claude-Opus-4.6: Work Θ(|E|²), Span Θ(|E|²) — for each edge, scans all edges for adjacency check
-    ///
-    /// Arguments:
-    /// - graph: The undirected graph
-    /// - seed: Random seed for reproducibility
-    ///
-    /// Returns:
-    /// - A set of edges forming a vertex matching
+    /// - Claude-Opus-4.6: Work Θ(|E|²), Span Θ(|E|²)
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>, seed: u64) -> SetStEph<Edge<V>> {
         use rand::rngs::StdRng;
@@ -138,4 +117,6 @@ pub mod VertexMatchingStEph {
 
         matching
     }
+
+    } // verus!
 }

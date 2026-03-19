@@ -68,24 +68,12 @@ pub mod SpanTreeMtEph {
             requires Self::spec_spantreemteph_wf(graph);
     }
 
-    } // verus!
-
-    /// Exercise 64.2: Spanning Tree via Star Contraction (Parallel)
-    ///
-    /// Computes a spanning tree using parallel star contraction.
+    /// Exercise 64.2: Spanning Tree via Star Contraction (Parallel).
     ///
     /// - APAS: Work O((n+m) lg n), Span O(lg² n)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — expand closure
-    ///   uses 2-way join() splits (not full divide-and-conquer), and inner
-    ///   loop scanning original_edges for each quotient edge is sequential O(E).
-    ///   Span does not achieve polylog; it equals Work.
-    ///
-    /// Arguments:
-    /// - graph: The undirected graph
-    /// - seed: Random seed for star partition
-    ///
-    /// Returns:
-    /// - Set of edges forming a spanning tree
+    ///   uses 2-way join() splits, inner loop is sequential O(E).
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
@@ -210,11 +198,11 @@ pub mod SpanTreeMtEph {
         star_contract_mt(graph, seed, &base, &expand)
     }
 
-    /// Verify that result is a valid spanning tree
+    /// Verify that result is a valid spanning tree.
     ///
     /// - APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: Work O(|V| + |E_tree|), Span O(|E_tree|) — 2-way split
-    ///   halves work but span is O(E_tree/2), not O(lg V).
+    /// - Claude-Opus-4.6: Work O(|V| + |E_tree|), Span O(|E_tree|).
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(
         graph: &UnDirGraphMtEph<V>,
@@ -266,4 +254,6 @@ pub mod SpanTreeMtEph {
 
         *valid.lock().unwrap()
     }
+
+    } // verus!
 }

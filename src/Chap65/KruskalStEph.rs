@@ -55,21 +55,11 @@ pub mod KruskalStEph {
             requires Self::spec_kruskalsteph_wf(graph), mst.spec_setsteph_wf();
     }
 
-    } // verus!
-
-    /// Algorithm 65.2: Kruskal's MST Algorithm
-    ///
-    /// Computes the Minimum Spanning Tree by sorting edges and greedily adding them.
-    /// Uses Union-Find to detect cycles efficiently.
-    ///
-    /// Algorithm:
-    /// 1. Sort edges by weight
-    /// 2. For each edge (u,v) in sorted order:
-    ///    - If find(u) != find(v): add edge to MST, union(u,v)
-    ///    - Else: skip (would create cycle)
+    /// Algorithm 65.2: Kruskal's MST Algorithm.
     ///
     /// - APAS: Work O(m lg n), Span O(m lg n)
-    /// - Claude-Opus-4.6: Work O(m lg m), Span O(m lg m) — sorting dominates; sequential
+    /// - Claude-Opus-4.6: Work O(m lg m), Span O(m lg m) — sorting dominates.
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn kruskal_mst<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
@@ -106,10 +96,6 @@ pub mod KruskalStEph {
 
         mst_edges
     }
-
-    verus! {
-
-    // 9. impls
 
     /// Compute total MST weight.
     /// - APAS: (no cost stated) — utility function

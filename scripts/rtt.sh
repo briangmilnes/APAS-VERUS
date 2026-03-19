@@ -13,5 +13,5 @@ if [ $# -gt 0 ]; then
     FILTER=(-E "test(/(?i)$1/)")
 fi
 
-timeout 120 cargo nextest run -j 6 --no-fail-fast --no-tests warn "${FILTER[@]}" 2>&1 \
+timeout 120 cargo nextest run --release -j 6 --no-fail-fast --no-tests warn "${FILTER[@]}" 2>&1 \
     | sed 's/\x1b\[[0-9;]*[mGKHABCDEFJST]//g'

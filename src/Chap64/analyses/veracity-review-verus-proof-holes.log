@@ -21,44 +21,43 @@ Table of Contents:
 =================================================================
 
 ❌ SpanTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/SpanTreeMtEph.rs:89: error: cfg_hidden_exec - #[cfg(not(verus_keep_ghost))]
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:89: error: cfg_hidden_exec - #[cfg(not(verus_keep_ghost))]
         90 |     pub fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/SpanTreeMtEph.rs:218: error: cfg_hidden_exec - #[cfg(not(verus_keep_ghost))]
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:218: error: cfg_hidden_exec - #[cfg(not(verus_keep_ghost))]
        219 |     pub fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(
    Holes: 2 total
       2 × cfg_hidden_exec
 ❌ SpanTreeStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/SpanTreeStEph.rs:74: error: cfg_hidden_exec - #[cfg(not(verus_keep_ghost))]
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:74: error: cfg_hidden_exec - #[cfg(not(verus_keep_ghost))]
         75 |     pub fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>> {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/SpanTreeStEph.rs:137: error: cfg_hidden_exec - #[cfg(not(verus_keep_ghost))]
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:137: error: cfg_hidden_exec - #[cfg(not(verus_keep_ghost))]
        138 |     pub fn verify_spanning_tree<V: HashOrd>(graph: &UnDirGraphStEph<V>, tree_edges: &SetStEph<Edge<V>>) -> B {
    Holes: 2 total
       2 × cfg_hidden_exec
 ❌ TSPApproxStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/TSPApproxStEph.rs:93: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:93: error: external_body - #[verifier::external_body]
         94 |     #[cfg(not(verus_keep_ghost))]
         95 |     pub fn euler_tour<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/TSPApproxStEph.rs:111: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:111: error: external_body - #[verifier::external_body]
        112 |     #[cfg(not(verus_keep_ghost))]
        113 |     fn euler_tour_dfs<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/TSPApproxStEph.rs:175: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:175: error: external_body - #[verifier::external_body]
        176 |     #[cfg(not(verus_keep_ghost))]
        177 |     pub fn shortcut_tour<V: HashOrd>(euler_tour: &[V]) -> Vec<V> {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/TSPApproxStEph.rs:206: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:206: error: external_body - #[verifier::external_body]
        207 |     #[cfg(not(verus_keep_ghost))]
        208 |     pub fn tour_weight<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/TSPApproxStEph.rs:269: error: external_body - #[verifier::external_body]
-       270 |     #[cfg(not(verus_keep_ghost))]
-       271 |     pub fn approx_metric_tsp<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/TSPApproxStEph.rs:238: error: fn_missing_ensures - fn get_edge_weight — exec fn should have ensures
-       229 |     fn get_neighbors<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>, v: &V) -> (ng: SetStEph<V>)
-            ...
-       236 |     /// - APAS: N/A — internal helper, delegates to LabUnDirGraphStEph::get_edge_label.
-       237 |     /// - Claude-Opus-4.6: Work O(m), Span O(m) — delegates to get_edge_label().
-       239 |         graph: &LabUnDirGraphStEph<V, WrappedF64>,
-       240 |         u: &V,
-   Holes: 5 total
-      5 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:229: error: external_body - #[verifier::external_body]
+       230 |     #[cfg(not(verus_keep_ghost))]
+       231 |     fn get_neighbors<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>, v: &V) -> SetStEph<V> {
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:246: error: external_body - #[verifier::external_body]
+       247 |     #[cfg(not(verus_keep_ghost))]
+       248 |     fn get_edge_weight<V: HashOrd>(
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:280: error: external_body - #[verifier::external_body]
+       281 |     #[cfg(not(verus_keep_ghost))]
+       282 |     pub fn approx_metric_tsp<V: HashOrd>(
+   Holes: 7 total
+      7 × external_body
 
 =================================================================
 2. Depends Upon
@@ -95,30 +94,24 @@ Proof Functions:
    0 total
 
 Function Specs:
-   15 exec fns with complete spec (requires+ensures) (75%)
-   1 exec fns missing spec (5%)
+   16 exec fns with complete spec (requires+ensures) (80%)
+   0 exec fns missing spec (0%)
    4 proof/spec fns clean (20%)
    0 proof/spec fns with holes (0%)
    20 total fns
 
 
-Holes Found: 9 (actionable)
-   5 × external_body (55%)
-   4 × cfg_hidden_exec (44%)
-
-Warnings: 1 total
-   1 × fn_missing_ensures
+Holes Found: 11 (actionable)
+   7 × external_body (63%)
+   4 × cfg_hidden_exec (36%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 11:06:17 -07:00
-Ended:     2026-03-19 11:06:17 -07:00
-Duration:  4ms
+Started:   2026-03-19 10:05:26 -07:00
+Ended:     2026-03-19 10:05:26 -07:00
+Duration:  6ms
 
 Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
-7 -07:00
-Duration:  4ms
-
-Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap64/analyses/veracity-review-verus-proof-holes.log

@@ -25,5 +25,5 @@ cd "$PROJECT_ROOT"
     2>&1 | sed 's/\x1b\[[0-9;]*[mGKHABCDEFJST]//g'
 
 cd "$PROJECT_ROOT/rust_verify_test"
-cargo nextest run -j 6 --no-fail-fast --no-tests warn "${FILTER[@]}" 2>&1 \
+cargo nextest run --release -j 6 --no-fail-fast --no-tests warn "${FILTER[@]}" 2>&1 \
     | sed 's/\x1b\[[0-9;]*[mGKHABCDEFJST]//g'

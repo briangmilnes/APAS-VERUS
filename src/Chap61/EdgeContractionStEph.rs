@@ -52,8 +52,6 @@ pub mod EdgeContractionStEph {
             requires Self::spec_edgecontractionsteph_wf(graph);
     }
 
-    } // verus!
-
     #[cfg(not(verus_keep_ghost))]
     pub type T<V> = UnDirGraphStEph<V>;
 
@@ -65,13 +63,7 @@ pub mod EdgeContractionStEph {
     ///
     /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
     /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(|V| + |E|) — agrees with APAS
-    ///
-    /// Arguments:
-    /// - graph: The undirected graph
-    /// - matching: A vertex matching (set of edges where no two share an endpoint)
-    ///
-    /// Returns:
-    /// - Contracted graph where matched edges are merged into single vertices
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn edge_contract<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
@@ -122,15 +114,12 @@ pub mod EdgeContractionStEph {
     ///
     /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
     /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(|V| + |E|) — agrees with APAS
-    ///
-    /// Arguments:
-    /// - graph: The undirected graph
-    ///
-    /// Returns:
-    /// - Contracted graph
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn contract_round<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> UnDirGraphStEph<V> {
         let matching = greedy_matching(graph);
         edge_contract(graph, &matching)
     }
+
+    } // verus!
 }

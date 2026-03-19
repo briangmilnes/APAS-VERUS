@@ -21,14 +21,14 @@ Table of Contents:
 =================================================================
 
 ❌ FibonacciMtEph2Threads.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap11/FibonacciMtEph2Threads.rs:155: error: assume(false) - Result::Err(_) => { proof { assume(false); }; diverge() } — needs diverge(); use `assume(false); diverge()`
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:155: error: assume(false) - Result::Err(_) => { proof { assume(false); }; diverge() } — needs diverge(); use `assume(false); diverge()`
        100 | pub fn fib_2threads(n: u64) -> (fibonacci: u64)
             ...
        153 |     let left_out = match join_handle1.join() {
        154 |         Result::Ok(out) => out,
        156 |     };
        157 |     let left_val = left_out.0;
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap11/FibonacciMtEph2Threads.rs:163: error: assume(false) - Result::Err(_) => { proof { assume(false); }; diverge() } — needs diverge(); use `assume(false); diverge()`
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:163: error: assume(false) - Result::Err(_) => { proof { assume(false); }; diverge() } — needs diverge(); use `assume(false); diverge()`
        100 | pub fn fib_2threads(n: u64) -> (fibonacci: u64)
             ...
        161 |     let right_out = match join_handle2.join() {
@@ -38,14 +38,14 @@ Table of Contents:
    Holes: 2 total
       2 × assume(false)
 ❌ FibonacciMtEphRecomputes.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap11/FibonacciMtEphRecomputes.rs:151: error: assume(false) - Result::Err(_) => { proof { assume(false); }; diverge() } — needs diverge(); use `assume(false); diverge()`
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:151: error: assume(false) - Result::Err(_) => { proof { assume(false); }; diverge() } — needs diverge(); use `assume(false); diverge()`
         92 | pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
             ...
        149 |         let left_out = match left_handle.join() {
        150 |             Result::Ok(out) => out,
        152 |         };
        153 |         let left_val = left_out.0;
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap11/FibonacciMtEphRecomputes.rs:159: error: assume(false) - Result::Err(_) => { proof { assume(false); }; diverge()} — needs diverge(); use `assume(false); diverge()`
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:159: error: assume(false) - Result::Err(_) => { proof { assume(false); }; diverge()} — needs diverge(); use `assume(false); diverge()`
         92 | pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
             ...
        157 |         let right_out = match right_handle.join() {
@@ -56,14 +56,14 @@ Table of Contents:
       2 × assume(false)
 ✓ FibonacciMtPerAllThreads.rs
 ❌ FibonacciMtPerTSM.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap11/FibonacciMtPerTSM.rs:145: error: assume(false) - Result::Err(_) => { proof { assume(false); }; diverge() } — needs diverge(); use `assume(false); diverge()`
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:145: error: assume(false) - Result::Err(_) => { proof { assume(false); }; diverge() } — needs diverge(); use `assume(false); diverge()`
         86 | pub fn fib(n: u64) -> (fibonacci: u64)
             ...
        143 |         let left_out = match left_handle.join() {
        144 |             Result::Ok(out) => out,
        146 |         };
        147 |         let left_val = left_out.0;
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap11/FibonacciMtPerTSM.rs:153: error: assume(false) - Result::Err(_) => { proof { assume(false); }; diverge() } — needs diverge(); use `assume(false); diverge()`
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:153: error: assume(false) - Result::Err(_) => { proof { assume(false); }; diverge() } — needs diverge(); use `assume(false); diverge()`
         86 | pub fn fib(n: u64) -> (fibonacci: u64)
             ...
        151 |         let right_out = match right_handle.join() {
@@ -128,9 +128,9 @@ Holes Found: 6 (actionable)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 11:06:15 -07:00
-Ended:     2026-03-19 11:06:15 -07:00
-Duration:  6ms
+Started:   2026-03-19 10:05:24 -07:00
+Ended:     2026-03-19 10:05:24 -07:00
+Duration:  27ms
 
 Full output: src/Chap11/analyses/veracity-review-verus-proof-holes.log
-eview-verus-proof-holes.log
+output: src/Chap11/analyses/veracity-review-verus-proof-holes.log

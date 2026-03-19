@@ -43,28 +43,14 @@ pub mod StarPartitionMtEph {
             requires Self::spec_starpartitionmteph_wf(graph);
     }
 
-    } // verus!
-
     #[cfg(not(verus_keep_ghost))]
     pub type T<V> = UnDirGraphMtEph<V>;
 
-    /// Algorithm 62.3: Parallel Star Partition
-    ///
-    /// Computes a star partition using randomized coin flips:
-    /// 1. Flip a coin for each vertex
-    /// 2. Find edges from tails (non-centers) to heads (centers)
-    /// 3. Use Seq.inject to map satellites to centers
-    /// 4. Remaining vertices become singleton centers
+    /// Algorithm 62.3: Parallel Star Partition.
     ///
     /// - APAS: Work O(n + m), Span O(lg n)
-    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — all loops are sequential; no parallelism implemented.
-    ///
-    /// Arguments:
-    /// - graph: The undirected graph to partition
-    /// - seed: Random seed for coin flips
-    ///
-    /// Returns:
-    /// - (centers, partition_map): Set of center vertices and mapping from each vertex to its center
+    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — all loops sequential.
+    #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn parallel_star_partition<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
@@ -125,4 +111,6 @@ pub mod StarPartitionMtEph {
 
         (centers, partition_map)
     }
+
+    } // verus!
 }
