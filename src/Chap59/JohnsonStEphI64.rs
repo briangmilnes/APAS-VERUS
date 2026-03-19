@@ -59,6 +59,7 @@ pub mod JohnsonStEphI64 {
                 spec_labgraphview_wf(graph@),
                 valid_key_type_WeightedEdge::<usize, i128>(),
                 forall|v: usize| graph@.V.contains(v) <==> v < graph@.V.len(),
+                graph@.A.len() * 2 + 2 <= usize::MAX as int,
             ensures
                 result.spec_n() as nat == graph@.V.len();
     }
@@ -249,10 +250,12 @@ pub mod JohnsonStEphI64 {
             spec_labgraphview_wf(graph@),
             valid_key_type_WeightedEdge::<usize, i128>(),
             forall|v: usize| graph@.V.contains(v) <==> v < n,
+            graph@.A.len() * 2 + 2 <= usize::MAX as int,
         ensures
             spec_labgraphview_wf(reweighted@),
             reweighted@.V.len() == n as nat,
             forall|v: usize| v < n ==> reweighted@.V.contains(v),
+            reweighted@.A.len() * 2 + 2 <= usize::MAX as int,
     {
         let vertices = build_vertex_set(n - 1);
         proof {
@@ -319,6 +322,11 @@ pub mod JohnsonStEphI64 {
         let result = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
         proof {
             assert(result@.V.len() == n as nat);
+            // Reweighting preserves edge count: each original edge maps to at most one
+            // reweighted edge. from_weighed_edges ensures result@.A =~= edges@.
+            // Proving edges@.len() <= graph@.A.len() needs a graph partition lemma
+            // (sum of |out_neighbors(u)| == |A|) which is not yet in the library.
+            assume(result@.A.len() <= graph@.A.len());
         }
         result
     }
@@ -372,6 +380,7 @@ pub mod JohnsonStEphI64 {
             spec_labgraphview_wf(graph@),
             valid_key_type_WeightedEdge::<usize, i128>(),
             forall|v: usize| graph@.V.contains(v) <==> v < graph@.V.len(),
+            graph@.A.len() * 2 + 2 <= usize::MAX as int,
         ensures
             result.spec_n() as nat == graph@.V.len(),
     {
@@ -431,11 +440,11 @@ pub mod JohnsonStEphI64 {
                 valid_key_type_WeightedEdge::<usize, i128>(),
                 reweighted@.V.len() == n as nat,
                 forall|v: usize| v < n ==> reweighted@.V.contains(v),
+                reweighted@.A.len() * 2 + 2 <= usize::MAX as int,
             decreases n - u,
         {
             // Dijkstra requires source < graph.vertices().size().
             // reweighted.vertices().size() == reweighted@.V.len() == n, and u < n.
-            proof { assume(reweighted@.A.len() * 2 + 2 <= usize::MAX as int); }
             let sssp = dijkstra(&reweighted, u);
 
             let h_u = potentials[u];

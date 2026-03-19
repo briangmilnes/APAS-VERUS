@@ -20,28 +20,40 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-✓ SpanTreeMtEph.rs
-✓ SpanTreeStEph.rs
+❌ SpanTreeMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:89: error: cfg_hidden_exec - #[cfg(not(verus_keep_ghost))]
+        90 |     pub fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:218: error: cfg_hidden_exec - #[cfg(not(verus_keep_ghost))]
+       219 |     pub fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(
+   Holes: 2 total
+      2 × cfg_hidden_exec
+❌ SpanTreeStEph.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:74: error: cfg_hidden_exec - #[cfg(not(verus_keep_ghost))]
+        75 |     pub fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>> {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:137: error: cfg_hidden_exec - #[cfg(not(verus_keep_ghost))]
+       138 |     pub fn verify_spanning_tree<V: HashOrd>(graph: &UnDirGraphStEph<V>, tree_edges: &SetStEph<Edge<V>>) -> B {
+   Holes: 2 total
+      2 × cfg_hidden_exec
 ❌ TSPApproxStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:93: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:93: error: external_body - #[verifier::external_body]
         94 |     #[cfg(not(verus_keep_ghost))]
         95 |     pub fn euler_tour<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:111: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:111: error: external_body - #[verifier::external_body]
        112 |     #[cfg(not(verus_keep_ghost))]
        113 |     fn euler_tour_dfs<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:175: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:175: error: external_body - #[verifier::external_body]
        176 |     #[cfg(not(verus_keep_ghost))]
        177 |     pub fn shortcut_tour<V: HashOrd>(euler_tour: &[V]) -> Vec<V> {
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:206: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:206: error: external_body - #[verifier::external_body]
        207 |     #[cfg(not(verus_keep_ghost))]
        208 |     pub fn tour_weight<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:229: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:229: error: external_body - #[verifier::external_body]
        230 |     #[cfg(not(verus_keep_ghost))]
        231 |     fn get_neighbors<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>, v: &V) -> SetStEph<V> {
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:246: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:246: error: external_body - #[verifier::external_body]
        247 |     #[cfg(not(verus_keep_ghost))]
        248 |     fn get_edge_weight<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:280: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:280: error: external_body - #[verifier::external_body]
        281 |     #[cfg(not(verus_keep_ghost))]
        282 |     pub fn approx_metric_tsp<V: HashOrd>(
    Holes: 7 total
@@ -72,8 +84,8 @@ TSPApproxStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   2 clean (no holes, no errors; 66%)
-   1 holed (holes or errors, 33%)
+   0 clean (no holes, no errors; 0%)
+   3 holed (holes or errors, 100%)
    3 total
 
 Proof Functions:
@@ -89,16 +101,17 @@ Function Specs:
    20 total fns
 
 
-Holes Found: 7 (actionable)
-   7 × external_body (100%)
+Holes Found: 11 (actionable)
+   7 × external_body (63%)
+   4 × cfg_hidden_exec (36%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 08:21:56 -07:00
-Ended:     2026-03-19 08:21:56 -07:00
-Duration:  7ms
+Started:   2026-03-19 10:11:06 -07:00
+Ended:     2026-03-19 10:11:06 -07:00
+Duration:  11ms
 
 Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
+erus-proof-holes.log
