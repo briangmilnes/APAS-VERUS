@@ -96,8 +96,8 @@ Table of Contents:
       3 × assume()
       24 × external_body
    Info: 2 × structural_false_positive
-      1 × RWLOCK_GHOST
       1 × OPAQUE_EXTERNAL
+      1 × RWLOCK_GHOST
 ✓ BSTSetTreapMtEph.rs
 ⚠ BSTTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:362: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
@@ -232,15 +232,15 @@ Structural (info only): 8
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 03:42:00 -07:00
-Ended:     2026-03-19 03:42:00 -07:00
-Duration:  42ms
+Started:   2026-03-19 04:55:21 -07:00
+Ended:     2026-03-19 04:55:21 -07:00
+Duration:  74ms
 
 Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log
-=======================
+===================================
 
-Started:   2026-03-19 03:42:00 -07:00
-Ended:     2026-03-19 03:42:00 -07:00
-Duration:  42ms
+Started:   2026-03-19 04:55:21 -07:00
+Ended:     2026-03-19 04:55:21 -07:00
+Duration:  74ms
 
 Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log

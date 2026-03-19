@@ -1192,61 +1192,28 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtEph.rs:547: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph — unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtEph<T> {} [high]
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtEph.rs:548: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph — unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {} [high]
    Info: 11 × structural_false_positive
-❌ src/Chap41/AVLTreeSetMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:224: error: external_body - #[verifier::external_body]
-       225 |         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:276: error: external_body - #[verifier::external_body]
-       277 |         fn filter<F: Pred<T> + Clone>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:339: error: external_body - #[verifier::external_body]
-       340 |         fn intersection(&self, other: &Self) -> (common: Self)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:397: error: external_body - #[verifier::external_body]
-       398 |         fn difference(&self, other: &Self) -> (remaining: Self)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:408: error: external_body - #[verifier::external_body]
-       409 |         fn union(&self, other: &Self) -> (combined: Self)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:498: error: external_body - #[verifier::external_body]
-       499 |         fn delete(&self, x: &T) -> (updated: Self)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:508: error: external_body - #[verifier::external_body]
-       509 |         fn insert(&self, x: T) -> (updated: Self)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:230: error: fn_missing_requires - fn parallel_sort — exec fn should have requires
-       225 |         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
+⚠ src/Chap41/AVLTreeSetMtPer.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:409: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       401 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       228 |             let mut vals = seq.values_in_order();
-       229 | 
-       231 |                 ensures sorted@.len() == vals@.len()
-       232 |             {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:543: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       539 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       541 |         {
-       542 |             proof {
-       544 |                 assume(other.spec_avltreesetmtper_wf());
-       545 |             }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:544: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       539 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       542 |             proof {
-       543 |                 assume(self.spec_avltreesetmtper_wf());
-       545 |             }
-       546 |             let equal = self.size() == other.size() && {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:566: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       539 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       564 |                 all_found
-       565 |             };
-       567 |             equal
-       568 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:605: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       601 |         fn clone(&self) -> (cloned: Self)
-            ...
-       603 |         {
-       604 |             let cloned = AVLTreeSetMtPer { elements: self.elements.clone() };
-       606 |             cloned
-       607 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:579: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
-   Holes: 7 total
-      7 × external_body
-   Info: 1 × structural_false_positive
-      1 × STD_TRAIT_IMPL
+       407 |             self_handle.release_read();
+       408 |             other_handle.release_read();
+       410 |             equal
+       411 |         }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:185: info: structural_false_positive RWLOCK_GHOST size — assume(count == self@.len()); [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:200: info: structural_false_positive RWLOCK_GHOST to_seq — assume(seq@.to_set() =~= self@); [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:272: info: structural_false_positive RWLOCK_GHOST filter — assume(filtered@.subset_of(self@)); [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:273: info: structural_false_positive RWLOCK_GHOST filter — assume(forall|v: T::V| #[trigger] filtered@.contains(v) [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:275: info: structural_false_positive RWLOCK_GHOST filter — assume(forall|v: T::V| self@.contains(v) && spec_pred(v) [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:295: info: structural_false_positive RWLOCK_GHOST intersection — assume(common@ == self@.intersect(other@)); [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:314: info: structural_false_positive RWLOCK_GHOST difference — assume(remaining@ == self@.difference(other@)); [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:333: info: structural_false_positive RWLOCK_GHOST union — assume(combined@ == self@.union(other@)); [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:344: info: structural_false_positive RWLOCK_GHOST find — assume(found == self@.contains(x@)); [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:362: info: structural_false_positive RWLOCK_GHOST delete — assume(updated@ == self@.remove(x@)); [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:379: info: structural_false_positive RWLOCK_GHOST insert — assume(updated@ == self@.insert(x@)); [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:422: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:461: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtPer — unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtPer<T> {} [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:462: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtPer — unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {} [high]
 ❌ src/Chap41/AVLTreeSetStEph.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetStEph.rs:1085: error: assume() [algorithmic] - assume(new_vec@.len() < usize::MAX);
        911 |         fn insert(&mut self, x: T)
@@ -2776,13 +2743,13 @@ Chap52::AdjSeqGraphMtEph  depends upon only clean modules
 Chap52::AdjSeqGraphMtPer  depends upon only clean modules
 Chap52::AdjSeqGraphStEph  depends upon only clean modules
 Chap52::AdjSeqGraphStPer  depends upon only clean modules
-Chap52::AdjTableGraphMtPer  depends upon holed modules: Chap41::AVLTreeSetMtPer
+Chap52::AdjTableGraphMtPer  depends upon only clean modules
 Chap52::AdjTableGraphStEph  depends upon holed modules: Chap41::AVLTreeSetStEph, Chap43::OrderedTableStEph
 Chap52::AdjTableGraphStPer  depends upon holed modules: Chap43::OrderedTableStPer
-Chap52::EdgeSetGraphMtPer  depends upon holed modules: Chap41::AVLTreeSetMtPer
+Chap52::EdgeSetGraphMtPer  depends upon only clean modules
 Chap52::EdgeSetGraphStEph  depends upon holed modules: Chap41::AVLTreeSetStEph
 Chap52::EdgeSetGraphStPer  depends upon only clean modules
-Chap53::GraphSearchMtPer  depends upon holed modules: Chap41::AVLTreeSetMtPer
+Chap53::GraphSearchMtPer  depends upon only clean modules
 Chap53::GraphSearchStEph  depends upon holed modules: Chap41::AVLTreeSetStEph
 Chap53::GraphSearchStPer  depends upon only clean modules
 Chap53::PQMinStEph  depends upon holed modules: Chap41::AVLTreeSetStEph
@@ -3038,13 +3005,13 @@ src/Chap52/AdjSeqGraphMtEph.rs  depends upon only clean modules
 src/Chap52/AdjSeqGraphMtPer.rs  depends upon only clean modules
 src/Chap52/AdjSeqGraphStEph.rs  depends upon only clean modules
 src/Chap52/AdjSeqGraphStPer.rs  depends upon only clean modules
-src/Chap52/AdjTableGraphMtPer.rs  depends upon holed modules: Chap41::AVLTreeSetMtPer
+src/Chap52/AdjTableGraphMtPer.rs  depends upon only clean modules
 src/Chap52/AdjTableGraphStEph.rs  depends upon holed modules: Chap41::AVLTreeSetStEph, Chap43::OrderedTableStEph
 src/Chap52/AdjTableGraphStPer.rs  depends upon holed modules: Chap43::OrderedTableStPer
-src/Chap52/EdgeSetGraphMtPer.rs  depends upon holed modules: Chap41::AVLTreeSetMtPer
+src/Chap52/EdgeSetGraphMtPer.rs  depends upon only clean modules
 src/Chap52/EdgeSetGraphStEph.rs  depends upon holed modules: Chap41::AVLTreeSetStEph
 src/Chap52/EdgeSetGraphStPer.rs  depends upon only clean modules
-src/Chap53/GraphSearchMtPer.rs  depends upon holed modules: Chap41::AVLTreeSetMtPer
+src/Chap53/GraphSearchMtPer.rs  depends upon only clean modules
 src/Chap53/GraphSearchStEph.rs  depends upon holed modules: Chap41::AVLTreeSetStEph
 src/Chap53/GraphSearchStPer.rs  depends upon only clean modules
 src/Chap53/PQMinStEph.rs  depends upon holed modules: Chap41::AVLTreeSetStEph
@@ -3108,8 +3075,8 @@ src/ParaPairs.rs  depends upon holed modules: Chap02::HFSchedulerMtEph
 =================================================================
 
 Modules:
-   215 clean (no holes, no errors; 83%)
-   42 holed (holes or errors, 16%)
+   216 clean (no holes, no errors; 84%)
+   41 holed (holes or errors, 15%)
    257 total
 
 Proof Functions:
@@ -3119,34 +3086,34 @@ Proof Functions:
 
 Function Specs:
    5133 exec fns with complete spec (requires+ensures) (69%)
-   63 exec fns missing spec (0%)
-   2160 proof/spec fns clean (29%)
+   62 exec fns missing spec (0%)
+   2161 proof/spec fns clean (29%)
    1 proof/spec fns with holes (0%)
    7357 total fns
 
 
-Holes Found: 187 (actionable)
+Holes Found: 180 (actionable)
    10 × assume(false) (5%)
    23 × assume() (12%)
       21 × algorithmic
       1 × rwlock:reader
       1 × closure
-   153 × external_body (81%)
+   146 × external_body (81%)
    1 × external (0%)
 
 Per-Chapter Holes:
   Chap02:  1  Chap11:  6  Chap26:  4
-  Chap38: 28  Chap39: 27  Chap41: 13
+  Chap38: 28  Chap39: 27  Chap41:  6
   Chap43: 43  Chap45:  1  Chap47: 14
   Chap59:  6  Chap61:  4  Chap62:  7
   Chap63: 12  Chap64:  7  Chap65:  3
   Chap66: 11
 
-Warnings: 186 total
-   11 × fn_missing_requires
+Warnings: 182 total
+   10 × fn_missing_requires
    16 × fn_missing_wf_requires
    7 × fn_missing_wf_ensures
-   152 × assume_eq_clone_workaround
+   149 × assume_eq_clone_workaround
 
 Accepted (reviewed): 55 total
    26 × external_body_accept_hole
@@ -3154,8 +3121,8 @@ Accepted (reviewed): 55 total
    7 × accept()
    5 × external_accept_hole
    4 × unsafe_block_accept_hole
-   1 × external_type_specification_accept_hole
    1 × enum_outside_verus_accept_hole
+   1 × external_type_specification_accept_hole
    1 × struct_outside_verus_accept_hole
 
 Accepted by Chapter:
@@ -3163,12 +3130,12 @@ Accepted by Chapter:
   Chap19:  3  Chap30:  7  Chap37:  5
   Chap40:  3  Chap41:  2  Chap56:  2
 
-Structural (info only): 155
-   124 × RWLOCK_GHOST
+Structural (info only): 168
+   135 × RWLOCK_GHOST
    12 × STD_TRAIT_IMPL
    11 × OPAQUE_EXTERNAL
+   6 × UNSAFE_SEND_SYNC
    4 × THREAD_SPAWN
-   4 × UNSAFE_SEND_SYNC
 
 =================================================================
 4. Proof Targets
@@ -3184,11 +3151,11 @@ Structural (info only): 155
    2  Chap38  (28 holes, 2 files)
    3  Chap39  (27 holes, 4 files)
    4  Chap47  (14 holes, 9 files)
-   5  Chap41  (13 holes, 7 files)
-   6  Chap63  (12 holes, 2 files)
-   7  Chap66  (11 holes, 2 files)
-   8  Chap62  (7 holes, 4 files)
-   9  Chap64  (7 holes, 3 files)
+   5  Chap63  (12 holes, 2 files)
+   6  Chap66  (11 holes, 2 files)
+   7  Chap62  (7 holes, 4 files)
+   8  Chap64  (7 holes, 3 files)
+   9  Chap41  (6 holes, 7 files)
    10  Chap11  (6 holes, 5 files)
    11  Chap59  (6 holes, 4 files)
    12  Chap26  (4 holes, 8 files)
@@ -3196,54 +3163,53 @@ Structural (info only): 155
    14  Chap65  (3 holes, 3 files)
    15  Chap02  (1 holes, 2 files)
    16  Chap45  (1 holes, 7 files)
-   17  Chap30  (0 holes, 1 files)
-   18  Chap50  (0 holes, 8 files)
-   19  Chap12  (0 holes, 3 files)
-   20  Concurrency  (0 holes, 1 files)
-   21  Chap55  (0 holes, 8 files)
-   22  Chap54  (0 holes, 4 files)
+   17  Chap53  (0 holes, 5 files)
+   18  Chap23  (0 holes, 2 files)
+   19  Chap19  (0 holes, 4 files)
+   20  Chap55  (0 holes, 8 files)
+   21  Chap03  (0 holes, 1 files)
+   22  Chap40  (0 holes, 3 files)
    23  Chap57  (0 holes, 3 files)
-   24  Chap36  (0 holes, 3 files)
-   25  Chap19  (0 holes, 4 files)
-   26  Chap56  (0 holes, 12 files)
-   27  Chap51  (0 holes, 8 files)
-   28  Chap05  (0 holes, 5 files)
-   29  ParaPairs  (0 holes, 1 files)
-   30  Chap18  (0 holes, 7 files)
-   31  Chap27  (0 holes, 4 files)
-   32  Chap58  (0 holes, 2 files)
-   33  Chap42  (0 holes, 4 files)
-   34  Chap17  (0 holes, 1 files)
-   35  Chap23  (0 holes, 2 files)
-   36  Chap28  (0 holes, 11 files)
-   37  Chap52  (0 holes, 14 files)
-   38  Chap40  (0 holes, 3 files)
-   39  Chap37  (0 holes, 19 files)
-   40  Chap53  (0 holes, 5 files)
-   41  Chap03  (0 holes, 1 files)
-   42  Chap44  (0 holes, 2 files)
-   43  Chap49  (0 holes, 8 files)
-   44  Chap35  (0 holes, 4 files)
-   45  Chap06  (0 holes, 20 files)
-   46  Chap21  (0 holes, 12 files)
+   24  Chap35  (0 holes, 4 files)
+   25  Chap36  (0 holes, 3 files)
+   26  ParaPairs  (0 holes, 1 files)
+   27  Chap12  (0 holes, 3 files)
+   28  Chap37  (0 holes, 19 files)
+   29  Chap17  (0 holes, 1 files)
+   30  Chap54  (0 holes, 4 files)
+   31  Chap28  (0 holes, 11 files)
+   32  Chap49  (0 holes, 8 files)
+   33  Chap58  (0 holes, 2 files)
+   34  Concurrency  (0 holes, 1 files)
+   35  Chap56  (0 holes, 12 files)
+   36  Chap51  (0 holes, 8 files)
+   37  Chap21  (0 holes, 12 files)
+   38  Chap30  (0 holes, 1 files)
+   39  Chap50  (0 holes, 8 files)
+   40  Chap52  (0 holes, 14 files)
+   41  Chap27  (0 holes, 4 files)
+   42  Chap42  (0 holes, 4 files)
+   43  Chap18  (0 holes, 7 files)
+   44  Chap06  (0 holes, 20 files)
+   45  Chap05  (0 holes, 5 files)
+   46  Chap44  (0 holes, 2 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
 =================================================================
 
-   1  src/Chap39/BSTParaTreapMtEph.rs  (27 holes)
-   2  src/Chap38/BSTParaMtEph.rs  (27 holes)
-   3  src/Chap41/AVLTreeSetMtPer.rs  (7 holes)
-   4  src/Chap26/ETSPMtEph.rs  (4 holes)
-   5  src/Chap11/FibonacciMtEphRecomputes.rs  (2 holes)
-   6  src/Chap11/FibonacciMtPerTSM.rs  (2 holes)
+   1  src/Chap38/BSTParaMtEph.rs  (27 holes)
+   2  src/Chap39/BSTParaTreapMtEph.rs  (27 holes)
+   3  src/Chap26/ETSPMtEph.rs  (4 holes)
+   4  src/Chap11/FibonacciMtPerTSM.rs  (2 holes)
+   5  src/Chap11/FibonacciMtEph2Threads.rs  (2 holes)
+   6  src/Chap11/FibonacciMtEphRecomputes.rs  (2 holes)
    7  src/Chap41/AVLTreeSetStEph.rs  (2 holes)
-   8  src/Chap11/FibonacciMtEph2Threads.rs  (2 holes)
-   9  src/Chap02/HFSchedulerMtEph.rs  (1 holes)
-   10  src/Chap43/OrderedSetStPer.rs  (1 holes)
-   11  src/Chap45/Example45_2.rs  (1 holes)
+   8  src/Chap43/OrderedSetStPer.rs  (1 holes)
+   9  src/Chap45/Example45_2.rs  (1 holes)
+   10  src/Chap38/BSTParaStEph.rs  (1 holes)
+   11  src/Chap02/HFSchedulerMtEph.rs  (1 holes)
    12  src/Chap47/ParaHashTableStEph.rs  (1 holes)
-   13  src/Chap38/BSTParaStEph.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
@@ -3270,7 +3236,7 @@ Structural (info only): 155
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 30 clean, 16 holed, 187 holes (global), 257 modules
+Chapter Status — 46 chapters, 30 clean, 16 holed, 180 holes (global), 257 modules
 
 CLEAN CHAPTERS (30)
   Chapter        Files
@@ -3306,7 +3272,7 @@ CLEAN CHAPTERS (30)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (16) — 187 holes
+HOLED CHAPTERS (16) — 180 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
   Chap02             1     2  internal  Chap02::HFSchedulerMtEph
@@ -3314,7 +3280,7 @@ HOLED CHAPTERS (16) — 187 holes
   Chap26             4     8  YES       
   Chap38            28     2  YES       
   Chap39            27     4  internal  Chap39::BSTParaTreapMtEph
-  Chap41            13     7  internal  Chap41::AVLTreeSetStEph
+  Chap41             6     7  internal  Chap41::AVLTreeSetStEph
   Chap43            43    11  NO        Chap42::TableStPer, Chap41::AVLTreeSetStEph
   Chap45             1     7  YES       
   Chap47            14     9  internal  Chap47::ParaHashTableStEph
@@ -3354,8 +3320,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 03:42:01 -07:00
-Ended:     2026-03-19 03:42:03 -07:00
-Duration:  1558ms
+Started:   2026-03-19 04:55:22 -07:00
+Ended:     2026-03-19 04:55:24 -07:00
+Duration:  1755ms
 
 Full output: /home/milnes/projects/APAS-VERUS-agent3/analyses/veracity-review-verus-proof-holes.log
