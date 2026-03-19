@@ -21,43 +21,43 @@ Table of Contents:
 =================================================================
 
 ❌ ConnectivityMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:90: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityMtEph.rs:90: error: external_body - #[verifier::external_body]
         91 |     #[cfg(not(verus_keep_ghost))]
         92 |     pub fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N {
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:119: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityMtEph.rs:119: error: external_body - #[verifier::external_body]
        120 |     #[cfg(not(verus_keep_ghost))]
        121 |     pub fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:149: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityMtEph.rs:149: error: external_body - #[verifier::external_body]
        150 |     #[cfg(not(verus_keep_ghost))]
        151 |     fn build_quotient_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:168: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityMtEph.rs:168: error: external_body - #[verifier::external_body]
        169 |     #[cfg(not(verus_keep_ghost))]
        170 |     fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:221: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityMtEph.rs:221: error: external_body - #[verifier::external_body]
        222 |     #[cfg(not(verus_keep_ghost))]
        223 |     fn compose_maps_parallel<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:239: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityMtEph.rs:239: error: external_body - #[verifier::external_body]
        240 |     #[cfg(not(verus_keep_ghost))]
        241 |     pub fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N {
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:253: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityMtEph.rs:253: error: external_body - #[verifier::external_body]
        254 |     #[cfg(not(verus_keep_ghost))]
        255 |     pub fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static>(
    Holes: 7 total
       7 × external_body
 ❌ ConnectivityStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:80: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityStEph.rs:80: error: external_body - #[verifier::external_body]
         81 |     #[cfg(not(verus_keep_ghost))]
         82 |     pub fn count_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N {
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:109: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityStEph.rs:109: error: external_body - #[verifier::external_body]
        110 |     #[cfg(not(verus_keep_ghost))]
        111 |     pub fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>) {
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:141: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityStEph.rs:141: error: external_body - #[verifier::external_body]
        142 |     #[cfg(not(verus_keep_ghost))]
        143 |     fn build_quotient_edges<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:173: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityStEph.rs:173: error: external_body - #[verifier::external_body]
        174 |     #[cfg(not(verus_keep_ghost))]
        175 |     pub fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N {
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:189: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityStEph.rs:189: error: external_body - #[verifier::external_body]
        190 |     #[cfg(not(verus_keep_ghost))]
        191 |     pub fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>) {
    Holes: 5 total
@@ -110,12 +110,12 @@ Holes Found: 12 (actionable)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 18:05:24 -07:00
-Ended:     2026-03-18 18:05:24 -07:00
-Duration:  7ms
+Started:   2026-03-18 19:00:02 -07:00
+Ended:     2026-03-18 19:00:02 -07:00
+Duration:  4ms
 
 Full output: src/Chap63/analyses/veracity-review-verus-proof-holes.log
-:     2026-03-18 18:05:24 -07:00
-Duration:  7ms
+ded:     2026-03-18 19:00:02 -07:00
+Duration:  4ms
 
 Full output: src/Chap63/analyses/veracity-review-verus-proof-holes.log

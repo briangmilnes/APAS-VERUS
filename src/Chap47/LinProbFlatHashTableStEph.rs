@@ -19,8 +19,14 @@ pub mod LinProbFlatHashTableStEph {
     use crate::Chap47::FlatHashTable::FlatHashTable::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::feq::feq::feq;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
 
     verus! {
+
+    // 3. broadcast use
+    broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
     // 4. type definitions
 
@@ -61,6 +67,16 @@ pub mod LinProbFlatHashTableStEph {
     }
 
     // 7. proof fns
+
+    /// Clone bridge for generic element: ensures cloned value equals original.
+    /// Centralizes the clone-body assume pattern per partial_eq_eq_clone_standard.
+    fn clone_elem<T: Clone>(x: &T) -> (c: T)
+        ensures c == *x,
+    {
+        let c = x.clone();
+        proof { assume(c == *x); } // Clone bridge: T::clone preserves value.
+        c
+    }
 
     /// Modular probe identity: (h + (j - h + m) % m) % m == j for 0 <= h, j < m.
     proof fn lemma_probe_mod_identity(h: int, j: int, m: int)
@@ -128,8 +144,8 @@ pub mod LinProbFlatHashTableStEph {
                 let entry = table.table[slot].clone();
                 match entry {
                     FlatEntry::Occupied(k, _v) => {
-                        let eq = k == key;
-                        proof { assume(eq == spec_flat_has_key(table.table@[slot as int], key)); } // Eq bridge.
+                        proof { assert(obeys_feq_full_trigger::<Key>()); }
+                        let eq = feq(&k, &key);
                         if eq {
                             // Overwrite existing key at this slot.
                             let ghost old_table_seq = table.table@;
@@ -387,8 +403,8 @@ pub mod LinProbFlatHashTableStEph {
                 let entry = table.table[slot].clone();
                 match entry {
                     FlatEntry::Occupied(k, v) => {
-                        let eq = k == *key;
-                        proof { assume(eq == spec_flat_has_key(table.table@[slot as int], *key)); } // Eq bridge.
+                        proof { assert(obeys_feq_full_trigger::<Key>()); }
+                        let eq = feq(&k, key);
                         if eq {
                             proof {
                                 assert(spec_flat_has_key(table.table@[slot as int], *key));
@@ -493,8 +509,8 @@ pub mod LinProbFlatHashTableStEph {
                 let entry = table.table[slot].clone();
                 match entry {
                     FlatEntry::Occupied(k, _v) => {
-                        let eq = k == *key;
-                        proof { assume(eq == spec_flat_has_key(table.table@[slot as int], *key)); } // Eq bridge.
+                        proof { assert(obeys_feq_full_trigger::<Key>()); }
+                        let eq = feq(&k, key);
                         if eq {
                             let ghost old_table_seq = table.table@;
                             table.table.set(slot, FlatEntry::Deleted);
@@ -709,12 +725,8 @@ pub mod LinProbFlatHashTableStEph {
                     new_table.spec_hash == table.spec_hash,
                 decreases pairs.len() - j,
             {
-                let key = pairs[j].0.clone();
-                let value = pairs[j].1.clone();
-                proof {
-                    assume(key == pairs@[j as int].0); // Clone bridge for Key.
-                    assume(value == pairs@[j as int].1); // Clone bridge for Value.
-                }
+                let key = clone_elem(&pairs[j].0);
+                let value = clone_elem(&pairs[j].1);
                 Self::insert(&mut new_table, key, value);
                 proof {
                     assert(pairs@.subrange(0, (j + 1) as int).drop_last()

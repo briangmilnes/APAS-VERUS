@@ -24,8 +24,14 @@ pub mod StructChainedHashTable {
     use crate::Chap47::ChainedHashTable::ChainedHashTable::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::feq::feq::feq;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
 
     verus! {
+
+        // 3. broadcast use
+        broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
         // 4. type definitions
 
@@ -65,6 +71,16 @@ pub mod StructChainedHashTable {
 
         // 7. proof fns
 
+        /// Clone bridge for generic element: ensures cloned value equals original.
+        /// Centralizes the clone-body assume pattern per partial_eq_eq_clone_standard.
+        fn clone_elem<T: Clone>(x: &T) -> (c: T)
+            ensures c == *x,
+        {
+            let c = x.clone();
+            proof { assume(c == *x); } // Clone bridge: T::clone preserves value.
+            c
+        }
+
         proof fn _struct_chained_hash_table_verified() {}
 
         // 8. traits
@@ -101,7 +117,7 @@ pub mod StructChainedHashTable {
         /// Inserts key-value into chain, updating if key exists, appending if not.
         /// Returns (new_chain, existed) where existed is true if key was already present.
         // veracity: no_requires
-        fn chain_insert<Key: PartialEq, Value>(
+        fn chain_insert<Key: Eq + View + Clone, Value>(
             chain: Option<Box<Node<Key, Value>>>,
             key: Key,
             value: Value,
@@ -120,8 +136,8 @@ pub mod StructChainedHashTable {
                 }
                 Some(node) => {
                     let Node { key: nk, value: nv, next: nn } = *node;
-                    let eq = nk == key;
-                    proof { assume(eq == (nk == key)); } // Eq bridge.
+                    proof { assert(obeys_feq_full_trigger::<Key>()); }
+                    let eq = feq(&nk, &key);
                     if eq {
                         let out = Some(Box::new(Node { key, value, next: nn }));
                         proof { reveal_with_fuel(spec_chain_to_map, 2); }
@@ -142,7 +158,7 @@ pub mod StructChainedHashTable {
 
         /// Looks up key in chain, returning value if found.
         // veracity: no_requires
-        fn chain_lookup<Key: PartialEq, Value: Clone>(
+        fn chain_lookup<Key: Eq + View + Clone, Value: Clone>(
             chain: &Option<Box<Node<Key, Value>>>,
             key: &Key,
         ) -> (found: Option<Value>)
@@ -159,12 +175,11 @@ pub mod StructChainedHashTable {
                     None
                 }
                 Some(node) => {
-                    let eq = node.key == *key;
-                    proof { assume(eq == (node.key == *key)); } // Eq bridge.
+                    proof { assert(obeys_feq_full_trigger::<Key>()); }
+                    let eq = feq(&node.key, key);
                     if eq {
-                        let v = node.value.clone();
+                        let v = clone_elem(&node.value);
                         proof {
-                            assume(v == node.value); // Clone bridge.
                             reveal_with_fuel(spec_chain_to_map, 2);
                         }
                         Some(v)
@@ -183,7 +198,7 @@ pub mod StructChainedHashTable {
 
         /// Removes all nodes matching key, returns updated chain and whether any found.
         // veracity: no_requires
-        fn chain_delete<Key: PartialEq, Value>(
+        fn chain_delete<Key: Eq + View + Clone, Value>(
             chain: Option<Box<Node<Key, Value>>>,
             key: &Key,
         ) -> (remaining_and_deleted: (Option<Box<Node<Key, Value>>>, bool))
@@ -201,8 +216,8 @@ pub mod StructChainedHashTable {
                 }
                 Some(node) => {
                     let Node { key: nk, value: nv, next: nn } = *node;
-                    let eq = nk == *key;
-                    proof { assume(eq == (nk == *key)); } // Eq bridge.
+                    proof { assert(obeys_feq_full_trigger::<Key>()); }
+                    let eq = feq(&nk, key);
                     let (new_next, tail_deleted) = chain_delete(nn, key);
                     if eq {
                         proof {
@@ -224,7 +239,7 @@ pub mod StructChainedHashTable {
             }
         }
 
-        impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for ChainList<Key, Value> {
+        impl<Key: Eq + View + Clone, Value: Clone> EntryTrait<Key, Value> for ChainList<Key, Value> {
             open spec fn spec_entry_to_map(&self) -> Map<Key, Value> {
                 spec_chain_to_map(self.head)
             }
