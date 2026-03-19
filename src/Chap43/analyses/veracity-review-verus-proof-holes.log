@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap43/OrderedTableStPer.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap43/OrderedTableStEph.rs
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,31 +20,37 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ OrderedTableStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:2798: error: external_body - #[verifier::external_body]
-      2799 |         fn rank_key(&self, k: &K) -> (rank: usize)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:2815: error: external_body - #[verifier::external_body]
-      2816 |         fn select_key(&self, i: usize) -> (key: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:3207: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      3203 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      3205 |         {
-      3206 |             let equal = self.base_set == other.base_set;
-      3208 |             equal
-      3209 |         }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:3219: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      3213 |         fn clone(&self) -> (copy: Self)
-            ...
-      3217 |                 base_set: self.base_set.clone(),
-      3218 |             };
-      3220 |             copy
-      3221 |         }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:3090: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
-   Holes: 2 total
-      2 × external_body
-   Info: 1 × structural_false_positive
+❌ OrderedTableStEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:395: error: external_body - #[verifier::external_body]
+       396 |     fn avl_seq_length<K: StT + Ord, V: StT>(seq: &AVLTreeSeqStEphS<Pair<K, V>>) -> (len: usize)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:403: error: external_body - #[verifier::external_body]
+       404 |     fn avl_seq_nth<'a, K: StT + Ord, V: StT>(seq: &'a AVLTreeSeqStEphS<Pair<K, V>>, index: usize) -> (elem: &'a Pair<K, V>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:533: error: external_body - #[verifier::external_body]
+       534 |         fn insert<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:663: error: external_body - #[verifier::external_body]
+       664 |         fn domain(&self) -> (domain: ArraySetStEph<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:677: error: external_body - #[verifier::external_body]
+       678 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:735: error: external_body - #[verifier::external_body]
+       736 |         fn filter<F: Fn(&K, &V) -> B>(
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:777: error: external_body - #[verifier::external_body]
+       778 |         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:796: error: external_body - #[verifier::external_body]
+       797 |         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1616: error: external_body - #[verifier::external_body]
+      1617 |         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1669: error: external_body - #[verifier::external_body]
+      1670 |         fn rank_key(&self, k: &K) -> (rank: usize)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1688: error: external_body - #[verifier::external_body]
+      1689 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1644: info: structural_false_positive OPAQUE_EXTERNAL get_key_range — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1907: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+   Holes: 11 total
+      11 × external_body
+   Info: 2 × structural_false_positive
+      1 × OPAQUE_EXTERNAL
       1 × STD_TRAIT_IMPL
-   Proof functions: 7 total (7 clean, 0 holed)
+   Proof functions: 1 total (1 clean, 0 holed)
 
 =================================================================
 2. Depends Upon
@@ -54,13 +60,13 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
-OrderedTableStPer  depends upon only clean modules
+OrderedTableStEph  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
-OrderedTableStPer.rs  depends upon only clean modules
+OrderedTableStEph.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
@@ -72,33 +78,31 @@ Modules:
    1 total
 
 Proof Functions:
-   7 clean (100%)
+   1 clean (100%)
    0 holed (0%)
-   7 total
+   1 total
 
 Function Specs:
-   58 exec fns with complete spec (requires+ensures) (72%)
+   66 exec fns with complete spec (requires+ensures) (82%)
    0 exec fns missing spec (0%)
-   22 proof/spec fns clean (27%)
+   14 proof/spec fns clean (17%)
    0 proof/spec fns with holes (0%)
    80 total fns
 
 
-Holes Found: 2 (actionable)
-   2 × external_body (100%)
+Holes Found: 11 (actionable)
+   11 × external_body (100%)
 
-Warnings: 2 total
-   2 × assume_eq_clone_workaround
-
-Structural (info only): 1
+Structural (info only): 2
    1 × STD_TRAIT_IMPL
+   1 × OPAQUE_EXTERNAL
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 09:01:25 -07:00
-Ended:     2026-03-19 09:01:25 -07:00
-Duration:  50ms
+Started:   2026-03-19 09:29:11 -07:00
+Ended:     2026-03-19 09:29:11 -07:00
+Duration:  32ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log

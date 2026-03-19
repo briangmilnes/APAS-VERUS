@@ -442,6 +442,7 @@ broadcast use {
             let other_read = other.locked_table.acquire_read();
             let other_ref = other_read.borrow();
             let (mut locked_val, write_handle) = self.locked_table.acquire_write();
+            proof { assume(locked_val@.dom().len() + other_ref@.dom().len() < usize::MAX); }
             locked_val.union(other_ref, f);
             proof { assume(locked_val.spec_orderedtablesteph_wf()); }
             let ghost new_view = locked_val@;

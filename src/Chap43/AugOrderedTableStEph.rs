@@ -253,6 +253,7 @@ broadcast use {
                 obeys_feq_clone::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
+                old(self)@.dom().len() + other@.dom().len() < usize::MAX,
             ensures
                 self@.dom() =~= old(self)@.dom().union(other@.dom()),
                 forall|k: K::V| #[trigger] old(self)@.contains_key(k) && !other@.contains_key(k)
@@ -351,6 +352,7 @@ broadcast use {
                 obeys_feq_clone::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
+                old(self)@.dom().len() + other@.dom().len() < usize::MAX,
             ensures
                 self@.dom() =~= old(self)@.dom().union(other@.dom()),
                 self@.dom().finite();
