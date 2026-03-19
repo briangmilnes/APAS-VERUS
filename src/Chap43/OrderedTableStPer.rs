@@ -26,6 +26,7 @@ pub mod OrderedTableStPer {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::map::group_map_axioms,
     vstd::seq::group_seq_axioms,
+    vstd::set::group_set_axioms,
    };
 
     // Table of Contents
@@ -69,6 +70,319 @@ pub mod OrderedTableStPer {
             implies entries[i] != entries[j]
         by {
             assert(entries[i].0 != entries[j].0);
+        };
+    }
+
+    // 7. proof fns
+
+    /// When two sequences have the same to_set, both have no duplicate pairs, and one has
+    /// unique keys, then the other also has unique keys.
+    proof fn lemma_keys_no_dups_preserved_by_set_eq<KV, VV>(
+        s1: Seq<(KV, VV)>,
+        s2: Seq<(KV, VV)>,
+    )
+        requires
+            spec_keys_no_dups(s1),
+            s1.no_duplicates(),
+            s2.no_duplicates(),
+            s1.to_set() =~= s2.to_set(),
+        ensures
+            spec_keys_no_dups(s2),
+    {
+        assert forall|i: int, j: int| 0 <= i < j < s2.len()
+            implies (#[trigger] s2[i]).0 != (#[trigger] s2[j]).0
+        by {
+            if s2[i].0 == s2[j].0 {
+                // s2[i] is in s2.to_set() = s1.to_set()
+                assert(s2.to_set().contains(s2[i]));
+                assert(s1.to_set().contains(s2[i]));
+                assert(s1.contains(s2[i]));
+                let p = choose|p: int| 0 <= p < s1.len() && s1[p] == s2[i];
+                // s2[j] is in s2.to_set() = s1.to_set()
+                assert(s2.to_set().contains(s2[j]));
+                assert(s1.to_set().contains(s2[j]));
+                assert(s1.contains(s2[j]));
+                let q = choose|q: int| 0 <= q < s1.len() && s1[q] == s2[j];
+                // s1[p] = s2[i] != s2[j] = s1[q], so p != q
+                assert(s1[p] != s1[q]);
+                if p < q {
+                    assert(s1[p].0 != s1[q].0);
+                } else {
+                    assert(s1[q].0 != s1[p].0);
+                }
+            }
+        };
+    }
+
+    /// When s2.to_set() is s1.to_set() with one pair removed, and s1 has unique keys,
+    /// then s2 also has unique keys.
+    proof fn lemma_keys_no_dups_after_set_remove<KV, VV>(
+        s1: Seq<(KV, VV)>,
+        s2: Seq<(KV, VV)>,
+        removed: (KV, VV),
+    )
+        requires
+            spec_keys_no_dups(s1),
+            s1.no_duplicates(),
+            s2.no_duplicates(),
+            s2.to_set() =~= s1.to_set().remove(removed),
+        ensures
+            spec_keys_no_dups(s2),
+    {
+        assert forall|i: int, j: int| 0 <= i < j < s2.len()
+            implies (#[trigger] s2[i]).0 != (#[trigger] s2[j]).0
+        by {
+            if s2[i].0 == s2[j].0 {
+                assert(s2.to_set().contains(s2[i]));
+                assert(s1.to_set().remove(removed).contains(s2[i]));
+                assert(s1.to_set().contains(s2[i]));
+                assert(s1.contains(s2[i]));
+                let p = choose|p: int| 0 <= p < s1.len() && s1[p] == s2[i];
+                assert(s2.to_set().contains(s2[j]));
+                assert(s1.to_set().remove(removed).contains(s2[j]));
+                assert(s1.to_set().contains(s2[j]));
+                assert(s1.contains(s2[j]));
+                let q = choose|q: int| 0 <= q < s1.len() && s1[q] == s2[j];
+                assert(s1[p] != s1[q]);
+                if p < q {
+                    assert(s1[p].0 != s1[q].0);
+                } else {
+                    assert(s1[q].0 != s1[p].0);
+                }
+            }
+        };
+    }
+
+    /// When s2 is s1 with pair (k,v) removed from the set representation,
+    /// the resulting map is the original map with key k removed.
+    proof fn lemma_entries_to_map_after_remove_pair<KV, VV>(
+        s1: Seq<(KV, VV)>,
+        s2: Seq<(KV, VV)>,
+        pair: (KV, VV),
+    )
+        requires
+            spec_keys_no_dups(s1),
+            spec_keys_no_dups(s2),
+            s1.no_duplicates(),
+            s2.no_duplicates(),
+            s1.to_set().contains(pair),
+            s2.to_set() =~= s1.to_set().remove(pair),
+        ensures
+            spec_entries_to_map(s2) =~= spec_entries_to_map(s1).remove(pair.0),
+    {
+        let map1 = spec_entries_to_map(s1);
+        let map2 = spec_entries_to_map(s2);
+        let k = pair.0;
+        // Show k not in dom(map2): if it were, the unique entry with key k in s1 is pair,
+        // but pair is removed from s2.to_set(), contradiction.
+        assert(!map2.contains_key(k)) by {
+            if map2.contains_key(k) {
+                lemma_entries_to_map_key_in_seq::<KV, VV>(s2, k);
+                let j = choose|j: int| 0 <= j < s2.len() && (#[trigger] s2[j]).0 == k;
+                assert(s2.to_set().contains(s2[j]));
+                assert(s1.to_set().remove(pair).contains(s2[j]));
+                assert(s2[j] != pair);
+                assert(s1.to_set().contains(s2[j]));
+                assert(s1.contains(s2[j]));
+                let p = choose|p: int| 0 <= p < s1.len() && s1[p] == s2[j];
+                assert(s1.to_set().contains(pair));
+                assert(s1.contains(pair));
+                let q = choose|q: int| 0 <= q < s1.len() && s1[q] == pair;
+                assert(s1[p].0 == k);
+                assert(s1[q].0 == k);
+                if p < q { assert(s1[p].0 != s1[q].0); }
+                else if q < p { assert(s1[q].0 != s1[p].0); }
+                assert(p == q);
+                assert(false);
+            }
+        };
+        // Domain equality: map2.dom() == map1.remove(k).dom()
+        assert forall|k2: KV| map2.dom().contains(k2) <==>
+            #[trigger] map1.remove(k).dom().contains(k2) by {
+            if map2.dom().contains(k2) {
+                assert(k2 != k);
+                lemma_entries_to_map_key_in_seq::<KV, VV>(s2, k2);
+                let j = choose|j: int| 0 <= j < s2.len() && (#[trigger] s2[j]).0 == k2;
+                assert(s2.to_set().contains(s2[j]));
+                assert(s1.to_set().contains(s2[j]));
+                assert(s1.contains(s2[j]));
+                let p = choose|p: int| 0 <= p < s1.len() && s1[p] == s2[j];
+                lemma_entries_to_map_contains_key::<KV, VV>(s1, p);
+            }
+            if map1.remove(k).dom().contains(k2) {
+                lemma_entries_to_map_key_in_seq::<KV, VV>(s1, k2);
+                let p = choose|p: int| 0 <= p < s1.len() && (#[trigger] s1[p]).0 == k2;
+                assert(s1[p] != pair);
+                assert(s1.to_set().contains(s1[p]));
+                assert(s1.to_set().remove(pair).contains(s1[p]));
+                assert(s2.to_set().contains(s1[p]));
+                assert(s2.contains(s1[p]));
+                let j = choose|j: int| 0 <= j < s2.len() && s2[j] == s1[p];
+                lemma_entries_to_map_contains_key::<KV, VV>(s2, j);
+            }
+        };
+        // Value equality for keys in map2
+        assert forall|k2: KV| map2.dom().contains(k2) implies
+            map2[k2] == #[trigger] map1.remove(k)[k2] by {
+            lemma_entries_to_map_key_in_seq::<KV, VV>(s2, k2);
+            let j = choose|j: int| 0 <= j < s2.len() && (#[trigger] s2[j]).0 == k2;
+            assert(s2.to_set().contains(s2[j]));
+            assert(s1.to_set().contains(s2[j]));
+            assert(s1.contains(s2[j]));
+            let p = choose|p: int| 0 <= p < s1.len() && s1[p] == s2[j];
+            lemma_entries_to_map_get::<KV, VV>(s1, p);
+            lemma_entries_to_map_get::<KV, VV>(s2, j);
+        };
+    }
+
+    /// After inserting a pair whose key is absent from s1, the result has unique keys.
+    proof fn lemma_keys_no_dups_after_set_insert<KV, VV>(
+        s1: Seq<(KV, VV)>,
+        s2: Seq<(KV, VV)>,
+        pair: (KV, VV),
+    )
+        requires
+            spec_keys_no_dups(s1),
+            s1.no_duplicates(),
+            s2.no_duplicates(),
+            !spec_entries_to_map(s1).contains_key(pair.0),
+            s2.to_set() =~= s1.to_set().insert(pair),
+        ensures
+            spec_keys_no_dups(s2),
+    {
+        assert forall|i: int, j: int| 0 <= i < j < s2.len()
+            implies (#[trigger] s2[i]).0 != (#[trigger] s2[j]).0
+        by {
+            if s2[i].0 == s2[j].0 {
+                assert(s2.to_set().contains(s2[i]));
+                assert(s1.to_set().insert(pair).contains(s2[i]));
+                assert(s2.to_set().contains(s2[j]));
+                assert(s1.to_set().insert(pair).contains(s2[j]));
+                if s2[i] == pair && s2[j] == pair {
+                    assert(false);
+                } else if s2[i] == pair {
+                    assert(s1.to_set().contains(s2[j]));
+                    assert(s1.contains(s2[j]));
+                    let q = choose|q: int| 0 <= q < s1.len() && s1[q] == s2[j];
+                    lemma_entries_to_map_contains_key::<KV, VV>(s1, q);
+                    assert(false);
+                } else if s2[j] == pair {
+                    assert(s1.to_set().contains(s2[i]));
+                    assert(s1.contains(s2[i]));
+                    let q = choose|q: int| 0 <= q < s1.len() && s1[q] == s2[i];
+                    lemma_entries_to_map_contains_key::<KV, VV>(s1, q);
+                    assert(false);
+                } else {
+                    assert(s1.to_set().contains(s2[i]));
+                    assert(s1.contains(s2[i]));
+                    let p = choose|p: int| 0 <= p < s1.len() && s1[p] == s2[i];
+                    assert(s1.to_set().contains(s2[j]));
+                    assert(s1.contains(s2[j]));
+                    let q = choose|q: int| 0 <= q < s1.len() && s1[q] == s2[j];
+                    assert(s1[p] != s1[q]);
+                    if p < q { assert(s1[p].0 != s1[q].0); }
+                    else { assert(s1[q].0 != s1[p].0); }
+                }
+            }
+        };
+    }
+
+    /// After set-inserting a pair, the map domain gains that key.
+    proof fn lemma_entries_to_map_dom_after_insert<KV, VV>(
+        s1: Seq<(KV, VV)>,
+        s2: Seq<(KV, VV)>,
+        pair: (KV, VV),
+    )
+        requires
+            spec_keys_no_dups(s1),
+            spec_keys_no_dups(s2),
+            s1.no_duplicates(),
+            s2.no_duplicates(),
+            s2.to_set() =~= s1.to_set().insert(pair),
+        ensures
+            spec_entries_to_map(s2).dom() =~= spec_entries_to_map(s1).dom().insert(pair.0),
+    {
+        let map1 = spec_entries_to_map(s1);
+        let map2 = spec_entries_to_map(s2);
+        // pair is in s2, so pair.0 is in map2
+        assert(s2.to_set().contains(pair));
+        assert(s2.contains(pair));
+        let j0 = choose|j: int| 0 <= j < s2.len() && s2[j] == pair;
+        lemma_entries_to_map_contains_key::<KV, VV>(s2, j0);
+        // Domain biconditional
+        assert forall|k2: KV| map2.dom().contains(k2) <==>
+            #[trigger] map1.dom().insert(pair.0).contains(k2)
+        by {
+            if map2.dom().contains(k2) {
+                lemma_entries_to_map_key_in_seq::<KV, VV>(s2, k2);
+                let j = choose|j: int| 0 <= j < s2.len() && (#[trigger] s2[j]).0 == k2;
+                assert(s2.to_set().contains(s2[j]));
+                assert(s1.to_set().insert(pair).contains(s2[j]));
+                if s2[j] != pair {
+                    assert(s1.to_set().contains(s2[j]));
+                    assert(s1.contains(s2[j]));
+                    let p = choose|p: int| 0 <= p < s1.len() && s1[p] == s2[j];
+                    lemma_entries_to_map_contains_key::<KV, VV>(s1, p);
+                }
+            }
+            if map1.dom().insert(pair.0).contains(k2) {
+                if k2 != pair.0 {
+                    assert(map1.dom().contains(k2));
+                    lemma_entries_to_map_key_in_seq::<KV, VV>(s1, k2);
+                    let p = choose|p: int| 0 <= p < s1.len() && (#[trigger] s1[p]).0 == k2;
+                    assert(s1.to_set().contains(s1[p]));
+                    assert(s1.to_set().insert(pair).contains(s1[p]));
+                    assert(s2.to_set().contains(s1[p]));
+                    assert(s2.contains(s1[p]));
+                    let j = choose|j: int| 0 <= j < s2.len() && s2[j] == s1[p];
+                    lemma_entries_to_map_contains_key::<KV, VV>(s2, j);
+                }
+            }
+        };
+    }
+
+    /// When two sequences have the same to_set and both have unique keys,
+    /// spec_entries_to_map produces the same map for both.
+    proof fn lemma_entries_to_map_set_determines_map<KV, VV>(
+        s1: Seq<(KV, VV)>,
+        s2: Seq<(KV, VV)>,
+    )
+        requires
+            spec_keys_no_dups(s1),
+            spec_keys_no_dups(s2),
+            s1.to_set() =~= s2.to_set(),
+        ensures
+            spec_entries_to_map(s1) =~= spec_entries_to_map(s2),
+    {
+        let map1 = spec_entries_to_map(s1);
+        let map2 = spec_entries_to_map(s2);
+        assert forall|k: KV| map1.contains_key(k) implies map2.contains_key(k) by {
+            lemma_entries_to_map_key_in_seq(s1, k);
+            let i = choose|i: int| 0 <= i < s1.len() && (#[trigger] s1[i]).0 == k;
+            assert(s1.to_set().contains(s1[i]));
+            assert(s2.to_set().contains(s1[i]));
+            assert(s2.contains(s1[i]));
+            let j = choose|j: int| 0 <= j < s2.len() && s2[j] == s1[i];
+            lemma_entries_to_map_contains_key::<KV, VV>(s2, j);
+        };
+        assert forall|k: KV| map2.contains_key(k) implies map1.contains_key(k) by {
+            lemma_entries_to_map_key_in_seq(s2, k);
+            let i = choose|i: int| 0 <= i < s2.len() && (#[trigger] s2[i]).0 == k;
+            assert(s2.to_set().contains(s2[i]));
+            assert(s1.to_set().contains(s2[i]));
+            assert(s1.contains(s2[i]));
+            let j = choose|j: int| 0 <= j < s1.len() && s1[j] == s2[i];
+            lemma_entries_to_map_contains_key::<KV, VV>(s1, j);
+        };
+        assert forall|k: KV| map1.contains_key(k) implies map1[k] == map2[k] by {
+            lemma_entries_to_map_key_in_seq(s1, k);
+            let i = choose|i: int| 0 <= i < s1.len() && (#[trigger] s1[i]).0 == k;
+            lemma_entries_to_map_get::<KV, VV>(s1, i);
+            assert(s1.to_set().contains(s1[i]));
+            assert(s2.to_set().contains(s1[i]));
+            assert(s2.contains(s1[i]));
+            let j = choose|j: int| 0 <= j < s2.len() && s2[j] == s1[i];
+            lemma_entries_to_map_get::<KV, VV>(s2, j);
         };
     }
 
@@ -357,10 +671,15 @@ pub mod OrderedTableStPer {
             && spec_keys_no_dups(self.base_set.elements@)
         }
 
-        #[verifier::external_body]
         fn size(&self) -> (count: usize)
         {
-            self.base_set.size()
+            let count = self.base_set.size();
+            proof {
+                self.base_set.elements@.unique_seq_to_set();
+                lemma_entries_to_map_len::<K::V, V::V>(self.base_set.elements@);
+                lemma_entries_to_map_finite::<K::V, V::V>(self.base_set.elements@);
+            }
+            count
         }
 
         fn empty() -> (table: Self)
@@ -373,64 +692,224 @@ pub mod OrderedTableStPer {
             OrderedTableStPer { base_set: base }
         }
 
-        #[verifier::external_body]
         fn singleton(k: K, v: V) -> (table: Self)
         {
-            OrderedTableStPer { base_set: AVLTreeSetStPer::singleton(Pair(k, v)) }
+            let pair = Pair(k, v);
+            let base = AVLTreeSetStPer::singleton(pair);
+            // base@ == Set::empty().insert(Pair(k,v)@)
+            // base.spec_avltreesetstper_wf()
+            // base.elements@.to_set() == {(k@, v@)}
+            // Need to show spec_entries_to_map(base.elements@) == Map::empty().insert(k@, v@)
+            proof {
+                // Build a known singleton sequence for comparison
+                let singleton_seq = seq![(k@, v@)];
+                // singleton_seq.to_set() == {(k@, v@)} == base@
+                assert(singleton_seq.to_set() =~= base.elements@.to_set()) by {
+                    assert(singleton_seq[0] == (k@, v@));
+                    assert(singleton_seq.to_set().contains((k@, v@)));
+                    assert(base.elements@.to_set().contains((k@, v@)));
+                    assert forall|x: (K::V, V::V)| singleton_seq.to_set().contains(x)
+                        implies base.elements@.to_set().contains(x)
+                    by {
+                        assert(x == (k@, v@));
+                    };
+                    assert forall|x: (K::V, V::V)| base.elements@.to_set().contains(x)
+                        implies singleton_seq.to_set().contains(x)
+                    by {
+                        assert(base@.contains(x));
+                        assert(x == (k@, v@));
+                        assert(singleton_seq.contains(x));
+                    };
+                };
+                // singleton_seq has unique keys (trivially, length 1)
+                assert(spec_keys_no_dups(singleton_seq));
+                // base.elements@ has no duplicate pairs (from wf)
+                // base.elements@ has same to_set as singleton_seq
+                lemma_keys_no_dups_implies_no_duplicates::<K::V, V::V>(singleton_seq);
+                lemma_keys_no_dups_preserved_by_set_eq::<K::V, V::V>(
+                    singleton_seq, base.elements@,
+                );
+                lemma_entries_to_map_set_determines_map::<K::V, V::V>(
+                    singleton_seq, base.elements@,
+                );
+                // Unfold spec_entries_to_map for length-1 sequence
+                assert(singleton_seq.len() == 1);
+                assert(singleton_seq.last() == (k@, v@));
+                let drop = singleton_seq.drop_last();
+                assert(drop.len() == 0);
+                assert(spec_entries_to_map(drop) =~= Map::<K::V, V::V>::empty());
+                assert(spec_entries_to_map(singleton_seq) =~= Map::<K::V, V::V>::empty().insert(k@, v@));
+                lemma_entries_to_map_finite::<K::V, V::V>(base.elements@);
+            }
+            OrderedTableStPer { base_set: base }
         }
 
-        #[verifier::external_body]
         fn find(&self, k: &K) -> (found: Option<V>)
         {
             let len = self.base_set.elements.length();
             let mut i: usize = 0;
-            while i < len {
+            while i < len
+                invariant
+                    self.base_set.elements.spec_avltreeseqstper_wf(),
+                    spec_keys_no_dups(self.base_set.elements@),
+                    obeys_view_eq::<K>(),
+                    obeys_feq_full::<V>(),
+                    len == self.base_set.elements@.len(),
+                    0 <= i <= len,
+                    forall|j: int| 0 <= j < i as int
+                        ==> (#[trigger] self.base_set.elements@[j]).0 != k@,
+                decreases len - i,
+            {
                 let pair = self.base_set.elements.nth(i);
-                if pair.0 == *k {
-                    return Some(pair.1.clone());
+                proof { reveal(obeys_view_eq); }
+                if pair.0.eq(k) {
+                    let v = pair.1.clone_plus();
+                    proof {
+                        lemma_entries_to_map_get::<K::V, V::V>(
+                            self.base_set.elements@, i as int,
+                        );
+                    }
+                    return Some(v);
                 }
                 i += 1;
+            }
+            proof {
+                lemma_entries_to_map_no_key::<K::V, V::V>(self.base_set.elements@, k@);
             }
             None
         }
 
-        #[verifier::external_body]
         fn insert(&self, k: K, v: V) -> (table: Self)
         {
-            // Remove existing pair with same key (if any), then insert new pair.
             let len = self.base_set.elements.length();
-            let mut base = self.base_set.clone();
             let mut i: usize = 0;
-            while i < len {
+            while i < len
+                invariant
+                    self.base_set.spec_avltreesetstper_wf(),
+                    self.base_set.elements.spec_avltreeseqstper_wf(),
+                    spec_keys_no_dups(self.base_set.elements@),
+                    obeys_view_eq::<K>(),
+                    obeys_feq_full::<Pair<K, V>>(),
+                    len == self.base_set.elements@.len(),
+                    0 <= i <= len,
+                    forall|j: int| 0 <= j < i as int
+                        ==> (#[trigger] self.base_set.elements@[j]).0 != k@,
+                decreases len - i,
+            {
                 let pair = self.base_set.elements.nth(i);
-                if pair.0 == k {
-                    let pair_clone = pair.clone();
-                    base = base.delete(&pair_clone);
-                    break;
+                proof { reveal(obeys_view_eq); }
+                if pair.0.eq(&k) {
+                    // Found existing key — delete old pair, insert new pair.
+                    let pair_clone = pair.clone_plus();
+                    let deleted = self.base_set.delete(&pair_clone);
+                    proof {
+                        assert(self.base_set.elements@[i as int] == pair_clone@);
+                        lemma_keys_no_dups_after_set_remove::<K::V, V::V>(
+                            self.base_set.elements@,
+                            deleted.elements@,
+                            pair_clone@,
+                        );
+                        lemma_entries_to_map_after_remove_pair::<K::V, V::V>(
+                            self.base_set.elements@,
+                            deleted.elements@,
+                            pair_clone@,
+                        );
+                        assert(pair_clone@.0 == k@);
+                    }
+                    let new_pair = Pair(k, v);
+                    let inserted = deleted.insert(new_pair);
+                    proof {
+                        lemma_keys_no_dups_after_set_insert::<K::V, V::V>(
+                            deleted.elements@,
+                            inserted.elements@,
+                            (k@, v@),
+                        );
+                        lemma_entries_to_map_dom_after_insert::<K::V, V::V>(
+                            deleted.elements@,
+                            inserted.elements@,
+                            (k@, v@),
+                        );
+                        lemma_entries_to_map_finite::<K::V, V::V>(inserted.elements@);
+                    }
+                    return OrderedTableStPer { base_set: inserted };
                 }
                 i += 1;
             }
-            OrderedTableStPer {
-                base_set: base.insert(Pair(k, v)),
+            // Key not found — just insert new pair.
+            let new_pair = Pair(k, v);
+            let inserted = self.base_set.insert(new_pair);
+            proof {
+                lemma_entries_to_map_no_key::<K::V, V::V>(self.base_set.elements@, k@);
+                lemma_keys_no_dups_after_set_insert::<K::V, V::V>(
+                    self.base_set.elements@,
+                    inserted.elements@,
+                    (k@, v@),
+                );
+                lemma_entries_to_map_dom_after_insert::<K::V, V::V>(
+                    self.base_set.elements@,
+                    inserted.elements@,
+                    (k@, v@),
+                );
+                lemma_entries_to_map_finite::<K::V, V::V>(inserted.elements@);
             }
+            OrderedTableStPer { base_set: inserted }
         }
 
-        #[verifier::external_body]
         fn delete(&self, k: &K) -> (table: Self)
         {
             let len = self.base_set.elements.length();
             let mut i: usize = 0;
-            while i < len {
+            while i < len
+                invariant
+                    self.base_set.spec_avltreesetstper_wf(),
+                    self.base_set.elements.spec_avltreeseqstper_wf(),
+                    spec_keys_no_dups(self.base_set.elements@),
+                    obeys_view_eq::<K>(),
+                    obeys_feq_clone::<Pair<K, V>>(),
+                    obeys_feq_full::<Pair<K, V>>(),
+                    len == self.base_set.elements@.len(),
+                    0 <= i <= len,
+                    forall|j: int| 0 <= j < i as int
+                        ==> (#[trigger] self.base_set.elements@[j]).0 != k@,
+                decreases len - i,
+            {
                 let pair = self.base_set.elements.nth(i);
-                if pair.0 == *k {
-                    let pair_clone = pair.clone();
-                    return OrderedTableStPer {
-                        base_set: self.base_set.delete(&pair_clone),
-                    };
+                proof { reveal(obeys_view_eq); }
+                if pair.0.eq(k) {
+                    let pair_clone = pair.clone_plus();
+                    let deleted = self.base_set.delete(&pair_clone);
+                    proof {
+                        assert(self.base_set.elements@[i as int] == pair_clone@);
+                        lemma_keys_no_dups_after_set_remove::<K::V, V::V>(
+                            self.base_set.elements@,
+                            deleted.elements@,
+                            pair_clone@,
+                        );
+                        lemma_entries_to_map_after_remove_pair::<K::V, V::V>(
+                            self.base_set.elements@,
+                            deleted.elements@,
+                            pair_clone@,
+                        );
+                        assert(pair_clone@.0 == k@);
+                        lemma_entries_to_map_finite::<K::V, V::V>(deleted.elements@);
+                    }
+                    return OrderedTableStPer { base_set: deleted };
                 }
                 i += 1;
             }
-            self.clone()
+            // Key not found — return copy with same entries.
+            let copy_elements = self.base_set.elements.clone();
+            proof {
+                lemma_entries_to_map_no_key::<K::V, V::V>(self.base_set.elements@, k@);
+                lemma_entries_to_map_finite::<K::V, V::V>(self.base_set.elements@);
+                assert(self@.remove(k@) =~= self@) by {
+                    assert forall|k2: K::V| self@.dom().contains(k2)
+                        implies k2 != k@ by {};
+                };
+            }
+            OrderedTableStPer {
+                base_set: AVLTreeSetStPer { elements: copy_elements },
+            }
         }
 
         #[verifier::external_body]
@@ -833,7 +1312,6 @@ pub mod OrderedTableStPer {
         }
     }
 
-    #[verifier::external_body]
     pub fn from_sorted_entries<K: StT + Ord, V: StT + Ord>(
         entries: AVLTreeSeqStPerS<Pair<K, V>>,
     ) -> (table: OrderedTableStPer<K, V>)
@@ -845,7 +1323,20 @@ pub mod OrderedTableStPer {
             table@ =~= spec_entries_to_map(entries@),
             table.spec_orderedtablestper_wf(),
     {
-        OrderedTableStPer { base_set: AVLTreeSetStPer::from_seq(entries) }
+        let base = AVLTreeSetStPer::from_seq(entries);
+        // base@ =~= entries@.to_set(), base.spec_avltreesetstper_wf()
+        // base.elements@.to_set() =~= entries@.to_set()
+        proof {
+            lemma_keys_no_dups_implies_no_duplicates::<K::V, V::V>(entries@);
+            lemma_keys_no_dups_preserved_by_set_eq::<K::V, V::V>(
+                entries@, base.elements@,
+            );
+            lemma_entries_to_map_set_determines_map::<K::V, V::V>(
+                entries@, base.elements@,
+            );
+            lemma_entries_to_map_finite::<K::V, V::V>(base.elements@);
+        }
+        OrderedTableStPer { base_set: base }
     }
 
     // 10. iterators
