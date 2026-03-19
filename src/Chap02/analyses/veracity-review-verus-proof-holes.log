@@ -23,22 +23,22 @@ Table of Contents:
 ✓ FibonacciHFScheduler.rs
    5 clean proof functions
 ❌ HFSchedulerMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:150: error: assume(false) - proof { assume(false); } — needs diverge(); use `assume(false); diverge()`
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap02/HFSchedulerMtEph.rs:150: error: assume(false) - proof { assume(false); } — needs diverge(); use `assume(false); diverge()`
        132 |     pub fn spawn_join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
             ...
        148 |             Ok(val) => val,
        149 |             Err(_) => {
        151 |                 diverge()
        152 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:82: info: external_type_specification_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:83: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:94: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:18: info: struct_outside_verus_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:24: info: enum_outside_verus_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:104: info: structural_false_positive THREAD_SPAWN join — #[verifier::external_body] // accept hole [high]
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:131: info: structural_false_positive THREAD_SPAWN spawn_join — #[verifier::external_body] // accept hole [high]
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:162: info: structural_false_positive THREAD_SPAWN spawn — #[verifier::external_body] // accept hole [high]
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:184: info: structural_false_positive THREAD_SPAWN wait — #[verifier::external_body] // accept hole [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap02/HFSchedulerMtEph.rs:82: info: external_type_specification_accept_hole
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap02/HFSchedulerMtEph.rs:83: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap02/HFSchedulerMtEph.rs:94: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap02/HFSchedulerMtEph.rs:18: info: struct_outside_verus_accept_hole
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap02/HFSchedulerMtEph.rs:24: info: enum_outside_verus_accept_hole
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap02/HFSchedulerMtEph.rs:104: info: structural_false_positive THREAD_SPAWN join — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap02/HFSchedulerMtEph.rs:131: info: structural_false_positive THREAD_SPAWN spawn_join — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap02/HFSchedulerMtEph.rs:162: info: structural_false_positive THREAD_SPAWN spawn — #[verifier::external_body] // accept hole [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap02/HFSchedulerMtEph.rs:184: info: structural_false_positive THREAD_SPAWN wait — #[verifier::external_body] // accept hole [medium]
    Holes: 1 total
       1 × assume(false)
    Info: 4 × structural_false_positive
@@ -91,8 +91,8 @@ Holes Found: 1 (actionable)
 Accepted (reviewed): 5 total
    2 × external_body_accept_hole
    1 × enum_outside_verus_accept_hole
-   1 × external_type_specification_accept_hole
    1 × struct_outside_verus_accept_hole
+   1 × external_type_specification_accept_hole
 
 Structural (info only): 4
    4 × THREAD_SPAWN
@@ -101,12 +101,9 @@ Structural (info only): 4
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 18:05:22 -07:00
-Ended:     2026-03-18 18:05:22 -07:00
-Duration:  13ms
+Started:   2026-03-18 19:44:34 -07:00
+Ended:     2026-03-18 19:44:34 -07:00
+Duration:  3ms
 
 Full output: src/Chap02/analyses/veracity-review-verus-proof-holes.log
-0
-Duration:  13ms
-
-Full output: src/Chap02/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap02/analyses/veracity-review-verus-proof-holes.log
