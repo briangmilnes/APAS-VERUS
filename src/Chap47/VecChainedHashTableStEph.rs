@@ -39,17 +39,6 @@ pub mod VecChainedHashTableStEph {
 
         proof fn _vec_chained_hash_table_verified() {}
 
-        /// Clone bridge for generic element: ensures cloned value equals original.
-        /// Centralizes the clone-body assume pattern per partial_eq_eq_clone_standard.
-        // veracity: no_requires
-        fn clone_elem<T: Clone>(x: &T) -> (c: T)
-            ensures c == *x,
-        {
-            let c = x.clone();
-            proof { assume(c == *x); } // Clone bridge: T::clone preserves value.
-            c
-        }
-
         /// Clones a Vec<(Key, Value)> with sequence equality ensures.
         // veracity: no_requires
         fn clone_vec_pairs<Key: Clone, Value: Clone>(pairs: &Vec<(Key, Value)>) -> (cloned: Vec<(Key, Value)>)

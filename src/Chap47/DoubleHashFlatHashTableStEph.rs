@@ -20,6 +20,7 @@ pub mod DoubleHashFlatHashTableStEph {
     use vstd::prelude::*;
     use crate::Chap47::FlatHashTable::FlatHashTable::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
+    use crate::Concurrency::diverge;
     use crate::Types::Types::*;
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
@@ -69,16 +70,6 @@ pub mod DoubleHashFlatHashTableStEph {
     }
 
     // 7. proof fns
-
-    /// Clone bridge for generic element: ensures cloned value equals original.
-    /// Centralizes the clone-body assume pattern per partial_eq_eq_clone_standard.
-    fn clone_elem<T: Clone>(x: &T) -> (c: T)
-        ensures c == *x,
-    {
-        let c = x.clone();
-        proof { assume(c == *x); } // Clone bridge: T::clone preserves value.
-        c
-    }
 
     // 9. impls
 
@@ -381,6 +372,7 @@ pub mod DoubleHashFlatHashTableStEph {
             proof {
                 assume(false); // Table full: unreachable with load factor < 1.
             }
+            diverge::<()>();
         }
 
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).

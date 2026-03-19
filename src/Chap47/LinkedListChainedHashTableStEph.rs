@@ -39,17 +39,6 @@ pub mod LinkedListChainedHashTableStEph {
 
         proof fn _linked_list_chained_hash_table_verified() {}
 
-        /// Clone bridge for generic element: ensures cloned value equals original.
-        /// Centralizes the clone-body assume pattern per partial_eq_eq_clone_standard.
-        // veracity: no_requires
-        fn clone_elem<T: Clone>(x: &T) -> (c: T)
-            ensures c == *x,
-        {
-            let c = x.clone();
-            proof { assume(c == *x); } // Clone bridge: T::clone preserves value.
-            c
-        }
-
         /// Clones a LinkedListStEphS<(Key, Value)> with sequence equality ensures.
         // veracity: no_requires
         fn clone_linked_list_entry<Key: Clone, Value: Clone>(
