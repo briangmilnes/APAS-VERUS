@@ -142,6 +142,17 @@ pub mod BSTParaStEph {
 
     // 7. proof fns
 
+    /// Clone bridge for generic element: ensures cloned value equals original.
+    /// Centralizes the clone-body assume pattern per partial_eq_eq_clone_standard.
+    // veracity: no_requires
+    fn clone_elem<T: Clone>(x: &T) -> (c: T)
+        ensures c == *x,
+    {
+        let c = x.clone();
+        proof { assume(c == *x); } // Clone bridge: T::clone preserves value.
+        c
+    }
+
     /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
     proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)
         requires
@@ -469,14 +480,21 @@ pub mod BSTParaStEph {
                         assert(node.right@.len() < self@.len());
                     }
                     let l = node.left.clone();
-                    let k = node.key.clone();
+                    let k = clone_elem(&node.key);
                     let r = node.right.clone();
-                    // T::clone has no verified ensures; cmp_spec(k) vs cmp_spec(node.key) unresolvable.
-                    proof { assume(
-                        k@ == node.key@
-                        && (forall|t: T| (#[trigger] l@.contains(t@)) ==> t.cmp_spec(&k) == Less)
-                        && (forall|t: T| (#[trigger] r@.contains(t@)) ==> t.cmp_spec(&k) == Greater)
-                    ); }
+                    proof {
+                        // k == node.key from clone_elem ensures.
+                        // l@ == node.left@ and r@ == node.right@ from ParamBST::clone ensures.
+                        // Ordering transfers: spec fn on equal args yields equal results.
+                        assert forall |t: T| (#[trigger] l@.contains(t@))
+                            implies t.cmp_spec(&k) == Less by {
+                            assert(node.left@.contains(t@));
+                        }
+                        assert forall |t: T| (#[trigger] r@.contains(t@))
+                            implies t.cmp_spec(&k) == Greater by {
+                            assert(node.right@.contains(t@));
+                        }
+                    }
                     Exposed::Node(l, k, r)
                 }
             };

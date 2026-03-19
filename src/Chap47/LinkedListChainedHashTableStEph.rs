@@ -7,6 +7,7 @@ pub mod LinkedListChainedHashTableStEph {
     // Table of Contents
     // 1. module
     // 2. imports
+    // 3. broadcast use
     // 4. type definitions (inside verus!)
     // 7. proof fns (inside verus!)
     // 9. impls (inside verus!: EntryTrait for LinkedListStEphS, ParaHashTableStEphTrait, ChainedHashTable)
@@ -19,8 +20,15 @@ pub mod LinkedListChainedHashTableStEph {
     use crate::Chap47::ChainedHashTable::ChainedHashTable::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::feq::feq::feq;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
 
     verus! {
+
+        // 3. broadcast use
+
+        broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
         // 4. type definitions
 
@@ -31,8 +39,18 @@ pub mod LinkedListChainedHashTableStEph {
 
         proof fn _linked_list_chained_hash_table_verified() {}
 
+        /// Clone bridge for generic element: ensures cloned value equals original.
+        /// Centralizes the clone-body assume pattern per partial_eq_eq_clone_standard.
+        // veracity: no_requires
+        fn clone_elem<T: Clone>(x: &T) -> (c: T)
+            ensures c == *x,
+        {
+            let c = x.clone();
+            proof { assume(c == *x); } // Clone bridge: T::clone preserves value.
+            c
+        }
+
         /// Clones a LinkedListStEphS<(Key, Value)> with sequence equality ensures.
-        /// Clone bridges inside this function follow the approved clone body pattern.
         // veracity: no_requires
         fn clone_linked_list_entry<Key: Clone, Value: Clone>(
             entry: &LinkedListStEphS<(Key, Value)>,
@@ -49,12 +67,8 @@ pub mod LinkedListChainedHashTableStEph {
                         ==> #[trigger] new_seq@[j] == entry.seq@[j],
                 decreases entry.seq.len() - i,
             {
-                let k = entry.seq[i].0.clone();
-                let v = entry.seq[i].1.clone();
-                proof {
-                    assume(k == entry.seq@[i as int].0); // Clone bridge for Key.
-                    assume(v == entry.seq@[i as int].1); // Clone bridge for Value.
-                }
+                let k = clone_elem(&entry.seq[i].0);
+                let v = clone_elem(&entry.seq[i].1);
                 new_seq.push((k, v));
                 i += 1;
             }
@@ -186,8 +200,8 @@ pub mod LinkedListChainedHashTableStEph {
                             && original[found_idx as int].0 == key,
                     decreases bucket_len - scan_i,
                 {
-                    let eq = bucket_seq[scan_i].0 == key;
-                    proof { assume(eq == (bucket_seq@[scan_i as int].0 == key)); } // Eq bridge.
+                    proof { assert(obeys_feq_full_trigger::<Key>()); }
+                    let eq = feq(&bucket_seq[scan_i].0, &key);
                     if eq {
                         existed = true;
                         found_idx = scan_i;
@@ -279,11 +293,10 @@ pub mod LinkedListChainedHashTableStEph {
                     decreases i,
                 {
                     i = i - 1;
-                    let eq = table.table[index].seq[i].0 == *key;
-                    proof { assume(eq == (bv[i as int].0 == *key)); } // Eq bridge.
+                    proof { assert(obeys_feq_full_trigger::<Key>()); }
+                    let eq = feq(&table.table[index].seq[i].0, key);
                     if eq {
-                        let v = table.table[index].seq[i].1.clone();
-                        proof { assume(v == bv[i as int].1); } // Clone bridge.
+                        let v = clone_elem(&table.table[index].seq[i].1);
                         proof {
                             lemma_seq_pairs_last_key_gives_value::<Key, Value>(
                                 bv, *key, i as int);
@@ -340,8 +353,8 @@ pub mod LinkedListChainedHashTableStEph {
                             && (#[trigger] original[j]).0 == *key,
                     decreases bucket_len - i,
                 {
-                    let eq = bucket_seq[i].0 == *key;
-                    proof { assume(eq == (bucket_seq@[i as int].0 == *key)); } // Eq bridge.
+                    proof { assert(obeys_feq_full_trigger::<Key>()); }
+                    let eq = feq(&bucket_seq[i].0, key);
 
                     proof {
                         assert(original.subrange(0, (i + 1) as int).drop_last()
@@ -351,12 +364,8 @@ pub mod LinkedListChainedHashTableStEph {
                     }
 
                     if !eq {
-                        let k = bucket_seq[i].0.clone();
-                        let v = bucket_seq[i].1.clone();
-                        proof {
-                            assume(k == bucket_seq@[i as int].0); // Clone bridge for Key.
-                            assume(v == bucket_seq@[i as int].1); // Clone bridge for Value.
-                        }
+                        let k = clone_elem(&bucket_seq[i].0);
+                        let v = clone_elem(&bucket_seq[i].1);
                         let ghost old_new_seq = new_seq@;
                         new_seq.push((k, v));
                         proof {
@@ -463,12 +472,8 @@ pub mod LinkedListChainedHashTableStEph {
                         let ghost old_pairs = pairs@;
                         let ghost old_map = spec_seq_pairs_to_map(old_pairs);
                         let ghost chain = table.table@[i as int].seq@;
-                        let k = table.table[i].seq[j].0.clone();
-                        let v = table.table[i].seq[j].1.clone();
-                        proof {
-                            assume(k == chain[j as int].0);
-                            assume(v == chain[j as int].1);
-                        }
+                        let k = clone_elem(&table.table[i].seq[j].0);
+                        let v = clone_elem(&table.table[i].seq[j].1);
                         pairs.push((k, v));
                         proof {
                             assert(pairs@.drop_last() =~= old_pairs);
@@ -560,12 +565,8 @@ pub mod LinkedListChainedHashTableStEph {
                         new_table.spec_hash == table.spec_hash,
                     decreases pairs.len() - m,
                 {
-                    let key = pairs[m].0.clone();
-                    let value = pairs[m].1.clone();
-                    proof {
-                        assume(key == pairs@[m as int].0);
-                        assume(value == pairs@[m as int].1);
-                    }
+                    let key = clone_elem(&pairs[m].0);
+                    let value = clone_elem(&pairs[m].1);
                     Self::insert(&mut new_table, key, value);
                     proof {
                         assert(pairs@.subrange(0, (m + 1) as int).drop_last()

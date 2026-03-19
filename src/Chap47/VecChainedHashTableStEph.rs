@@ -7,6 +7,7 @@ pub mod VecChainedHashTableStEph {
     // Table of Contents
     // 1. module
     // 2. imports
+    // 3. broadcast use
     // 4. type definitions (inside verus!)
     // 7. proof fns (inside verus!)
     // 9. impls (inside verus!: EntryTrait for Vec, ParaHashTableStEphTrait, ChainedHashTable)
@@ -19,8 +20,15 @@ pub mod VecChainedHashTableStEph {
     use crate::Chap47::ChainedHashTable::ChainedHashTable::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::feq::feq::feq;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
 
     verus! {
+
+        // 3. broadcast use
+
+        broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
         // 4. type definitions
 
@@ -31,8 +39,18 @@ pub mod VecChainedHashTableStEph {
 
         proof fn _vec_chained_hash_table_verified() {}
 
+        /// Clone bridge for generic element: ensures cloned value equals original.
+        /// Centralizes the clone-body assume pattern per partial_eq_eq_clone_standard.
+        // veracity: no_requires
+        fn clone_elem<T: Clone>(x: &T) -> (c: T)
+            ensures c == *x,
+        {
+            let c = x.clone();
+            proof { assume(c == *x); } // Clone bridge: T::clone preserves value.
+            c
+        }
+
         /// Clones a Vec<(Key, Value)> with sequence equality ensures.
-        /// Clone bridges inside this function follow the approved clone body pattern.
         // veracity: no_requires
         fn clone_vec_pairs<Key: Clone, Value: Clone>(pairs: &Vec<(Key, Value)>) -> (cloned: Vec<(Key, Value)>)
             ensures cloned@ =~= pairs@,
@@ -47,12 +65,8 @@ pub mod VecChainedHashTableStEph {
                         ==> #[trigger] new_vec@[j] == pairs@[j],
                 decreases pairs.len() - i,
             {
-                let k = pairs[i].0.clone();
-                let v = pairs[i].1.clone();
-                proof {
-                    assume(k == pairs@[i as int].0); // Clone bridge for Key.
-                    assume(v == pairs@[i as int].1); // Clone bridge for Value.
-                }
+                let k = clone_elem(&pairs[i].0);
+                let v = clone_elem(&pairs[i].1);
                 new_vec.push((k, v));
                 i += 1;
             }
@@ -187,8 +201,8 @@ pub mod VecChainedHashTableStEph {
                             && original[found_idx as int].0 == key,
                     decreases bucket_len - scan_i,
                 {
-                    let eq = bucket[scan_i].0 == key;
-                    proof { assume(eq == (bucket@[scan_i as int].0 == key)); } // Eq bridge.
+                    proof { assert(obeys_feq_full_trigger::<Key>()); }
+                    let eq = feq(&bucket[scan_i].0, &key);
                     if eq {
                         existed = true;
                         found_idx = scan_i;
@@ -281,11 +295,10 @@ pub mod VecChainedHashTableStEph {
                     decreases i,
                 {
                     i = i - 1;
-                    let eq = table.table[index][i].0 == *key;
-                    proof { assume(eq == (bv[i as int].0 == *key)); } // Eq bridge.
+                    proof { assert(obeys_feq_full_trigger::<Key>()); }
+                    let eq = feq(&table.table[index][i].0, key);
                     if eq {
-                        let v = table.table[index][i].1.clone();
-                        proof { assume(v == bv[i as int].1); } // Clone bridge.
+                        let v = clone_elem(&table.table[index][i].1);
                         proof {
                             lemma_seq_pairs_last_key_gives_value::<Key, Value>(
                                 bv, *key, i as int);
@@ -341,8 +354,8 @@ pub mod VecChainedHashTableStEph {
                             && (#[trigger] original[j]).0 == *key,
                     decreases bucket_len - i,
                 {
-                    let eq = bucket[i].0 == *key;
-                    proof { assume(eq == (bucket@[i as int].0 == *key)); } // Eq bridge.
+                    proof { assert(obeys_feq_full_trigger::<Key>()); }
+                    let eq = feq(&bucket[i].0, key);
 
                     proof {
                         assert(original.subrange(0, (i + 1) as int).drop_last()
@@ -352,12 +365,8 @@ pub mod VecChainedHashTableStEph {
                     }
 
                     if !eq {
-                        let k = bucket[i].0.clone();
-                        let v = bucket[i].1.clone();
-                        proof {
-                            assume(k == bucket@[i as int].0); // Clone bridge for Key.
-                            assume(v == bucket@[i as int].1); // Clone bridge for Value.
-                        }
+                        let k = clone_elem(&bucket[i].0);
+                        let v = clone_elem(&bucket[i].1);
                         let ghost old_new_bucket = new_bucket@;
                         new_bucket.push((k, v));
                         proof {
@@ -466,12 +475,8 @@ pub mod VecChainedHashTableStEph {
                         let ghost old_pairs = pairs@;
                         let ghost old_map = spec_seq_pairs_to_map(old_pairs);
                         let ghost chain = table.table@[i as int]@;
-                        let k = table.table[i][j].0.clone();
-                        let v = table.table[i][j].1.clone();
-                        proof {
-                            assume(k == chain[j as int].0);
-                            assume(v == chain[j as int].1);
-                        }
+                        let k = clone_elem(&table.table[i][j].0);
+                        let v = clone_elem(&table.table[i][j].1);
                         pairs.push((k, v));
                         proof {
                             assert(pairs@.drop_last() =~= old_pairs);
@@ -562,12 +567,8 @@ pub mod VecChainedHashTableStEph {
                         new_table.spec_hash == table.spec_hash,
                     decreases pairs.len() - m,
                 {
-                    let key = pairs[m].0.clone();
-                    let value = pairs[m].1.clone();
-                    proof {
-                        assume(key == pairs@[m as int].0);
-                        assume(value == pairs@[m as int].1);
-                    }
+                    let key = clone_elem(&pairs[m].0);
+                    let value = clone_elem(&pairs[m].1);
                     Self::insert(&mut new_table, key, value);
                     proof {
                         assert(pairs@.subrange(0, (m + 1) as int).drop_last()
