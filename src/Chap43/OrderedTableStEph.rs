@@ -902,7 +902,7 @@ broadcast use {
             proof {
                 assert(domain@ =~= self@.dom()) by {
                     assert forall|kv: K::V| self@.dom().contains(kv)
-                        implies domain@.contains(kv)
+                        implies #[trigger] domain@.contains(kv)
                     by {
                         lemma_entries_to_map_key_in_seq::<K::V, V::V>(
                             self.base_seq@, kv,
@@ -2805,7 +2805,7 @@ broadcast use {
                             assert(spec_rank_pred::<K>(pair.0@, *k));
                             lemma_entries_to_map_contains_key::<K::V, V::V>(seq, i as int);
                             if counted.contains(pair.0@) {
-                                let witness = choose|j: int| 0 <= j < i as int && seq[j].0 == pair.0@;
+                                let witness = choose|j: int| 0 <= j < i as int && (#[trigger] seq[j]).0 == pair.0@;
                                 assert(seq[witness].0 == seq[i as int].0);
                             }
                             assert(!counted.contains(pair.0@));
