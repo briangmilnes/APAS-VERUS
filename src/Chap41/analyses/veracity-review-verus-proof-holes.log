@@ -291,22 +291,22 @@ Accepted (reviewed): 2 total
 
 Structural (info only): 4
    2 × UNSAFE_SEND_SYNC
-   1 × RWLOCK_GHOST
    1 × STD_TRAIT_IMPL
+   1 × RWLOCK_GHOST
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 03:40:21 -07:00
-Ended:     2026-03-19 03:40:21 -07:00
-Duration:  69ms
+Started:   2026-03-19 04:49:35 -07:00
+Ended:     2026-03-19 04:49:35 -07:00
+Duration:  80ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
-=========================================================
+========================
 
-Started:   2026-03-19 03:40:21 -07:00
-Ended:     2026-03-19 03:40:21 -07:00
-Duration:  69ms
+Started:   2026-03-19 04:49:35 -07:00
+Ended:     2026-03-19 04:49:35 -07:00
+Duration:  80ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log

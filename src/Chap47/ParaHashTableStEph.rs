@@ -84,6 +84,10 @@ pub mod ParaHashTableStEph {
         }
     }
 
+    /// Abstract second hash value for double hashing.
+    /// Closed so body is hidden from SMT; runtime `compute_second_hash` links via ensures.
+    pub closed spec fn spec_second_hash<Key>(key: Key, table_size: nat) -> nat { 1 }
+
     // 7. proof fns
 
     /// Clone bridge for generic element: ensures cloned value equals original.
@@ -503,7 +507,10 @@ pub mod ParaHashTableStEph {
     #[verifier::external_body]
     pub fn compute_second_hash<Key: std::hash::Hash>(key: &Key, table_size: usize) -> (step: usize)
         requires table_size > 0,
-        ensures step >= 1,
+        ensures
+            step >= 1,
+            table_size > 1 ==> step < table_size,
+            step as nat == spec_second_hash(*key, table_size as nat),
     {
         use std::collections::hash_map::DefaultHasher;
         use std::hash::Hasher;

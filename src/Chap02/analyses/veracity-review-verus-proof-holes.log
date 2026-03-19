@@ -90,9 +90,9 @@ Holes Found: 1 (actionable)
 
 Accepted (reviewed): 5 total
    2 × external_body_accept_hole
+   1 × external_type_specification_accept_hole
    1 × struct_outside_verus_accept_hole
    1 × enum_outside_verus_accept_hole
-   1 × external_type_specification_accept_hole
 
 Structural (info only): 4
    4 × THREAD_SPAWN
@@ -101,9 +101,9 @@ Structural (info only): 4
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 03:40:20 -07:00
-Ended:     2026-03-19 03:40:20 -07:00
-Duration:  3ms
+Started:   2026-03-19 04:49:34 -07:00
+Ended:     2026-03-19 04:49:34 -07:00
+Duration:  4ms
 
 Full output: src/Chap02/analyses/veracity-review-verus-proof-holes.log
 Full output: src/Chap02/analyses/veracity-review-verus-proof-holes.log

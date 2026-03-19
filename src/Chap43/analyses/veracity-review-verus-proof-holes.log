@@ -241,8 +241,8 @@ Table of Contents:
    Holes: 18 total
       18 × external_body
    Info: 2 × structural_false_positive
-      1 × STD_TRAIT_IMPL
       1 × OPAQUE_EXTERNAL
+      1 × STD_TRAIT_IMPL
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ OrderedTableStPer.rs
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableStPer.rs:915: error: external_body - #[verifier::external_body]
@@ -384,15 +384,15 @@ Structural (info only): 56
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 03:40:21 -07:00
-Ended:     2026-03-19 03:40:21 -07:00
-Duration:  130ms
+Started:   2026-03-19 04:49:35 -07:00
+Ended:     2026-03-19 04:49:35 -07:00
+Duration:  146ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
 =======================================
 
-Started:   2026-03-19 03:40:21 -07:00
-Ended:     2026-03-19 03:40:21 -07:00
-Duration:  130ms
+Started:   2026-03-19 04:49:35 -07:00
+Ended:     2026-03-19 04:49:35 -07:00
+Duration:  146ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log

@@ -96,9 +96,12 @@ Holes Found: 7 (actionable)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 03:40:22 -07:00
-Ended:     2026-03-19 03:40:22 -07:00
-Duration:  4ms
+Started:   2026-03-19 04:49:36 -07:00
+Ended:     2026-03-19 04:49:36 -07:00
+Duration:  8ms
 
 Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
+026-03-19 04:49:36 -07:00
+Duration:  8ms
+
+Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
