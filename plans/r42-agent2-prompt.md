@@ -1,7 +1,8 @@
 # R42 Agent 2: Fix Trait WF Requires + Prove Remaining StPer Methods
 
 ## Baseline
-- Main after R41 merge, Verus release/0.2026.03.17.a96bad0, Rust 1.94.0
+- Main at `e83db19f`, Verus release/0.2026.03.17.a96bad0, Rust 1.94.0
+- 4320 verified, 153 holes, 30 clean chapters
 
 ## MANDATORY RULES — READ BEFORE WRITING ANY CODE
 
@@ -26,9 +27,31 @@ The trait `OrderedTableStPerTrait` defines signatures for these methods without
 `requires self.spec_orderedtablestper_wf()`. Add the wf requires to the trait
 signature for each blocked method.
 
+**Exact changes needed** (you started this before disk filled — re-apply these):
+
+In `OrderedTableStPer.rs` trait definition:
+- `domain`: add `requires self.spec_orderedtablestper_wf()`
+- `collect`: add `requires self.spec_orderedtablestper_wf()`
+- `first_key`: add `requires self.spec_orderedtablestper_wf()`
+- `last_key`: add `requires self.spec_orderedtablestper_wf()`
+- `previous_key`: add `requires self.spec_orderedtablestper_wf()`
+- `next_key`: add `requires self.spec_orderedtablestper_wf()`
+- `difference`: add `other.spec_orderedtablestper_wf()` to existing requires
+- `split_key` ensures: add `parts.0.spec_orderedtablestper_wf(), parts.2.spec_orderedtablestper_wf()`
+
+In `AugOrderedTableStPer.rs` trait definition:
+- `calculate_reduction`: add `requires base.spec_orderedtablestper_wf()` (already has reducer requires)
+- `domain`: add `requires self.spec_augorderedtablestper_wf()`
+- `collect`: add `requires self.spec_augorderedtablestper_wf()`
+- `first_key`: add `requires self.spec_augorderedtablestper_wf()`
+- `last_key`: add `requires self.spec_augorderedtablestper_wf()`
+- `previous_key`: add `requires self.spec_augorderedtablestper_wf()`
+- `next_key`: add `requires self.spec_augorderedtablestper_wf()`
+- `difference`: add `other.spec_augorderedtablestper_wf()` to existing requires
+
 **Steps:**
-1. Read the trait definition — find where domain, collect, first_key, etc. are declared
-2. Add `requires self.spec_orderedtablestper_wf()` to each
+1. Apply the above trait signature changes
+2. Update all impls to match (requires must match trait exactly)
 3. For `difference`, also add `requires other.spec_orderedtablestper_wf()`
 4. Update the impl to match (requires must match trait exactly)
 5. Check all callers — RTT tests, other files that call these methods. They may need

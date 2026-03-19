@@ -1,7 +1,8 @@
 # R42 Agent 3: Graph Algorithms — Chap65 Prim + Chap61 EdgeContraction
 
 ## Baseline
-- Main after R41 merge, Verus release/0.2026.03.17.a96bad0, Rust 1.94.0
+- Main at `e83db19f`, Verus release/0.2026.03.17.a96bad0, Rust 1.94.0
+- 4320 verified, 153 holes, 30 clean chapters
 
 ## MANDATORY RULES — READ BEFORE WRITING ANY CODE
 
