@@ -196,6 +196,8 @@ broadcast use {
                 forall|k: &K| f.requires((k,)),
                 forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
                 obeys_feq_full::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                keys@.len() < usize::MAX as nat,
             ensures domain@.dom().finite();
         /// - APAS: Work O(n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- maps all values linearly, then recalculates reduction O(n)

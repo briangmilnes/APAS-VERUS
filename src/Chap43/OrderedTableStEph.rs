@@ -109,6 +109,7 @@ broadcast use {
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
+                !old(self)@.contains_key(k@) ==> old(self)@.dom().len() + 1 < usize::MAX as nat,
             ensures
                 self@.contains_key(k@),
                 self@.dom() =~= old(self)@.dom().insert(k@),
@@ -130,12 +131,17 @@ broadcast use {
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- agrees with APAS; collects keys from entries
         fn domain(&self) -> (domain: ArraySetStEph<K>)
-            requires obeys_feq_clone::<K>()
+            requires self.spec_orderedtablesteph_wf(), obeys_feq_clone::<K>()
             ensures domain@ =~= self@.dom(), self@.dom().finite();
         /// - APAS: Work Θ(n log n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) -- delegates to TableStEph.tabulate which inserts keys sequentially
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
-            requires keys.spec_arraysetsteph_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>()
+            requires
+                keys.spec_arraysetsteph_wf(),
+                forall|k: &K| f.requires((k,)),
+                obeys_feq_full::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                keys@.len() < usize::MAX as nat,
             ensures
                 tabulated@.dom() =~= keys@,
                 tabulated.spec_orderedtablesteph_wf(),
@@ -174,7 +180,7 @@ broadcast use {
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- agrees with APAS; iterates all entries
         fn reduce<R, F: Fn(R, &K, &V) -> R>(&self, init: R, f: F) -> (reduced: R)
-            requires forall|r: R, k: &K, v: &V| f.requires((r, k, v))
+            requires self.spec_orderedtablesteph_wf(), forall|r: R, k: &K, v: &V| f.requires((r, k, v))
             ensures self@.dom().finite();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to TableStEph.intersection which is linear scan
@@ -204,6 +210,7 @@ broadcast use {
                 obeys_feq_clone::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
+                old(self)@.dom().len() + other@.dom().len() < usize::MAX,
             ensures
                 self@.dom() =~= old(self)@.dom().union(other@.dom()),
                 forall|k: K::V| #[trigger] old(self)@.contains_key(k) && !other@.contains_key(k)
@@ -220,7 +227,7 @@ broadcast use {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to TableStEph.difference which is linear scan
         fn difference(&mut self, other: &Self)
-            requires old(self).spec_orderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
+            requires old(self).spec_orderedtablesteph_wf(), other.spec_orderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
             ensures
                 self@.dom() =~= old(self)@.dom().difference(other@.dom()),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
@@ -253,6 +260,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then returns first element
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
+            requires self.spec_orderedtablesteph_wf()
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
@@ -262,6 +270,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then returns last element
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
+            requires self.spec_orderedtablesteph_wf()
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
@@ -271,6 +280,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then scans backward
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
+            requires self.spec_orderedtablesteph_wf()
             ensures
                 self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
@@ -280,6 +290,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then scans forward
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
+            requires self.spec_orderedtablesteph_wf()
             ensures
                 self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
@@ -316,6 +327,7 @@ broadcast use {
                 obeys_feq_clone::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
+                old(self)@.dom().len() + other@.dom().len() < usize::MAX,
             ensures
                 self@.dom() =~= old(self)@.dom().union(other@.dom()),
                 self@.dom().finite(),
@@ -391,18 +403,22 @@ broadcast use {
         };
     }
 
-    /// Get the length of the backing AVL sequence without requiring wf.
-    #[verifier::external_body]
+    /// Spec predicate for rank_key: x is strictly less than k in the total order.
+    pub open spec fn spec_rank_pred<K: StT + Ord + TotalOrder>(x: K::V, k: K) -> bool {
+        exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, k) && t@ != k@
+    }
+
+    /// Get the length of the backing AVL sequence.
     fn avl_seq_length<K: StT + Ord, V: StT>(seq: &AVLTreeSeqStEphS<Pair<K, V>>) -> (len: usize)
+        requires seq.spec_avltreeseqsteph_wf()
         ensures len as nat == seq@.len()
     {
         seq.length()
     }
 
-    /// Get nth element from the AVL sequence without requiring wf.
-    #[verifier::external_body]
+    /// Get nth element from the AVL sequence.
     fn avl_seq_nth<'a, K: StT + Ord, V: StT>(seq: &'a AVLTreeSeqStEphS<Pair<K, V>>, index: usize) -> (elem: &'a Pair<K, V>)
-        requires (index as int) < seq@.len()
+        requires seq.spec_avltreeseqsteph_wf(), (index as int) < seq@.len()
         ensures elem@ == seq@[index as int]
     {
         seq.nth(index)
@@ -414,7 +430,7 @@ broadcast use {
         other: &AVLTreeSeqStEphS<Pair<K, V>>,
         k: &K,
     ) -> (found: bool)
-        requires obeys_view_eq::<K>()
+        requires other.spec_avltreeseqsteph_wf(), obeys_view_eq::<K>()
         ensures found == spec_entries_to_map(other@).dom().contains(k@)
     {
         let other_len = avl_seq_length(other);
@@ -423,6 +439,7 @@ broadcast use {
             invariant
                 j <= other_len,
                 other_len as nat == other@.len(),
+                other.spec_avltreeseqsteph_wf(),
                 obeys_view_eq::<K>(),
                 forall|q: int| 0 <= q < j as int ==> (#[trigger] other@[q]).0 != k@,
             decreases other_len - j,
@@ -530,29 +547,216 @@ broadcast use {
             self.size() == 0
         }
 
-        #[verifier::external_body]
         fn insert<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
         {
+            assert(obeys_feq_full_trigger::<Pair<K, V>>());
+            let ghost old_seq = self.base_seq@;
+            let ghost old_map = self@;
             let len = self.base_seq.length();
             let mut all: Vec<Pair<K, V>> = Vec::new();
             let mut match_found = false;
+            let ghost mut found_at: int = len as int;
+            // Ghost witnesses for combine result.
+            let ghost mut combined_old_v: V = v;
+            let ghost mut combined_r: V = v;
             let mut i: usize = 0;
-            while i < len {
+            while i < len
+                invariant
+                    i <= len,
+                    len as nat == old_seq.len(),
+                    self.base_seq@ == old_seq,
+                    old(self).base_seq@ == old_seq,
+                    old(self).spec_orderedtablesteph_wf(),
+                    obeys_view_eq::<K>(),
+                    obeys_feq_full::<Pair<K, V>>(),
+                    forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                    spec_keys_no_dups(old_seq),
+                    old_map == spec_entries_to_map(old_seq),
+                    all@.len() == i as int,
+                    match_found == (found_at < len as int),
+                    found_at == len as int || (0 <= found_at < i as int && old_seq[found_at].0 == k@),
+                    !match_found ==>
+                        forall|j: int| 0 <= j < i as int ==> (#[trigger] old_seq[j]).0 != k@,
+                    // Non-matching entries copied verbatim.
+                    forall|j: int| 0 <= j < i as int && j != found_at ==>
+                        (#[trigger] all@[j])@ == old_seq[j],
+                    // Found entry: keys match, value is combine result.
+                    match_found ==> all@[found_at]@.0 == old_seq[found_at].0,
+                    match_found ==> combined_old_v@ == old_map[k@],
+                    match_found ==> combine.ensures((&combined_old_v, &v), combined_r),
+                    match_found ==> all@[found_at]@.1 == combined_r@,
+                decreases len - i,
+            {
                 let pair = self.base_seq.nth(i);
+                proof { reveal(obeys_view_eq); }
                 if pair.0 == k && !match_found {
                     match_found = true;
+                    proof { found_at = i as int; }
+                    let pair_clone = pair.clone_plus();
+                    proof { lemma_cloned_view_eq(*pair, pair_clone); }
                     let final_value = combine(&pair.1, &v);
-                    all.push(Pair(pair.0.clone(), final_value));
+                    proof {
+                        lemma_entries_to_map_get::<K::V, V::V>(old_seq, i as int);
+                        combined_old_v = pair_clone.1;
+                        combined_r = final_value;
+                    }
+                    all.push(Pair(pair_clone.0, final_value));
                 } else {
-                    all.push(pair.clone());
+                    let cloned = pair.clone_plus();
+                    proof { lemma_cloned_view_eq(*pair, cloned); }
+                    let ghost all_pre = all@;
+                    all.push(cloned);
+                    proof {
+                        if match_found {
+                            assert(found_at < all_pre.len() as int);
+                            assert(all@[found_at] == all_pre[found_at]);
+                        }
+                    }
                 }
-                i += 1;
+                i = i + 1;
+            }
+            // Connect match_found to spec-level contains_key.
+            proof {
+                if match_found {
+                    lemma_entries_to_map_contains_key::<K::V, V::V>(old_seq, found_at);
+                    assert(old_map.contains_key(k@));
+                } else {
+                    // No entry has key k@, so map doesn't contain it.
+                    if old_map.contains_key(k@) {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_seq, k@);
+                        let j = choose|j: int| 0 <= j < old_seq.len()
+                            && (#[trigger] old_seq[j]).0 == k@;
+                        assert(false); // contradicts !match_found invariant
+                    }
+                    assert(!old_map.contains_key(k@));
+                }
             }
             if !match_found {
+                proof {
+                    lemma_entries_to_map_len::<K::V, V::V>(old_seq);
+                    assert(!old_map.contains_key(k@));
+                }
                 all.push(Pair(k, v));
+            }
+            proof {
+                if match_found {
+                    assert(all@.len() == len as int);
+                } else {
+                    assert(all@.len() == len as int + 1);
+                }
             }
             let tree = AVLTreeSeqStEphS::from_vec(all);
             self.base_seq = tree;
+            proof {
+                let tree_seq = tree@;
+                let new_map = spec_entries_to_map(tree_seq);
+                // Prove no-dups.
+                assert(spec_keys_no_dups(tree_seq)) by {
+                    assert forall|i_: int, j_: int|
+                        0 <= i_ < j_ < tree_seq.len()
+                        implies (#[trigger] tree_seq[i_]).0 != (#[trigger] tree_seq[j_]).0
+                    by {
+                        assert(tree_seq[i_] == all@[i_]@);
+                        assert(tree_seq[j_] == all@[j_]@);
+                        if i_ < len as int && j_ < len as int {
+                            if i_ == found_at {
+                                assert(all@[i_]@.0 == old_seq[found_at].0);
+                            } else {
+                                assert(all@[i_]@ == old_seq[i_]);
+                            }
+                            if j_ == found_at {
+                                assert(all@[j_]@.0 == old_seq[found_at].0);
+                            } else {
+                                assert(all@[j_]@ == old_seq[j_]);
+                            }
+                        } else {
+                            assert(j_ == len as int);
+                            assert(all@[j_]@.0 == k@);
+                            assert(!match_found);
+                            assert(i_ != found_at);
+                            assert(all@[i_]@ == old_seq[i_]);
+                            assert(old_seq[i_].0 != k@);
+                        }
+                    };
+                };
+                // Prove wf.
+                assert(tree_seq.len() == all@.len());
+                if match_found {
+                    assert(tree_seq.len() as nat == old_seq.len());
+                }
+                assert(self.spec_orderedtablesteph_wf());
+                lemma_entries_to_map_finite::<K::V, V::V>(tree_seq);
+                lemma_entries_to_map_finite::<K::V, V::V>(old_seq);
+                // Prove dom =~= old_dom.insert(k@).
+                assert(new_map.dom() =~= old_map.dom().insert(k@)) by {
+                    assert forall|key: K::V| #[trigger] new_map.dom().contains(key)
+                        implies old_map.dom().contains(key) || key == k@
+                    by {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(tree_seq, key);
+                        let p = choose|p: int| 0 <= p < tree_seq.len()
+                            && (#[trigger] tree_seq[p]).0 == key;
+                        assert(tree_seq[p] == all@[p]@);
+                        if p < len as int && p != found_at {
+                            assert(all@[p]@ == old_seq[p]);
+                            lemma_entries_to_map_contains_key::<K::V, V::V>(old_seq, p);
+                        } else if p < len as int && p == found_at {
+                            assert(all@[p]@.0 == old_seq[found_at].0);
+                            lemma_entries_to_map_contains_key::<K::V, V::V>(old_seq, found_at);
+                        } else {
+                            assert(all@[p]@.0 == k@);
+                        }
+                    };
+                    if found_at < len as int {
+                        assert(tree_seq[found_at] == all@[found_at]@);
+                        assert(all@[found_at]@.0 == k@);
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(tree_seq, found_at);
+                    } else {
+                        assert(tree_seq[len as int] == all@[len as int]@);
+                        assert(all@[len as int]@.0 == k@);
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(tree_seq, len as int);
+                    }
+                    assert forall|key: K::V| old_map.dom().contains(key)
+                        implies #[trigger] new_map.dom().contains(key)
+                    by {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_seq, key);
+                        let q = choose|q: int| 0 <= q < old_seq.len()
+                            && (#[trigger] old_seq[q]).0 == key;
+                        assert(tree_seq[q] == all@[q]@);
+                        if q == found_at {
+                            assert(all@[q]@.0 == old_seq[found_at].0);
+                        } else {
+                            assert(all@[q]@ == old_seq[q]);
+                        }
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(tree_seq, q);
+                    };
+                };
+                // Value: key != k@ and old_map.contains_key(key) => same value.
+                assert forall|key: K::V| key != k@ && #[trigger] old_map.contains_key(key)
+                    implies new_map[key] == old_map[key]
+                by {
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_seq, key);
+                    let q = choose|q: int| 0 <= q < old_seq.len()
+                        && (#[trigger] old_seq[q]).0 == key;
+                    assert(q != found_at);
+                    assert(all@[q]@ == old_seq[q]);
+                    assert(tree_seq[q] == all@[q]@);
+                    lemma_entries_to_map_get::<K::V, V::V>(tree_seq, q);
+                    lemma_entries_to_map_get::<K::V, V::V>(old_seq, q);
+                };
+                // Value: !old_map.contains_key(k@) => new_map[k@] == v@.
+                if !old_map.contains_key(k@) {
+                    assert(all@[len as int]@.0 == k@);
+                    assert(all@[len as int]@.1 == v@);
+                    assert(tree_seq[len as int] == all@[len as int]@);
+                    lemma_entries_to_map_get::<K::V, V::V>(tree_seq, len as int);
+                }
+                // Value: old_map.contains_key(k@) => combine witness.
+                if old_map.contains_key(k@) {
+                    assert(all@[found_at]@.0 == k@);
+                    assert(tree_seq[found_at] == all@[found_at]@);
+                    lemma_entries_to_map_get::<K::V, V::V>(tree_seq, found_at);
+                }
+            }
         }
 
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
@@ -662,90 +866,168 @@ broadcast use {
 
         fn domain(&self) -> (domain: ArraySetStEph<K>)
         {
-            proof {
-                assert(obeys_feq_full_trigger::<K>());
-                assert(obeys_feq_full_trigger::<Pair<K, V>>());
-            }
             let len = avl_seq_length(&self.base_seq);
             let mut domain = ArraySetStEph::empty();
             let mut i: usize = 0;
+            proof {
+                lemma_entries_to_map_finite::<K::V, V::V>(self.base_seq@);
+            }
             while i < len
                 invariant
+                    obeys_feq_clone::<K>(),
+                    self.base_seq.spec_avltreeseqsteph_wf(),
                     len as nat == self.base_seq@.len(),
-                    i <= len,
+                    0 <= i <= len,
                     domain.spec_arraysetsteph_wf(),
                     domain@.finite(),
-                    obeys_feq_full::<K>(),
-                    obeys_feq_full::<Pair<K, V>>(),
-                    // Forward: everything in domain came from entries [0..i).
-                    forall|kv: K::V| #[trigger] domain@.contains(kv) ==>
-                        exists|j: int| 0 <= j < i as int && (#[trigger] self.base_seq@[j]).0 == kv,
-                    // Backward: every key from entries [0..i) is in domain.
-                    forall|j: int| 0 <= j < i as int ==>
-                        #[trigger] domain@.contains(self.base_seq@[j].0),
+                    forall|kv: K::V| domain@.contains(kv) ==>
+                        #[trigger] self@.dom().contains(kv),
+                    forall|j: int| 0 <= j < i ==>
+                        domain@.contains(#[trigger] self.base_seq@[j].0),
                 decreases len - i,
             {
                 let pair = avl_seq_nth(&self.base_seq, i);
-                let cloned_pair = pair.clone_plus();
-                proof { lemma_cloned_view_eq(*pair, cloned_pair); }
-                let ghost key_view: K::V = cloned_pair@.0;
-                domain.insert(cloned_pair.0);
+                let key_clone = pair.0.clone_plus();
                 proof {
-                    assert(key_view == self.base_seq@[i as int].0);
-                    assert forall|kv: K::V| #[trigger] domain@.contains(kv) implies
-                        exists|j: int| 0 <= j < (i + 1) as int && (#[trigger] self.base_seq@[j]).0 == kv
-                    by {
-                        if kv == key_view {
-                            assert(self.base_seq@[i as int].0 == kv);
-                        }
-                    };
-                    assert forall|j: int| 0 <= j < (i + 1) as int implies
-                        #[trigger] domain@.contains(self.base_seq@[j].0)
-                    by {
-                        if j == i as int {
-                            assert(self.base_seq@[j].0 == key_view);
-                        }
-                    };
+                    assert(cloned(pair.0, key_clone));
+                    assert(obeys_feq_clone::<K>());
+                    assert(key_clone@ == self.base_seq@[i as int].0);
+                    lemma_entries_to_map_contains_key::<K::V, V::V>(
+                        self.base_seq@, i as int,
+                    );
                 }
-                i = i + 1;
+                domain.insert(key_clone);
+                i += 1;
             }
             proof {
-                lemma_entries_to_map_finite::<K::V, V::V>(self.base_seq@);
-                assert(domain@ =~= spec_entries_to_map(self.base_seq@).dom()) by {
-                    assert forall|kv: K::V| #[trigger] domain@.contains(kv) implies
-                        spec_entries_to_map(self.base_seq@).dom().contains(kv)
+                assert(domain@ =~= self@.dom()) by {
+                    assert forall|kv: K::V| self@.dom().contains(kv)
+                        implies domain@.contains(kv)
                     by {
-                        let j = choose|j: int| 0 <= j < len as int && (#[trigger] self.base_seq@[j]).0 == kv;
-                        lemma_entries_to_map_contains_key::<K::V, V::V>(self.base_seq@, j);
-                    };
-                    assert forall|kv: K::V| #[trigger] spec_entries_to_map(self.base_seq@).dom().contains(kv) implies
-                        domain@.contains(kv)
-                    by {
-                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.base_seq@, kv);
-                        let j = choose|j: int| 0 <= j < self.base_seq@.len()
-                            && (#[trigger] self.base_seq@[j]).0 == kv;
-                        assert(domain@.contains(self.base_seq@[j].0));
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(
+                            self.base_seq@, kv,
+                        );
                     };
                 };
             }
             domain
         }
 
-        #[verifier::external_body]
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
         {
+            proof {
+                assert(obeys_feq_full_trigger::<K>());
+                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+            }
             let seq = keys.to_seq();
             let len = seq.length();
+            let ghost seq_view = seq@;
             let mut all: Vec<Pair<K, V>> = Vec::new();
+            // Ghost: key and result witnesses per index.
+            let ghost mut key_args: Seq<K> = Seq::empty();
+            let ghost mut results: Seq<V> = Seq::empty();
             let mut i: usize = 0;
-            while i < len {
+            while i < len
+                invariant
+                    0 <= i <= len,
+                    len as int == seq_view.len(),
+                    seq_view == seq@,
+                    seq_view.no_duplicates(),
+                    seq_view.to_set() =~= keys@,
+                    forall|k: &K| f.requires((k,)),
+                    obeys_feq_full::<K>(),
+                    all@.len() == i as int,
+                    key_args.len() == i as int,
+                    results.len() == i as int,
+                    forall|j: int| 0 <= j < i as int ==>
+                        (#[trigger] all@[j])@.0 == seq_view[j],
+                    forall|j: int| 0 <= j < i as int ==> {
+                        &&& (#[trigger] key_args[j])@ == seq_view[j]
+                        &&& f.ensures((&key_args[j],), results[j])
+                        &&& all@[j]@.1 == results[j]@
+                    },
+                decreases len - i,
+            {
                 let k = seq.nth(i);
-                let v = f(k);
-                all.push(Pair(k.clone(), v));
+                let val = f(k);
+                let k_clone = k.clone_plus();
+                proof {
+                    assert(cloned(*k, k_clone));
+                    key_args = key_args.push(*k);
+                    results = results.push(val);
+                }
+                all.push(Pair(k_clone, val));
                 i += 1;
             }
+            proof {
+                assert(all@.len() as nat == seq_view.len());
+                seq_view.unique_seq_to_set();
+                assert(seq_view.len() == keys@.len());
+            }
             let tree = AVLTreeSeqStEphS::from_vec(all);
-            OrderedTableStEph { base_seq: tree }
+            let tabulated = OrderedTableStEph { base_seq: tree };
+            proof {
+                let tree_seq = tree@;
+                let new_map = spec_entries_to_map(tree_seq);
+                // Prove no-dups.
+                assert(spec_keys_no_dups(tree_seq)) by {
+                    assert forall|i_: int, j_: int|
+                        0 <= i_ < j_ < tree_seq.len()
+                        implies (#[trigger] tree_seq[i_]).0 != (#[trigger] tree_seq[j_]).0
+                    by {
+                        assert(tree_seq[i_] == all@[i_]@);
+                        assert(tree_seq[j_] == all@[j_]@);
+                        assert(all@[i_]@.0 == seq_view[i_]);
+                        assert(all@[j_]@.0 == seq_view[j_]);
+                        // seq_view.no_duplicates() => seq_view[i_] != seq_view[j_].
+                    };
+                };
+                assert(tabulated.spec_orderedtablesteph_wf());
+                lemma_entries_to_map_finite::<K::V, V::V>(tree_seq);
+                // Prove dom =~= keys@.
+                assert(new_map.dom() =~= keys@) by {
+                    // Forward: every key in new_map is in keys@.
+                    assert forall|key: K::V| #[trigger] new_map.dom().contains(key)
+                        implies keys@.contains(key)
+                    by {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(tree_seq, key);
+                        let p = choose|p: int| 0 <= p < tree_seq.len()
+                            && (#[trigger] tree_seq[p]).0 == key;
+                        assert(tree_seq[p] == all@[p]@);
+                        assert(all@[p]@.0 == seq_view[p]);
+                        assert(seq_view.to_set().contains(seq_view[p]));
+                    };
+                    // Backward: every key in keys@ is in new_map.
+                    assert forall|key: K::V| keys@.contains(key)
+                        implies #[trigger] new_map.dom().contains(key)
+                    by {
+                        assert(seq_view.to_set().contains(key));
+                        let q = choose|q: int| 0 <= q < seq_view.len()
+                            && (#[trigger] seq_view[q]) == key;
+                        assert(all@[q]@.0 == key);
+                        assert(tree_seq[q] == all@[q]@);
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(tree_seq, q);
+                    };
+                };
+                // Prove value witness.
+                assert forall|key: K::V| #[trigger] new_map.contains_key(key)
+                    implies (exists|key_arg: K, result: V|
+                        key_arg@ == key && f.ensures((&key_arg,), result)
+                        && new_map[key] == result@)
+                by {
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(tree_seq, key);
+                    let p = choose|p: int| 0 <= p < tree_seq.len()
+                        && (#[trigger] tree_seq[p]).0 == key;
+                    assert(tree_seq[p] == all@[p]@);
+                    lemma_entries_to_map_get::<K::V, V::V>(tree_seq, p);
+                    let ka = key_args[p];
+                    let rv = results[p];
+                    assert(ka@ == key);
+                    assert(f.ensures((&ka,), rv));
+                    assert(new_map[key] == rv@);
+                };
+            }
+            tabulated
         }
 
         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
@@ -920,6 +1202,7 @@ broadcast use {
                 invariant
                     i <= len,
                     len as nat == self.base_seq@.len(),
+                    self.base_seq.spec_avltreeseqsteph_wf(),
                     forall|r: R, k: &K, v: &V| f.requires((r, k, v)),
                 decreases len - i,
             {
@@ -1096,40 +1379,321 @@ broadcast use {
             }
         }
 
-        #[verifier::external_body]
         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
         {
-            // Start with self entries, combining with other when key overlaps.
-            let len = self.base_seq.length();
+            proof {
+                assert(obeys_feq_full_trigger::<V>());
+                assert(obeys_feq_full_trigger::<K>());
+                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+                lemma_entries_to_map_len::<K::V, V::V>(self.base_seq@);
+                lemma_entries_to_map_len::<K::V, V::V>(other.base_seq@);
+            }
+            let ghost old_seq = self.base_seq@;
+            let ghost old_map = self@;
+            let ghost other_map = other@;
+            // Phase 1: all entries from self (merged with other where keys overlap).
+            let self_len = avl_seq_length(&self.base_seq);
             let mut all: Vec<Pair<K, V>> = Vec::new();
             let mut i: usize = 0;
-            while i < len {
-                let pair = self.base_seq.nth(i);
-                let other_val = other.find(&pair.0);
-                match other_val {
+            let ghost mut self_in_other: Seq<bool> = Seq::empty();
+            let ghost mut combined_v1: Seq<V> = Seq::empty();
+            let ghost mut combined_v2: Seq<V> = Seq::empty();
+            let ghost mut combined_r: Seq<V> = Seq::empty();
+            while i < self_len
+                invariant
+                    self.base_seq@ == old_seq,
+                    old(self).base_seq@ == old_seq,
+                    old(self).spec_orderedtablesteph_wf(),
+                    self.base_seq.spec_avltreeseqsteph_wf(),
+                    other.spec_orderedtablesteph_wf(),
+                    spec_keys_no_dups(old_seq),
+                    obeys_view_eq::<K>(),
+                    obeys_feq_full::<V>(),
+                    obeys_feq_full::<K>(),
+                    obeys_feq_full::<Pair<K, V>>(),
+                    forall|v1: &V, v2: &V| f.requires((v1, v2)),
+                    self_len as nat == old_seq.len(),
+                    0 <= i <= self_len,
+                    all@.len() == i as int,
+                    self_in_other.len() == i as int,
+                    combined_v1.len() == i as int,
+                    combined_v2.len() == i as int,
+                    combined_r.len() == i as int,
+                    old_map == spec_entries_to_map(old_seq),
+                    other_map == spec_entries_to_map(other.base_seq@),
+                    forall|j: int| 0 <= j < all@.len() ==>
+                        (#[trigger] all@[j])@.0 == old_seq[j].0,
+                    forall|j: int| 0 <= j < all@.len() ==>
+                        (#[trigger] self_in_other[j]) == other_map.contains_key(old_seq[j].0),
+                    forall|j: int| 0 <= j < all@.len() && !(#[trigger] self_in_other[j]) ==>
+                        all@[j]@.1 == old_seq[j].1,
+                    forall|j: int| 0 <= j < all@.len() && (#[trigger] self_in_other[j]) ==> {
+                        &&& combined_v1[j]@ == old_map[old_seq[j].0]
+                        &&& combined_v2[j]@ == other_map[old_seq[j].0]
+                        &&& f.ensures((&combined_v1[j], &combined_v2[j]), combined_r[j])
+                        &&& all@[j]@.1 == combined_r[j]@
+                    },
+                    forall|a: int, b: int| 0 <= a < b < all@.len() ==>
+                        (#[trigger] all@[a])@.0 != (#[trigger] all@[b])@.0,
+                decreases self_len - i,
+            {
+                let pair = avl_seq_nth(&self.base_seq, i);
+                let other_find = other.find(&pair.0);
+                match other_find {
                     Some(ov) => {
                         let combined = f(&pair.1, &ov);
-                        all.push(Pair(pair.0.clone(), combined));
+                        let key_clone = pair.0.clone_plus();
+                        proof {
+                            lemma_cloned_view_eq(pair.0, key_clone);
+                            assert forall|a: int| 0 <= a < all@.len()
+                                implies (#[trigger] all@[a])@.0 != old_seq[i as int].0
+                            by {
+                                assert(all@[a]@.0 == old_seq[a].0);
+                                assert(a != i as int);
+                            };
+                            lemma_entries_to_map_contains_key::<K::V, V::V>(old_seq, i as int);
+                            lemma_entries_to_map_get::<K::V, V::V>(old_seq, i as int);
+                        }
+                        all.push(Pair(key_clone, combined));
+                        proof {
+                            self_in_other = self_in_other.push(true);
+                            combined_v1 = combined_v1.push(pair.1);
+                            combined_v2 = combined_v2.push(ov);
+                            combined_r = combined_r.push(combined);
+                        }
                     },
                     None => {
-                        all.push(pair.clone());
+                        let cloned = pair.clone_plus();
+                        proof {
+                            lemma_cloned_view_eq(*pair, cloned);
+                            assert forall|a: int| 0 <= a < all@.len()
+                                implies (#[trigger] all@[a])@.0 != old_seq[i as int].0
+                            by {
+                                assert(all@[a]@.0 == old_seq[a].0);
+                                assert(a != i as int);
+                            };
+                        }
+                        all.push(cloned);
+                        proof {
+                            self_in_other = self_in_other.push(false);
+                            combined_v1 = combined_v1.push(pair.1);
+                            combined_v2 = combined_v2.push(pair.1);
+                            combined_r = combined_r.push(pair.1);
+                        }
                     },
                 }
                 i += 1;
             }
-            // Add other entries not in self.
-            let other_len = other.base_seq.length();
+            // Phase 2: entries from other not in self.
+            let ghost phase1_len = all@.len();
+            let other_len = avl_seq_length(&other.base_seq);
+            let ghost mut phase2_src: Seq<int> = Seq::empty();
+            let ghost mut phase2_idx: Seq<int> = Seq::empty();
             let mut j: usize = 0;
-            while j < other_len {
-                let pair = other.base_seq.nth(j);
-                let self_val = self.find(&pair.0);
-                if self_val.is_none() {
-                    all.push(pair.clone());
+            proof {
+                assert forall|j_: int| 0 <= j_ < phase1_len
+                    implies (#[trigger] all@[j_])@.0 == old_seq[j_].0
+                by {};
+            }
+            while j < other_len
+                invariant
+                    self.base_seq@ == old_seq,
+                    old(self).base_seq@ == old_seq,
+                    old(self).spec_orderedtablesteph_wf(),
+                    self.base_seq.spec_avltreeseqsteph_wf(),
+                    other.base_seq.spec_avltreeseqsteph_wf(),
+                    spec_keys_no_dups(old_seq),
+                    spec_keys_no_dups(other.base_seq@),
+                    obeys_view_eq::<K>(),
+                    obeys_feq_full::<Pair<K, V>>(),
+                    old_map == spec_entries_to_map(old_seq),
+                    other_map == spec_entries_to_map(other.base_seq@),
+                    self_len as nat == old_seq.len(),
+                    other_len as nat == other.base_seq@.len(),
+                    0 <= j <= other_len,
+                    phase1_len == self_len as int,
+                    all@.len() >= phase1_len,
+                    all@.len() <= self_len + j,
+                    phase2_src.len() == all@.len() - phase1_len,
+                    phase2_idx.len() == j as int,
+                    forall|j_: int| 0 <= j_ < phase1_len ==>
+                        (#[trigger] all@[j_])@.0 == old_seq[j_].0,
+                    forall|j_: int| 0 <= j_ < phase1_len ==>
+                        (#[trigger] self_in_other[j_]) == other_map.contains_key(old_seq[j_].0),
+                    forall|j_: int| 0 <= j_ < phase1_len && !(#[trigger] self_in_other[j_]) ==>
+                        all@[j_]@.1 == old_seq[j_].1,
+                    forall|j_: int| 0 <= j_ < phase1_len && (#[trigger] self_in_other[j_]) ==> {
+                        &&& combined_v1[j_]@ == old_map[old_seq[j_].0]
+                        &&& combined_v2[j_]@ == other_map[old_seq[j_].0]
+                        &&& f.ensures((&combined_v1[j_], &combined_v2[j_]), combined_r[j_])
+                        &&& all@[j_]@.1 == combined_r[j_]@
+                    },
+                    forall|p: int| 0 <= p < phase2_src.len() ==>
+                        0 <= (#[trigger] phase2_src[p]) < j
+                        && all@[phase1_len + p]@ == other.base_seq@[phase2_src[p]]
+                        && !old_map.contains_key(other.base_seq@[phase2_src[p]].0),
+                    forall|m: int| #![trigger phase2_idx[m]]
+                        0 <= m < j
+                        && !old_map.contains_key(other.base_seq@[m].0)
+                        ==> 0 <= phase2_idx[m] < phase2_src.len()
+                        && all@[phase1_len + phase2_idx[m]]@ == other.base_seq@[m],
+                    forall|a: int, b: int| 0 <= a < b < all@.len() ==>
+                        (#[trigger] all@[a])@.0 != (#[trigger] all@[b])@.0,
+                decreases other_len - j,
+            {
+                let pair = avl_seq_nth(&other.base_seq, j);
+                let in_self = key_in_other(&self.base_seq, &pair.0);
+                if !in_self {
+                    let cloned = pair.clone_plus();
+                    proof {
+                        lemma_cloned_view_eq(*pair, cloned);
+                        assert forall|a: int| 0 <= a < all@.len()
+                            implies (#[trigger] all@[a])@.0 != other.base_seq@[j as int].0
+                        by {
+                            if a < phase1_len {
+                                assert(all@[a]@.0 == old_seq[a].0);
+                                lemma_entries_to_map_contains_key::<K::V, V::V>(old_seq, a);
+                            } else {
+                                let p2idx = a - phase1_len;
+                                let src = phase2_src[p2idx];
+                                assert(all@[a]@ == other.base_seq@[src]);
+                                assert(src != j as int);
+                            }
+                        };
+                    }
+                    let ghost new_p2_idx = phase2_src.len() as int;
+                    all.push(cloned);
+                    proof {
+                        phase2_src = phase2_src.push(j as int);
+                        phase2_idx = phase2_idx.push(new_p2_idx);
+                    }
+                } else {
+                    proof {
+                        phase2_idx = phase2_idx.push(0int);
+                    }
                 }
                 j += 1;
             }
+            proof {
+                assert(all@.len() <= self_len + other_len);
+                lemma_entries_to_map_len::<K::V, V::V>(old_seq);
+                lemma_entries_to_map_len::<K::V, V::V>(other.base_seq@);
+            }
             let tree = AVLTreeSeqStEphS::from_vec(all);
             self.base_seq = tree;
+            proof {
+                let tree_seq = tree@;
+                let new_map = spec_entries_to_map(tree_seq);
+                // Prove no-dups.
+                assert(spec_keys_no_dups(tree_seq)) by {
+                    assert forall|i_: int, j_: int|
+                        0 <= i_ < j_ < tree_seq.len()
+                        implies (#[trigger] tree_seq[i_]).0 != (#[trigger] tree_seq[j_]).0
+                    by {
+                        assert(tree_seq[i_] == all@[i_]@);
+                        assert(tree_seq[j_] == all@[j_]@);
+                    };
+                };
+                // Prove wf: tree was built by from_vec, no-dups shown above, size bounded.
+                assert(tree_seq.len() == all@.len());
+                assert(all@.len() as nat <= old_seq.len() + other.base_seq@.len());
+                assert(self.spec_orderedtablesteph_wf());
+                lemma_entries_to_map_finite::<K::V, V::V>(tree_seq);
+                lemma_entries_to_map_finite::<K::V, V::V>(old_seq);
+                lemma_entries_to_map_finite::<K::V, V::V>(other.base_seq@);
+                // Prove dom =~= old_dom.union(other_dom).
+                assert forall|kv: K::V| #[trigger] new_map.dom().contains(kv)
+                    <==> old_map.dom().contains(kv) || other_map.dom().contains(kv)
+                by {
+                    if new_map.dom().contains(kv) {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(tree_seq, kv);
+                        let idx = choose|idx: int| 0 <= idx < tree_seq.len()
+                            && (#[trigger] tree_seq[idx]).0 == kv;
+                        assert(tree_seq[idx] == all@[idx]@);
+                        if idx < phase1_len {
+                            assert(all@[idx]@.0 == old_seq[idx].0);
+                            lemma_entries_to_map_contains_key::<K::V, V::V>(old_seq, idx);
+                        } else {
+                            let p2idx = idx - phase1_len;
+                            let src = phase2_src[p2idx];
+                            assert(all@[idx]@ == other.base_seq@[src]);
+                            lemma_entries_to_map_contains_key::<K::V, V::V>(
+                                other.base_seq@, src,
+                            );
+                        }
+                    }
+                    if old_map.dom().contains(kv) {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_seq, kv);
+                        let m = choose|m: int| 0 <= m < old_seq.len()
+                            && (#[trigger] old_seq[m]).0 == kv;
+                        assert(all@[m]@.0 == kv);
+                        assert(tree_seq[m] == all@[m]@);
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(tree_seq, m);
+                    }
+                    if other_map.dom().contains(kv) && !old_map.dom().contains(kv) {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(other.base_seq@, kv);
+                        let m = choose|m: int| 0 <= m < other.base_seq@.len()
+                            && (#[trigger] other.base_seq@[m]).0 == kv;
+                        let p2i = phase2_idx[m];
+                        assert(all@[phase1_len + p2i]@ == other.base_seq@[m]);
+                        assert(tree_seq[phase1_len + p2i] == all@[phase1_len + p2i]@);
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(
+                            tree_seq, phase1_len + p2i,
+                        );
+                    }
+                };
+                assert(new_map.dom() =~= old_map.dom().union(other_map.dom()));
+                // Value case 1: key in old(self), not in other.
+                assert forall|kv: K::V| #[trigger] old_map.contains_key(kv) && !other_map.contains_key(kv)
+                    implies new_map[kv] == old_map[kv]
+                by {
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_seq, kv);
+                    let m = choose|m: int| 0 <= m < old_seq.len()
+                        && (#[trigger] old_seq[m]).0 == kv;
+                    assert(!self_in_other[m]);
+                    assert(all@[m]@.1 == old_seq[m].1);
+                    assert(tree_seq[m] == all@[m]@);
+                    lemma_entries_to_map_get::<K::V, V::V>(tree_seq, m);
+                    lemma_entries_to_map_get::<K::V, V::V>(old_seq, m);
+                };
+                // Value case 2: key in other, not in old(self).
+                assert forall|kv: K::V| #[trigger] other_map.contains_key(kv) && !old_map.contains_key(kv)
+                    implies new_map[kv] == other_map[kv]
+                by {
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(other.base_seq@, kv);
+                    let m = choose|m: int| 0 <= m < other.base_seq@.len()
+                        && (#[trigger] other.base_seq@[m]).0 == kv;
+                    let p2i = phase2_idx[m];
+                    let idx = phase1_len + p2i;
+                    assert(all@[idx]@ == other.base_seq@[m]);
+                    assert(tree_seq[idx] == all@[idx]@);
+                    lemma_entries_to_map_get::<K::V, V::V>(tree_seq, idx);
+                    lemma_entries_to_map_get::<K::V, V::V>(other.base_seq@, m);
+                };
+                // Value case 3: key in both.
+                assert forall|kv: K::V| #[trigger] old_map.contains_key(kv) && other_map.contains_key(kv)
+                    implies (exists|v1: V, v2: V, r: V|
+                        v1@ == old_map[kv] && v2@ == other_map[kv]
+                        && f.ensures((&v1, &v2), r)
+                        && new_map[kv] == r@)
+                by {
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_seq, kv);
+                    let m = choose|m: int| 0 <= m < old_seq.len()
+                        && (#[trigger] old_seq[m]).0 == kv;
+                    assert(self_in_other[m]);
+                    assert(all@[m]@.0 == kv);
+                    assert(tree_seq[m] == all@[m]@);
+                    lemma_entries_to_map_get::<K::V, V::V>(tree_seq, m);
+                    lemma_entries_to_map_get::<K::V, V::V>(old_seq, m);
+                    let v1 = combined_v1[m];
+                    let v2 = combined_v2[m];
+                    let r = combined_r[m];
+                    assert(v1@ == old_map[kv]);
+                    assert(v2@ == other_map[kv]);
+                    assert(f.ensures((&v1, &v2), r));
+                    assert(new_map[kv] == r@);
+                };
+            }
         }
 
         fn difference(&mut self, other: &Self)
@@ -1149,6 +1713,8 @@ broadcast use {
                     self.base_seq@ == old_seq,
                     old(self).base_seq@ == old_seq,
                     old(self).spec_orderedtablesteph_wf(),
+                    self.base_seq.spec_avltreeseqsteph_wf(),
+                    other.base_seq.spec_avltreeseqsteph_wf(),
                     obeys_feq_full::<Pair<K, V>>(),
                     obeys_view_eq::<K>(),
                     spec_keys_no_dups(old_seq),
@@ -1260,6 +1826,7 @@ broadcast use {
                     self.base_seq@ == old_seq,
                     old(self).base_seq@ == old_seq,
                     old(self).spec_orderedtablesteph_wf(),
+                    self.base_seq.spec_avltreeseqsteph_wf(),
                     obeys_feq_full::<Pair<K, V>>(),
                     spec_keys_no_dups(old_seq),
                     keys@ == keys_set,
@@ -1368,6 +1935,7 @@ broadcast use {
                     self.base_seq@ == old_seq,
                     old(self).base_seq@ == old_seq,
                     old(self).spec_orderedtablesteph_wf(),
+                    self.base_seq.spec_avltreeseqsteph_wf(),
                     obeys_feq_full::<Pair<K, V>>(),
                     spec_keys_no_dups(old_seq),
                     keys@ == keys_set,
@@ -1477,6 +2045,7 @@ broadcast use {
                     i <= len,
                     len as nat == self.base_seq@.len(),
                     self.spec_orderedtablesteph_wf(),
+                    self.base_seq.spec_avltreeseqsteph_wf(),
                     obeys_feq_full::<Pair<K, V>>(),
                     elements@.len() == i as int,
                     forall|j: int| 0 <= j < i ==> (#[trigger] elements@[j])@ == self.base_seq@[j],
@@ -1539,6 +2108,7 @@ broadcast use {
                 while i < len
                     invariant
                         obeys_feq_full::<K>(),
+                        self.base_seq.spec_avltreeseqsteph_wf(),
                         1 <= i, i <= len,
                         len as nat == self.base_seq@.len(),
                         0 <= min_idx, min_idx < i,
@@ -1629,6 +2199,7 @@ broadcast use {
                 while i < len
                     invariant
                         obeys_feq_full::<K>(),
+                        self.base_seq.spec_avltreeseqsteph_wf(),
                         1 <= i, i <= len,
                         len as nat == self.base_seq@.len(),
                         0 <= max_idx, max_idx < i,
@@ -1710,6 +2281,7 @@ broadcast use {
             while i < len
                 invariant
                     obeys_feq_full::<K>(),
+                    self.base_seq.spec_avltreeseqsteph_wf(),
                     0 <= i, i <= len,
                     len as nat == self.base_seq@.len(),
                     vals == spec_inorder_values::<Pair<K, V>>(self.base_seq.root),
@@ -1823,6 +2395,7 @@ broadcast use {
             while i < len
                 invariant
                     obeys_feq_full::<K>(),
+                    self.base_seq.spec_avltreeseqsteph_wf(),
                     0 <= i, i <= len,
                     len as nat == self.base_seq@.len(),
                     vals == spec_inorder_values::<Pair<K, V>>(self.base_seq.root),
@@ -2184,102 +2757,107 @@ broadcast use {
                 // Contrapositive: x != y ==> x@ != y@
             }
             let len = self.base_seq.length();
+            let ghost seq = self.base_seq@;
+            let ghost dom = self@.dom();
+            let ghost pred = |x: K::V| -> bool
+                { exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@ };
             let mut count: usize = 0;
+            let ghost mut counted: Set<K::V> = Set::empty();
             let mut i: usize = 0;
-            let ghost mut less_set: Set<K::V> = Set::empty();
+            proof {
+                assert(obeys_feq_full_trigger::<K>());
+                assert(obeys_feq_full::<K>());
+                lemma_entries_to_map_finite::<K::V, V::V>(seq);
+                assert(counted.finite());
+                assert(counted.len() == 0);
+            }
             while i < len
                 invariant
-                    i <= len,
-                    count <= i,
-                    len as nat == self.base_seq@.len(),
                     self.spec_orderedtablesteph_wf(),
-                    obeys_view_eq::<K>(),
                     obeys_feq_full::<K>(),
-                    less_set.finite(),
-                    less_set.len() == count as nat,
-                    // Forward: less_set keys come from [0..i) and satisfy pred.
-                    forall|x: K::V| #[trigger] less_set.contains(x) ==>
-                        (exists|j: int| 0 <= j < i as int && (#[trigger] self.base_seq@[j]).0 == x)
-                        && (exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@),
-                    // Backward: every strictly-less key from [0..i) is in less_set.
-                    forall|j: int| #![trigger self.base_seq@[j]]
-                        0 <= j < i as int
-                        && (exists|t: K| #![trigger t@] t@ == self.base_seq@[j].0 && TotalOrder::le(t, *k) && t@ != k@)
-                        ==> less_set.contains(self.base_seq@[j].0),
+                    len as nat == seq.len(),
+                    seq == self.base_seq@,
+                    dom == self@.dom(),
+                    spec_keys_no_dups(seq),
+                    0 <= i <= len,
+                    0 <= count <= i,
+                    count as int == counted.len(),
+                    counted.finite(),
+                    forall|x: K::V| #[trigger] counted.contains(x)
+                        ==> spec_rank_pred::<K>(x, *k),
+                    forall|x: K::V| #[trigger] counted.contains(x) ==> dom.contains(x),
+                    forall|j: int| 0 <= j < i as int && spec_rank_pred::<K>(seq[j].0, *k)
+                        ==> #[trigger] counted.contains(seq[j].0),
+                    forall|x: K::V| counted.contains(x) ==>
+                        exists|j: int| 0 <= j < i as int && #[trigger] seq[j].0 == x,
                 decreases len - i,
             {
                 let pair = self.base_seq.nth(i);
                 let c = TotalOrder::cmp(&pair.0, k);
                 match c {
                     core::cmp::Ordering::Less => {
+                        // cmp Less: le(pair.0, *k) && pair.0 != *k.
+                        // view_injective (from obeys_feq_full): pair.0@ == k@ ==> pair.0 == *k.
+                        // Contrapositive: pair.0 != *k ==> pair.0@ != k@.
                         proof {
-                            // cmp Less: pair.0.le(*k) && pair.0 != *k (structural).
-                            // view_injective contrapositive: pair.0 != *k ==> pair.0@ != k@.
-                            let ghost _pv = pair.0@;
-                            let ghost _kv = k@;
                             assert(pair.0@ != k@);
-                            // pair.0 is witness: le(pair.0, *k) && pair.0@ != k@.
                             assert(TotalOrder::le(pair.0, *k));
-                            assert(pair.0@ == self.base_seq@[i as int].0);
-                            // Not already in less_set (spec_keys_no_dups).
-                            if less_set.contains(self.base_seq@[i as int].0) {
-                                let j_dup = choose|j: int| 0 <= j < i as int
-                                    && (#[trigger] self.base_seq@[j]).0 == self.base_seq@[i as int].0;
-                                assert(false);
+                            assert(spec_rank_pred::<K>(pair.0@, *k));
+                            lemma_entries_to_map_contains_key::<K::V, V::V>(seq, i as int);
+                            if counted.contains(pair.0@) {
+                                let witness = choose|j: int| 0 <= j < i as int && seq[j].0 == pair.0@;
+                                assert(seq[witness].0 == seq[i as int].0);
                             }
-                            less_set = less_set.insert(self.base_seq@[i as int].0);
+                            assert(!counted.contains(pair.0@));
+                            counted = counted.insert(pair.0@);
                         }
                         count = count + 1;
                     },
-                    core::cmp::Ordering::Equal => {
+                    _ => {
+                        // cmp Equal or Greater. Need !spec_rank_pred(seq[i].0, *k).
                         proof {
-                            // pair.0 == *k (structural), so pair.0@ == k@.
-                            // Any witness t with t@ == pair.0@ == k@ fails t@ != k@.
-                            assert(self.base_seq@[i as int].0 == k@);
-                        }
-                    },
-                    core::cmp::Ordering::Greater => {
-                        proof {
-                            // cmp Greater: le(*k, pair.0) && pair.0 != *k (structural).
-                            let ghost _pv = pair.0@;
-                            let ghost _kv = k@;
-                            assert(pair.0@ != k@);
-                            // No witness t exists with t@ == pair.0@ && le(t, *k) && t@ != k@:
-                            // view_injective gives t == pair.0 from t@ == pair.0@.
-                            // le(pair.0, *k) + le(*k, pair.0) => antisymmetric => pair.0 == *k.
-                            // Contradicts pair.0 != *k.
-                            assert forall|t: K| #[trigger] t@ == self.base_seq@[i as int].0
-                                && TotalOrder::le(t, *k) && t@ != k@
-                                implies false
-                            by {
-                                assert(t@ == pair.0@);
-                                K::antisymmetric(t, *k);
-                            };
+                            if spec_rank_pred::<K>(seq[i as int].0, *k) {
+                                let t_wit: K = choose|t: K| #![trigger t@]
+                                    t@ == seq[i as int].0 && TotalOrder::le(t, *k) && t@ != k@;
+                                // t_wit@ == pair.0@. view_injective: t_wit == pair.0.
+                                assert(t_wit == pair.0);
+                                assert(TotalOrder::le(pair.0, *k));
+                                match c {
+                                    core::cmp::Ordering::Equal => {
+                                        // pair.0 == *k, so pair.0@ == k@ by view_injective.
+                                        // But t_wit@ != k@ and t_wit@ == pair.0@ == k@. Contradiction.
+                                    },
+                                    core::cmp::Ordering::Greater => {
+                                        // le(*k, pair.0) && le(pair.0, *k).
+                                        K::antisymmetric(pair.0, *k);
+                                    },
+                                    _ => {},
+                                }
+                            }
                         }
                     },
                 }
                 i = i + 1;
             }
             proof {
-                lemma_entries_to_map_finite::<K::V, V::V>(self.base_seq@);
-                lemma_entries_to_map_len::<K::V, V::V>(self.base_seq@);
-                let pred = |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@;
-                assert(less_set =~= self@.dom().filter(pred)) by {
-                    assert forall|x: K::V| less_set.contains(x) <==>
-                        (#[trigger] self@.dom().contains(x) && pred(x))
-                    by {
-                        if less_set.contains(x) {
-                            let j = choose|j: int| 0 <= j < len as int
-                                && (#[trigger] self.base_seq@[j]).0 == x;
-                            lemma_entries_to_map_contains_key::<K::V, V::V>(self.base_seq@, j);
-                        }
-                        if self@.dom().contains(x) && pred(x) {
-                            lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.base_seq@, x);
-                            let j = choose|j: int| 0 <= j < self.base_seq@.len()
-                                && (#[trigger] self.base_seq@[j]).0 == x;
-                        }
+                assert(counted =~= dom.filter(pred)) by {
+                    assert forall|x: K::V| counted.contains(x)
+                        implies #[trigger] dom.filter(pred).contains(x) by {
+                        assert(dom.contains(x));
+                        assert(spec_rank_pred::<K>(x, *k));
+                    };
+                    assert forall|x: K::V| dom.filter(pred).contains(x)
+                        implies #[trigger] counted.contains(x) by {
+                        assert(dom.contains(x));
+                        assert(spec_rank_pred::<K>(x, *k));
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(seq, x);
+                        let idx = choose|idx: int| 0 <= idx < seq.len()
+                            && (#[trigger] seq[idx]).0 == x;
+                        assert(spec_rank_pred::<K>(seq[idx].0, *k));
+                        assert(counted.contains(seq[idx].0));
                     };
                 };
+                dom.lemma_len_filter(pred);
             }
             count
         }
@@ -2504,6 +3082,7 @@ broadcast use {
     impl<K: StT + Ord, V: StT> OrderedTableStEph<K, V> {
         /// Returns an iterator over the table entries.
         pub fn iter(&self) -> (it: OrderedTableStEphIter<'_, K, V>)
+            requires self.spec_orderedtablesteph_wf()
             ensures
                 it@.0 == 0,
                 it@.1 == self.base_seq@,
@@ -2625,6 +3204,7 @@ broadcast use {
         type Item = &'a Pair<K, V>;
         type IntoIter = OrderedTableStEphIter<'a, K, V>;
         fn into_iter(self) -> (it: Self::IntoIter)
+            requires self.spec_orderedtablesteph_wf()
             ensures
                 it@.0 == 0,
                 it@.1 == self.base_seq@,

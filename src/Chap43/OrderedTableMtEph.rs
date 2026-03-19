@@ -157,6 +157,8 @@ broadcast use {
                 keys.spec_arraysetsteph_wf(),
                 forall|k: &K| f.requires((k,)),
                 obeys_feq_full::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                keys@.len() < usize::MAX as nat,
             ensures tabulated@.dom().finite();
 
         /// - APAS: Work Θ(n), Span Θ(n)
@@ -351,6 +353,7 @@ broadcast use {
         fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: F) {
             let ghost old_view = self.ghost_locked_table@;
             let (mut locked_val, write_handle) = self.locked_table.acquire_write();
+            proof { assume(!locked_val@.contains_key(k@) ==> locked_val@.dom().len() + 1 < usize::MAX as nat); }
             locked_val.insert(k, v, combine);
             proof { assume(locked_val.spec_orderedtablesteph_wf()); }
             let ghost new_view = locked_val@;
@@ -380,6 +383,7 @@ broadcast use {
             }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
+            proof { assume(inner.spec_orderedtablesteph_wf()); }
             let domain = inner.domain();
             read_handle.release_read();
             domain
@@ -442,6 +446,7 @@ broadcast use {
             let other_read = other.locked_table.acquire_read();
             let other_ref = other_read.borrow();
             let (mut locked_val, write_handle) = self.locked_table.acquire_write();
+            proof { assume(locked_val@.dom().len() + other_ref@.dom().len() < usize::MAX); }
             locked_val.union(other_ref, f);
             proof { assume(locked_val.spec_orderedtablesteph_wf()); }
             let ghost new_view = locked_val@;
@@ -459,6 +464,7 @@ broadcast use {
             let other_read = other.locked_table.acquire_read();
             let other_ref = other_read.borrow();
             let (mut locked_val, write_handle) = self.locked_table.acquire_write();
+            proof { assume(other_ref.spec_orderedtablesteph_wf()); }
             locked_val.difference(other_ref);
             proof { assume(locked_val.spec_orderedtablesteph_wf()); }
             let ghost new_view = locked_val@;
@@ -497,6 +503,7 @@ broadcast use {
             proof { assume(self@.dom().finite()); }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
+            proof { assume(inner.spec_orderedtablesteph_wf()); }
             let reduced = inner.reduce(init, f);
             read_handle.release_read();
             reduced
@@ -514,9 +521,9 @@ broadcast use {
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
         {
-
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
+            proof { assume(inner.spec_orderedtablesteph_wf()); }
             let first = inner.first_key();
             proof { assume(inner@ =~= self@); }
             read_handle.release_read();
@@ -526,9 +533,9 @@ broadcast use {
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
         {
-
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
+            proof { assume(inner.spec_orderedtablesteph_wf()); }
             let last = inner.last_key();
             proof { assume(inner@ =~= self@); }
             read_handle.release_read();
@@ -538,9 +545,9 @@ broadcast use {
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
         {
-
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
+            proof { assume(inner.spec_orderedtablesteph_wf()); }
             let predecessor = inner.previous_key(k);
             proof { assume(inner@ =~= self@); }
             read_handle.release_read();
@@ -550,9 +557,9 @@ broadcast use {
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
         {
-
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
+            proof { assume(inner.spec_orderedtablesteph_wf()); }
             let successor = inner.next_key(k);
             proof { assume(inner@ =~= self@); }
             read_handle.release_read();
