@@ -21,28 +21,28 @@ Table of Contents:
 =================================================================
 
 ❌ EdgeContractionMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap61/EdgeContractionMtEph.rs:128: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:128: error: external_body - #[verifier::external_body]
        129 |     #[cfg(not(verus_keep_ghost))]
        130 |     fn build_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap61/EdgeContractionMtEph.rs:194: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:194: error: external_body - #[verifier::external_body]
        195 |     #[cfg(not(verus_keep_ghost))]
        196 |     pub fn contract_round_mt<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap61/EdgeContractionMtEph.rs:80: info: structural_false_positive OPAQUE_EXTERNAL edge_contract_mt — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:80: info: structural_false_positive OPAQUE_EXTERNAL edge_contract_mt — #[verifier::external_body] [medium]
    Holes: 2 total
       2 × external_body
    Info: 1 × structural_false_positive
       1 × OPAQUE_EXTERNAL
 ✓ EdgeContractionStEph.rs
 ❌ VertexMatchingMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap61/VertexMatchingMtEph.rs:96: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:96: error: external_body - #[verifier::external_body]
         97 |     #[cfg(not(verus_keep_ghost))]
         98 |     fn flip_coins_parallel<V: StT + MtT + 'static>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap61/VertexMatchingMtEph.rs:203: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:203: error: external_body - #[verifier::external_body]
        204 |     #[cfg(not(verus_keep_ghost))]
        205 |     fn should_select_edge<V: StT + MtT + Hash + 'static>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap61/VertexMatchingMtEph.rs:67: info: structural_false_positive OPAQUE_EXTERNAL parallel_matching_mt — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap61/VertexMatchingMtEph.rs:121: info: structural_false_positive OPAQUE_EXTERNAL select_edges_parallel — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap61/VertexMatchingMtEph.rs:153: info: structural_false_positive OPAQUE_EXTERNAL select_edges_recursive — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:67: info: structural_false_positive OPAQUE_EXTERNAL parallel_matching_mt — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:121: info: structural_false_positive OPAQUE_EXTERNAL select_edges_parallel — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:153: info: structural_false_positive OPAQUE_EXTERNAL select_edges_recursive — #[verifier::external_body] [medium]
    Holes: 2 total
       2 × external_body
    Info: 3 × structural_false_positive
@@ -103,8 +103,8 @@ Structural (info only): 4
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 14:49:38 -07:00
-Ended:     2026-03-18 14:49:38 -07:00
+Started:   2026-03-18 14:50:51 -07:00
+Ended:     2026-03-18 14:50:51 -07:00
 Duration:  7ms
 
 Full output: src/Chap61/analyses/veracity-review-verus-proof-holes.log

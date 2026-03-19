@@ -21,23 +21,23 @@ Table of Contents:
 =================================================================
 
 ❌ AugOrderedTableMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/AugOrderedTableMtEph.rs:92: error: assume() [algorithmic] - proof { assume(forall|v1: &V, v2: &V| #[trigger] reducer.req
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/AugOrderedTableMtEph.rs:92: error: assume() [algorithmic] - proof { assume(forall|v1: &V, v2: &V| #[trigger] reducer.req
         85 |     pub fn calculate_reduction<K: MtKey, V: MtVal, F: MtReduceFn<V>>(
             ...
         90 |     ensures base@.dom().finite()
         91 |     {
         93 |         let pairs = base.collect();
         94 |         let sz = pairs.length();
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/AugOrderedTableMtEph.rs:664: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/AugOrderedTableMtEph.rs:664: error: external_body - #[verifier::external_body]
        665 |         fn reduce_range_parallel(&self, k1: &K, k2: &K) -> (reduced: V)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/AugOrderedTableMtEph.rs:72: error: fn_missing_requires - fn recalculate_reduction — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/AugOrderedTableMtEph.rs:72: error: fn_missing_requires - fn recalculate_reduction — exec fn should have requires
         67 |         open spec fn view(&self) -> Map<K::V, V::V> { self.base_table@ }
             ...
         70 |     // 7. free functions (calculate_reduction, recalculate_reduction)
         71 | 
         73 |         table: &AugOrderedTableMtEph<K, V, F>,
         74 |     ) -> (reduced: V)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/AugOrderedTableMtEph.rs:85: error: fn_missing_requires - fn calculate_reduction — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/AugOrderedTableMtEph.rs:85: error: fn_missing_requires - fn calculate_reduction — exec fn should have requires
         72 |     pub fn recalculate_reduction<K: MtKey, V: MtVal, F: MtReduceFn<V>>(
             ...
         83 |     }
@@ -49,7 +49,7 @@ Table of Contents:
       1 × external_body
    Proof functions: 1 total (1 clean, 0 holed)
 ⚠ AugOrderedTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/AugOrderedTableStEph.rs:837: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/AugOrderedTableStEph.rs:837: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        833 |         fn clone(&self) -> (cloned: Self)
             ...
        835 |         {
@@ -57,14 +57,14 @@ Table of Contents:
        838 |             Self {
        839 |                 base_table: base_cloned,
 ❌ AugOrderedTableStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/AugOrderedTableStPer.rs:124: error: assume() [closure] - assume(forall|v1: &V, v2: &V| #[trigger] cloned.requires((v1
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/AugOrderedTableStPer.rs:124: error: assume() [closure] - assume(forall|v1: &V, v2: &V| #[trigger] cloned.requires((v1
        117 |     proof fn lemma_reducer_clone_total<V: StT, F: Fn(&V, &V) -> V + Clone>(
             ...
        122 |         ensures forall|v1: &V, v2: &V| #[trigger] cloned.requires((v1, v2)),
        123 |     {
        125 |     }
        126 | 
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/AugOrderedTableStPer.rs:117: error: proof_fn_with_holes - proof fn lemma_reducer_clone_total — contains assume/external_body/admit, needs proof
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/AugOrderedTableStPer.rs:117: error: proof_fn_with_holes - proof fn lemma_reducer_clone_total — contains assume/external_body/admit, needs proof
        109 |     proof fn lemma_aug_view<K: StT + Ord, V: StT, F: Fn(&V, &V) -> V + Clone>(
             ...
        115 |     /// Clone bridge for closures: cloning a total reducer preserves totality.
@@ -77,78 +77,78 @@ Table of Contents:
 ✓ Example43_1.rs
    1 clean proof function
 ❌ OrderedSetMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:344: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:344: error: external_body - #[verifier::external_body]
        345 |         fn to_seq(&self) -> (seq: ArraySeqStPerS<T>) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:240: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.len()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:268: info: structural_false_positive RWLOCK_GHOST find — proof { assume(found == self@.contains(x@)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:384: info: structural_false_positive RWLOCK_GHOST first — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:396: info: structural_false_positive RWLOCK_GHOST last — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:408: info: structural_false_positive RWLOCK_GHOST previous — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:420: info: structural_false_positive RWLOCK_GHOST next — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:433: info: structural_false_positive RWLOCK_GHOST split — assume(left.spec_orderedsetsteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:434: info: structural_false_positive RWLOCK_GHOST split — assume(right.spec_orderedsetsteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:458: info: structural_false_positive RWLOCK_GHOST get_range — proof { assume(range.spec_orderedsetsteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:469: info: structural_false_positive RWLOCK_GHOST rank — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:481: info: structural_false_positive RWLOCK_GHOST select — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:494: info: structural_false_positive RWLOCK_GHOST split_rank — assume(left.spec_orderedsetsteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:495: info: structural_false_positive RWLOCK_GHOST split_rank — assume(right.spec_orderedsetsteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:240: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:268: info: structural_false_positive RWLOCK_GHOST find — proof { assume(found == self@.contains(x@)); } [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:384: info: structural_false_positive RWLOCK_GHOST first — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:396: info: structural_false_positive RWLOCK_GHOST last — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:408: info: structural_false_positive RWLOCK_GHOST previous — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:420: info: structural_false_positive RWLOCK_GHOST next — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:433: info: structural_false_positive RWLOCK_GHOST split — assume(left.spec_orderedsetsteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:434: info: structural_false_positive RWLOCK_GHOST split — assume(right.spec_orderedsetsteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:458: info: structural_false_positive RWLOCK_GHOST get_range — proof { assume(range.spec_orderedsetsteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:469: info: structural_false_positive RWLOCK_GHOST rank — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:481: info: structural_false_positive RWLOCK_GHOST select — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:494: info: structural_false_positive RWLOCK_GHOST split_rank — assume(left.spec_orderedsetsteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:495: info: structural_false_positive RWLOCK_GHOST split_rank — assume(right.spec_orderedsetsteph_wf()); [medium]
    Holes: 1 total
       1 × external_body
    Info: 13 × structural_false_positive
       13 × RWLOCK_GHOST
 ❌ OrderedSetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:344: error: assume() [algorithmic] - assume(result@ =~= eph_seq@);  // Clone/view bridging.
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:344: error: assume() [algorithmic] - assume(result@ =~= eph_seq@);  // Clone/view bridging.
        324 |         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
             ...
        342 |             proof {
        343 |                 // T::clone preserves View (StT bound); from_vec maps values through View.
        345 |             }
        346 |             result
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:1111: error: assume() [algorithmic] - assume(self@.filter(|x: T::V| exists|t: T| #[trigger] TotalO
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:1111: error: assume() [algorithmic] - assume(self@.filter(|x: T::V| exists|t: T| #[trigger] TotalO
       1095 |         fn select(&self, i: usize) -> (selected: Option<T>)
             ...
       1109 |                     // Filter cardinality requires sortedness of the backing sequence,
       1110 |                     // which is true for AVL trees but not captured in the wf spec.
       1112 |                 }
       1113 |                 Some(result)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:1379: error: fn_missing_requires - fn from_sorted_elements — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:1379: error: fn_missing_requires - fn from_sorted_elements — exec fn should have requires
       1370 |         fn clone(&self) -> (cloned: Self)
             ...
       1377 |     }
       1378 | 
       1380 |         ensures constructed@.finite(), constructed.spec_orderedsetsteph_wf()
       1381 |     {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:1266: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:1266: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
    Holes: 2 total
       2 × assume()
    Info: 1 × structural_false_positive
       1 × STD_TRAIT_IMPL
 ❌ OrderedSetStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStPer.rs:1031: error: assume() [algorithmic] - assume(self@.filter(|x: T::V| exists|t: T| #[trigger] TotalO
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStPer.rs:1031: error: assume() [algorithmic] - assume(self@.filter(|x: T::V| exists|t: T| #[trigger] TotalO
       1015 |         fn select(&self, i: usize) -> (selected: Option<T>)
             ...
       1029 |                     // Filter cardinality requires sortedness of the backing sequence,
       1030 |                     // which is true for AVL trees but not captured in the wf spec.
       1032 |                 }
       1033 |                 Some(result)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStPer.rs:1157: error: fn_missing_requires - fn from_sorted_elements — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStPer.rs:1157: error: fn_missing_requires - fn from_sorted_elements — exec fn should have requires
       1037 |         fn split_rank(&self, i: usize) -> (split: (Self, Self))
             ...
       1155 |     }
       1156 | 
       1158 |         ensures constructed@.finite(), constructed.spec_orderedsetstper_wf()
       1159 |     {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStPer.rs:1200: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStPer.rs:1200: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
    Holes: 1 total
       1 × assume()
    Info: 1 × structural_false_positive
       1 × STD_TRAIT_IMPL
 ❌ OrderedTableMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:941: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:941: error: external_body - #[verifier::external_body]
        942 |         fn rank_key(&self, k: &K) -> (rank: usize)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:957: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:957: error: external_body - #[verifier::external_body]
        958 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:1167: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include constructed.spec_orderedtablemteph_wf() for return type OrderedTableMtEph
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:1167: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include constructed.spec_orderedtablemteph_wf() for return type OrderedTableMtEph
       1156 |         fn clone(&self) -> (cloned: Self)
             ...
       1165 |     }
@@ -158,46 +158,46 @@ Table of Contents:
    Holes: 2 total
       2 × external_body
 ⚠ OrderedTableMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:524: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:524: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        519 |         fn clone(&self) -> (cloned: Self)
             ...
        522 |             let read_handle = self.locked_table.acquire_read();
        523 |             let inner = read_handle.borrow().clone();
        525 |             read_handle.release_read();
        526 |             let ghost view = inner@;
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:528: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:528: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        519 |         fn clone(&self) -> (cloned: Self)
             ...
        526 |             let ghost view = inner@;
        527 |             proof {
        529 |                 assume(inner.spec_orderedtablestper_wf());
        530 |             }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:529: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:529: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        519 |         fn clone(&self) -> (cloned: Self)
             ...
        527 |             proof {
        528 |                 assume(view.dom().finite());
        530 |             }
        531 |             OrderedTableMtPer {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:80: info: structural_false_positive RWLOCK_GHOST from_st_table — assume(inner.spec_orderedtablestper_wf()); [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:241: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.dom().len()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:407: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:418: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:429: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:440: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:489: info: structural_false_positive RWLOCK_GHOST rank_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:501: info: structural_false_positive RWLOCK_GHOST select_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:80: info: structural_false_positive RWLOCK_GHOST from_st_table — assume(inner.spec_orderedtablestper_wf()); [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:241: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.dom().len()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:407: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:418: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:429: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:440: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:489: info: structural_false_positive RWLOCK_GHOST rank_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:501: info: structural_false_positive RWLOCK_GHOST select_key — proof { assume(inner@ =~= self@); } [medium]
 ❌ OrderedTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStEph.rs:668: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableStEph.rs:668: error: external_body - #[verifier::external_body]
        669 |         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStEph.rs:1445: error: assume() [algorithmic] - assume(less_keys.len() == less_idx.len());
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableStEph.rs:1445: error: assume() [algorithmic] - assume(less_keys.len() == less_idx.len());
       1346 |         fn rank_key(&self, k: &K) -> (rank: usize)
             ...
       1443 |                 // less_keys has the same cardinality as less_idx (since entries have unique keys).
       1444 |                 // Bijection: j -> entries@[j].0 is injective (no_dups) and surjective (by construction).
       1446 |                 assert(count as int == self@.dom().filter(pred).len());
       1447 |                 lemma_entries_to_map_len::<K::V, V::V>(self.base_table.entries@);
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStEph.rs:1515: error: assume(false) - assume(false); — needs diverge(); use `assume(false); diverge()`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableStEph.rs:1515: error: assume(false) - assume(false); — needs diverge(); use `assume(false); diverge()`
       1452 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
             ...
       1513 |                         // This follows from the TotalOrder being total and keys being distinct.
@@ -209,23 +209,23 @@ Table of Contents:
       1 × assume()
       1 × external_body
 ❌ OrderedTableStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:452: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableStPer.rs:452: error: external_body - #[verifier::external_body]
        453 |         fn collect(&self) -> (sorted_entries: AVLTreeSeqStPerS<Pair<K, V>>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:1196: error: assume() [algorithmic] - assume(less_keys.len() == less_idx.len());
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableStPer.rs:1196: error: assume() [algorithmic] - assume(less_keys.len() == less_idx.len());
       1110 |         fn rank_key(&self, k: &K) -> (rank: usize)
             ...
       1194 |                     };
       1195 |                 };
       1197 |                 assert(count as int == self@.dom().filter(pred).len());
       1198 |                 lemma_entries_to_map_len::<K::V, V::V>(self.base_table.entries@);
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:1254: error: assume(false) - assume(false); — needs diverge(); use `assume(false); diverge()`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableStPer.rs:1254: error: assume(false) - assume(false); — needs diverge(); use `assume(false); diverge()`
       1203 |         fn select_key(&self, i: usize) -> (key: Option<K>)
             ...
       1252 |                 proof {
       1253 |                     if !found {
       1255 |                     }
       1256 |                 }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:1593: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableStPer.rs:1593: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1589 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1591 |         {
@@ -315,15 +315,16 @@ Structural (info only): 23
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 14:49:37 -07:00
-Ended:     2026-03-18 14:49:37 -07:00
-Duration:  156ms
+Started:   2026-03-18 14:50:51 -07:00
+Ended:     2026-03-18 14:50:51 -07:00
+Duration:  126ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
-===================
 
-Started:   2026-03-18 14:49:37 -07:00
-Ended:     2026-03-18 14:49:37 -07:00
-Duration:  156ms
+=================================================================
+
+Started:   2026-03-18 14:50:51 -07:00
+Ended:     2026-03-18 14:50:51 -07:00
+Duration:  126ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
