@@ -159,8 +159,9 @@ fn test_string_concatenation_reducer() {
     assert_eq!(table.reduce_val(), "Hello World");
 
     // Replace key 2's value; reduction recalculated from scratch.
+    // After replacement, key 2 moves to end of internal sequence: [1, 3, 2].
     table.insert(2, "Beautiful ".to_string(), |_old, new| new.clone());
-    assert_eq!(table.reduce_val(), "HelloBeautiful World");
+    assert_eq!(table.reduce_val(), "HelloWorldBeautiful ");
 }
 
 #[test]

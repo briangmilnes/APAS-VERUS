@@ -75,7 +75,9 @@ broadcast use {
     ) -> (reduced: V)
     where
         F: Fn(&V, &V) -> V + Clone,
-        requires forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
+        requires
+            forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
+            base.spec_orderedtablesteph_wf(),
         ensures base@.dom().finite(),
     {
         let pairs = base.collect();
@@ -290,6 +292,7 @@ broadcast use {
         /// - APAS: Work Θ(n log n), Span Θ(n log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects entries and sorts by key
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
+            requires self.spec_augorderedtablesteph_wf()
             ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf(), collected@.len() == self@.dom().len();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then returns first element
@@ -471,7 +474,7 @@ broadcast use {
         {
             proof {
                 lemma_aug_view(self);
-                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.base_table.entries@);
+                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.base_seq@);
             }
             self.base_table.is_empty()
         }
@@ -780,7 +783,7 @@ broadcast use {
         {
             proof {
                 lemma_aug_view(self);
-                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.base_table.entries@);
+                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.base_seq@);
             }
             self.cached_reduction.clone()
         }
@@ -790,7 +793,7 @@ broadcast use {
         {
             proof {
                 lemma_aug_view(self);
-                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.base_table.entries@);
+                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.base_seq@);
             }
             let range_table = self.get_key_range(k1, k2);
             range_table.reduce_val()
@@ -804,7 +807,7 @@ broadcast use {
         pub fn iter(&self) -> (it: OrderedTableStEphIter<'_, K, V>)
             ensures
                 it@.0 == 0,
-                it@.1 == self.base_table.base_table.entries.seq@,
+                it@.1 == self.base_table.base_seq@,
                 iter_invariant(&it),
         {
             self.base_table.iter()
@@ -817,7 +820,7 @@ broadcast use {
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
                 it@.0 == 0,
-                it@.1 == self.base_table.base_table.entries.seq@,
+                it@.1 == self.base_table.base_seq@,
                 iter_invariant(&it),
         {
             self.base_table.iter()
