@@ -27,19 +27,13 @@ Table of Contents:
        404 |     fn avl_seq_nth<'a, K: StT + Ord, V: StT>(seq: &'a AVLTreeSeqStEphS<Pair<K, V>>, index: usize) -> (elem: &'a Pair<K, V>)
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:533: error: external_body - #[verifier::external_body]
        534 |         fn insert<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:663: error: external_body - #[verifier::external_body]
-       664 |         fn domain(&self) -> (domain: ArraySetStEph<K>)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:677: error: external_body - #[verifier::external_body]
-       678 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:1042: error: external_body - #[verifier::external_body]
-      1043 |         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:2119: error: external_body - #[verifier::external_body]
-      2120 |         fn rank_key(&self, k: &K) -> (rank: usize)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:2138: error: external_body - #[verifier::external_body]
-      2139 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:2357: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
-   Holes: 8 total
-      8 × external_body
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:734: error: external_body - #[verifier::external_body]
+       735 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:1099: error: external_body - #[verifier::external_body]
+      1100 |         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableStEph.rs:2537: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+   Holes: 5 total
+      5 × external_body
    Info: 1 × structural_false_positive
       1 × STD_TRAIT_IMPL
    Proof functions: 1 total (1 clean, 0 holed)
@@ -82,8 +76,8 @@ Function Specs:
    80 total fns
 
 
-Holes Found: 8 (actionable)
-   8 × external_body (100%)
+Holes Found: 5 (actionable)
+   5 × external_body (100%)
 
 Structural (info only): 1
    1 × STD_TRAIT_IMPL
@@ -92,8 +86,8 @@ Structural (info only): 1
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 09:16:53 -07:00
-Ended:     2026-03-19 09:16:53 -07:00
-Duration:  38ms
+Started:   2026-03-19 10:56:20 -07:00
+Ended:     2026-03-19 10:56:20 -07:00
+Duration:  45ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log

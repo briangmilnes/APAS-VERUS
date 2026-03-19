@@ -660,16 +660,73 @@ broadcast use {
             found_value
         }
 
-        #[verifier::external_body]
         fn domain(&self) -> (domain: ArraySetStEph<K>)
         {
-            let len = self.base_seq.length();
+            proof {
+                assert(obeys_feq_full_trigger::<K>());
+                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+            }
+            let len = avl_seq_length(&self.base_seq);
             let mut domain = ArraySetStEph::empty();
             let mut i: usize = 0;
-            while i < len {
-                let pair = self.base_seq.nth(i);
-                domain.insert(pair.0.clone());
-                i += 1;
+            while i < len
+                invariant
+                    len as nat == self.base_seq@.len(),
+                    i <= len,
+                    domain.spec_arraysetsteph_wf(),
+                    domain@.finite(),
+                    obeys_feq_full::<K>(),
+                    obeys_feq_full::<Pair<K, V>>(),
+                    // Forward: everything in domain came from entries [0..i).
+                    forall|kv: K::V| #[trigger] domain@.contains(kv) ==>
+                        exists|j: int| 0 <= j < i as int && (#[trigger] self.base_seq@[j]).0 == kv,
+                    // Backward: every key from entries [0..i) is in domain.
+                    forall|j: int| 0 <= j < i as int ==>
+                        #[trigger] domain@.contains(self.base_seq@[j].0),
+                decreases len - i,
+            {
+                let pair = avl_seq_nth(&self.base_seq, i);
+                let cloned_pair = pair.clone_plus();
+                proof { lemma_cloned_view_eq(*pair, cloned_pair); }
+                let ghost key_view: K::V = cloned_pair@.0;
+                domain.insert(cloned_pair.0);
+                proof {
+                    assert(key_view == self.base_seq@[i as int].0);
+                    assert forall|kv: K::V| #[trigger] domain@.contains(kv) implies
+                        exists|j: int| 0 <= j < (i + 1) as int && (#[trigger] self.base_seq@[j]).0 == kv
+                    by {
+                        if kv == key_view {
+                            assert(self.base_seq@[i as int].0 == kv);
+                        }
+                    };
+                    assert forall|j: int| 0 <= j < (i + 1) as int implies
+                        #[trigger] domain@.contains(self.base_seq@[j].0)
+                    by {
+                        if j == i as int {
+                            assert(self.base_seq@[j].0 == key_view);
+                        }
+                    };
+                }
+                i = i + 1;
+            }
+            proof {
+                lemma_entries_to_map_finite::<K::V, V::V>(self.base_seq@);
+                assert(domain@ =~= spec_entries_to_map(self.base_seq@).dom()) by {
+                    assert forall|kv: K::V| #[trigger] domain@.contains(kv) implies
+                        spec_entries_to_map(self.base_seq@).dom().contains(kv)
+                    by {
+                        let j = choose|j: int| 0 <= j < len as int && (#[trigger] self.base_seq@[j]).0 == kv;
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(self.base_seq@, j);
+                    };
+                    assert forall|kv: K::V| #[trigger] spec_entries_to_map(self.base_seq@).dom().contains(kv) implies
+                        domain@.contains(kv)
+                    by {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.base_seq@, kv);
+                        let j = choose|j: int| 0 <= j < self.base_seq@.len()
+                            && (#[trigger] self.base_seq@[j]).0 == kv;
+                        assert(domain@.contains(self.base_seq@[j].0));
+                    };
+                };
             }
             domain
         }
@@ -2117,40 +2174,162 @@ broadcast use {
             OrderedTableStEph { base_seq: tree }
         }
 
-        #[verifier::external_body]
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
         {
+            proof {
+                assert(obeys_feq_full_trigger::<K>());
+                // obeys_feq_full::<K>() now holds, providing obeys_feq_view_injective::<K>():
+                // forall|x: K, y: K| x@ == y@ ==> x == y
+                // Contrapositive: x != y ==> x@ != y@
+            }
             let len = self.base_seq.length();
             let mut count: usize = 0;
             let mut i: usize = 0;
-            while i < len {
+            let ghost mut less_set: Set<K::V> = Set::empty();
+            while i < len
+                invariant
+                    i <= len,
+                    count <= i,
+                    len as nat == self.base_seq@.len(),
+                    self.spec_orderedtablesteph_wf(),
+                    obeys_view_eq::<K>(),
+                    obeys_feq_full::<K>(),
+                    less_set.finite(),
+                    less_set.len() == count as nat,
+                    // Forward: less_set keys come from [0..i) and satisfy pred.
+                    forall|x: K::V| #[trigger] less_set.contains(x) ==>
+                        (exists|j: int| 0 <= j < i as int && (#[trigger] self.base_seq@[j]).0 == x)
+                        && (exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@),
+                    // Backward: every strictly-less key from [0..i) is in less_set.
+                    forall|j: int| #![trigger self.base_seq@[j]]
+                        0 <= j < i as int
+                        && (exists|t: K| #![trigger t@] t@ == self.base_seq@[j].0 && TotalOrder::le(t, *k) && t@ != k@)
+                        ==> less_set.contains(self.base_seq@[j].0),
+                decreases len - i,
+            {
                 let pair = self.base_seq.nth(i);
                 let c = TotalOrder::cmp(&pair.0, k);
                 match c {
-                    core::cmp::Ordering::Less => { count = count + 1; },
-                    _ => {},
+                    core::cmp::Ordering::Less => {
+                        proof {
+                            // cmp Less: pair.0.le(*k) && pair.0 != *k (structural).
+                            // view_injective contrapositive: pair.0 != *k ==> pair.0@ != k@.
+                            let ghost _pv = pair.0@;
+                            let ghost _kv = k@;
+                            assert(pair.0@ != k@);
+                            // pair.0 is witness: le(pair.0, *k) && pair.0@ != k@.
+                            assert(TotalOrder::le(pair.0, *k));
+                            assert(pair.0@ == self.base_seq@[i as int].0);
+                            // Not already in less_set (spec_keys_no_dups).
+                            if less_set.contains(self.base_seq@[i as int].0) {
+                                let j_dup = choose|j: int| 0 <= j < i as int
+                                    && (#[trigger] self.base_seq@[j]).0 == self.base_seq@[i as int].0;
+                                assert(false);
+                            }
+                            less_set = less_set.insert(self.base_seq@[i as int].0);
+                        }
+                        count = count + 1;
+                    },
+                    core::cmp::Ordering::Equal => {
+                        proof {
+                            // pair.0 == *k (structural), so pair.0@ == k@.
+                            // Any witness t with t@ == pair.0@ == k@ fails t@ != k@.
+                            assert(self.base_seq@[i as int].0 == k@);
+                        }
+                    },
+                    core::cmp::Ordering::Greater => {
+                        proof {
+                            // cmp Greater: le(*k, pair.0) && pair.0 != *k (structural).
+                            let ghost _pv = pair.0@;
+                            let ghost _kv = k@;
+                            assert(pair.0@ != k@);
+                            // No witness t exists with t@ == pair.0@ && le(t, *k) && t@ != k@:
+                            // view_injective gives t == pair.0 from t@ == pair.0@.
+                            // le(pair.0, *k) + le(*k, pair.0) => antisymmetric => pair.0 == *k.
+                            // Contradicts pair.0 != *k.
+                            assert forall|t: K| #[trigger] t@ == self.base_seq@[i as int].0
+                                && TotalOrder::le(t, *k) && t@ != k@
+                                implies false
+                            by {
+                                assert(t@ == pair.0@);
+                                K::antisymmetric(t, *k);
+                            };
+                        }
+                    },
                 }
                 i = i + 1;
+            }
+            proof {
+                lemma_entries_to_map_finite::<K::V, V::V>(self.base_seq@);
+                lemma_entries_to_map_len::<K::V, V::V>(self.base_seq@);
+                let pred = |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@;
+                assert(less_set =~= self@.dom().filter(pred)) by {
+                    assert forall|x: K::V| less_set.contains(x) <==>
+                        (#[trigger] self@.dom().contains(x) && pred(x))
+                    by {
+                        if less_set.contains(x) {
+                            let j = choose|j: int| 0 <= j < len as int
+                                && (#[trigger] self.base_seq@[j]).0 == x;
+                            lemma_entries_to_map_contains_key::<K::V, V::V>(self.base_seq@, j);
+                        }
+                        if self@.dom().contains(x) && pred(x) {
+                            lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.base_seq@, x);
+                            let j = choose|j: int| 0 <= j < self.base_seq@.len()
+                                && (#[trigger] self.base_seq@[j]).0 == x;
+                        }
+                    };
+                };
             }
             count
         }
 
-        #[verifier::external_body]
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
         {
+            proof {
+                assert(obeys_feq_full_trigger::<K>());
+                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+                lemma_entries_to_map_finite::<K::V, V::V>(self.base_seq@);
+            }
             let len = self.base_seq.length();
             if i >= self.size() {
                 None
             } else {
                 let mut j: usize = 0;
                 let mut result_key: Option<K> = None;
-                while j < len {
+                while j < len
+                    invariant
+                        j <= len,
+                        len as nat == self.base_seq@.len(),
+                        self.spec_orderedtablesteph_wf(),
+                        obeys_view_eq::<K>(),
+                        obeys_feq_full::<K>(),
+                        obeys_feq_full::<Pair<K, V>>(),
+                        self@.dom().finite(),
+                        i < self@.dom().len(),
+                        match result_key {
+                            None => true,
+                            Some(rk) =>
+                                self@.dom().contains(rk@)
+                                && self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, rk) && t@ != rk@).len() == i as int,
+                        },
+                    decreases len - j,
+                {
                     let candidate = self.base_seq.nth(j);
                     let rank_val = self.rank_key(&candidate.0);
                     if rank_val == i && result_key.is_none() {
-                        result_key = Some(candidate.0.clone());
+                        let pair_clone = candidate.clone_plus();
+                        proof {
+                            lemma_cloned_view_eq(*candidate, pair_clone);
+                            // pair_clone.0@ == candidate.0@ from cloned view eq.
+                            // view_injective: pair_clone.0 == candidate.0 (structural).
+                            let ghost _pv = pair_clone.0@;
+                            let ghost _cv = candidate.0@;
+                            assert(pair_clone.0 == candidate.0);
+                            lemma_entries_to_map_contains_key::<K::V, V::V>(self.base_seq@, j as int);
+                        }
+                        result_key = Some(pair_clone.0);
                     }
                     j = j + 1;
                 }
