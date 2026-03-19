@@ -435,7 +435,7 @@ pub mod OrderedTableStPer {
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableStPer.domain
         fn domain(&self) -> (keys: ArraySetStEph<K>)
-            requires obeys_feq_clone::<K>()
+            requires self.spec_orderedtablestper_wf(), obeys_feq_clone::<K>()
             ensures keys@ =~= self@.dom(), self@.dom().finite();
         /// - APAS: Work Θ(n log n), Span Θ(n log n)
         /// - Claude-Opus-4.6: Work Θ(n^2), Span Θ(n^2) -- delegates to TableStPer.tabulate (sequential insert loop)
@@ -520,7 +520,7 @@ pub mod OrderedTableStPer {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to TableStPer.difference (linear scan)
         fn difference(&self, other: &Self) -> (table: Self)
-            requires self.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
+            requires self.spec_orderedtablestper_wf(), other.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
             ensures
                 table@.dom() =~= self@.dom().difference(other@.dom()),
                 forall|k: K::V| #[trigger] table@.contains_key(k) ==> table@[k] == self@[k],
@@ -547,11 +547,13 @@ pub mod OrderedTableStPer {
         /// - APAS: Work Θ(n log n), Span Θ(n log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects entries and sorts by key
         fn collect(&self) -> (sorted_entries: AVLTreeSeqStPerS<Pair<K, V>>)
+            requires self.spec_orderedtablestper_wf(),
             ensures self@.dom().finite(), sorted_entries.spec_avltreeseqstper_wf(), sorted_entries@.len() == self@.dom().len();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then returns first element
         fn first_key(&self) -> (key: Option<K>)
             where K: TotalOrder
+            requires self.spec_orderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> key matches None,
@@ -561,6 +563,7 @@ pub mod OrderedTableStPer {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then returns last element
         fn last_key(&self) -> (key: Option<K>)
             where K: TotalOrder
+            requires self.spec_orderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> key matches None,
@@ -570,6 +573,7 @@ pub mod OrderedTableStPer {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then scans for predecessor
         fn previous_key(&self, k: &K) -> (key: Option<K>)
             where K: TotalOrder
+            requires self.spec_orderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
                 key matches Some(pk) ==> self@.dom().contains(pk@),
@@ -579,6 +583,7 @@ pub mod OrderedTableStPer {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then scans for successor
         fn next_key(&self, k: &K) -> (key: Option<K>)
             where K: TotalOrder
+            requires self.spec_orderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
                 key matches Some(nk) ==> self@.dom().contains(nk@),
@@ -602,7 +607,9 @@ pub mod OrderedTableStPer {
                 parts.0@.dom().subset_of(self@.dom()),
                 parts.2@.dom().subset_of(self@.dom()),
                 parts.0@.dom().disjoint(parts.2@.dom()),
-                forall|key| #[trigger] self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.2@.dom().contains(key) || key == k@;
+                forall|key| #[trigger] self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.2@.dom().contains(key) || key == k@,
+                parts.0.spec_orderedtablestper_wf(),
+                parts.2.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to union (linear merge)
         fn join_key(left: &Self, right: &Self) -> (table: Self)
@@ -623,7 +630,8 @@ pub mod OrderedTableStPer {
             ensures
                 table@.dom().finite(),
                 table@.dom().subset_of(self@.dom()),
-                forall|key| #[trigger] table@.dom().contains(key) ==> table@[key] == self@[key];
+                forall|key| #[trigger] table@.dom().contains(key) ==> table@[key] == self@[key],
+                table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then counts elements < k
         fn rank_key(&self, k: &K) -> (rank: usize)
@@ -660,7 +668,9 @@ pub mod OrderedTableStPer {
                 parts.0@.dom().subset_of(self@.dom()),
                 parts.1@.dom().subset_of(self@.dom()),
                 parts.0@.dom().disjoint(parts.1@.dom()),
-                forall|key| #[trigger] self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.1@.dom().contains(key);
+                forall|key| #[trigger] self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.1@.dom().contains(key),
+                parts.0.spec_orderedtablestper_wf(),
+                parts.1.spec_orderedtablestper_wf();
     }
 
     // 9. impls
@@ -912,16 +922,52 @@ pub mod OrderedTableStPer {
             }
         }
 
-        #[verifier::external_body]
         fn domain(&self) -> (keys: ArraySetStEph<K>)
         {
             let len = self.base_set.elements.length();
             let mut keys = ArraySetStEph::empty();
             let mut i: usize = 0;
-            while i < len {
+            proof {
+                lemma_entries_to_map_finite::<K::V, V::V>(self.base_set.elements@);
+            }
+            while i < len
+                invariant
+                    self.base_set.elements.spec_avltreeseqstper_wf(),
+                    spec_keys_no_dups(self.base_set.elements@),
+                    obeys_feq_clone::<K>(),
+                    len == self.base_set.elements@.len(),
+                    0 <= i <= len,
+                    keys.spec_arraysetsteph_wf(),
+                    keys@.finite(),
+                    forall|kv: K::V| keys@.contains(kv) ==>
+                        #[trigger] self@.dom().contains(kv),
+                    forall|j: int| 0 <= j < i ==>
+                        keys@.contains(#[trigger] self.base_set.elements@[j].0),
+                decreases len - i,
+            {
                 let pair = self.base_set.elements.nth(i);
-                keys.insert(pair.0.clone());
+                let key_clone = pair.0.clone_plus();
+                proof {
+                    assert(cloned(pair.0, key_clone));
+                    assert(obeys_feq_clone::<K>());
+                    assert(key_clone@ == self.base_set.elements@[i as int].0);
+                    lemma_entries_to_map_contains_key::<K::V, V::V>(
+                        self.base_set.elements@, i as int,
+                    );
+                }
+                keys.insert(key_clone);
                 i += 1;
+            }
+            proof {
+                assert(keys@ =~= self@.dom()) by {
+                    assert forall|kv: K::V| self@.dom().contains(kv)
+                        implies keys@.contains(kv)
+                    by {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(
+                            self.base_set.elements@, kv,
+                        );
+                    };
+                };
             }
             keys
         }
@@ -1748,22 +1794,128 @@ pub mod OrderedTableStPer {
             table
         }
 
-        #[verifier::external_body]
         fn difference(&self, other: &Self) -> (table: Self)
         {
             let len = self.base_set.elements.length();
             let mut result_vec: Vec<Pair<K, V>> = Vec::new();
             let mut i: usize = 0;
-            while i < len {
+            let ghost mut result_src: Seq<int> = Seq::empty();
+            let ghost mut result_idx: Seq<int> = Seq::empty();
+            proof {
+                lemma_entries_to_map_finite::<K::V, V::V>(other.base_set.elements@);
+            }
+            while i < len
+                invariant
+                    self.base_set.elements.spec_avltreeseqstper_wf(),
+                    spec_keys_no_dups(self.base_set.elements@),
+                    other.spec_orderedtablestper_wf(),
+                    obeys_view_eq::<K>(),
+                    obeys_feq_full::<Pair<K, V>>(),
+                    len == self.base_set.elements@.len(),
+                    0 <= i <= len,
+                    other@.dom().finite(),
+                    result_src.len() == result_vec@.len(),
+                    result_idx.len() == i as int,
+                    forall|j: int| 0 <= j < result_vec@.len() ==>
+                        0 <= (#[trigger] result_src[j]) < i
+                        && result_vec@[j]@ == self.base_set.elements@[result_src[j]]
+                        && !other@.dom().contains(self.base_set.elements@[result_src[j]].0),
+                    forall|a: int, b: int| 0 <= a < b < result_vec@.len() ==>
+                        (#[trigger] result_vec@[a])@.0 != (#[trigger] result_vec@[b])@.0,
+                    forall|m: int| #![trigger result_idx[m]]
+                        0 <= m < i
+                        && !other@.dom().contains(self.base_set.elements@[m].0)
+                        ==> 0 <= result_idx[m] < result_vec@.len()
+                        && result_vec@[result_idx[m]]@ == self.base_set.elements@[m],
+                decreases len - i,
+            {
                 let pair = self.base_set.elements.nth(i);
+                proof {
+                    assert(obeys_feq_full_trigger::<V>());
+                }
                 let other_find = other.find(&pair.0);
                 if other_find.is_none() {
-                    result_vec.push(pair.clone());
+                    let pair_clone = pair.clone_plus();
+                    proof {
+                        assert(obeys_feq_full_trigger::<Pair<K, V>>());
+                        assert(pair_clone@ == self.base_set.elements@[i as int]);
+                        assert forall|a: int| 0 <= a < result_vec@.len()
+                            implies (#[trigger] result_vec@[a])@.0 != self.base_set.elements@[i as int].0
+                        by {
+                            let src_a = result_src[a];
+                            assert(result_vec@[a]@ == self.base_set.elements@[src_a]);
+                            assert(src_a != i as int);
+                        };
+                    }
+                    let ghost new_result_idx = result_vec@.len() as int;
+                    result_vec.push(pair_clone);
+                    proof {
+                        result_src = result_src.push(i as int);
+                        result_idx = result_idx.push(new_result_idx);
+                    }
+                } else {
+                    proof {
+                        result_idx = result_idx.push(0int);
+                    }
                 }
                 i += 1;
             }
             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
-            OrderedTableStPer { base_set: AVLTreeSetStPer::from_seq(seq) }
+            proof {
+                assert(seq@ =~= result_vec@.map_values(|p: Pair<K, V>| p@));
+                assert forall|a: int, b: int| 0 <= a < b < seq@.len()
+                    implies (#[trigger] seq@[a]).0 != (#[trigger] seq@[b]).0
+                by {
+                    assert(seq@[a] == result_vec@[a]@);
+                    assert(seq@[b] == result_vec@[b]@);
+                };
+            }
+            let table = from_sorted_entries(seq);
+            proof {
+                lemma_entries_to_map_finite::<K::V, V::V>(self.base_set.elements@);
+                assert forall|kv: K::V| #[trigger] table@.dom().contains(kv)
+                    <==> self@.dom().contains(kv) && !other@.dom().contains(kv)
+                by {
+                    if table@.dom().contains(kv) {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(seq@, kv);
+                        let j = choose|j: int| 0 <= j < seq@.len()
+                            && (#[trigger] seq@[j]).0 == kv;
+                        assert(seq@[j] == result_vec@[j]@);
+                        let m = result_src[j];
+                        assert(result_vec@[j]@ == self.base_set.elements@[m]);
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(
+                            self.base_set.elements@, m,
+                        );
+                        assert(!other@.dom().contains(kv));
+                    }
+                    if self@.dom().contains(kv) && !other@.dom().contains(kv) {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(
+                            self.base_set.elements@, kv,
+                        );
+                        let m = choose|m: int| 0 <= m < len
+                            && (#[trigger] self.base_set.elements@[m]).0 == kv;
+                        let ri = result_idx[m];
+                        assert(result_vec@[ri]@ == self.base_set.elements@[m]);
+                        assert(seq@[ri] == result_vec@[ri]@);
+                        assert(seq@[ri].0 == kv);
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(seq@, ri);
+                    }
+                };
+                assert(table@.dom() =~= self@.dom().difference(other@.dom()));
+                assert forall|kv: K::V| #[trigger] table@.contains_key(kv)
+                    implies table@[kv] == self@[kv]
+                by {
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(seq@, kv);
+                    let j = choose|j: int| 0 <= j < seq@.len()
+                        && (#[trigger] seq@[j]).0 == kv;
+                    lemma_entries_to_map_get::<K::V, V::V>(seq@, j);
+                    assert(seq@[j] == result_vec@[j]@);
+                    let m = result_src[j];
+                    assert(result_vec@[j]@ == self.base_set.elements@[m]);
+                    lemma_entries_to_map_get::<K::V, V::V>(self.base_set.elements@, m);
+                };
+            }
+            table
         }
 
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (table: Self)
@@ -2000,103 +2152,411 @@ pub mod OrderedTableStPer {
             table
         }
 
-        #[verifier::external_body]
         fn collect(&self) -> (sorted_entries: AVLTreeSeqStPerS<Pair<K, V>>)
         {
-            self.base_set.to_seq()
+            let seq = self.base_set.elements.clone();
+            proof {
+                lemma_entries_to_map_finite::<K::V, V::V>(self.base_set.elements@);
+                lemma_entries_to_map_len::<K::V, V::V>(self.base_set.elements@);
+            }
+            seq
         }
 
-        #[verifier::external_body]
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
         {
+            assert(obeys_feq_full_trigger::<K>());
             let len = self.base_set.elements.length();
+            proof {
+                lemma_entries_to_map_finite::<K::V, V::V>(self.base_set.elements@);
+                lemma_entries_to_map_len::<K::V, V::V>(self.base_set.elements@);
+            }
             if len == 0 {
                 None
             } else {
                 let first_pair = self.base_set.elements.nth(0);
-                let mut min_key = first_pair.0.clone();
+                let mut min_key = first_pair.0.clone_plus();
+                proof {
+                    lemma_cloned_view_eq(first_pair.0, min_key);
+                    K::reflexive(min_key);
+                }
+                let ghost mut min_idx: int = 0;
+                let ghost mut ghost_vals: Seq<Pair<K, V>> = seq![*first_pair];
                 let mut i: usize = 1;
-                while i < len {
+                while i < len
+                    invariant
+                        self.base_set.elements.spec_avltreeseqstper_wf(),
+                        spec_keys_no_dups(self.base_set.elements@),
+                        len as nat == self.base_set.elements@.len(),
+                        obeys_feq_full::<K>(),
+                        1 <= i, i <= len,
+                        0 <= min_idx, min_idx < i,
+                        ghost_vals.len() == i as int,
+                        forall|j: int| #![trigger ghost_vals[j]]
+                            0 <= j < i ==> ghost_vals[j]@ == self.base_set.elements@[j],
+                        min_key == ghost_vals[min_idx].0,
+                        min_key@ == self.base_set.elements@[min_idx].0,
+                        forall|j: int| #![trigger ghost_vals[j]]
+                            0 <= j < i ==> TotalOrder::le(min_key, ghost_vals[j].0),
+                    decreases len - i,
+                {
                     let elem_pair = self.base_set.elements.nth(i);
-                    if elem_pair.0 < min_key {
-                        min_key = elem_pair.0.clone();
+                    proof { ghost_vals = ghost_vals.push(*elem_pair); }
+                    let c = TotalOrder::cmp(&elem_pair.0, &min_key);
+                    match c {
+                        core::cmp::Ordering::Less => {
+                            let ghost old_min = min_key;
+                            min_key = elem_pair.0.clone_plus();
+                            proof {
+                                lemma_cloned_view_eq(elem_pair.0, min_key);
+                                min_idx = i as int;
+                                assert forall|j: int| 0 <= j < i + 1
+                                    implies TotalOrder::le(min_key, #[trigger] ghost_vals[j].0) by {
+                                    if j == i as int {
+                                        K::reflexive(min_key);
+                                    } else {
+                                        K::transitive(min_key, old_min, ghost_vals[j].0);
+                                    }
+                                };
+                            }
+                        },
+                        core::cmp::Ordering::Equal => {
+                            proof { K::reflexive(min_key); }
+                        },
+                        core::cmp::Ordering::Greater => {
+                        },
                     }
-                    i += 1;
+                    i = i + 1;
+                }
+                proof {
+                    lemma_entries_to_map_contains_key::<K::V, V::V>(
+                        self.base_set.elements@, min_idx,
+                    );
+                    assert forall|t: K| #[trigger] self@.dom().contains(t@)
+                        implies TotalOrder::le(min_key, t) by {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(
+                            self.base_set.elements@, t@,
+                        );
+                        let j = choose|j: int| 0 <= j < self.base_set.elements@.len()
+                            && (#[trigger] self.base_set.elements@[j]).0 == t@;
+                        assert(ghost_vals[j].0@ == t@);
+                        assert(ghost_vals[j].0 == t);
+                    };
                 }
                 Some(min_key)
             }
         }
 
 
-        #[verifier::external_body]
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
         {
+            assert(obeys_feq_full_trigger::<K>());
             let len = self.base_set.elements.length();
+            proof {
+                lemma_entries_to_map_finite::<K::V, V::V>(self.base_set.elements@);
+                lemma_entries_to_map_len::<K::V, V::V>(self.base_set.elements@);
+            }
             if len == 0 {
                 None
             } else {
                 let first_pair = self.base_set.elements.nth(0);
-                let mut max_key = first_pair.0.clone();
+                let mut max_key = first_pair.0.clone_plus();
+                proof {
+                    lemma_cloned_view_eq(first_pair.0, max_key);
+                    K::reflexive(max_key);
+                }
+                let ghost mut max_idx: int = 0;
+                let ghost mut ghost_vals: Seq<Pair<K, V>> = seq![*first_pair];
                 let mut i: usize = 1;
-                while i < len {
+                while i < len
+                    invariant
+                        self.base_set.elements.spec_avltreeseqstper_wf(),
+                        spec_keys_no_dups(self.base_set.elements@),
+                        len as nat == self.base_set.elements@.len(),
+                        obeys_feq_full::<K>(),
+                        1 <= i, i <= len,
+                        0 <= max_idx, max_idx < i,
+                        ghost_vals.len() == i as int,
+                        forall|j: int| #![trigger ghost_vals[j]]
+                            0 <= j < i ==> ghost_vals[j]@ == self.base_set.elements@[j],
+                        max_key == ghost_vals[max_idx].0,
+                        max_key@ == self.base_set.elements@[max_idx].0,
+                        forall|j: int| #![trigger ghost_vals[j]]
+                            0 <= j < i ==> TotalOrder::le(ghost_vals[j].0, max_key),
+                    decreases len - i,
+                {
                     let elem_pair = self.base_set.elements.nth(i);
-                    if elem_pair.0 > max_key {
-                        max_key = elem_pair.0.clone();
+                    proof { ghost_vals = ghost_vals.push(*elem_pair); }
+                    let c = TotalOrder::cmp(&elem_pair.0, &max_key);
+                    match c {
+                        core::cmp::Ordering::Greater => {
+                            let ghost old_max = max_key;
+                            max_key = elem_pair.0.clone_plus();
+                            proof {
+                                lemma_cloned_view_eq(elem_pair.0, max_key);
+                                max_idx = i as int;
+                                assert forall|j: int| 0 <= j < i + 1
+                                    implies TotalOrder::le(#[trigger] ghost_vals[j].0, max_key) by {
+                                    if j == i as int {
+                                        K::reflexive(max_key);
+                                    } else {
+                                        K::transitive(ghost_vals[j].0, old_max, max_key);
+                                    }
+                                };
+                            }
+                        },
+                        core::cmp::Ordering::Equal => {
+                            proof { K::reflexive(max_key); }
+                        },
+                        core::cmp::Ordering::Less => {
+                        },
                     }
-                    i += 1;
+                    i = i + 1;
+                }
+                proof {
+                    lemma_entries_to_map_contains_key::<K::V, V::V>(
+                        self.base_set.elements@, max_idx,
+                    );
+                    assert forall|t: K| #[trigger] self@.dom().contains(t@)
+                        implies TotalOrder::le(t, max_key) by {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(
+                            self.base_set.elements@, t@,
+                        );
+                        let j = choose|j: int| 0 <= j < self.base_set.elements@.len()
+                            && (#[trigger] self.base_set.elements@[j]).0 == t@;
+                        assert(ghost_vals[j].0@ == t@);
+                        assert(ghost_vals[j].0 == t);
+                    };
                 }
                 Some(max_key)
             }
         }
 
-        #[verifier::external_body]
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
         {
+            assert(obeys_feq_full_trigger::<K>());
             let len = self.base_set.elements.length();
-            let mut best: Option<K> = None;
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_set.elements@); }
+            let ghost mut ghost_vals: Seq<Pair<K, V>> = Seq::empty();
+            let mut found = false;
+            let mut best_pos: usize = 0;
+            let ghost mut best_idx: int = -1;
             let mut i: usize = 0;
-            while i < len {
-                let pair = self.base_set.elements.nth(i);
-                if pair.0 < *k {
-                    match &best {
-                        None => { best = Some(pair.0.clone()); },
-                        Some(b) => {
-                            if pair.0 > *b {
-                                best = Some(pair.0.clone());
+            while i < len
+                invariant
+                    self.base_set.elements.spec_avltreeseqstper_wf(),
+                    spec_keys_no_dups(self.base_set.elements@),
+                    len as nat == self.base_set.elements@.len(),
+                    obeys_feq_full::<K>(),
+                    0 <= i, i <= len,
+                    ghost_vals.len() == i as int,
+                    forall|j: int| #![trigger ghost_vals[j]]
+                        0 <= j < i ==> ghost_vals[j]@ == self.base_set.elements@[j],
+                    !found ==> forall|j: int| #![trigger ghost_vals[j]]
+                        0 <= j < i ==> !(TotalOrder::le(ghost_vals[j].0, *k) && ghost_vals[j].0@ != k@),
+                    found ==> (
+                        0 <= best_idx && best_idx < i &&
+                        best_pos == best_idx as usize &&
+                        TotalOrder::le(ghost_vals[best_idx].0, *k) && ghost_vals[best_idx].0@ != k@ &&
+                        forall|j: int| #![trigger ghost_vals[j]]
+                            0 <= j < i && TotalOrder::le(ghost_vals[j].0, *k) && ghost_vals[j].0@ != k@
+                            ==> TotalOrder::le(ghost_vals[j].0, ghost_vals[best_idx].0)
+                    ),
+                decreases len - i,
+            {
+                let elem_pair = self.base_set.elements.nth(i);
+                proof { ghost_vals = ghost_vals.push(*elem_pair); }
+                let c = TotalOrder::cmp(&elem_pair.0, k);
+                match c {
+                    core::cmp::Ordering::Less => {
+                        if !found {
+                            found = true;
+                            best_pos = i;
+                            proof {
+                                best_idx = i as int;
+                                K::reflexive(ghost_vals[i as int].0);
                             }
-                        },
-                    }
+                        } else {
+                            let best_pair = self.base_set.elements.nth(best_pos);
+                            let c2 = TotalOrder::cmp(&elem_pair.0, &best_pair.0);
+                            match c2 {
+                                core::cmp::Ordering::Greater => {
+                                    proof {
+                                        let old_best = best_idx;
+                                        best_idx = i as int;
+                                        assert forall|j: int| 0 <= j < i + 1
+                                            && TotalOrder::le(ghost_vals[j].0, *k) && ghost_vals[j].0@ != k@
+                                            implies TotalOrder::le(#[trigger] ghost_vals[j].0, ghost_vals[best_idx].0) by {
+                                            if j == i as int {
+                                                K::reflexive(ghost_vals[i as int].0);
+                                            } else {
+                                                K::transitive(ghost_vals[j].0, ghost_vals[old_best].0, ghost_vals[i as int].0);
+                                            }
+                                        };
+                                    }
+                                    best_pos = i;
+                                },
+                                _ => {
+                                    proof {
+                                        K::total(ghost_vals[i as int].0, ghost_vals[best_idx].0);
+                                    }
+                                },
+                            }
+                        }
+                    },
+                    core::cmp::Ordering::Equal => {
+                    },
+                    core::cmp::Ordering::Greater => {
+                        proof {
+                            if TotalOrder::le(ghost_vals[i as int].0, *k) {
+                                K::antisymmetric(ghost_vals[i as int].0, *k);
+                            }
+                        }
+                    },
                 }
-                i += 1;
+                i = i + 1;
             }
-            best
+            if !found {
+                None
+            } else {
+                let result_pair = self.base_set.elements.nth(best_pos);
+                let result = result_pair.0.clone_plus();
+                proof {
+                    lemma_cloned_view_eq(result_pair.0, result);
+                    assert(result@ == ghost_vals[best_idx].0@);
+                    assert(result == ghost_vals[best_idx].0);
+                    lemma_entries_to_map_contains_key::<K::V, V::V>(
+                        self.base_set.elements@, best_idx,
+                    );
+                    assert forall|t: K| #![trigger t@] self@.dom().contains(t@)
+                        && TotalOrder::le(t, *k) && t@ != k@
+                        implies TotalOrder::le(t, result) by {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(
+                            self.base_set.elements@, t@,
+                        );
+                        let j = choose|j: int| 0 <= j < self.base_set.elements@.len()
+                            && (#[trigger] self.base_set.elements@[j]).0 == t@;
+                        assert(ghost_vals[j].0@ == t@);
+                        assert(ghost_vals[j].0 == t);
+                    };
+                }
+                Some(result)
+            }
         }
 
-        #[verifier::external_body]
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
         {
+            assert(obeys_feq_full_trigger::<K>());
             let len = self.base_set.elements.length();
-            let mut best: Option<K> = None;
+            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_set.elements@); }
+            let ghost mut ghost_vals: Seq<Pair<K, V>> = Seq::empty();
+            let mut found = false;
+            let mut best_pos: usize = 0;
+            let ghost mut best_idx: int = -1;
             let mut i: usize = 0;
-            while i < len {
-                let pair = self.base_set.elements.nth(i);
-                if pair.0 > *k {
-                    match &best {
-                        None => { best = Some(pair.0.clone()); },
-                        Some(b) => {
-                            if pair.0 < *b {
-                                best = Some(pair.0.clone());
+            while i < len
+                invariant
+                    self.base_set.elements.spec_avltreeseqstper_wf(),
+                    spec_keys_no_dups(self.base_set.elements@),
+                    len as nat == self.base_set.elements@.len(),
+                    obeys_feq_full::<K>(),
+                    0 <= i, i <= len,
+                    ghost_vals.len() == i as int,
+                    forall|j: int| #![trigger ghost_vals[j]]
+                        0 <= j < i ==> ghost_vals[j]@ == self.base_set.elements@[j],
+                    !found ==> forall|j: int| #![trigger ghost_vals[j]]
+                        0 <= j < i ==> !(TotalOrder::le(*k, ghost_vals[j].0) && ghost_vals[j].0@ != k@),
+                    found ==> (
+                        0 <= best_idx && best_idx < i &&
+                        best_pos == best_idx as usize &&
+                        TotalOrder::le(*k, ghost_vals[best_idx].0) && ghost_vals[best_idx].0@ != k@ &&
+                        forall|j: int| #![trigger ghost_vals[j]]
+                            0 <= j < i && TotalOrder::le(*k, ghost_vals[j].0) && ghost_vals[j].0@ != k@
+                            ==> TotalOrder::le(ghost_vals[best_idx].0, ghost_vals[j].0)
+                    ),
+                decreases len - i,
+            {
+                let elem_pair = self.base_set.elements.nth(i);
+                proof { ghost_vals = ghost_vals.push(*elem_pair); }
+                let c = TotalOrder::cmp(&elem_pair.0, k);
+                match c {
+                    core::cmp::Ordering::Greater => {
+                        if !found {
+                            found = true;
+                            best_pos = i;
+                            proof {
+                                best_idx = i as int;
+                                K::reflexive(ghost_vals[i as int].0);
                             }
-                        },
-                    }
+                        } else {
+                            let best_pair = self.base_set.elements.nth(best_pos);
+                            let c2 = TotalOrder::cmp(&elem_pair.0, &best_pair.0);
+                            match c2 {
+                                core::cmp::Ordering::Less => {
+                                    proof {
+                                        let old_best = best_idx;
+                                        best_idx = i as int;
+                                        assert forall|j: int| 0 <= j < i + 1
+                                            && TotalOrder::le(*k, (#[trigger] ghost_vals[j]).0) && ghost_vals[j].0@ != k@
+                                            implies TotalOrder::le(ghost_vals[best_idx].0, ghost_vals[j].0) by {
+                                            if j == i as int {
+                                                K::reflexive(ghost_vals[i as int].0);
+                                            } else {
+                                                K::transitive(ghost_vals[i as int].0, ghost_vals[old_best].0, ghost_vals[j].0);
+                                            }
+                                        };
+                                    }
+                                    best_pos = i;
+                                },
+                                _ => {
+                                    proof {
+                                        K::total(ghost_vals[best_idx].0, ghost_vals[i as int].0);
+                                    }
+                                },
+                            }
+                        }
+                    },
+                    core::cmp::Ordering::Equal => {
+                    },
+                    core::cmp::Ordering::Less => {
+                        proof {
+                            if TotalOrder::le(*k, ghost_vals[i as int].0) {
+                                K::antisymmetric(*k, ghost_vals[i as int].0);
+                            }
+                        }
+                    },
                 }
-                i += 1;
+                i = i + 1;
             }
-            best
+            if !found {
+                None
+            } else {
+                let result_pair = self.base_set.elements.nth(best_pos);
+                let result = result_pair.0.clone_plus();
+                proof {
+                    lemma_cloned_view_eq(result_pair.0, result);
+                    assert(result@ == ghost_vals[best_idx].0@);
+                    assert(result == ghost_vals[best_idx].0);
+                    lemma_entries_to_map_contains_key::<K::V, V::V>(
+                        self.base_set.elements@, best_idx,
+                    );
+                    assert forall|t: K| #![trigger t@] self@.dom().contains(t@)
+                        && TotalOrder::le(*k, t) && t@ != k@
+                        implies TotalOrder::le(result, t) by {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(
+                            self.base_set.elements@, t@,
+                        );
+                        let j = choose|j: int| 0 <= j < self.base_set.elements@.len()
+                            && (#[trigger] self.base_set.elements@[j]).0 == t@;
+                        assert(ghost_vals[j].0@ == t@);
+                        assert(ghost_vals[j].0 == t);
+                    };
+                }
+                Some(result)
+            }
         }
 
         fn split_key(&self, k: &K) -> (parts: (Self, Option<V>, Self))

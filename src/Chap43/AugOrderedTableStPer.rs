@@ -79,7 +79,7 @@ broadcast use {
     ) -> (reduced: V)
     where
         F: Fn(&V, &V) -> V + Clone,
-        requires forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
+        requires base.spec_orderedtablestper_wf(), forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
         ensures base@.dom().finite(),
     {
         let pairs = base.collect();
@@ -185,7 +185,7 @@ broadcast use {
         /// - APAS: Work O(n), Span O(n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- extracts keys from base table entries
         fn domain(&self) -> (domain: ArraySetStEph<K>)
-            requires obeys_feq_clone::<K>()
+            requires self.spec_augorderedtablestper_wf(), obeys_feq_clone::<K>()
             ensures domain@ =~= self@.dom(), self@.dom().finite();
         /// - APAS: Work O(n log n), Span O(n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- applies f to each key, then recalculates reduction O(n)
@@ -283,7 +283,7 @@ broadcast use {
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires
                 self.spec_augorderedtablestper_wf(),
-
+                other.spec_augorderedtablestper_wf(),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
             ensures
@@ -318,11 +318,13 @@ broadcast use {
         /// - APAS: Work O(n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- collects base table entries into AVLTreeSeqStPer
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
+            requires self.spec_augorderedtablestper_wf(),
             ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf();
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- collects entries, sorts, returns first key
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
+            requires self.spec_augorderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
@@ -332,6 +334,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- collects entries, sorts, returns last key
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
+            requires self.spec_augorderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
@@ -341,6 +344,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- collects entries, sorts, finds predecessor
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
+            requires self.spec_augorderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
@@ -350,6 +354,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- collects entries, sorts, finds successor
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
+            requires self.spec_augorderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
@@ -373,7 +378,9 @@ broadcast use {
                 parts.0@.dom().subset_of(self@.dom()),
                 parts.2@.dom().subset_of(self@.dom()),
                 parts.0@.dom().disjoint(parts.2@.dom()),
-                forall|key| #[trigger] self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.2@.dom().contains(key) || key == k@;
+                forall|key| #[trigger] self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.2@.dom().contains(key) || key == k@,
+                parts.0.spec_augorderedtablestper_wf(),
+                parts.2.spec_augorderedtablestper_wf();
         /// - APAS: Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) -- delegates to base table union (linear merge), then recalculates reduction
         fn join_key(left: &Self, right: &Self) -> (joined: Self)
@@ -392,11 +399,11 @@ broadcast use {
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             requires
                 self.spec_augorderedtablestper_wf(),
-
             ensures
                 range@.dom().finite(),
                 range@.dom().subset_of(self@.dom()),
-                forall|key| #[trigger] range@.dom().contains(key) ==> range@[key] == self@[key];
+                forall|key| #[trigger] range@.dom().contains(key) ==> range@[key] == self@[key],
+                range.spec_augorderedtablestper_wf();
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- collects entries, sorts, counts predecessors
         fn rank_key(&self, k: &K) -> (rank: usize)
@@ -426,7 +433,6 @@ broadcast use {
             where Self: Sized
             requires
                 self.spec_augorderedtablestper_wf(),
-
             ensures
                 self@.dom().finite(),
                 split.0@.dom().finite(),
@@ -434,7 +440,9 @@ broadcast use {
                 split.1@.dom().finite(),
                 split.1@.dom().subset_of(self@.dom()),
                 split.0@.dom().disjoint(split.1@.dom()),
-                forall|key| #[trigger] self@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key);
+                forall|key| #[trigger] self@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key),
+                split.0.spec_augorderedtablestper_wf(),
+                split.1.spec_augorderedtablestper_wf();
         /// - APAS: Work O(1), Span O(1) -- augmented tables cache the reduction
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- calculate_reduction is external_body, iterates all values
         fn reduce_val(&self) -> (reduced: V)
@@ -752,6 +760,8 @@ broadcast use {
                 parts.2@.dom().subset_of(self@.dom()),
                 parts.0@.dom().disjoint(parts.2@.dom()),
                 forall|key| #[trigger] self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.2@.dom().contains(key) || key == k@,
+                parts.0.spec_augorderedtablestper_wf(),
+                parts.2.spec_augorderedtablestper_wf(),
         {
             let (left_base, middle, right_base) = self.base_table.split_key(k);
 
@@ -774,6 +784,8 @@ broadcast use {
 
             proof {
                 lemma_aug_view(self);
+                lemma_reducer_clone_total::<V, F>(&self.reducer, &left.reducer);
+                lemma_reducer_clone_total::<V, F>(&self.reducer, &right.reducer);
                 lemma_aug_view(&left);
                 lemma_aug_view(&right);
             }
@@ -809,6 +821,7 @@ broadcast use {
                 range@.dom().finite(),
                 range@.dom().subset_of(self@.dom()),
                 forall|key| #[trigger] range@.dom().contains(key) ==> range@[key] == self@[key],
+                range.spec_augorderedtablestper_wf(),
         {
             let new_base = self.base_table.get_key_range(k1, k2);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -821,6 +834,7 @@ broadcast use {
             };
             proof {
                 lemma_aug_view(self);
+                lemma_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
                 lemma_aug_view(&r);
             }
             r
@@ -858,6 +872,8 @@ broadcast use {
                 split.1@.dom().subset_of(self@.dom()),
                 split.0@.dom().disjoint(split.1@.dom()),
                 forall|key| #[trigger] self@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key),
+                split.0.spec_augorderedtablestper_wf(),
+                split.1.spec_augorderedtablestper_wf(),
         {
             let (left_base, right_base) = self.base_table.split_rank_key(i);
 
@@ -880,6 +896,8 @@ broadcast use {
 
             proof {
                 lemma_aug_view(self);
+                lemma_reducer_clone_total::<V, F>(&self.reducer, &left.reducer);
+                lemma_reducer_clone_total::<V, F>(&self.reducer, &right.reducer);
                 lemma_aug_view(&left);
                 lemma_aug_view(&right);
             }
