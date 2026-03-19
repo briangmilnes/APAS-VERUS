@@ -71,16 +71,6 @@ pub mod StructChainedHashTable {
 
         // 7. proof fns
 
-        /// Clone bridge for generic element: ensures cloned value equals original.
-        /// Centralizes the clone-body assume pattern per partial_eq_eq_clone_standard.
-        fn clone_elem<T: Clone>(x: &T) -> (c: T)
-            ensures c == *x,
-        {
-            let c = x.clone();
-            proof { assume(c == *x); } // Clone bridge: T::clone preserves value.
-            c
-        }
-
         proof fn _struct_chained_hash_table_verified() {}
 
         // 8. traits

@@ -18,6 +18,7 @@ pub mod LinProbFlatHashTableStEph {
     use vstd::prelude::*;
     use crate::Chap47::FlatHashTable::FlatHashTable::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
+    use crate::Concurrency::diverge;
     use crate::Types::Types::*;
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
@@ -67,16 +68,6 @@ pub mod LinProbFlatHashTableStEph {
     }
 
     // 7. proof fns
-
-    /// Clone bridge for generic element: ensures cloned value equals original.
-    /// Centralizes the clone-body assume pattern per partial_eq_eq_clone_standard.
-    fn clone_elem<T: Clone>(x: &T) -> (c: T)
-        ensures c == *x,
-    {
-        let c = x.clone();
-        proof { assume(c == *x); } // Clone bridge: T::clone preserves value.
-        c
-    }
 
     /// Modular probe identity: (h + (j - h + m) % m) % m == j for 0 <= h, j < m.
     proof fn lemma_probe_mod_identity(h: int, j: int, m: int)
@@ -363,6 +354,7 @@ pub mod LinProbFlatHashTableStEph {
             proof {
                 assume(false); // Table full: unreachable with load factor < 1.
             }
+            diverge::<()>();
         }
 
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).

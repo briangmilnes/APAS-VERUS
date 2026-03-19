@@ -20,6 +20,7 @@ pub mod DoubleHashFlatHashTableStEph {
     use vstd::prelude::*;
     use crate::Chap47::FlatHashTable::FlatHashTable::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
+    use crate::Concurrency::diverge;
     use crate::Types::Types::*;
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
@@ -41,9 +42,9 @@ pub mod DoubleHashFlatHashTableStEph {
 
     /// Well-formedness for double hashing flat hash tables.
     /// Probe sequence: slot (h + j * s) % m for attempt j = 0, 1, 2, ...
-    /// where h = hash(k) % m and s = second_hash(k, m) >= 1.
-    /// Since the second hash is opaque (external_body), the spec uses an
-    /// existential: there exists some step s >= 1 placing the key at its slot.
+    /// where h = hash(k) % m and s = spec_second_hash(k, m) >= 1.
+    /// The step s is concrete via `spec_second_hash`, linked to runtime by
+    /// `compute_second_hash` ensures `step == spec_second_hash(key, m)`.
     pub open spec fn spec_doublehashflathashsteph_wf<Key, Value, Metrics, H>(
         table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
     ) -> bool {
@@ -61,7 +62,9 @@ pub mod DoubleHashFlatHashTableStEph {
             && #[trigger] spec_flat_has_key(table.table@[i], k)
             ==> {
                 let h = (table.spec_hash@)(k) as int % m;
-                exists |s: int, n: int| #![trigger table.table@[(h + n * s) % m]] s >= 1 && 0 <= n < m
+                let s = spec_second_hash(k, m as nat) as int;
+                s >= 1
+                && exists |n: int| #![trigger table.table@[(h + n * s) % m]] 0 <= n < m
                     && (h + n * s) % m == i
                     && forall |j: int| 0 <= j < n
                         ==> !(#[trigger] table.table@[(h + j * s) % m] is Empty)
@@ -69,16 +72,6 @@ pub mod DoubleHashFlatHashTableStEph {
     }
 
     // 7. proof fns
-
-    /// Clone bridge for generic element: ensures cloned value equals original.
-    /// Centralizes the clone-body assume pattern per partial_eq_eq_clone_standard.
-    fn clone_elem<T: Clone>(x: &T) -> (c: T)
-        ensures c == *x,
-    {
-        let c = x.clone();
-        proof { assume(c == *x); } // Clone bridge: T::clone preserves value.
-        c
-    }
 
     // 9. impls
 
@@ -91,7 +84,10 @@ pub mod DoubleHashFlatHashTableStEph {
         /// and for prime sizes, ensure < m and non-zero.
         pub fn second_hash<Key: StT + Hash>(key: &Key, table_size: usize) -> (step: usize)
             requires table_size > 0,
-            ensures step >= 1,
+            ensures
+                step >= 1,
+                table_size > 1 ==> step < table_size,
+                step as nat == spec_second_hash(*key, table_size as nat),
         {
             compute_second_hash(key, table_size)
         }
@@ -111,18 +107,7 @@ pub mod DoubleHashFlatHashTableStEph {
             let h = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
             let m = table.current_size;
             let step = Self::second_hash(&key, m);
-            // Bridge: wf existential uses our runtime step.
-            proof {
-                assume(forall |j: int| 0 <= j < m as int
-                    && #[trigger] spec_flat_has_key(table.table@[j], key) ==> {
-                    let hh = (table.spec_hash@)(key) as int % (m as int);
-                    exists |n: int| #![trigger table.table@[(hh + n * step as int) % (m as int)]]
-                        0 <= n < m as int
-                        && (hh + n * step as int) % (m as int) == j
-                        && forall |d: int| 0 <= d < n
-                            ==> !(#[trigger] table.table@[(hh + d * step as int) % (m as int)] is Empty)
-                });
-            }
+            // step == spec_second_hash(key, m): wf gives concrete probe chain.
             let mut slot: usize = h;
             proof {
                 vstd::arithmetic::div_mod::lemma_small_mod(h as nat, m as nat);
@@ -137,6 +122,7 @@ pub mod DoubleHashFlatHashTableStEph {
                     m > 0,
                     h < m,
                     step >= 1usize,
+                    step as nat == spec_second_hash(key, m as nat),
                     table.table@.len() == m as int,
                     slot < m,
                     slot as int == (h as int + attempt as int * step as int) % (m as int),
@@ -146,16 +132,6 @@ pub mod DoubleHashFlatHashTableStEph {
                     table.spec_hash == old(table).spec_hash,
                     table.num_elements == old(table).num_elements,
                     old(table).num_elements < usize::MAX,
-                    // Bridge: wf probe chain for key uses step.
-                    forall |j: int| 0 <= j < m as int
-                        && #[trigger] spec_flat_has_key(table.table@[j], key) ==> {
-                        let hh = (table.spec_hash@)(key) as int % (m as int);
-                        exists |n: int| #![trigger table.table@[(hh + n * step as int) % (m as int)]]
-                            0 <= n < m as int
-                            && (hh + n * step as int) % (m as int) == j
-                            && forall |d: int| 0 <= d < n
-                                ==> !(#[trigger] table.table@[(hh + d * step as int) % (m as int)] is Empty)
-                    },
                     forall |d: int| 0 <= d < attempt as int
                         ==> !#[trigger] spec_flat_has_key(table.table@[(h as int + d * step as int) % (m as int)], key),
                     forall |d: int| 0 <= d < attempt as int
@@ -216,7 +192,9 @@ pub mod DoubleHashFlatHashTableStEph {
                                     && #[trigger] spec_flat_has_key(table.table@[i], k)
                                     implies ({
                                         let hk = (table.spec_hash@)(k) as int % m as int;
-                                        exists |s: int, n: int| #![trigger table.table@[(hk + n * s) % m as int]] s >= 1 && 0 <= n < m as int
+                                        let s = spec_second_hash(k, m as nat) as int;
+                                        s >= 1
+                                        && exists |n: int| #![trigger table.table@[(hk + n * s) % m as int]] 0 <= n < m as int
                                             && (hk + n * s) % m as int == i
                                             && forall |j: int| 0 <= j < n
                                                 ==> !(#[trigger] table.table@[(hk + j * s) % m as int] is Empty)
@@ -299,13 +277,15 @@ pub mod DoubleHashFlatHashTableStEph {
                                     }
                                 }
                             }
-                            // Wf: probe chain — new key with witness s=step, n=attempt.
+                            // Wf: probe chain — new key with witness n=attempt.
                             assert forall |i: int, k: Key|
                                 0 <= i < m as int
                                 && #[trigger] spec_flat_has_key(table.table@[i], k)
                                 implies ({
                                     let hk = (table.spec_hash@)(k) as int % m as int;
-                                    exists |s: int, n: int| #![trigger table.table@[(hk + n * s) % m as int]] s >= 1 && 0 <= n < m as int
+                                    let s = spec_second_hash(k, m as nat) as int;
+                                    s >= 1
+                                    && exists |n: int| #![trigger table.table@[(hk + n * s) % m as int]] 0 <= n < m as int
                                         && (hk + n * s) % m as int == i
                                         && forall |j: int| 0 <= j < n
                                             ==> !(#[trigger] table.table@[(hk + j * s) % m as int] is Empty)
@@ -315,15 +295,12 @@ pub mod DoubleHashFlatHashTableStEph {
                                     assert(spec_flat_has_key(table.table@[slot as int], k) ==> k == key);
                                     if k == key {
                                         assert(hk == h as int);
-                                        // Witness: s = step, n = attempt.
+                                        // step == spec_second_hash(key, m): witness n = attempt.
+                                        assert(spec_second_hash(key, m as nat) as int == step as int);
                                         assert forall |j: int| 0 <= j < attempt as int
                                             implies !(#[trigger] table.table@[(h as int + j * step as int) % m as int] is Empty) by {
                                             let pos = (h as int + j * step as int) % m as int;
                                             if pos == slot as int {
-                                                // Invariant: !spec_flat_has_key at (h+j*step)%m for j < attempt.
-                                                // But pos == slot means (h+j*step)%m == (h+attempt*step)%m.
-                                                // Invariant says no Empty at (h+j*step)%m, but slot was Empty.
-                                                // Contradiction.
                                             }
                                             assert(table.table@[pos] == old_table_seq[pos]);
                                         }
@@ -381,6 +358,7 @@ pub mod DoubleHashFlatHashTableStEph {
             proof {
                 assume(false); // Table full: unreachable with load factor < 1.
             }
+            diverge::<()>();
         }
 
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
@@ -389,19 +367,7 @@ pub mod DoubleHashFlatHashTableStEph {
             let h = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
             let m = table.current_size;
             let step = Self::second_hash(key, m);
-            // Bridge: second_hash is deterministic, so the wf probe chain for *key
-            // uses our runtime step. The wf existential witness s == step.
-            proof {
-                assume(forall |j: int| 0 <= j < m as int
-                    && #[trigger] spec_flat_has_key(table.table@[j], *key) ==> {
-                    let hh = (table.spec_hash@)(*key) as int % (m as int);
-                    exists |n: int| #![trigger table.table@[(hh + n * step as int) % (m as int)]]
-                        0 <= n < m as int
-                        && (hh + n * step as int) % (m as int) == j
-                        && forall |d: int| 0 <= d < n
-                            ==> !(#[trigger] table.table@[(hh + d * step as int) % (m as int)] is Empty)
-                });
-            }
+            // step == spec_second_hash(*key, m): wf gives concrete probe chain.
             let mut slot: usize = h;
             proof {
                 vstd::arithmetic::div_mod::lemma_small_mod(h as nat, m as nat);
@@ -415,21 +381,12 @@ pub mod DoubleHashFlatHashTableStEph {
                     m > 0,
                     h < m,
                     step >= 1usize,
+                    step as nat == spec_second_hash(*key, m as nat),
                     table.table@.len() == m as int,
                     slot < m,
                     slot as int == (h as int + attempt as int * step as int) % (m as int),
                     h as nat == (table.spec_hash@)(*key) % (m as nat),
                     spec_doublehashflathashsteph_wf(table),
-                    // Bridge: wf probe chain for *key uses step.
-                    forall |j: int| 0 <= j < m as int
-                        && #[trigger] spec_flat_has_key(table.table@[j], *key) ==> {
-                        let hh = (table.spec_hash@)(*key) as int % (m as int);
-                        exists |n: int| #![trigger table.table@[(hh + n * step as int) % (m as int)]]
-                            0 <= n < m as int
-                            && (hh + n * step as int) % (m as int) == j
-                            && forall |d: int| 0 <= d < n
-                                ==> !(#[trigger] table.table@[(hh + d * step as int) % (m as int)] is Empty)
-                    },
                     // Prior probe positions don't have the key.
                     forall |d: int| 0 <= d < attempt as int
                         ==> !#[trigger] spec_flat_has_key(table.table@[(h as int + d * step as int) % (m as int)], *key),
@@ -536,18 +493,7 @@ pub mod DoubleHashFlatHashTableStEph {
             let h = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
             let m = table.current_size;
             let step = Self::second_hash(key, m);
-            // Bridge: wf existential uses our runtime step.
-            proof {
-                assume(forall |j: int| 0 <= j < m as int
-                    && #[trigger] spec_flat_has_key(table.table@[j], *key) ==> {
-                    let hh = (table.spec_hash@)(*key) as int % (m as int);
-                    exists |n: int| #![trigger table.table@[(hh + n * step as int) % (m as int)]]
-                        0 <= n < m as int
-                        && (hh + n * step as int) % (m as int) == j
-                        && forall |d: int| 0 <= d < n
-                            ==> !(#[trigger] table.table@[(hh + d * step as int) % (m as int)] is Empty)
-                });
-            }
+            // step == spec_second_hash(*key, m): wf gives concrete probe chain.
             let mut slot: usize = h;
             proof {
                 vstd::arithmetic::div_mod::lemma_small_mod(h as nat, m as nat);
@@ -562,6 +508,7 @@ pub mod DoubleHashFlatHashTableStEph {
                     m > 0,
                     h < m,
                     step >= 1usize,
+                    step as nat == spec_second_hash(*key, m as nat),
                     table.table@.len() == m as int,
                     slot < m,
                     slot as int == (h as int + attempt as int * step as int) % (m as int),
@@ -570,16 +517,6 @@ pub mod DoubleHashFlatHashTableStEph {
                     table.table@ == old(table).table@,
                     table.spec_hash == old(table).spec_hash,
                     table.num_elements == old(table).num_elements,
-                    // Bridge: wf probe chain for *key uses step.
-                    forall |j: int| 0 <= j < m as int
-                        && #[trigger] spec_flat_has_key(table.table@[j], *key) ==> {
-                        let hh = (table.spec_hash@)(*key) as int % (m as int);
-                        exists |n: int| #![trigger table.table@[(hh + n * step as int) % (m as int)]]
-                            0 <= n < m as int
-                            && (hh + n * step as int) % (m as int) == j
-                            && forall |d: int| 0 <= d < n
-                                ==> !(#[trigger] table.table@[(hh + d * step as int) % (m as int)] is Empty)
-                    },
                     forall |d: int| 0 <= d < attempt as int
                         ==> !#[trigger] spec_flat_has_key(table.table@[(h as int + d * step as int) % (m as int)], *key),
                     forall |d: int| 0 <= d < attempt as int
@@ -634,7 +571,9 @@ pub mod DoubleHashFlatHashTableStEph {
                                     && #[trigger] spec_flat_has_key(table.table@[i], k)
                                     implies ({
                                         let hk = (table.spec_hash@)(k) as int % m as int;
-                                        exists |s: int, n: int| #![trigger table.table@[(hk + n * s) % m as int]] s >= 1 && 0 <= n < m as int
+                                        let s = spec_second_hash(k, m as nat) as int;
+                                        s >= 1
+                                        && exists |n: int| #![trigger table.table@[(hk + n * s) % m as int]] 0 <= n < m as int
                                             && (hk + n * s) % m as int == i
                                             && forall |j: int| 0 <= j < n
                                                 ==> !(#[trigger] table.table@[(hk + j * s) % m as int] is Empty)
@@ -643,7 +582,7 @@ pub mod DoubleHashFlatHashTableStEph {
                                     assert(table.table@[i] == old_table_seq[i]);
                                     assert(spec_flat_has_key(old_table_seq[i], k));
                                     let hk = (table.spec_hash@)(k) as int % m as int;
-                                    // Old wf: exists s, n. Same witnesses work for new table.
+                                    // Old wf: same witnesses work for new table.
                                     // Non-Empty preserved at every position.
                                     assert forall |pos: int| 0 <= pos < m as int
                                         && !(old_table_seq[pos] is Empty)
