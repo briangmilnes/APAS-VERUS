@@ -157,6 +157,8 @@ broadcast use {
                 keys.spec_arraysetsteph_wf(),
                 forall|k: &K| f.requires((k,)),
                 obeys_feq_full::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                keys@.len() < usize::MAX as nat,
             ensures tabulated@.dom().finite();
 
         /// - APAS: Work Θ(n), Span Θ(n)

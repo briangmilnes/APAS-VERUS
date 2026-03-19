@@ -136,7 +136,12 @@ broadcast use {
         /// - APAS: Work Θ(n log n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) -- delegates to TableStEph.tabulate which inserts keys sequentially
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
-            requires keys.spec_arraysetsteph_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>()
+            requires
+                keys.spec_arraysetsteph_wf(),
+                forall|k: &K| f.requires((k,)),
+                obeys_feq_full::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                keys@.len() < usize::MAX as nat,
             ensures
                 tabulated@.dom() =~= keys@,
                 tabulated.spec_orderedtablesteph_wf(),
@@ -898,21 +903,121 @@ broadcast use {
             domain
         }
 
-        #[verifier::external_body]
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
         {
+            proof {
+                assert(obeys_feq_full_trigger::<K>());
+                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+            }
             let seq = keys.to_seq();
             let len = seq.length();
+            let ghost seq_view = seq@;
             let mut all: Vec<Pair<K, V>> = Vec::new();
+            // Ghost: key and result witnesses per index.
+            let ghost mut key_args: Seq<K> = Seq::empty();
+            let ghost mut results: Seq<V> = Seq::empty();
             let mut i: usize = 0;
-            while i < len {
+            while i < len
+                invariant
+                    0 <= i <= len,
+                    len as int == seq_view.len(),
+                    seq_view == seq@,
+                    seq_view.no_duplicates(),
+                    seq_view.to_set() =~= keys@,
+                    forall|k: &K| f.requires((k,)),
+                    obeys_feq_full::<K>(),
+                    all@.len() == i as int,
+                    key_args.len() == i as int,
+                    results.len() == i as int,
+                    forall|j: int| 0 <= j < i as int ==>
+                        (#[trigger] all@[j])@.0 == seq_view[j],
+                    forall|j: int| 0 <= j < i as int ==> {
+                        &&& (#[trigger] key_args[j])@ == seq_view[j]
+                        &&& f.ensures((&key_args[j],), results[j])
+                        &&& all@[j]@.1 == results[j]@
+                    },
+                decreases len - i,
+            {
                 let k = seq.nth(i);
-                let v = f(k);
-                all.push(Pair(k.clone(), v));
+                let val = f(k);
+                let k_clone = k.clone_plus();
+                proof {
+                    assert(cloned(*k, k_clone));
+                    key_args = key_args.push(*k);
+                    results = results.push(val);
+                }
+                all.push(Pair(k_clone, val));
                 i += 1;
             }
+            proof {
+                assert(all@.len() as nat == seq_view.len());
+                seq_view.unique_seq_to_set();
+                assert(seq_view.len() == keys@.len());
+            }
             let tree = AVLTreeSeqStEphS::from_vec(all);
-            OrderedTableStEph { base_seq: tree }
+            let tabulated = OrderedTableStEph { base_seq: tree };
+            proof {
+                let tree_seq = tree@;
+                let new_map = spec_entries_to_map(tree_seq);
+                // Prove no-dups.
+                assert(spec_keys_no_dups(tree_seq)) by {
+                    assert forall|i_: int, j_: int|
+                        0 <= i_ < j_ < tree_seq.len()
+                        implies (#[trigger] tree_seq[i_]).0 != (#[trigger] tree_seq[j_]).0
+                    by {
+                        assert(tree_seq[i_] == all@[i_]@);
+                        assert(tree_seq[j_] == all@[j_]@);
+                        assert(all@[i_]@.0 == seq_view[i_]);
+                        assert(all@[j_]@.0 == seq_view[j_]);
+                        // seq_view.no_duplicates() => seq_view[i_] != seq_view[j_].
+                    };
+                };
+                assert(tabulated.spec_orderedtablesteph_wf());
+                lemma_entries_to_map_finite::<K::V, V::V>(tree_seq);
+                // Prove dom =~= keys@.
+                assert(new_map.dom() =~= keys@) by {
+                    // Forward: every key in new_map is in keys@.
+                    assert forall|key: K::V| #[trigger] new_map.dom().contains(key)
+                        implies keys@.contains(key)
+                    by {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(tree_seq, key);
+                        let p = choose|p: int| 0 <= p < tree_seq.len()
+                            && (#[trigger] tree_seq[p]).0 == key;
+                        assert(tree_seq[p] == all@[p]@);
+                        assert(all@[p]@.0 == seq_view[p]);
+                        assert(seq_view.to_set().contains(seq_view[p]));
+                    };
+                    // Backward: every key in keys@ is in new_map.
+                    assert forall|key: K::V| keys@.contains(key)
+                        implies #[trigger] new_map.dom().contains(key)
+                    by {
+                        assert(seq_view.to_set().contains(key));
+                        let q = choose|q: int| 0 <= q < seq_view.len()
+                            && (#[trigger] seq_view[q]) == key;
+                        assert(all@[q]@.0 == key);
+                        assert(tree_seq[q] == all@[q]@);
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(tree_seq, q);
+                    };
+                };
+                // Prove value witness.
+                assert forall|key: K::V| #[trigger] new_map.contains_key(key)
+                    implies (exists|key_arg: K, result: V|
+                        key_arg@ == key && f.ensures((&key_arg,), result)
+                        && new_map[key] == result@)
+                by {
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(tree_seq, key);
+                    let p = choose|p: int| 0 <= p < tree_seq.len()
+                        && (#[trigger] tree_seq[p]).0 == key;
+                    assert(tree_seq[p] == all@[p]@);
+                    lemma_entries_to_map_get::<K::V, V::V>(tree_seq, p);
+                    let ka = key_args[p];
+                    let rv = results[p];
+                    assert(ka@ == key);
+                    assert(f.ensures((&ka,), rv));
+                    assert(new_map[key] == rv@);
+                };
+            }
+            tabulated
         }
 
         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)

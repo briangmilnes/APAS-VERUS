@@ -195,7 +195,9 @@ broadcast use {
                 keys.spec_arraysetsteph_wf(),
                 forall|k: &K| f.requires((k,)),
                 obeys_feq_full::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
                 forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
+                keys@.len() < usize::MAX as nat,
             ensures
                 tabulated@.dom() =~= keys@,
                 tabulated.spec_augorderedtablesteph_wf(),
