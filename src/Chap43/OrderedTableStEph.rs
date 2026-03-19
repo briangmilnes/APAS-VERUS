@@ -1440,9 +1440,32 @@ broadcast use {
                         assert(less_idx.contains(j));
                     };
                 };
-                // less_keys has the same cardinality as less_idx (since entries have unique keys).
-                // Bijection: j -> entries@[j].0 is injective (no_dups) and surjective (by construction).
-                assume(less_keys.len() == less_idx.len());
+                // Cardinality: j -> entries@[j].0 is injective on less_idx (from spec_keys_no_dups).
+                let f = |j: int| self.base_table.entries@[j].0;
+                assert(vstd::relations::injective_on(f, less_idx)) by {
+                    assert forall|j1: int, j2: int|
+                        less_idx.contains(j1) && less_idx.contains(j2) && #[trigger] f(j1) == #[trigger] f(j2)
+                        implies j1 == j2 by {
+                        if j1 != j2 {
+                            let (lo, hi) = if j1 < j2 { (j1, j2) } else { (j2, j1) };
+                            assert(0 <= lo && lo < hi && hi < self.base_table.entries@.len());
+                            assert(self.base_table.entries@[lo].0 != self.base_table.entries@[hi].0);
+                        }
+                    };
+                };
+                assert(less_idx.map(f) =~= less_keys) by {
+                    assert forall|kv: K::V| #[trigger] less_idx.map(f).contains(kv)
+                        implies less_keys.contains(kv) by {
+                        let j = choose|j: int| less_idx.contains(j) && f(j) == kv;
+                        assert(less_idx.contains(j) && self.base_table.entries@[j].0 == kv);
+                    };
+                    assert forall|kv: K::V| #[trigger] less_keys.contains(kv)
+                        implies less_idx.map(f).contains(kv) by {
+                        let j = choose|j: int| #[trigger] less_idx.contains(j) && self.base_table.entries@[j].0 == kv;
+                        assert(less_idx.contains(j) && f(j) == kv);
+                    };
+                };
+                vstd::set_lib::lemma_map_size::<int, K::V>(less_idx, less_keys, f);
                 assert(count as int == self@.dom().filter(pred).len());
                 lemma_entries_to_map_len::<K::V, V::V>(self.base_table.entries@);
             }
@@ -1477,19 +1500,23 @@ broadcast use {
                         obeys_feq_full::<K>(),
                         i < self@.dom().len(),
                         self@.dom().finite(),
-                        // If found, result is correct.
                         found ==> result_key is Some,
                         found ==> (result_key matches Some(rk) ==> (
                             self@.dom().contains(rk@) &&
                             self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, rk) && t@ != rk@).len() == i as int
                         )),
-                        // If not found, no entry in [0..j) has rank == i.
                         !found ==> result_key is None,
+                        !found ==> forall|k: int| #![trigger self.base_table.entries.spec_index(k)]
+                            0 <= k < j as int ==>
+                            self@.dom().filter(
+                                |x: K::V| exists|t: K| #![trigger t@] t@ == x
+                                    && TotalOrder::le(t, self.base_table.entries.spec_index(k).0)
+                                    && t@ != (self.base_table.entries.spec_index(k).0)@
+                            ).len() != i as int,
                     decreases len - j,
                 {
                     if !found {
                         let candidate = self.base_table.entries.nth(j);
-                        // Count entries strictly less than candidate.
                         let rank_val = self.rank_key(&candidate.0);
                         if rank_val == i {
                             let rk = candidate.0.clone_plus();
@@ -1504,15 +1531,107 @@ broadcast use {
                     j = j + 1;
                 }
                 proof {
-                    // Must have found something: there are dom().len() distinct ranks 0..dom().len()-1
-                    // and i < dom().len(), so some entry has rank i.
-                    // This is hard to prove in general; assert that found == true.
                     if !found {
-                        // Pigeonhole: there must be an entry with rank i.
-                        // Each entry has a unique rank (from 0 to len-1) since all keys are distinct.
-                        // This follows from the TotalOrder being total and keys being distinct.
-                        // For now, trust the algorithm's correctness.
-                        assume(false);
+                        // Pigeonhole: every index in 0..n maps to a unique rank in 0..n,
+                        // so every rank value 0..n is achieved, including i.
+                        let n = self.base_table.entries.spec_len() as int;
+                        let dom = self@.dom();
+                        lemma_entries_to_map_len::<K::V, V::V>(self.base_table.entries@);
+
+                        let rank_fn = |k: int| -> int {
+                            dom.filter(
+                                |x: K::V| exists|t: K| #![trigger t@] t@ == x
+                                    && TotalOrder::le(t, self.base_table.entries.spec_index(k).0)
+                                    && t@ != (self.base_table.entries.spec_index(k).0)@
+                            ).len() as int
+                        };
+
+                        let range = vstd::set_lib::set_int_range(0, n);
+                        vstd::set_lib::lemma_int_range(0, n);
+
+                        // Step 1: rank_fn is injective on range.
+                        assert(vstd::relations::injective_on(rank_fn, range)) by {
+                            assert forall|k1: int, k2: int|
+                                range.contains(k1) && range.contains(k2)
+                                && #[trigger] rank_fn(k1) == #[trigger] rank_fn(k2)
+                            implies k1 == k2 by {
+                                if k1 != k2 {
+                                    let key1 = self.base_table.entries.spec_index(k1).0;
+                                    let key2 = self.base_table.entries.spec_index(k2).0;
+                                    let (lo, hi) = if k1 < k2 { (k1, k2) } else { (k2, k1) };
+                                    assert(self.base_table.entries@[lo].0 != self.base_table.entries@[hi].0);
+                                    assert(key1@ != key2@);
+                                    K::total(key1, key2);
+                                    if TotalOrder::le(key1, key2) {
+                                        let pred1 = |x: K::V| exists|t: K| #![trigger t@] t@ == x
+                                            && TotalOrder::le(t, key1) && t@ != key1@;
+                                        let pred2 = |x: K::V| exists|t: K| #![trigger t@] t@ == x
+                                            && TotalOrder::le(t, key2) && t@ != key2@;
+                                        assert forall|x: K::V| dom.filter(pred1).contains(x)
+                                            implies #[trigger] dom.filter(pred2).contains(x) by {
+                                            let t = choose|t: K| #![trigger t@] t@ == x
+                                                && TotalOrder::le(t, key1) && t@ != key1@;
+                                            K::transitive(t, key1, key2);
+                                            if t@ == key2@ { K::antisymmetric(key1, key2); }
+                                        };
+                                        lemma_entries_to_map_contains_key::<K::V, V::V>(
+                                            self.base_table.entries@, k1);
+                                        assert(dom.filter(pred2).contains(key1@));
+                                        assert(!dom.filter(pred1).contains(key1@));
+                                        dom.filter(pred1).lemma_subset_not_in_lt(dom.filter(pred2), key1@);
+                                    } else {
+                                        let pred1 = |x: K::V| exists|t: K| #![trigger t@] t@ == x
+                                            && TotalOrder::le(t, key1) && t@ != key1@;
+                                        let pred2 = |x: K::V| exists|t: K| #![trigger t@] t@ == x
+                                            && TotalOrder::le(t, key2) && t@ != key2@;
+                                        assert forall|x: K::V| dom.filter(pred2).contains(x)
+                                            implies #[trigger] dom.filter(pred1).contains(x) by {
+                                            let t = choose|t: K| #![trigger t@] t@ == x
+                                                && TotalOrder::le(t, key2) && t@ != key2@;
+                                            K::transitive(t, key2, key1);
+                                            if t@ == key1@ { K::antisymmetric(key2, key1); }
+                                        };
+                                        lemma_entries_to_map_contains_key::<K::V, V::V>(
+                                            self.base_table.entries@, k2);
+                                        assert(dom.filter(pred1).contains(key2@));
+                                        assert(!dom.filter(pred2).contains(key2@));
+                                        dom.filter(pred2).lemma_subset_not_in_lt(dom.filter(pred1), key2@);
+                                    }
+                                }
+                            };
+                        };
+
+                        // Step 2: rank_fn maps range into range.
+                        assert(range.map(rank_fn).subset_of(range)) by {
+                            assert forall|r: int| #[trigger] range.map(rank_fn).contains(r)
+                                implies range.contains(r) by {
+                                let k = choose|k: int| range.contains(k) && rank_fn(k) == r;
+                                let key_k = self.base_table.entries.spec_index(k).0;
+                                let pred_k = |x: K::V| exists|t: K| #![trigger t@] t@ == x
+                                    && TotalOrder::le(t, key_k) && t@ != key_k@;
+                                lemma_entries_to_map_contains_key::<K::V, V::V>(
+                                    self.base_table.entries@, k);
+                                assert(!dom.filter(pred_k).contains(key_k@));
+                                dom.filter(pred_k).lemma_subset_not_in_lt(dom, key_k@);
+                            };
+                        };
+
+                        // Step 3: rank image has same size as range.
+                        vstd::set_lib::lemma_map_size(range, range.map(rank_fn), rank_fn);
+
+                        // Step 4: rank image == range.
+                        if !(range.map(rank_fn) =~= range) {
+                            let x = choose|x: int| #[trigger] range.contains(x) && !range.map(rank_fn).contains(x);
+                            range.map(rank_fn).lemma_subset_not_in_lt(range, x);
+                        }
+                        assert(range.map(rank_fn) =~= range);
+
+                        // Step 5: i is in range, hence some entry has rank i.
+                        assert(range.contains(i as int));
+                        assert(range.map(rank_fn).contains(i as int));
+                        let witness = choose|k: int| range.contains(k) && rank_fn(k) == i as int;
+                        assert(self.base_table.entries.spec_index(witness) ==
+                               self.base_table.entries.spec_index(witness));
                     }
                 }
                 result_key

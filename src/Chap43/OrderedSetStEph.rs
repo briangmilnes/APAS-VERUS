@@ -327,21 +327,26 @@ broadcast use {
             let len = eph_seq.length();
             let mut elements: Vec<T> = Vec::new();
             let mut i: usize = 0;
+            proof { assert(obeys_feq_full_trigger::<T>()); }
             while i < len
                 invariant
                     eph_seq.spec_avltreeseqsteph_wf(),
                     len as nat == eph_seq@.len(),
                     0 <= i <= len,
                     elements@.len() == i as int,
+                    obeys_feq_full::<T>(),
+                    forall|j: int| 0 <= j < i ==> (#[trigger] elements@[j])@ == eph_seq@[j],
                 decreases len - i,
             {
-                elements.push(eph_seq.nth(i).clone());
+                let elem_ref = eph_seq.nth(i);
+                let cloned = elem_ref.clone_plus();
+                proof { lemma_cloned_view_eq(*elem_ref, cloned); }
+                elements.push(cloned);
                 i = i + 1;
             }
             let result = AVLTreeSeqStPerS::from_vec(elements);
             proof {
-                // T::clone preserves View (StT bound); from_vec maps values through View.
-                assume(result@ =~= eph_seq@);  // Clone/view bridging.
+                assert(elements@.map_values(|t: T| t@) =~= eph_seq@);
             }
             result
         }
