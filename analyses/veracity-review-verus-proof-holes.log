@@ -118,62 +118,62 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetMtEph.rs:1061: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_locked_set@ == locked_val@); } [medium]
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetMtEph.rs:1072: info: structural_false_positive RWLOCK_GHOST choose — proof { assume(inner@ == self@); } [medium]
 ⚠ src/Chap05/SetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetStEph.rs:215: error: fn_missing_wf_requires - fn elt_cross_set — requires should include s2.spec_setsteph_wf() for input type SetStEph
-       207 |         fn intersection(&self, s2: &Self) -> (intersection: Self)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetStEph.rs:216: error: fn_missing_wf_requires - fn elt_cross_set — requires should include s2.spec_setsteph_wf() for input type SetStEph
+       208 |         fn intersection(&self, s2: &Self) -> (intersection: Self)
             ...
-       213 |         /// - APAS: N/A — internal helper for cartesian_product.
-       214 |         /// - Claude-Opus-4.6: Work Θ(|s2|), Span Θ(|s2|) — iterates s2, creates one pair per element.
-       216 |             requires
-       217 |               Self::spec_valid_key_type(),
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetStEph.rs:215: error: fn_missing_wf_ensures - fn elt_cross_set — ensures should include product.spec_setsteph_wf() for return type SetStEph
-       207 |         fn intersection(&self, s2: &Self) -> (intersection: Self)
+       214 |         /// - APAS: N/A — internal helper for cartesian_product.
+       215 |         /// - Claude-Opus-4.6: Work Θ(|s2|), Span Θ(|s2|) — iterates s2, creates one pair per element.
+       217 |             requires
+       218 |               Self::spec_valid_key_type(),
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetStEph.rs:216: error: fn_missing_wf_ensures - fn elt_cross_set — ensures should include product.spec_setsteph_wf() for return type SetStEph
+       208 |         fn intersection(&self, s2: &Self) -> (intersection: Self)
             ...
-       213 |         /// - APAS: N/A — internal helper for cartesian_product.
-       214 |         /// - Claude-Opus-4.6: Work Θ(|s2|), Span Θ(|s2|) — iterates s2, creates one pair per element.
-       216 |             requires
-       217 |               Self::spec_valid_key_type(),
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetStEph.rs:226: error: fn_missing_wf_requires - fn cartesian_product — requires should include s2.spec_setsteph_wf() for input type SetStEph
-       215 |         fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
+       214 |         /// - APAS: N/A — internal helper for cartesian_product.
+       215 |         /// - Claude-Opus-4.6: Work Θ(|s2|), Span Θ(|s2|) — iterates s2, creates one pair per element.
+       217 |             requires
+       218 |               Self::spec_valid_key_type(),
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetStEph.rs:227: error: fn_missing_wf_requires - fn cartesian_product — requires should include s2.spec_setsteph_wf() for input type SetStEph
+       216 |         fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
             ...
-       224 |         /// - APAS: Work Θ(|a| × |b|), Span Θ(1)
-       225 |         /// - Claude-Opus-4.6: Work Θ(|a| × |b|), Span Θ(1)
-       227 |             requires
-       228 |                 self.spec_setsteph_wf(),
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetStEph.rs:226: error: fn_missing_wf_ensures - fn cartesian_product — ensures should include product.spec_setsteph_wf() for return type SetStEph
-       215 |         fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
+       225 |         /// - APAS: Work Θ(|a| × |b|), Span Θ(1)
+       226 |         /// - Claude-Opus-4.6: Work Θ(|a| × |b|), Span Θ(1)
+       228 |             requires
+       229 |                 self.spec_setsteph_wf(),
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetStEph.rs:227: error: fn_missing_wf_ensures - fn cartesian_product — ensures should include product.spec_setsteph_wf() for return type SetStEph
+       216 |         fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
             ...
-       224 |         /// - APAS: Work Θ(|a| × |b|), Span Θ(1)
-       225 |         /// - Claude-Opus-4.6: Work Θ(|a| × |b|), Span Θ(1)
-       227 |             requires
-       228 |                 self.spec_setsteph_wf(),
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetStEph.rs:237: error: fn_missing_wf_requires - fn all_nonempty — requires should include parts.spec_setsteph_wf() for input type SetStEph
-       226 |         fn cartesian_product<U: StT + Hash + Clone>(&self, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
+       225 |         /// - APAS: Work Θ(|a| × |b|), Span Θ(1)
+       226 |         /// - Claude-Opus-4.6: Work Θ(|a| × |b|), Span Θ(1)
+       228 |             requires
+       229 |                 self.spec_setsteph_wf(),
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetStEph.rs:238: error: fn_missing_wf_requires - fn all_nonempty — requires should include parts.spec_setsteph_wf() for input type SetStEph
+       227 |         fn cartesian_product<U: StT + Hash + Clone>(&self, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
             ...
-       235 |         /// - APAS: N/A — internal helper for partition.
-       236 |         /// - Claude-Opus-4.6: Work Θ(|parts|), Span Θ(|parts|) — iterates parts, O(1) size check each.
-       238 |             requires
-       239 |                 Self::spec_valid_key_type(),
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetStEph.rs:246: error: fn_missing_wf_requires - fn partition_on_elt — requires should include parts.spec_setsteph_wf() for input type SetStEph
-       237 |         fn all_nonempty(parts: &SetStEph<SetStEph<T>>) -> (all_nonempty: bool)
+       236 |         /// - APAS: N/A — internal helper for partition.
+       237 |         /// - Claude-Opus-4.6: Work Θ(|parts|), Span Θ(|parts|) — iterates parts, O(1) size check each.
+       239 |             requires
+       240 |                 Self::spec_valid_key_type(),
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetStEph.rs:247: error: fn_missing_wf_requires - fn partition_on_elt — requires should include parts.spec_setsteph_wf() for input type SetStEph
+       238 |         fn all_nonempty(parts: &SetStEph<SetStEph<T>>) -> (all_nonempty: bool)
             ...
-       244 |         /// - APAS: N/A — internal helper for partition.
-       245 |         /// - Claude-Opus-4.6: Work Θ(|parts|), Span Θ(|parts|) — iterates parts, O(1) membership check each.
-       247 |             requires
-       248 |                 Self::spec_valid_key_type(),
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetStEph.rs:261: error: fn_missing_wf_requires - fn partition — requires should include parts.spec_setsteph_wf() for input type SetStEph
-       246 |         fn partition_on_elt(x: &T, parts: &SetStEph<SetStEph<T>>) -> (partition_on_elt: bool)
+       245 |         /// - APAS: N/A — internal helper for partition.
+       246 |         /// - Claude-Opus-4.6: Work Θ(|parts|), Span Θ(|parts|) — iterates parts, O(1) membership check each.
+       248 |             requires
+       249 |                 Self::spec_valid_key_type(),
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetStEph.rs:262: error: fn_missing_wf_requires - fn partition — requires should include parts.spec_setsteph_wf() for input type SetStEph
+       247 |         fn partition_on_elt(x: &T, parts: &SetStEph<SetStEph<T>>) -> (partition_on_elt: bool)
             ...
-       259 |         /// - APAS: Work Θ(|a| × |parts|), Span Θ(1)
-       260 |         /// - Claude-Opus-4.6: Work Θ(|a| × |parts|), Span Θ(1) — agrees. Outer loop over |a|, inner partition_on_elt scans |parts| with O(1) hash lookups.
-       262 |             requires
-       263 |                 self.spec_setsteph_wf(),
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetStEph.rs:895: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       890 |         fn eq(&self, other: &Self) -> (equal: bool)
+       260 |         /// - APAS: Work Θ(|a| × |parts|), Span Θ(1)
+       261 |         /// - Claude-Opus-4.6: Work Θ(|a| × |parts|), Span Θ(1) — agrees. Outer loop over |a|, inner partition_on_elt scans |parts| with O(1) hash lookups.
+       263 |             requires
+       264 |                 self.spec_setsteph_wf(),
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap05/SetStEph.rs:904: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       899 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       893 |             let equal = self.elements == other.elements;
-       894 |             // HashSetWithView* eq is external_body so we have to trust it here.
-       896 |             equal
-       897 |         }
+       902 |             let equal = self.elements == other.elements;
+       903 |             // HashSetWithView* eq is external_body so we have to trust it here.
+       905 |             equal
+       906 |         }
 ℹ src/Chap06/DirGraphMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap06/DirGraphMtEph.rs:832: info: structural_false_positive RWLOCK_GHOST vertices — proof { assume(inner@ == self@); } [medium]
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap06/DirGraphMtEph.rs:841: info: structural_false_positive RWLOCK_GHOST arcs — proof { assume(inner@ == self@); } [medium]
@@ -966,8 +966,8 @@ Table of Contents:
       3 × assume()
       24 × external_body
    Info: 2 × structural_false_positive
-      1 × OPAQUE_EXTERNAL
       1 × RWLOCK_GHOST
+      1 × OPAQUE_EXTERNAL
 ✓ src/Chap39/BSTSetTreapMtEph.rs
 ⚠ src/Chap39/BSTTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap39/BSTTreapMtEph.rs:362: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
@@ -1618,20 +1618,20 @@ Table of Contents:
        671 |                 equal
        672 |             }
 ⚠ src/Chap45/BinaryHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:1557: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1548 |             fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:1776: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1767 |             fn clone(&self) -> (cloned: Self)
             ...
-      1555 |                 let cloned = BinaryHeapPQ { elements: self.elements.clone() };
-      1556 |                 proof {
-      1558 |                     lemma_seq_map_cloned_view_eq(
-      1559 |                         self.elements.seq@,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:1578: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1574 |             fn eq(&self, other: &Self) -> (equal: bool)
+      1774 |                 let cloned = BinaryHeapPQ { elements: self.elements.clone() };
+      1775 |                 proof {
+      1777 |                     lemma_seq_map_cloned_view_eq(
+      1778 |                         self.elements.seq@,
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap45/BinaryHeapPQ.rs:1797: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1793 |             fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1576 |             {
-      1577 |                 let equal = self.elements == other.elements;
-      1579 |                 equal
-      1580 |             }
+      1795 |             {
+      1796 |                 let equal = self.elements == other.elements;
+      1798 |                 equal
+      1799 |             }
 ❌ src/Chap45/Example45_2.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap45/Example45_2.rs:43: error: external - #[verifier::external]
         44 |         impl Example45_2Trait for Example45_2 {
@@ -2241,21 +2241,7 @@ Table of Contents:
 ✓ src/Chap56/SSSPResultStPerF64.rs
 ✓ src/Chap56/SSSPResultStPerI64.rs
 ✓ src/Chap57/DijkstraStEphF64.rs
-❌ src/Chap57/DijkstraStEphU64.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:212: error: assume() [algorithmic] - assume(BinaryHeapPQ::<PQEntry>::spec_is_exec_heap(pq.spec_se
-       165 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
-            ...
-       210 |             assert(pq@.len() * 2 <= usize::MAX as int);
-       211 |             proof {
-       213 |             }
-       214 |             let (new_pq, min_elem) = pq.delete_min();
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:253: error: assume() [algorithmic] - proof { assume(remaining_budget > 0); }
-       165 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
-            ...
-       251 |                                         assert(pq@.len() + 1 <= usize::MAX as int);
-       252 |                                         // Budget: total Dijkstra PQ inserts <= |E|.
-       254 |                                         pq = pq.insert(pq_entry_new(new_dist, *u));
-       255 |                                         proof { remaining_budget = remaining_budget - 1; }
+⚠ src/Chap57/DijkstraStEphU64.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:104: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
         88 |         fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
             ...
@@ -2265,11 +2251,6 @@ Table of Contents:
        106 |     {
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:111: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:128: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
-   Holes: 2 total
-      2 × assume()
-   Info: 2 × structural_false_positive
-      2 × STD_TRAIT_IMPL
-   Proof functions: 4 total (4 clean, 0 holed)
 ✓ src/Chap57/StackStEph.rs
 ✓ src/Chap58/BellmanFordStEphF64.rs
 ✓ src/Chap58/BellmanFordStEphI64.rs
@@ -3047,29 +3028,29 @@ Proof Functions:
    374 total
 
 Function Specs:
-   5132 exec fns with complete spec (requires+ensures) (69%)
+   5133 exec fns with complete spec (requires+ensures) (69%)
    67 exec fns missing spec (0%)
    2150 proof/spec fns clean (29%)
    1 proof/spec fns with holes (0%)
-   7350 total fns
+   7351 total fns
 
 
-Holes Found: 160 (actionable)
+Holes Found: 158 (actionable)
    10 × assume(false) (6%)
-   26 × assume() (16%)
-      24 × algorithmic
+   24 × assume() (15%)
+      22 × algorithmic
       1 × rwlock:reader
       1 × closure
-   123 × external_body (76%)
+   123 × external_body (77%)
    1 × external (0%)
 
 Per-Chapter Holes:
   Chap02:  1  Chap11:  6  Chap26:  4
   Chap38: 28  Chap39: 27  Chap41: 18
   Chap43:  9  Chap45:  1  Chap47: 14
-  Chap57:  2  Chap59:  6  Chap61:  4
-  Chap62:  7  Chap63: 12  Chap64:  7
-  Chap65:  3  Chap66: 11
+  Chap59:  6  Chap61:  4  Chap62:  7
+  Chap63: 12  Chap64:  7  Chap65:  3
+  Chap66: 11
 
 Warnings: 187 total
    15 × fn_missing_requires
@@ -3083,9 +3064,9 @@ Accepted (reviewed): 55 total
    7 × accept()
    5 × external_accept_hole
    4 × unsafe_block_accept_hole
-   1 × enum_outside_verus_accept_hole
-   1 × external_type_specification_accept_hole
    1 × struct_outside_verus_accept_hole
+   1 × external_type_specification_accept_hole
+   1 × enum_outside_verus_accept_hole
 
 Accepted by Chapter:
   Chap02:  5  Chap12: 19  Chap18:  8
@@ -3116,45 +3097,45 @@ Structural (info only): 114
    5  Chap63  (12 holes, 2 files)
    6  Chap66  (11 holes, 2 files)
    7  Chap43  (9 holes, 11 files)
-   8  Chap62  (7 holes, 4 files)
-   9  Chap64  (7 holes, 3 files)
-   10  Chap11  (6 holes, 5 files)
-   11  Chap59  (6 holes, 4 files)
+   8  Chap64  (7 holes, 3 files)
+   9  Chap62  (7 holes, 4 files)
+   10  Chap59  (6 holes, 4 files)
+   11  Chap11  (6 holes, 5 files)
    12  Chap61  (4 holes, 4 files)
    13  Chap26  (4 holes, 8 files)
    14  Chap65  (3 holes, 3 files)
-   15  Chap57  (2 holes, 3 files)
-   16  Chap02  (1 holes, 2 files)
-   17  Chap45  (1 holes, 7 files)
-   18  Chap23  (0 holes, 2 files)
-   19  ParaPairs  (0 holes, 1 files)
-   20  Chap21  (0 holes, 12 files)
-   21  Chap53  (0 holes, 5 files)
-   22  Chap42  (0 holes, 4 files)
-   23  Chap44  (0 holes, 2 files)
-   24  Chap06  (0 holes, 20 files)
-   25  Chap56  (0 holes, 12 files)
-   26  Chap49  (0 holes, 8 files)
-   27  Chap35  (0 holes, 4 files)
-   28  Concurrency  (0 holes, 1 files)
-   29  Chap37  (0 holes, 19 files)
-   30  Chap51  (0 holes, 8 files)
-   31  Chap28  (0 holes, 11 files)
-   32  Chap36  (0 holes, 3 files)
-   33  Chap54  (0 holes, 4 files)
-   34  Chap27  (0 holes, 4 files)
-   35  Chap52  (0 holes, 14 files)
-   36  Chap03  (0 holes, 1 files)
-   37  Chap12  (0 holes, 3 files)
-   38  Chap30  (0 holes, 1 files)
-   39  Chap58  (0 holes, 2 files)
-   40  Chap55  (0 holes, 8 files)
-   41  Chap18  (0 holes, 7 files)
-   42  Chap05  (0 holes, 5 files)
-   43  Chap40  (0 holes, 3 files)
-   44  Chap50  (0 holes, 8 files)
+   15  Chap02  (1 holes, 2 files)
+   16  Chap45  (1 holes, 7 files)
+   17  Chap21  (0 holes, 12 files)
+   18  Chap49  (0 holes, 8 files)
+   19  Chap27  (0 holes, 4 files)
+   20  Chap30  (0 holes, 1 files)
+   21  Chap36  (0 holes, 3 files)
+   22  Chap28  (0 holes, 11 files)
+   23  Chap56  (0 holes, 12 files)
+   24  Chap55  (0 holes, 8 files)
+   25  Chap17  (0 holes, 1 files)
+   26  Chap58  (0 holes, 2 files)
+   27  Chap05  (0 holes, 5 files)
+   28  ParaPairs  (0 holes, 1 files)
+   29  Chap50  (0 holes, 8 files)
+   30  Chap18  (0 holes, 7 files)
+   31  Chap03  (0 holes, 1 files)
+   32  Chap57  (0 holes, 3 files)
+   33  Chap51  (0 holes, 8 files)
+   34  Chap06  (0 holes, 20 files)
+   35  Chap23  (0 holes, 2 files)
+   36  Chap44  (0 holes, 2 files)
+   37  Chap40  (0 holes, 3 files)
+   38  Chap37  (0 holes, 19 files)
+   39  Concurrency  (0 holes, 1 files)
+   40  Chap52  (0 holes, 14 files)
+   41  Chap54  (0 holes, 4 files)
+   42  Chap12  (0 holes, 3 files)
+   43  Chap42  (0 holes, 4 files)
+   44  Chap53  (0 holes, 5 files)
    45  Chap19  (0 holes, 4 files)
-   46  Chap17  (0 holes, 1 files)
+   46  Chap35  (0 holes, 4 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
@@ -3164,17 +3145,17 @@ Structural (info only): 114
    2  src/Chap39/BSTParaTreapMtEph.rs  (27 holes)
    3  src/Chap41/AVLTreeSetMtPer.rs  (7 holes)
    4  src/Chap26/ETSPMtEph.rs  (4 holes)
-   5  src/Chap11/FibonacciMtEphRecomputes.rs  (2 holes)
+   5  src/Chap41/AVLTreeSetStEph.rs  (2 holes)
    6  src/Chap11/FibonacciMtEph2Threads.rs  (2 holes)
    7  src/Chap11/FibonacciMtPerTSM.rs  (2 holes)
-   8  src/Chap41/AVLTreeSetStEph.rs  (2 holes)
-   9  src/Chap43/OrderedTableStEph.rs  (1 holes)
-   10  src/Chap43/OrderedSetStPer.rs  (1 holes)
-   11  src/Chap47/ParaHashTableStEph.rs  (1 holes)
-   12  src/Chap02/HFSchedulerMtEph.rs  (1 holes)
-   13  src/Chap38/BSTParaStEph.rs  (1 holes)
-   14  src/Chap45/Example45_2.rs  (1 holes)
-   15  src/Chap43/OrderedTableMtEph.rs  (1 holes)
+   8  src/Chap11/FibonacciMtEphRecomputes.rs  (2 holes)
+   9  src/Chap47/ParaHashTableStEph.rs  (1 holes)
+   10  src/Chap43/OrderedTableMtEph.rs  (1 holes)
+   11  src/Chap45/Example45_2.rs  (1 holes)
+   12  src/Chap43/OrderedSetStPer.rs  (1 holes)
+   13  src/Chap43/OrderedTableStEph.rs  (1 holes)
+   14  src/Chap38/BSTParaStEph.rs  (1 holes)
+   15  src/Chap02/HFSchedulerMtEph.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
@@ -3201,9 +3182,9 @@ Structural (info only): 114
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 29 clean, 17 holed, 160 holes (global), 257 modules
+Chapter Status — 46 chapters, 30 clean, 16 holed, 158 holes (global), 257 modules
 
-CLEAN CHAPTERS (29)
+CLEAN CHAPTERS (30)
   Chapter        Files
   -------------- -----
   Chap03             1
@@ -3232,11 +3213,12 @@ CLEAN CHAPTERS (29)
   Chap54             4
   Chap55             8
   Chap56            12
+  Chap57             3
   Chap58             2
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (17) — 160 holes
+HOLED CHAPTERS (16) — 158 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
   Chap02             1     2  internal  Chap02::HFSchedulerMtEph
@@ -3245,10 +3227,9 @@ HOLED CHAPTERS (17) — 160 holes
   Chap38            28     2  YES       
   Chap39            27     4  internal  Chap39::BSTParaTreapMtEph
   Chap41            18     7  internal  Chap41::AVLTreeSetStEph
-  Chap43             9    11  NO        Chap41::AVLTreeSetStEph, Chap42::TableStPer
+  Chap43             9    11  NO        Chap42::TableStPer, Chap41::AVLTreeSetStEph
   Chap45             1     7  YES       
   Chap47            14     9  internal  Chap47::ParaHashTableStEph
-  Chap57             2     3  NO        Chap05::SetStEph
   Chap59             6     4  NO        Chap05::SetStEph
   Chap61             4     4  NO        Chap05::SetStEph
   Chap62             7     4  NO        Chap05::SetStEph
@@ -3285,8 +3266,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 19:00:02 -07:00
-Ended:     2026-03-18 19:00:04 -07:00
-Duration:  1467ms
+Started:   2026-03-18 21:00:04 -07:00
+Ended:     2026-03-18 21:00:07 -07:00
+Duration:  2378ms
 
 Full output: /home/milnes/projects/APAS-VERUS-agent3/analyses/veracity-review-verus-proof-holes.log

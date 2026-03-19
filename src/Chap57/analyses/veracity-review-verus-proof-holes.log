@@ -21,21 +21,7 @@ Table of Contents:
 =================================================================
 
 ✓ DijkstraStEphF64.rs
-❌ DijkstraStEphU64.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:212: error: assume() [algorithmic] - assume(BinaryHeapPQ::<PQEntry>::spec_is_exec_heap(pq.spec_se
-       165 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
-            ...
-       210 |             assert(pq@.len() * 2 <= usize::MAX as int);
-       211 |             proof {
-       213 |             }
-       214 |             let (new_pq, min_elem) = pq.delete_min();
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:253: error: assume() [algorithmic] - proof { assume(remaining_budget > 0); }
-       165 |     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
-            ...
-       251 |                                         assert(pq@.len() + 1 <= usize::MAX as int);
-       252 |                                         // Budget: total Dijkstra PQ inserts <= |E|.
-       254 |                                         pq = pq.insert(pq_entry_new(new_dist, *u));
-       255 |                                         proof { remaining_budget = remaining_budget - 1; }
+⚠ DijkstraStEphU64.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:104: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
         88 |         fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
             ...
@@ -45,11 +31,6 @@ Table of Contents:
        106 |     {
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:111: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:128: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
-   Holes: 2 total
-      2 × assume()
-   Info: 2 × structural_false_positive
-      2 × STD_TRAIT_IMPL
-   Proof functions: 4 total (4 clean, 0 holed)
 ✓ StackStEph.rs
 
 =================================================================
@@ -94,8 +75,7 @@ Function Specs:
    33 total fns
 
 
-Holes Found: 2 (actionable)
-   2 × assume() (100%)
+Holes Found: 0 (actionable)
 
 Warnings: 1 total
    1 × fn_missing_requires
@@ -103,13 +83,15 @@ Warnings: 1 total
 Structural (info only): 2
    2 × STD_TRAIT_IMPL
 
+No proof holes found! All proofs are complete.
+
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 19:00:02 -07:00
-Ended:     2026-03-18 19:00:02 -07:00
-Duration:  5ms
+Started:   2026-03-18 21:00:04 -07:00
+Ended:     2026-03-18 21:00:04 -07:00
+Duration:  9ms
 
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
-/Chap57/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
