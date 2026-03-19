@@ -80,3 +80,38 @@ ConnectivityStEph  depends upon only clean modules
 
 ConnectivityMtEph.rs  depends upon only clean modules
 ConnectivityStEph.rs  depends upon only clean modules
+
+=================================================================
+3. Summary of Holes
+=================================================================
+
+Modules:
+   0 clean (no holes, no errors; 0%)
+   2 holed (holes or errors, 100%)
+   2 total
+
+Proof Functions:
+   0 clean (0%)
+   0 holed (0%)
+   0 total
+
+Function Specs:
+   20 exec fns with complete spec (requires+ensures) (90%)
+   0 exec fns missing spec (0%)
+   2 proof/spec fns clean (9%)
+   0 proof/spec fns with holes (0%)
+   22 total fns
+
+
+Holes Found: 12 (actionable)
+   12 × external_body (100%)
+
+=================================================================
+5. Started/Ended/Duration
+=================================================================
+
+Started:   2026-03-19 16:06:41 -07:00
+Ended:     2026-03-19 16:06:41 -07:00
+Duration:  6ms
+
+Full output: src/Chap63/analyses/veracity-review-verus-proof-holes.log

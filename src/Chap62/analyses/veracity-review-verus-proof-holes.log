@@ -48,15 +48,17 @@ Table of Contents:
    Holes: 3 total
       3 × external_body
 ❌ StarPartitionMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarPartitionMtEph.rs:68: error: cfg_hidden_exec - #[cfg(not(verus_keep_ghost))]
-        69 |     pub fn parallel_star_partition<V: StT + MtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarPartitionMtEph.rs:53: error: external_body - #[verifier::external_body]
+        54 |     #[cfg(not(verus_keep_ghost))]
+        55 |     pub fn parallel_star_partition<V: StT + MtT + Hash + Ord + 'static>(
    Holes: 1 total
-      1 × cfg_hidden_exec
+      1 × external_body
 ❌ StarPartitionStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarPartitionStEph.rs:63: error: cfg_hidden_exec - #[cfg(not(verus_keep_ghost))]
-        64 |     pub fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>) {
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarPartitionStEph.rs:49: error: external_body - #[verifier::external_body]
+        50 |     #[cfg(not(verus_keep_ghost))]
+        51 |     pub fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>) {
    Holes: 1 total
-      1 × cfg_hidden_exec
+      1 × external_body
 
 =================================================================
 2. Depends Upon
@@ -95,24 +97,22 @@ Proof Functions:
    0 total
 
 Function Specs:
-   13 exec fns with complete spec (requires+ensures) (76%)
+   15 exec fns with complete spec (requires+ensures) (78%)
    0 exec fns missing spec (0%)
-   4 proof/spec fns clean (23%)
+   4 proof/spec fns clean (21%)
    0 proof/spec fns with holes (0%)
-   17 total fns
+   19 total fns
 
 
 Holes Found: 9 (actionable)
-   7 × external_body (77%)
-   2 × cfg_hidden_exec (22%)
+   9 × external_body (100%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 10:05:26 -07:00
-Ended:     2026-03-19 10:05:26 -07:00
-Duration:  6ms
+Started:   2026-03-19 16:06:41 -07:00
+Ended:     2026-03-19 16:06:41 -07:00
+Duration:  8ms
 
-Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
 Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
