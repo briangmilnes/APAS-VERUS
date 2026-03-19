@@ -403,6 +403,11 @@ broadcast use {
         };
     }
 
+    /// Spec predicate for rank_key: x is strictly less than k in the total order.
+    pub open spec fn spec_rank_pred<K: StT + Ord + TotalOrder>(x: K::V, k: K) -> bool {
+        exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, k) && t@ != k@
+    }
+
     /// Get the length of the backing AVL sequence.
     fn avl_seq_length<K: StT + Ord, V: StT>(seq: &AVLTreeSeqStEphS<Pair<K, V>>) -> (len: usize)
         requires seq.spec_avltreeseqsteph_wf()
@@ -2291,21 +2296,111 @@ broadcast use {
             OrderedTableStEph { base_seq: tree }
         }
 
-        #[verifier::external_body]
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
         {
             let len = self.base_seq.length();
+            let ghost seq = self.base_seq@;
+            let ghost dom = self@.dom();
+            let ghost pred = |x: K::V| -> bool
+                { exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@ };
             let mut count: usize = 0;
+            let ghost mut counted: Set<K::V> = Set::empty();
             let mut i: usize = 0;
-            while i < len {
+            proof {
+                assert(obeys_feq_full_trigger::<K>());
+                assert(obeys_feq_full::<K>());
+                lemma_entries_to_map_finite::<K::V, V::V>(seq);
+                assert(counted.finite());
+                assert(counted.len() == 0);
+            }
+            while i < len
+                invariant
+                    self.spec_orderedtablesteph_wf(),
+                    obeys_feq_full::<K>(),
+                    len as nat == seq.len(),
+                    seq == self.base_seq@,
+                    dom == self@.dom(),
+                    spec_keys_no_dups(seq),
+                    0 <= i <= len,
+                    0 <= count <= i,
+                    count as int == counted.len(),
+                    counted.finite(),
+                    forall|x: K::V| #[trigger] counted.contains(x)
+                        ==> spec_rank_pred::<K>(x, *k),
+                    forall|x: K::V| #[trigger] counted.contains(x) ==> dom.contains(x),
+                    forall|j: int| 0 <= j < i as int && spec_rank_pred::<K>(seq[j].0, *k)
+                        ==> #[trigger] counted.contains(seq[j].0),
+                    forall|x: K::V| counted.contains(x) ==>
+                        exists|j: int| 0 <= j < i as int && #[trigger] seq[j].0 == x,
+                decreases len - i,
+            {
                 let pair = self.base_seq.nth(i);
                 let c = TotalOrder::cmp(&pair.0, k);
                 match c {
-                    core::cmp::Ordering::Less => { count = count + 1; },
-                    _ => {},
+                    core::cmp::Ordering::Less => {
+                        // cmp Less: le(pair.0, *k) && pair.0 != *k.
+                        // view_injective (from obeys_feq_full): pair.0@ == k@ ==> pair.0 == *k.
+                        // Contrapositive: pair.0 != *k ==> pair.0@ != k@.
+                        proof {
+                            assert(pair.0@ != k@);
+                            assert(TotalOrder::le(pair.0, *k));
+                            assert(spec_rank_pred::<K>(pair.0@, *k));
+                            lemma_entries_to_map_contains_key::<K::V, V::V>(seq, i as int);
+                            if counted.contains(pair.0@) {
+                                let witness = choose|j: int| 0 <= j < i as int && seq[j].0 == pair.0@;
+                                assert(seq[witness].0 == seq[i as int].0);
+                            }
+                            assert(!counted.contains(pair.0@));
+                            counted = counted.insert(pair.0@);
+                        }
+                        count = count + 1;
+                    },
+                    _ => {
+                        // cmp Equal or Greater. Need !spec_rank_pred(seq[i].0, *k).
+                        proof {
+                            if spec_rank_pred::<K>(seq[i as int].0, *k) {
+                                let t_wit: K = choose|t: K| #![trigger t@]
+                                    t@ == seq[i as int].0 && TotalOrder::le(t, *k) && t@ != k@;
+                                // t_wit@ == pair.0@. view_injective: t_wit == pair.0.
+                                assert(t_wit == pair.0);
+                                assert(TotalOrder::le(pair.0, *k));
+                                match c {
+                                    core::cmp::Ordering::Equal => {
+                                        // pair.0 == *k, so pair.0@ == k@ by view_injective.
+                                        // But t_wit@ != k@ and t_wit@ == pair.0@ == k@. Contradiction.
+                                    },
+                                    core::cmp::Ordering::Greater => {
+                                        // le(*k, pair.0) && le(pair.0, *k).
+                                        K::antisymmetric(pair.0, *k);
+                                    },
+                                    _ => {},
+                                }
+                            }
+                        }
+                    },
                 }
                 i = i + 1;
+            }
+            proof {
+                assert(counted =~= dom.filter(pred)) by {
+                    assert forall|x: K::V| counted.contains(x)
+                        implies #[trigger] dom.filter(pred).contains(x) by {
+                        assert(dom.contains(x));
+                        assert(spec_rank_pred::<K>(x, *k));
+                    };
+                    assert forall|x: K::V| dom.filter(pred).contains(x)
+                        implies #[trigger] counted.contains(x) by {
+                        assert(dom.contains(x));
+                        assert(spec_rank_pred::<K>(x, *k));
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(seq, x);
+                        let idx = choose|idx: int| 0 <= idx < seq.len()
+                            && (#[trigger] seq[idx]).0 == x;
+                        assert(spec_rank_pred::<K>(seq[idx].0, *k));
+                        assert(counted.contains(seq[idx].0));
+                    };
+                };
+                dom.lemma_len_filter(pred);
             }
             count
         }

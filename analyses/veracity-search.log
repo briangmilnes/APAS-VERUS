@@ -2,7 +2,7 @@ Logging to: /home/milnes/projects/APAS-VERUS-agent2/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: to_set.*len\|set.*finite.*seq\|seq.*to_set
+Pattern: fn.*len.*insert
 Searching: /home/milnes/projects/verus/source/vstd
 Files: 103, Functions: 2479, Matches: 0
 
