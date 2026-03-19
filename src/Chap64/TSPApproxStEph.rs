@@ -224,39 +224,28 @@ pub mod TSPApproxStEph {
         total
     }
 
-    /// - APAS: N/A — internal helper, no prose counterpart.
-    /// - Claude-Opus-4.6: Work O(m), Span O(m) — linear scan over all edges.
-    #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
-    fn get_neighbors<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>, v: &V) -> SetStEph<V> {
-        let mut neighbors = SetLit![];
-        for edge in graph.labeled_edges().iter() {
-            let LabEdge(a, b, _) = edge;
-            if a == v {
-                let _ = neighbors.insert(b.clone());
-            } else if b == v {
-                let _ = neighbors.insert(a.clone());
-            }
-        }
-        neighbors
+    /// - APAS: N/A — internal helper, delegates to LabUnDirGraphStEph::ng.
+    /// - Claude-Opus-4.6: Work O(m), Span O(m) — delegates to ng().
+    fn get_neighbors<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>, v: &V) -> (ng: SetStEph<V>)
+        requires spec_labgraphview_wf(graph@),
+        ensures ng@ == graph.spec_ng(v@),
+    {
+        graph.ng(v)
     }
 
-    /// - APAS: N/A — internal helper, no prose counterpart.
-    /// - Claude-Opus-4.6: Work O(m), Span O(m) — linear scan over all edges.
-    #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
+    /// - APAS: N/A — internal helper, delegates to LabUnDirGraphStEph::get_edge_label.
+    /// - Claude-Opus-4.6: Work O(m), Span O(m) — delegates to get_edge_label().
     fn get_edge_weight<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         u: &V,
         v: &V,
-    ) -> Option<WrappedF64> {
-        for edge in graph.labeled_edges().iter() {
-            let LabEdge(a, b, w) = edge;
-            if (a == u && b == v) || (a == v && b == u) {
-                return Some(*w);
-            }
+    ) -> (weight: Option<WrappedF64>)
+        requires spec_labgraphview_wf(graph@),
+    {
+        match graph.get_edge_label(u, v) {
+            Some(w) => Some(*w),
+            None => None,
         }
-        None
     }
 
     /// Approximate Metric TSP

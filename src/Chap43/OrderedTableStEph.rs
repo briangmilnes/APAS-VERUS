@@ -1166,7 +1166,7 @@ broadcast use {
                     // Completeness: every source index < i not in other was kept.
                     forall|q: int| 0 <= q < i as int
                         && !other_map.dom().contains(old_seq[q].0)
-                        ==> kept.contains(q),
+                        ==> #[trigger] kept.contains(q),
                 decreases len - i,
             {
                 let pair = avl_seq_nth(&self.base_seq, i);
@@ -1184,7 +1184,7 @@ broadcast use {
                         // Old witnesses still valid: kept is an extension of old_kept.
                         assert forall|q: int| 0 <= q < (i + 1) as int
                             && !other_map.dom().contains(old_seq[q].0)
-                            implies kept.contains(q)
+                            implies #[trigger] kept.contains(q)
                         by {
                             if q == i as int {
                                 assert(kept[new_idx] == q);
@@ -1222,7 +1222,7 @@ broadcast use {
                     implies old_map.dom().contains(k) && !other_map.dom().contains(k) && new_map[k] == old_map[k]
                 by {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(tree_seq, k);
-                    let idx = choose|idx: int| 0 <= idx < tree_seq.len() && tree_seq[idx].0 == k;
+                    let idx = choose|idx: int| 0 <= idx < tree_seq.len() && (#[trigger] tree_seq[idx]).0 == k;
                     assert(tree_seq[idx] == old_seq[kept[idx]]);
                     lemma_entries_to_map_contains_key::<K::V, V::V>(old_seq, kept[idx]);
                     lemma_entries_to_map_get::<K::V, V::V>(tree_seq, idx);
@@ -1233,7 +1233,7 @@ broadcast use {
                     implies #[trigger] new_map.contains_key(k)
                 by {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_seq, k);
-                    let src_idx = choose|idx: int| 0 <= idx < old_seq.len() && old_seq[idx].0 == k;
+                    let src_idx = choose|idx: int| 0 <= idx < old_seq.len() && (#[trigger] old_seq[idx]).0 == k;
                     assert(kept.contains(src_idx));
                     let p = choose|p: int| 0 <= p < kept.len() && kept[p] == src_idx;
                     assert(tree_seq[p].0 == k);
@@ -1275,7 +1275,7 @@ broadcast use {
                         ==> keys_set.contains(old_seq[#[trigger] kept[p]].0),
                     forall|q: int| 0 <= q < i as int
                         && keys_set.contains(old_seq[q].0)
-                        ==> kept.contains(q),
+                        ==> #[trigger] kept.contains(q),
                 decreases len - i,
             {
                 let pair = avl_seq_nth(&self.base_seq, i);
@@ -1292,7 +1292,7 @@ broadcast use {
                         assert(kept[new_idx] == i as int);
                         assert forall|q: int| 0 <= q < (i + 1) as int
                             && keys_set.contains(old_seq[q].0)
-                            implies kept.contains(q)
+                            implies #[trigger] kept.contains(q)
                         by {
                             if q == i as int {
                                 assert(kept[new_idx] == q);
@@ -1330,7 +1330,7 @@ broadcast use {
                     implies old_map.dom().contains(k) && keys_set.contains(k) && new_map[k] == old_map[k]
                 by {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(tree_seq, k);
-                    let idx = choose|idx: int| 0 <= idx < tree_seq.len() && tree_seq[idx].0 == k;
+                    let idx = choose|idx: int| 0 <= idx < tree_seq.len() && (#[trigger] tree_seq[idx]).0 == k;
                     assert(tree_seq[idx] == old_seq[kept[idx]]);
                     lemma_entries_to_map_contains_key::<K::V, V::V>(old_seq, kept[idx]);
                     lemma_entries_to_map_get::<K::V, V::V>(tree_seq, idx);
@@ -1341,7 +1341,7 @@ broadcast use {
                     implies #[trigger] new_map.contains_key(k)
                 by {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_seq, k);
-                    let src_idx = choose|idx: int| 0 <= idx < old_seq.len() && old_seq[idx].0 == k;
+                    let src_idx = choose|idx: int| 0 <= idx < old_seq.len() && (#[trigger] old_seq[idx]).0 == k;
                     assert(kept.contains(src_idx));
                     let p = choose|p: int| 0 <= p < kept.len() && kept[p] == src_idx;
                     assert(tree_seq[p].0 == k);
@@ -1383,7 +1383,7 @@ broadcast use {
                         ==> !keys_set.contains(old_seq[#[trigger] kept[p]].0),
                     forall|q: int| 0 <= q < i as int
                         && !keys_set.contains(old_seq[q].0)
-                        ==> kept.contains(q),
+                        ==> #[trigger] kept.contains(q),
                 decreases len - i,
             {
                 let pair = avl_seq_nth(&self.base_seq, i);
@@ -1400,7 +1400,7 @@ broadcast use {
                         assert(kept[new_idx] == i as int);
                         assert forall|q: int| 0 <= q < (i + 1) as int
                             && !keys_set.contains(old_seq[q].0)
-                            implies kept.contains(q)
+                            implies #[trigger] kept.contains(q)
                         by {
                             if q == i as int {
                                 assert(kept[new_idx] == q);
@@ -1438,7 +1438,7 @@ broadcast use {
                     implies old_map.dom().contains(k) && !keys_set.contains(k) && new_map[k] == old_map[k]
                 by {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(tree_seq, k);
-                    let idx = choose|idx: int| 0 <= idx < tree_seq.len() && tree_seq[idx].0 == k;
+                    let idx = choose|idx: int| 0 <= idx < tree_seq.len() && (#[trigger] tree_seq[idx]).0 == k;
                     assert(tree_seq[idx] == old_seq[kept[idx]]);
                     lemma_entries_to_map_contains_key::<K::V, V::V>(old_seq, kept[idx]);
                     lemma_entries_to_map_get::<K::V, V::V>(tree_seq, idx);
@@ -1449,7 +1449,7 @@ broadcast use {
                     implies #[trigger] new_map.contains_key(k)
                 by {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_seq, k);
-                    let src_idx = choose|idx: int| 0 <= idx < old_seq.len() && old_seq[idx].0 == k;
+                    let src_idx = choose|idx: int| 0 <= idx < old_seq.len() && (#[trigger] old_seq[idx]).0 == k;
                     assert(kept.contains(src_idx));
                     let p = choose|p: int| 0 <= p < kept.len() && kept[p] == src_idx;
                     assert(tree_seq[p].0 == k);

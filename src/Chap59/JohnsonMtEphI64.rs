@@ -193,11 +193,27 @@ pub mod JohnsonMtEphI64 {
     ///
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — builds n×n distance and predecessor matrices
-    #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
-    fn create_negative_cycle_result(n: usize) -> AllPairsResultStEphI64 {
-        let distances = ArraySeqStEphS::tabulate(&|_| ArraySeqStEphS::tabulate(&|_| i64::MAX, n), n);
-        let predecessors = ArraySeqStEphS::tabulate(&|_| ArraySeqStEphS::tabulate(&|_| 0, n), n);
+    fn create_negative_cycle_result(n: usize) -> (result: AllPairsResultStEphI64)
+        ensures
+            result.n == n,
+            result.distances.seq@.len() == n as int,
+            result.predecessors.seq@.len() == n as int,
+    {
+        let ghost n_int = n as int;
+        let inner_dist = |_i: usize| -> (r: i64) ensures r == i64::MAX { i64::MAX };
+        let dist_row = |_i: usize| -> (r: ArraySeqStEphS<i64>)
+            ensures r.seq@.len() == n_int
+        {
+            ArraySeqStEphS::tabulate(&inner_dist, n)
+        };
+        let distances = ArraySeqStEphS::tabulate(&dist_row, n);
+        let inner_pred = |_i: usize| -> (r: usize) ensures r == 0usize { 0usize };
+        let pred_row = |_i: usize| -> (r: ArraySeqStEphS<usize>)
+            ensures r.seq@.len() == n_int
+        {
+            ArraySeqStEphS::tabulate(&inner_pred, n)
+        };
+        let predecessors = ArraySeqStEphS::tabulate(&pred_row, n);
         AllPairsResultStEphI64 {
             distances,
             predecessors,

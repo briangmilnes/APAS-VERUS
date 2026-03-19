@@ -374,7 +374,7 @@ pub mod OrderedTableStPer {
             let j = choose|j: int| 0 <= j < s1.len() && s1[j] == s2[i];
             lemma_entries_to_map_contains_key::<KV, VV>(s1, j);
         };
-        assert forall|k: KV| map1.contains_key(k) implies map1[k] == map2[k] by {
+        assert forall|k: KV| map1.contains_key(k) implies (#[trigger] map1[k]) == (#[trigger] map2[k]) by {
             lemma_entries_to_map_key_in_seq(s1, k);
             let i = choose|i: int| 0 <= i < s1.len() && (#[trigger] s1[i]).0 == k;
             lemma_entries_to_map_get::<KV, VV>(s1, i);
@@ -718,13 +718,13 @@ pub mod OrderedTableStPer {
                     assert(singleton_seq[0] == (k@, v@));
                     assert(singleton_seq.to_set().contains((k@, v@)));
                     assert(base.elements@.to_set().contains((k@, v@)));
-                    assert forall|x: (K::V, V::V)| singleton_seq.to_set().contains(x)
+                    assert forall|x: (K::V, V::V)| #[trigger] singleton_seq.to_set().contains(x)
                         implies base.elements@.to_set().contains(x)
                     by {
                         assert(x == (k@, v@));
                     };
                     assert forall|x: (K::V, V::V)| base.elements@.to_set().contains(x)
-                        implies singleton_seq.to_set().contains(x)
+                        implies #[trigger] singleton_seq.to_set().contains(x)
                     by {
                         assert(base@.contains(x));
                         assert(x == (k@, v@));
@@ -961,7 +961,7 @@ pub mod OrderedTableStPer {
             proof {
                 assert(keys@ =~= self@.dom()) by {
                     assert forall|kv: K::V| self@.dom().contains(kv)
-                        implies keys@.contains(kv)
+                        implies #[trigger] keys@.contains(kv)
                     by {
                         lemma_entries_to_map_key_in_seq::<K::V, V::V>(
                             self.base_set.elements@, kv,

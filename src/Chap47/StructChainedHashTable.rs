@@ -658,7 +658,7 @@ pub mod StructChainedHashTable {
                 proof {
                     // After Phase 1: pairs_map =~= table@.
                     assert forall |k: Key|
-                        pairs_map.dom().contains(k) <==>
+                        (#[trigger] pairs_map.dom().contains(k)) <==>
                         (#[trigger] spec_table_to_map::<Key, Value, ChainList<Key, Value>>(
                             table.table@
                         )).dom().contains(k)
