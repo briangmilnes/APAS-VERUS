@@ -70,6 +70,7 @@ broadcast use {
     pub fn recalculate_reduction<K: MtKey, V: MtVal, F: MtReduceFn<V>>(
         table: &AugOrderedTableMtEph<K, V, F>,
     ) -> (reduced: V)
+    requires table.spec_augorderedtablemteph_wf()
     ensures table@.dom().finite()
     {
         let reduced = calculate_reduction(&table.base_table, &table.reducer, &table.identity);
@@ -82,9 +83,9 @@ broadcast use {
         reducer: &F,
         identity: &V,
     ) -> (reduced: V)
+    requires forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2))
     ensures base@.dom().finite()
     {
-        proof { assume(forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2))); }
         let pairs = base.collect();
         let sz = pairs.length();
         if sz == 0 {
@@ -130,10 +131,12 @@ broadcast use {
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- constructs empty base table with reducer/identity
         fn empty(reducer: F, identity: V) -> (empty: Self)
+            requires forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2))
             ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_augorderedtablemteph_wf();
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- constructs singleton base table with reducer/identity
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
+            requires forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2))
             ensures tree@.dom().finite(), tree.spec_augorderedtablemteph_wf();
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- delegates to TableMtEph which uses linear scan
@@ -191,12 +194,15 @@ broadcast use {
             requires
                 keys.spec_arraysetsteph_wf(),
                 forall|k: &K| f.requires((k,)),
+                forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
                 obeys_feq_full::<K>(),
             ensures domain@.dom().finite();
         /// - APAS: Work O(n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- maps all values linearly, then recalculates reduction O(n)
         fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (mapped: Self)
-            requires forall|k: &K, v: &V| f.requires((k, v))
+            requires
+                self.spec_augorderedtablemteph_wf(),
+                forall|k: &K, v: &V| f.requires((k, v)),
             ensures mapped@.dom().finite();
         /// - APAS: Work O(n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- filters base table linearly, then recalculates reduction O(n)
@@ -209,24 +215,31 @@ broadcast use {
         /// - APAS: Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Claude-Opus-4.6: Work O(n * m), Span O(n * m) -- delegates to base table intersection (linear scan), then recalculates reduction
         fn intersection<G: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: G)
-            requires forall|v1: &V, v2: &V| f.requires((v1, v2)),
+            requires
+                old(self).spec_augorderedtablemteph_wf(),
+                forall|v1: &V, v2: &V| f.requires((v1, v2)),
             ensures self@.dom().finite();
         /// - APAS: Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) -- delegates to base table union (linear merge), then recalculates reduction
         fn union<G: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: G)
-            requires forall|v1: &V, v2: &V| f.requires((v1, v2)),
+            requires
+                old(self).spec_augorderedtablemteph_wf(),
+                forall|v1: &V, v2: &V| f.requires((v1, v2)),
             ensures self@.dom().finite();
         /// - APAS: Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Claude-Opus-4.6: Work O(n * m), Span O(n * m) -- delegates to base table difference (linear scan), then recalculates reduction
         fn difference(&mut self, other: &Self)
+            requires old(self).spec_augorderedtablemteph_wf()
             ensures self@.dom().finite();
         /// - APAS: Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Claude-Opus-4.6: Work O(n * m), Span O(n * m) -- delegates to base table restrict (linear scan), then recalculates reduction
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
+            requires old(self).spec_augorderedtablemteph_wf()
             ensures self@.dom().finite();
         /// - APAS: Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Claude-Opus-4.6: Work O(n * m), Span O(n * m) -- delegates to base table subtract (linear scan), then recalculates reduction
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
+            requires old(self).spec_augorderedtablemteph_wf()
             ensures self@.dom().finite();
         /// - APAS: Work O(n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- iterates all entries applying f sequentially
@@ -282,10 +295,12 @@ broadcast use {
         /// - APAS: Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) -- delegates to base table join + recalculates reduction
         fn join_key(&mut self, other: Self)
+            requires old(self).spec_augorderedtablemteph_wf()
             ensures self@.dom().finite();
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- delegates to base table get_key_range + recalculates reduction
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
+            requires self.spec_augorderedtablemteph_wf()
             ensures range@.dom().finite();
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- external_body, delegates to base table which collects+sorts+counts
@@ -310,14 +325,17 @@ broadcast use {
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- delegates to base table split_rank + recalculates reductions
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized,
+            requires old(self).spec_augorderedtablemteph_wf()
             ensures self@.dom().finite();
         /// - APAS: Work O(1), Span O(1) -- augmented tables cache the reduction
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- returns clone of cached_reduction
         fn reduce_val(&self) -> (reduced: V)
+            requires self@.dom().finite()
             ensures self@.dom().finite();
         /// - APAS: Work O(log n), Span O(log n) -- split + cached reduction
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- get_key_range O(n log n) + reduce_val O(1)
         fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)
+            requires self.spec_augorderedtablemteph_wf()
             ensures self@.dom().finite();
         /// - APAS: Work O(log n), Span O(log n) -- split + cached reduction
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- external_body, parallel via ParaPair! but get_key_range dominates
@@ -331,6 +349,7 @@ broadcast use {
     impl<K: MtKey, V: MtVal, F: MtReduceFn<V>> AugOrderedTableMtEphTrait<K, V, F> for AugOrderedTableMtEph<K, V, F> {
         open spec fn spec_augorderedtablemteph_wf(&self) -> bool {
             self@.dom().finite() && self.base_table.spec_orderedtablemteph_wf()
+            && forall|v1: &V, v2: &V| #[trigger] self.reducer.requires((v1, v2))
         }
 
         fn size(&self) -> (count: usize)
@@ -635,20 +654,14 @@ broadcast use {
         fn reduce_val(&self) -> (reduced: V)
             ensures self@.dom().finite()
         {
-            proof {
-                lemma_aug_view(self);
-                assume(self@.dom().finite());
-            }
+            proof { lemma_aug_view(self); }
             self.cached_reduction.clone()
         }
 
         fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)
             ensures self@.dom().finite()
         {
-            proof {
-                lemma_aug_view(self);
-                assume(self@.dom().finite());
-            }
+            proof { lemma_aug_view(self); }
             let range_table = self.get_key_range(k1, k2);
             range_table.reduce_val()
         }

@@ -23,6 +23,9 @@ pub mod OrderedSetMtEph {
     use crate::Chap43::OrderedSetStEph::OrderedSetStEph::*;
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    use crate::vstdplus::clone_plus::clone_plus::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, lemma_cloned_view_eq};
 
     verus! {
 
@@ -341,19 +344,39 @@ pub mod OrderedSetMtEph {
             self.ghost_locked_set = Ghost(old_view.difference(other_view));
         }
 
-        #[verifier::external_body]
         fn to_seq(&self) -> (seq: ArraySeqStPerS<T>) {
+            proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
-            let st_seq = inner.to_seq();
+            let avl_seq = inner.to_seq();
+            proof { assume(inner@ =~= self@); }
             read_handle.release_read();
             use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::AVLTreeSeqStPerTrait;
-            let len = st_seq.length();
+            let len = avl_seq.length();
             let mut elements: Vec<T> = Vec::new();
-            for i in 0..len {
-                elements.push(st_seq.nth(i).clone());
+            let mut i: usize = 0;
+            proof { assert(obeys_feq_full_trigger::<T>()); }
+            while i < len
+                invariant
+                    avl_seq.spec_avltreeseqstper_wf(),
+                    len as nat == avl_seq@.len(),
+                    0 <= i <= len,
+                    elements@.len() == i as int,
+                    obeys_feq_full::<T>(),
+                    forall|j: int| 0 <= j < i ==> (#[trigger] elements@[j])@ == avl_seq@[j],
+                decreases len - i,
+            {
+                let elem_ref = avl_seq.nth(i);
+                let cloned = elem_ref.clone_plus();
+                proof { lemma_cloned_view_eq(*elem_ref, cloned); }
+                elements.push(cloned);
+                i = i + 1;
             }
-            ArraySeqStPerS::from_vec(elements)
+            let result = ArraySeqStPerS { seq: elements };
+            proof {
+                assert(result@ =~= avl_seq@);
+            }
+            result
         }
 
         fn from_seq(seq: ArraySeqStPerS<T>) -> (constructed: Self) {

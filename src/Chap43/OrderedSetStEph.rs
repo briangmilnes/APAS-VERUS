@@ -146,6 +146,7 @@ broadcast use {
             requires self.spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
+                seq.spec_avltreeseqstper_wf(),
                 seq@.to_set() =~= self@,
                 forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
         /// - APAS: Work Θ(n log n), Span Θ(n log n)
