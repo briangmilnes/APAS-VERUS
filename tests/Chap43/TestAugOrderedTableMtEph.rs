@@ -219,7 +219,6 @@ fn test_sum_reducer_multithreaded() {
 }
 
 #[test]
-#[ignore] // R39 merge: OrderedTableStEph restructure changed iteration order; needs fix in MtEph reduce path
 fn test_string_concatenation_multithreaded() {
     let concat_reducer = |a: &String, b: &String| format!("{a}{b}");
     let mut table = AugOrderedTableMtEph::empty(concat_reducer, String::new());

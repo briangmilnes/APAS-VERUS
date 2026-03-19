@@ -759,28 +759,17 @@ broadcast use {
     }
 
     /// Build an MtEph table from entries (used by macro and tests).
-    #[verifier::external_body]
     pub fn from_sorted_entries<K: MtKey, V: MtVal>(
         entries: AVLTreeSeqStPerS<Pair<K, V>>,
     ) -> (constructed: OrderedTableMtEph<K, V>)
-        requires entries.spec_avltreeseqstper_wf()
+        requires
+            entries.spec_avltreeseqstper_wf(),
+            crate::Chap42::TableStEph::TableStEph::spec_keys_no_dups(entries@),
+            entries@.len() < usize::MAX as nat,
         ensures constructed@.dom().finite(), constructed.spec_orderedtablemteph_wf()
     {
-        let len = entries.length();
-        let mut elements: Vec<Pair<K, V>> = Vec::new();
-        let mut i: usize = 0;
-        while i < len
-            invariant
-                i <= len,
-                len as nat == entries.spec_seq().len(),
-                entries.spec_avltreeseqstper_wf(),
-            decreases len - i,
-        {
-            let elem = entries.nth(i);
-            elements.push(Pair(elem.0.clone(), elem.1.clone()));
-            i += 1;
-        }
-        let inner = OrderedTableStEph { base_seq: AVLTreeSeqStEphS::from_vec(elements) };
+        assert(obeys_feq_full_trigger::<Pair<K, V>>());
+        let inner = crate::Chap43::OrderedTableStEph::OrderedTableStEph::from_sorted_entries(entries);
         from_st(inner)
     }
 
