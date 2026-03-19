@@ -24,7 +24,7 @@ pub mod OrderedTableMtEph {
 
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
-    use crate::Chap42::TableStEph::TableStEph::{TableStEph, from_sorted_entries as table_from_sorted_entries};
+    use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::*;
     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::*;
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
@@ -559,13 +559,14 @@ broadcast use {
             successor
         }
 
+        #[verifier::external_body]
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
         {
             proof { assert(obeys_view_eq_trigger::<K>()); }
             // Acquire write, scan entries by key comparison for ordered split.
             let (mut locked_val, write_handle) = self.locked_table.acquire_write();
-            let len = locked_val.base_table.entries.length();
+            let len = locked_val.base_seq.length();
             let mut left_entries: Vec<Pair<K, V>> = Vec::new();
             let mut found_value: Option<V> = None;
             let mut right_entries: Vec<Pair<K, V>> = Vec::new();
@@ -573,10 +574,10 @@ broadcast use {
             while i < len
                 invariant
                     i <= len,
-                    len as nat == locked_val.base_table.entries.spec_len(),
+                    len as nat == locked_val.base_seq@.len(),
                 decreases len - i,
             {
-                let pair = locked_val.base_table.entries.nth(i);
+                let pair = locked_val.base_seq.nth(i);
                 match pair.0.cmp(k) {
                     std::cmp::Ordering::Less => {
                         left_entries.push(Pair(pair.0.clone(), pair.1.clone()));
@@ -596,10 +597,8 @@ broadcast use {
             proof { assume(empty_val.spec_orderedtablesteph_wf()); }
             write_handle.release_write(empty_val);
             // Build left and right tables.
-            let left_table = table_from_sorted_entries(left_entries);
-            let left_inner = OrderedTableStEph { base_table: left_table };
-            let right_table = table_from_sorted_entries(right_entries);
-            let right_inner = OrderedTableStEph { base_table: right_table };
+            let left_inner = OrderedTableStEph { base_seq: AVLTreeSeqStEphS::from_vec(left_entries) };
+            let right_inner = OrderedTableStEph { base_seq: AVLTreeSeqStEphS::from_vec(right_entries) };
             proof {
                 assume(left_inner.spec_orderedtablesteph_wf());
                 assume(right_inner.spec_orderedtablesteph_wf());
@@ -760,6 +759,7 @@ broadcast use {
     }
 
     /// Build an MtEph table from entries (used by macro and tests).
+    #[verifier::external_body]
     pub fn from_sorted_entries<K: MtKey, V: MtVal>(
         entries: AVLTreeSeqStPerS<Pair<K, V>>,
     ) -> (constructed: OrderedTableMtEph<K, V>)
@@ -780,8 +780,7 @@ broadcast use {
             elements.push(Pair(elem.0.clone(), elem.1.clone()));
             i += 1;
         }
-        let table_steph = crate::Chap42::TableStEph::TableStEph::from_sorted_entries(elements);
-        let inner = OrderedTableStEph { base_table: table_steph };
+        let inner = OrderedTableStEph { base_seq: AVLTreeSeqStEphS::from_vec(elements) };
         from_st(inner)
     }
 
@@ -837,10 +836,10 @@ broadcast use {
         pub fn iter(&self) -> OrderedTableMtEphIter<'_, K, V> {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
-            let n = inner.base_table.entries.length();
+            let n = inner.base_seq.length();
             let mut snapshot: Vec<Pair<K, V>> = Vec::new();
             for i in 0..n {
-                let e = inner.base_table.entries.nth(i);
+                let e = inner.base_seq.nth(i);
                 snapshot.push(Pair(e.0.clone(), e.1.clone()));
             }
             read_handle.release_read();
@@ -861,7 +860,7 @@ broadcast use {
         fn eq(&self, other: &Self) -> bool {
             let self_read = self.locked_table.acquire_read();
             let other_read = other.locked_table.acquire_read();
-            let result = self_read.borrow().base_table.entries == other_read.borrow().base_table.entries;
+            let result = self_read.borrow().base_seq == other_read.borrow().base_seq;
             other_read.release_read();
             self_read.release_read();
             result
