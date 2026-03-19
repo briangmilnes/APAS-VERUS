@@ -21,27 +21,21 @@ Table of Contents:
 =================================================================
 
 ❌ OrderedTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:403: error: external_body - #[verifier::external_body]
-       404 |     fn avl_seq_length<K: StT + Ord, V: StT>(seq: &AVLTreeSeqStEphS<Pair<K, V>>) -> (len: usize)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:411: error: external_body - #[verifier::external_body]
-       412 |     fn avl_seq_nth<'a, K: StT + Ord, V: StT>(seq: &'a AVLTreeSeqStEphS<Pair<K, V>>, index: usize) -> (elem: &'a Pair<K, V>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1064: error: external_body - #[verifier::external_body]
-      1065 |         fn filter<F: Fn(&K, &V) -> B>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1106: error: external_body - #[verifier::external_body]
-      1107 |         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:2223: error: external_body - #[verifier::external_body]
-      2224 |         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:2276: error: external_body - #[verifier::external_body]
-      2277 |         fn rank_key(&self, k: &K) -> (rank: usize)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:2295: error: external_body - #[verifier::external_body]
-      2296 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:2251: info: structural_false_positive OPAQUE_EXTERNAL get_key_range — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:2514: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
-   Holes: 7 total
-      7 × external_body
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1074: error: external_body - #[verifier::external_body]
+      1075 |         fn filter<F: Fn(&K, &V) -> B>(
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:1117: error: external_body - #[verifier::external_body]
+      1118 |         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:2246: error: external_body - #[verifier::external_body]
+      2247 |         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:2408: error: external_body - #[verifier::external_body]
+      2409 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:2274: info: structural_false_positive OPAQUE_EXTERNAL get_key_range — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStEph.rs:2628: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+   Holes: 4 total
+      4 × external_body
    Info: 2 × structural_false_positive
-      1 × STD_TRAIT_IMPL
       1 × OPAQUE_EXTERNAL
+      1 × STD_TRAIT_IMPL
    Proof functions: 1 total (1 clean, 0 holed)
 
 =================================================================
@@ -57,44 +51,3 @@ OrderedTableStEph  depends upon only clean modules
 =================================================================
 2.2. By File
 =================================================================
-
-OrderedTableStEph.rs  depends upon only clean modules
-
-=================================================================
-3. Summary of Holes
-=================================================================
-
-Modules:
-   0 clean (no holes, no errors; 0%)
-   1 holed (holes or errors, 100%)
-   1 total
-
-Proof Functions:
-   1 clean (100%)
-   0 holed (0%)
-   1 total
-
-Function Specs:
-   66 exec fns with complete spec (requires+ensures) (82%)
-   0 exec fns missing spec (0%)
-   14 proof/spec fns clean (17%)
-   0 proof/spec fns with holes (0%)
-   80 total fns
-
-
-Holes Found: 7 (actionable)
-   7 × external_body (100%)
-
-Structural (info only): 2
-   1 × STD_TRAIT_IMPL
-   1 × OPAQUE_EXTERNAL
-
-=================================================================
-5. Started/Ended/Duration
-=================================================================
-
-Started:   2026-03-19 11:06:25 -07:00
-Ended:     2026-03-19 11:06:25 -07:00
-Duration:  42ms
-
-Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
