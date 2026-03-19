@@ -22,13 +22,13 @@ Table of Contents:
 
 ✓ KruskalStEph.rs
 ❌ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:77: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:77: error: external_body - #[verifier::external_body]
         78 |     #[cfg(not(verus_keep_ghost))]
         79 |     fn pq_entry_new<V: HashOrd>(priority: WrappedF64, vertex: V, parent: Option<V>) -> PQEntry<V> {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:100: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:100: error: external_body - #[verifier::external_body]
        101 |     #[cfg(not(verus_keep_ghost))]
        102 |     pub fn prim_mst<V: HashOrd + Display>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:156: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:156: error: external_body - #[verifier::external_body]
        157 |     #[cfg(not(verus_keep_ghost))]
        158 |     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64 {
    Holes: 3 total
@@ -84,9 +84,9 @@ Holes Found: 3 (actionable)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 19:44:36 -07:00
-Ended:     2026-03-18 19:44:36 -07:00
-Duration:  8ms
+Started:   2026-03-18 20:15:44 -07:00
+Ended:     2026-03-18 20:15:45 -07:00
+Duration:  63ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
+

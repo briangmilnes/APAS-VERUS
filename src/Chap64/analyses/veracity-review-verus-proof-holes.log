@@ -23,25 +23,25 @@ Table of Contents:
 ✓ SpanTreeMtEph.rs
 ✓ SpanTreeStEph.rs
 ❌ TSPApproxStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap64/TSPApproxStEph.rs:93: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:93: error: external_body - #[verifier::external_body]
         94 |     #[cfg(not(verus_keep_ghost))]
         95 |     pub fn euler_tour<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap64/TSPApproxStEph.rs:111: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:111: error: external_body - #[verifier::external_body]
        112 |     #[cfg(not(verus_keep_ghost))]
        113 |     fn euler_tour_dfs<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap64/TSPApproxStEph.rs:175: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:175: error: external_body - #[verifier::external_body]
        176 |     #[cfg(not(verus_keep_ghost))]
        177 |     pub fn shortcut_tour<V: HashOrd>(euler_tour: &[V]) -> Vec<V> {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap64/TSPApproxStEph.rs:206: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:206: error: external_body - #[verifier::external_body]
        207 |     #[cfg(not(verus_keep_ghost))]
        208 |     pub fn tour_weight<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap64/TSPApproxStEph.rs:229: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:229: error: external_body - #[verifier::external_body]
        230 |     #[cfg(not(verus_keep_ghost))]
        231 |     fn get_neighbors<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>, v: &V) -> SetStEph<V> {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap64/TSPApproxStEph.rs:246: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:246: error: external_body - #[verifier::external_body]
        247 |     #[cfg(not(verus_keep_ghost))]
        248 |     fn get_edge_weight<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap64/TSPApproxStEph.rs:280: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:280: error: external_body - #[verifier::external_body]
        281 |     #[cfg(not(verus_keep_ghost))]
        282 |     pub fn approx_metric_tsp<V: HashOrd>(
    Holes: 7 total
@@ -96,9 +96,9 @@ Holes Found: 7 (actionable)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 19:44:36 -07:00
-Ended:     2026-03-18 19:44:36 -07:00
-Duration:  6ms
+Started:   2026-03-18 20:15:44 -07:00
+Ended:     2026-03-18 20:15:44 -07:00
+Duration:  27ms
 
 Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
-review-verus-proof-holes.log
+verus-proof-holes.log
