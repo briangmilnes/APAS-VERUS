@@ -21,33 +21,45 @@ Table of Contents:
 =================================================================
 
 ❌ EdgeContractionMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:128: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:128: error: external_body - #[verifier::external_body]
        129 |     #[cfg(not(verus_keep_ghost))]
        130 |     fn build_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:194: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:194: error: external_body - #[verifier::external_body]
        195 |     #[cfg(not(verus_keep_ghost))]
        196 |     pub fn contract_round_mt<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:80: info: structural_false_positive OPAQUE_EXTERNAL edge_contract_mt — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:80: info: structural_false_positive OPAQUE_EXTERNAL edge_contract_mt — #[verifier::external_body] [medium]
    Holes: 2 total
       2 × external_body
    Info: 1 × structural_false_positive
       1 × OPAQUE_EXTERNAL
-✓ EdgeContractionStEph.rs
+❌ EdgeContractionStEph.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:75: error: cfg_hidden_exec - #[cfg(not(verus_keep_ghost))]
+        76 |     pub fn edge_contract<V: HashOrd>(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:131: error: cfg_hidden_exec - #[cfg(not(verus_keep_ghost))]
+       132 |     pub fn contract_round<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> UnDirGraphStEph<V> {
+   Holes: 2 total
+      2 × cfg_hidden_exec
 ❌ VertexMatchingMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:96: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:96: error: external_body - #[verifier::external_body]
         97 |     #[cfg(not(verus_keep_ghost))]
         98 |     fn flip_coins_parallel<V: StT + MtT + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:203: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:203: error: external_body - #[verifier::external_body]
        204 |     #[cfg(not(verus_keep_ghost))]
        205 |     fn should_select_edge<V: StT + MtT + Hash + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:67: info: structural_false_positive OPAQUE_EXTERNAL parallel_matching_mt — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:121: info: structural_false_positive OPAQUE_EXTERNAL select_edges_parallel — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:153: info: structural_false_positive OPAQUE_EXTERNAL select_edges_recursive — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:67: info: structural_false_positive OPAQUE_EXTERNAL parallel_matching_mt — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:121: info: structural_false_positive OPAQUE_EXTERNAL select_edges_parallel — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:153: info: structural_false_positive OPAQUE_EXTERNAL select_edges_recursive — #[verifier::external_body] [medium]
    Holes: 2 total
       2 × external_body
    Info: 3 × structural_false_positive
       3 × OPAQUE_EXTERNAL
-✓ VertexMatchingStEph.rs
+❌ VertexMatchingStEph.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:63: error: cfg_hidden_exec - #[cfg(not(verus_keep_ghost))]
+        64 |     pub fn greedy_matching<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>> {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:97: error: cfg_hidden_exec - #[cfg(not(verus_keep_ghost))]
+        98 |     pub fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>, seed: u64) -> SetStEph<Edge<V>> {
+   Holes: 2 total
+      2 × cfg_hidden_exec
 
 =================================================================
 2. Depends Upon
@@ -76,8 +88,8 @@ VertexMatchingStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   2 clean (no holes, no errors; 50%)
-   2 holed (holes or errors, 50%)
+   0 clean (no holes, no errors; 0%)
+   4 holed (holes or errors, 100%)
    4 total
 
 Proof Functions:
@@ -93,8 +105,9 @@ Function Specs:
    19 total fns
 
 
-Holes Found: 4 (actionable)
-   4 × external_body (100%)
+Holes Found: 8 (actionable)
+   4 × external_body (50%)
+   4 × cfg_hidden_exec (50%)
 
 Structural (info only): 4
    4 × OPAQUE_EXTERNAL
@@ -103,9 +116,9 @@ Structural (info only): 4
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 08:21:56 -07:00
-Ended:     2026-03-19 08:21:56 -07:00
-Duration:  5ms
+Started:   2026-03-19 10:11:06 -07:00
+Ended:     2026-03-19 10:11:06 -07:00
+Duration:  8ms
 
 Full output: src/Chap61/analyses/veracity-review-verus-proof-holes.log
 Full output: src/Chap61/analyses/veracity-review-verus-proof-holes.log
