@@ -186,7 +186,7 @@ broadcast use {
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to OrderedTableStEph.domain
         fn domain(&self) -> (domain: ArraySetStEph<K>)
-            requires obeys_feq_clone::<K>()
+            requires self.spec_augorderedtablesteph_wf(), obeys_feq_clone::<K>()
             ensures domain@ =~= self@.dom(), self@.dom().finite();
         /// - APAS: Work Θ(n log n), Span Θ(n log n)
         /// - Claude-Opus-4.6: Work Θ(n^2), Span Θ(n^2) -- delegates to OrderedTableStEph.tabulate (sequential insert loop)
@@ -227,7 +227,7 @@ broadcast use {
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to OrderedTableStEph.reduce (linear fold)
         fn reduce<R, G: Fn(R, &K, &V) -> R>(&self, init: R, f: G) -> (reduced: R)
-            requires forall|r: R, k: &K, v: &V| f.requires((r, k, v))
+            requires self.spec_augorderedtablesteph_wf(), forall|r: R, k: &K, v: &V| f.requires((r, k, v))
             ensures self@.dom().finite();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to OrderedTableStEph.intersection (linear scan)
@@ -272,7 +272,7 @@ broadcast use {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to OrderedTableStEph.difference (linear scan)
         fn difference(&mut self, other: &Self)
-            requires old(self).spec_augorderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
+            requires old(self).spec_augorderedtablesteph_wf(), other.spec_augorderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
             ensures
                 self@.dom() =~= old(self)@.dom().difference(other@.dom()),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
@@ -302,6 +302,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then returns first element
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
+            requires self.spec_augorderedtablesteph_wf()
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
@@ -311,6 +312,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then returns last element
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
+            requires self.spec_augorderedtablesteph_wf()
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
@@ -320,6 +322,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then scans for predecessor
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
+            requires self.spec_augorderedtablesteph_wf()
             ensures
                 self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
@@ -329,6 +332,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then scans for successor
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
+            requires self.spec_augorderedtablesteph_wf()
             ensures
                 self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
@@ -810,6 +814,7 @@ broadcast use {
     impl<K: StT + Ord, V: StT, F: Fn(&V, &V) -> V + Clone> AugOrderedTableStEph<K, V, F> {
         /// Returns an iterator over the table entries via the base ordered table.
         pub fn iter(&self) -> (it: OrderedTableStEphIter<'_, K, V>)
+            requires self.spec_augorderedtablesteph_wf()
             ensures
                 it@.0 == 0,
                 it@.1 == self.base_table.base_seq@,
@@ -823,6 +828,7 @@ broadcast use {
         type Item = &'a Pair<K, V>;
         type IntoIter = OrderedTableStEphIter<'a, K, V>;
         fn into_iter(self) -> (it: Self::IntoIter)
+            requires self.spec_augorderedtablesteph_wf()
             ensures
                 it@.0 == 0,
                 it@.1 == self.base_table.base_seq@,

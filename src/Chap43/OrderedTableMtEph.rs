@@ -383,6 +383,7 @@ broadcast use {
             }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
+            proof { assume(inner.spec_orderedtablesteph_wf()); }
             let domain = inner.domain();
             read_handle.release_read();
             domain
@@ -463,6 +464,7 @@ broadcast use {
             let other_read = other.locked_table.acquire_read();
             let other_ref = other_read.borrow();
             let (mut locked_val, write_handle) = self.locked_table.acquire_write();
+            proof { assume(other_ref.spec_orderedtablesteph_wf()); }
             locked_val.difference(other_ref);
             proof { assume(locked_val.spec_orderedtablesteph_wf()); }
             let ghost new_view = locked_val@;
@@ -501,6 +503,7 @@ broadcast use {
             proof { assume(self@.dom().finite()); }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
+            proof { assume(inner.spec_orderedtablesteph_wf()); }
             let reduced = inner.reduce(init, f);
             read_handle.release_read();
             reduced
@@ -518,9 +521,9 @@ broadcast use {
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
         {
-
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
+            proof { assume(inner.spec_orderedtablesteph_wf()); }
             let first = inner.first_key();
             proof { assume(inner@ =~= self@); }
             read_handle.release_read();
@@ -530,9 +533,9 @@ broadcast use {
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
         {
-
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
+            proof { assume(inner.spec_orderedtablesteph_wf()); }
             let last = inner.last_key();
             proof { assume(inner@ =~= self@); }
             read_handle.release_read();
@@ -542,9 +545,9 @@ broadcast use {
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
         {
-
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
+            proof { assume(inner.spec_orderedtablesteph_wf()); }
             let predecessor = inner.previous_key(k);
             proof { assume(inner@ =~= self@); }
             read_handle.release_read();
@@ -554,9 +557,9 @@ broadcast use {
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
         {
-
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
+            proof { assume(inner.spec_orderedtablesteph_wf()); }
             let successor = inner.next_key(k);
             proof { assume(inner@ =~= self@); }
             read_handle.release_read();

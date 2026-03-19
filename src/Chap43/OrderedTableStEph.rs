@@ -131,7 +131,7 @@ broadcast use {
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- agrees with APAS; collects keys from entries
         fn domain(&self) -> (domain: ArraySetStEph<K>)
-            requires obeys_feq_clone::<K>()
+            requires self.spec_orderedtablesteph_wf(), obeys_feq_clone::<K>()
             ensures domain@ =~= self@.dom(), self@.dom().finite();
         /// - APAS: Work Θ(n log n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) -- delegates to TableStEph.tabulate which inserts keys sequentially
@@ -180,7 +180,7 @@ broadcast use {
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- agrees with APAS; iterates all entries
         fn reduce<R, F: Fn(R, &K, &V) -> R>(&self, init: R, f: F) -> (reduced: R)
-            requires forall|r: R, k: &K, v: &V| f.requires((r, k, v))
+            requires self.spec_orderedtablesteph_wf(), forall|r: R, k: &K, v: &V| f.requires((r, k, v))
             ensures self@.dom().finite();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to TableStEph.intersection which is linear scan
@@ -227,7 +227,7 @@ broadcast use {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to TableStEph.difference which is linear scan
         fn difference(&mut self, other: &Self)
-            requires old(self).spec_orderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
+            requires old(self).spec_orderedtablesteph_wf(), other.spec_orderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
             ensures
                 self@.dom() =~= old(self)@.dom().difference(other@.dom()),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
@@ -260,6 +260,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then returns first element
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
+            requires self.spec_orderedtablesteph_wf()
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
@@ -269,6 +270,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then returns last element
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
+            requires self.spec_orderedtablesteph_wf()
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
@@ -278,6 +280,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then scans backward
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
+            requires self.spec_orderedtablesteph_wf()
             ensures
                 self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
@@ -287,6 +290,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then scans forward
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
+            requires self.spec_orderedtablesteph_wf()
             ensures
                 self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
@@ -399,18 +403,17 @@ broadcast use {
         };
     }
 
-    /// Get the length of the backing AVL sequence without requiring wf.
-    #[verifier::external_body]
+    /// Get the length of the backing AVL sequence.
     fn avl_seq_length<K: StT + Ord, V: StT>(seq: &AVLTreeSeqStEphS<Pair<K, V>>) -> (len: usize)
+        requires seq.spec_avltreeseqsteph_wf()
         ensures len as nat == seq@.len()
     {
         seq.length()
     }
 
-    /// Get nth element from the AVL sequence without requiring wf.
-    #[verifier::external_body]
+    /// Get nth element from the AVL sequence.
     fn avl_seq_nth<'a, K: StT + Ord, V: StT>(seq: &'a AVLTreeSeqStEphS<Pair<K, V>>, index: usize) -> (elem: &'a Pair<K, V>)
-        requires (index as int) < seq@.len()
+        requires seq.spec_avltreeseqsteph_wf(), (index as int) < seq@.len()
         ensures elem@ == seq@[index as int]
     {
         seq.nth(index)
@@ -422,7 +425,7 @@ broadcast use {
         other: &AVLTreeSeqStEphS<Pair<K, V>>,
         k: &K,
     ) -> (found: bool)
-        requires obeys_view_eq::<K>()
+        requires other.spec_avltreeseqsteph_wf(), obeys_view_eq::<K>()
         ensures found == spec_entries_to_map(other@).dom().contains(k@)
     {
         let other_len = avl_seq_length(other);
@@ -431,6 +434,7 @@ broadcast use {
             invariant
                 j <= other_len,
                 other_len as nat == other@.len(),
+                other.spec_avltreeseqsteph_wf(),
                 obeys_view_eq::<K>(),
                 forall|q: int| 0 <= q < j as int ==> (#[trigger] other@[q]).0 != k@,
             decreases other_len - j,
@@ -866,6 +870,7 @@ broadcast use {
             while i < len
                 invariant
                     obeys_feq_clone::<K>(),
+                    self.base_seq.spec_avltreeseqsteph_wf(),
                     len as nat == self.base_seq@.len(),
                     0 <= i <= len,
                     domain.spec_arraysetsteph_wf(),
@@ -1092,6 +1097,7 @@ broadcast use {
                 invariant
                     i <= len,
                     len as nat == self.base_seq@.len(),
+                    self.base_seq.spec_avltreeseqsteph_wf(),
                     forall|r: R, k: &K, v: &V| f.requires((r, k, v)),
                 decreases len - i,
             {
@@ -1147,6 +1153,7 @@ broadcast use {
                     self.base_seq@ == old_seq,
                     old(self).base_seq@ == old_seq,
                     old(self).spec_orderedtablesteph_wf(),
+                    self.base_seq.spec_avltreeseqsteph_wf(),
                     other.spec_orderedtablesteph_wf(),
                     spec_keys_no_dups(old_seq),
                     obeys_view_eq::<K>(),
@@ -1242,6 +1249,8 @@ broadcast use {
                     self.base_seq@ == old_seq,
                     old(self).base_seq@ == old_seq,
                     old(self).spec_orderedtablesteph_wf(),
+                    self.base_seq.spec_avltreeseqsteph_wf(),
+                    other.base_seq.spec_avltreeseqsteph_wf(),
                     spec_keys_no_dups(old_seq),
                     spec_keys_no_dups(other.base_seq@),
                     obeys_view_eq::<K>(),
@@ -1453,6 +1462,8 @@ broadcast use {
                     self.base_seq@ == old_seq,
                     old(self).base_seq@ == old_seq,
                     old(self).spec_orderedtablesteph_wf(),
+                    self.base_seq.spec_avltreeseqsteph_wf(),
+                    other.base_seq.spec_avltreeseqsteph_wf(),
                     obeys_feq_full::<Pair<K, V>>(),
                     obeys_view_eq::<K>(),
                     spec_keys_no_dups(old_seq),
@@ -1564,6 +1575,7 @@ broadcast use {
                     self.base_seq@ == old_seq,
                     old(self).base_seq@ == old_seq,
                     old(self).spec_orderedtablesteph_wf(),
+                    self.base_seq.spec_avltreeseqsteph_wf(),
                     obeys_feq_full::<Pair<K, V>>(),
                     spec_keys_no_dups(old_seq),
                     keys@ == keys_set,
@@ -1672,6 +1684,7 @@ broadcast use {
                     self.base_seq@ == old_seq,
                     old(self).base_seq@ == old_seq,
                     old(self).spec_orderedtablesteph_wf(),
+                    self.base_seq.spec_avltreeseqsteph_wf(),
                     obeys_feq_full::<Pair<K, V>>(),
                     spec_keys_no_dups(old_seq),
                     keys@ == keys_set,
@@ -1781,6 +1794,7 @@ broadcast use {
                     i <= len,
                     len as nat == self.base_seq@.len(),
                     self.spec_orderedtablesteph_wf(),
+                    self.base_seq.spec_avltreeseqsteph_wf(),
                     obeys_feq_full::<Pair<K, V>>(),
                     elements@.len() == i as int,
                     forall|j: int| 0 <= j < i ==> (#[trigger] elements@[j])@ == self.base_seq@[j],
@@ -1843,6 +1857,7 @@ broadcast use {
                 while i < len
                     invariant
                         obeys_feq_full::<K>(),
+                        self.base_seq.spec_avltreeseqsteph_wf(),
                         1 <= i, i <= len,
                         len as nat == self.base_seq@.len(),
                         0 <= min_idx, min_idx < i,
@@ -1933,6 +1948,7 @@ broadcast use {
                 while i < len
                     invariant
                         obeys_feq_full::<K>(),
+                        self.base_seq.spec_avltreeseqsteph_wf(),
                         1 <= i, i <= len,
                         len as nat == self.base_seq@.len(),
                         0 <= max_idx, max_idx < i,
@@ -2014,6 +2030,7 @@ broadcast use {
             while i < len
                 invariant
                     obeys_feq_full::<K>(),
+                    self.base_seq.spec_avltreeseqsteph_wf(),
                     0 <= i, i <= len,
                     len as nat == self.base_seq@.len(),
                     vals == spec_inorder_values::<Pair<K, V>>(self.base_seq.root),
@@ -2127,6 +2144,7 @@ broadcast use {
             while i < len
                 invariant
                     obeys_feq_full::<K>(),
+                    self.base_seq.spec_avltreeseqsteph_wf(),
                     0 <= i, i <= len,
                     len as nat == self.base_seq@.len(),
                     vals == spec_inorder_values::<Pair<K, V>>(self.base_seq.root),
@@ -2481,6 +2499,7 @@ broadcast use {
     impl<K: StT + Ord, V: StT> OrderedTableStEph<K, V> {
         /// Returns an iterator over the table entries.
         pub fn iter(&self) -> (it: OrderedTableStEphIter<'_, K, V>)
+            requires self.spec_orderedtablesteph_wf()
             ensures
                 it@.0 == 0,
                 it@.1 == self.base_seq@,
@@ -2602,6 +2621,7 @@ broadcast use {
         type Item = &'a Pair<K, V>;
         type IntoIter = OrderedTableStEphIter<'a, K, V>;
         fn into_iter(self) -> (it: Self::IntoIter)
+            requires self.spec_orderedtablesteph_wf()
             ensures
                 it@.0 == 0,
                 it@.1 == self.base_seq@,
