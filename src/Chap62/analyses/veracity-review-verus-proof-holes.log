@@ -21,28 +21,28 @@ Table of Contents:
 =================================================================
 
 ❌ StarContractionMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap62/StarContractionMtEph.rs:77: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap62/StarContractionMtEph.rs:77: error: external_body - #[verifier::external_body]
         78 |     #[cfg(not(verus_keep_ghost))]
         79 |     pub fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G) -> R
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap62/StarContractionMtEph.rs:104: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap62/StarContractionMtEph.rs:104: error: external_body - #[verifier::external_body]
        105 |     #[cfg(not(verus_keep_ghost))]
        106 |     fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap62/StarContractionMtEph.rs:126: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap62/StarContractionMtEph.rs:126: error: external_body - #[verifier::external_body]
        127 |     #[cfg(not(verus_keep_ghost))]
        128 |     fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap62/StarContractionMtEph.rs:181: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap62/StarContractionMtEph.rs:181: error: external_body - #[verifier::external_body]
        182 |     #[cfg(not(verus_keep_ghost))]
        183 |     pub fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + 'static>(
    Holes: 4 total
       4 × external_body
 ❌ StarContractionStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap62/StarContractionStEph.rs:71: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap62/StarContractionStEph.rs:71: error: external_body - #[verifier::external_body]
         72 |     #[cfg(not(verus_keep_ghost))]
         73 |     pub fn star_contract<V, R, F, G>(graph: &UnDirGraphStEph<V>, base: &F, expand: &G) -> R
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap62/StarContractionStEph.rs:98: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap62/StarContractionStEph.rs:98: error: external_body - #[verifier::external_body]
         99 |     #[cfg(not(verus_keep_ghost))]
        100 |     fn build_quotient_graph<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap62/StarContractionStEph.rs:132: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap62/StarContractionStEph.rs:132: error: external_body - #[verifier::external_body]
        133 |     #[cfg(not(verus_keep_ghost))]
        134 |     pub fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<V> {
    Holes: 3 total
@@ -101,12 +101,9 @@ Holes Found: 7 (actionable)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-18 19:00:02 -07:00
-Ended:     2026-03-18 19:00:02 -07:00
+Started:   2026-03-18 19:57:05 -07:00
+Ended:     2026-03-18 19:57:05 -07:00
 Duration:  4ms
 
 Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
-     2026-03-18 19:00:02 -07:00
-Duration:  4ms
-
-Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
+c/Chap62/analyses/veracity-review-verus-proof-holes.log

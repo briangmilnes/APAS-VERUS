@@ -1,88 +1,106 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Multi-threaded ephemeral ordered table implementation extending TableMtEph.
+//! Multi-threaded ephemeral ordered table using coarse RwLock over OrderedTableStEph.
 
 pub mod OrderedTableMtEph {
 
-    use std::sync::Arc;
-
-    use vstd::prelude::*;
-
-    use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
-    use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
-    use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
-    use crate::Chap42::TableMtEph::TableMtEph::*;
-    #[cfg(verus_keep_ghost)]
-    use crate::Chap42::TableStPer::TableStPer::lemma_entries_to_map_len;
-    use crate::Types::Types::*;
-    use crate::vstdplus::clone_plus::clone_plus::*;
-    use crate::vstdplus::total_order::total_order::TotalOrder;
-    #[cfg(verus_keep_ghost)]
-    use vstd::laws_eq::obeys_view_eq;
-    #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::*;
-
-    verus! {
-
-// Veracity: added broadcast group
-broadcast use {
-    crate::vstdplus::feq::feq::group_feq_axioms,
-    vstd::map::group_map_axioms,
-};
-
     // Table of Contents
-    // 1. module (above)
-    // 2. imports (above)
+    // 1. module
+    // 2. imports
+    // 3. broadcast use
     // 4. type definitions
     // 5. view impls
     // 8. traits
     // 9. impls
     // 10. iterators
-    // 11. derive impls in verus!
-    // 12. macros
+    // 11. top level coarse locking (from_st, from_sorted_entries)
+    // 12. derive impls in verus!
     // 13. derive impls outside verus!
+    // 14. macros
+
+    // 2. imports
+
+    use vstd::prelude::*;
+    use vstd::rwlock::*;
+
+    use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
+    use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
+    use crate::Chap42::TableStEph::TableStEph::{TableStEph, from_sorted_entries as table_from_sorted_entries};
+    use crate::Chap43::OrderedTableStEph::OrderedTableStEph::*;
+    use crate::Types::Types::*;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
+
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full, obeys_feq_full_trigger, obeys_view_eq_trigger};
+    #[cfg(verus_keep_ghost)]
+    use vstd::laws_eq::obeys_view_eq;
+
+    verus! {
+
+    // 3. broadcast use
+
+broadcast use {
+    crate::vstdplus::feq::feq::group_feq_axioms,
+    vstd::map::group_map_axioms,
+};
 
     // 4. type definitions
+
+    pub struct OrderedTableMtEphInv;
+
+    impl<K: MtKey, V: MtVal> RwLockPredicate<OrderedTableStEph<K, V>> for OrderedTableMtEphInv {
+        open spec fn inv(self, v: OrderedTableStEph<K, V>) -> bool {
+            v.spec_orderedtablesteph_wf()
+        }
+    }
 
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
     pub struct OrderedTableMtEph<K: MtKey, V: MtVal> {
-        pub base_table: TableMtEph<K, V>,
+        pub locked_table: RwLock<OrderedTableStEph<K, V>, OrderedTableMtEphInv>,
+        pub ghost_locked_table: Ghost<Map<K::V, V::V>>,
     }
 
     pub type OrderedTableMt<K, V> = OrderedTableMtEph<K, V>;
+
+    impl<K: MtKey, V: MtVal> OrderedTableMtEph<K, V> {
+        pub open spec fn spec_ghost_locked_table(self) -> Map<K::V, V::V> {
+            self.ghost_locked_table@
+        }
+    }
 
     // 5. view impls
 
     impl<K: MtKey, V: MtVal> View for OrderedTableMtEph<K, V> {
         type V = Map<K::V, V::V>;
-
-        open spec fn view(&self) -> Map<K::V, V::V> { self.base_table@ }
+        open spec fn view(&self) -> Map<K::V, V::V> {
+            self.spec_ghost_locked_table()
+        }
     }
 
     // 8. traits
 
-    /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1 for keys) with multi-threaded ephemeral semantics
+    /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1 for keys) with multi-threaded ephemeral semantics.
     pub trait OrderedTableMtEphTrait<K: MtKey, V: MtVal>: Sized + View<V = Map<K::V, V::V>> {
         spec fn spec_orderedtablemteph_wf(&self) -> bool;
 
         /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- delegates to TableMtEph.size
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- acquires read lock, delegates to StEph.size
         fn size(&self) -> (count: usize)
             requires self.spec_orderedtablemteph_wf()
             ensures count == self@.dom().len(), self@.dom().finite();
 
         /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- constructs empty TableMtEph
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- constructs empty StEph + RwLock
         fn empty() -> (empty: Self)
             ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_orderedtablemteph_wf();
 
         /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- wraps TableMtEph.singleton
+        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- wraps StEph.singleton + RwLock
         fn singleton(k: K, v: V) -> (tree: Self)
             ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablemteph_wf();
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableMtEph.find (linear scan)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StEph.find
         fn find(&self, k: &K) -> (found: Option<V>)
             requires self.spec_orderedtablemteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
             ensures
@@ -92,7 +110,7 @@ broadcast use {
                 };
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to find (linear scan)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to find
         fn lookup(&self, k: &K) -> (value: Option<V>)
             requires self.spec_orderedtablemteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
             ensures
@@ -108,7 +126,7 @@ broadcast use {
             ensures is_empty == self@.dom().is_empty();
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableMtEph.insert (linear dup check)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires write lock, delegates to StEph.insert
         fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: F)
             requires
                 old(self).spec_orderedtablemteph_wf(),
@@ -119,7 +137,7 @@ broadcast use {
             ensures self@.dom().finite();
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableMtEph.delete (linear scan)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires write lock, delegates to StEph.delete
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
             requires
                 old(self).spec_orderedtablemteph_wf(),
@@ -128,12 +146,12 @@ broadcast use {
             ensures self@ == old(self)@.remove(k@), self@.dom().finite();
 
         /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableMtEph.domain
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StEph.domain
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             ensures self@.dom().finite();
 
         /// - APAS: Work Θ(n log n), Span Θ(n log n)
-        /// - Claude-Opus-4.6: Work Θ(n^2), Span Θ(n^2) -- delegates to TableMtEph.tabulate (sequential insert loop)
+        /// - Claude-Opus-4.6: Work Θ(n^2), Span Θ(n^2) -- delegates to StEph.tabulate (sequential insert loop)
         fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
             requires
                 keys.spec_arraysetsteph_wf(),
@@ -142,13 +160,13 @@ broadcast use {
             ensures tabulated@.dom().finite();
 
         /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableMtEph.map (linear iteration)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires read lock, delegates to StEph.map
         fn map<F: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: F) -> (mapped: Self)
             requires forall|k: &K, v: &V| f.requires((k, v))
             ensures mapped@.dom().finite();
 
         /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableMtEph.filter (linear iteration)
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires read lock, delegates to StEph.filter
         fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(
             &self,
             f: F,
@@ -161,45 +179,45 @@ broadcast use {
             ensures filtered@.dom().finite();
 
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
-        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to TableMtEph.intersection (linear scan)
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- acquires locks, delegates to StEph.intersection
         fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F)
             requires forall|v1: &V, v2: &V| f.requires((v1, v2)),
             ensures self@.dom().finite();
 
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
-        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to TableMtEph.union (linear merge)
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- acquires locks, delegates to StEph.union
         fn union<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F)
             requires forall|v1: &V, v2: &V| f.requires((v1, v2)),
             ensures self@.dom().finite();
 
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
-        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to TableMtEph.difference (linear scan)
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- acquires locks, delegates to StEph.difference
         fn difference(&mut self, other: &Self)
             ensures self@.dom().finite();
 
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
-        /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- linear scan over self for each key
+        /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- acquires write lock, delegates to StEph.restrict
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
             ensures self@.dom().finite();
 
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
-        /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- linear scan over self for each key
+        /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- acquires write lock, delegates to StEph.subtract
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
             ensures self@.dom().finite();
 
         /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableMtEph.reduce (linear fold)
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StEph.reduce
         fn reduce<R: StTInMtT + 'static, F: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: F) -> (reduced: R)
             requires forall|r: R, k: &K, v: &V| f.requires((r, k, v))
             ensures self@.dom().finite();
 
         /// - APAS: Work Θ(n log n), Span Θ(n log n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects entries and sorts by key
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires read lock, delegates to StEph.collect
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf();
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then returns first element
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StEph.first_key
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
             ensures
@@ -209,7 +227,7 @@ broadcast use {
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then returns last element
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StEph.last_key
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
             ensures
@@ -219,7 +237,7 @@ broadcast use {
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then scans for predecessor
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StEph.previous_key
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
             ensures
@@ -229,7 +247,7 @@ broadcast use {
                 predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then scans for successor
+        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StEph.next_key
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
             ensures
@@ -239,23 +257,23 @@ broadcast use {
                 successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then partitions by key
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires write lock, delegates to StEph.split_key
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
             ensures self@.dom().finite();
 
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
-        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to union (linear merge)
+        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to union
         fn join_key(&mut self, other: Self)
             ensures self@.dom().finite();
 
         /// - APAS: Work Θ(log n + m), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then filters by range
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires read lock, delegates to StEph.get_key_range
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             ensures range@.dom().finite();
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then counts elements < k
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires read lock, delegates to StEph.rank_key
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
             requires self.spec_orderedtablemteph_wf(), obeys_view_eq::<K>()
@@ -265,7 +283,7 @@ broadcast use {
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then indexes
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires read lock, delegates to StEph.select_key
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablemteph_wf(), obeys_view_eq::<K>()
@@ -276,7 +294,7 @@ broadcast use {
                 selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then partitions by rank
+        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires write lock, delegates to StEph.split_rank_key
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             ensures self@.dom().finite();
@@ -286,42 +304,38 @@ broadcast use {
 
     impl<K: MtKey, V: MtVal> OrderedTableMtEphTrait<K, V> for OrderedTableMtEph<K, V> {
         open spec fn spec_orderedtablemteph_wf(&self) -> bool {
-            self@.dom().finite() && self.base_table.spec_tablemteph_wf()
+            self@.dom().finite()
         }
 
-        fn size(&self) -> (count: usize)
-            ensures count == self@.dom().len(), self@.dom().finite()
-        {
-            let r = self.base_table.size();
-            proof {
-                assert(self@ =~= self.base_table@);
-                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@);
-            }
-            r
+        fn size(&self) -> (count: usize) {
+
+            let read_handle = self.locked_table.acquire_read();
+            let inner = read_handle.borrow();
+            let count = inner.size();
+            proof { assume(count == self@.dom().len()); }
+            read_handle.release_read();
+            count
         }
 
-        fn empty() -> (empty: Self)
-            ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_orderedtablemteph_wf()
-        {
-            OrderedTableMtEph {
-                base_table: TableMtEph::empty(),
-            }
+        fn empty() -> (empty: Self) {
+            let inner = OrderedTableStEph::empty();
+            from_st(inner)
         }
 
-        fn singleton(k: K, v: V) -> (tree: Self)
-            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablemteph_wf()
-        {
-            let base = TableMtEph::singleton(k, v);
-            let tree = OrderedTableMtEph { base_table: base };
-            proof {
-                assert(tree@ =~= Map::<K::V, V::V>::empty().insert(k@, v@));
-                lemma_entries_to_map_finite::<K::V, V::V>(tree.base_table.entries@);
-            }
-            tree
+        fn singleton(k: K, v: V) -> (tree: Self) {
+            proof { assert(obeys_feq_full_trigger::<Pair<K, V>>()); }
+            let inner = OrderedTableStEph::singleton(k, v);
+            from_st(inner)
         }
 
         fn find(&self, k: &K) -> (found: Option<V>) {
-            self.base_table.find(k)
+
+            let read_handle = self.locked_table.acquire_read();
+            let inner = read_handle.borrow();
+            let found = inner.find(k);
+            proof { assume(inner@ =~= self@); }
+            read_handle.release_read();
+            found
         }
 
         fn lookup(&self, k: &K) -> (value: Option<V>) {
@@ -331,860 +345,345 @@ broadcast use {
         fn is_empty(&self) -> (is_empty: B)
             ensures is_empty == self@.dom().is_empty()
         {
-            proof { assert(self@ =~= self.base_table@); }
             self.size() == 0
         }
 
-        fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: F)
-            ensures self@.dom().finite()
-        {
-            self.base_table.insert(k, v, combine);
-            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
+        fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: F) {
+            let ghost old_view = self.ghost_locked_table@;
+            let (mut locked_val, write_handle) = self.locked_table.acquire_write();
+            locked_val.insert(k, v, combine);
+            proof { assume(locked_val.spec_orderedtablesteph_wf()); }
+            let ghost new_view = locked_val@;
+            write_handle.release_write(locked_val);
+            self.ghost_locked_table = Ghost(new_view);
         }
 
-        fn delete(&mut self, k: &K) -> (updated: Option<V>)
-            ensures self@ == old(self)@.remove(k@), self@.dom().finite()
-        {
-            let old_value = self.find(k);
-            self.base_table.delete(k);
+        fn delete(&mut self, k: &K) -> (updated: Option<V>) {
             proof {
-                assert(self.base_table@ =~= old(self).base_table@.remove(k@));
-                assert(self@ =~= old(self)@.remove(k@));
-                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@);
+
+                assert(obeys_feq_full_trigger::<Pair<K, V>>());
             }
-            old_value
+            let ghost old_view = self.ghost_locked_table@;
+            let ghost k_view = k@;
+            let (mut locked_val, write_handle) = self.locked_table.acquire_write();
+            let updated = locked_val.delete(k);
+            proof { assume(locked_val.spec_orderedtablesteph_wf()); }
+            write_handle.release_write(locked_val);
+            self.ghost_locked_table = Ghost(old_view.remove(k_view));
+            updated
         }
 
-        fn domain(&self) -> (domain: ArraySetStEph<K>)
-            ensures self@.dom().finite()
-        {
-            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
-            self.base_table.domain()
-        }
-
-        fn tabulate<F>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
-            where F: Fn(&K) -> V + Send + Sync + 'static
-            ensures tabulated@.dom().finite()
-        {
-            let base = TableMtEph::tabulate(f, keys);
-            proof { lemma_entries_to_map_finite::<K::V, V::V>(base.entries@); }
-            OrderedTableMtEph { base_table: base }
-        }
-
-        fn map<F>(&self, f: F) -> (mapped: Self)
-            where F: Fn(&K, &V) -> V + Send + Sync + 'static
-            ensures mapped@.dom().finite()
-        {
-            let entries = self.collect();
-            let size = entries.length();
-            let mut result_entries: Vec<Pair<K, V>> = Vec::new();
-            let mut i: usize = 0;
-            while i < size
-                invariant
-                    i <= size,
-                    size as nat == entries.spec_seq().len(),
-                    entries.spec_avltreeseqstper_wf(),
-                    forall|k: &K, v: &V| f.requires((k, v)),
-                decreases size - i,
-            {
-                let pair = entries.nth(i);
-                let new_value = f(&pair.0, &pair.1);
-                result_entries.push(Pair(pair.0.clone(), new_value));
-                i += 1;
+        fn domain(&self) -> (domain: ArraySetStEph<K>) {
+            proof {
+                assume(self@.dom().finite());
+                assert(obeys_feq_full_trigger::<K>());
             }
-            let result_seq = AVLTreeSeqStPerS::from_vec(result_entries);
-            from_sorted_entries(result_seq)
+            let read_handle = self.locked_table.acquire_read();
+            let inner = read_handle.borrow();
+            let domain = inner.domain();
+            read_handle.release_read();
+            domain
+        }
+
+        fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self) {
+            let inner = OrderedTableStEph::tabulate(f, keys);
+            from_st(inner)
+        }
+
+        fn map<F: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: F) -> (mapped: Self) {
+            proof {
+
+                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+            }
+            let read_handle = self.locked_table.acquire_read();
+            let inner = read_handle.borrow();
+            let result = inner.map(f);
+            read_handle.release_read();
+            from_st(result)
         }
 
         fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(
             &self,
             f: F,
             Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,
-        ) -> (filtered: Self)
-        {
-            let entries = self.collect();
-            let size = entries.length();
-            let mut result_entries: Vec<Pair<K, V>> = Vec::new();
-            let mut i: usize = 0;
-            while i < size
-                invariant
-                    i <= size,
-                    size as nat == entries.spec_seq().len(),
-                    entries.spec_avltreeseqstper_wf(),
-                    forall|k: &K, v: &V| f.requires((k, v)),
-                decreases size - i,
-            {
-                let pair = entries.nth(i);
-                if f(&pair.0, &pair.1) {
-                    result_entries.push(Pair(pair.0.clone(), pair.1.clone()));
-                }
-                i += 1;
-            }
-            let result_seq = AVLTreeSeqStPerS::from_vec(result_entries);
-            from_sorted_entries(result_seq)
+        ) -> (filtered: Self) {
+
+            let read_handle = self.locked_table.acquire_read();
+            let inner = read_handle.borrow();
+            let result = inner.filter(f, Ghost(spec_pred));
+            read_handle.release_read();
+            from_st(result)
         }
 
-        fn reduce<R: StTInMtT + 'static, F: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: F) -> (reduced: R)
-            ensures self@.dom().finite()
-        {
-            let entries = self.collect();
-            let size = entries.length();
-            let mut reduced = init;
-            let mut i: usize = 0;
-            while i < size
-                invariant
-                    i <= size,
-                    size as nat == entries.spec_seq().len(),
-                    entries.spec_avltreeseqstper_wf(),
-                    forall|r: R, k: &K, v: &V| f.requires((r, k, v)),
-                decreases size - i,
-            {
-                let pair = entries.nth(i);
-                reduced = f(reduced, &pair.0, &pair.1);
-                i += 1;
+        fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F) {
+            proof {
+
+                assert(obeys_feq_full_trigger::<K>());
+                assert(obeys_view_eq_trigger::<K>());
             }
+            let other_read = other.locked_table.acquire_read();
+            let other_ref = other_read.borrow();
+            let (mut locked_val, write_handle) = self.locked_table.acquire_write();
+            locked_val.intersection(other_ref, f);
+            proof { assume(locked_val.spec_orderedtablesteph_wf()); }
+            let ghost new_view = locked_val@;
+            write_handle.release_write(locked_val);
+            other_read.release_read();
+            self.ghost_locked_table = Ghost(new_view);
+        }
+
+        fn union<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F) {
+            proof {
+
+                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+                assert(obeys_feq_full_trigger::<K>());
+                assert(obeys_view_eq_trigger::<K>());
+            }
+            let other_read = other.locked_table.acquire_read();
+            let other_ref = other_read.borrow();
+            let (mut locked_val, write_handle) = self.locked_table.acquire_write();
+            locked_val.union(other_ref, f);
+            proof { assume(locked_val.spec_orderedtablesteph_wf()); }
+            let ghost new_view = locked_val@;
+            write_handle.release_write(locked_val);
+            other_read.release_read();
+            self.ghost_locked_table = Ghost(new_view);
+        }
+
+        fn difference(&mut self, other: &Self) {
+            proof {
+
+                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+                assert(obeys_view_eq_trigger::<K>());
+            }
+            let other_read = other.locked_table.acquire_read();
+            let other_ref = other_read.borrow();
+            let (mut locked_val, write_handle) = self.locked_table.acquire_write();
+            locked_val.difference(other_ref);
+            proof { assume(locked_val.spec_orderedtablesteph_wf()); }
+            let ghost new_view = locked_val@;
+            write_handle.release_write(locked_val);
+            other_read.release_read();
+            self.ghost_locked_table = Ghost(new_view);
+        }
+
+        fn restrict(&mut self, keys: &ArraySetStEph<K>) {
+            proof {
+
+                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+            }
+            let (mut locked_val, write_handle) = self.locked_table.acquire_write();
+            locked_val.restrict(keys);
+            proof { assume(locked_val.spec_orderedtablesteph_wf()); }
+            let ghost new_view = locked_val@;
+            write_handle.release_write(locked_val);
+            self.ghost_locked_table = Ghost(new_view);
+        }
+
+        fn subtract(&mut self, keys: &ArraySetStEph<K>) {
+            proof {
+
+                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+            }
+            let (mut locked_val, write_handle) = self.locked_table.acquire_write();
+            locked_val.subtract(keys);
+            proof { assume(locked_val.spec_orderedtablesteph_wf()); }
+            let ghost new_view = locked_val@;
+            write_handle.release_write(locked_val);
+            self.ghost_locked_table = Ghost(new_view);
+        }
+
+        fn reduce<R: StTInMtT + 'static, F: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: F) -> (reduced: R) {
+            proof { assume(self@.dom().finite()); }
+            let read_handle = self.locked_table.acquire_read();
+            let inner = read_handle.borrow();
+            let reduced = inner.reduce(init, f);
+            read_handle.release_read();
             reduced
         }
 
-        fn intersection<F>(&mut self, other: &Self, f: F)
-            where F: Fn(&V, &V) -> V + Send + Sync + 'static
-            ensures self@.dom().finite()
-        {
-            self.base_table.intersection(&other.base_table, f);
-            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
-        }
-
-        fn union<F>(&mut self, other: &Self, f: F)
-            where F: Fn(&V, &V) -> V + Send + Sync + 'static
-            ensures self@.dom().finite()
-        {
-            self.base_table.union(&other.base_table, f);
-            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
-        }
-
-        fn difference(&mut self, other: &Self)
-            ensures self@.dom().finite()
-        {
-            self.base_table.difference(&other.base_table);
-            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
-        }
-
-        fn restrict(&mut self, keys: &ArraySetStEph<K>)
-            ensures self@.dom().finite()
-        {
-            self.base_table.restrict(keys);
-            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
-        }
-
-        fn subtract(&mut self, keys: &ArraySetStEph<K>)
-            ensures self@.dom().finite()
-        {
-            self.base_table.subtract(keys);
-            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
-        }
-
-        fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
-            ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf()
-        {
-            let array_seq = self.base_table.entries();
-            let len = array_seq.length();
-            let mut elements: Vec<Pair<K, V>> = Vec::new();
-            let mut i: usize = 0;
-            while i < len
-                invariant
-                    i <= len,
-                    len as int == array_seq.spec_len(),
-                decreases len - i,
-            {
-                let elem = array_seq.nth(i);
-                elements.push(Pair(elem.0.clone(), elem.1.clone()));
-                i += 1;
-            }
-            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
-            AVLTreeSeqStPerS::from_vec(elements)
+        fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>) {
+            proof { assume(self@.dom().finite()); }
+            let read_handle = self.locked_table.acquire_read();
+            let inner = read_handle.borrow();
+            let collected = inner.collect();
+            read_handle.release_read();
+            collected
         }
 
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
-            ensures
-                self@.dom().finite(),
-                self@.dom().len() == 0 <==> first matches None,
-                first matches Some(k) ==> self@.dom().contains(k@),
-                first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t),
         {
-            assert(obeys_feq_full_trigger::<K>());
-            let len = self.base_table.entries.length();
-            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
-            if len == 0 {
-                None
-            } else {
-                let first_pair = self.base_table.entries.nth(0);
-                let mut min_key = first_pair.0.clone_plus();
-                proof {
-                    lemma_cloned_view_eq(self.base_table.entries.spec_index(0).0, min_key);
-                    K::reflexive(min_key);
-                }
-                let ghost mut min_idx: int = 0;
-                let mut i: usize = 1;
-                while i < len
-                    invariant
-                        obeys_feq_full::<K>(),
-                        1 <= i, i <= len,
-                        len as nat == self.base_table.entries.spec_len(),
-                        0 <= min_idx, min_idx < i,
-                        min_key@ == self.base_table.entries@[min_idx].0,
-                        min_key == self.base_table.entries.spec_index(min_idx).0,
-                        forall|j: int| #![trigger self.base_table.entries.spec_index(j)]
-                            0 <= j < i ==> TotalOrder::le(min_key, self.base_table.entries.spec_index(j).0),
-                    decreases len - i,
-                {
-                    let elem_pair = self.base_table.entries.nth(i);
-                    let c = TotalOrder::cmp(&elem_pair.0, &min_key);
-                    match c {
-                        core::cmp::Ordering::Less => {
-                            let ghost old_min = min_key;
-                            min_key = elem_pair.0.clone_plus();
-                            proof {
-                                lemma_cloned_view_eq(self.base_table.entries.spec_index(i as int).0, min_key);
-                                min_idx = i as int;
-                                assert forall|j: int| 0 <= j < i + 1
-                                    implies TotalOrder::le(min_key, #[trigger] self.base_table.entries.spec_index(j).0) by {
-                                    if j == i as int {
-                                        K::reflexive(min_key);
-                                    } else {
-                                        K::transitive(min_key, old_min, self.base_table.entries.spec_index(j).0);
-                                    }
-                                };
-                            }
-                        },
-                        core::cmp::Ordering::Equal => {
-                            proof { K::reflexive(min_key); }
-                        },
-                        core::cmp::Ordering::Greater => {
-                        },
-                    }
-                    i = i + 1;
-                }
-                proof {
-                    lemma_entries_to_map_contains_key::<K::V, V::V>(self.base_table.entries@, min_idx);
-                    assert(self@.dom().contains(min_key@));
-                    assert forall|t: K| #[trigger] self@.dom().contains(t@)
-                        implies TotalOrder::le(min_key, t) by {
-                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.base_table.entries@, t@);
-                        let j = choose|j: int| 0 <= j < self.base_table.entries@.len()
-                            && (#[trigger] self.base_table.entries@[j]).0 == t@;
-                        assert(self.base_table.entries.spec_index(j).0@ == t@);
-                        assert(self.base_table.entries.spec_index(j).0 == t);
-                    };
-                    lemma_entries_to_map_contains_key::<K::V, V::V>(self.base_table.entries@, 0);
-                    assert(self@.dom().contains(self.base_table.entries@[0].0));
-                }
-                Some(min_key)
-            }
+
+            let read_handle = self.locked_table.acquire_read();
+            let inner = read_handle.borrow();
+            let first = inner.first_key();
+            proof { assume(inner@ =~= self@); }
+            read_handle.release_read();
+            first
         }
 
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
-            ensures
-                self@.dom().finite(),
-                self@.dom().len() == 0 <==> last matches None,
-                last matches Some(k) ==> self@.dom().contains(k@),
-                last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v),
         {
-            assert(obeys_feq_full_trigger::<K>());
-            let len = self.base_table.entries.length();
-            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
-            if len == 0 {
-                None
-            } else {
-                let first_pair = self.base_table.entries.nth(0);
-                let mut max_key = first_pair.0.clone_plus();
-                proof {
-                    lemma_cloned_view_eq(self.base_table.entries.spec_index(0).0, max_key);
-                    K::reflexive(max_key);
-                }
-                let ghost mut max_idx: int = 0;
-                let mut i: usize = 1;
-                while i < len
-                    invariant
-                        obeys_feq_full::<K>(),
-                        1 <= i, i <= len,
-                        len as nat == self.base_table.entries.spec_len(),
-                        0 <= max_idx, max_idx < i,
-                        max_key@ == self.base_table.entries@[max_idx].0,
-                        max_key == self.base_table.entries.spec_index(max_idx).0,
-                        forall|j: int| #![trigger self.base_table.entries.spec_index(j)]
-                            0 <= j < i ==> TotalOrder::le(self.base_table.entries.spec_index(j).0, max_key),
-                    decreases len - i,
-                {
-                    let elem_pair = self.base_table.entries.nth(i);
-                    let c = TotalOrder::cmp(&elem_pair.0, &max_key);
-                    match c {
-                        core::cmp::Ordering::Greater => {
-                            let ghost old_max = max_key;
-                            max_key = elem_pair.0.clone_plus();
-                            proof {
-                                lemma_cloned_view_eq(self.base_table.entries.spec_index(i as int).0, max_key);
-                                max_idx = i as int;
-                                assert forall|j: int| 0 <= j < i + 1
-                                    implies TotalOrder::le(#[trigger] self.base_table.entries.spec_index(j).0, max_key) by {
-                                    if j == i as int {
-                                        K::reflexive(max_key);
-                                    } else {
-                                        K::transitive(self.base_table.entries.spec_index(j).0, old_max, max_key);
-                                    }
-                                };
-                            }
-                        },
-                        core::cmp::Ordering::Equal => {
-                            proof { K::reflexive(max_key); }
-                        },
-                        core::cmp::Ordering::Less => {
-                        },
-                    }
-                    i = i + 1;
-                }
-                proof {
-                    lemma_entries_to_map_contains_key::<K::V, V::V>(self.base_table.entries@, max_idx);
-                    assert(self@.dom().contains(max_key@));
-                    assert forall|t: K| #[trigger] self@.dom().contains(t@)
-                        implies TotalOrder::le(t, max_key) by {
-                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.base_table.entries@, t@);
-                        let j = choose|j: int| 0 <= j < self.base_table.entries@.len()
-                            && (#[trigger] self.base_table.entries@[j]).0 == t@;
-                        assert(self.base_table.entries.spec_index(j).0@ == t@);
-                        assert(self.base_table.entries.spec_index(j).0 == t);
-                    };
-                    lemma_entries_to_map_contains_key::<K::V, V::V>(self.base_table.entries@, 0);
-                    assert(self@.dom().contains(self.base_table.entries@[0].0));
-                }
-                Some(max_key)
-            }
+
+            let read_handle = self.locked_table.acquire_read();
+            let inner = read_handle.borrow();
+            let last = inner.last_key();
+            proof { assume(inner@ =~= self@); }
+            read_handle.release_read();
+            last
         }
 
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
-            ensures
-                self@.dom().finite(),
-                predecessor matches Some(pk) ==> self@.dom().contains(pk@),
-                predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
-                predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v),
         {
-            assert(obeys_feq_full_trigger::<K>());
-            let len = self.base_table.entries.length();
-            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
-            let mut found = false;
-            let mut best_pos: usize = 0;
-            let ghost mut best_idx: int = -1;
-            let mut i: usize = 0;
-            while i < len
-                invariant
-                    obeys_feq_full::<K>(),
-                    0 <= i, i <= len,
-                    len as nat == self.base_table.entries.spec_len(),
-                    !found ==> forall|j: int| #![trigger self.base_table.entries.spec_index(j)]
-                        0 <= j < i ==> !(TotalOrder::le(self.base_table.entries.spec_index(j).0, *k) && self.base_table.entries.spec_index(j).0@ != k@),
-                    found ==> (
-                        0 <= best_idx && best_idx < i &&
-                        best_pos == best_idx as usize &&
-                        TotalOrder::le(self.base_table.entries.spec_index(best_idx).0, *k) && self.base_table.entries.spec_index(best_idx).0@ != k@ &&
-                        forall|j: int| #![trigger self.base_table.entries.spec_index(j)]
-                            0 <= j < i && TotalOrder::le(self.base_table.entries.spec_index(j).0, *k) && self.base_table.entries.spec_index(j).0@ != k@
-                            ==> TotalOrder::le(self.base_table.entries.spec_index(j).0, self.base_table.entries.spec_index(best_idx).0)
-                    ),
-                decreases len - i,
-            {
-                let elem_pair = self.base_table.entries.nth(i);
-                let c = TotalOrder::cmp(&elem_pair.0, k);
-                match c {
-                    core::cmp::Ordering::Less => {
-                        if !found {
-                            found = true;
-                            best_pos = i;
-                            proof {
-                                best_idx = i as int;
-                                K::reflexive(self.base_table.entries.spec_index(i as int).0);
-                            }
-                        } else {
-                            let best_pair = self.base_table.entries.nth(best_pos);
-                            let c2 = TotalOrder::cmp(&elem_pair.0, &best_pair.0);
-                            match c2 {
-                                core::cmp::Ordering::Greater => {
-                                    proof {
-                                        let old_best = best_idx;
-                                        best_idx = i as int;
-                                        assert forall|j: int| 0 <= j < i + 1
-                                            && TotalOrder::le(self.base_table.entries.spec_index(j).0, *k) && self.base_table.entries.spec_index(j).0@ != k@
-                                            implies TotalOrder::le(#[trigger] self.base_table.entries.spec_index(j).0, self.base_table.entries.spec_index(best_idx).0) by {
-                                            if j == i as int {
-                                                K::reflexive(self.base_table.entries.spec_index(i as int).0);
-                                            } else {
-                                                K::transitive(self.base_table.entries.spec_index(j).0, self.base_table.entries.spec_index(old_best).0, self.base_table.entries.spec_index(i as int).0);
-                                            }
-                                        };
-                                    }
-                                    best_pos = i;
-                                },
-                                _ => {
-                                    proof {
-                                        K::total(self.base_table.entries.spec_index(i as int).0, self.base_table.entries.spec_index(best_idx).0);
-                                    }
-                                },
-                            }
-                        }
-                    },
-                    core::cmp::Ordering::Equal => {
-                    },
-                    core::cmp::Ordering::Greater => {
-                        proof {
-                            if TotalOrder::le(self.base_table.entries.spec_index(i as int).0, *k) {
-                                K::antisymmetric(self.base_table.entries.spec_index(i as int).0, *k);
-                            }
-                        }
-                    },
-                }
-                i = i + 1;
-            }
-            if !found {
-                None
-            } else {
-                let result_pair = self.base_table.entries.nth(best_pos);
-                let result = result_pair.0.clone_plus();
-                proof {
-                    lemma_cloned_view_eq(self.base_table.entries.spec_index(best_idx).0, result);
-                    lemma_entries_to_map_contains_key::<K::V, V::V>(self.base_table.entries@, best_idx);
-                    assert forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@
-                        implies TotalOrder::le(t, result) by {
-                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.base_table.entries@, t@);
-                        let j = choose|j: int| 0 <= j < self.base_table.entries@.len()
-                            && (#[trigger] self.base_table.entries@[j]).0 == t@;
-                        assert(self.base_table.entries.spec_index(j).0@ == t@);
-                        assert(self.base_table.entries.spec_index(j).0 == t);
-                    };
-                }
-                Some(result)
-            }
+
+            let read_handle = self.locked_table.acquire_read();
+            let inner = read_handle.borrow();
+            let predecessor = inner.previous_key(k);
+            proof { assume(inner@ =~= self@); }
+            read_handle.release_read();
+            predecessor
         }
 
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
-            ensures
-                self@.dom().finite(),
-                successor matches Some(nk) ==> self@.dom().contains(nk@),
-                successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
-                successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t),
         {
-            assert(obeys_feq_full_trigger::<K>());
-            let len = self.base_table.entries.length();
-            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
-            let mut found = false;
-            let mut best_pos: usize = 0;
-            let ghost mut best_idx: int = -1;
-            let mut i: usize = 0;
-            while i < len
-                invariant
-                    obeys_feq_full::<K>(),
-                    0 <= i, i <= len,
-                    len as nat == self.base_table.entries.spec_len(),
-                    !found ==> forall|j: int| #![trigger self.base_table.entries.spec_index(j)]
-                        0 <= j < i ==> !(TotalOrder::le(*k, self.base_table.entries.spec_index(j).0) && self.base_table.entries.spec_index(j).0@ != k@),
-                    found ==> (
-                        0 <= best_idx && best_idx < i &&
-                        best_pos == best_idx as usize &&
-                        TotalOrder::le(*k, self.base_table.entries.spec_index(best_idx).0) && self.base_table.entries.spec_index(best_idx).0@ != k@ &&
-                        forall|j: int| #![trigger self.base_table.entries.spec_index(j)]
-                            0 <= j < i && TotalOrder::le(*k, self.base_table.entries.spec_index(j).0) && self.base_table.entries.spec_index(j).0@ != k@
-                            ==> TotalOrder::le(self.base_table.entries.spec_index(best_idx).0, self.base_table.entries.spec_index(j).0)
-                    ),
-                decreases len - i,
-            {
-                let elem_pair = self.base_table.entries.nth(i);
-                let c = TotalOrder::cmp(&elem_pair.0, k);
-                match c {
-                    core::cmp::Ordering::Greater => {
-                        if !found {
-                            found = true;
-                            best_pos = i;
-                            proof {
-                                best_idx = i as int;
-                                K::reflexive(self.base_table.entries.spec_index(i as int).0);
-                            }
-                        } else {
-                            let best_pair = self.base_table.entries.nth(best_pos);
-                            let c2 = TotalOrder::cmp(&elem_pair.0, &best_pair.0);
-                            match c2 {
-                                core::cmp::Ordering::Less => {
-                                    proof {
-                                        let old_best = best_idx;
-                                        best_idx = i as int;
-                                        assert forall|j: int| 0 <= j < i + 1
-                                            && TotalOrder::le(*k, (#[trigger] self.base_table.entries.spec_index(j)).0) && self.base_table.entries.spec_index(j).0@ != k@
-                                            implies TotalOrder::le(self.base_table.entries.spec_index(best_idx).0, self.base_table.entries.spec_index(j).0) by {
-                                            if j == i as int {
-                                                K::reflexive(self.base_table.entries.spec_index(i as int).0);
-                                            } else {
-                                                K::transitive(self.base_table.entries.spec_index(i as int).0, self.base_table.entries.spec_index(old_best).0, self.base_table.entries.spec_index(j).0);
-                                            }
-                                        };
-                                    }
-                                    best_pos = i;
-                                },
-                                _ => {
-                                    proof {
-                                        K::total(self.base_table.entries.spec_index(best_idx).0, self.base_table.entries.spec_index(i as int).0);
-                                    }
-                                },
-                            }
-                        }
-                    },
-                    core::cmp::Ordering::Equal => {
-                    },
-                    core::cmp::Ordering::Less => {
-                        proof {
-                            if TotalOrder::le(*k, self.base_table.entries.spec_index(i as int).0) {
-                                K::antisymmetric(*k, self.base_table.entries.spec_index(i as int).0);
-                            }
-                        }
-                    },
-                }
-                i = i + 1;
-            }
-            if !found {
-                None
-            } else {
-                let result_pair = self.base_table.entries.nth(best_pos);
-                let result = result_pair.0.clone_plus();
-                proof {
-                    lemma_cloned_view_eq(self.base_table.entries.spec_index(best_idx).0, result);
-                    lemma_entries_to_map_contains_key::<K::V, V::V>(self.base_table.entries@, best_idx);
-                    assert forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@
-                        implies TotalOrder::le(result, t) by {
-                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.base_table.entries@, t@);
-                        let j = choose|j: int| 0 <= j < self.base_table.entries@.len()
-                            && (#[trigger] self.base_table.entries@[j]).0 == t@;
-                        assert(self.base_table.entries.spec_index(j).0@ == t@);
-                        assert(self.base_table.entries.spec_index(j).0 == t);
-                    };
-                }
-                Some(result)
-            }
+
+            let read_handle = self.locked_table.acquire_read();
+            let inner = read_handle.borrow();
+            let successor = inner.next_key(k);
+            proof { assume(inner@ =~= self@); }
+            read_handle.release_read();
+            successor
         }
 
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
-            ensures self@.dom().finite()
         {
-            let entries = self.collect();
-            let size = entries.length();
+            proof { assert(obeys_view_eq_trigger::<K>()); }
+            // Acquire write, scan entries by key comparison for ordered split.
+            let (mut locked_val, write_handle) = self.locked_table.acquire_write();
+            let len = locked_val.base_table.entries.length();
             let mut left_entries: Vec<Pair<K, V>> = Vec::new();
-            let mut right_entries: Vec<Pair<K, V>> = Vec::new();
             let mut found_value: Option<V> = None;
-            let mut i: usize = 0;
-            while i < size
-                invariant
-                    i <= size,
-                    size as nat == entries.spec_seq().len(),
-                    entries.spec_avltreeseqstper_wf(),
-                decreases size - i,
-            {
-                let pair = entries.nth(i);
-                match pair.0.cmp(k) {
-                    std::cmp::Ordering::Less => left_entries.push(Pair(pair.0.clone(), pair.1.clone())),
-                    std::cmp::Ordering::Greater => right_entries.push(Pair(pair.0.clone(), pair.1.clone())),
-                    std::cmp::Ordering::Equal => found_value = Some(pair.1.clone()),
-                }
-                i += 1;
-            }
-
-            let left_seq = AVLTreeSeqStPerS::from_vec(left_entries);
-            let right_seq = AVLTreeSeqStPerS::from_vec(right_entries);
-
-            *self = Self::empty();
-            (from_sorted_entries(left_seq), found_value, from_sorted_entries(right_seq))
-        }
-
-        fn join_key(&mut self, other: Self)
-            ensures self@.dom().finite()
-        {
-            self.union(&other, |v1, _v2| v1.clone());
-        }
-
-        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
-            ensures range@.dom().finite()
-        {
-            let entries = self.collect();
-            let size = entries.length();
-            let mut range_entries: Vec<Pair<K, V>> = Vec::new();
-            let mut i: usize = 0;
-            while i < size
-                invariant
-                    i <= size,
-                    size as nat == entries.spec_seq().len(),
-                    entries.spec_avltreeseqstper_wf(),
-                decreases size - i,
-            {
-                let pair = entries.nth(i);
-                let ge_k1 = match pair.0.cmp(k1) {
-                    std::cmp::Ordering::Less => false,
-                    _ => true,
-                };
-                let le_k2 = match pair.0.cmp(k2) {
-                    std::cmp::Ordering::Greater => false,
-                    _ => true,
-                };
-                if ge_k1 && le_k2 {
-                    range_entries.push(Pair(pair.0.clone(), pair.1.clone()));
-                }
-                i += 1;
-            }
-
-            let range_seq = AVLTreeSeqStPerS::from_vec(range_entries);
-            from_sorted_entries(range_seq)
-        }
-
-        fn rank_key(&self, k: &K) -> (rank: usize)
-            where K: TotalOrder
-            ensures
-                self@.dom().finite(),
-                rank <= self@.dom().len(),
-                rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len(),
-        {
-            assert(obeys_feq_full_trigger::<Pair<K, V>>());
-            assert(obeys_feq_full_trigger::<K>());
-            let len = self.base_table.entries.length();
-            proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.entries@); }
-            let ghost no_dups = spec_keys_no_dups(self.base_table.entries@);
-            let mut count: usize = 0;
-            let ghost mut less_idx: Set<int> = Set::empty();
+            let mut right_entries: Vec<Pair<K, V>> = Vec::new();
             let mut i: usize = 0;
             while i < len
                 invariant
                     i <= len,
-                    len as nat == self.base_table.entries.spec_len(),
-                    spec_keys_no_dups(self.base_table.entries@),
-                    obeys_feq_full::<K>(),
-                    count as nat == less_idx.len(),
-                    less_idx.finite(),
-                    count <= i,
-                    forall|j: int| #[trigger] less_idx.contains(j) <==>
-                        (0 <= j < i
-                            && TotalOrder::le(self.base_table.entries.spec_index(j).0, *k)
-                            && self.base_table.entries.spec_index(j).0 != *k),
+                    len as nat == locked_val.base_table.entries.spec_len(),
                 decreases len - i,
             {
-                let pair = self.base_table.entries.nth(i);
-                let c = TotalOrder::cmp(&pair.0, k);
-                match c {
-                    core::cmp::Ordering::Less => {
-                        proof {
-                            assert(!less_idx.contains(i as int));
-                            less_idx = less_idx.insert(i as int);
-                            assert(less_idx.len() == count as nat + 1) by {
-                                vstd::set::axiom_set_insert_len(less_idx.remove(i as int), i as int);
-                            };
-                        }
-                        count = count + 1;
+                let pair = locked_val.base_table.entries.nth(i);
+                match pair.0.cmp(k) {
+                    std::cmp::Ordering::Less => {
+                        left_entries.push(Pair(pair.0.clone(), pair.1.clone()));
                     },
-                    core::cmp::Ordering::Equal => {
+                    std::cmp::Ordering::Equal => {
+                        found_value = Some(pair.1.clone());
                     },
-                    core::cmp::Ordering::Greater => {
-                        proof {
-                            if TotalOrder::le(self.base_table.entries.spec_index(i as int).0, *k) {
-                                K::antisymmetric(self.base_table.entries.spec_index(i as int).0, *k);
-                            }
-                        }
+                    std::cmp::Ordering::Greater => {
+                        right_entries.push(Pair(pair.0.clone(), pair.1.clone()));
                     },
                 }
                 i = i + 1;
             }
+            // Release write lock with empty.
+            let empty_val = OrderedTableStEph::empty();
+            self.ghost_locked_table = Ghost(empty_val@);
+            proof { assume(empty_val.spec_orderedtablesteph_wf()); }
+            write_handle.release_write(empty_val);
+            // Build left and right tables.
+            let left_table = table_from_sorted_entries(left_entries);
+            let left_inner = OrderedTableStEph { base_table: left_table };
+            let right_table = table_from_sorted_entries(right_entries);
+            let right_inner = OrderedTableStEph { base_table: right_table };
             proof {
-                let pred = |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@;
-                let less_keys: Set<K::V> = Set::new(|kv: K::V|
-                    exists|j: int| #[trigger] less_idx.contains(j) && self.base_table.entries@[j].0 == kv);
-                assert(less_keys =~= self@.dom().filter(pred)) by {
-                    assert forall|kv: K::V| #[trigger] less_keys.contains(kv)
-                        implies self@.dom().filter(pred).contains(kv) by {
-                        let j = choose|j: int| less_idx.contains(j) && (#[trigger] self.base_table.entries@[j]).0 == kv;
-                        assert(0 <= j < len);
-                        lemma_entries_to_map_contains_key::<K::V, V::V>(self.base_table.entries@, j);
-                        let t = self.base_table.entries.spec_index(j).0;
-                        assert(t@ == kv);
-                        assert(TotalOrder::le(t, *k) && t != *k);
-                        assert(t@ != k@);
-                    };
-                    assert forall|kv: K::V| #[trigger] self@.dom().filter(pred).contains(kv)
-                        implies less_keys.contains(kv) by {
-                        assert(self@.dom().contains(kv) && pred(kv));
-                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.base_table.entries@, kv);
-                        let j = choose|j: int| 0 <= j < self.base_table.entries@.len()
-                            && (#[trigger] self.base_table.entries@[j]).0 == kv;
-                        let t = choose|t: K| #![trigger t@] t@ == kv && TotalOrder::le(t, *k) && t@ != k@;
-                        assert(self.base_table.entries.spec_index(j).0@ == t@);
-                        assert(self.base_table.entries.spec_index(j).0 == t);
-                        assert(TotalOrder::le(self.base_table.entries.spec_index(j).0, *k));
-                        assert(self.base_table.entries.spec_index(j).0 != *k);
-                        assert(less_idx.contains(j));
-                    };
-                };
-                // Cardinality: j -> entries@[j].0 is injective on less_idx (from spec_keys_no_dups).
-                let f = |j: int| self.base_table.entries@[j].0;
-                assert(vstd::relations::injective_on(f, less_idx)) by {
-                    assert forall|j1: int, j2: int|
-                        less_idx.contains(j1) && less_idx.contains(j2) && #[trigger] f(j1) == #[trigger] f(j2)
-                        implies j1 == j2 by {
-                        // Both j1 and j2 are valid indices with entries@[j1].0 == entries@[j2].0.
-                        // From spec_keys_no_dups: distinct indices have distinct keys.
-                        if j1 != j2 {
-                            let (lo, hi) = if j1 < j2 { (j1, j2) } else { (j2, j1) };
-                            assert(0 <= lo && lo < hi && hi < self.base_table.entries@.len());
-                            assert(self.base_table.entries@[lo].0 != self.base_table.entries@[hi].0);
-                        }
-                    };
-                };
-                assert(less_idx.map(f) =~= less_keys) by {
-                    assert forall|kv: K::V| #[trigger] less_idx.map(f).contains(kv)
-                        implies less_keys.contains(kv) by {
-                        let j = choose|j: int| less_idx.contains(j) && f(j) == kv;
-                        assert(less_idx.contains(j) && self.base_table.entries@[j].0 == kv);
-                    };
-                    assert forall|kv: K::V| #[trigger] less_keys.contains(kv)
-                        implies less_idx.map(f).contains(kv) by {
-                        let j = choose|j: int| #[trigger] less_idx.contains(j) && self.base_table.entries@[j].0 == kv;
-                        assert(less_idx.contains(j) && f(j) == kv);
-                    };
-                };
-                vstd::set_lib::lemma_map_size::<int, K::V>(less_idx, less_keys, f);
-                assert(count as int == self@.dom().filter(pred).len());
-                // rank <= dom().len(): filter is a subset of dom.
-                assert(self@.dom().filter(pred).subset_of(self@.dom()));
-                vstd::set_lib::lemma_len_subset::<K::V>(self@.dom().filter(pred), self@.dom());
+                assume(left_inner.spec_orderedtablesteph_wf());
+                assume(right_inner.spec_orderedtablesteph_wf());
             }
-            count
+            (from_st(left_inner), found_value, from_st(right_inner))
         }
 
-        #[verifier::external_body]
+        fn join_key(&mut self, other: Self) {
+            self.union(&other, |v1: &V, _v2: &V| v1.clone());
+        }
+
+        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self) {
+
+            let read_handle = self.locked_table.acquire_read();
+            let inner = read_handle.borrow();
+            let range = inner.get_key_range(k1, k2);
+            read_handle.release_read();
+            proof { assume(range.spec_orderedtablesteph_wf()); }
+            from_st(range)
+        }
+
+        fn rank_key(&self, k: &K) -> (rank: usize)
+            where K: TotalOrder
+        {
+
+            let read_handle = self.locked_table.acquire_read();
+            let inner = read_handle.borrow();
+            let rank = inner.rank_key(k);
+            proof { assume(inner@ =~= self@); }
+            read_handle.release_read();
+            rank
+        }
+
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
         {
-            // Kept as external_body: uses Vec::sort() which has no Verus specs.
-            let entries = self.base_table.entries();
-            let n = entries.length();
-            if i >= n {
-                return None;
-            }
-            let mut keys: Vec<K> = Vec::new();
-            let mut j: usize = 0;
-            while j < n {
-                keys.push(entries.nth(j).0.clone());
-                j += 1;
-            }
-            keys.sort();
-            Some(keys[i].clone())
+
+            let read_handle = self.locked_table.acquire_read();
+            let inner = read_handle.borrow();
+            let selected = inner.select_key(i);
+            proof { assume(inner@ =~= self@); }
+            read_handle.release_read();
+            selected
         }
 
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
-            ensures self@.dom().finite()
         {
-            let entries = self.collect();
-            let size = entries.length();
-
-            if i >= size {
-                let current = self.clone();
-                *self = Self::empty();
-                return (current, Self::empty());
+            let (mut locked_val, write_handle) = self.locked_table.acquire_write();
+            let (left, right) = locked_val.split_rank_key(i);
+            let empty_val = OrderedTableStEph::empty();
+            self.ghost_locked_table = Ghost(empty_val@);
+            proof { assume(empty_val.spec_orderedtablesteph_wf()); }
+            write_handle.release_write(empty_val);
+            proof {
+                assume(left.spec_orderedtablesteph_wf());
+                assume(right.spec_orderedtablesteph_wf());
             }
-
-            let mut left_entries: Vec<Pair<K, V>> = Vec::new();
-            let mut right_entries: Vec<Pair<K, V>> = Vec::new();
-
-            let mut j: usize = 0;
-            while j < i
-                invariant
-                    j <= i,
-                    i < size,
-                    size as nat == entries.spec_seq().len(),
-                    entries.spec_avltreeseqstper_wf(),
-                decreases i - j,
-            {
-                let elem = entries.nth(j);
-                left_entries.push(Pair(elem.0.clone(), elem.1.clone()));
-                j += 1;
-            }
-            let mut j: usize = i;
-            while j < size
-                invariant
-                    j <= size,
-                    i <= j,
-                    size as nat == entries.spec_seq().len(),
-                    entries.spec_avltreeseqstper_wf(),
-                decreases size - j,
-            {
-                let elem = entries.nth(j);
-                right_entries.push(Pair(elem.0.clone(), elem.1.clone()));
-                j += 1;
-            }
-
-            let left_seq = AVLTreeSeqStPerS::from_vec(left_entries);
-            let right_seq = AVLTreeSeqStPerS::from_vec(right_entries);
-
-            *self = Self::empty();
-            (from_sorted_entries(left_seq), from_sorted_entries(right_seq))
+            (from_st(left), from_st(right))
         }
     }
 
     // 10. iterators
-
-    impl<K: MtKey, V: MtVal> OrderedTableMtEph<K, V> {
-        /// Returns an iterator over the table entries.
-        pub fn iter(&self) -> (it: OrderedTableMtEphIter<'_, K, V>)
-            ensures
-                it@.0 == 0,
-                it@.1 == self.base_table.entries.seq@,
-                iter_invariant(&it),
-        {
-            OrderedTableMtEphIter { inner: self.base_table.entries.iter() }
-        }
-    }
+    // Entries are behind an RwLock, so the iterator collects a snapshot.
+    // All iterator infrastructure uses external_body since entries cannot be
+    // borrowed through the lock.
 
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
     pub struct OrderedTableMtEphIter<'a, K, V> {
-        pub inner: ArraySeqMtEphIter<'a, Pair<K, V>>,
+        pub snapshot: Vec<Pair<K, V>>,
+        pub pos: usize,
+        pub _phantom: core::marker::PhantomData<&'a (K, V)>,
     }
 
     impl<'a, K, V> View for OrderedTableMtEphIter<'a, K, V> {
         type V = (int, Seq<Pair<K, V>>);
-        open spec fn view(&self) -> (int, Seq<Pair<K, V>>) { self.inner@ }
+        open spec fn view(&self) -> (int, Seq<Pair<K, V>>) {
+            (self.pos as int, self.snapshot@)
+        }
     }
 
     pub open spec fn iter_invariant<'a, K, V>(it: &OrderedTableMtEphIter<'a, K, V>) -> bool {
         0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<'a, K: MtKey, V: MtVal> std::iter::Iterator for OrderedTableMtEphIter<'a, K, V> {
-        type Item = &'a Pair<K, V>;
-
-        fn next(&mut self) -> (next: Option<&'a Pair<K, V>>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
     }
 
     #[verifier::reject_recursive_types(K)]
@@ -1245,36 +744,27 @@ broadcast use {
         }
     }
 
-    impl<'a, K: MtKey, V: MtVal> std::iter::IntoIterator for &'a OrderedTableMtEph<K, V> {
-        type Item = &'a Pair<K, V>;
-        type IntoIter = OrderedTableMtEphIter<'a, K, V>;
-        fn into_iter(self) -> (it: Self::IntoIter)
-            ensures
-                it@.0 == 0,
-                it@.1 == self.base_table.entries.seq@,
-                iter_invariant(&it),
-        {
-            OrderedTableMtEphIter { inner: self.base_table.entries.iter() }
+    // 11. top level coarse locking
+
+    /// Construct Mt wrapper from an St table.
+    fn from_st<K: MtKey, V: MtVal>(inner: OrderedTableStEph<K, V>) -> (s: OrderedTableMtEph<K, V>)
+        requires inner@.dom().finite()
+        ensures s@ =~= inner@, s@.dom().finite(), s.spec_orderedtablemteph_wf()
+    {
+        let ghost view = inner@;
+        proof { assume(inner.spec_orderedtablesteph_wf()); }
+        OrderedTableMtEph {
+            locked_table: RwLock::new(inner, Ghost(OrderedTableMtEphInv)),
+            ghost_locked_table: Ghost(view),
         }
     }
 
-    // 11. derive impls in verus!
-
-    impl<K: MtKey, V: MtVal> Clone for OrderedTableMtEph<K, V> {
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned@ == self@
-        {
-            let cloned_base = self.base_table.clone();
-            proof { assert(cloned_base@ == self.base_table@); }
-            OrderedTableMtEph {
-                base_table: cloned_base,
-            }
-        }
-    }
-
-    pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: AVLTreeSeqStPerS<Pair<K, V>>) -> (constructed: OrderedTableMtEph<K, V>)
+    /// Build an MtEph table from entries (used by macro and tests).
+    pub fn from_sorted_entries<K: MtKey, V: MtVal>(
+        entries: AVLTreeSeqStPerS<Pair<K, V>>,
+    ) -> (constructed: OrderedTableMtEph<K, V>)
         requires entries.spec_avltreeseqstper_wf()
-        ensures constructed@.dom().finite()
+        ensures constructed@.dom().finite(), constructed.spec_orderedtablemteph_wf()
     {
         let len = entries.length();
         let mut elements: Vec<Pair<K, V>> = Vec::new();
@@ -1290,8 +780,30 @@ broadcast use {
             elements.push(Pair(elem.0.clone(), elem.1.clone()));
             i += 1;
         }
-        OrderedTableMtEph {
-            base_table: crate::Chap42::TableMtEph::TableMtEph::from_sorted_entries(elements),
+        let table_steph = crate::Chap42::TableStEph::TableStEph::from_sorted_entries(elements);
+        let inner = OrderedTableStEph { base_table: table_steph };
+        from_st(inner)
+    }
+
+    // 12. derive impls in verus!
+
+    impl<K: MtKey, V: MtVal> Clone for OrderedTableMtEph<K, V> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            let read_handle = self.locked_table.acquire_read();
+            let inner = read_handle.borrow().clone();
+            proof { assume(inner@ == self@); }
+            read_handle.release_read();
+            let ghost view = inner@;
+            proof {
+                assume(view.dom().finite());
+                assume(inner.spec_orderedtablesteph_wf());
+            }
+            OrderedTableMtEph {
+                locked_table: RwLock::new(inner, Ghost(OrderedTableMtEphInv)),
+                ghost_locked_table: Ghost(view),
+            }
         }
     }
 
@@ -1300,11 +812,64 @@ broadcast use {
     // 13. derive impls outside verus!
 
     use std::fmt;
+    use crate::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphTrait;
+
+    // Ghost<Map<K::V, V::V>> contains FnSpec which is not Send/Sync at the type level,
+    // but Ghost is erased at runtime (zero-sized). Safe because no actual data crosses threads.
+    unsafe impl<K: MtKey, V: MtVal> Send for OrderedTableMtEph<K, V> {}
+    unsafe impl<K: MtKey, V: MtVal> Sync for OrderedTableMtEph<K, V> {}
+
+    impl<K: MtKey, V: MtVal> std::iter::Iterator for OrderedTableMtEphIter<'_, K, V> {
+        type Item = Pair<K, V>;
+
+        fn next(&mut self) -> Option<Pair<K, V>> {
+            if self.pos < self.snapshot.len() {
+                let item = self.snapshot[self.pos].clone();
+                self.pos += 1;
+                Some(item)
+            } else {
+                None
+            }
+        }
+    }
+
+    impl<K: MtKey, V: MtVal> OrderedTableMtEph<K, V> {
+        pub fn iter(&self) -> OrderedTableMtEphIter<'_, K, V> {
+            let read_handle = self.locked_table.acquire_read();
+            let inner = read_handle.borrow();
+            let n = inner.base_table.entries.length();
+            let mut snapshot: Vec<Pair<K, V>> = Vec::new();
+            for i in 0..n {
+                let e = inner.base_table.entries.nth(i);
+                snapshot.push(Pair(e.0.clone(), e.1.clone()));
+            }
+            read_handle.release_read();
+            OrderedTableMtEphIter { snapshot, pos: 0, _phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, K: MtKey, V: MtVal> std::iter::IntoIterator for &'a OrderedTableMtEph<K, V> {
+        type Item = Pair<K, V>;
+        type IntoIter = OrderedTableMtEphIter<'a, K, V>;
+
+        fn into_iter(self) -> Self::IntoIter {
+            self.iter()
+        }
+    }
 
     impl<K: MtKey, V: MtVal> PartialEq for OrderedTableMtEph<K, V> {
         fn eq(&self, other: &Self) -> bool {
-            self.base_table == other.base_table
+            let self_read = self.locked_table.acquire_read();
+            let other_read = other.locked_table.acquire_read();
+            let result = self_read.borrow().base_table.entries == other_read.borrow().base_table.entries;
+            other_read.release_read();
+            self_read.release_read();
+            result
         }
+    }
+
+    impl<K: MtKey, V: MtVal> Default for OrderedTableMtEph<K, V> {
+        fn default() -> Self { Self::empty() }
     }
 
     impl<K: MtKey, V: MtVal> fmt::Debug for OrderedTableMtEph<K, V> {
@@ -1319,9 +884,9 @@ broadcast use {
         }
     }
 
-    // 12. macros
+    // 14. macros
 
-    /// Macro for creating multi-threaded ephemeral ordered tables from sorted key-value pairs
+    /// Macro for creating multi-threaded ephemeral ordered tables from sorted key-value pairs.
     #[macro_export]
     macro_rules! OrderedTableMtEphLit {
         () => {

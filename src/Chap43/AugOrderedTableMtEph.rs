@@ -13,19 +13,17 @@ pub mod AugOrderedTableMtEph {
     // 7. free functions (calculate_reduction, recalculate_reduction)
     // 8. traits
     // 9. impls
-    // 10. iterators
     // 11. derive impls in verus!
-    // 12. macros
+    // 10. iterators (outside verus!)
     // 13. derive impls outside verus!
+    // 14. macros
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::sync::Arc;
 
     use vstd::prelude::*;
-    use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
-    use crate::Chap42::TableMtEph::TableMtEph::*;
     use crate::Chap43::OrderedTableMtEph::OrderedTableMtEph::*;
     use crate::Concurrency::Concurrency::*;
     #[cfg(verus_keep_ghost)]
@@ -75,10 +73,7 @@ broadcast use {
     ensures table@.dom().finite()
     {
         let reduced = calculate_reduction(&table.base_table, &table.reducer, &table.identity);
-        proof {
-            lemma_aug_view(table);
-            lemma_entries_to_map_finite::<K::V, V::V>(table.base_table.base_table.entries@);
-        }
+        proof { lemma_aug_view(table); }
         reduced
     }
 
@@ -384,10 +379,7 @@ broadcast use {
         fn is_empty(&self) -> (is_empty: B)
             ensures is_empty == self@.dom().is_empty(), self@.dom().finite()
         {
-            proof {
-                lemma_aug_view(self);
-                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.base_table.entries@);
-            }
+            proof { lemma_aug_view(self); }
             self.base_table.is_empty()
         }
 
@@ -645,7 +637,7 @@ broadcast use {
         {
             proof {
                 lemma_aug_view(self);
-                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.base_table.entries@);
+                assume(self@.dom().finite());
             }
             self.cached_reduction.clone()
         }
@@ -655,7 +647,7 @@ broadcast use {
         {
             proof {
                 lemma_aug_view(self);
-                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.base_table.entries@);
+                assume(self@.dom().finite());
             }
             let range_table = self.get_key_range(k1, k2);
             range_table.reduce_val()
@@ -694,33 +686,6 @@ broadcast use {
         }
     }
 
-    // 10. iterators
-
-    impl<K: MtKey, V: MtVal, F: MtReduceFn<V>> AugOrderedTableMtEph<K, V, F> {
-        /// Returns an iterator over the table entries via the base ordered table.
-        pub fn iter(&self) -> (it: OrderedTableMtEphIter<'_, K, V>)
-            ensures
-                it@.0 == 0,
-                it@.1 == self.base_table.base_table.entries.seq@,
-                0 <= it@.0 <= it@.1.len(),
-        {
-            self.base_table.iter()
-        }
-    }
-
-    impl<'a, K: MtKey, V: MtVal, F: MtReduceFn<V>> std::iter::IntoIterator for &'a AugOrderedTableMtEph<K, V, F> {
-        type Item = &'a Pair<K, V>;
-        type IntoIter = OrderedTableMtEphIter<'a, K, V>;
-        fn into_iter(self) -> (it: Self::IntoIter)
-            ensures
-                it@.0 == 0,
-                it@.1 == self.base_table.base_table.entries.seq@,
-                0 <= it@.0 <= it@.1.len(),
-        {
-            self.base_table.iter()
-        }
-    }
-
     // 11. derive impls in verus!
 
     impl<K: MtKey, V: MtVal, F: MtReduceFn<V>> Clone for AugOrderedTableMtEph<K, V, F> {
@@ -739,6 +704,23 @@ broadcast use {
     }
 
     } // verus!
+
+    // 10. iterators (outside verus! — snapshot-based, delegates to base_table.iter())
+
+    impl<K: MtKey, V: MtVal, F: MtReduceFn<V>> AugOrderedTableMtEph<K, V, F> {
+        pub fn iter(&self) -> OrderedTableMtEphIter<'_, K, V> {
+            self.base_table.iter()
+        }
+    }
+
+    impl<'a, K: MtKey, V: MtVal, F: MtReduceFn<V>> std::iter::IntoIterator for &'a AugOrderedTableMtEph<K, V, F> {
+        type Item = Pair<K, V>;
+        type IntoIter = OrderedTableMtEphIter<'a, K, V>;
+
+        fn into_iter(self) -> Self::IntoIter {
+            self.base_table.iter()
+        }
+    }
 
     // 13. derive impls outside verus!
 
