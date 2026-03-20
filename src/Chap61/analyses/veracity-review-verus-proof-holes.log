@@ -21,17 +21,17 @@ Table of Contents:
 =================================================================
 
 ❌ EdgeContractionMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:122: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap61/EdgeContractionMtEph.rs:122: error: external_body - #[verifier::external_body]
        123 |     fn build_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:75: info: structural_false_positive OPAQUE_EXTERNAL edge_contract_mt — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap61/EdgeContractionMtEph.rs:75: info: structural_false_positive OPAQUE_EXTERNAL edge_contract_mt — #[verifier::external_body] [medium]
    Holes: 1 total
       1 × external_body
    Info: 1 × structural_false_positive
       1 × OPAQUE_EXTERNAL
 ✓ EdgeContractionStEph.rs
 ℹ VertexMatchingMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:119: info: structural_false_positive OPAQUE_EXTERNAL select_edges_parallel — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:153: info: structural_false_positive OPAQUE_EXTERNAL select_edges_recursive — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap61/VertexMatchingMtEph.rs:119: info: structural_false_positive OPAQUE_EXTERNAL select_edges_parallel — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap61/VertexMatchingMtEph.rs:153: info: structural_false_positive OPAQUE_EXTERNAL select_edges_recursive — #[verifier::external_body] [medium]
    Info: 2 × structural_false_positive
 ✓ VertexMatchingStEph.rs
 
@@ -89,9 +89,9 @@ Structural (info only): 3
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 22:50:09 -07:00
-Ended:     2026-03-19 22:50:09 -07:00
+Started:   2026-03-19 23:00:28 -07:00
+Ended:     2026-03-19 23:00:28 -07:00
 Duration:  5ms
 
 Full output: src/Chap61/analyses/veracity-review-verus-proof-holes.log
-/Chap61/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap61/analyses/veracity-review-verus-proof-holes.log

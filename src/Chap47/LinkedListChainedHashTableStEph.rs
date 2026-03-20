@@ -245,10 +245,16 @@ pub mod LinkedListChainedHashTableStEph {
                             assert(table.table@[j] == old_table[j]);
                         }
                     }
+                    // One-slot modification witness for trait ensures.
+                    assert(old_table =~= old(table).table@);
+                    assert(spec_other_slots_preserved(old(table).table@, table.table@, index as int));
                 }
 
                 if !existed {
                     table.num_elements = table.num_elements + 1;
+                }
+                proof {
+                    assert(spec_other_slots_preserved(old(table).table@, table.table@, index as int));
                 }
             }
 

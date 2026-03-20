@@ -95,6 +95,17 @@ pub mod LinProbFlatHashTableStEph {
             spec_linprobflathashsteph_wf(table)
         }
 
+        /// Flat tables require at least one Empty slot for insertion.
+        open spec fn spec_has_insert_capacity(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) -> bool {
+            exists |j: int| #![trigger table.table@[j]]
+                0 <= j < table.table@.len() && table.table@[j] is Empty
+        }
+
+        /// Flat tables require new_size > current_size for resize.
+        open spec fn spec_resize_ok(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, new_size: usize) -> bool {
+            new_size as int > table.current_size as int
+        }
+
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
         /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe find_slot then set.
         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
@@ -214,6 +225,10 @@ pub mod LinProbFlatHashTableStEph {
                                         }
                                     }
                                 }
+                                // One-slot modification witness for trait ensures.
+                                assert(old_table_seq =~= old(table).table@);
+                                assert(spec_other_slots_preserved(
+                                    old(table).table@, table.table@, slot as int));
                             }
                             return;
                         }
@@ -336,6 +351,10 @@ pub mod LinProbFlatHashTableStEph {
                                     }
                                 }
                             }
+                            // One-slot modification witness for trait ensures.
+                            assert(old_table_seq =~= old(table).table@);
+                            assert(spec_other_slots_preserved(
+                                old(table).table@, table.table@, slot as int));
                         }
                         return;
                     }
@@ -349,10 +368,17 @@ pub mod LinProbFlatHashTableStEph {
                 }
                 attempt = attempt + 1;
             }
-            // Exhausted all m positions. Key not in table and no Empty slot found.
-            // This is unreachable with proper load factor management (resize before full).
+            // Exhausted all m positions — unreachable given spec_has_insert_capacity.
+            // Linear probing visits all m slots; loop invariant says none was Empty.
+            // But the precondition guarantees an Empty slot exists. Contradiction.
             proof {
-                assume(false); // Table full: unreachable with load factor < 1.
+                assert forall |j: int| 0 <= j < m as int
+                    implies !(#[trigger] table.table@[j] is Empty) by {
+                    lemma_probe_mod_identity(h as int, j, m as int);
+                }
+                assert(table.table@.len() == m as int);
+                assert(table.table@ =~= old(table).table@);
+                assert(false);
             }
             diverge::<()>();
         }
@@ -625,6 +651,7 @@ pub mod LinProbFlatHashTableStEph {
                 invariant
                     i <= table.table@.len(),
                     table.table@.len() == table.current_size as int,
+                    pairs@.len() <= i as int,
                     spec_seq_pairs_to_map(pairs@) =~=
                         spec_table_to_map::<Key, Value, FlatEntry<Key, Value>>(
                             table.table@.subrange(0, i as int)),
@@ -705,6 +732,11 @@ pub mod LinProbFlatHashTableStEph {
 
             // Phase 3: reinsert all pairs.
             let mut j: usize = 0;
+            proof {
+                assert forall |idx: int| 0 <= idx < new_table.table@.len()
+                    implies (#[trigger] new_table.table@[idx]) is Empty by {}
+                lemma_all_empties_count::<Key, Value>(new_table.table@);
+            }
             while j < pairs.len()
                 invariant
                     j <= pairs@.len(),
@@ -715,12 +747,31 @@ pub mod LinProbFlatHashTableStEph {
                     Self::spec_impl_wf(&new_table),
                     new_table@ =~= spec_seq_pairs_to_map(pairs@.subrange(0, j as int)),
                     new_table.spec_hash == table.spec_hash,
+                    pairs@.len() <= table.current_size as int,
+                    new_size as int > table.current_size as int,
+                    spec_count_empties(new_table.table@) >= (new_size - j) as int,
                 decreases pairs.len() - j,
             {
                 let key = clone_elem(&pairs[j].0);
                 let value = clone_elem(&pairs[j].1);
+                proof {
+                    // Prove spec_has_insert_capacity: empties > 0 implies exists Empty slot.
+                    assert((new_size - j) as int > 0int) by {
+                        assert(j as int <= pairs@.len());
+                        assert(pairs@.len() <= table.current_size as int);
+                        assert(new_size as int > table.current_size as int);
+                    }
+                    lemma_empties_positive_implies_exists_empty::<Key, Value>(
+                        new_table.table@);
+                }
+                let ghost old_new_table_seq = new_table.table@;
                 Self::insert(&mut new_table, key, value);
                 proof {
+                    // Use exists |s| from insert ensures to maintain empties invariant.
+                    let s = choose |s: int| #[trigger] spec_other_slots_preserved(
+                        old_new_table_seq, new_table.table@, s);
+                    lemma_one_slot_change_empties::<Key, Value>(
+                        old_new_table_seq, new_table.table@, s);
                     assert(pairs@.subrange(0, (j + 1) as int).drop_last()
                         =~= pairs@.subrange(0, j as int));
                     assert(pairs@.subrange(0, (j + 1) as int).last()

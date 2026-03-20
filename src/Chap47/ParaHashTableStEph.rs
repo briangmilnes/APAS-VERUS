@@ -10,7 +10,7 @@ pub mod ParaHashTableStEph {
     // 1. module
     // 2. imports
     // 4. type definitions (inside verus!: LoadAndSize, HashTable)
-    // 6. spec fns (inside verus!: spec_hashtable_wf, spec_seq_pairs_to_map, spec_table_to_map)
+    // 6. spec fns (inside verus!: spec_hashtable_wf, spec_seq_pairs_to_map, spec_table_to_map, spec_other_slots_preserved)
     // 8. traits (inside verus!: EntryTrait, ParaHashTableStEphTrait)
     // 9. impls (inside verus!: View for HashTable)
     // 13. derive impls outside verus!
@@ -82,6 +82,17 @@ pub mod ParaHashTableStEph {
                 table.last().spec_entry_to_map()
             )
         }
+    }
+
+    /// Whether only one slot changed between old and new table sequences.
+    /// Used as trigger for existential quantifier in insert ensures.
+    pub open spec fn spec_other_slots_preserved<Entry>(
+        old_seq: Seq<Entry>, new_seq: Seq<Entry>, s: int,
+    ) -> bool {
+        &&& 0 <= s < new_seq.len()
+        &&& old_seq.len() == new_seq.len()
+        &&& forall |j: int| 0 <= j < new_seq.len() && j != s
+            ==> #[trigger] new_seq[j] == old_seq[j]
     }
 
     /// Abstract second hash value for double hashing.
@@ -582,6 +593,18 @@ pub mod ParaHashTableStEph {
             spec_hashtable_wf(table)
         }
 
+        /// Whether the table has capacity for an insertion.
+        /// Default true for chained tables; flat tables override to require an empty slot.
+        open spec fn spec_has_insert_capacity(table: &HashTable<Key, Value, Entry, Metrics, H>) -> bool {
+            true
+        }
+
+        /// Whether resize to new_size is valid for this implementation.
+        /// Default true for chained tables; flat tables override.
+        open spec fn spec_resize_ok(table: &HashTable<Key, Value, Entry, Metrics, H>, new_size: usize) -> bool {
+            true
+        }
+
         /// Creates an empty hash table with the given initial size.
         /// Takes a hash function that maps (&Key, table_size) to a bucket index.
         /// - APAS: Work O(m), Span O(m) where m is initial size.
@@ -641,12 +664,15 @@ pub mod ParaHashTableStEph {
             requires
                 Self::spec_impl_wf(old(table)),
                 old(table).num_elements < usize::MAX,
+                Self::spec_has_insert_capacity(old(table)),
             ensures
                 table@ == old(table)@.insert(key, value),
                 Self::spec_impl_wf(table),
                 table.spec_hash == old(table).spec_hash,
                 table.current_size == old(table).current_size,
-                table.num_elements <= old(table).num_elements + 1;
+                table.num_elements <= old(table).num_elements + 1,
+                exists |s: int| #[trigger] spec_other_slots_preserved(
+                    old(table).table@, table.table@, s);
 
         /// Looks up a key in the hash table, returning its value if found.
         /// - APAS: Work O(1) expected, Span O(1).
@@ -704,6 +730,7 @@ pub mod ParaHashTableStEph {
             requires
                 new_size > 0,
                 Self::spec_impl_wf(table),
+                Self::spec_resize_ok(table, new_size),
             ensures
                 resized@ == table@,
                 resized.current_size == new_size,
