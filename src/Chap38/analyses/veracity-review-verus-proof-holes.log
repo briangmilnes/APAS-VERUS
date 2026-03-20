@@ -144,8 +144,8 @@ Function Specs:
 
 Holes Found: 14 (actionable)
    2 × assume() (14%)
-      1 × algorithmic
       1 × rwlock:reader
+      1 × algorithmic
    12 × external_body (85%)
 
 Warnings: 4 total
@@ -153,19 +153,15 @@ Warnings: 4 total
    2 × assume_eq_clone_workaround
 
 Structural (info only): 4
-   2 × UNSAFE_SEND_SYNC
    2 × RWLOCK_GHOST
+   2 × UNSAFE_SEND_SYNC
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 20:23:42 -07:00
-Ended:     2026-03-19 20:23:42 -07:00
-Duration:  28ms
-
-Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
-2026-03-19 20:23:42 -07:00
-Duration:  28ms
+Started:   2026-03-19 20:36:43 -07:00
+Ended:     2026-03-19 20:36:43 -07:00
+Duration:  27ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
