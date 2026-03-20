@@ -113,6 +113,7 @@ pub mod OrderedSetMtEph {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- acquires lock, delegates to StEph.insert (BST insert)
         fn insert(&mut self, x: T)
+            requires old(self)@.len() + 1 < usize::MAX as nat,
             ensures self@ == old(self)@.insert(x@), self@.finite();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- acquires lock, delegates to StEph.delete (BST delete)
@@ -152,6 +153,7 @@ pub mod OrderedSetMtEph {
         /// - APAS: Work Θ(n log n), Span Θ(n log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- delegates to StEph.from_seq (n inserts)
         fn from_seq(seq: ArraySeqStPerS<T>) -> (constructed: Self)
+            requires seq.spec_len() < usize::MAX as int,
             ensures constructed@.finite();
 
         // Ordering operations (ADT 43.1)
@@ -278,6 +280,7 @@ pub mod OrderedSetMtEph {
             let ghost old_view = self.ghost_locked_set@;
             let ghost x_view = x@;
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
+            proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } // RWLOCK_GHOST
             locked_val.insert(x);
             write_handle.release_write(locked_val);
             self.ghost_locked_set = Ghost(old_view.insert(x_view));
@@ -387,10 +390,13 @@ pub mod OrderedSetMtEph {
                 invariant
                     inner.spec_orderedsetsteph_wf(),
                     inner@.finite(),
+                    inner@.len() <= i as nat,
                     i <= len,
                     len as int == seq.spec_len(),
+                    seq.spec_len() < usize::MAX as int,
                 decreases len - i,
             {
+                // Capacity: inner@.len() <= i < len < usize::MAX (from requires).
                 inner.insert(seq.nth(i).clone());
                 i += 1;
             }
