@@ -77,6 +77,63 @@
 //!    broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 //!    ```
 //!
+//! 6. Carrying clone-view through trait bounds (ClonePreservesView pattern).
+//!
+//!    Pattern 5 (feq) works when there is a single entry point that can assume
+//!    `obeys_feq_clone::<T>()` and propagate it through requires. But when generic
+//!    code needs `clone()@ == self@` as part of a **trait bound** — e.g., a graph
+//!    algorithm generic over `V: HashOrd` — there is no entry point to assume at.
+//!    The guarantee must be carried by the type system, not by requires.
+//!
+//!    Solution: a `ClonePreservesView` trait in `vstdplus/clone_view.rs` with a
+//!    `clone_view` method that has the view-preserving postcondition:
+//!
+//!    ```
+//!    // In vstdplus/clone_view.rs:
+//!    pub trait ClonePreservesView: Clone + View {
+//!        fn clone_view(&self) -> (result: Self)
+//!            ensures result@ == self@;
+//!    }
+//!    ```
+//!
+//!    Concrete impls delegate to `self.clone()` with the standard accept bridge:
+//!
+//!    ```
+//!    impl ClonePreservesView for usize {
+//!        fn clone_view(&self) -> (result: Self)
+//!            ensures result@ == self@
+//!        {
+//!            let result = self.clone();
+//!            proof { accept(result@ == self@); }
+//!            result
+//!        }
+//!    }
+//!    ```
+//!
+//!    Generic algorithms use `clone_view()` instead of `clone()` to get the
+//!    postcondition through the type bound:
+//!
+//!    ```
+//!    fn build_quotient_graph<V: HashOrd>(graph: &Graph<V>, ...) -> Graph<V>
+//!    // HashOrd: StT + Hash + Ord + ClonePreservesView
+//!    {
+//!        let v = vertex.clone_view();  // v@ == vertex@ is now provable
+//!        quotient.add_vertex(v);       // graph wf follows from view equality
+//!    }
+//!    ```
+//!
+//!    When to use which pattern:
+//!    - **Pattern 5 (feq requires)**: Single module, single entry point, tree/recursive
+//!      algorithms. The assume lives at the top-level insert/delete/find.
+//!    - **Pattern 6 (ClonePreservesView bound)**: Cross-module generic code where the
+//!      type parameter must carry the clone-view guarantee. Graph algorithms, hash
+//!      tables, any algorithm generic over vertex/key types.
+//!
+//!    Import pattern:
+//!    ```
+//!    use crate::vstdplus::clone_view::clone_view::*;
+//!    ```
+//!
 //! Section ordering within section 12:
 //! 1. Clone
 //! 2. PartialEq
