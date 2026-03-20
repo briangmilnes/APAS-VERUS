@@ -503,6 +503,30 @@ Do not use `assume(false)` anywhere else without asking.
 **No `verus_keep_ghost` antipatterns**: No duplicate function implementations, no nightly
 feature gates, no module gating in lib.rs.
 
+**DO NOT USE `#[cfg(not(verus_keep_ghost))]` TO HIDE FUNCTIONS FROM VERACITY.**
+The `#[cfg(not(verus_keep_ghost))]` gate is ONLY permitted on `use` statements (imports)
+that bring in types Verus cannot parse (HashMap, rand, Arc, etc.). It is NEVER permitted
+on `fn` definitions as a way to dodge hole counting. If a function has
+`#[verifier::external_body]`, that is the honest annotation — it tells veracity "this
+function exists but is not yet proved." Removing `external_body` and adding or keeping a
+cfg gate instead makes the function invisible to Verus AND veracity, which is hiding work
+rather than doing it. Specifically:
+
+- **ALLOWED**: `#[cfg(not(verus_keep_ghost))] use std::collections::HashMap;` — import gate.
+- **ALLOWED**: `#[verifier::external_body] #[cfg(not(verus_keep_ghost))] fn foo()` — honest
+  hole on a function whose body uses unverifiable types.
+- **FORBIDDEN**: Removing `#[verifier::external_body]` from a function while leaving
+  `#[cfg(not(verus_keep_ghost))]` to make veracity stop counting it as a hole.
+- **FORBIDDEN**: Adding `#[cfg(not(verus_keep_ghost))]` to a function that previously had
+  `#[verifier::external_body]` to make veracity stop counting it.
+
+If a function body uses HashMap, rand, or other unverifiable types, the correct path is to
+**replace those types with verified alternatives** (HashMapWithViewPlus, MappingStEph,
+SetStEph, factored-out external_body helpers for RNG) so the function can be proved — not
+to hide it from the tool. The graph chapters (59-66) have many functions using
+`std::collections::HashMap` that should be migrated to `HashMapWithViewPlus` or
+`MappingStEph`.
+
 **Never modify `~/projects/verus/`**. Find workarounds within APAS-VERUS.
 
 **Never modify `~/projects/veracity/`**. Veracity is a separate tool maintained by a
