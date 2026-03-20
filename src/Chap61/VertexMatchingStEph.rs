@@ -63,7 +63,7 @@ pub mod VertexMatchingStEph {
                 matching.spec_setsteph_wf(),
                 matched_vertices.spec_setsteph_wf(),
         {
-            let Edge(ref u, ref v) = edge;
+            let Edge(u, v) = edge;
 
             if !matched_vertices.mem(u) && !matched_vertices.mem(v) {
                 let _ = matching.insert(edge.clone());
@@ -79,44 +79,81 @@ pub mod VertexMatchingStEph {
     ///
     /// - APAS: (no cost stated — sequential baseline of Algorithm 61.4)
     /// - Claude-Opus-4.6: Work Θ(|E|²), Span Θ(|E|²)
-    #[verifier::external_body]
-    pub fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>, seed: u64) -> SetStEph<Edge<V>> {
-        pub type T<V> = UnDirGraphStEph<V>;
-
+    pub fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>, seed: u64) -> (matching: SetStEph<Edge<V>>)
+        requires valid_key_type_Edge::<V>(),
+        ensures true,
+    {
         let mut matching: SetStEph<Edge<V>> = SetLit![];
 
         let mut rng = seeded_rng(seed);
         let mut edge_coins = HashMapWithViewPlus::<Edge<V>, bool>::new();
 
-        for edge in graph.edges().iter() {
+        let edge_vec = graph.E.to_seq();
+        let ne = edge_vec.len();
+
+        // Phase 1: Flip coins for all edges.
+        let mut i: usize = 0;
+        while i < ne
+            invariant
+                valid_key_type_Edge::<V>(),
+                i <= ne,
+                ne == edge_vec@.len(),
+            decreases ne - i,
+        {
+            let edge = &edge_vec[i];
             edge_coins.insert(edge.clone(), random_bool_seeded(&mut rng));
+            i = i + 1;
         }
 
-        for edge in graph.edges().iter() {
+        // Phase 2: Select edges where coin is heads and all adjacent coins are tails.
+        let mut j: usize = 0;
+        while j < ne
+            invariant
+                valid_key_type_Edge::<V>(),
+                matching.spec_setsteph_wf(),
+                j <= ne,
+                ne == edge_vec@.len(),
+            decreases ne - j,
+        {
+            let edge = &edge_vec[j];
             let Edge(u, v) = edge;
 
-            if !edge_coins.get(edge).copied().unwrap_or(false) {
-                continue;
-            }
+            let this_coin = match edge_coins.get(edge) {
+                Some(val) => *val,
+                None => false,
+            };
 
-            let mut all_adjacent_tails = true;
+            if this_coin {
+                let mut all_adjacent_tails = true;
 
-            for adj_edge in graph.edges().iter() {
-                if adj_edge == edge {
-                    continue;
-                }
-
-                if (graph.incident(adj_edge, u) || graph.incident(adj_edge, v))
-                    && edge_coins.get(adj_edge).copied().unwrap_or(false)
+                let mut k: usize = 0;
+                while k < ne
+                    invariant
+                        valid_key_type_Edge::<V>(),
+                        k <= ne,
+                        ne == edge_vec@.len(),
+                    decreases ne - k,
                 {
-                    all_adjacent_tails = false;
-                    break;
+                    let adj_edge = &edge_vec[k];
+                    if adj_edge != edge {
+                        if graph.incident(adj_edge, u) || graph.incident(adj_edge, v) {
+                            let adj_coin = match edge_coins.get(adj_edge) {
+                                Some(val) => *val,
+                                None => false,
+                            };
+                            if adj_coin {
+                                all_adjacent_tails = false;
+                            }
+                        }
+                    }
+                    k = k + 1;
+                }
+
+                if all_adjacent_tails {
+                    let _ = matching.insert(edge.clone());
                 }
             }
-
-            if all_adjacent_tails {
-                let _ = matching.insert(edge.clone());
-            }
+            j = j + 1;
         }
 
         matching

@@ -58,20 +58,26 @@ pub mod EdgeContractionStEph {
     ///
     /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
     /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(|V| + |E|) — agrees with APAS
-    #[verifier::external_body]
     pub fn edge_contract<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
         matching: &SetStEph<Edge<V>>,
-    ) -> UnDirGraphStEph<V> {
+    ) -> (contracted: UnDirGraphStEph<V>)
+        requires valid_key_type_Edge::<V>(),
+        ensures true,
+    {
         let mut vertex_to_block = HashMapWithViewPlus::<V, V>::new();
 
-        for edge in matching.iter() {
+        for edge in matching.iter()
+            invariant valid_key_type_Edge::<V>(),
+        {
             let Edge(u, v) = edge;
             vertex_to_block.insert(u.clone(), u.clone());
             vertex_to_block.insert(v.clone(), u.clone());
         }
 
-        for vertex in graph.vertices().iter() {
+        for vertex in graph.vertices().iter()
+            invariant valid_key_type_Edge::<V>(),
+        {
             if !vertex_to_block.contains_key(vertex) {
                 vertex_to_block.insert(vertex.clone(), vertex.clone());
             }
@@ -80,14 +86,28 @@ pub mod EdgeContractionStEph {
         let mut new_vertices: SetStEph<V> = SetLit![];
         let mut new_edges: SetStEph<Edge<V>> = SetLit![];
 
-        for (_, representative) in vertex_to_block.iter() {
+        for (_, representative) in vertex_to_block.iter()
+            invariant
+                valid_key_type_Edge::<V>(),
+                new_vertices.spec_setsteph_wf(),
+        {
             let _ = new_vertices.insert(representative.clone());
         }
 
-        for edge in graph.edges().iter() {
+        for edge in graph.edges().iter()
+            invariant
+                valid_key_type_Edge::<V>(),
+                new_edges.spec_setsteph_wf(),
+        {
             let Edge(u, v) = edge;
-            let block_u = vertex_to_block.get(u).unwrap().clone();
-            let block_v = vertex_to_block.get(v).unwrap().clone();
+            let block_u = match vertex_to_block.get(u) {
+                Some(val) => val.clone(),
+                None => u.clone(),
+            };
+            let block_v = match vertex_to_block.get(v) {
+                Some(val) => val.clone(),
+                None => v.clone(),
+            };
 
             if block_u != block_v {
                 let new_edge = if block_u < block_v {
@@ -99,7 +119,7 @@ pub mod EdgeContractionStEph {
             }
         }
 
-        <UnDirGraphStEph<V> as UnDirGraphStEphTrait<V>>::from_sets(new_vertices, new_edges)
+        UnDirGraphStEph { V: new_vertices, E: new_edges }
     }
 
     /// One round of sequential edge contraction
@@ -108,8 +128,12 @@ pub mod EdgeContractionStEph {
     ///
     /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
     /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(|V| + |E|) — agrees with APAS
-    #[verifier::external_body]
-    pub fn contract_round<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> UnDirGraphStEph<V> {
+    pub fn contract_round<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (contracted: UnDirGraphStEph<V>)
+        requires
+            spec_graphview_wf(graph@),
+            valid_key_type_Edge::<V>(),
+        ensures true,
+    {
         let matching = greedy_matching(graph);
         edge_contract(graph, &matching)
     }

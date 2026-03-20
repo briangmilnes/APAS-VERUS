@@ -61,12 +61,14 @@ pub mod VertexMatchingMtEph {
     ///
     /// Returns:
     /// - A set of edges forming a vertex matching
-    #[verifier::external_body]
     pub fn parallel_matching_mt<V: StT + MtT + Hash + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
-    ) -> SetStEph<Edge<V>> {
-        let edges_vec = graph.edges().iter().cloned().collect::<Vec<Edge<V>>>();
+    ) -> (result: SetStEph<Edge<V>>)
+        requires valid_key_type_Edge::<V>(),
+        ensures true,
+    {
+        let edges_vec = graph.E.to_seq();
         let edges_seq = ArraySeqStEphS::<Edge<V>>::from_vec(edges_vec);
         let n_edges = edges_seq.length();
 
@@ -83,20 +85,28 @@ pub mod VertexMatchingMtEph {
     ///
     /// - APAS: Work Θ(|E|), Span Θ(1) — each coin is independent
     /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — RNG is sequential, no actual parallelism
-    #[verifier::external_body]
     fn flip_coins_parallel<V: StT + MtT + 'static>(
         edges: &ArraySeqStEphS<Edge<V>>,
         seed: u64,
-    ) -> ArraySeqStEphS<B> {
+    ) -> (result: ArraySeqStEphS<B>)
+        requires valid_key_type_Edge::<V>(),
+        ensures true,
+    {
         let n = edges.length();
         if n == 0 {
             return ArraySeqStEphS::empty();
         }
 
         let mut rng = seeded_rng(seed);
-        let mut coins_vec = Vec::with_capacity(n);
-        for _i in 0..n {
+        let mut coins_vec: Vec<B> = Vec::new();
+        let mut i: usize = 0;
+        while i < n
+            invariant
+                n == edges.length(),
+                i <= n,
+        {
             coins_vec.push(random_bool_seeded(&mut rng));
+            i = i + 1;
         }
 
         ArraySeqStEphS::from_vec(coins_vec)
@@ -189,27 +199,37 @@ pub mod VertexMatchingMtEph {
     ///
     /// - APAS: Work O(degree(u) + degree(v)), Span O(degree(u) + degree(v)) — checks only incident edges
     /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — iterates all edges, not just incident ones
-    #[verifier::external_body]
     fn should_select_edge<V: StT + MtT + Hash + 'static>(
         graph: &UnDirGraphMtEph<V>,
         edge: &Edge<V>,
         edge_coins: &HashMapWithViewPlus<Edge<V>, bool>,
-    ) -> bool {
+    ) -> (selected: bool)
+        requires valid_key_type_Edge::<V>(),
+        ensures true,
+    {
         let Edge(u, v) = edge;
 
-        if !edge_coins.get(edge).copied().unwrap_or(false) {
+        let this_coin = match edge_coins.get(edge) {
+            Some(val) => *val,
+            None => false,
+        };
+        if !this_coin {
             return false;
         }
 
-        for adj_edge in graph.edges().iter() {
-            if adj_edge == edge {
-                continue;
-            }
-
-            if (graph.incident(adj_edge, u) || graph.incident(adj_edge, v))
-                && edge_coins.get(adj_edge).copied().unwrap_or(false)
-            {
-                return false;
+        for adj_edge in graph.edges().iter()
+            invariant valid_key_type_Edge::<V>(),
+        {
+            if adj_edge != edge {
+                if graph.incident(adj_edge, u) || graph.incident(adj_edge, v) {
+                    let adj_coin = match edge_coins.get(adj_edge) {
+                        Some(val) => *val,
+                        None => false,
+                    };
+                    if adj_coin {
+                        return false;
+                    }
+                }
             }
         }
 
