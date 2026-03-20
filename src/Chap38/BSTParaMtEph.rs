@@ -10,6 +10,8 @@ pub mod BSTParaMtEph {
     // 3. broadcast use
     // 4. type definitions
     // 5. view impls
+    // 6. spec fns
+    // 7. proof fns/broadcast groups
     // 8. traits
     // 9. impls
     // 11. derive impls in verus!
@@ -20,6 +22,8 @@ pub mod BSTParaMtEph {
 
     use vstd::prelude::*;
     use vstd::rwlock::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::{OrdSpec, PartialEqSpec, PartialOrdSpec};
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
@@ -30,7 +34,10 @@ pub mod BSTParaMtEph {
 
     // 3. broadcast use
 
-    broadcast use {vstd::set::group_set_axioms, vstd::set_lib::group_set_properties};
+    broadcast use {
+        vstd::set::group_set_axioms,
+        vstd::set_lib::group_set_properties,
+    };
 
     // 4. type definitions
 
@@ -101,9 +108,91 @@ pub mod BSTParaMtEph {
         open spec fn view(&self) -> () { () }
     }
 
+    // 6. spec fns
+
+    /// View-consistent ordering: elements with the same view compare Equal.
+    pub open spec fn view_ord_consistent<T: MtKey>() -> bool {
+        forall|a: T, b: T| a@ == b@ <==> (#[trigger] a.cmp_spec(&b)) == Equal
+    }
+
     // 7. proof fns/broadcast groups
 
-    // assume_specification for split_inner removed — specs now on the function itself.
+    /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
+    proof fn lemma_cmp_antisymmetry<T: MtKey>(a: T, b: T)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            a.cmp_spec(&b) == Greater,
+        ensures
+            b.cmp_spec(&a) == Less,
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
+    /// cmp_spec transitivity: Less(a,b) and Less(b,c) implies Less(a,c).
+    proof fn lemma_cmp_transitivity<T: MtKey>(a: T, b: T, c: T)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            a.cmp_spec(&b) == Less,
+            b.cmp_spec(&c) == Less,
+        ensures
+            a.cmp_spec(&c) == Less,
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
+    /// Equal-substitution: Less(a,b) and Equal(b,c) implies Less(a,c).
+    proof fn lemma_cmp_eq_subst<T: MtKey>(a: T, b: T, c: T)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
+            a.cmp_spec(&b) == Less,
+            b.cmp_spec(&c) == Equal,
+        ensures
+            a.cmp_spec(&c) == Less,
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
+    /// Left congruence: Equal(a,b) implies a and b compare the same way to c.
+    proof fn lemma_cmp_equal_congruent<T: MtKey>(a: T, b: T, c: T)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
+            a.cmp_spec(&b) == Equal,
+        ensures
+            a.cmp_spec(&c) == b.cmp_spec(&c),
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
+    /// Right congruence: Equal(b,c) implies any a compares the same way to b and c.
+    proof fn lemma_cmp_equal_congruent_right<T: MtKey>(a: T, b: T, c: T)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
+            b.cmp_spec(&c) == Equal,
+        ensures
+            a.cmp_spec(&b) == a.cmp_spec(&c),
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
+    /// Ordering axioms for generic MtKey: obeys_cmp_spec and view_ord_consistent.
+    /// Consolidates the two standard ordering assumes into one proof function.
+    /// Callers get both properties from a single call.
+    proof fn lemma_cmp_order_axioms<T: MtKey>()
+        ensures
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
+    {
+        assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
+        assume(view_ord_consistent::<T>());
+    }
 
     // 8. traits
 
@@ -327,31 +416,7 @@ pub mod BSTParaMtEph {
         fn find(&self, key: &T) -> (found: Option<T>)
             ensures found.is_some() <==> self@.contains(key@)
         {
-            let mut current = self.clone();
-            let fuel = self.size();
-            let mut remaining = fuel;
-            let mut result: Option<T> = None;
-            while remaining > 0
-                invariant true,
-                decreases remaining,
-            {
-                match current.expose() {
-                    Exposed::Leaf => { break; },
-                    Exposed::Node(left, root_key, right) => {
-                        if (*key) == root_key {
-                            result = Some(root_key);
-                            break;
-                        } else if (*key) < root_key {
-                            current = left;
-                        } else {
-                            current = right;
-                        }
-                    }
-                }
-                remaining = remaining - 1;
-            }
-            proof { assume(result.is_some() <==> self@.contains(key@)); }
-            result
+            find_recursive(self, key)
         }
 
         fn split(&self, key: &T) -> (parts: (Self, B, Self))
@@ -463,6 +528,8 @@ pub mod BSTParaMtEph {
                 && !left@.contains(key@)
                 && !right@.contains(key@)
                 && left@.disjoint(right@)
+                && (forall|t: T| (#[trigger] left@.contains(t@)) ==> t.cmp_spec(&key) == Less)
+                && (forall|t: T| (#[trigger] right@.contains(t@)) ==> t.cmp_spec(&key) == Greater)
             ),
     {
         let handle = tree.root.acquire_read();
@@ -499,7 +566,6 @@ pub mod BSTParaMtEph {
         }
     }
 
-    #[verifier::external_body]
     fn split_inner<T: MtKey + 'static>(tree: &ParamBST<T>, key: &T) -> (parts: (ParamBST<T>, B, ParamBST<T>))
         ensures
             parts.0@.finite(),
@@ -510,22 +576,113 @@ pub mod BSTParaMtEph {
             tree@ =~= parts.0@.union(parts.2@).union(
                 if parts.1 { Set::<<T as View>::V>::empty().insert(key@) } else { Set::<<T as View>::V>::empty() }
             ),
+            forall|t: T| (#[trigger] parts.0@.contains(t@)) ==> t.cmp_spec(&key) == Less,
+            forall|t: T| (#[trigger] parts.2@.contains(t@)) ==> t.cmp_spec(&key) == Greater,
+        decreases tree@.len(),
     {
+        proof {
+            lemma_cmp_order_axioms::<T>();
+            reveal(vstd::laws_cmp::obeys_cmp_ord);
+        }
         match expose_internal(tree) {
-            | Exposed::Leaf => (new_leaf(), false, new_leaf()),
-            | Exposed::Node(left, root_key, right) => match key.cmp(&root_key) {
-                | Less => {
-                    let (ll, found, lr) = split_inner(&left, key);
-                    let rebuilt = join_mid(Exposed::Node(lr, root_key, right));
-                    (ll, found, rebuilt)
-                }
-                | Greater => {
-                    let (rl, found, rr) = split_inner(&right, key);
-                    let rebuilt = join_mid(Exposed::Node(left, root_key, rl));
-                    (rebuilt, found, rr)
-                }
-                | Equal => (left, true, right),
+            | Exposed::Leaf => {
+                (new_leaf(), false, new_leaf())
             },
+            | Exposed::Node(left, root_key, right) => {
+                let ghost lv = left@;
+                let ghost rv = right@;
+                let ghost rkv = root_key@;
+                let ghost kv = key@;
+                let ghost rk = root_key;
+                let ghost kref = *key;
+                proof {
+                    lv.lemma_subset_not_in_lt(tree@, rkv);
+                    rv.lemma_subset_not_in_lt(tree@, rkv);
+                }
+                match key.cmp(&root_key) {
+                    | Less => {
+                        let (ll, found, lr) = split_inner(&left, key);
+                        let rebuilt = join_mid(Exposed::Node(lr, root_key, right));
+                        let ghost llv = ll@;
+                        let ghost lrv = lr@;
+                        proof {
+                            assert(rebuilt@ =~= lrv.union(rv).insert(rkv));
+                            assert(!rv.contains(kv));
+                            assert forall|t: T| (#[trigger] rebuilt@.contains(t@)) implies
+                                t.cmp_spec(&key) == Greater by {
+                                reveal(vstd::laws_cmp::obeys_cmp_ord);
+                                reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+                                if lrv.contains(t@) {
+                                    // From recursive split ensures.
+                                } else if rv.contains(t@) {
+                                    // t > rk (expose). Antisymmetry: rk < t.
+                                    // kref < rk (cmp). Transitivity: kref < t.
+                                    // Reveals handle: kref < t → t > kref.
+                                    lemma_cmp_antisymmetry(t, rk);
+                                    lemma_cmp_transitivity(kref, rk, t);
+                                } else {
+                                    // t@ == rkv. Congruence: t compares like rk.
+                                    // rk > kref (antisymmetry of kref < rk).
+                                    // So t > kref.
+                                    assert(t@ == rkv);
+                                    assert(t.cmp_spec(&rk) == Equal);
+                                    lemma_cmp_equal_congruent(t, rk, kref);
+                                }
+                            };
+                        }
+                        (ll, found, rebuilt)
+                    }
+                    | Greater => {
+                        let (rl, found, rr) = split_inner(&right, key);
+                        let rebuilt = join_mid(Exposed::Node(left, root_key, rl));
+                        let ghost rlv = rl@;
+                        let ghost rrv = rr@;
+                        proof {
+                            assert(rebuilt@ =~= lv.union(rlv).insert(rkv));
+                            assert(!lv.contains(kv));
+                            assert forall|t: T| (#[trigger] rebuilt@.contains(t@)) implies
+                                t.cmp_spec(&key) == Less by {
+                                reveal(vstd::laws_cmp::obeys_cmp_ord);
+                                reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+                                if rlv.contains(t@) {
+                                    // From recursive split ensures.
+                                } else if lv.contains(t@) {
+                                    // kref > rk (cmp). Antisymmetry: rk < kref.
+                                    // t < rk (expose). Transitivity: t < kref.
+                                    lemma_cmp_antisymmetry(kref, rk);
+                                    lemma_cmp_transitivity(t, rk, kref);
+                                } else {
+                                    // t@ == rkv. Congruence: t compares like rk.
+                                    // rk < kref (antisymmetry of kref > rk).
+                                    // So t < kref.
+                                    assert(t@ == rkv);
+                                    assert(t.cmp_spec(&rk) == Equal);
+                                    lemma_cmp_antisymmetry(kref, rk);
+                                    lemma_cmp_equal_congruent(t, rk, kref);
+                                }
+                            };
+                        }
+                        (rebuilt, found, rr)
+                    }
+                    | Equal => {
+                        proof {
+                            assert forall|t: T| (#[trigger] lv.contains(t@)) implies
+                                t.cmp_spec(&key) == Less by {
+                                reveal(vstd::laws_cmp::obeys_cmp_ord);
+                                reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+                                lemma_cmp_equal_congruent_right(t, kref, rk);
+                            };
+                            assert forall|t: T| (#[trigger] rv.contains(t@)) implies
+                                t.cmp_spec(&key) == Greater by {
+                                reveal(vstd::laws_cmp::obeys_cmp_ord);
+                                reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+                                lemma_cmp_equal_congruent_right(t, kref, rk);
+                            };
+                        }
+                        (left, true, right)
+                    }
+                }
+            }
         }
     }
 
@@ -533,6 +690,30 @@ pub mod BSTParaMtEph {
         ensures result@ =~= left@.union(right@).insert(key@)
     {
         join_mid(Exposed::Node(left, key, right))
+    }
+
+    fn find_recursive<T: MtKey + 'static>(tree: &ParamBST<T>, key: &T) -> (found: Option<T>)
+        ensures found.is_some() <==> tree@.contains(key@),
+        decreases tree@.len(),
+    {
+        proof {
+            lemma_cmp_order_axioms::<T>();
+            reveal(vstd::laws_cmp::obeys_cmp_ord);
+        }
+        match expose_internal(tree) {
+            | Exposed::Leaf => None,
+            | Exposed::Node(left, root_key, right) => {
+                proof {
+                    left@.lemma_subset_not_in_lt(tree@, root_key@);
+                    right@.lemma_subset_not_in_lt(tree@, root_key@);
+                }
+                match key.cmp(&root_key) {
+                    | Equal => Some(root_key),
+                    | Less => find_recursive(&left, key),
+                    | Greater => find_recursive(&right, key),
+                }
+            }
+        }
     }
 
     fn min_key<T: MtKey + 'static>(tree: &ParamBST<T>) -> (result: Option<T>)
