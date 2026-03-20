@@ -52,7 +52,8 @@ pub mod StarPartitionStEph {
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
-        ensures true,
+        ensures
+            result.0.spec_setsteph_wf(),
     {
         let mut partition_map = HashMapWithViewPlus::<V, V>::new();
         let mut centers: SetStEph<V> = SetLit![];
@@ -64,6 +65,7 @@ pub mod StarPartitionStEph {
         let ne = edge_vec.len();
 
         let mut vi: usize = 0;
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
         while vi < nv
             invariant
                 valid_key_type_Edge::<V>(),
@@ -75,12 +77,14 @@ pub mod StarPartitionStEph {
             decreases nv - vi,
         {
             let vertex = &vert_vec[vi];
+
             if !processed.mem(vertex) {
                 let _ = centers.insert(vertex.clone());
                 partition_map.insert(vertex.clone(), vertex.clone());
                 let _ = processed.insert(vertex.clone());
 
                 let mut ei: usize = 0;
+                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 while ei < ne
                     invariant
                         valid_key_type_Edge::<V>(),
@@ -106,6 +110,7 @@ pub mod StarPartitionStEph {
                     ei = ei + 1;
                 }
             }
+
             vi = vi + 1;
         }
 
