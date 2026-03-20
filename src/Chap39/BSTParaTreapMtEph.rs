@@ -390,15 +390,27 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    #[verifier::external_body]
-    fn filter_inner<T: MtKey + 'static, F: Pred<T>>(tree: &ParamTreap<T>, predicate: &Arc<F>) -> ParamTreap<T> {
+    #[verifier::exec_allows_no_decreases_clause]
+    fn filter_inner<T: MtKey + 'static, F: Pred<T>>(tree: &ParamTreap<T>, predicate: &Arc<F>) -> (result: ParamTreap<T>)
+        requires forall|t: &T| #[trigger] ((**predicate).requires((t,))),
+        ensures result@.finite(),
+    {
         match expose_internal(tree) {
             | None => new_leaf(),
             | Some((left, key, priority, right)) => {
                 let pred_left = Arc::clone(predicate);
                 let pred_right = Arc::clone(predicate);
-                let Pair(left_filtered, right_filtered) =
-                    crate::ParaPair!(move || filter_inner(&left, &pred_left), move || filter_inner(&right, &pred_right));
+                let f1 = move || -> (r: ParamTreap<T>)
+                    ensures r@.finite()
+                {
+                    filter_inner(&left, &pred_left)
+                };
+                let f2 = move || -> (r: ParamTreap<T>)
+                    ensures r@.finite()
+                {
+                    filter_inner(&right, &pred_right)
+                };
+                let Pair(left_filtered, right_filtered) = crate::ParaPair!(f1, f2);
                 if (**predicate)(&key) {
                     join_with_priority(left_filtered, key, priority, right_filtered)
                 } else {
