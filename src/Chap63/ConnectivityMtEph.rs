@@ -16,8 +16,8 @@ pub mod ConnectivityMtEph {
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
 
-    use std::collections::HashMap;
     use std::hash::Hash;
+    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     #[cfg(not(verus_keep_ghost))]
     use std::sync::Arc;
     #[cfg(not(verus_keep_ghost))]
@@ -54,7 +54,7 @@ pub mod ConnectivityMtEph {
         fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static>(
             graph: &UnDirGraphMtEph<V>,
             seed: u64,
-        ) -> (SetStEph<V>, HashMap<V, V>)
+        ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
             requires Self::spec_connectivitymteph_wf(graph);
 
         /// Count components using higher-order function approach.
@@ -67,7 +67,7 @@ pub mod ConnectivityMtEph {
         fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static>(
             graph: &UnDirGraphMtEph<V>,
             seed: u64,
-        ) -> (SetStEph<V>, HashMap<V, V>)
+        ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
             requires Self::spec_connectivitymteph_wf(graph);
     }
 
@@ -121,9 +121,9 @@ pub mod ConnectivityMtEph {
     pub fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
-    ) -> (SetStEph<V>, HashMap<V, V>) {
+    ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>) {
         if graph.sizeE() == 0 {
-            let mut component_map = HashMap::new();
+            let mut component_map = HashMapWithViewPlus::new();
             for vertex in graph.vertices().iter() {
                 let _ = component_map.insert(vertex.clone(), vertex.clone());
             }
@@ -150,7 +150,7 @@ pub mod ConnectivityMtEph {
     #[cfg(not(verus_keep_ghost))]
     fn build_quotient_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
-        partition_map: &HashMap<V, V>,
+        partition_map: &HashMapWithViewPlus<V, V>,
     ) -> SetStEph<Edge<V>> {
         let edges_vec = graph.edges().iter().cloned().collect::<Vec<Edge<V>>>();
         let edges_seq = ArraySeqStEphS::from_vec(edges_vec);
@@ -169,7 +169,7 @@ pub mod ConnectivityMtEph {
     #[cfg(not(verus_keep_ghost))]
     fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
         edges: &ArraySeqStEphS<Edge<V>>,
-        partition_map: Arc<HashMap<V, V>>,
+        partition_map: Arc<HashMapWithViewPlus<V, V>>,
         start: usize,
         end: usize,
     ) -> SetStEph<Edge<V>> {
@@ -221,10 +221,10 @@ pub mod ConnectivityMtEph {
     #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     fn compose_maps_parallel<V: StT + MtT + Hash + Ord + 'static>(
-        partition_map: &HashMap<V, V>,
-        component_map: &HashMap<V, V>,
-    ) -> HashMap<V, V> {
-        let mut result = HashMap::new();
+        partition_map: &HashMapWithViewPlus<V, V>,
+        component_map: &HashMapWithViewPlus<V, V>,
+    ) -> HashMapWithViewPlus<V, V> {
+        let mut result = HashMapWithViewPlus::new();
         for (u, v) in partition_map.iter() {
             let component = component_map.get(v).unwrap_or(v);
             let _ = result.insert(u.clone(), component.clone());
@@ -241,7 +241,7 @@ pub mod ConnectivityMtEph {
     pub fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N {
         let base = |vertices: &SetStEph<V>| vertices.size();
 
-        let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMap<V, V>, r: N| r;
+        let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, r: N| r;
 
         star_contract_mt(graph, seed, &base, &expand)
     }
@@ -255,9 +255,9 @@ pub mod ConnectivityMtEph {
     pub fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
-    ) -> (SetStEph<V>, HashMap<V, V>) {
+    ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>) {
         let base = |vertices: &SetStEph<V>| {
-            let mut map = HashMap::new();
+            let mut map = HashMapWithViewPlus::new();
             for v in vertices.iter() {
                 let _ = map.insert(v.clone(), v.clone());
             }
@@ -267,9 +267,9 @@ pub mod ConnectivityMtEph {
         let expand = |_v: &SetStEph<V>,
                       _e: &SetStEph<Edge<V>>,
                       _centers: &SetStEph<V>,
-                      partition_map: &HashMap<V, V>,
-                      (reps, component_map): (SetStEph<V>, HashMap<V, V>)| {
-            let mut result_map = HashMap::new();
+                      partition_map: &HashMapWithViewPlus<V, V>,
+                      (reps, component_map): (SetStEph<V>, HashMapWithViewPlus<V, V>)| {
+            let mut result_map = HashMapWithViewPlus::new();
             for (u, v) in partition_map.iter() {
                 let component = component_map.get(v).unwrap_or(v);
                 let _ = result_map.insert(u.clone(), component.clone());

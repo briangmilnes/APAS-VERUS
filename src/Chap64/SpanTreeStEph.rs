@@ -10,9 +10,8 @@ pub mod SpanTreeStEph {
     use crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
     use crate::Types::Types::*;
 
-    #[cfg(not(verus_keep_ghost))]
-    use std::collections::HashMap;
     use std::hash::Hash;
+    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     #[cfg(not(verus_keep_ghost))]
     use crate::Chap62::StarContractionStEph::StarContractionStEph::star_contract;
     #[cfg(not(verus_keep_ghost))]
@@ -60,7 +59,7 @@ pub mod SpanTreeStEph {
         let expand = |_v: &SetStEph<V>,
                       original_edges: &SetStEph<Edge<V>>,
                       _centers: &SetStEph<V>,
-                      partition_map: &HashMap<V, V>,
+                      partition_map: &HashMapWithViewPlus<V, V>,
                       quotient_tree: SetStEph<Edge<V>>| {
             // Collect edges from partition map (vertex → center edges)
             let mut spanning_edges = SetLit![];

@@ -13,8 +13,8 @@ pub mod StarContractionMtEph {
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
 
-    use std::collections::HashMap;
     use std::hash::Hash;
+    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     #[cfg(not(verus_keep_ghost))]
     use std::sync::Arc;
     #[cfg(not(verus_keep_ghost))]
@@ -45,7 +45,7 @@ pub mod StarContractionMtEph {
         where
             V: StT + MtT + Hash + Ord + 'static,
             F: Fn(&SetStEph<V>) -> R,
-            G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R
+            G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R
         requires Self::spec_starcontractionmteph_wf(graph);
 
         /// Contract graph to just vertices (no edges).
@@ -80,7 +80,7 @@ pub mod StarContractionMtEph {
     where
         V: StT + MtT + Hash + Ord + 'static,
         F: Fn(&SetStEph<V>) -> R,
-        G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R,
+        G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R,
     {
         if graph.sizeE() == 0 {
             return base(graph.vertices());
@@ -106,7 +106,7 @@ pub mod StarContractionMtEph {
     fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         centers: &SetStEph<V>,
-        partition_map: &HashMap<V, V>,
+        partition_map: &HashMapWithViewPlus<V, V>,
     ) -> UnDirGraphMtEph<V> {
         let edges_vec = graph.edges().iter().cloned().collect::<Vec<Edge<V>>>();
         let edges_seq = ArraySeqStEphS::from_vec(edges_vec);
@@ -127,7 +127,7 @@ pub mod StarContractionMtEph {
     #[cfg(not(verus_keep_ghost))]
     fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
         edges: &ArraySeqStEphS<Edge<V>>,
-        partition_map: Arc<HashMap<V, V>>,
+        partition_map: Arc<HashMapWithViewPlus<V, V>>,
         start: usize,
         end: usize,
     ) -> SetStEph<Edge<V>> {

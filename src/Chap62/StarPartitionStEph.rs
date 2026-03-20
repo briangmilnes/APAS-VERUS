@@ -13,10 +13,10 @@ pub mod StarPartitionStEph {
     use crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
     use crate::Types::Types::*;
 
-    use std::collections::HashMap;
     use std::hash::Hash;
     #[cfg(not(verus_keep_ghost))]
     use crate::SetLit;
+    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
 
     verus! {
 
@@ -35,7 +35,7 @@ pub mod StarPartitionStEph {
 
         /// Sequential star partition using greedy selection.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>)
+        fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
             requires Self::spec_starpartitionsteph_wf(graph);
     }
 
@@ -48,8 +48,8 @@ pub mod StarPartitionStEph {
     /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — agrees with APAS.
     #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
-    pub fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>) {
-        let mut partition_map = HashMap::<V, V>::new();
+    pub fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>) {
+        let mut partition_map = HashMapWithViewPlus::<V, V>::new();
         let mut centers: SetStEph<V> = SetLit![];
         let mut processed: SetStEph<V> = SetLit![];
 

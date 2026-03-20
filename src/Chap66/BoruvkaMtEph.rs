@@ -11,15 +11,10 @@ pub mod BoruvkaMtEph {
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;
 
-    #[cfg(not(verus_keep_ghost))]
-    use std::collections::HashMap;
     use std::hash::Hash;
     #[cfg(not(verus_keep_ghost))]
     use std::sync::Arc;
-    #[cfg(not(verus_keep_ghost))]
-    use rand::rngs::StdRng;
-    #[cfg(not(verus_keep_ghost))]
-    use rand::*;
+    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     #[cfg(not(verus_keep_ghost))]
     use crate::{ParaPair, SetLit};
 
@@ -85,16 +80,16 @@ pub mod BoruvkaMtEph {
             edges: Arc<Vec<LabeledEdge<V>>>,
             start: usize,
             end: usize,
-        ) -> HashMap<V, (V, WrappedF64, usize)>;
+        ) -> HashMapWithViewPlus<V, (V, WrappedF64, usize)>;
 
         /// Parallel bridge-based star partition.
         /// APAS: Work O(|V| + |E|), Span O(lg |V|)
         fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(
             vertices_vec: Vec<V>,
-            bridges: HashMap<V, (V, WrappedF64, usize)>,
+            bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
             seed: u64,
             round: usize,
-        ) -> (SetStEph<V>, HashMap<V, (V, WrappedF64, usize)>);
+        ) -> (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>);
 
         /// Parallel Borůvka's MST algorithm.
         /// APAS: Work O(m log n), Span O(log² n)
@@ -148,13 +143,13 @@ pub mod BoruvkaMtEph {
         round: usize,
         start: usize,
         end: usize,
-    ) -> HashMap<V, bool> {
+    ) -> HashMapWithViewPlus<V, bool> {
         let size = end - start;
         if size == 0 {
-            return HashMap::new();
+            return HashMapWithViewPlus::new();
         }
         if size == 1 {
-            let mut coins = HashMap::new();
+            let mut coins = HashMapWithViewPlus::new();
             let _ = coins.insert(vertices[start].clone(), hash_coin(seed, round, start));
             return coins;
         }
@@ -169,7 +164,7 @@ pub mod BoruvkaMtEph {
         );
 
         let mut merged = pair.0;
-        merged.extend(pair.1);
+        for (k, v) in pair.1.inner.into_iter() { merged.insert(k, v); }
         merged
     }
 
@@ -179,7 +174,7 @@ pub mod BoruvkaMtEph {
     #[verifier::external_body]
     fn compute_remaining_mt<V: StTInMtT + Hash + Ord + 'static>(
         vertices: Arc<Vec<V>>,
-        partition: Arc<HashMap<V, (V, WrappedF64, usize)>>,
+        partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
         start: usize,
         end: usize,
     ) -> Vec<V> {
@@ -217,7 +212,7 @@ pub mod BoruvkaMtEph {
     #[verifier::external_body]
     fn collect_mst_labels_mt<V: StTInMtT + Hash + Ord + 'static>(
         keys: Arc<Vec<V>>,
-        partition: Arc<HashMap<V, (V, WrappedF64, usize)>>,
+        partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
         start: usize,
         end: usize,
     ) -> Vec<usize> {
@@ -255,17 +250,17 @@ pub mod BoruvkaMtEph {
     #[verifier::external_body]
     fn build_partition_map_mt<V: StTInMtT + Hash + Ord + 'static>(
         vertices: Arc<Vec<V>>,
-        partition: Arc<HashMap<V, (V, WrappedF64, usize)>>,
+        partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
         start: usize,
         end: usize,
-    ) -> HashMap<V, V> {
+    ) -> HashMapWithViewPlus<V, V> {
         let size = end - start;
         if size == 0 {
-            return HashMap::new();
+            return HashMapWithViewPlus::new();
         }
         if size == 1 {
             let v = &vertices[start];
-            let mut heads = HashMap::new();
+            let mut heads = HashMapWithViewPlus::new();
             if let Some((head, _, _)) = partition.get(v) {
                 let _ = heads.insert(v.clone(), head.clone());
             } else {
@@ -286,7 +281,7 @@ pub mod BoruvkaMtEph {
         );
 
         let mut merged = pair.0;
-        merged.extend(pair.1);
+        for (k, v) in pair.1.inner.into_iter() { merged.insert(k, v); }
         merged
     }
 
@@ -302,16 +297,16 @@ pub mod BoruvkaMtEph {
         edges: Arc<Vec<LabeledEdge<V>>>,
         start: usize,
         end: usize,
-    ) -> HashMap<V, (V, WrappedF64, usize)> {
+    ) -> HashMapWithViewPlus<V, (V, WrappedF64, usize)> {
         let size = end - start;
         if size == 0 {
-            return HashMap::new();
+            return HashMapWithViewPlus::new();
         }
 
         if size == 1 {
             // Base case: single edge contributes bridges for both endpoints.
             let LabeledEdge(u, v, w, label) = edges[start].clone();
-            let mut min_edges = HashMap::new();
+            let mut min_edges = HashMapWithViewPlus::new();
             let _ = min_edges.insert(u.clone(), (v.clone(), w, label));
             let _ = min_edges.insert(v.clone(), (u.clone(), w, label));
             return min_edges;
@@ -330,14 +325,14 @@ pub mod BoruvkaMtEph {
         // Merge: for each vertex, keep the minimum weight edge.
         let mut merged = pair.0;
         let right_bridges = pair.1;
-        for (v, (neighbor, w, label)) in right_bridges {
+        for (v, (neighbor, w, label)) in right_bridges.inner {
             match merged.get(&v) {
                 | None => {
-                    let _ = merged.insert(v, (neighbor, w, label));
+                    merged.insert(v, (neighbor, w, label));
                 }
                 | Some((_, existing_w, _)) => {
                     if w < *existing_w {
-                        let _ = merged.insert(v, (neighbor, w, label));
+                        merged.insert(v, (neighbor, w, label));
                     }
                 }
             }
@@ -356,10 +351,10 @@ pub mod BoruvkaMtEph {
     #[verifier::external_body]
     pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(
         vertices_vec: Vec<V>,
-        bridges: HashMap<V, (V, WrappedF64, usize)>,
+        bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
         seed: u64,
         round: usize,
-    ) -> (SetStEph<V>, HashMap<V, (V, WrappedF64, usize)>) {
+    ) -> (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>) {
         // Parallel hash-based coin flips: O(n) work, O(log n) span.
         let vertices_len = vertices_vec.len();
         let vertices_arc = Arc::new(vertices_vec);
@@ -395,14 +390,14 @@ pub mod BoruvkaMtEph {
     #[verifier::external_body]
     fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + 'static>(
         vertices: Arc<Vec<V>>,
-        bridges: Arc<HashMap<V, (V, WrappedF64, usize)>>,
-        coin_flips: Arc<HashMap<V, bool>>,
+        bridges: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
+        coin_flips: Arc<HashMapWithViewPlus<V, bool>>,
         start: usize,
         end: usize,
-    ) -> HashMap<V, (V, WrappedF64, usize)> {
+    ) -> HashMapWithViewPlus<V, (V, WrappedF64, usize)> {
         let size = end - start;
         if size == 0 {
-            return HashMap::new();
+            return HashMapWithViewPlus::new();
         }
 
         if size == 1 {
@@ -413,12 +408,12 @@ pub mod BoruvkaMtEph {
                 let v_heads = coin_flips.get(v).copied().unwrap_or(false);
 
                 if !u_heads && v_heads {
-                    let mut min_edges = HashMap::new();
+                    let mut min_edges = HashMapWithViewPlus::new();
                     let _ = min_edges.insert(u.clone(), (v.clone(), *w, *label));
                     return min_edges;
                 }
             }
-            return HashMap::new();
+            return HashMapWithViewPlus::new();
         }
 
         // Divide and conquer.
@@ -437,7 +432,7 @@ pub mod BoruvkaMtEph {
 
         // Merge.
         let mut merged = pair.0;
-        merged.extend(pair.1);
+        for (k, v) in pair.1.inner.into_iter() { merged.insert(k, v); }
         merged
     }
 
@@ -471,7 +466,7 @@ pub mod BoruvkaMtEph {
             bridge_star_partition_mt(vertices_vec, bridges, seed, round);
 
         // Parallel MST label collection: O(n) work, O(log n) span.
-        let partition_keys: Vec<V> = partition.keys().cloned().collect();
+        let partition_keys: Vec<V> = partition.inner.keys().cloned().collect();
         let partition_keys_len = partition_keys.len();
         let partition_arc = Arc::new(partition);
         let keys_arc = Arc::new(partition_keys);
@@ -486,7 +481,7 @@ pub mod BoruvkaMtEph {
         // Parallel partition map construction: O(n) work, O(log n) span.
         let all_vertices: Vec<V> = {
             let mut v: Vec<V> = remaining_vertices.iter().cloned().collect();
-            for k in partition_arc.keys() {
+            for k in partition_arc.inner.keys() {
                 v.push(k.clone());
             }
             v
@@ -510,7 +505,7 @@ pub mod BoruvkaMtEph {
     #[verifier::external_body]
     fn reroute_edges_mt<V: StTInMtT + Hash + Ord + 'static>(
         edges: Arc<Vec<LabeledEdge<V>>>,
-        partition: Arc<HashMap<V, V>>,
+        partition: Arc<HashMapWithViewPlus<V, V>>,
         start: usize,
         end: usize,
     ) -> Vec<LabeledEdge<V>> {

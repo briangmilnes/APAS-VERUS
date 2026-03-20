@@ -12,12 +12,13 @@ pub mod StarPartitionMtEph {
     use crate::Chap06::UnDirGraphMtEph::UnDirGraphMtEph::*;
     use crate::Types::Types::*;
 
-    use std::collections::HashMap;
     use std::hash::Hash;
     #[cfg(not(verus_keep_ghost))]
     use std::vec::Vec;
     #[cfg(not(verus_keep_ghost))]
     use crate::SetLit;
+    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use crate::vstdplus::rand::rand::{seeded_rng, random_bool_seeded};
 
     verus! {
 
@@ -39,7 +40,7 @@ pub mod StarPartitionMtEph {
         fn parallel_star_partition<V: StT + MtT + Hash + Ord + 'static>(
             graph: &UnDirGraphMtEph<V>,
             seed: u64,
-        ) -> (SetStEph<V>, HashMap<V, V>)
+        ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
             requires Self::spec_starpartitionmteph_wf(graph);
     }
 
@@ -55,23 +56,19 @@ pub mod StarPartitionMtEph {
     pub fn parallel_star_partition<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
-    ) -> (SetStEph<V>, HashMap<V, V>) {
-        use rand::rngs::StdRng;
-        use rand::{Rng, RngExt, SeedableRng};
-
-        let mut rng = StdRng::seed_from_u64(seed);
-
+    ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>) {
         let vertices_vec = graph.vertices().iter().cloned().collect::<Vec<V>>();
         let n = vertices_vec.len() as N;
 
-        let mut vertex_to_index = HashMap::<V, N>::new();
+        let mut vertex_to_index = HashMapWithViewPlus::<V, N>::new();
         for (i, v) in vertices_vec.iter().enumerate() {
-            let _ = vertex_to_index.insert(v.clone(), i as N);
+            vertex_to_index.insert(v.clone(), i as N);
         }
 
-        let mut coin_flips = HashMap::<V, bool>::new();
+        let mut rng = seeded_rng(seed);
+        let mut coin_flips = HashMapWithViewPlus::<V, bool>::new();
         for vertex in vertices_vec.iter() {
-            let _ = coin_flips.insert(vertex.clone(), rng.random());
+            coin_flips.insert(vertex.clone(), random_bool_seeded(&mut rng));
         }
 
         let mut th_edges = Vec::<(N, V)>::new();
@@ -98,11 +95,11 @@ pub mod StarPartitionMtEph {
         }
 
         let mut centers: SetStEph<V> = SetLit![];
-        let mut partition_map = HashMap::<V, V>::new();
+        let mut partition_map = HashMapWithViewPlus::<V, V>::new();
 
         for (i, vertex) in vertices_vec.iter().enumerate() {
             let center = p_vec[i].clone();
-            let _ = partition_map.insert(vertex.clone(), center.clone());
+            partition_map.insert(vertex.clone(), center.clone());
 
             if *vertex == center {
                 let _ = centers.insert(vertex.clone());

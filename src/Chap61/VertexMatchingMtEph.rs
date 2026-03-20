@@ -13,11 +13,11 @@ pub mod VertexMatchingMtEph {
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
 
-    #[cfg(not(verus_keep_ghost))]
-    use std::collections::HashMap;
     use std::hash::Hash;
     #[cfg(not(verus_keep_ghost))]
     use std::sync::Arc;
+    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use crate::vstdplus::rand::rand::{seeded_rng, random_bool_seeded};
     #[cfg(not(verus_keep_ghost))]
     use std::vec::Vec;
     #[cfg(not(verus_keep_ghost))]
@@ -70,12 +70,6 @@ pub mod VertexMatchingMtEph {
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
     ) -> SetStEph<Edge<V>> {
-        use rand::rngs::StdRng;
-        use rand::{Rng, RngExt, SeedableRng};
-        use std::sync::{Arc, Mutex};
-
-        let mut rng = StdRng::seed_from_u64(seed);
-
         let edges_vec = graph.edges().iter().cloned().collect::<Vec<Edge<V>>>();
         let edges_seq = ArraySeqStEphS::<Edge<V>>::from_vec(edges_vec);
         let n_edges = edges_seq.length();
@@ -84,7 +78,7 @@ pub mod VertexMatchingMtEph {
             return SetLit![];
         }
 
-        let coins = flip_coins_parallel(&edges_seq, &mut rng);
+        let coins = flip_coins_parallel(&edges_seq, seed);
 
         select_edges_parallel(graph, &edges_seq, &coins)
     }
@@ -97,18 +91,17 @@ pub mod VertexMatchingMtEph {
     #[cfg(not(verus_keep_ghost))]
     fn flip_coins_parallel<V: StT + MtT + 'static>(
         edges: &ArraySeqStEphS<Edge<V>>,
-        rng: &mut rand::rngs::StdRng,
+        seed: u64,
     ) -> ArraySeqStEphS<B> {
-        use rand::{Rng, RngExt};
-
         let n = edges.length();
         if n == 0 {
             return ArraySeqStEphS::empty();
         }
 
+        let mut rng = seeded_rng(seed);
         let mut coins_vec = Vec::with_capacity(n);
-        for _ in 0..n {
-            coins_vec.push(rng.random());
+        for _i in 0..n {
+            coins_vec.push(random_bool_seeded(&mut rng));
         }
 
         ArraySeqStEphS::from_vec(coins_vec)
@@ -133,7 +126,10 @@ pub mod VertexMatchingMtEph {
             return SetLit![];
         }
 
-        let edge_coin_map = edges.iter().zip(coins.iter()).map(|(e, c)| (e.clone(), *c)).collect::<HashMap<Edge<V>, bool>>();
+        let mut edge_coin_map = HashMapWithViewPlus::<Edge<V>, bool>::new();
+        for (e, c) in edges.iter().zip(coins.iter()) {
+            edge_coin_map.insert(e.clone(), *c);
+        }
 
         let graph_arc = Arc::new(graph.clone());
         let edges_arc = Arc::new(edges.clone());
@@ -155,7 +151,7 @@ pub mod VertexMatchingMtEph {
     fn select_edges_recursive<V: StT + MtT + Hash + 'static>(
         graph: Arc<UnDirGraphMtEph<V>>,
         edges: Arc<ArraySeqStEphS<Edge<V>>>,
-        edge_coins: Arc<HashMap<Edge<V>, bool>>,
+        edge_coins: Arc<HashMapWithViewPlus<Edge<V>, bool>>,
         start: usize,
         end: usize,
     ) -> ArraySeqStEphS<Edge<V>> {
@@ -205,7 +201,7 @@ pub mod VertexMatchingMtEph {
     fn should_select_edge<V: StT + MtT + Hash + 'static>(
         graph: &UnDirGraphMtEph<V>,
         edge: &Edge<V>,
-        edge_coins: &HashMap<Edge<V>, bool>,
+        edge_coins: &HashMapWithViewPlus<Edge<V>, bool>,
     ) -> bool {
         let Edge(u, v) = edge;
 

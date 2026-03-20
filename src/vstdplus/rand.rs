@@ -14,6 +14,11 @@ pub mod rand {
 
     verus! {
 
+    // 4. type definitions
+
+    #[verifier::external_type_specification]
+    pub struct ExSeededRng(SeededRng);
+
     // 9. impls
 
     /// Returns a uniformly random usize in [lo, hi).
@@ -25,7 +30,27 @@ pub mod rand {
         random_usize_range_exec(lo, hi)
     }
 
+    /// Creates a seeded random number generator.
+    #[verifier::external_body]
+    pub fn seeded_rng(seed: u64) -> (result: SeededRng)
+    {
+        seeded_rng_impl(seed)
+    }
+
+    /// Returns a random bool from a seeded RNG.
+    #[verifier::external_body]
+    pub fn random_bool_seeded(rng: &mut SeededRng) -> (result: bool)
+    {
+        random_bool_seeded_exec(rng)
+    }
+
     } // verus!
+
+    /// Opaque wrapper around a seeded RNG.
+    pub struct SeededRng {
+        #[cfg(not(verus_keep_ghost))]
+        inner: rand::rngs::StdRng,
+    }
 
     #[cfg(not(verus_keep_ghost))]
     fn random_usize_range_exec(lo: usize, hi: usize) -> usize {
@@ -36,6 +61,28 @@ pub mod rand {
 
     #[cfg(verus_keep_ghost)]
     fn random_usize_range_exec(_lo: usize, _hi: usize) -> usize {
+        unimplemented!()
+    }
+
+    #[cfg(not(verus_keep_ghost))]
+    fn seeded_rng_impl(seed: u64) -> SeededRng {
+        use rand::SeedableRng;
+        SeededRng { inner: rand::rngs::StdRng::seed_from_u64(seed) }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    fn seeded_rng_impl(_seed: u64) -> SeededRng {
+        unimplemented!()
+    }
+
+    #[cfg(not(verus_keep_ghost))]
+    fn random_bool_seeded_exec(rng: &mut SeededRng) -> bool {
+        use rand::RngExt;
+        rng.inner.random()
+    }
+
+    #[cfg(verus_keep_ghost)]
+    fn random_bool_seeded_exec(_rng: &mut SeededRng) -> bool {
         unimplemented!()
     }
 }

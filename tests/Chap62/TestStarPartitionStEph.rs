@@ -7,7 +7,7 @@ use apas_verus::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
 use apas_verus::Chap62::StarPartitionStEph::StarPartitionStEph::*;
 use apas_verus::SetLit;
 use apas_verus::Types::Types::*;
-use std::collections::HashMap;
+use apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
 
 fn create_cycle_graph(n: N) -> UnDirGraphStEph<N> {
     let mut vertices = SetLit![];

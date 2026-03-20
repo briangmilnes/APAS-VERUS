@@ -204,10 +204,10 @@ fn test_vertex_bridges_mt_empty() {
 
 #[test]
 fn test_bridge_star_partition_mt() {
-    use std::collections::HashMap;
+    use apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
 
     let vertices = vec![1, 2, 3];
-    let mut bridges = HashMap::new();
+    let mut bridges = HashMapWithViewPlus::new();
     bridges.insert(1, (2, OrderedFloat(1.0), 0));
     bridges.insert(2, (3, OrderedFloat(2.0), 1));
 

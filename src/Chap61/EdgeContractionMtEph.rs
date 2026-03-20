@@ -13,11 +13,10 @@ pub mod EdgeContractionMtEph {
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
 
-    #[cfg(not(verus_keep_ghost))]
-    use std::collections::HashMap;
     use std::hash::Hash;
     #[cfg(not(verus_keep_ghost))]
     use std::sync::Arc;
+    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     #[cfg(not(verus_keep_ghost))]
     use std::vec::Vec;
     #[cfg(not(verus_keep_ghost))]
@@ -86,7 +85,7 @@ pub mod EdgeContractionMtEph {
         use std::sync::{Arc, Mutex};
         pub type T<V> = UnDirGraphMtEph<V>;
 
-        let vertex_to_block = Arc::new(Mutex::new(HashMap::new()));
+        let vertex_to_block = Arc::new(Mutex::new(HashMapWithViewPlus::new()));
 
         {
             let mut map = vertex_to_block.lock().unwrap();
@@ -106,7 +105,7 @@ pub mod EdgeContractionMtEph {
         let vertex_to_block = Arc::try_unwrap(vertex_to_block).unwrap().into_inner().unwrap();
 
         let mut new_vertices: SetStEph<V> = SetLit![];
-        for representative in vertex_to_block.values() {
+        for (_, representative) in vertex_to_block.iter() {
             let _ = new_vertices.insert(representative.clone());
         }
 
@@ -114,7 +113,7 @@ pub mod EdgeContractionMtEph {
         let edges_seq = ArraySeqStEphS::from_vec(edges_vec);
         let n_edges = edges_seq.length();
         let edges_arc = Arc::new(edges_seq);
-        let vertex_map_arc = Arc::new(vertex_to_block);
+        let vertex_map_arc: Arc<HashMapWithViewPlus<V, V>> = Arc::new(vertex_to_block);
 
         let new_edges_set = build_edges_parallel(edges_arc, vertex_map_arc, 0, n_edges);
 
@@ -129,7 +128,7 @@ pub mod EdgeContractionMtEph {
     #[cfg(not(verus_keep_ghost))]
     fn build_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
         edges: Arc<ArraySeqStEphS<Edge<V>>>,
-        vertex_map: Arc<HashMap<V, V>>,
+        vertex_map: Arc<HashMapWithViewPlus<V, V>>,
         start: usize,
         end: usize,
     ) -> SetStEph<Edge<V>> {

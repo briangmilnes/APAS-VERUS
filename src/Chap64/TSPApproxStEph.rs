@@ -10,7 +10,6 @@ pub mod TSPApproxStEph {
 
     use vstd::prelude::*;
 
-    use std::collections::HashMap;
     use std::hash::Hash;
     use crate::vstdplus::float::float::WrappedF64;
     use crate::Chap05::SetStEph::SetStEph::*;

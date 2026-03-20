@@ -13,9 +13,8 @@ pub mod EdgeContractionStEph {
     use crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
     use crate::Types::Types::*;
 
-    #[cfg(not(verus_keep_ghost))]
-    use std::collections::HashMap;
     use std::hash::Hash;
+    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     #[cfg(not(verus_keep_ghost))]
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     #[cfg(not(verus_keep_ghost))]
@@ -69,7 +68,7 @@ pub mod EdgeContractionStEph {
         graph: &UnDirGraphStEph<V>,
         matching: &SetStEph<Edge<V>>,
     ) -> UnDirGraphStEph<V> {
-        let mut vertex_to_block = HashMap::<V, V>::new();
+        let mut vertex_to_block = HashMapWithViewPlus::<V, V>::new();
 
         for edge in matching.iter() {
             let Edge(u, v) = edge;
@@ -86,7 +85,7 @@ pub mod EdgeContractionStEph {
         let mut new_vertices: SetStEph<V> = SetLit![];
         let mut new_edges: SetStEph<Edge<V>> = SetLit![];
 
-        for representative in vertex_to_block.values() {
+        for (_, representative) in vertex_to_block.iter() {
             let _ = new_vertices.insert(representative.clone());
         }
 

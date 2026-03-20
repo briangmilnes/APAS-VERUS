@@ -12,8 +12,8 @@ pub mod StarContractionStEph {
     use crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
     use crate::Types::Types::*;
 
-    use std::collections::HashMap;
     use std::hash::Hash;
+    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     #[cfg(not(verus_keep_ghost))]
     use crate::Chap62::StarPartitionStEph::StarPartitionStEph::sequential_star_partition;
     #[cfg(not(verus_keep_ghost))]
@@ -40,7 +40,7 @@ pub mod StarContractionStEph {
         where
             V: HashOrd,
             F: Fn(&SetStEph<V>) -> R,
-            G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R
+            G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R
         requires Self::spec_starcontractionsteph_wf(graph);
 
         /// Contract graph to just vertices (no edges).
@@ -74,7 +74,7 @@ pub mod StarContractionStEph {
     where
         V: HashOrd,
         F: Fn(&SetStEph<V>) -> R,
-        G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R,
+        G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R,
     {
         if graph.sizeE() == 0 {
             return base(graph.vertices());
@@ -100,7 +100,7 @@ pub mod StarContractionStEph {
     fn build_quotient_graph<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
         centers: &SetStEph<V>,
-        partition_map: &HashMap<V, V>,
+        partition_map: &HashMapWithViewPlus<V, V>,
     ) -> UnDirGraphStEph<V> {
         let mut quotient_edges: SetStEph<Edge<V>> = SetLit![];
 

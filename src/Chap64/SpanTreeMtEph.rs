@@ -12,10 +12,9 @@ pub mod SpanTreeMtEph {
     use crate::Types::Types::*;
     use crate::vstdplus::arc_rwlock::arc_rwlock::*;
 
-    #[cfg(not(verus_keep_ghost))]
-    use std::collections::HashMap;
     use std::hash::Hash;
     use std::sync::Arc;
+    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     #[cfg(not(verus_keep_ghost))]
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     #[cfg(not(verus_keep_ghost))]
@@ -87,7 +86,7 @@ pub mod SpanTreeMtEph {
         let expand = |_v: &SetStEph<V>,
                       original_edges: &SetStEph<Edge<V>>,
                       _centers: &SetStEph<V>,
-                      partition_map: &HashMap<V, V>,
+                      partition_map: &HashMapWithViewPlus<V, V>,
                       quotient_tree: SetStEph<Edge<V>>| {
             let spanning_edges = new_spanning_edges_arc(SetLit![]);
 

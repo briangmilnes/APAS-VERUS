@@ -13,10 +13,10 @@ pub mod VertexMatchingStEph {
     use crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
     use crate::Types::Types::*;
 
-    #[cfg(not(verus_keep_ghost))]
-    use std::collections::HashMap;
     use std::hash::Hash;
     use crate::SetLit;
+    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use crate::vstdplus::rand::rand::{seeded_rng, random_bool_seeded};
 
     verus! {
 
@@ -82,17 +82,15 @@ pub mod VertexMatchingStEph {
     #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
     pub fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>, seed: u64) -> SetStEph<Edge<V>> {
-        use rand::rngs::StdRng;
-        use rand::{Rng, RngExt, SeedableRng};
         pub type T<V> = UnDirGraphStEph<V>;
 
-        let mut rng = StdRng::seed_from_u64(seed);
         let mut matching: SetStEph<Edge<V>> = SetLit![];
 
-        let mut edge_coins = HashMap::<Edge<V>, bool>::new();
+        let mut rng = seeded_rng(seed);
+        let mut edge_coins = HashMapWithViewPlus::<Edge<V>, bool>::new();
 
         for edge in graph.edges().iter() {
-            edge_coins.insert(edge.clone(), rng.random());
+            edge_coins.insert(edge.clone(), random_bool_seeded(&mut rng));
         }
 
         for edge in graph.edges().iter() {

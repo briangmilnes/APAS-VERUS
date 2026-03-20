@@ -15,8 +15,8 @@ pub mod ConnectivityStEph {
     use crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
     use crate::Types::Types::*;
 
-    use std::collections::HashMap;
     use std::hash::Hash;
+    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     #[cfg(not(verus_keep_ghost))]
     use crate::Chap62::StarContractionStEph::StarContractionStEph::star_contract;
     #[cfg(not(verus_keep_ghost))]
@@ -46,7 +46,7 @@ pub mod ConnectivityStEph {
 
         /// Find connected components using star contraction.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>)
+        fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
             requires Self::spec_connectivitysteph_wf(graph);
 
         /// Count components using higher-order function approach.
@@ -56,7 +56,7 @@ pub mod ConnectivityStEph {
 
         /// Find components using higher-order function approach.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>)
+        fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
             requires Self::spec_connectivitysteph_wf(graph);
     }
 
@@ -108,9 +108,9 @@ pub mod ConnectivityStEph {
     ///   mapping from each vertex to its component representative
     #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
-    pub fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>) {
+    pub fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>) {
         if graph.sizeE() == 0 {
-            let mut component_map = HashMap::new();
+            let mut component_map = HashMapWithViewPlus::new();
             for vertex in graph.vertices().iter() {
                 let _ = component_map.insert(vertex.clone(), vertex.clone());
             }
@@ -124,7 +124,7 @@ pub mod ConnectivityStEph {
 
         let (representatives, component_map_quotient) = connected_components(&quotient_graph);
 
-        let mut component_map = HashMap::new();
+        let mut component_map = HashMapWithViewPlus::new();
         for (u, v) in partition_map.iter() {
             let component = component_map_quotient.get(v).unwrap_or(v);
             let _ = component_map.insert(u.clone(), component.clone());
@@ -142,7 +142,7 @@ pub mod ConnectivityStEph {
     #[cfg(not(verus_keep_ghost))]
     fn build_quotient_edges<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
-        partition_map: &HashMap<V, V>,
+        partition_map: &HashMapWithViewPlus<V, V>,
     ) -> SetStEph<Edge<V>> {
         let mut quotient_edges: SetStEph<Edge<V>> = SetLit![];
 
@@ -175,7 +175,7 @@ pub mod ConnectivityStEph {
     pub fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N {
         let base = |vertices: &SetStEph<V>| vertices.size();
 
-        let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMap<V, V>, r: N| r;
+        let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, r: N| r;
 
         star_contract(graph, &base, &expand)
     }
@@ -188,9 +188,9 @@ pub mod ConnectivityStEph {
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
     #[verifier::external_body]
     #[cfg(not(verus_keep_ghost))]
-    pub fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>) {
+    pub fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>) {
         let base = |vertices: &SetStEph<V>| {
-            let mut map = HashMap::new();
+            let mut map = HashMapWithViewPlus::new();
             for v in vertices.iter() {
                 let _ = map.insert(v.clone(), v.clone());
             }
@@ -200,9 +200,9 @@ pub mod ConnectivityStEph {
         let expand = |_v: &SetStEph<V>,
                       _e: &SetStEph<Edge<V>>,
                       _centers: &SetStEph<V>,
-                      partition_map: &HashMap<V, V>,
-                      (reps, component_map): (SetStEph<V>, HashMap<V, V>)| {
-            let mut result_map = HashMap::new();
+                      partition_map: &HashMapWithViewPlus<V, V>,
+                      (reps, component_map): (SetStEph<V>, HashMapWithViewPlus<V, V>)| {
+            let mut result_map = HashMapWithViewPlus::new();
             for (u, v) in partition_map.iter() {
                 let component = component_map.get(v).unwrap_or(v);
                 let _ = result_map.insert(u.clone(), component.clone());

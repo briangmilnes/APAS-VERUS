@@ -1,6 +1,7 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 63: Graph Connectivity - Sequential Ephemeral Tests
 
+use apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
 use apas_verus::Chap05::SetStEph::SetStEph::*;
 use apas_verus::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
 use apas_verus::Chap63::ConnectivityStEph::ConnectivityStEph::*;
