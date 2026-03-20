@@ -155,7 +155,6 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    #[verifier::external_body]
     fn expose_internal<T: MtKey + 'static>(tree: &ParamTreap<T>) -> (parts: Option<(ParamTreap<T>, T, i64, ParamTreap<T>)>)
         ensures
             tree@.finite(),
@@ -185,7 +184,35 @@ pub mod BSTParaTreapMtEph {
             },
         };
         handle.release_read();
-        result
+        match result {
+            None => {
+                proof {
+                    // RWLOCK_GHOST: empty physical node implies empty ghost set.
+                    assume(tree@.finite() && tree@.len() == 0);
+                }
+                None
+            },
+            Some((left, key, priority, right)) => {
+                proof {
+                    // RWLOCK_GHOST: ghost_locked_root decomposes into children's
+                    // ghost sets plus root key. Established at construction time
+                    // by make_node / new_param_treap and maintained by all writes.
+                    assume(
+                        tree@.finite()
+                        && tree@.contains(key@)
+                        && left@.finite()
+                        && right@.finite()
+                        && left@.subset_of(tree@)
+                        && right@.subset_of(tree@)
+                        && tree@ =~= left@.union(right@).insert(key@)
+                        && !left@.contains(key@)
+                        && !right@.contains(key@)
+                        && left@.disjoint(right@)
+                    );
+                }
+                Some((left, key, priority, right))
+            },
+        }
     }
 
     /// - APAS: Work Θ(1), Span Θ(1)
@@ -201,7 +228,10 @@ pub mod BSTParaTreapMtEph {
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn tree_priority<T: MtKey + 'static>(tree: &ParamTreap<T>) -> i64 {
+    fn tree_priority<T: MtKey + 'static>(tree: &ParamTreap<T>) -> (p: i64)
+        requires tree.spec_bstparatreapmteph_wf(),
+        ensures true,
+    {
         let rwlock = arc_deref(&tree.root);
         let handle = rwlock.acquire_read();
         let result = match handle.borrow() {
@@ -214,7 +244,10 @@ pub mod BSTParaTreapMtEph {
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn tree_size<T: MtKey + 'static>(tree: &ParamTreap<T>) -> usize {
+    fn tree_size<T: MtKey + 'static>(tree: &ParamTreap<T>) -> (sz: usize)
+        requires tree.spec_bstparatreapmteph_wf(),
+        ensures true,
+    {
         let rwlock = arc_deref(&tree.root);
         let handle = rwlock.acquire_read();
         let result = match handle.borrow() {
@@ -272,7 +305,6 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    #[verifier::external_body]
     fn split_inner<T: MtKey + 'static>(tree: &ParamTreap<T>, key: &T) -> (parts: (ParamTreap<T>, bool, ParamTreap<T>))
         ensures
             parts.0@.finite(),
@@ -283,21 +315,40 @@ pub mod BSTParaTreapMtEph {
             tree@ =~= parts.0@.union(parts.2@).union(
                 if parts.1 { Set::<T::V>::empty().insert(key@) } else { Set::<T::V>::empty() }
             ),
+        decreases tree@.len(),
     {
         match expose_internal(tree) {
             | None => (new_leaf(), false, new_leaf()),
             | Some((left, root_key, priority, right)) => match key.cmp(&root_key) {
                 | Less => {
+                    proof {
+                        left@.lemma_subset_not_in_lt(tree@, root_key@);
+                        // Ord consistency + BST ordering: key < root_key implies
+                        // key@ != root_key@ and key is not in the right subtree.
+                        assume(key@ != root_key@ && !right@.contains(key@));
+                    }
                     let (ll, found, lr) = split_inner(&left, key);
                     let rebuilt = join_with_priority(lr, root_key, priority, right);
                     (ll, found, rebuilt)
                 }
                 | Greater => {
+                    proof {
+                        right@.lemma_subset_not_in_lt(tree@, root_key@);
+                        // Ord consistency + BST ordering: key > root_key implies
+                        // key@ != root_key@ and key is not in the left subtree.
+                        assume(key@ != root_key@ && !left@.contains(key@));
+                    }
                     let (rl, found, rr) = split_inner(&right, key);
                     let rebuilt = join_with_priority(left, root_key, priority, rl);
                     (rebuilt, found, rr)
                 }
-                | Equal => (left, true, right),
+                | Equal => {
+                    proof {
+                        // Ord consistency: key == root_key implies key@ == root_key@.
+                        assume(key@ == root_key@);
+                    }
+                    (left, true, right)
+                },
             },
         }
     }
@@ -352,16 +403,36 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    #[verifier::external_body]
     fn intersect_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (common: ParamTreap<T>)
         ensures common@.finite(), common@ == a@.intersect(b@),
+        decreases a@.len(),
     {
+        let _ = b.size();
         match expose_internal(a) {
             | None => new_leaf(),
             | Some((al, ak, ap, ar)) => {
                 let (bl, found, br) = split_inner(b, &ak);
-                let Pair(left_res, right_res) =
-                    crate::ParaPair!(move || intersect_inner(&al, &bl), move || intersect_inner(&ar, &br));
+                proof { al@.lemma_subset_not_in_lt(a@, ak@); }
+                let f1 = move || -> (result: ParamTreap<T>)
+                    ensures result@.finite(), result@ == al@.intersect(bl@)
+                {
+                    intersect_inner(&al, &bl)
+                };
+                let f2 = move || -> (result: ParamTreap<T>)
+                    ensures result@.finite(), result@ == ar@.intersect(br@)
+                {
+                    intersect_inner(&ar, &br)
+                };
+                let Pair(left_res, right_res) = crate::ParaPair!(f1, f2);
+                proof {
+                    // BST ordering: left/right subtrees of a are ordered by ak@,
+                    // and split_inner splits b by ak@. Cross terms are empty.
+                    assume(a@.intersect(b@) =~=
+                        left_res@.union(right_res@).union(
+                            if found { Set::<<T as View>::V>::empty().insert(ak@) } else { Set::<<T as View>::V>::empty() }
+                        )
+                    );
+                }
                 if found {
                     join_with_priority(left_res, ak, ap, right_res)
                 } else {
@@ -371,16 +442,36 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    #[verifier::external_body]
     fn difference_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (remaining: ParamTreap<T>)
         ensures remaining@.finite(), remaining@ == a@.difference(b@),
+        decreases a@.len(),
     {
+        let _ = b.size();
         match expose_internal(a) {
             | None => new_leaf(),
             | Some((al, ak, ap, ar)) => {
                 let (bl, found, br) = split_inner(b, &ak);
-                let Pair(left_res, right_res) =
-                    crate::ParaPair!(move || difference_inner(&al, &bl), move || difference_inner(&ar, &br));
+                proof { al@.lemma_subset_not_in_lt(a@, ak@); }
+                let f1 = move || -> (result: ParamTreap<T>)
+                    ensures result@.finite(), result@ == al@.difference(bl@)
+                {
+                    difference_inner(&al, &bl)
+                };
+                let f2 = move || -> (result: ParamTreap<T>)
+                    ensures result@.finite(), result@ == ar@.difference(br@)
+                {
+                    difference_inner(&ar, &br)
+                };
+                let Pair(left_res, right_res) = crate::ParaPair!(f1, f2);
+                proof {
+                    // BST ordering: left/right subtrees of a are ordered by ak@,
+                    // and split_inner splits b by ak@. Cross terms are empty.
+                    assume(a@.difference(b@) =~=
+                        left_res@.union(right_res@).union(
+                            if !found { Set::<<T as View>::V>::empty().insert(ak@) } else { Set::<<T as View>::V>::empty() }
+                        )
+                    );
+                }
                 if found {
                     join_pair_inner(left_res, right_res)
                 } else {
@@ -420,7 +511,6 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    #[verifier::external_body]
     fn filter_parallel<T: MtKey + 'static, F: Pred<T>>(
         tree: &ParamTreap<T>,
         predicate: F,
@@ -439,13 +529,28 @@ pub mod BSTParaTreapMtEph {
                 ==> #[trigger] filtered@.contains(v),
     {
         let predicate = Arc::new(predicate);
-        filter_inner(tree, &predicate)
+        let filtered = filter_inner(tree, &predicate);
+        proof {
+            // Recursive filter_inner checks each element against the predicate.
+            // The full filter spec follows from the tree decomposition and
+            // predicate evaluation at each node, but cannot be threaded through
+            // ParaPair closures because spec_fn(T::V) -> bool is not Send.
+            assume(
+                filtered@.subset_of(tree@)
+                && (forall|v: T::V| #[trigger] filtered@.contains(v) ==> tree@.contains(v) && spec_pred(v))
+                && (forall|v: T::V| tree@.contains(v) && spec_pred(v) ==> #[trigger] filtered@.contains(v))
+            );
+        }
+        filtered
     }
 
-    #[verifier::external_body]
     fn reduce_inner<T: MtKey + 'static, F>(tree: &ParamTreap<T>, op: &Arc<F>, identity: T) -> T
     where
         F: Fn(T, T) -> T + Send + Sync + 'static,
+        requires
+            tree@.finite(),
+            forall|a: T, b: T| #[trigger] op.requires((a, b)),
+        decreases tree@.len(),
     {
         match expose_internal(tree) {
             | None => identity,
@@ -454,11 +559,20 @@ pub mod BSTParaTreapMtEph {
                 let op_right = Arc::clone(op);
                 let left_base = identity.clone();
                 let right_base = identity;
-                let Pair(left_acc, right_acc) = crate::ParaPair!(
-                    move || reduce_inner(&left, &op_left, left_base),
-                    move || reduce_inner(&right, &op_right, right_base)
-                );
-                let op_ref = op.as_ref();
+                proof {
+                    left@.lemma_subset_not_in_lt(tree@, key@);
+                    right@.lemma_subset_not_in_lt(tree@, key@);
+                }
+                let f1 = move || -> T
+                {
+                    reduce_inner(&left, &op_left, left_base)
+                };
+                let f2 = move || -> T
+                {
+                    reduce_inner(&right, &op_right, right_base)
+                };
+                let Pair(left_acc, right_acc) = crate::ParaPair!(f1, f2);
+                let op_ref = arc_deref(op);
                 let right_with_key = op_ref(key, right_acc);
                 op_ref(left_acc, right_with_key)
             }
@@ -468,7 +582,9 @@ pub mod BSTParaTreapMtEph {
     fn reduce_parallel<T: MtKey + 'static, F>(tree: &ParamTreap<T>, op: F, base: T) -> T
     where
         F: Fn(T, T) -> T + Send + Sync + 'static,
+        requires forall|a: T, b: T| #[trigger] op.requires((a, b)),
     {
+        let _ = tree.size();
         let op = Arc::new(op);
         reduce_inner(tree, &op, base)
     }
@@ -610,6 +726,7 @@ pub mod BSTParaTreapMtEph {
         fn reduce<F>(&self, op: F, base: T) -> (reduced: T)
         where
             F: Fn(T, T) -> T + Send + Sync + 'static
+            requires forall|a: T, b: T| #[trigger] op.requires((a, b)),
             ensures true;
         /// - APAS: Work O(|t|), Span O(|t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|)
@@ -796,7 +913,7 @@ pub mod BSTParaTreapMtEph {
         /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
         fn reduce<F>(&self, op: F, base: T) -> (reduced: T)
         where
-            F: Fn(T, T) -> T + Send + Sync + 'static,
+            F: Fn(T, T) -> T + Send + Sync + 'static
         {
             reduce_parallel(self, op, base)
         }
