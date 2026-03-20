@@ -19,6 +19,10 @@ pub mod StarContractionStEph {
 
     verus! {
 
+    // 3. broadcast use
+
+    broadcast use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms;
+
     // 4. type definitions
 
     /// Namespace struct for trait impl.
@@ -91,31 +95,50 @@ pub mod StarContractionStEph {
     ///
     /// - APAS: (no cost stated) — helper not in prose.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential loop over all edges.
-    #[verifier::external_body]
     fn build_quotient_graph<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
         centers: &SetStEph<V>,
         partition_map: &HashMapWithViewPlus<V, V>,
-    ) -> UnDirGraphStEph<V> {
+    ) -> (quotient: UnDirGraphStEph<V>)
+        requires valid_key_type_Edge::<V>(),
+        ensures true,
+    {
         let mut quotient_edges: SetStEph<Edge<V>> = SetLit![];
-
-        for edge in graph.edges().iter() {
+        let edge_vec = graph.E.to_seq();
+        let n = edge_vec.len();
+        let mut i: usize = 0;
+        while i < n
+            invariant
+                valid_key_type_Edge::<V>(),
+                quotient_edges.spec_setsteph_wf(),
+                i <= n,
+                n == edge_vec@.len(),
+            decreases n - i,
+        {
+            let edge = &edge_vec[i];
             let Edge(u, v) = edge;
 
-            let u_center = partition_map.get(u).unwrap_or(u);
-            let v_center = partition_map.get(v).unwrap_or(v);
+            let u_center = match partition_map.get(u) {
+                Some(val) => val.clone(),
+                None => u.clone(),
+            };
+            let v_center = match partition_map.get(v) {
+                Some(val) => val.clone(),
+                None => v.clone(),
+            };
 
             if u_center != v_center {
                 let new_edge = if u_center < v_center {
-                    Edge(u_center.clone(), v_center.clone())
+                    Edge(u_center, v_center)
                 } else {
-                    Edge(v_center.clone(), u_center.clone())
+                    Edge(v_center, u_center)
                 };
                 let _ = quotient_edges.insert(new_edge);
             }
+            i = i + 1;
         }
 
-        <UnDirGraphStEph<V> as UnDirGraphStEphTrait<V>>::from_sets(centers.clone(), quotient_edges)
+        UnDirGraphStEph { V: centers.clone(), E: quotient_edges }
     }
 
     /// One round of sequential star contraction
@@ -124,12 +147,14 @@ pub mod StarContractionStEph {
     ///
     /// - APAS: Work O((n + m) lg n), Span O((n + m) lg n)
     /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — agrees with APAS.
-    #[verifier::external_body]
-    pub fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<V> {
+    pub fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (result: SetStEph<V>)
+        requires valid_key_type_Edge::<V>(),
+        ensures true,
+    {
         star_contract(
             graph,
-            &|vertices| vertices.clone(),
-            &|_v, _e, _centers, _part, result| result,
+            &|vertices: &SetStEph<V>| -> (r: SetStEph<V>) ensures true { vertices.clone() },
+            &|_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, result: SetStEph<V>| -> (r: SetStEph<V>) ensures true { result },
         )
     }
 

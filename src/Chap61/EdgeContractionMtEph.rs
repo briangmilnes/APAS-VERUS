@@ -184,11 +184,13 @@ pub mod EdgeContractionMtEph {
     ///
     /// Returns:
     /// - Contracted graph
-    #[verifier::external_body]
     pub fn contract_round_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
-    ) -> UnDirGraphMtEph<V> {
+    ) -> (contracted: UnDirGraphMtEph<V>)
+        requires valid_key_type_Edge::<V>(),
+        ensures true,
+    {
         let matching = parallel_matching_mt(graph, seed);
         edge_contract_mt(graph, &matching)
     }

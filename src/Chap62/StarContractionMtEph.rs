@@ -95,13 +95,15 @@ pub mod StarContractionMtEph {
     ///
     /// - APAS: (no cost stated) — helper not in prose.
     /// - Claude-Opus-4.6: Work O(m), Span O(lg m) — delegates to route_edges_parallel which uses ParaPair fork-join.
-    #[verifier::external_body]
     fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         centers: &SetStEph<V>,
         partition_map: &HashMapWithViewPlus<V, V>,
-    ) -> UnDirGraphMtEph<V> {
-        let edges_vec = graph.edges().iter().cloned().collect::<Vec<Edge<V>>>();
+    ) -> (quotient: UnDirGraphMtEph<V>)
+        requires valid_key_type_Edge::<V>(),
+        ensures true,
+    {
+        let edges_vec = graph.E.to_seq();
         let edges_seq = ArraySeqStEphS::from_vec(edges_vec);
         let n_edges = edges_seq.length();
 
@@ -109,7 +111,7 @@ pub mod StarContractionMtEph {
 
         let quotient_edges = route_edges_parallel(&edges_seq, part_map_arc, 0, n_edges);
 
-        <UnDirGraphMtEph<V> as UnDirGraphMtEphTrait<V>>::from_sets(centers.clone(), quotient_edges)
+        UnDirGraphMtEph { V: centers.clone(), E: quotient_edges }
     }
 
     /// Parallel edge routing using divide-and-conquer
@@ -170,16 +172,18 @@ pub mod StarContractionMtEph {
     ///
     /// - APAS: Work O((n + m) lg n), Span O(lg^2 n)
     /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — delegates to star_contract_mt which has sequential partition.
-    #[verifier::external_body]
     pub fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
-    ) -> SetStEph<V> {
+    ) -> (result: SetStEph<V>)
+        requires valid_key_type_Edge::<V>(),
+        ensures true,
+    {
         star_contract_mt(
             graph,
             seed,
-            &|vertices| vertices.clone(),
-            &|_v, _e, _centers, _part, result| result,
+            &|vertices: &SetStEph<V>| -> (r: SetStEph<V>) ensures true { vertices.clone() },
+            &|_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, result: SetStEph<V>| -> (r: SetStEph<V>) ensures true { result },
         )
     }
 
