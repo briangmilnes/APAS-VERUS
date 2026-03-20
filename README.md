@@ -10,9 +10,9 @@ develop two software engineering tools to clean things up:
 - [veracity](https://github.com/briangmilnes/veracity) - Verus code analysis tools (proof hole detection, spec strength review, function search).
 - [rusticate](https://github.com/briangmilnes/rusticate) - Rust code style and structure review tools.
 
-**All 44 algorithm chapters verified, 34 with zero proof holes**
+**All 44 algorithm chapters verified, 36 with zero proof holes**
 
-**4076 verified, 0 errors | 2613 runtime tests | 147 proof time tests | 220 proof holes | 101 PartialEq/Clone workarounds**
+**4413 verified, 0 errors | 2613 runtime tests | 147 proof time tests | 43 proof holes | 101 PartialEq/Clone workarounds**
 
 The 101 PartialEq/Clone workarounds are accepted `assume` calls inside `eq()` and `clone()` bodies — Verus cannot yet verify that Rust's generic PartialEq and Clone match spec-level View equality. These are standard across all Verus projects and will be eliminated when Verus adds derived spec support for these traits.
 
@@ -26,23 +26,23 @@ The 101 PartialEq/Clone workarounds are accepted `assume` calls inside `eq()` an
 
 ## Proof State
 
-Full verification: **4076 verified, 0 errors**
+Full verification: **4413 verified, 0 errors**
 
 | # | Metric | Count |
 |---|--------|-------|
 | 1 | Chapters verified | 46 |
-| 2 | Chapters with zero proof holes | 33 |
-| 3 | Verified functions | 4076 |
+| 2 | Chapters with zero proof holes | 36 |
+| 3 | Verified functions | 4413 |
 | 4 | Runtime tests (RTT) | 2613 |
 | 5 | Proof time tests (PTT) | 147 |
-| 6 | Proof holes remaining | 220 |
+| 6 | Proof holes remaining | 43 |
 | 7 | Modules | 257 |
 
-Holes tracked by [veracity](https://github.com/briangmilnes/veracity). 13 chapters remain holed; 33 are fully clean.
+Holes tracked by [veracity](https://github.com/briangmilnes/veracity). 10 chapters remain holed; 36 are fully clean.
 
 ## Algorithm Status
 
-### Chapter 02: Scheduling - ✅ VERIFIED
+### Chapter 02: Scheduling - ✅ VERIFIED (ZERO HOLES)
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
@@ -55,7 +55,7 @@ Holes tracked by [veracity](https://github.com/briangmilnes/veracity). 13 chapte
 |---|-----------|-------|-------|
 | 1 | InsertionSortStEph | St | Generic, multiset preservation proven |
 
-### Chapter 05: Sets, Relations, Mappings - ✅ VERIFIED
+### Chapter 05: Sets, Relations, Mappings - ✅ VERIFIED (ZERO HOLES)
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
@@ -79,7 +79,7 @@ Holes tracked by [veracity](https://github.com/briangmilnes/veracity). 13 chapte
 | 8 | LabUnDirGraphMtEph | Mt | Parallel labeled undirected graph |
 | 9-20 | WeightedDirGraphStEph{U8..Isize} | St | All 12 integer types |
 
-### Chapter 11: Fibonacci - ✅ VERIFIED
+### Chapter 11: Fibonacci - ✅ VERIFIED (ZERO HOLES)
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
@@ -89,7 +89,7 @@ Holes tracked by [veracity](https://github.com/briangmilnes/veracity). 13 chapte
 | 4 | FibonacciMtEphRecomputes | Mt | Recomputation variant |
 | 5 | FibonacciMtPerTSM | Mt | Tokenized state machine |
 
-### Chapter 12: Concurrency Primitives - ✅ VERIFIED
+### Chapter 12: Concurrency Primitives - ✅ VERIFIED (ZERO HOLES)
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
@@ -99,13 +99,13 @@ Holes tracked by [veracity](https://github.com/briangmilnes/veracity). 13 chapte
 
 Atomics and raw pointers not supported by Verus — external_body wrappers required.
 
-### Chapter 17: MathSeq - ✅ VERIFIED
+### Chapter 17: MathSeq - ✅ VERIFIED (ZERO HOLES)
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
 | 1 | MathSeq | St | Vec-backed dense sequence, uses `HashMapWithView` |
 
-### Chapter 18: Sequences - ✅ VERIFIED
+### Chapter 18: Sequences - ✅ VERIFIED (ZERO HOLES)
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
@@ -119,7 +119,7 @@ Atomics and raw pointers not supported by Verus — external_body wrappers requi
 
 All with custom iterators and ForLoopGhostIterator.
 
-### Chapter 19: Sequences (Advanced) - ✅ VERIFIED
+### Chapter 19: Sequences (Advanced) - ✅ VERIFIED (ZERO HOLES)
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
@@ -144,14 +144,14 @@ All with custom iterators and ForLoopGhostIterator.
 | 10 | Problem21_1 | St | |
 | 11 | Problem21_4 | St | |
 
-### Chapter 23: Trees - ✅ VERIFIED
+### Chapter 23: Trees - ✅ VERIFIED (ZERO HOLES)
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
 | 1 | PrimTreeSeqStPer | St | Primitive tree sequence |
 | 2 | BalBinTreeStEph | St | Balanced binary tree |
 
-### Chapter 26: Divide and Conquer - ✅ VERIFIED (ZERO HOLES)
+### Chapter 26: Divide and Conquer - ✅ VERIFIED
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
@@ -185,7 +185,7 @@ All with custom iterators and ForLoopGhostIterator.
 | 8 | MaxContigSubSumDivConMtEph | Mt | Parallel divide-and-conquer |
 | 9 | MaxContigSubSumDivConOptMtEph | Mt | Parallel optimized divide-and-conquer |
 
-### Chapter 30: Probability - ✅ VERIFIED
+### Chapter 30: Probability - ✅ VERIFIED (ZERO HOLES)
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
@@ -207,7 +207,7 @@ All with custom iterators and ForLoopGhostIterator.
 | 1 | QuickSortStEph | St | Sequential quicksort |
 | 2 | QuickSortMtEph | Mt | Parallel quicksort |
 
-### Chapter 37: BST Variants - ✅ VERIFIED
+### Chapter 37: BST Variants - ✅ VERIFIED (ZERO HOLES)
 
 8 unconditional + 8 behind `all_chapters` feature gate.
 
@@ -242,7 +242,7 @@ All with custom iterators and ForLoopGhostIterator.
 | 3 | BSTParaTreapMtEph | Mt | Parallel operations on treap |
 | 4 | BSTSetTreapMtEph | Mt | Treap-backed set |
 
-### Chapter 40: BST Key-Value - ✅ VERIFIED
+### Chapter 40: BST Key-Value - ✅ VERIFIED (ZERO HOLES)
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
@@ -264,7 +264,7 @@ All with custom iterators and ForLoopGhostIterator.
 | 6 | AVLTreeSetMtPer | Mt | Parallel persistent AVL tree set (gated) |
 | 7 | Example41_3 | St | Textbook example |
 
-### Chapter 42: Hash Tables - ✅ VERIFIED
+### Chapter 42: Hash Tables - ✅ VERIFIED (ZERO HOLES)
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
@@ -335,7 +335,7 @@ All with custom iterators and ForLoopGhostIterator.
 | 7 | MinEditDistMtEph | Mt | Parallel min edit distance |
 | 8 | MinEditDistMtPer | Mt | Parallel persistent min edit distance |
 
-### Chapter 50: Dynamic Programming II - ✅ VERIFIED
+### Chapter 50: Dynamic Programming II - ✅ VERIFIED (ZERO HOLES)
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
@@ -378,7 +378,7 @@ All with custom iterators and ForLoopGhostIterator.
 | 9 | AdjTableGraphMtPer | Mt | Adjacency table (gated) |
 | 10 | EdgeSetGraphMtPer | Mt | Edge set graph (gated) |
 
-### Chapter 53: Graph Search - ✅ VERIFIED
+### Chapter 53: Graph Search - ✅ VERIFIED (ZERO HOLES)
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
@@ -440,7 +440,7 @@ All with custom iterators and ForLoopGhostIterator.
 | 1 | BellmanFordStEphI64 | St | Bellman-Ford shortest paths (i64) |
 | 2 | BellmanFordStEphF64 | St | Bellman-Ford shortest paths (f64) |
 
-### Chapter 59: Johnson - ✅ VERIFIED (ZERO HOLES)
+### Chapter 59: Johnson - ✅ VERIFIED
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
@@ -458,7 +458,7 @@ All with custom iterators and ForLoopGhostIterator.
 | 3 | EdgeContractionStEph | St | Edge contraction |
 | 4 | EdgeContractionMtEph | Mt | Parallel edge contraction |
 
-### Chapter 62: Star Partition - ✅ VERIFIED (ZERO HOLES)
+### Chapter 62: Star Partition - ✅ VERIFIED
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
@@ -474,7 +474,7 @@ All with custom iterators and ForLoopGhostIterator.
 | 1 | ConnectivityStEph | St | Graph connectivity |
 | 2 | ConnectivityMtEph | Mt | Parallel graph connectivity |
 
-### Chapter 64: Spanning Trees - ✅ VERIFIED (`all_chapters`)
+### Chapter 64: Spanning Trees - ✅ VERIFIED (ZERO HOLES) (`all_chapters`)
 
 Behind `all_chapters` feature gate.
 
@@ -484,7 +484,7 @@ Behind `all_chapters` feature gate.
 | 2 | SpanTreeMtEph | Mt | Parallel spanning tree |
 | 3 | TSPApproxStEph | St | TSP approximation |
 
-### Chapter 65: MST (Kruskal, Prim) - ✅ VERIFIED (ZERO HOLES) (`all_chapters`)
+### Chapter 65: MST (Kruskal, Prim) - ✅ VERIFIED (`all_chapters`)
 
 Behind `all_chapters` feature gate.
 
@@ -494,7 +494,7 @@ Behind `all_chapters` feature gate.
 | 2 | KruskalStEph | St | Kruskal's MST algorithm |
 | 3 | PrimStEph | St | Prim's MST algorithm |
 
-### Chapter 66: MST (Boruvka) - ✅ VERIFIED (`all_chapters`)
+### Chapter 66: MST (Boruvka) - ✅ VERIFIED (ZERO HOLES) (`all_chapters`)
 
 Behind `all_chapters` feature gate.
 
@@ -540,7 +540,7 @@ Behind `all_chapters` feature gate.
 
 ### Standards Library
 
-14 Verus coding standards demonstrating project patterns. Each is a compilable, verified example.
+19 Verus coding standards demonstrating project patterns. Each is a compilable, verified example.
 
 | # | Standard | Covers |
 |---|----------|--------|
