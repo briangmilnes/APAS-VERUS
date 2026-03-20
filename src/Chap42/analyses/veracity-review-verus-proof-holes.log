@@ -23,14 +23,14 @@ Table of Contents:
 ✓ Example42_1.rs
    1 clean proof function
 ⚠ TableMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableMtEph.rs:2202: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2202: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       2198 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       2200 |         {
       2201 |             let equal = self.entries == other.entries;
       2203 |             equal
       2204 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableMtEph.rs:2214: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2214: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       2208 |         fn clone(&self) -> (cloned: Self)
             ...
       2212 |                 entries: self.entries.clone(),
@@ -38,7 +38,7 @@ Table of Contents:
       2215 |             cloned
       2216 |         }
 ⚠ TableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableStEph.rs:2118: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:2118: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       2114 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       2116 |         {
@@ -46,21 +46,21 @@ Table of Contents:
       2119 |             equal
       2120 |         }
 ⚠ TableStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableStPer.rs:2035: error: fn_missing_wf_ensures - fn collect_by_key — ensures should include grouped.spec_tablestper_wf() for return type TableStPer
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2035: error: fn_missing_wf_ensures - fn collect_by_key — ensures should include grouped.spec_tablestper_wf() for return type TableStPer
       2018 |     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
             ...
       2033 |     /// APAS Algorithm 42.3: collect groups a sequence of (key, value) pairs into a table
       2034 |     /// mapping each key to the subsequence of values for that key, preserving order.
       2036 |         pairs: &ArraySeqStPerS<Pair<K, V>>,
       2037 |     ) -> (grouped: TableStPer<K, ArraySeqStPerS<V>>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableStPer.rs:2193: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2193: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       2189 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       2191 |         {
       2192 |             let equal = self.entries == other.entries;
       2194 |             equal
       2195 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableStPer.rs:2204: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2204: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       2199 |         fn clone(&self) -> (cloned: Self)
             ...
       2202 |             let cloned = TableStPer { entries: self.entries.clone() };
@@ -124,12 +124,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 20:00:01 -07:00
-Ended:     2026-03-19 20:00:01 -07:00
-Duration:  79ms
+Started:   2026-03-19 20:23:42 -07:00
+Ended:     2026-03-19 20:23:42 -07:00
+Duration:  80ms
 
 Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
-:01 -07:00
-Duration:  79ms
-
-Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap42/analyses/veracity-review-verus-proof-holes.log

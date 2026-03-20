@@ -21,38 +21,51 @@ Table of Contents:
 =================================================================
 
 ❌ ConnectivityMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityMtEph.rs:85: error: external_body - #[verifier::external_body]
-        86 |     pub fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityMtEph.rs:113: error: external_body - #[verifier::external_body]
-       114 |     pub fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityMtEph.rs:142: error: external_body - #[verifier::external_body]
-       143 |     fn build_quotient_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityMtEph.rs:160: error: external_body - #[verifier::external_body]
-       161 |     fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityMtEph.rs:237: error: external_body - #[verifier::external_body]
-       238 |     pub fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityMtEph.rs:250: error: external_body - #[verifier::external_body]
-       251 |     pub fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityMtEph.rs:212: error: fn_missing_ensures - fn compose_maps_parallel — exec fn should have ensures
-       161 |     fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:87: error: external_body - #[verifier::external_body]
+        88 |     pub fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N {
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:115: error: external_body - #[verifier::external_body]
+       116 |     pub fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:144: error: external_body - #[verifier::external_body]
+       145 |     fn build_quotient_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:162: error: external_body - #[verifier::external_body]
+       163 |     fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:246: error: fn_missing_ensures - fn count_components_hof — exec fn should have ensures
+       214 |     fn compose_maps_parallel<V: StT + MtT + Hash + Ord + 'static>(
             ...
-       210 |     /// - APAS: N/A — helper function, Line 10 of Algorithm 63.3.
-       211 |     /// - Claude-Opus-4.6: Work O(|P|), Span O(|P|) — currently sequential despite "parallel" name
-       213 |         partition_map: &HashMapWithViewPlus<V, V>,
-       214 |         component_map: &HashMapWithViewPlus<V, V>,
-   Holes: 6 total
-      6 × external_body
-❌ ConnectivityStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityStEph.rs:77: error: external_body - #[verifier::external_body]
-        78 |     pub fn count_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityStEph.rs:105: error: external_body - #[verifier::external_body]
-       106 |     pub fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityStEph.rs:188: error: external_body - #[verifier::external_body]
-       189 |     pub fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap63/ConnectivityStEph.rs:203: error: external_body - #[verifier::external_body]
-       204 |     pub fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>) {
+       244 |     /// - APAS: Work O((n+m) lg n), Span O(lg^2 n) — same as Algorithm 63.2 (parallel)
+       245 |     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(m) — delegates to star_contract_mt (inherits merge bottleneck)
+       247 |         requires spec_graphview_wf(graph@),
+       248 |     {
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:262: error: fn_missing_ensures - fn connected_components_hof — exec fn should have ensures
+       246 |     pub fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N
+            ...
+       260 |     /// - APAS: Work O((n+m) lg n), Span O(lg^2 n) — same as Algorithm 63.3 (parallel)
+       261 |     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(n lg n) — delegates to star_contract_mt (inherits compose bottleneck)
+       263 |         graph: &UnDirGraphMtEph<V>,
+       264 |         seed: u64,
    Holes: 4 total
       4 × external_body
+❌ ConnectivityStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:79: error: external_body - #[verifier::external_body]
+        80 |     pub fn count_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N {
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:107: error: external_body - #[verifier::external_body]
+       108 |     pub fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>) {
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:190: error: fn_missing_ensures - fn count_components_hof — exec fn should have ensures
+       138 |     fn build_quotient_edges<V: HashOrd>(
+            ...
+       188 |     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — same as Algorithm 63.2
+       189 |     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
+       191 |         requires spec_graphview_wf(graph@),
+       192 |     {
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:208: error: fn_missing_ensures - fn connected_components_hof — exec fn should have ensures
+       190 |     pub fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N
+            ...
+       206 |     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — same as Algorithm 63.3
+       207 |     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
+       209 |         requires spec_graphview_wf(graph@),
+       210 |     {
+   Holes: 2 total
+      2 × external_body
 
 =================================================================
 2. Depends Upon
@@ -87,26 +100,29 @@ Proof Functions:
    0 total
 
 Function Specs:
-   19 exec fns with complete spec (requires+ensures) (86%)
-   1 exec fns missing spec (4%)
+   16 exec fns with complete spec (requires+ensures) (72%)
+   4 exec fns missing spec (18%)
    2 proof/spec fns clean (9%)
    0 proof/spec fns with holes (0%)
    22 total fns
 
 
-Holes Found: 10 (actionable)
-   10 × external_body (100%)
+Holes Found: 6 (actionable)
+   6 × external_body (100%)
 
-Warnings: 1 total
-   1 × fn_missing_ensures
+Warnings: 4 total
+   4 × fn_missing_ensures
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 20:00:02 -07:00
-Ended:     2026-03-19 20:00:02 -07:00
-Duration:  4ms
+Started:   2026-03-19 20:23:43 -07:00
+Ended:     2026-03-19 20:23:43 -07:00
+Duration:  5ms
 
 Full output: src/Chap63/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap63/analyses/veracity-review-verus-proof-holes.log
+:     2026-03-19 20:23:43 -07:00
+Duration:  5ms
+
+Full output: src/Chap63/analyses/veracity-review-verus-proof-holes.log
