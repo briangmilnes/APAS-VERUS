@@ -12,7 +12,6 @@ pub mod BoruvkaMtEph {
     use crate::Types::Types::*;
 
     use std::hash::Hash;
-    #[cfg(not(verus_keep_ghost))]
     use std::sync::Arc;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     #[cfg(not(verus_keep_ghost))]
@@ -548,15 +547,50 @@ pub mod BoruvkaMtEph {
     ///
     /// - APAS: Work O(m log n), Span O(log² n)
     /// - Claude-Opus-4.6: Work O(m log n), Span O(log² n) — delegates to boruvka_mst_mt which achieves O(log n) span per round.
-    #[verifier::external_body]
     pub fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(
         vertices: &SetStEph<V>,
         edges: &SetStEph<LabeledEdge<V>>,
         seed: u64,
-    ) -> SetStEph<usize> {
-        let vertices_vec = vertices.iter().cloned().collect::<Vec<V>>();
-        let edges_vec = edges.iter().cloned().collect::<Vec<LabeledEdge<V>>>();
-        boruvka_mst_mt(vertices_vec, edges_vec, SetLit![], seed, 0)
+    ) -> SetStEph<usize>
+        requires
+            vertices.spec_setsteph_wf(),
+            edges.spec_setsteph_wf(),
+    {
+        // Collect vertices into Vec.
+        let mut vertices_vec: Vec<V> = Vec::new();
+        let mut vit = vertices.iter();
+        let ghost vseq = vit@.1;
+        loop
+            invariant
+                iter_invariant(&vit),
+                vseq == vit@.1,
+            decreases vseq.len() - vit@.0,
+        {
+            if let Some(v) = vit.next() {
+                vertices_vec.push(v.clone());
+            } else {
+                break;
+            }
+        }
+
+        // Collect edges into Vec.
+        let mut edges_vec: Vec<LabeledEdge<V>> = Vec::new();
+        let mut eit = edges.iter();
+        let ghost eseq = eit@.1;
+        loop
+            invariant
+                iter_invariant(&eit),
+                eseq == eit@.1,
+            decreases eseq.len() - eit@.0,
+        {
+            if let Some(e) = eit.next() {
+                edges_vec.push(*e);
+            } else {
+                break;
+            }
+        }
+
+        boruvka_mst_mt(vertices_vec, edges_vec, SetStEph::empty(), seed, 0)
     }
 
     /// Compute MST weight from edge labels.
@@ -566,11 +600,16 @@ pub mod BoruvkaMtEph {
     pub fn mst_weight<V: StT + Hash>(
         edges: &SetStEph<LabeledEdge<V>>,
         mst_labels: &SetStEph<usize>,
-    ) -> WrappedF64
+    ) -> (total: WrappedF64)
         requires
             edges.spec_setsteph_wf(),
             mst_labels.spec_setsteph_wf(),
+        ensures
+            edges@.len() == 0 ==> total@ == 0.0f64,
     {
+        if edges.size() == 0 {
+            return zero_dist();
+        }
         let mut total = zero_dist();
         let mut it = edges.iter();
         let ghost iter_seq = it@.1;
