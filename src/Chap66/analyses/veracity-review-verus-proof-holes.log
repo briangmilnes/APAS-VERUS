@@ -20,48 +20,17 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaMtEph.rs:138: error: external_body - #[verifier::external_body]
-       139 |     fn hash_coin_flips_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaMtEph.rs:173: error: external_body - #[verifier::external_body]
-       174 |     fn compute_remaining_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaMtEph.rs:211: error: external_body - #[verifier::external_body]
-       212 |     fn collect_mst_labels_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaMtEph.rs:249: error: external_body - #[verifier::external_body]
-       250 |     fn build_partition_map_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaMtEph.rs:294: error: external_body - #[verifier::external_body]
-       295 |     pub fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaMtEph.rs:350: error: external_body [blocked_by: hash_coin_flips_mt] - #[verifier::external_body]
-       351 |     pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaMtEph.rs:389: error: external_body - #[verifier::external_body]
-       390 |     fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaMtEph.rs:445: error: external_body [blocked_by: bridge_star_partition_mt] - #[verifier::external_body]
-       446 |     pub fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaMtEph.rs:504: error: external_body - #[verifier::external_body]
-       505 |     fn reroute_edges_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaMtEph.rs:45: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        41 |         fn eq(&self, other: &Self) -> (r: bool)
+⚠ BoruvkaMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:51: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        47 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
-        43 |         {
-        44 |             let r = self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3;
-        46 |             r
-        47 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaMtEph.rs:550: error: fn_missing_ensures - fn boruvka_mst_mt_with_seed — exec fn should have ensures
-       505 |     fn reroute_edges_mt<V: StTInMtT + Hash + Ord + 'static>(
-            ...
-       548 |     /// - APAS: Work O(m log n), Span O(log² n)
-       549 |     /// - Claude-Opus-4.6: Work O(m log n), Span O(log² n) — delegates to boruvka_mst_mt which achieves O(log n) span per round.
-       551 |         vertices: &SetStEph<V>,
-       552 |         edges: &SetStEph<LabeledEdge<V>>,
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaMtEph.rs:124: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
-   Holes: 9 total
-      9 × external_body
-         7 × root cause
-         2 × downstream (blocked by root causes)
-   Info: 1 × structural_false_positive
-      1 × OPAQUE_EXTERNAL
+        49 |         {
+        50 |             let r = self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3;
+        52 |             r
+        53 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:149: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
 ⚠ BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap66/BoruvkaStEph.rs:66: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:66: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         62 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
         64 |         {
@@ -92,8 +61,8 @@ BoruvkaStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   1 clean (no holes, no errors; 50%)
-   1 holed (holes or errors, 50%)
+   2 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    2 total
 
 Proof Functions:
@@ -102,32 +71,30 @@ Proof Functions:
    0 total
 
 Function Specs:
-   30 exec fns with complete spec (requires+ensures) (76%)
-   2 exec fns missing spec (5%)
+   31 exec fns with complete spec (requires+ensures) (79%)
+   1 exec fns missing spec (2%)
    7 proof/spec fns clean (17%)
    0 proof/spec fns with holes (0%)
    39 total fns
 
 
-Holes Found: 9 (actionable)
-   9 × external_body (100%)
-      7 × root cause
-      2 × downstream (blocked by root causes)
+Holes Found: 0 (actionable)
 
-Warnings: 3 total
-   1 × fn_missing_ensures
+Warnings: 2 total
    2 × assume_eq_clone_workaround
 
 Structural (info only): 1
    1 × OPAQUE_EXTERNAL
 
+No proof holes found! All proofs are complete.
+
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 21:50:02 -07:00
-Ended:     2026-03-19 21:50:02 -07:00
-Duration:  9ms
+Started:   2026-03-19 21:56:00 -07:00
+Ended:     2026-03-19 21:56:00 -07:00
+Duration:  12ms
 
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
