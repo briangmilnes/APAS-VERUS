@@ -22,28 +22,19 @@ Table of Contents:
 
 ✓ src/Chap02/FibonacciHFScheduler.rs
    5 clean proof functions
-❌ src/Chap02/HFSchedulerMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:150: error: assume(false) - proof { assume(false); } — needs diverge(); use `assume(false); diverge()`
-       132 |     pub fn spawn_join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
-            ...
-       148 |             Ok(val) => val,
-       149 |             Err(_) => {
-       151 |                 diverge()
-       152 |             }
+ℹ src/Chap02/HFSchedulerMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:82: info: external_type_specification_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:83: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:94: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:150: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:18: info: struct_outside_verus_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:24: info: enum_outside_verus_accept_hole
+   Info: 6 total
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:104: info: structural_false_positive THREAD_SPAWN join — #[verifier::external_body] // accept hole [high]
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:131: info: structural_false_positive THREAD_SPAWN spawn_join — #[verifier::external_body] // accept hole [high]
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:162: info: structural_false_positive THREAD_SPAWN spawn — #[verifier::external_body] // accept hole [high]
 /home/milnes/projects/APAS-VERUS/src/Chap02/HFSchedulerMtEph.rs:184: info: structural_false_positive THREAD_SPAWN wait — #[verifier::external_body] // accept hole [medium]
-   Holes: 1 total
-      1 × assume(false)
    Info: 4 × structural_false_positive
-      4 × THREAD_SPAWN
-   Info: 5 total
 ✓ src/Chap03/InsertionSortStEph.rs
 ✓ src/Chap05/KleeneStPer.rs
    9 clean proof functions
@@ -227,58 +218,19 @@ Table of Contents:
 ✓ src/Chap06/WeightedDirGraphStEphU64.rs
 ✓ src/Chap06/WeightedDirGraphStEphU8.rs
 ✓ src/Chap06/WeightedDirGraphStEphUsize.rs
-❌ src/Chap11/FibonacciMtEph2Threads.rs
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:155: error: assume(false) - Result::Err(_) => { proof { assume(false); }; diverge() } — needs diverge(); use `assume(false); diverge()`
-       100 | pub fn fib_2threads(n: u64) -> (fibonacci: u64)
-            ...
-       153 |     let left_out = match join_handle1.join() {
-       154 |         Result::Ok(out) => out,
-       156 |     };
-       157 |     let left_val = left_out.0;
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:163: error: assume(false) - Result::Err(_) => { proof { assume(false); }; diverge() } — needs diverge(); use `assume(false); diverge()`
-       100 | pub fn fib_2threads(n: u64) -> (fibonacci: u64)
-            ...
-       161 |     let right_out = match join_handle2.join() {
-       162 |         Result::Ok(out) => out,
-       164 |     };
-       165 |     let right_val = right_out.0;
-   Holes: 2 total
-      2 × assume(false)
-❌ src/Chap11/FibonacciMtEphRecomputes.rs
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:151: error: assume(false) - Result::Err(_) => { proof { assume(false); }; diverge() } — needs diverge(); use `assume(false); diverge()`
-        92 | pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
-            ...
-       149 |         let left_out = match left_handle.join() {
-       150 |             Result::Ok(out) => out,
-       152 |         };
-       153 |         let left_val = left_out.0;
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:159: error: assume(false) - Result::Err(_) => { proof { assume(false); }; diverge()} — needs diverge(); use `assume(false); diverge()`
-        92 | pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
-            ...
-       157 |         let right_out = match right_handle.join() {
-       158 |             Result::Ok(out) => out,
-       160 |         };
-       161 |         let right_val = right_out.0;
-   Holes: 2 total
-      2 × assume(false)
+ℹ src/Chap11/FibonacciMtEph2Threads.rs
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:155: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEph2Threads.rs:163: info: accept()
+   Info: 2 total
+ℹ src/Chap11/FibonacciMtEphRecomputes.rs
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:151: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtEphRecomputes.rs:159: info: accept()
+   Info: 2 total
 ✓ src/Chap11/FibonacciMtPerAllThreads.rs
-❌ src/Chap11/FibonacciMtPerTSM.rs
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:145: error: assume(false) - Result::Err(_) => { proof { assume(false); }; diverge() } — needs diverge(); use `assume(false); diverge()`
-        86 | pub fn fib(n: u64) -> (fibonacci: u64)
-            ...
-       143 |         let left_out = match left_handle.join() {
-       144 |             Result::Ok(out) => out,
-       146 |         };
-       147 |         let left_val = left_out.0;
-/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:153: error: assume(false) - Result::Err(_) => { proof { assume(false); }; diverge() } — needs diverge(); use `assume(false); diverge()`
-        86 | pub fn fib(n: u64) -> (fibonacci: u64)
-            ...
-       151 |         let right_out = match right_handle.join() {
-       152 |             Result::Ok(out) => out,
-       154 |         };
-       155 |         let right_val = right_out.0;
-   Holes: 2 total
-      2 × assume(false)
+ℹ src/Chap11/FibonacciMtPerTSM.rs
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:145: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap11/FibonacciMtPerTSM.rs:153: info: accept()
+   Info: 2 total
 ✓ src/Chap11/FibonacciStEph.rs
    3 clean proof functions
 ℹ src/Chap12/Exercise12_1.rs
@@ -2343,13 +2295,13 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
-Chap02::FibonacciHFScheduler  depends upon holed modules: Chap02::HFSchedulerMtEph
+Chap02::FibonacciHFScheduler  depends upon only clean modules
 Chap02::HFSchedulerMtEph  depends upon only clean modules
 Chap03::InsertionSortStEph  depends upon only clean modules
 Chap05::KleeneStPer  depends upon only clean modules
 Chap05::MappingStEph  depends upon only clean modules
 Chap05::RelationStEph  depends upon only clean modules
-Chap05::SetMtEph  depends upon holed modules: Chap02::HFSchedulerMtEph
+Chap05::SetMtEph  depends upon only clean modules
 Chap05::SetStEph  depends upon only clean modules
 Chap06::DirGraphMtEph  depends upon only clean modules
 Chap06::DirGraphStEph  depends upon only clean modules
@@ -2376,13 +2328,13 @@ Chap11::FibonacciMtEphRecomputes  depends upon only clean modules
 Chap11::FibonacciMtPerAllThreads  depends upon only clean modules
 Chap11::FibonacciMtPerTSM  depends upon only clean modules
 Chap11::FibonacciStEph  depends upon only clean modules
-Chap12::Exercise12_1  depends upon holed modules: Chap02::HFSchedulerMtEph
+Chap12::Exercise12_1  depends upon only clean modules
 Chap12::Exercise12_2  depends upon only clean modules
 Chap12::Exercise12_5  depends upon only clean modules
 Chap17::MathSeq  depends upon only clean modules
 Chap18::ArraySeq  depends upon only clean modules
 Chap18::ArraySeqMtEph  depends upon only clean modules
-Chap18::ArraySeqMtPer  depends upon holed modules: Chap02::HFSchedulerMtEph
+Chap18::ArraySeqMtPer  depends upon only clean modules
 Chap18::ArraySeqStEph  depends upon only clean modules
 Chap18::ArraySeqStPer  depends upon only clean modules
 Chap18::LinkedListStEph  depends upon only clean modules
@@ -2437,7 +2389,7 @@ Chap36::QuickSortMtEph  depends upon only clean modules
 Chap36::QuickSortMtEphSlice  depends upon only clean modules
 Chap36::QuickSortStEph  depends upon only clean modules
 Chap37::AVLTreeSeq  depends upon only clean modules
-Chap37::AVLTreeSeqMtPer  depends upon holed modules: Chap02::HFSchedulerMtEph
+Chap37::AVLTreeSeqMtPer  depends upon only clean modules
 Chap37::AVLTreeSeqStEph  depends upon only clean modules
 Chap37::AVLTreeSeqStPer  depends upon only clean modules
 Chap37::BSTAVLMtEph  depends upon only clean modules
@@ -2599,19 +2551,19 @@ Chap65::UnionFindStEph  depends upon only clean modules
 Chap66::BoruvkaMtEph  depends upon only clean modules
 Chap66::BoruvkaStEph  depends upon only clean modules
 Concurrency  depends upon only clean modules
-ParaPairs  depends upon holed modules: Chap02::HFSchedulerMtEph
+ParaPairs  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
-src/Chap02/FibonacciHFScheduler.rs  depends upon holed modules: Chap02::HFSchedulerMtEph
+src/Chap02/FibonacciHFScheduler.rs  depends upon only clean modules
 src/Chap02/HFSchedulerMtEph.rs  depends upon only clean modules
 src/Chap03/InsertionSortStEph.rs  depends upon only clean modules
 src/Chap05/KleeneStPer.rs  depends upon only clean modules
 src/Chap05/MappingStEph.rs  depends upon only clean modules
 src/Chap05/RelationStEph.rs  depends upon only clean modules
-src/Chap05/SetMtEph.rs  depends upon holed modules: Chap02::HFSchedulerMtEph
+src/Chap05/SetMtEph.rs  depends upon only clean modules
 src/Chap05/SetStEph.rs  depends upon only clean modules
 src/Chap06/DirGraphMtEph.rs  depends upon only clean modules
 src/Chap06/DirGraphStEph.rs  depends upon only clean modules
@@ -2638,13 +2590,13 @@ src/Chap11/FibonacciMtEphRecomputes.rs  depends upon only clean modules
 src/Chap11/FibonacciMtPerAllThreads.rs  depends upon only clean modules
 src/Chap11/FibonacciMtPerTSM.rs  depends upon only clean modules
 src/Chap11/FibonacciStEph.rs  depends upon only clean modules
-src/Chap12/Exercise12_1.rs  depends upon holed modules: Chap02::HFSchedulerMtEph
+src/Chap12/Exercise12_1.rs  depends upon only clean modules
 src/Chap12/Exercise12_2.rs  depends upon only clean modules
 src/Chap12/Exercise12_5.rs  depends upon only clean modules
 src/Chap17/MathSeq.rs  depends upon only clean modules
 src/Chap18/ArraySeq.rs  depends upon only clean modules
 src/Chap18/ArraySeqMtEph.rs  depends upon only clean modules
-src/Chap18/ArraySeqMtPer.rs  depends upon holed modules: Chap02::HFSchedulerMtEph
+src/Chap18/ArraySeqMtPer.rs  depends upon only clean modules
 src/Chap18/ArraySeqStEph.rs  depends upon only clean modules
 src/Chap18/ArraySeqStPer.rs  depends upon only clean modules
 src/Chap18/LinkedListStEph.rs  depends upon only clean modules
@@ -2699,7 +2651,7 @@ src/Chap36/QuickSortMtEph.rs  depends upon only clean modules
 src/Chap36/QuickSortMtEphSlice.rs  depends upon only clean modules
 src/Chap36/QuickSortStEph.rs  depends upon only clean modules
 src/Chap37/AVLTreeSeq.rs  depends upon only clean modules
-src/Chap37/AVLTreeSeqMtPer.rs  depends upon holed modules: Chap02::HFSchedulerMtEph
+src/Chap37/AVLTreeSeqMtPer.rs  depends upon only clean modules
 src/Chap37/AVLTreeSeqStEph.rs  depends upon only clean modules
 src/Chap37/AVLTreeSeqStPer.rs  depends upon only clean modules
 src/Chap37/BSTAVLMtEph.rs  depends upon only clean modules
@@ -2861,15 +2813,15 @@ src/Chap65/UnionFindStEph.rs  depends upon only clean modules
 src/Chap66/BoruvkaMtEph.rs  depends upon only clean modules
 src/Chap66/BoruvkaStEph.rs  depends upon only clean modules
 src/Concurrency.rs  depends upon only clean modules
-src/ParaPairs.rs  depends upon holed modules: Chap02::HFSchedulerMtEph
+src/ParaPairs.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   221 clean (no holes, no errors; 85%)
-   36 holed (holes or errors, 14%)
+   225 clean (no holes, no errors; 87%)
+   32 holed (holes or errors, 12%)
    257 total
 
 Proof Functions:
@@ -2885,23 +2837,22 @@ Function Specs:
    7373 total fns
 
 
-Holes Found: 54 (actionable)
-   10 × assume(false) (18%)
-   10 × assume() (18%)
+Holes Found: 47 (actionable)
+   3 × assume(false) (6%)
+   10 × assume() (21%)
       8 × algorithmic
-      1 × rwlock:reader
       1 × closure
-   33 × external_body (61%)
+      1 × rwlock:reader
+   33 × external_body (70%)
       17 × root cause
       16 × downstream (blocked by root causes)
-   1 × external (1%)
+   1 × external (2%)
 
 Per-Chapter Holes:
-  Chap02:  1  Chap11:  6  Chap26:  4
-  Chap38:  9  Chap39:  8  Chap41:  6
-  Chap43:  4  Chap45:  1  Chap47:  5
-  Chap59:  2  Chap61:  1  Chap62:  3
-  Chap64:  2  Chap65:  2
+  Chap26:  4  Chap38:  9  Chap39:  8
+  Chap41:  6  Chap43:  4  Chap45:  1
+  Chap47:  5  Chap59:  2  Chap61:  1
+  Chap62:  3  Chap64:  2  Chap65:  2
 
 Warnings: 205 total
    18 × fn_missing_requires
@@ -2910,20 +2861,21 @@ Warnings: 205 total
    7 × fn_missing_wf_ensures
    148 × assume_eq_clone_workaround
 
-Accepted (reviewed): 55 total
+Accepted (reviewed): 62 total
    26 × external_body_accept_hole
+   14 × accept()
    10 × trivial_spec_wf
-   7 × accept()
    5 × external_accept_hole
    4 × unsafe_block_accept_hole
-   1 × enum_outside_verus_accept_hole
    1 × external_type_specification_accept_hole
+   1 × enum_outside_verus_accept_hole
    1 × struct_outside_verus_accept_hole
 
 Accepted by Chapter:
-  Chap02:  5  Chap12: 19  Chap18:  8
-  Chap19:  3  Chap30:  7  Chap37:  5
-  Chap40:  3  Chap41:  2  Chap56:  2
+  Chap02:  6  Chap11:  6  Chap12: 19
+  Chap18:  8  Chap19:  3  Chap30:  7
+  Chap37:  5  Chap40:  3  Chap41:  2
+  Chap56:  2
 
 Structural (info only): 179
    144 × RWLOCK_GHOST
@@ -2944,50 +2896,50 @@ Structural (info only): 179
 
    1  Chap38  (9 holes, 2 files)
    2  Chap39  (8 holes, 4 files)
-   3  Chap11  (6 holes, 5 files)
-   4  Chap41  (6 holes, 7 files)
-   5  Chap47  (5 holes, 9 files)
-   6  Chap43  (4 holes, 11 files)
-   7  Chap26  (4 holes, 8 files)
-   8  Chap62  (3 holes, 4 files)
+   3  Chap41  (6 holes, 7 files)
+   4  Chap47  (5 holes, 9 files)
+   5  Chap43  (4 holes, 11 files)
+   6  Chap26  (4 holes, 8 files)
+   7  Chap62  (3 holes, 4 files)
+   8  Chap64  (2 holes, 3 files)
    9  Chap65  (2 holes, 3 files)
-   10  Chap64  (2 holes, 3 files)
-   11  Chap59  (2 holes, 4 files)
+   10  Chap59  (2 holes, 4 files)
+   11  Chap61  (1 holes, 4 files)
    12  Chap45  (1 holes, 7 files)
-   13  Chap02  (1 holes, 2 files)
-   14  Chap61  (1 holes, 4 files)
-   15  Chap50  (0 holes, 8 files)
-   16  Chap57  (0 holes, 3 files)
-   17  Chap53  (0 holes, 5 files)
-   18  Chap63  (0 holes, 2 files)
-   19  Concurrency  (0 holes, 1 files)
-   20  Chap42  (0 holes, 4 files)
-   21  Chap56  (0 holes, 12 files)
-   22  Chap18  (0 holes, 7 files)
-   23  Chap19  (0 holes, 4 files)
-   24  Chap35  (0 holes, 4 files)
+   13  Chap54  (0 holes, 4 files)
+   14  Chap12  (0 holes, 3 files)
+   15  Chap44  (0 holes, 2 files)
+   16  Chap05  (0 holes, 5 files)
+   17  Chap36  (0 holes, 3 files)
+   18  ParaPairs  (0 holes, 1 files)
+   19  Chap40  (0 holes, 3 files)
+   20  Chap19  (0 holes, 4 files)
+   21  Chap27  (0 holes, 4 files)
+   22  Chap49  (0 holes, 8 files)
+   23  Chap21  (0 holes, 12 files)
+   24  Chap55  (0 holes, 8 files)
    25  Chap03  (0 holes, 1 files)
-   26  Chap17  (0 holes, 1 files)
-   27  Chap21  (0 holes, 12 files)
-   28  Chap05  (0 holes, 5 files)
-   29  Chap40  (0 holes, 3 files)
-   30  Chap44  (0 holes, 2 files)
-   31  Chap12  (0 holes, 3 files)
-   32  Chap49  (0 holes, 8 files)
-   33  Chap54  (0 holes, 4 files)
-   34  Chap52  (0 holes, 14 files)
-   35  Chap36  (0 holes, 3 files)
-   36  Chap51  (0 holes, 8 files)
-   37  Chap37  (0 holes, 19 files)
-   38  Chap23  (0 holes, 2 files)
-   39  Chap30  (0 holes, 1 files)
-   40  ParaPairs  (0 holes, 1 files)
-   41  Chap06  (0 holes, 20 files)
-   42  Chap55  (0 holes, 8 files)
-   43  Chap58  (0 holes, 2 files)
-   44  Chap66  (0 holes, 2 files)
-   45  Chap27  (0 holes, 4 files)
-   46  Chap28  (0 holes, 11 files)
+   26  Chap58  (0 holes, 2 files)
+   27  Chap23  (0 holes, 2 files)
+   28  Concurrency  (0 holes, 1 files)
+   29  Chap30  (0 holes, 1 files)
+   30  Chap56  (0 holes, 12 files)
+   31  Chap28  (0 holes, 11 files)
+   32  Chap06  (0 holes, 20 files)
+   33  Chap52  (0 holes, 14 files)
+   34  Chap11  (0 holes, 5 files)
+   35  Chap17  (0 holes, 1 files)
+   36  Chap35  (0 holes, 4 files)
+   37  Chap51  (0 holes, 8 files)
+   38  Chap02  (0 holes, 2 files)
+   39  Chap37  (0 holes, 19 files)
+   40  Chap18  (0 holes, 7 files)
+   41  Chap66  (0 holes, 2 files)
+   42  Chap57  (0 holes, 3 files)
+   43  Chap42  (0 holes, 4 files)
+   44  Chap50  (0 holes, 8 files)
+   45  Chap53  (0 holes, 5 files)
+   46  Chap63  (0 holes, 2 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
@@ -2996,39 +2948,34 @@ Structural (info only): 179
    1  src/Chap38/BSTParaMtEph.rs  (8 holes)
    2  src/Chap39/BSTParaTreapMtEph.rs  (8 holes)
    3  src/Chap26/ETSPMtEph.rs  (4 holes)
-   4  src/Chap11/FibonacciMtEphRecomputes.rs  (2 holes)
-   5  src/Chap64/TSPApproxStEph.rs  (2 holes)
-   6  src/Chap11/FibonacciMtEph2Threads.rs  (2 holes)
-   7  src/Chap41/AVLTreeSetStEph.rs  (2 holes)
-   8  src/Chap62/StarContractionMtEph.rs  (2 holes)
-   9  src/Chap11/FibonacciMtPerTSM.rs  (2 holes)
-   10  src/Chap47/ParaHashTableStEph.rs  (2 holes)
-   11  src/Chap65/KruskalStEph.rs  (1 holes)
-   12  src/Chap43/AugOrderedTableMtEph.rs  (1 holes)
-   13  src/Chap43/AugOrderedTableStPer.rs  (1 holes)
-   14  src/Chap61/EdgeContractionMtEph.rs  (1 holes)
-   15  src/Chap45/Example45_2.rs  (1 holes)
-   16  src/Chap62/StarContractionStEph.rs  (1 holes)
-   17  src/Chap02/HFSchedulerMtEph.rs  (1 holes)
+   4  src/Chap47/ParaHashTableStEph.rs  (2 holes)
+   5  src/Chap41/AVLTreeSetStEph.rs  (2 holes)
+   6  src/Chap64/TSPApproxStEph.rs  (2 holes)
+   7  src/Chap62/StarContractionMtEph.rs  (2 holes)
+   8  src/Chap45/Example45_2.rs  (1 holes)
+   9  src/Chap65/KruskalStEph.rs  (1 holes)
+   10  src/Chap59/JohnsonMtEphI64.rs  (1 holes)
+   11  src/Chap43/AugOrderedTableMtEph.rs  (1 holes)
+   12  src/Chap65/PrimStEph.rs  (1 holes)
+   13  src/Chap43/OrderedSetStPer.rs  (1 holes)
+   14  src/Chap43/AugOrderedTableStPer.rs  (1 holes)
+   15  src/Chap62/StarContractionStEph.rs  (1 holes)
+   16  src/Chap61/EdgeContractionMtEph.rs  (1 holes)
+   17  src/Chap59/JohnsonStEphI64.rs  (1 holes)
    18  src/Chap38/BSTParaStEph.rs  (1 holes)
-   19  src/Chap43/OrderedSetStPer.rs  (1 holes)
-   20  src/Chap59/JohnsonMtEphI64.rs  (1 holes)
-   21  src/Chap65/PrimStEph.rs  (1 holes)
-   22  src/Chap59/JohnsonStEphI64.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
 =================================================================
 
    1  src/Chap38  (9 holes, 2 files)
-   2  src/Chap11  (6 holes, 5 files)
-   3  src/Chap26  (4 holes, 8 files)
-   4  src/Chap62  (3 holes, 4 files)
-   5  src/Chap64  (2 holes, 3 files)
+   2  src/Chap26  (4 holes, 8 files)
+   3  src/Chap62  (3 holes, 4 files)
+   4  src/Chap64  (2 holes, 3 files)
+   5  src/Chap65  (2 holes, 3 files)
    6  src/Chap59  (2 holes, 4 files)
-   7  src/Chap65  (2 holes, 3 files)
+   7  src/Chap45  (1 holes, 7 files)
    8  src/Chap61  (1 holes, 4 files)
-   9  src/Chap45  (1 holes, 7 files)
 
 =================================================================
 4.4. Not Verusified
@@ -3046,14 +2993,16 @@ Structural (info only): 179
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 32 clean, 14 holed, 54 holes (global), 257 modules
+Chapter Status — 46 chapters, 34 clean, 12 holed, 47 holes (global), 257 modules
 
-CLEAN CHAPTERS (32)
+CLEAN CHAPTERS (34)
   Chapter        Files
   -------------- -----
+  Chap02             2
   Chap03             1
   Chap05             5
   Chap06            20
+  Chap11             5
   Chap12             3
   Chap17             1
   Chap18             7
@@ -3084,11 +3033,9 @@ CLEAN CHAPTERS (32)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (14) — 54 holes
+HOLED CHAPTERS (12) — 47 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
-  Chap02             1     2  internal  Chap02::HFSchedulerMtEph
-  Chap11             6     5  YES       
   Chap26             4     8  YES       
   Chap38             9     2  YES       
   Chap39             8     4  internal  Chap39::BSTParaTreapMtEph
@@ -3105,22 +3052,17 @@ HOLED CHAPTERS (14) — 54 holes
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
   --------------  -------------------
-  Chap05          Chap02
-  Chap12          Chap02
-  Chap18          Chap02
-  Chap37          Chap02
   Chap43          Chap41
   Chap52          Chap41
   Chap53          Chap41
   Chap55          Chap41
-  ParaPairs       Chap02
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 21:59:19 -07:00
-Ended:     2026-03-19 21:59:21 -07:00
-Duration:  1424ms
+Started:   2026-03-19 22:07:08 -07:00
+Ended:     2026-03-19 22:07:09 -07:00
+Duration:  1373ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log

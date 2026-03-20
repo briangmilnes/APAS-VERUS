@@ -152,7 +152,7 @@ pub fn fib_2threads(n: u64) -> (fibonacci: u64)
     // Join thread 1
     let left_out = match join_handle1.join() {
         Result::Ok(out) => out,
-        Result::Err(_) => { proof { assume(false); }; diverge() }
+        Result::Err(_) => { proof { assume(false); }; diverge() } // accept hole: thread join error arm unreachable
     };
     let left_val = left_out.0;
     let tracked left_token = left_out.1.get();
@@ -160,7 +160,7 @@ pub fn fib_2threads(n: u64) -> (fibonacci: u64)
     // Join thread 2
     let right_out = match join_handle2.join() {
         Result::Ok(out) => out,
-        Result::Err(_) => { proof { assume(false); }; diverge() }
+        Result::Err(_) => { proof { assume(false); }; diverge() } // accept hole: thread join error arm unreachable
     };
     let right_val = right_out.0;
     let tracked right_token = right_out.1.get();

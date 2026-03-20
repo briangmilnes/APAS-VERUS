@@ -142,7 +142,7 @@ pub fn fib(n: u64) -> (fibonacci: u64)
         // Join left
         let left_out = match left_handle.join() {
             Result::Ok(out) => out,
-            Result::Err(_) => { proof { assume(false); }; diverge() }
+            Result::Err(_) => { proof { assume(false); }; diverge() } // accept hole: thread join error arm unreachable
         };
         let left_val = left_out.0;
         let tracked left_done = left_out.1.get();
@@ -150,7 +150,7 @@ pub fn fib(n: u64) -> (fibonacci: u64)
         // Join right  
         let right_out = match right_handle.join() {
             Result::Ok(out) => out,
-            Result::Err(_) => { proof { assume(false); }; diverge() }
+            Result::Err(_) => { proof { assume(false); }; diverge() } // accept hole: thread join error arm unreachable
         };
         let right_val = right_out.0;
         let tracked right_done = right_out.1.get();

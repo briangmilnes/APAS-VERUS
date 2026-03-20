@@ -147,7 +147,7 @@ pub mod HFSchedulerMtEph {
         let b = match handle.join() {
             Ok(val) => val,
             Err(_) => {
-                proof { assume(false); }
+                proof { assume(false); } // accept hole: thread join error arm unreachable
                 diverge()
             }
         };

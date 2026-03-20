@@ -115,8 +115,8 @@ Table of Contents:
          1 × root cause
          6 × downstream (blocked by root causes)
    Info: 4 × structural_false_positive
-      2 × RWLOCK_GHOST
       2 × UNSAFE_SEND_SYNC
+      2 × RWLOCK_GHOST
 ❌ BSTParaStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:152: error: assume() [algorithmic] - proof { assume(c == *x); } // Clone bridge: T::clone preserv
        148 |     fn clone_elem<T: Clone>(x: &T) -> (c: T)
@@ -183,18 +183,16 @@ Warnings: 9 total
    2 × assume_eq_clone_workaround
 
 Structural (info only): 4
-   2 × UNSAFE_SEND_SYNC
    2 × RWLOCK_GHOST
+   2 × UNSAFE_SEND_SYNC
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 21:59:18 -07:00
-Ended:     2026-03-19 21:59:18 -07:00
-Duration:  28ms
+Started:   2026-03-19 22:07:07 -07:00
+Ended:     2026-03-19 22:07:07 -07:00
+Duration:  26ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
-Duration:  28ms
-
-Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
+c/Chap38/analyses/veracity-review-verus-proof-holes.log
