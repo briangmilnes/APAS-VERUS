@@ -219,6 +219,9 @@ pub mod DoubleHashFlatHashTableStEph {
                                         }
                                     }
                                 }
+                                // One-slot modification witness for trait ensures.
+                                assert(spec_other_slots_preserved(
+                                    old(table).table@, table.table@, slot as int));
                             }
                             return;
                         }
@@ -319,6 +322,10 @@ pub mod DoubleHashFlatHashTableStEph {
                                     }
                                 }
                             }
+                            // One-slot modification witness for trait ensures.
+                            assert(old_table_seq =~= old(table).table@);
+                            assert(spec_other_slots_preserved(
+                                old(table).table@, table.table@, slot as int));
                         }
                         return;
                     }

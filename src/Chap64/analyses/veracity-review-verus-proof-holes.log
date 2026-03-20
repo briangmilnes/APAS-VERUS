@@ -21,7 +21,7 @@ Table of Contents:
 =================================================================
 
 ⚠ SpanTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:54: error: fn_missing_ensures - fn spanning_tree_star_contraction_mt — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/SpanTreeMtEph.rs:54: error: fn_missing_ensures - fn spanning_tree_star_contraction_mt — exec fn should have ensures
         45 |         fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(graph: &UnDirGraphMtEph<V>, tree: &SetStEph<Edge<V>>) -> B
             ...
         52 |     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — expand closure
@@ -29,7 +29,7 @@ Table of Contents:
         55 |         graph: &UnDirGraphMtEph<V>,
         56 |         seed: u64,
 ⚠ SpanTreeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:51: error: fn_missing_ensures - fn spanning_tree_star_contraction — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/SpanTreeStEph.rs:51: error: fn_missing_ensures - fn spanning_tree_star_contraction — exec fn should have ensures
         43 |         fn verify_spanning_tree<V: HashOrd>(graph: &UnDirGraphStEph<V>, tree: &SetStEph<Edge<V>>) -> B
             ...
         49 |     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n)
@@ -37,11 +37,11 @@ Table of Contents:
         52 |         requires
         53 |             spec_graphview_wf(graph@),
 ❌ TSPApproxStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:89: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/TSPApproxStEph.rs:89: error: external_body [blocked_by: euler_tour_dfs] - #[verifier::external_body]
         90 |     pub fn euler_tour<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:106: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/TSPApproxStEph.rs:106: error: external_body - #[verifier::external_body]
        107 |     fn euler_tour_dfs<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:295: error: fn_missing_ensures - fn approx_metric_tsp — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/TSPApproxStEph.rs:295: error: fn_missing_ensures - fn approx_metric_tsp — exec fn should have ensures
        259 |     fn get_edge_weight<V: HashOrd>(
             ...
        293 |     /// Returns:
@@ -50,6 +50,8 @@ Table of Contents:
        297 |         spanning_tree: &SetStEph<LabEdge<V, WrappedF64>>,
    Holes: 2 total
       2 × external_body
+         1 × root cause
+         1 × downstream (blocked by root causes)
 
 =================================================================
 2. Depends Upon
@@ -95,6 +97,8 @@ Function Specs:
 
 Holes Found: 2 (actionable)
    2 × external_body (100%)
+      1 × root cause
+      1 × downstream (blocked by root causes)
 
 Warnings: 3 total
    3 × fn_missing_ensures
@@ -103,9 +107,12 @@ Warnings: 3 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 21:20:51 -07:00
-Ended:     2026-03-19 21:20:51 -07:00
+Started:   2026-03-19 23:00:28 -07:00
+Ended:     2026-03-19 23:00:28 -07:00
 Duration:  5ms
 
 Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
+
+Duration:  5ms
+
 Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
