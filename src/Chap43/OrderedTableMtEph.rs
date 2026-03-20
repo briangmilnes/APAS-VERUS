@@ -272,7 +272,7 @@ broadcast use {
         /// - APAS: Work Θ(log n + m), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires read lock, delegates to StEph.get_key_range
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
-            ensures range@.dom().finite();
+            ensures range@.dom().finite(), range.spec_orderedtablemteph_wf();
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires read lock, delegates to StEph.rank_key
