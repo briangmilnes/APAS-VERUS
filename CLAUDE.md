@@ -142,8 +142,13 @@ minor). You bring:
 - **Always ask before `git commit`**. Show changed files, proposed message, wait for "Ready to commit?"
 - **Always ask before `git push`**. Show commits to be pushed, wait for approval.
 - **Todos need approval.** Display the plan, wait for user approval before executing.
-- **Do not revert without asking.** Proof work requires human interaction. Verification
-  failures are data, not reasons to undo. Ask: "Should I revert, or fix forward?"
+- **NEVER revert proof work without explicit user approval.** This is a HARD RULE. Do NOT
+  run `git checkout --`, `git restore`, `git reset`, or manually undo changes to source
+  files without FIRST stopping and asking the user: "Should I revert, or fix forward?"
+  Proof work is expensive. A partially-working proof that needs two more fixes is worth
+  more than a clean revert. Verification failures are data, not reasons to undo. If the
+  user tells you something about a different file or pattern, do NOT assume that means
+  your current work should be reverted. Ask before destroying any work.
 
 ### Git
 
