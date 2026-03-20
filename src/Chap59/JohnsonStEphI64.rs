@@ -266,14 +266,14 @@ pub mod JohnsonStEphI64 {
 
         let mut edges = SetStEph::<WeightedEdge<usize, i128>>::empty();
 
-        // Iterate each vertex's out-neighbors, reweight, and insert.
-        let mut u: usize = 0;
+        // Iterate over all arcs directly (avoids sum-of-degrees lemma).
+        let arcs = graph.labeled_arcs();
+        let mut it = arcs.iter();
+        let ghost arcs_seq = it@.1;
+
         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-        while u < n
+        loop
             invariant
-                u <= n,
-                n > 0,
-                n < usize::MAX,
                 edges.spec_setsteph_wf(),
                 vertices.spec_setsteph_wf(),
                 vertices@.len() == n as nat,
@@ -282,51 +282,54 @@ pub mod JohnsonStEphI64 {
                 spec_labgraphview_wf(graph@),
                 valid_key_type_WeightedEdge::<usize, i128>(),
                 forall|v: usize| graph@.V.contains(v) <==> v < n,
+                n > 0,
+                n < usize::MAX,
+                it@.0 <= it@.1.len(),
+                it@.1 == arcs_seq,
+                arcs_seq.map(|i: int, k: LabEdge<usize, i128>| k@).to_set() =~= graph@.A,
+                arcs_seq.no_duplicates(),
+                edges@.len() <= it@.0,
                 forall|a: usize, b: usize, w: i128|
                     #[trigger] edges@.contains((a, b, w)) ==>
                     vertices@.contains(a) && vertices@.contains(b),
-            decreases n - u,
+            decreases arcs_seq.len() - it@.0,
         {
-            let neighbors = graph.out_neighbors_weighed(&u);
-            let mut it = neighbors.iter();
-            loop
-                invariant
-                    edges.spec_setsteph_wf(),
-                    vertices.spec_setsteph_wf(),
-                    forall|k: usize| vertices@.contains(k) <==> k < n,
-                    spec_labgraphview_wf(graph@),
-                    valid_key_type_WeightedEdge::<usize, i128>(),
-                    u < n,
-                    potentials@.len() == n as int,
-                    forall|v: usize| graph@.V.contains(v) <==> v < n,
-                    it@.0 <= it@.1.len(),
-                    forall|a: usize, b: usize, w: i128|
-                        #[trigger] edges@.contains((a, b, w)) ==>
-                        vertices@.contains(a) && vertices@.contains(b),
-                decreases it@.1.len() - it@.0,
-            {
-                match it.next() {
-                    None => break,
-                    Some(pair) => {
-                        let Pair(v, weight) = pair;
-                        if *v < n {
-                            let new_weight = reweight_edge(*weight, potentials[u], potentials[*v]);
-                            let _ = edges.insert(WeightedEdge(u, *v, new_weight));
-                        }
+            match it.next() {
+                None => break,
+                Some(arc) => {
+                    let from = arc.0;
+                    let to = arc.1;
+                    let weight = arc.2;
+                    if from < n && to < n {
+                        let new_weight = reweight_edge(weight, potentials[from], potentials[to]);
+                        let _ = edges.insert(WeightedEdge(from, to, new_weight));
                     }
                 }
             }
-            u = u + 1;
         }
 
         let result = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
         proof {
             assert(result@.V.len() == n as nat);
-            // Reweighting preserves edge count: each original edge maps to at most one
-            // reweighted edge. from_weighed_edges ensures result@.A =~= edges@.
-            // Proving edges@.len() <= graph@.A.len() needs a graph partition lemma
-            // (sum of |out_neighbors(u)| == |A|) which is not yet in the library.
-            assume(result@.A.len() <= graph@.A.len());
+            // Prove edges@.len() <= graph@.A.len():
+            // At loop exit: edges@.len() <= it@.0 == arcs_seq.len().
+            // The view function on LabEdge<usize, i128> is injective (identity).
+            let view_fn = |k: LabEdge<usize, i128>| k@;
+            assert forall|x: LabEdge<usize, i128>, y: LabEdge<usize, i128>|
+                #[trigger] view_fn(x) == #[trigger] view_fn(y) implies x == y
+            by {};
+            // By lemma_no_duplicates_injective: mapped seq has no duplicates.
+            arcs_seq.lemma_no_duplicates_injective(view_fn);
+            // By unique_seq_to_set: no-dup seq length == to_set length.
+            let mapped = arcs_seq.map_values(view_fn);
+            mapped.unique_seq_to_set();
+            // mapped.to_set() =~= arcs_seq.map(|i, k| k@).to_set() =~= graph@.A.
+            assert(mapped =~= arcs_seq.map(|i: int, k: LabEdge<usize, i128>| k@));
+            assert(mapped.to_set() =~= graph@.A);
+            // Therefore arcs_seq.len() == graph@.A.len().
+            assert(arcs_seq.len() == graph@.A.len());
+            // And edges@.len() <= arcs_seq.len() from loop invariant.
+            assert(result@.A.len() <= graph@.A.len());
         }
         result
     }
