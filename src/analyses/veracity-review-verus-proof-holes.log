@@ -777,107 +777,88 @@ Table of Contents:
 ✓ src/Chap37/BSTSplayStEph.rs
    1 clean proof function
 ❌ src/Chap38/BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:80: error: external_body - #[verifier::external_body]
-        81 |         open spec fn view(&self) -> Set<<T as View>::V> { Set::empty() }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:203: error: assume() [algorithmic] - proof { assume(empty@ == Set::<<T as View>::V>::empty() && e
-       199 |         fn new() -> (empty: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:352: error: assume() [rwlock:reader] - proof { assume(result.is_some() <==> self@.contains(key@)); 
+       326 |         fn find(&self, key: &T) -> (found: Option<T>)
             ...
-       201 |         {
-       202 |             let empty = ParamBST { root: new_param_bst_arc(None) };
-       204 |             empty
-       205 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:217: error: assume() [algorithmic] - proof { assume(tree@ == Set::<<T as View>::V>::empty().inser
-       207 |         fn singleton(key: T) -> (tree: Self)
-            ...
-       215 |                 root: new_param_bst_arc(Some(Box::new(NodeInner { key, size: 1, left, right }))),
-       216 |             };
-       218 |             tree
-       219 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:256: error: assume() [algorithmic] - proof { assume(exposed is Leaf ==> joined@ == Set::<<T as Vi
-       237 |         fn join_mid(exposed: Exposed<T>) -> (joined: Self)
-            ...
-       254 |                         root: new_param_bst_arc(Some(Box::new(NodeInner { key, size: sz, left, right }))),
-       255 |                     };
-       257 |                     joined
-       258 |                 },
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:344: error: assume() [rwlock:reader] - proof { assume(result.is_some() <==> self@.contains(key@)); 
-       318 |         fn find(&self, key: &T) -> (found: Option<T>)
-            ...
-       342 |                 remaining = remaining - 1;
-       343 |             }
-       345 |             result
-       346 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:355: error: external_body - #[verifier::external_body]
-       356 |         fn join_pair(&self, other: Self) -> (joined: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:360: error: external_body - #[verifier::external_body]
-       361 |         fn union(&self, other: &Self) -> (combined: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:365: error: external_body - #[verifier::external_body]
-       366 |         fn intersect(&self, other: &Self) -> (common: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:370: error: external_body - #[verifier::external_body]
-       371 |         fn difference(&self, other: &Self) -> (remaining: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:375: error: external_body - #[verifier::external_body]
-       376 |         fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:385: error: external_body - #[verifier::external_body]
-       386 |         fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:390: error: external_body - #[verifier::external_body]
-       391 |         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:442: error: external_body - #[verifier::external_body]
-       443 |     fn new_leaf<T: MtKey>() -> ParamBST<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:447: error: external_body - #[verifier::external_body]
-       448 |     fn expose_internal<T: MtKey + 'static>(tree: &ParamBST<T>) -> Exposed<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:458: error: external_body - #[verifier::external_body]
-       459 |     fn join_mid<T: MtKey + 'static>(exposed: Exposed<T>) -> ParamBST<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:471: error: external_body - #[verifier::external_body]
-       472 |     fn split_inner<T: MtKey + 'static>(tree: &ParamBST<T>, key: &T) -> (parts: (ParamBST<T>, B, ParamBST<T>))
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:496: error: external_body - #[verifier::external_body]
-       497 |     fn join_m<T: MtKey + 'static>(left: ParamBST<T>, key: T, right: ParamBST<T>) -> ParamBST<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:501: error: external_body - #[verifier::external_body]
-       502 |     fn min_key<T: MtKey + 'static>(tree: &ParamBST<T>) -> Option<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:512: error: external_body - #[verifier::external_body]
-       513 |     fn join_pair_inner<T: MtKey + 'static>(left: ParamBST<T>, right: ParamBST<T>) -> ParamBST<T> {
+       350 |                 remaining = remaining - 1;
+       351 |             }
+       353 |             result
+       354 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:363: error: external_body - #[verifier::external_body]
+       364 |         fn join_pair(&self, other: Self) -> (joined: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:368: error: external_body - #[verifier::external_body]
+       369 |         fn union(&self, other: &Self) -> (combined: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:373: error: external_body - #[verifier::external_body]
+       374 |         fn intersect(&self, other: &Self) -> (common: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:378: error: external_body - #[verifier::external_body]
+       379 |         fn difference(&self, other: &Self) -> (remaining: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:383: error: external_body - #[verifier::external_body]
+       384 |         fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:393: error: external_body - #[verifier::external_body]
+       394 |         fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T {
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:398: error: external_body - #[verifier::external_body]
+       399 |         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:457: error: external_body - #[verifier::external_body]
+       458 |     fn expose_internal<T: MtKey + 'static>(tree: &ParamBST<T>) -> Exposed<T> {
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:493: error: external_body - #[verifier::external_body]
+       494 |     fn split_inner<T: MtKey + 'static>(tree: &ParamBST<T>, key: &T) -> (parts: (ParamBST<T>, B, ParamBST<T>))
 /home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:524: error: external_body - #[verifier::external_body]
-       525 |     fn union_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:538: error: external_body - #[verifier::external_body]
-       539 |     fn intersect_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:555: error: external_body - #[verifier::external_body]
-       556 |     fn difference_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:574: error: external_body - #[verifier::external_body]
-       575 |     fn filter_inner<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(
+       525 |     fn min_key<T: MtKey + 'static>(tree: &ParamBST<T>) -> Option<T> {
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:535: error: external_body - #[verifier::external_body]
+       536 |     fn join_pair_inner<T: MtKey + 'static>(left: ParamBST<T>, right: ParamBST<T>) -> ParamBST<T> {
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:547: error: external_body - #[verifier::external_body]
+       548 |     fn union_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:561: error: external_body - #[verifier::external_body]
+       562 |     fn intersect_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:578: error: external_body - #[verifier::external_body]
+       579 |     fn difference_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {
 /home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:597: error: external_body - #[verifier::external_body]
-       598 |     fn filter_parallel<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:606: error: external_body - #[verifier::external_body]
-       607 |     fn reduce_inner<T: MtKey + 'static, F: Fn(T, T) -> T + Send + Sync + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:630: error: external_body - #[verifier::external_body]
-       631 |     fn reduce_parallel<T: MtKey + 'static, F: Fn(T, T) -> T + Send + Sync + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:640: error: external_body - #[verifier::external_body]
-       641 |     fn collect_in_order<T: MtKey + 'static>(tree: &ParamBST<T>, out: &mut Vec<T>) {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:410: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       403 |         fn clone(&self) -> (cloned: Self)
+       598 |     fn filter_inner<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:620: error: external_body - #[verifier::external_body]
+       621 |     fn filter_parallel<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:629: error: external_body - #[verifier::external_body]
+       630 |     fn reduce_inner<T: MtKey + 'static, F: Fn(T, T) -> T + Send + Sync + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:653: error: external_body - #[verifier::external_body]
+       654 |     fn reduce_parallel<T: MtKey + 'static, F: Fn(T, T) -> T + Send + Sync + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:663: error: external_body - #[verifier::external_body]
+       664 |     fn collect_in_order<T: MtKey + 'static>(tree: &ParamBST<T>, out: &mut Vec<T>) {
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:418: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       411 |         fn clone(&self) -> (cloned: Self)
             ...
-       408 |                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
-       409 |             };
-       411 |             cloned
-       412 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:425: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       416 |         fn clone(&self) -> (cloned: Self)
+       416 |                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
+       417 |             };
+       419 |             cloned
+       420 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:433: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       424 |         fn clone(&self) -> (cloned: Self)
             ...
-       423 |                 right: self.right.clone(),
-       424 |             };
-       426 |             cloned
-       427 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:435: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       431 |         fn clone(&self) -> (cloned: Self)
+       431 |                 right: self.right.clone(),
+       432 |             };
+       434 |             cloned
+       435 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:468: error: fn_missing_requires - fn join_mid — exec fn should have requires
+       458 |     fn expose_internal<T: MtKey + 'static>(tree: &ParamBST<T>) -> Exposed<T> {
             ...
-       433 |         {
-       434 |             let cloned = ParamBST { root: clone_arc_rwlock(&self.root) };
-       436 |             cloned
-       437 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:233: info: structural_false_positive RWLOCK_GHOST expose — proof { assume(self@.len() == 0 ==> exposed is Leaf); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:272: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.len() && self@.finite()); } [medium]
-   Holes: 27 total
-      4 × assume()
-      23 × external_body
-   Info: 2 × structural_false_positive
+       466 |     }
+       467 | 
+       469 |         ensures
+       470 |             exposed is Leaf ==> result@ =~= Set::<<T as View>::V>::empty(),
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:518: error: fn_missing_requires - fn join_m — exec fn should have requires
+       494 |     fn split_inner<T: MtKey + 'static>(tree: &ParamBST<T>, key: &T) -> (parts: (ParamBST<T>, B, ParamBST<T>))
+            ...
+       516 |     }
+       517 | 
+       519 |         ensures result@ =~= left@.union(right@).insert(key@)
+       520 |     {
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:241: info: structural_false_positive RWLOCK_GHOST expose — proof { assume(self@.len() == 0 ==> exposed is Leaf); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:280: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.len() && self@.finite()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:681: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:682: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
+   Holes: 20 total
+      1 × assume()
+      19 × external_body
+   Info: 4 × structural_false_positive
+      2 × UNSAFE_SEND_SYNC
       2 × RWLOCK_GHOST
 ❌ src/Chap38/BSTParaStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:152: error: assume() [algorithmic] - proof { assume(c == *x); } // Clone bridge: T::clone preserv
@@ -966,8 +947,8 @@ Table of Contents:
       3 × assume()
       24 × external_body
    Info: 2 × structural_false_positive
-      1 × RWLOCK_GHOST
       1 × OPAQUE_EXTERNAL
+      1 × RWLOCK_GHOST
 ✓ src/Chap39/BSTSetTreapMtEph.rs
 ⚠ src/Chap39/BSTTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:362: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
@@ -2195,173 +2176,135 @@ Table of Contents:
    Holes: 1 total
       1 × assume()
 ❌ src/Chap61/EdgeContractionMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:128: error: external_body - #[verifier::external_body]
-       129 |     #[cfg(not(verus_keep_ghost))]
-       130 |     fn build_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:194: error: external_body - #[verifier::external_body]
-       195 |     #[cfg(not(verus_keep_ghost))]
-       196 |     pub fn contract_round_mt<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:80: info: structural_false_positive OPAQUE_EXTERNAL edge_contract_mt — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:127: error: external_body - #[verifier::external_body]
+       128 |     #[cfg(not(verus_keep_ghost))]
+       129 |     fn build_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:193: error: external_body - #[verifier::external_body]
+       194 |     #[cfg(not(verus_keep_ghost))]
+       195 |     pub fn contract_round_mt<V: StT + MtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:79: info: structural_false_positive OPAQUE_EXTERNAL edge_contract_mt — #[verifier::external_body] [medium]
    Holes: 2 total
       2 × external_body
    Info: 1 × structural_false_positive
       1 × OPAQUE_EXTERNAL
 ❌ src/Chap61/EdgeContractionStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:66: error: external_body - #[verifier::external_body]
-        67 |     #[cfg(not(verus_keep_ghost))]
-        68 |     pub fn edge_contract<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:117: error: external_body - #[verifier::external_body]
-       118 |     #[cfg(not(verus_keep_ghost))]
-       119 |     pub fn contract_round<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> UnDirGraphStEph<V> {
+/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:65: error: external_body - #[verifier::external_body]
+        66 |     #[cfg(not(verus_keep_ghost))]
+        67 |     pub fn edge_contract<V: HashOrd>(
+/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:116: error: external_body - #[verifier::external_body]
+       117 |     #[cfg(not(verus_keep_ghost))]
+       118 |     pub fn contract_round<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> UnDirGraphStEph<V> {
    Holes: 2 total
       2 × external_body
 ❌ src/Chap61/VertexMatchingMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:96: error: external_body - #[verifier::external_body]
-        97 |     #[cfg(not(verus_keep_ghost))]
-        98 |     fn flip_coins_parallel<V: StT + MtT + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:203: error: external_body - #[verifier::external_body]
-       204 |     #[cfg(not(verus_keep_ghost))]
-       205 |     fn should_select_edge<V: StT + MtT + Hash + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:67: info: structural_false_positive OPAQUE_EXTERNAL parallel_matching_mt — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:121: info: structural_false_positive OPAQUE_EXTERNAL select_edges_parallel — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:153: info: structural_false_positive OPAQUE_EXTERNAL select_edges_recursive — #[verifier::external_body] [medium]
-   Holes: 2 total
-      2 × external_body
-   Info: 3 × structural_false_positive
-      3 × OPAQUE_EXTERNAL
+/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:67: error: external_body - #[verifier::external_body]
+        68 |     #[cfg(not(verus_keep_ghost))]
+        69 |     pub fn parallel_matching_mt<V: StT + MtT + Hash + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:90: error: external_body - #[verifier::external_body]
+        91 |     #[cfg(not(verus_keep_ghost))]
+        92 |     fn flip_coins_parallel<V: StT + MtT + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:199: error: external_body - #[verifier::external_body]
+       200 |     #[cfg(not(verus_keep_ghost))]
+       201 |     fn should_select_edge<V: StT + MtT + Hash + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:114: info: structural_false_positive OPAQUE_EXTERNAL select_edges_parallel — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:149: info: structural_false_positive OPAQUE_EXTERNAL select_edges_recursive — #[verifier::external_body] [medium]
+   Holes: 3 total
+      3 × external_body
+   Info: 2 × structural_false_positive
+      2 × OPAQUE_EXTERNAL
 ❌ src/Chap61/VertexMatchingStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:52: error: external_body - #[verifier::external_body]
-        53 |     #[cfg(not(verus_keep_ghost))]
-        54 |     pub fn greedy_matching<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>> {
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:75: error: external_body - #[verifier::external_body]
-        76 |     #[cfg(not(verus_keep_ghost))]
-        77 |     pub fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>, seed: u64) -> SetStEph<Edge<V>> {
-   Holes: 2 total
-      2 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:82: error: external_body - #[verifier::external_body]
+        83 |     #[cfg(not(verus_keep_ghost))]
+        84 |     pub fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>, seed: u64) -> SetStEph<Edge<V>> {
+   Holes: 1 total
+      1 × external_body
 ❌ src/Chap62/StarContractionMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:77: error: external_body - #[verifier::external_body]
-        78 |     #[cfg(not(verus_keep_ghost))]
-        79 |     pub fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G) -> R
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:104: error: external_body - #[verifier::external_body]
-       105 |     #[cfg(not(verus_keep_ghost))]
-       106 |     fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:126: error: external_body - #[verifier::external_body]
-       127 |     #[cfg(not(verus_keep_ghost))]
-       128 |     fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:181: error: external_body - #[verifier::external_body]
-       182 |     #[cfg(not(verus_keep_ghost))]
-       183 |     pub fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:72: error: external_body - #[verifier::external_body]
+        73 |     pub fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G) -> R
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:98: error: external_body - #[verifier::external_body]
+        99 |     fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:119: error: external_body - #[verifier::external_body]
+       120 |     fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:173: error: external_body - #[verifier::external_body]
+       174 |     pub fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + 'static>(
    Holes: 4 total
       4 × external_body
 ❌ src/Chap62/StarContractionStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:71: error: external_body - #[verifier::external_body]
-        72 |     #[cfg(not(verus_keep_ghost))]
-        73 |     pub fn star_contract<V, R, F, G>(graph: &UnDirGraphStEph<V>, base: &F, expand: &G) -> R
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:98: error: external_body - #[verifier::external_body]
-        99 |     #[cfg(not(verus_keep_ghost))]
-       100 |     fn build_quotient_graph<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:132: error: external_body - #[verifier::external_body]
-       133 |     #[cfg(not(verus_keep_ghost))]
-       134 |     pub fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<V> {
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:68: error: external_body - #[verifier::external_body]
+        69 |     pub fn star_contract<V, R, F, G>(graph: &UnDirGraphStEph<V>, base: &F, expand: &G) -> R
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:94: error: external_body - #[verifier::external_body]
+        95 |     fn build_quotient_graph<V: HashOrd>(
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:127: error: external_body - #[verifier::external_body]
+       128 |     pub fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<V> {
    Holes: 3 total
       3 × external_body
 ❌ src/Chap62/StarPartitionMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarPartitionMtEph.rs:53: error: external_body - #[verifier::external_body]
-        54 |     #[cfg(not(verus_keep_ghost))]
-        55 |     pub fn parallel_star_partition<V: StT + MtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarPartitionMtEph.rs:51: error: external_body - #[verifier::external_body]
+        52 |     pub fn parallel_star_partition<V: StT + MtT + Hash + Ord + 'static>(
    Holes: 1 total
       1 × external_body
 ❌ src/Chap62/StarPartitionStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarPartitionStEph.rs:49: error: external_body - #[verifier::external_body]
-        50 |     #[cfg(not(verus_keep_ghost))]
-        51 |     pub fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>) {
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarPartitionStEph.rs:47: error: external_body - #[verifier::external_body]
+        48 |     pub fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>) {
    Holes: 1 total
       1 × external_body
 ❌ src/Chap63/ConnectivityMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:90: error: external_body - #[verifier::external_body]
-        91 |     #[cfg(not(verus_keep_ghost))]
-        92 |     pub fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N {
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:119: error: external_body - #[verifier::external_body]
-       120 |     #[cfg(not(verus_keep_ghost))]
-       121 |     pub fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:149: error: external_body - #[verifier::external_body]
-       150 |     #[cfg(not(verus_keep_ghost))]
-       151 |     fn build_quotient_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:168: error: external_body - #[verifier::external_body]
-       169 |     #[cfg(not(verus_keep_ghost))]
-       170 |     fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:221: error: external_body - #[verifier::external_body]
-       222 |     #[cfg(not(verus_keep_ghost))]
-       223 |     fn compose_maps_parallel<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:239: error: external_body - #[verifier::external_body]
-       240 |     #[cfg(not(verus_keep_ghost))]
-       241 |     pub fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N {
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:253: error: external_body - #[verifier::external_body]
-       254 |     #[cfg(not(verus_keep_ghost))]
-       255 |     pub fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static>(
-   Holes: 7 total
-      7 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:85: error: external_body - #[verifier::external_body]
+        86 |     pub fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N {
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:113: error: external_body - #[verifier::external_body]
+       114 |     pub fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:142: error: external_body - #[verifier::external_body]
+       143 |     fn build_quotient_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:160: error: external_body - #[verifier::external_body]
+       161 |     fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:237: error: external_body - #[verifier::external_body]
+       238 |     pub fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N {
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:250: error: external_body - #[verifier::external_body]
+       251 |     pub fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:212: error: fn_missing_ensures - fn compose_maps_parallel — exec fn should have ensures
+       161 |     fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
+            ...
+       210 |     /// - APAS: N/A — helper function, Line 10 of Algorithm 63.3.
+       211 |     /// - Claude-Opus-4.6: Work O(|P|), Span O(|P|) — currently sequential despite "parallel" name
+       213 |         partition_map: &HashMapWithViewPlus<V, V>,
+       214 |         component_map: &HashMapWithViewPlus<V, V>,
+   Holes: 6 total
+      6 × external_body
 ❌ src/Chap63/ConnectivityStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:80: error: external_body - #[verifier::external_body]
-        81 |     #[cfg(not(verus_keep_ghost))]
-        82 |     pub fn count_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N {
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:109: error: external_body - #[verifier::external_body]
-       110 |     #[cfg(not(verus_keep_ghost))]
-       111 |     pub fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>) {
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:141: error: external_body - #[verifier::external_body]
-       142 |     #[cfg(not(verus_keep_ghost))]
-       143 |     fn build_quotient_edges<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:173: error: external_body - #[verifier::external_body]
-       174 |     #[cfg(not(verus_keep_ghost))]
-       175 |     pub fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N {
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:189: error: external_body - #[verifier::external_body]
-       190 |     #[cfg(not(verus_keep_ghost))]
-       191 |     pub fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>) {
-   Holes: 5 total
-      5 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:77: error: external_body - #[verifier::external_body]
+        78 |     pub fn count_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N {
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:105: error: external_body - #[verifier::external_body]
+       106 |     pub fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>) {
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:188: error: external_body - #[verifier::external_body]
+       189 |     pub fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N {
+/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:203: error: external_body - #[verifier::external_body]
+       204 |     pub fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>) {
+   Holes: 4 total
+      4 × external_body
 ❌ src/Chap64/SpanTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:76: error: external_body - #[verifier::external_body]
-        77 |     #[cfg(not(verus_keep_ghost))]
-        78 |     pub fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:205: info: structural_false_positive OPAQUE_EXTERNAL verify_spanning_tree — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:72: error: external_body - #[verifier::external_body]
+        73 |     pub fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + 'static>(
    Holes: 1 total
       1 × external_body
-   Info: 1 × structural_false_positive
-      1 × OPAQUE_EXTERNAL
 ❌ src/Chap64/SpanTreeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:53: error: external_body - #[verifier::external_body]
-        54 |     #[cfg(not(verus_keep_ghost))]
-        55 |     pub fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>> {
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:110: error: external_body - #[verifier::external_body]
-       111 |     #[cfg(not(verus_keep_ghost))]
-       112 |     pub fn verify_spanning_tree<V: HashOrd>(graph: &UnDirGraphStEph<V>, tree_edges: &SetStEph<Edge<V>>) -> B {
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:51: error: external_body - #[verifier::external_body]
+        52 |     pub fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>> {
+   Holes: 1 total
+      1 × external_body
+❌ src/Chap64/TSPApproxStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:89: error: external_body - #[verifier::external_body]
+        90 |     pub fn euler_tour<V: HashOrd>(
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:106: error: external_body - #[verifier::external_body]
+       107 |     fn euler_tour_dfs<V: HashOrd>(
+/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:295: error: fn_missing_ensures - fn approx_metric_tsp — exec fn should have ensures
+       259 |     fn get_edge_weight<V: HashOrd>(
+            ...
+       293 |     /// Returns:
+       294 |     /// - (tour, weight): Hamiltonian cycle and its total weight
+       296 |         graph: &LabUnDirGraphStEph<V, WrappedF64>,
+       297 |         spanning_tree: &SetStEph<LabEdge<V, WrappedF64>>,
    Holes: 2 total
       2 × external_body
-❌ src/Chap64/TSPApproxStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:93: error: external_body - #[verifier::external_body]
-        94 |     #[cfg(not(verus_keep_ghost))]
-        95 |     pub fn euler_tour<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:111: error: external_body - #[verifier::external_body]
-       112 |     #[cfg(not(verus_keep_ghost))]
-       113 |     fn euler_tour_dfs<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:175: error: external_body - #[verifier::external_body]
-       176 |     #[cfg(not(verus_keep_ghost))]
-       177 |     pub fn shortcut_tour<V: HashOrd>(euler_tour: &[V]) -> Vec<V> {
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:206: error: external_body - #[verifier::external_body]
-       207 |     #[cfg(not(verus_keep_ghost))]
-       208 |     pub fn tour_weight<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:269: error: external_body - #[verifier::external_body]
-       270 |     #[cfg(not(verus_keep_ghost))]
-       271 |     pub fn approx_metric_tsp<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:238: error: fn_missing_ensures - fn get_edge_weight — exec fn should have ensures
-       229 |     fn get_neighbors<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>, v: &V) -> (ng: SetStEph<V>)
-            ...
-       236 |     /// - APAS: N/A — internal helper, delegates to LabUnDirGraphStEph::get_edge_label.
-       237 |     /// - Claude-Opus-4.6: Work O(m), Span O(m) — delegates to get_edge_label().
-       239 |         graph: &LabUnDirGraphStEph<V, WrappedF64>,
-       240 |         u: &V,
-   Holes: 5 total
-      5 × external_body
 ❌ src/Chap65/KruskalStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:62: error: external_body - #[verifier::external_body]
         63 |     #[cfg(not(verus_keep_ghost))]
@@ -2404,38 +2347,43 @@ Table of Contents:
       1 × external_body
 ✓ src/Chap65/UnionFindStEph.rs
 ❌ src/Chap66/BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:144: error: external_body - #[verifier::external_body]
-       145 |     fn hash_coin_flips_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:179: error: external_body - #[verifier::external_body]
-       180 |     fn compute_remaining_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:217: error: external_body - #[verifier::external_body]
-       218 |     fn collect_mst_labels_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:255: error: external_body - #[verifier::external_body]
-       256 |     fn build_partition_map_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:300: error: external_body - #[verifier::external_body]
-       301 |     pub fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:356: error: external_body - #[verifier::external_body]
-       357 |     pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:395: error: external_body - #[verifier::external_body]
-       396 |     fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:451: error: external_body - #[verifier::external_body]
-       452 |     pub fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:510: error: external_body - #[verifier::external_body]
-       511 |     fn reroute_edges_mt<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:556: error: external_body - #[verifier::external_body]
-       557 |     pub fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:571: error: external_body - #[verifier::external_body]
-       572 |     pub fn mst_weight<V: StT + Hash>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:51: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        47 |         fn eq(&self, other: &Self) -> (r: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:139: error: external_body - #[verifier::external_body]
+       140 |     fn hash_coin_flips_mt<V: StTInMtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:174: error: external_body - #[verifier::external_body]
+       175 |     fn compute_remaining_mt<V: StTInMtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:212: error: external_body - #[verifier::external_body]
+       213 |     fn collect_mst_labels_mt<V: StTInMtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:250: error: external_body - #[verifier::external_body]
+       251 |     fn build_partition_map_mt<V: StTInMtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:295: error: external_body - #[verifier::external_body]
+       296 |     pub fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:351: error: external_body - #[verifier::external_body]
+       352 |     pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:390: error: external_body - #[verifier::external_body]
+       391 |     fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:446: error: external_body - #[verifier::external_body]
+       447 |     pub fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:505: error: external_body - #[verifier::external_body]
+       506 |     fn reroute_edges_mt<V: StTInMtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:551: error: external_body - #[verifier::external_body]
+       552 |     pub fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:46: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        42 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
-        49 |         {
-        50 |             let r = self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3;
-        52 |             r
-        53 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:130: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
-   Holes: 11 total
-      11 × external_body
+        44 |         {
+        45 |             let r = self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3;
+        47 |             r
+        48 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:566: error: fn_missing_ensures - fn mst_weight — exec fn should have ensures
+       552 |     pub fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(
+            ...
+       564 |     /// - APAS: N/A — utility function, not in prose.
+       565 |     /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential scan of edges.
+       567 |         edges: &SetStEph<LabeledEdge<V>>,
+       568 |         mst_labels: &SetStEph<usize>,
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:125: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
+   Holes: 10 total
+      10 × external_body
    Info: 1 × structural_false_positive
       1 × OPAQUE_EXTERNAL
 ⚠ src/Chap66/BoruvkaStEph.rs
@@ -2994,36 +2942,36 @@ Proof Functions:
    382 total
 
 Function Specs:
-   5141 exec fns with complete spec (requires+ensures) (69%)
-   63 exec fns missing spec (0%)
-   2165 proof/spec fns clean (29%)
+   5136 exec fns with complete spec (requires+ensures) (69%)
+   68 exec fns missing spec (0%)
+   2166 proof/spec fns clean (29%)
    1 proof/spec fns with holes (0%)
-   7370 total fns
+   7371 total fns
 
 
-Holes Found: 139 (actionable)
-   10 × assume(false) (7%)
-   15 × assume() (10%)
-      13 × algorithmic
+Holes Found: 125 (actionable)
+   10 × assume(false) (8%)
+   12 × assume() (9%)
+      10 × algorithmic
       1 × rwlock:reader
       1 × closure
-   113 × external_body (81%)
+   102 × external_body (81%)
    1 × external (0%)
 
 Per-Chapter Holes:
   Chap02:  1  Chap11:  6  Chap26:  4
-  Chap38: 28  Chap39: 27  Chap41:  6
+  Chap38: 21  Chap39: 27  Chap41:  6
   Chap43:  6  Chap45:  1  Chap47:  5
   Chap59:  5  Chap61:  8  Chap62:  9
-  Chap63: 12  Chap64:  8  Chap65:  2
-  Chap66: 11
+  Chap63: 10  Chap64:  4  Chap65:  2
+  Chap66: 10
 
-Warnings: 185 total
-   9 × fn_missing_requires
-   4 × fn_missing_ensures
+Warnings: 188 total
+   11 × fn_missing_requires
+   6 × fn_missing_ensures
    16 × fn_missing_wf_requires
    7 × fn_missing_wf_ensures
-   149 × assume_eq_clone_workaround
+   148 × assume_eq_clone_workaround
 
 Accepted (reviewed): 55 total
    26 × external_body_accept_hole
@@ -3031,9 +2979,9 @@ Accepted (reviewed): 55 total
    7 × accept()
    5 × external_accept_hole
    4 × unsafe_block_accept_hole
-   1 × enum_outside_verus_accept_hole
-   1 × struct_outside_verus_accept_hole
    1 × external_type_specification_accept_hole
+   1 × struct_outside_verus_accept_hole
+   1 × enum_outside_verus_accept_hole
 
 Accepted by Chapter:
   Chap02:  5  Chap12: 19  Chap18:  8
@@ -3043,8 +2991,8 @@ Accepted by Chapter:
 Structural (info only): 177
    144 × RWLOCK_GHOST
    12 × STD_TRAIT_IMPL
-   11 × OPAQUE_EXTERNAL
-   6 × UNSAFE_SEND_SYNC
+   9 × OPAQUE_EXTERNAL
+   8 × UNSAFE_SEND_SYNC
    4 × THREAD_SPAWN
 
 =================================================================
@@ -3057,76 +3005,76 @@ Structural (info only): 177
 4.1. Worst src/* Directories (all dirs, by holes)
 =================================================================
 
-   1  Chap38  (28 holes, 2 files)
-   2  Chap39  (27 holes, 4 files)
-   3  Chap63  (12 holes, 2 files)
-   4  Chap66  (11 holes, 2 files)
+   1  Chap39  (27 holes, 4 files)
+   2  Chap38  (21 holes, 2 files)
+   3  Chap66  (10 holes, 2 files)
+   4  Chap63  (10 holes, 2 files)
    5  Chap62  (9 holes, 4 files)
-   6  Chap64  (8 holes, 3 files)
-   7  Chap61  (8 holes, 4 files)
-   8  Chap11  (6 holes, 5 files)
-   9  Chap41  (6 holes, 7 files)
-   10  Chap43  (6 holes, 11 files)
+   6  Chap61  (8 holes, 4 files)
+   7  Chap43  (6 holes, 11 files)
+   8  Chap41  (6 holes, 7 files)
+   9  Chap11  (6 holes, 5 files)
+   10  Chap47  (5 holes, 9 files)
    11  Chap59  (5 holes, 4 files)
-   12  Chap47  (5 holes, 9 files)
+   12  Chap64  (4 holes, 3 files)
    13  Chap26  (4 holes, 8 files)
    14  Chap65  (2 holes, 3 files)
-   15  Chap45  (1 holes, 7 files)
-   16  Chap02  (1 holes, 2 files)
-   17  Chap50  (0 holes, 8 files)
-   18  Chap42  (0 holes, 4 files)
-   19  Chap03  (0 holes, 1 files)
-   20  Chap57  (0 holes, 3 files)
-   21  Chap30  (0 holes, 1 files)
+   15  Chap02  (1 holes, 2 files)
+   16  Chap45  (1 holes, 7 files)
+   17  Chap42  (0 holes, 4 files)
+   18  Chap50  (0 holes, 8 files)
+   19  Chap06  (0 holes, 20 files)
+   20  Chap23  (0 holes, 2 files)
+   21  Chap05  (0 holes, 5 files)
    22  Chap52  (0 holes, 14 files)
-   23  Chap06  (0 holes, 20 files)
-   24  Chap54  (0 holes, 4 files)
-   25  Chap28  (0 holes, 11 files)
-   26  Chap55  (0 holes, 8 files)
-   27  ParaPairs  (0 holes, 1 files)
-   28  Chap21  (0 holes, 12 files)
-   29  Chap36  (0 holes, 3 files)
-   30  Chap17  (0 holes, 1 files)
-   31  Chap35  (0 holes, 4 files)
-   32  Chap44  (0 holes, 2 files)
-   33  Chap58  (0 holes, 2 files)
-   34  Chap27  (0 holes, 4 files)
-   35  Chap18  (0 holes, 7 files)
+   23  Chap44  (0 holes, 2 files)
+   24  Chap49  (0 holes, 8 files)
+   25  Chap56  (0 holes, 12 files)
+   26  Chap51  (0 holes, 8 files)
+   27  Chap54  (0 holes, 4 files)
+   28  Chap03  (0 holes, 1 files)
+   29  Chap12  (0 holes, 3 files)
+   30  Chap18  (0 holes, 7 files)
+   31  Chap19  (0 holes, 4 files)
+   32  Chap58  (0 holes, 2 files)
+   33  ParaPairs  (0 holes, 1 files)
+   34  Chap36  (0 holes, 3 files)
+   35  Chap17  (0 holes, 1 files)
    36  Concurrency  (0 holes, 1 files)
-   37  Chap49  (0 holes, 8 files)
-   38  Chap12  (0 holes, 3 files)
-   39  Chap05  (0 holes, 5 files)
-   40  Chap53  (0 holes, 5 files)
-   41  Chap37  (0 holes, 19 files)
-   42  Chap19  (0 holes, 4 files)
-   43  Chap23  (0 holes, 2 files)
-   44  Chap40  (0 holes, 3 files)
-   45  Chap51  (0 holes, 8 files)
-   46  Chap56  (0 holes, 12 files)
+   37  Chap37  (0 holes, 19 files)
+   38  Chap57  (0 holes, 3 files)
+   39  Chap55  (0 holes, 8 files)
+   40  Chap27  (0 holes, 4 files)
+   41  Chap30  (0 holes, 1 files)
+   42  Chap53  (0 holes, 5 files)
+   43  Chap21  (0 holes, 12 files)
+   44  Chap28  (0 holes, 11 files)
+   45  Chap40  (0 holes, 3 files)
+   46  Chap35  (0 holes, 4 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
 =================================================================
 
    1  src/Chap39/BSTParaTreapMtEph.rs  (27 holes)
-   2  src/Chap38/BSTParaMtEph.rs  (27 holes)
+   2  src/Chap38/BSTParaMtEph.rs  (20 holes)
    3  src/Chap26/ETSPMtEph.rs  (4 holes)
-   4  src/Chap11/FibonacciMtPerTSM.rs  (2 holes)
-   5  src/Chap47/ParaHashTableStEph.rs  (2 holes)
-   6  src/Chap11/FibonacciMtEph2Threads.rs  (2 holes)
+   4  src/Chap11/FibonacciMtEph2Threads.rs  (2 holes)
+   5  src/Chap41/AVLTreeSetStEph.rs  (2 holes)
+   6  src/Chap47/ParaHashTableStEph.rs  (2 holes)
    7  src/Chap11/FibonacciMtEphRecomputes.rs  (2 holes)
-   8  src/Chap41/AVLTreeSetStEph.rs  (2 holes)
-   9  src/Chap02/HFSchedulerMtEph.rs  (1 holes)
+   8  src/Chap11/FibonacciMtPerTSM.rs  (2 holes)
+   9  src/Chap43/OrderedSetStPer.rs  (1 holes)
    10  src/Chap43/AugOrderedTableMtEph.rs  (1 holes)
-   11  src/Chap43/OrderedSetStPer.rs  (1 holes)
-   12  src/Chap45/Example45_2.rs  (1 holes)
-   13  src/Chap38/BSTParaStEph.rs  (1 holes)
+   11  src/Chap45/Example45_2.rs  (1 holes)
+   12  src/Chap38/BSTParaStEph.rs  (1 holes)
+   13  src/Chap02/HFSchedulerMtEph.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
 =================================================================
 
-   1  src/Chap38  (28 holes, 2 files)
+   1  src/Chap38  (21 holes, 2 files)
    2  src/Chap11  (6 holes, 5 files)
    3  src/Chap26  (4 holes, 8 files)
    4  src/Chap45  (1 holes, 7 files)
@@ -3147,7 +3095,7 @@ Structural (info only): 177
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 30 clean, 16 holed, 139 holes (global), 257 modules
+Chapter Status — 46 chapters, 30 clean, 16 holed, 125 holes (global), 257 modules
 
 CLEAN CHAPTERS (30)
   Chapter        Files
@@ -3183,13 +3131,13 @@ CLEAN CHAPTERS (30)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (16) — 139 holes
+HOLED CHAPTERS (16) — 125 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
   Chap02             1     2  internal  Chap02::HFSchedulerMtEph
   Chap11             6     5  YES       
   Chap26             4     8  YES       
-  Chap38            28     2  YES       
+  Chap38            21     2  YES       
   Chap39            27     4  internal  Chap39::BSTParaTreapMtEph
   Chap41             6     7  internal  Chap41::AVLTreeSetStEph
   Chap43             6    11  NO        Chap41::AVLTreeSetStEph, Chap42::TableStPer
@@ -3198,10 +3146,10 @@ HOLED CHAPTERS (16) — 139 holes
   Chap59             5     4  NO        Chap05::SetStEph
   Chap61             8     4  NO        Chap05::SetStEph
   Chap62             9     4  NO        Chap05::SetStEph
-  Chap63            12     2  NO        Chap05::SetStEph
-  Chap64             8     3  NO        Chap05::SetStEph
+  Chap63            10     2  NO        Chap05::SetStEph
+  Chap64             4     3  NO        Chap05::SetStEph
   Chap65             2     3  NO        Chap05::SetStEph
-  Chap66            11     2  NO        Chap05::SetStEph
+  Chap66            10     2  NO        Chap05::SetStEph
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
@@ -3231,8 +3179,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 16:06:06 -07:00
-Ended:     2026-03-19 16:06:07 -07:00
-Duration:  1428ms
+Started:   2026-03-19 18:39:29 -07:00
+Ended:     2026-03-19 18:39:30 -07:00
+Duration:  1300ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log

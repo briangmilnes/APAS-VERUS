@@ -170,3 +170,150 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:761: info: structural_false_positive RWLOCK_GHOST from_st — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:814: info: structural_false_positive UNSAFE_SEND_SYNC OrderedTableMtEph — unsafe impl<K: MtKey, V: MtVal> Send for OrderedTableMtEph<K, V> {} [high]
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:815: info: structural_false_positive UNSAFE_SEND_SYNC OrderedTableMtEph — unsafe impl<K: MtKey, V: MtVal> Sync for OrderedTableMtEph<K, V> {} [high]
+⚠ OrderedTableMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:524: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       519 |         fn clone(&self) -> (cloned: Self)
+            ...
+       522 |             let read_handle = self.locked_table.acquire_read();
+       523 |             let inner = read_handle.borrow().clone();
+       525 |             read_handle.release_read();
+       526 |             let ghost view = inner@;
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:528: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       519 |         fn clone(&self) -> (cloned: Self)
+            ...
+       526 |             let ghost view = inner@;
+       527 |             proof {
+       529 |                 assume(inner.spec_orderedtablestper_wf());
+       530 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:529: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       519 |         fn clone(&self) -> (cloned: Self)
+            ...
+       527 |             proof {
+       528 |                 assume(view.dom().finite());
+       530 |             }
+       531 |             OrderedTableMtPer {
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:80: info: structural_false_positive RWLOCK_GHOST from_st_table — assume(inner.spec_orderedtablestper_wf()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:241: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.dom().len()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:407: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:418: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:429: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:440: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:489: info: structural_false_positive RWLOCK_GHOST rank_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:501: info: structural_false_positive RWLOCK_GHOST select_key — proof { assume(inner@ =~= self@); } [medium]
+ℹ OrderedTableStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:3116: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+   Info: 1 × structural_false_positive
+   1 clean proof function
+❌ OrderedTableStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:2798: error: external_body - #[verifier::external_body]
+      2799 |         fn rank_key(&self, k: &K) -> (rank: usize)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:2815: error: external_body - #[verifier::external_body]
+      2816 |         fn select_key(&self, i: usize) -> (key: Option<K>)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3207: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      3203 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      3205 |         {
+      3206 |             let equal = self.base_set == other.base_set;
+      3208 |             equal
+      3209 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3219: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      3213 |         fn clone(&self) -> (copy: Self)
+            ...
+      3217 |                 base_set: self.base_set.clone(),
+      3218 |             };
+      3220 |             copy
+      3221 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3090: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+   Holes: 2 total
+      2 × external_body
+   Info: 1 × structural_false_positive
+      1 × STD_TRAIT_IMPL
+   Proof functions: 7 total (7 clean, 0 holed)
+
+=================================================================
+2. Depends Upon
+=================================================================
+
+=================================================================
+2.1. By Module
+=================================================================
+
+AugOrderedTableMtEph  depends upon only clean modules
+AugOrderedTableStEph  depends upon only clean modules
+AugOrderedTableStPer  depends upon only clean modules
+Example43_1  depends upon only clean modules
+OrderedSetMtEph  depends upon only clean modules
+OrderedSetStEph  depends upon only clean modules
+OrderedSetStPer  depends upon only clean modules
+OrderedTableMtEph  depends upon only clean modules
+OrderedTableMtPer  depends upon only clean modules
+OrderedTableStEph  depends upon only clean modules
+OrderedTableStPer  depends upon only clean modules
+
+=================================================================
+2.2. By File
+=================================================================
+
+AugOrderedTableMtEph.rs  depends upon only clean modules
+AugOrderedTableStEph.rs  depends upon only clean modules
+AugOrderedTableStPer.rs  depends upon only clean modules
+Example43_1.rs  depends upon only clean modules
+OrderedSetMtEph.rs  depends upon only clean modules
+OrderedSetStEph.rs  depends upon only clean modules
+OrderedSetStPer.rs  depends upon only clean modules
+OrderedTableMtEph.rs  depends upon only clean modules
+OrderedTableMtPer.rs  depends upon only clean modules
+OrderedTableStEph.rs  depends upon only clean modules
+OrderedTableStPer.rs  depends upon only clean modules
+
+=================================================================
+3. Summary of Holes
+=================================================================
+
+Modules:
+   6 clean (no holes, no errors; 54%)
+   5 holed (holes or errors, 45%)
+   11 total
+
+Proof Functions:
+   12 clean (92%)
+   1 holed (7%)
+   13 total
+
+Function Specs:
+   561 exec fns with complete spec (requires+ensures) (83%)
+   2 exec fns missing spec (0%)
+   107 proof/spec fns clean (15%)
+   1 proof/spec fns with holes (0%)
+   671 total fns
+
+
+Holes Found: 6 (actionable)
+   3 × assume() (50%)
+      2 × algorithmic
+      1 × closure
+   3 × external_body (50%)
+
+Warnings: 11 total
+   2 × fn_missing_requires
+   9 × assume_eq_clone_workaround
+
+Structural (info only): 64
+   57 × RWLOCK_GHOST
+   4 × STD_TRAIT_IMPL
+   2 × UNSAFE_SEND_SYNC
+   1 × OPAQUE_EXTERNAL
+
+=================================================================
+5. Started/Ended/Duration
+=================================================================
+
+Started:   2026-03-19 18:39:28 -07:00
+Ended:     2026-03-19 18:39:28 -07:00
+Duration:  147ms
+
+Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
+00
+Duration:  147ms
+
+Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log

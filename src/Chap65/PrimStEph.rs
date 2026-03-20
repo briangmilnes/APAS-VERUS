@@ -12,18 +12,12 @@ pub mod PrimStEph {
     use crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
     use crate::Types::Types::*;
 
-    #[cfg(not(verus_keep_ghost))]
     use std::cmp::Ordering;
-    #[cfg(not(verus_keep_ghost))]
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::{HashSetWithViewPlus, HashSetWithViewPlusTrait};
-    #[cfg(not(verus_keep_ghost))]
     use std::fmt::{Display, Formatter};
-    #[cfg(not(verus_keep_ghost))]
     use std::fmt::Result as FmtResult;
     use std::hash::Hash;
-    #[cfg(not(verus_keep_ghost))]
     use crate::Chap45::BinaryHeapPQ::BinaryHeapPQ::*;
-    #[cfg(not(verus_keep_ghost))]
     use crate::SetLit;
 
     pub type T<V> = PQEntry<V>;
@@ -99,7 +93,6 @@ pub mod PrimStEph {
     ///   work across all vertices is O(nm) = O(m^2) in a dense graph. With an adjacency-list
     ///   graph representation this would be O(m lg n) as textbook states.
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn prim_mst<V: HashOrd + Display>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         start: &V,
@@ -177,26 +170,22 @@ pub mod PrimStEph {
 
     } // verus!
 
-    #[cfg(not(verus_keep_ghost))]
     impl<V: HashOrd> Ord for PQEntry<V> {
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn cmp(&self, other: &Self) -> Ordering { self.priority.cmp(&other.priority) }
     }
 
-    #[cfg(not(verus_keep_ghost))]
     impl<V: HashOrd> PartialOrd for PQEntry<V> {
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }
     }
 
-    #[cfg(not(verus_keep_ghost))]
     impl<V: HashOrd + Display> Display for PQEntry<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult { write!(f, "({}, {})", self.priority, self.vertex) }
     }
 
-    #[cfg(not(verus_keep_ghost))]
     impl<V: HashOrd + std::fmt::Debug> std::fmt::Debug for PQEntry<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("PQEntry")

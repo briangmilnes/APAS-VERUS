@@ -14,13 +14,10 @@ pub mod VertexMatchingMtEph {
     use crate::Types::Types::*;
 
     use std::hash::Hash;
-    #[cfg(not(verus_keep_ghost))]
     use std::sync::Arc;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::rand::rand::{seeded_rng, random_bool_seeded};
-    #[cfg(not(verus_keep_ghost))]
     use std::vec::Vec;
-    #[cfg(not(verus_keep_ghost))]
     use crate::{ParaPair, SetLit};
 
     verus! {
@@ -65,7 +62,6 @@ pub mod VertexMatchingMtEph {
     /// Returns:
     /// - A set of edges forming a vertex matching
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn parallel_matching_mt<V: StT + MtT + Hash + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
@@ -88,7 +84,6 @@ pub mod VertexMatchingMtEph {
     /// - APAS: Work Θ(|E|), Span Θ(1) — each coin is independent
     /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — RNG is sequential, no actual parallelism
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     fn flip_coins_parallel<V: StT + MtT + 'static>(
         edges: &ArraySeqStEphS<Edge<V>>,
         seed: u64,
@@ -112,7 +107,6 @@ pub mod VertexMatchingMtEph {
     /// - APAS: Work O(|E|), Span O(lg |V|) — each edge checks only incident edges
     /// - Claude-Opus-4.6: Work Θ(|E|^2), Span Θ(lg |E| + |E|) — should_select_edge scans all |E| edges
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     fn select_edges_parallel<V: StT + MtT + Hash + 'static>(
         graph: &UnDirGraphMtEph<V>,
         edges: &ArraySeqStEphS<Edge<V>>,
@@ -147,7 +141,6 @@ pub mod VertexMatchingMtEph {
     /// - APAS: N/A — Verus-specific scaffolding (parallel recursion helper)
     /// - Claude-Opus-4.6: Work Θ(k * |E|), Span Θ(lg k + |E|) — each base case calls should_select_edge which is Θ(|E|)
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     fn select_edges_recursive<V: StT + MtT + Hash + 'static>(
         graph: Arc<UnDirGraphMtEph<V>>,
         edges: Arc<ArraySeqStEphS<Edge<V>>>,
@@ -197,7 +190,6 @@ pub mod VertexMatchingMtEph {
     /// - APAS: Work O(degree(u) + degree(v)), Span O(degree(u) + degree(v)) — checks only incident edges
     /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — iterates all edges, not just incident ones
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     fn should_select_edge<V: StT + MtT + Hash + 'static>(
         graph: &UnDirGraphMtEph<V>,
         edge: &Edge<V>,

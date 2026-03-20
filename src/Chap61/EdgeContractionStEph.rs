@@ -15,11 +15,8 @@ pub mod EdgeContractionStEph {
 
     use std::hash::Hash;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
-    #[cfg(not(verus_keep_ghost))]
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
-    #[cfg(not(verus_keep_ghost))]
     use crate::Chap61::VertexMatchingStEph::VertexMatchingStEph::greedy_matching;
-    #[cfg(not(verus_keep_ghost))]
     use crate::SetLit;
 
     verus! {
@@ -51,7 +48,6 @@ pub mod EdgeContractionStEph {
             requires Self::spec_edgecontractionsteph_wf(graph);
     }
 
-    #[cfg(not(verus_keep_ghost))]
     pub type T<V> = UnDirGraphStEph<V>;
 
     /// Algorithm 61.6: Sequential Edge Contraction
@@ -63,7 +59,6 @@ pub mod EdgeContractionStEph {
     /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
     /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(|V| + |E|) — agrees with APAS
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn edge_contract<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
         matching: &SetStEph<Edge<V>>,
@@ -114,7 +109,6 @@ pub mod EdgeContractionStEph {
     /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
     /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(|V| + |E|) — agrees with APAS
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn contract_round<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> UnDirGraphStEph<V> {
         let matching = greedy_matching(graph);
         edge_contract(graph, &matching)

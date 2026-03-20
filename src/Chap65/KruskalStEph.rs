@@ -12,9 +12,7 @@ pub mod KruskalStEph {
     use crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
     use crate::Types::Types::*;
     use std::hash::Hash;
-    #[cfg(not(verus_keep_ghost))]
     use crate::Chap65::UnionFindStEph::UnionFindStEph::*;
-    #[cfg(not(verus_keep_ghost))]
     use crate::SetLit;
 
     pub type T<V> = LabUnDirGraphStEph<V, WrappedF64>;
@@ -60,7 +58,6 @@ pub mod KruskalStEph {
     /// - APAS: Work O(m lg n), Span O(m lg n)
     /// - Claude-Opus-4.6: Work O(m lg m), Span O(m lg m) — sorting dominates.
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn kruskal_mst<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
     ) -> SetStEph<LabEdge<V, WrappedF64>> {

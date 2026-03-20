@@ -14,14 +14,10 @@ pub mod EdgeContractionMtEph {
     use crate::Types::Types::*;
 
     use std::hash::Hash;
-    #[cfg(not(verus_keep_ghost))]
     use std::sync::Arc;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
-    #[cfg(not(verus_keep_ghost))]
     use std::vec::Vec;
-    #[cfg(not(verus_keep_ghost))]
     use crate::Chap61::VertexMatchingMtEph::VertexMatchingMtEph::parallel_matching_mt;
-    #[cfg(not(verus_keep_ghost))]
     use crate::{ParaPair, SetLit};
 
     verus! {
@@ -77,7 +73,6 @@ pub mod EdgeContractionMtEph {
     /// Returns:
     /// - Contracted graph where matched edges are merged into single vertices
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn edge_contract_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         matching: &SetStEph<Edge<V>>,
@@ -125,7 +120,6 @@ pub mod EdgeContractionMtEph {
     /// - APAS: N/A — Verus-specific scaffolding (parallel edge routing helper)
     /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(lg |E|) — genuine divide-and-conquer parallelism
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     fn build_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
         edges: Arc<ArraySeqStEphS<Edge<V>>>,
         vertex_map: Arc<HashMapWithViewPlus<V, V>>,
@@ -191,7 +185,6 @@ pub mod EdgeContractionMtEph {
     /// Returns:
     /// - Contracted graph
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn contract_round_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,

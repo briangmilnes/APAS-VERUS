@@ -23,9 +23,7 @@ pub mod JohnsonMtEphI64 {
     use crate::Chap56::SSSPResultStEphI64::SSSPResultStEphI64::*;
     use crate::Types::Types::*;
 
-    #[cfg(not(verus_keep_ghost))]
     use crate::Chap57::DijkstraStEphU64::DijkstraStEphU64::dijkstra;
-    #[cfg(not(verus_keep_ghost))]
     use crate::Chap58::BellmanFordStEphI64::BellmanFordStEphI64::bellman_ford;
 
     verus! {
@@ -34,7 +32,6 @@ pub mod JohnsonMtEphI64 {
             /// APAS: Work O(mn log n), Span O(m log n) where n = |V|, m = |E|
             fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> AllPairsResultStEphI64;
         }
-    #[cfg(not(verus_keep_ghost))]
     pub type T = WeightedDirGraphStEphI128<usize>;
 
     /// Algorithm 59.1: Johnson's All-Pairs Shortest Paths (Parallel)
@@ -47,7 +44,6 @@ pub mod JohnsonMtEphI64 {
     /// - APAS: Work O(mn log n), Span O(m log n), Parallelism Θ(n)
     /// - Claude-Opus-4.6: Work O(mn log n), Span O(m log n) — agrees with APAS; ParaPair! recursion achieves Θ(n) parallelism in Phase 3
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> AllPairsResultStEphI64 {
         let n = graph.vertices().size();
 
@@ -78,7 +74,6 @@ pub mod JohnsonMtEphI64 {
     /// - APAS: N/A — internal helper, not named in prose.
     /// - Claude-Opus-4.6: Work O(k * m log n), Span O(m log n) where k = end - start — binary split with ParaPair! gives log k depth, each leaf runs Dijkstra O(m log n)
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     fn parallel_dijkstra_all(
         graph: &WeightedDirGraphStEphI128<usize>,
         potentials: &ArraySeqStEphS<i64>,
@@ -140,7 +135,6 @@ pub mod JohnsonMtEphI64 {
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — iterates over vertices and edges
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     fn add_dummy_source(graph: &WeightedDirGraphStEphI128<usize>, n: usize) -> (WeightedDirGraphStEphI128<usize>, usize) {
         let mut vertices = SetStEph::empty();
         for i in 0..n {
@@ -167,7 +161,6 @@ pub mod JohnsonMtEphI64 {
     /// - APAS: Work O(m), Span O(m)
     /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — rebuilds vertex set O(n) plus iterates edges O(m)
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     fn reweight_graph(
         graph: &WeightedDirGraphStEphI128<usize>,
         potentials: &ArraySeqStEphS<i64>,

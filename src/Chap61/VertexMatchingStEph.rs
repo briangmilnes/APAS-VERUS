@@ -80,7 +80,6 @@ pub mod VertexMatchingStEph {
     /// - APAS: (no cost stated — sequential baseline of Algorithm 61.4)
     /// - Claude-Opus-4.6: Work Θ(|E|²), Span Θ(|E|²)
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>, seed: u64) -> SetStEph<Edge<V>> {
         pub type T<V> = UnDirGraphStEph<V>;
 
