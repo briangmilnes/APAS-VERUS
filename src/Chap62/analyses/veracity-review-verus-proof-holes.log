@@ -21,21 +21,21 @@ Table of Contents:
 =================================================================
 
 ❌ StarContractionMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap62/StarContractionMtEph.rs:162: error: assume() [rwlock:predicate] - assume(spec_graphview_wf(quotient@));
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:162: error: assume() [rwlock:predicate] - assume(spec_graphview_wf(quotient@));
        138 |     fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + 'static>(
             ...
        160 |             // Blocked by generic Clone::clone lacking view-preserving ensures in Verus.
        161 |             // Same root cause as StEph version.
        163 |         }
        164 |         quotient
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap62/StarContractionMtEph.rs:67: error: fn_missing_ensures - fn star_contract_mt_fuel — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:67: error: fn_missing_ensures - fn star_contract_mt_fuel — exec fn should have ensures
         58 |         fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> SetStEph<V>
             ...
         65 | 
         66 |     /// Inner recursive star contraction with fuel for termination (parallel version).
         68 |         graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G, fuel: usize,
         69 |     ) -> R
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap62/StarContractionMtEph.rs:117: error: fn_missing_ensures - fn star_contract_mt — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:117: error: fn_missing_ensures - fn star_contract_mt — exec fn should have ensures
         67 |     fn star_contract_mt_fuel<V, R, F, G>(
             ...
        115 |     /// Returns:
@@ -45,21 +45,21 @@ Table of Contents:
    Holes: 1 total
       1 × assume()
 ❌ StarContractionStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap62/StarContractionStEph.rs:190: error: assume() [algorithmic] - assume(spec_graphview_wf(quotient@));
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:190: error: assume() [algorithmic] - assume(spec_graphview_wf(quotient@));
        135 |     fn build_quotient_graph<V: HashOrd>(
             ...
        188 |             // but we cannot prove partition_map@[v]@ ∈ centers@ because Clone::clone
        189 |             // for generic V does not guarantee cloned@ == original@.
        191 |         }
        192 |         quotient
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap62/StarContractionStEph.rs:64: error: fn_missing_ensures - fn star_contract_fuel — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:64: error: fn_missing_ensures - fn star_contract_fuel — exec fn should have ensures
         55 |         fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<V>
             ...
         62 | 
         63 |     /// Inner recursive star contraction with fuel for termination.
         65 |         graph: &UnDirGraphStEph<V>, base: &F, expand: &G, fuel: usize,
         66 |     ) -> R
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap62/StarContractionStEph.rs:113: error: fn_missing_ensures - fn star_contract — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:113: error: fn_missing_ensures - fn star_contract — exec fn should have ensures
         64 |     fn star_contract_fuel<V, R, F, G>(
             ...
        111 |     /// Returns:
@@ -117,8 +117,8 @@ Function Specs:
 
 Holes Found: 2 (actionable)
    2 × assume() (100%)
-      1 × algorithmic
       1 × rwlock:predicate
+      1 × algorithmic
 
 Warnings: 4 total
    4 × fn_missing_ensures
@@ -127,9 +127,11 @@ Warnings: 4 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-20 10:42:26 -07:00
-Ended:     2026-03-20 10:42:26 -07:00
-Duration:  9ms
+Started:   2026-03-20 11:12:37 -07:00
+Ended:     2026-03-20 11:12:37 -07:00
+Duration:  6ms
 
 Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
+on:  6ms
+
+Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log

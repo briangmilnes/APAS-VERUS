@@ -169,8 +169,7 @@ minor). You bring:
 
 | Script | Purpose |
 |---|---|
-| `scripts/merge-agent.sh <branch>` | Merge one agent branch into main; runs `validate-check-rtt-ptt.sh` after |
-| `scripts/validate-check-rtt-ptt.sh` | Full pipeline: validate + RTT + PTT. Stops on first failure |
+| `scripts/merge-agent.sh <branch>` | Merge one agent branch into main (validate separately after) |
 | `scripts/resolve-analysis-merge.sh [dir]` | Resolves analysis-only merge conflicts (`--theirs`) |
 | `scripts/resolve-analysis-rebase.sh [dir]` | Loops through rebase steps, resolves analysis-only conflicts (`--ours`) |
 | `scripts/resolve-settings-merge.sh [dir]` | Unions `.claude/settings.local.json` allow lists from both conflict sides |
@@ -180,11 +179,13 @@ minor). You bring:
 | `scripts/show-agent-reports.sh <round> [lines]` | Show all 4 agent reports for a round |
 
 **Merge workflow** (run from main worktree):
-1. `scripts/merge-agent.sh agent1/ready` — merge + validate
-2. On conflict: resolve with `scripts/resolve-analysis-merge.sh`, commit, run `scripts/validate-check-rtt-ptt.sh`
-3. Repeat for each agent branch
-4. After all merges: regenerate analyses (`scripts/all-holes-by-chap.sh`, etc.)
-5. Commit, push, then **wait for user to request rebase** (see below).
+1. `scripts/merge-agent.sh agent1/ready` — merge only
+2. On conflict: resolve with `scripts/resolve-analysis-merge.sh`, commit
+3. Validate each step separately: `scripts/validate.sh`, then `scripts/rtt.sh`, then
+   `scripts/ptt.sh`. Fix trigger warnings and errors between steps.
+4. Repeat for each agent branch
+5. After all merges: regenerate analyses (`scripts/all-holes-by-chap.sh`, etc.)
+6. Commit, push, then **wait for user to request rebase** (see below).
 
 **Do NOT rebase agents without asking.** Agents may be running. Running
 `scripts/rebase-agents.sh` while agents have uncommitted work destroys that work. After
@@ -321,6 +322,10 @@ scripts/rtt.sh               # run time tests (cargo nextest)
   memory. Verus holds large dependency graphs in memory; running concurrent builds can
   exhaust system RAM and lock the machine. Always: `validate` first, then `rtt`, then `ptt`.
   Never overlap them. Never run two validation passes at the same time.
+- **Run each validation step individually.** After merges or changes, run each step as a
+  separate command and check its output before proceeding to the next. Fix any trigger
+  warnings or errors between steps. Do NOT use a combined pipeline script — each step must
+  be independently verified clean.
 - **DO NOT run validate from subagents.** Validation is inherently sequential (single Verus
   process, single Z3 solver). Running validate from multiple subagents concurrently will
   wedge the machine. If you need multiple views of the output, run validate ONCE in the

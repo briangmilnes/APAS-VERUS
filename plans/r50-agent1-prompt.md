@@ -1,61 +1,73 @@
-# Agent 1 — Round 50
+# Agent 1 — Round 50 (Revised)
 
-## Primary Target: Chap43 holes (5 real holes across 4 files)
+## Primary Target: Chap47 ParaHashTableStEph — 3 Holes + 8 Warnings
 
-| # | Chap | File | Line | Type | Description |
-|---|------|------|------|------|-------------|
-| 1 | 43 | AugOrderedTableMtEph.rs | 672 | external_body | Prove the body |
-| 2 | 43 | AugOrderedTableStPer.rs | 117 | proof_fn_with_holes | lemma_reducer_clone_total — closure assume |
-| 3 | 43 | OrderedSetStEph.rs | 1134 | assume (algorithmic) | filter assume with exists quantifier |
-| 4 | 43 | OrderedSetStPer.rs | 1031 | assume (algorithmic) | filter assume with exists quantifier (same pattern as #3) |
-| 5 | 43 | OrderedTableMtPer.rs | 321 | assume (algorithmic) | assume(len < usize::MAX) — capacity bounds |
+Target: `src/Chap47/ParaHashTableStEph.rs` (787 lines, 3 holes, 8 warnings)
 
-Also fix `OrderedSetStPer.rs:1157` fn_missing_requires on `from_sorted_elements`.
+### Holes
 
-## Secondary Target: Chap57 + Chap59 int graph file warnings (3 fn_missing_requires)
+| # | Line | Type | Description |
+|---|------|------|-------------|
+| 1 | 116 | assume (algorithmic) | `assume(c == *x)` — Clone bridge for T::clone |
+| 2 | 494 | external_body | Function body not verified |
+| 3 | 112 | fn_missing_requires | `clone_elem` missing requires |
 
-These are verified graph algorithms (Dijkstra, Johnson APSP) with integer weights. They are
-real, substantial algorithm implementations — not scaffolding. The 3 warnings are trivial:
-add real requires clauses (not `requires true`, not tautologies).
+### Warnings (fn_missing_wf)
 
-| # | Chap | File | Line | Warning | Fix |
-|---|------|------|------|---------|-----|
-| 1 | 57 | DijkstraStEphU64.rs | 104 | fn_missing_requires | pq_entry_new — read the function, add real precondition |
-| 2 | 59 | JohnsonStEphI64.rs | 73 | fn_missing_requires | adjust_distance — read the function, add real precondition |
-| 3 | 59 | JohnsonStEphI64.rs | 89 | fn_missing_requires | reweight_edge — read the function, add real precondition |
+| # | Line | Function | Warning |
+|---|------|----------|---------|
+| 1 | 618 | createTable | fn_missing_wf_ensures — needs spec_hashtable_wf() |
+| 2 | 669 | insert | fn_missing_wf_requires — needs spec_hashtable_wf() |
+| 3 | 686 | lookup | fn_missing_wf_requires — needs spec_hashtable_wf() |
+| 4 | 696 | delete | fn_missing_wf_requires — needs spec_hashtable_wf() |
+| 5 | 709 | metrics | fn_missing_wf_requires — needs spec_hashtable_wf() |
+| 6 | 718 | loadAndSize | fn_missing_wf_requires — needs spec_hashtable_wf() |
+| 7 | 735 | resize | fn_missing_wf_requires — needs spec_hashtable_wf() |
 
-## Standards to Read First
+### Approach
 
-1. `src/standards/using_closures_standard.rs` — for lemma_reducer_clone closure assume
-2. `src/standards/partial_eq_eq_clone_standard.rs` — for Clone bridge pattern
-3. `src/standards/capacity_bounds_standard.rs` — for the len < usize::MAX assume
+1. **Read the file** thoroughly first. Understand the hash table design and existing specs.
+2. **Fix fn_missing_wf warnings**: Add `self.spec_hashtable_wf()` (or the correct wf
+   predicate name) to requires/ensures where veracity flags it. These are real
+   preconditions, not tautologies. The trait signature is the source of truth — update
+   trait declarations first, then impls.
+3. **Hole #1 (clone_elem assume)**: This is the same Clone-view pattern seen elsewhere.
+   Use the `obeys_feq_clone` propagation pattern from `partial_eq_eq_clone_standard.rs`
+   if applicable, or add the assume to the function's requires and propagate up.
+4. **Hole #2 (external_body at line 494)**: Read the function, understand what it does,
+   and provide a verified body. May need loop invariants.
+5. **Hole #3 (fn_missing_requires on clone_elem)**: Add the real requires once you
+   understand what clone_elem needs.
 
-## Approach
+### Secondary: Chap65 Kruskal + Prim (2 holes + 1 warning)
 
-1. **Start with Chap57+59 warnings** — quick wins, 15 minutes. Read each function body,
-   understand what it assumes about its inputs, write the real requires clause.
-2. **OrderedTableMtPer.rs:321** — capacity bounds assume. You did capacity bounds work in
-   R48. Apply the same pattern: propagate the bound from callers.
-3. **OrderedSetStEph.rs:1134 + OrderedSetStPer.rs:1031** — paired filter assumes with
-   exists quantifier. These are the same proof obligation in two files. Prove it once,
-   replicate. The assume says the filter result matches a spec-level filter with an
-   existential witness.
-4. **AugOrderedTableStPer.rs lemma_reducer_clone_total** — closure assume for Clone.
-   Read the closures standard. The assume says the cloned closure preserves requires.
-5. **AugOrderedTableMtEph.rs:672** — external_body. Read the function, understand what
-   it does, write the verified body.
-6. **Validate after each fix**: `scripts/validate.sh`.
+If Chap47 work completes early:
 
-## Constraints
+- `src/Chap65/KruskalStEph.rs:58` — external_body on sort_edges (238 lines total)
+- `src/Chap65/PrimStEph.rs:95` — external_body on prim_mst (202 lines total)
+- `src/Chap65/PrimStEph.rs:72` — fn_missing_requires on pq_entry_new
 
-- Do NOT modify Example files (Example41_3.rs — those 4 holes are skipped per CLAUDE.md)
+### Standards to Read
+
+- `src/standards/partial_eq_eq_clone_standard.rs` (Clone patterns)
+- `src/standards/capacity_bounds_standard.rs` (if insert needs capacity)
+- `src/standards/spec_wf_standard.rs` (wf naming)
+
+### Validation
+
+Run each step separately, fix errors between steps:
+- `scripts/validate.sh` — 0 errors, no trigger warnings
+- `scripts/rtt.sh` — all pass
+- `scripts/ptt.sh` — all pass
+
+### Constraints
+
 - Do NOT add new assumes, external_body, or accept()
 - Do NOT weaken ensures clauses
 - Do NOT add `requires true` or tautological requires
-- Each StEph/StPer/MtEph file is standalone — no cross-imports
+- Do NOT add `// veracity: no_requires` annotations
 
-## Success Criteria
+### Current State
 
-- 3 fn_missing_requires warnings fixed (Chap57+59)
-- Net hole reduction in Chap43 (target: -2 or more from the 5 holes)
-- 0 verification errors, 0 RTT failures, 0 PTT failures
+- Main at post-merge of agents 1-4 R49/R50
+- 4450 verified, 2613 RTT, 147 PTT

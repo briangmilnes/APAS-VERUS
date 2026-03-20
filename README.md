@@ -585,9 +585,8 @@ All scripts live in `scripts/`, auto-detect the worktree root, and strip ANSI es
 | 3 | `scripts/rtt.sh` | `rtt.sh [filter]` | Runtime tests (`-j 6`, 120s timeout) |
 | 4 | `scripts/ptt.sh` | `ptt.sh [filter]` | Compile PTT lib + proof time tests (`-j 6`) |
 | 5 | `scripts/holes.sh` | `holes.sh [dir-or-file]` | Proof hole detection |
-| 6 | `scripts/validate-check-rtt-ptt.sh` | `validate-check-rtt-ptt.sh` | Full pipeline (stops on first failure) |
-| 7 | `scripts/merge-agent.sh` | `merge-agent.sh <branch>` | Merge an agent branch + validate |
-| 8 | `scripts/reset-agent-to-main.sh` | `reset-agent-to-main.sh` | Reset agent branch to `origin/main` + force push |
+| 6 | `scripts/merge-agent.sh` | `merge-agent.sh <branch>` | Merge an agent branch (validate separately after) |
+| 7 | `scripts/reset-agent-to-main.sh` | `reset-agent-to-main.sh` | Reset agent branch to `origin/main` + force push |
 
 ### Verification
 
@@ -628,8 +627,12 @@ scripts/holes.sh src/Chap05/SetStEph.rs  # one file
 ### Full Pipeline
 
 ```bash
-scripts/validate-check-rtt-ptt.sh  # validate (dev) -> check -> RTT -> PTT
+scripts/validate.sh   # verify all modules
+scripts/rtt.sh        # runtime tests
+scripts/ptt.sh        # proof time tests
 ```
+
+Run each step separately. Fix trigger warnings and errors between steps.
 
 ### Benchmarking
 

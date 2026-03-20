@@ -22,9 +22,15 @@ cd "$PROJECT_ROOT"
 
 git fetch origin
 git merge "$BRANCH" --no-edit || {
-    echo "CONFLICTS. Resolve, then run: $SCRIPT_DIR/validate-check-rtt-ptt.sh"
+    echo "CONFLICTS. Resolve, then validate each step separately:"
+    echo "  scripts/validate.sh"
+    echo "  scripts/rtt.sh"
+    echo "  scripts/ptt.sh"
     git diff --name-only --diff-filter=U
     exit 1
 }
 
-"$SCRIPT_DIR/validate-check-rtt-ptt.sh"
+echo "Merge complete. Validate each step separately:"
+echo "  scripts/validate.sh"
+echo "  scripts/rtt.sh"
+echo "  scripts/ptt.sh"

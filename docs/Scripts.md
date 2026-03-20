@@ -18,12 +18,11 @@ All scripts live in `scripts/`, auto-detect the worktree root via `BASH_SOURCE`,
 | 3 | `rtt.sh` | `rtt.sh [filter]` | Runtime tests |
 | 4 | `ptt.sh` | `ptt.sh [filter]` | Compile PTT lib + proof time tests |
 | 5 | `holes.sh` | `holes.sh [dir-or-file]` | Proof hole detection |
-| 6 | `validate-check-rtt-ptt.sh` | `validate-check-rtt-ptt.sh` | Full pipeline |
-| 7 | `merge-agent.sh` | `merge-agent.sh <branch>` | Merge agent branch into main |
-| 8 | `reset-agent-to-main.sh` | `reset-agent-to-main.sh` | Reset agent to `origin/main` |
-| 9 | `tags.sh` | `tags.sh` | Generate Emacs TAGS |
-| 10 | `verusdoc.sh` | `verusdoc.sh` | Generate Verus API docs |
-| 11 | `clear-lsp-cache.sh` | `clear-lsp-cache.sh` | Clear LSP and Verus analyzer caches |
+| 6 | `merge-agent.sh` | `merge-agent.sh <branch>` | Merge agent branch into main |
+| 7 | `reset-agent-to-main.sh` | `reset-agent-to-main.sh` | Reset agent to `origin/main` |
+| 8 | `tags.sh` | `tags.sh` | Generate Emacs TAGS |
+| 9 | `verusdoc.sh` | `verusdoc.sh` | Generate Verus API docs |
+| 10 | `clear-lsp-cache.sh` | `clear-lsp-cache.sh` | Clear LSP and Verus analyzer caches |
 
 ---
 
@@ -129,39 +128,9 @@ scripts/holes.sh src/Chap05/SetStEph.rs
 
 ---
 
-## 6. validate-check-rtt-ptt.sh
+## 6. merge-agent.sh
 
-Runs the full validation pipeline in order. Stops on first failure (`set -euo pipefail`).
-
-**Usage:** `scripts/validate-check-rtt-ptt.sh [full|dev|exp] [--time] [filter]`
-
-| Argument | Description |
-|----------|-------------|
-| `full\|dev\|exp` (optional) | Verus mode, passed to `validate.sh` (defaults to `dev`) |
-| `--time` (optional) | Passed to `validate.sh` for timing breakdown |
-| `filter` (optional) | Case-insensitive test name filter, passed to `rtt.sh` and `ptt.sh` |
-
-Calls in order:
-
-1. `validate.sh <mode> [--time]`
-2. `check.sh`
-3. `rtt.sh [filter]`
-4. `ptt.sh [filter]`
-
-**Examples:**
-
-```
-scripts/validate-check-rtt-ptt.sh                  # dev, all tests
-scripts/validate-check-rtt-ptt.sh full --time       # full verify with timing, all tests
-scripts/validate-check-rtt-ptt.sh dev bst           # dev verify, BST tests only
-scripts/validate-check-rtt-ptt.sh full --time bst   # full with timing, BST tests only
-```
-
----
-
-## 7. merge-agent.sh
-
-Merges an agent branch into the current worktree (should be main). On success, runs the full validation pipeline. On conflict, prints the conflicted files and exits for manual resolution.
+Merges an agent branch into the current worktree (should be main). On conflict, prints the conflicted files and exits for manual resolution. After merging, validate each step separately (`validate.sh`, `rtt.sh`, `ptt.sh`).
 
 **Usage:** `scripts/merge-agent.sh <branch>`
 
@@ -180,7 +149,7 @@ See [WorkingWithMultipleAgentsInWorktrees.md](WorkingWithMultipleAgentsInWorktre
 
 ---
 
-## 8. reset-agent-to-main.sh
+## 7. reset-agent-to-main.sh
 
 Resets the current agent branch to `origin/main` and force-pushes. Run in an agent worktree **after** main has merged and pushed the agent's work. Refuses to run on `main`.
 
@@ -197,7 +166,7 @@ scripts/reset-agent-to-main.sh
 
 ---
 
-## 9. tags.sh
+## 8. tags.sh
 
 Generates an Emacs `TAGS` file covering `src/`, `vstd`, and `builtin` using `verus-etags`.
 
@@ -213,7 +182,7 @@ scripts/tags.sh
 
 ---
 
-## 10. verusdoc.sh
+## 9. verusdoc.sh
 
 Generates API documentation with Verus specifications (requires/ensures) using `rustdoc` and the `verusdoc` post-processor. Builds `verusdoc` and `vstd` (debug) if not already built.
 
@@ -229,7 +198,7 @@ scripts/verusdoc.sh
 
 ---
 
-## 11. clear-lsp-cache.sh
+## 10. clear-lsp-cache.sh
 
 Clears Verus analyzer and rust-analyzer caches (`.verus-log`, `target/.fingerprint`, `.rust-analyzer`). Useful when the LSP gets into a bad state.
 

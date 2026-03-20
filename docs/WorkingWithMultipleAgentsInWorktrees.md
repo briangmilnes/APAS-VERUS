@@ -29,9 +29,8 @@ All scripts live in `scripts/` and auto-detect the worktree root. They strip ANS
 | 3 | `scripts/rtt.sh` | `rtt.sh [filter]` | Runtime tests (`-j 6`, 120s timeout) |
 | 4 | `scripts/ptt.sh` | `ptt.sh [filter]` | Compile PTT lib + proof time tests (`-j 6`) |
 | 5 | `scripts/holes.sh` | `holes.sh [dir-or-file]` | Proof hole detection |
-| 6 | `scripts/validate-check-rtt-ptt.sh` | `validate-check-rtt-ptt.sh` | Full pipeline: validate + check + RTT + PTT |
-| 7 | `scripts/merge-agent.sh` | `merge-agent.sh <branch>` | Merge an agent branch + validate |
-| 8 | `scripts/reset-agent-to-main.sh` | `reset-agent-to-main.sh` | Reset agent branch to `origin/main` + force push |
+| 6 | `scripts/merge-agent.sh` | `merge-agent.sh <branch>` | Merge an agent branch (validate separately after) |
+| 7 | `scripts/reset-agent-to-main.sh` | `reset-agent-to-main.sh` | Reset agent branch to `origin/main` + force push |
 
 ## Critical Rules
 
@@ -54,7 +53,7 @@ All scripts live in `scripts/` and auto-detect the worktree root. They strip ANS
 
 ### Step 1: Validate main
 
-> **Script:** `cd ~/projects/APAS-VERUS && scripts/validate-check-rtt-ptt.sh`
+> **Script:** `cd ~/projects/APAS-VERUS && scripts/validate.sh && scripts/rtt.sh && scripts/ptt.sh`
 
 Full commands:
 
@@ -94,7 +93,7 @@ git push origin main
 
 ### Step 3: Validate agent1
 
-> **Script:** `cd ~/projects/APAS-VERUS-agent1 && scripts/validate-check-rtt-ptt.sh`
+> **Script:** `cd ~/projects/APAS-VERUS-agent1 && scripts/validate.sh && scripts/rtt.sh && scripts/ptt.sh`
 
 Full commands:
 
@@ -134,7 +133,7 @@ git push origin agent1/ready
 
 ### Step 5: Validate agent2
 
-> **Script:** `cd ~/projects/APAS-VERUS-agent2 && scripts/validate-check-rtt-ptt.sh`
+> **Script:** `cd ~/projects/APAS-VERUS-agent2 && scripts/validate.sh && scripts/rtt.sh && scripts/ptt.sh`
 
 Full commands:
 
@@ -174,7 +173,7 @@ git push origin agent2/ready
 
 ### Step 6a: Validate agent3
 
-> **Script:** `cd ~/projects/APAS-VERUS-agent3 && scripts/validate-check-rtt-ptt.sh`
+> **Script:** `cd ~/projects/APAS-VERUS-agent3 && scripts/validate.sh && scripts/rtt.sh && scripts/ptt.sh`
 
 ### Step 6b: Commit and push agent3
 
@@ -230,7 +229,7 @@ git commit --no-edit
 
 ### Step 9: Validate after agent1 merge
 
-> **Script:** `cd ~/projects/APAS-VERUS && scripts/validate-check-rtt-ptt.sh`
+> **Script:** `cd ~/projects/APAS-VERUS && scripts/validate.sh && scripts/rtt.sh && scripts/ptt.sh`
 
 Full commands:
 
@@ -309,7 +308,7 @@ git commit --no-edit
 
 ### Step 13: Validate after agent2 merge
 
-> **Script:** `cd ~/projects/APAS-VERUS && scripts/validate-check-rtt-ptt.sh`
+> **Script:** `cd ~/projects/APAS-VERUS && scripts/validate.sh && scripts/rtt.sh && scripts/ptt.sh`
 
 Full commands:
 
@@ -357,7 +356,7 @@ Same pattern as Step 8 or 12 — take ours for lib.rs, theirs for analyses, manu
 
 ### Step 14c: Validate after agent3 merge
 
-> **Script:** `cd ~/projects/APAS-VERUS && scripts/validate-check-rtt-ptt.sh`
+> **Script:** `cd ~/projects/APAS-VERUS && scripts/validate.sh && scripts/rtt.sh && scripts/ptt.sh`
 
 ### Step 14d: Commit and push main
 
