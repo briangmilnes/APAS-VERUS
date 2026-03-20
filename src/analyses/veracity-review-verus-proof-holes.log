@@ -2900,8 +2900,8 @@ Accepted (reviewed): 55 total
    5 × external_accept_hole
    4 × unsafe_block_accept_hole
    1 × external_type_specification_accept_hole
-   1 × enum_outside_verus_accept_hole
    1 × struct_outside_verus_accept_hole
+   1 × enum_outside_verus_accept_hole
 
 Accepted by Chapter:
   Chap02:  5  Chap12: 19  Chap18:  8
@@ -2927,50 +2927,50 @@ Structural (info only): 179
 
    1  Chap39  (16 holes, 4 files)
    2  Chap38  (14 holes, 2 files)
-   3  Chap62  (9 holes, 4 files)
-   4  Chap66  (9 holes, 2 files)
+   3  Chap66  (9 holes, 2 files)
+   4  Chap62  (9 holes, 4 files)
    5  Chap61  (8 holes, 4 files)
-   6  Chap11  (6 holes, 5 files)
-   7  Chap63  (6 holes, 2 files)
-   8  Chap43  (6 holes, 11 files)
+   6  Chap63  (6 holes, 2 files)
+   7  Chap43  (6 holes, 11 files)
+   8  Chap11  (6 holes, 5 files)
    9  Chap41  (6 holes, 7 files)
    10  Chap47  (5 holes, 9 files)
    11  Chap64  (4 holes, 3 files)
    12  Chap26  (4 holes, 8 files)
    13  Chap65  (2 holes, 3 files)
    14  Chap59  (2 holes, 4 files)
-   15  Chap02  (1 holes, 2 files)
-   16  Chap45  (1 holes, 7 files)
-   17  Chap05  (0 holes, 5 files)
-   18  Chap58  (0 holes, 2 files)
-   19  Chap57  (0 holes, 3 files)
-   20  Concurrency  (0 holes, 1 files)
-   21  Chap03  (0 holes, 1 files)
-   22  Chap21  (0 holes, 12 files)
-   23  Chap40  (0 holes, 3 files)
-   24  Chap23  (0 holes, 2 files)
-   25  Chap55  (0 holes, 8 files)
-   26  Chap44  (0 holes, 2 files)
-   27  Chap12  (0 holes, 3 files)
-   28  Chap17  (0 holes, 1 files)
-   29  Chap42  (0 holes, 4 files)
-   30  Chap19  (0 holes, 4 files)
-   31  Chap35  (0 holes, 4 files)
-   32  Chap56  (0 holes, 12 files)
-   33  Chap52  (0 holes, 14 files)
+   15  Chap45  (1 holes, 7 files)
+   16  Chap02  (1 holes, 2 files)
+   17  ParaPairs  (0 holes, 1 files)
+   18  Chap42  (0 holes, 4 files)
+   19  Chap36  (0 holes, 3 files)
+   20  Chap05  (0 holes, 5 files)
+   21  Chap37  (0 holes, 19 files)
+   22  Chap40  (0 holes, 3 files)
+   23  Chap55  (0 holes, 8 files)
+   24  Chap03  (0 holes, 1 files)
+   25  Chap28  (0 holes, 11 files)
+   26  Chap58  (0 holes, 2 files)
+   27  Chap56  (0 holes, 12 files)
+   28  Chap35  (0 holes, 4 files)
+   29  Concurrency  (0 holes, 1 files)
+   30  Chap12  (0 holes, 3 files)
+   31  Chap06  (0 holes, 20 files)
+   32  Chap23  (0 holes, 2 files)
+   33  Chap18  (0 holes, 7 files)
    34  Chap51  (0 holes, 8 files)
-   35  ParaPairs  (0 holes, 1 files)
-   36  Chap49  (0 holes, 8 files)
-   37  Chap06  (0 holes, 20 files)
-   38  Chap37  (0 holes, 19 files)
-   39  Chap28  (0 holes, 11 files)
-   40  Chap54  (0 holes, 4 files)
-   41  Chap50  (0 holes, 8 files)
-   42  Chap18  (0 holes, 7 files)
-   43  Chap36  (0 holes, 3 files)
-   44  Chap30  (0 holes, 1 files)
-   45  Chap53  (0 holes, 5 files)
-   46  Chap27  (0 holes, 4 files)
+   35  Chap54  (0 holes, 4 files)
+   36  Chap30  (0 holes, 1 files)
+   37  Chap44  (0 holes, 2 files)
+   38  Chap21  (0 holes, 12 files)
+   39  Chap19  (0 holes, 4 files)
+   40  Chap53  (0 holes, 5 files)
+   41  Chap57  (0 holes, 3 files)
+   42  Chap52  (0 holes, 14 files)
+   43  Chap17  (0 holes, 1 files)
+   44  Chap50  (0 holes, 8 files)
+   45  Chap27  (0 holes, 4 files)
+   46  Chap49  (0 holes, 8 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
@@ -2979,16 +2979,16 @@ Structural (info only): 179
    1  src/Chap39/BSTParaTreapMtEph.rs  (16 holes)
    2  src/Chap38/BSTParaMtEph.rs  (13 holes)
    3  src/Chap26/ETSPMtEph.rs  (4 holes)
-   4  src/Chap11/FibonacciMtEph2Threads.rs  (2 holes)
+   4  src/Chap11/FibonacciMtPerTSM.rs  (2 holes)
    5  src/Chap47/ParaHashTableStEph.rs  (2 holes)
-   6  src/Chap41/AVLTreeSetStEph.rs  (2 holes)
-   7  src/Chap11/FibonacciMtPerTSM.rs  (2 holes)
-   8  src/Chap11/FibonacciMtEphRecomputes.rs  (2 holes)
-   9  src/Chap43/AugOrderedTableMtEph.rs  (1 holes)
-   10  src/Chap45/Example45_2.rs  (1 holes)
-   11  src/Chap02/HFSchedulerMtEph.rs  (1 holes)
-   12  src/Chap43/OrderedSetStPer.rs  (1 holes)
-   13  src/Chap38/BSTParaStEph.rs  (1 holes)
+   6  src/Chap11/FibonacciMtEphRecomputes.rs  (2 holes)
+   7  src/Chap41/AVLTreeSetStEph.rs  (2 holes)
+   8  src/Chap11/FibonacciMtEph2Threads.rs  (2 holes)
+   9  src/Chap02/HFSchedulerMtEph.rs  (1 holes)
+   10  src/Chap38/BSTParaStEph.rs  (1 holes)
+   11  src/Chap45/Example45_2.rs  (1 holes)
+   12  src/Chap43/AugOrderedTableMtEph.rs  (1 holes)
+   13  src/Chap43/OrderedSetStPer.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
@@ -3060,7 +3060,7 @@ HOLED CHAPTERS (16) — 99 holes
   Chap38            14     2  YES       
   Chap39            16     4  internal  Chap39::BSTParaTreapMtEph
   Chap41             6     7  internal  Chap41::AVLTreeSetStEph
-  Chap43             6    11  NO        Chap41::AVLTreeSetStEph, Chap42::TableStPer
+  Chap43             6    11  NO        Chap42::TableStPer, Chap41::AVLTreeSetStEph
   Chap45             1     7  YES       
   Chap47             5     9  internal  Chap47::ParaHashTableStEph
   Chap59             2     4  NO        Chap05::SetStEph
@@ -3099,8 +3099,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 20:23:43 -07:00
-Ended:     2026-03-19 20:23:44 -07:00
-Duration:  1562ms
+Started:   2026-03-19 20:54:17 -07:00
+Ended:     2026-03-19 20:54:19 -07:00
+Duration:  1579ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log

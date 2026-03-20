@@ -67,8 +67,8 @@ Table of Contents:
       15 × external_body
    Info: 4 × structural_false_positive
       2 × UNSAFE_SEND_SYNC
-      1 × OPAQUE_EXTERNAL
       1 × RWLOCK_GHOST
+      1 × OPAQUE_EXTERNAL
 ✓ BSTSetTreapMtEph.rs
 ⚠ BSTTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:362: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
@@ -204,15 +204,15 @@ Structural (info only): 10
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 20:23:42 -07:00
-Ended:     2026-03-19 20:23:42 -07:00
-Duration:  38ms
+Started:   2026-03-19 20:54:16 -07:00
+Ended:     2026-03-19 20:54:16 -07:00
+Duration:  40ms
 
 Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log
-============================
+================
 
-Started:   2026-03-19 20:23:42 -07:00
-Ended:     2026-03-19 20:23:42 -07:00
-Duration:  38ms
+Started:   2026-03-19 20:54:16 -07:00
+Ended:     2026-03-19 20:54:16 -07:00
+Duration:  40ms
 
 Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log

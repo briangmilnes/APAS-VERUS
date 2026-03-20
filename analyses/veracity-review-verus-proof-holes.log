@@ -904,8 +904,8 @@ Table of Contents:
       15 × external_body
    Info: 4 × structural_false_positive
       2 × UNSAFE_SEND_SYNC
-      1 × OPAQUE_EXTERNAL
       1 × RWLOCK_GHOST
+      1 × OPAQUE_EXTERNAL
 ✓ src/Chap39/BSTSetTreapMtEph.rs
 ⚠ src/Chap39/BSTTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:362: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
@@ -2318,6 +2318,1017 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Concurrency.rs:13: info: external_body_accept_hole
    Info: 1 total
 ✓ src/ParaPairs.rs
+⚠ tests/Chap02/test_fibonacci_scheduler.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap02/test_fibonacci_scheduler.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::Chap02::FibonacciHFScheduler::FibonacciHFScheduler::{fib_seq, fib_par};
+⚠ tests/Chap02/test_hf_scheduler.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap02/test_hf_scheduler.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for HFSchedulerMtEph global work-stealing pool.
+         3 | 
+⚠ tests/Chap02/test_threads_plus.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap02/test_threads_plus.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for threads_plus at the raw thread level.
+         3 | 
+⚠ tests/Chap03/TestInsertionSortStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap03/TestInsertionSortStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::Chap03::InsertionSortStEph::InsertionSortStEph::*;
+⚠ tests/Chap05/TestKleeneStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap05/TestKleeneStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::Chap05::SetStEph::SetStEph::*;
+⚠ tests/Chap05/TestMappingStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap05/TestMappingStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for MappingStEph ephemeral mappings.
+         3 | 
+⚠ tests/Chap05/TestRelationStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap05/TestRelationStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::Chap05::RelationStEph::RelationStEph::*;
+⚠ tests/Chap05/TestSetMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap05/TestSetMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for SetMtEph - parallel set operations.
+         3 | 
+⚠ tests/Chap05/TestSetStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap05/TestSetStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::Chap05::SetStEph::SetStEph::*;
+⚠ tests/Chap06/TestDirGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestDirGraphMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use std::sync::Arc;
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestDirGraphMtEph.rs:441: error: rust_rwlock - Use Verus RwLock (vstd::rwlock::RwLock), not std::sync::RwLock.
+       435 | fn test_race_condition_verification_mixed_graph_operations() {
+            ...
+       439 | 
+       440 |     // Create multiple graphs for concurrent access
+       442 |         DirGraphMtEph::empty(),
+       443 |         DirGraphMtEph::empty(),
+⚠ tests/Chap06/TestDirGraphStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestDirGraphStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::Chap05::SetStEph::SetStEph::*;
+⚠ tests/Chap06/TestLabDirGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestLabDirGraphMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use std::sync::{Arc, Barrier};
+⚠ tests/Chap06/TestLabDirGraphStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestLabDirGraphStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::Chap05::SetStEph::SetStEph::*;
+⚠ tests/Chap06/TestLabUnDirGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestLabUnDirGraphMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for LabUnDirGraphMtEph - ALL trait methods
+         3 | 
+⚠ tests/Chap06/TestLabUnDirGraphStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestLabUnDirGraphStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for LabUnDirGraphStEph - ALL trait methods
+         3 | 
+⚠ tests/Chap06/TestUnDirGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestUnDirGraphMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use std::sync::{Arc, Barrier};
+⚠ tests/Chap06/TestUnDirGraphStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestUnDirGraphStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::Chap05::SetStEph::SetStEph::*;
+⚠ tests/Chap06/TestWeighedDirGraphMtEphFloat.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestWeighedDirGraphMtEphFloat.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use std::f64::consts::{E, PI, SQRT_2};
+⚠ tests/Chap06/TestWeighedDirGraphMtEphInt.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestWeighedDirGraphMtEphInt.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use std::sync::{Arc, Barrier};
+⚠ tests/Chap06/TestWeighedDirGraphStEphFloat.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestWeighedDirGraphStEphFloat.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use std::f64::consts::{E, PI};
+⚠ tests/Chap06/TestWeighedDirGraphStEphInt.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestWeighedDirGraphStEphInt.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for WeighedDirGraphStEphInt.
+         3 | 
+⚠ tests/Chap06/TestWeighedUnDirGraphMtEphFloat.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestWeighedUnDirGraphMtEphFloat.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use std::f64::consts::{E, PI, SQRT_2};
+⚠ tests/Chap06/TestWeighedUnDirGraphMtEphInt.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestWeighedUnDirGraphMtEphInt.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use std::sync::{Arc, Barrier};
+⚠ tests/Chap06/TestWeighedUnDirGraphStEphFloat.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestWeighedUnDirGraphStEphFloat.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap06 WeighedUnDirGraphStEphFloat.
+         3 | 
+⚠ tests/Chap06/TestWeighedUnDirGraphStEphInt.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestWeighedUnDirGraphStEphInt.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap06 WeighedUnDirGraphStEphInt.
+         3 | 
+⚠ tests/Chap06/TestWeightedDirGraphStEphI128.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestWeightedDirGraphStEphI128.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for WeightedDirGraphStEphI128.
+         3 | 
+⚠ tests/Chap06/TestWeightedDirGraphStEphI16.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestWeightedDirGraphStEphI16.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for WeightedDirGraphStEphI16.
+         3 | 
+⚠ tests/Chap06/TestWeightedDirGraphStEphI32.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestWeightedDirGraphStEphI32.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for WeightedDirGraphStEphI32.
+         3 | 
+⚠ tests/Chap06/TestWeightedDirGraphStEphI64.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestWeightedDirGraphStEphI64.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for WeightedDirGraphStEphI64.
+         3 | 
+⚠ tests/Chap06/TestWeightedDirGraphStEphI8.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestWeightedDirGraphStEphI8.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for WeightedDirGraphStEphI8.
+         3 | 
+⚠ tests/Chap06/TestWeightedDirGraphStEphIsize.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestWeightedDirGraphStEphIsize.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for WeightedDirGraphStEphIsize.
+         3 | 
+⚠ tests/Chap06/TestWeightedDirGraphStEphU128.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestWeightedDirGraphStEphU128.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for WeightedDirGraphStEphU128.
+         3 | 
+⚠ tests/Chap06/TestWeightedDirGraphStEphU16.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestWeightedDirGraphStEphU16.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for WeightedDirGraphStEphU16.
+         3 | 
+⚠ tests/Chap06/TestWeightedDirGraphStEphU32.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestWeightedDirGraphStEphU32.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for WeightedDirGraphStEphU32.
+         3 | 
+⚠ tests/Chap06/TestWeightedDirGraphStEphU64.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestWeightedDirGraphStEphU64.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for WeightedDirGraphStEphU64.
+         3 | 
+⚠ tests/Chap06/TestWeightedDirGraphStEphU8.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestWeightedDirGraphStEphU8.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for WeightedDirGraphStEphU8.
+         3 | 
+⚠ tests/Chap06/TestWeightedDirGraphStEphUsize.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap06/TestWeightedDirGraphStEphUsize.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for WeightedDirGraphStEphUsize.
+         3 | 
+⚠ tests/Chap11/TestFibonacciMt.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap11/TestFibonacciMt.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap11 Fibonacci implementations.
+         3 | //!
+⚠ tests/Chap11/TestParaPairs.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap11/TestParaPairs.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for ParaPairs module - work-stealing parallelism with global pool.
+         3 | 
+⚠ tests/Chap12/test_exercise12_1.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap12/test_exercise12_1.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use std::sync::Arc;
+⚠ tests/Chap12/test_exercise12_2.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap12/test_exercise12_2.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use std::sync::Arc;
+⚠ tests/Chap12/test_exercise12_5.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap12/test_exercise12_5.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use std::collections::HashSet;
+⚠ tests/Chap17/TestMathSeq.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap17/TestMathSeq.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for MathSeq
+         3 | 
+⚠ tests/Chap18/TestArraySeq.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap18/TestArraySeq.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for base ArraySeq implementation.
+         3 | 
+⚠ tests/Chap18/TestArraySeqMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap18/TestArraySeqMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for ArraySeqMtEph with parallel operations.
+         3 | 
+⚠ tests/Chap18/TestArraySeqMtPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap18/TestArraySeqMtPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for ArraySeqMtPer with parallel operations.
+         3 | 
+⚠ tests/Chap18/TestArraySeqStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap18/TestArraySeqStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Runtime tests for ArraySeqStEph (sequential ephemeral array sequence).
+         3 | 
+⚠ tests/Chap18/TestArraySeqStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap18/TestArraySeqStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Runtime tests for ArraySeqStPer (sequential persistent array sequence).
+         3 | 
+⚠ tests/Chap18/TestLinkedListStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap18/TestLinkedListStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Runtime tests for LinkedListStEph (sequential ephemeral linked-list sequence).
+         3 | 
+⚠ tests/Chap18/TestLinkedListStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap18/TestLinkedListStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Runtime tests for LinkedListStPer (sequential persistent linked-list sequence).
+         3 | 
+⚠ tests/Chap19/TestArraySeqMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap19/TestArraySeqMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Runtime tests for Chap19 ArraySeqMtEph (multi-threaded ephemeral parametric array sequence).
+         3 | 
+⚠ tests/Chap19/TestArraySeqStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap19/TestArraySeqStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Runtime tests for Chap19 ArraySeqStEph (sequential ephemeral parametric array sequence).
+         3 | 
+⚠ tests/Chap19/TestArraySeqStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap19/TestArraySeqStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Runtime tests for Chap19 ArraySeqStPer (sequential persistent parametric array sequence).
+         3 | 
+⚠ tests/Chap21/TestChap21.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap21/TestChap21.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Runtime tests for Chapter 21 — Comprehensions and tabulate+flatten algorithms.
+         3 | 
+⚠ tests/Chap23/TestBalBinTreeStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap23/TestBalBinTreeStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | use apas_verus::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
+         3 | use apas_verus::Types::Types::*;
+⚠ tests/Chap23/TestPrimTreeSeqStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap23/TestPrimTreeSeqStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::Chap23::PrimTreeSeqStPer::PrimTreeSeqStPer::*;
+⚠ tests/Chap26/TestDivConReduceMtPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap26/TestDivConReduceMtPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for parallel divide-and-conquer via reduce (Chapter 26).
+         3 | 
+⚠ tests/Chap26/TestDivConReduceStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap26/TestDivConReduceStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for sequential divide-and-conquer via reduce (Chapter 26).
+         3 | 
+⚠ tests/Chap26/TestETSPMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap26/TestETSPMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for parallel divide-and-conquer eTSP heuristic (Chapter 26).
+         3 | 
+⚠ tests/Chap26/TestETSPStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap26/TestETSPStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for divide-and-conquer eTSP heuristic (Chapter 26).
+         3 | 
+⚠ tests/Chap26/TestMergeSortMtPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap26/TestMergeSortMtPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for parallel merge sort (Chapter 26).
+         3 | 
+⚠ tests/Chap26/TestMergeSortStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap26/TestMergeSortStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for sequential merge sort (Chapter 26).
+         3 | 
+⚠ tests/Chap26/TestScanDCMtPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap26/TestScanDCMtPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for parallel divide-and-conquer scan (Chapter 26).
+         3 | 
+⚠ tests/Chap26/TestScanDCStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap26/TestScanDCStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for sequential divide-and-conquer scan (Chapter 26).
+         3 | 
+⚠ tests/Chap27/TestReduceContractMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap27/TestReduceContractMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for parallel reduce using contraction (Chapter 27).
+         3 | 
+⚠ tests/Chap27/TestReduceContractStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap27/TestReduceContractStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for sequential reduce using contraction (Chapter 27).
+         3 | 
+⚠ tests/Chap27/TestScanContractMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap27/TestScanContractMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for parallel scan using contraction (Chapter 27).
+         3 | 
+⚠ tests/Chap27/TestScanContractStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap27/TestScanContractStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for sequential scan using contraction (Chapter 27).
+         3 | 
+⚠ tests/Chap28/TestMaxContigSubSumBruteStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap28/TestMaxContigSubSumBruteStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::ArraySeqStEphSLit;
+⚠ tests/Chap28/TestMaxContigSubSumDivConMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap28/TestMaxContigSubSumDivConMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
+⚠ tests/Chap28/TestMaxContigSubSumDivConOptMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap28/TestMaxContigSubSumDivConOptMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
+⚠ tests/Chap28/TestMaxContigSubSumDivConOptStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap28/TestMaxContigSubSumDivConOptStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::ArraySeqStEphSLit;
+⚠ tests/Chap28/TestMaxContigSubSumDivConStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap28/TestMaxContigSubSumDivConStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::ArraySeqStEphSLit;
+⚠ tests/Chap28/TestMaxContigSubSumIterStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap28/TestMaxContigSubSumIterStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::ArraySeqStEphSLit;
+⚠ tests/Chap28/TestMaxContigSubSumOptMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap28/TestMaxContigSubSumOptMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
+⚠ tests/Chap28/TestMaxContigSubSumOptStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap28/TestMaxContigSubSumOptStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::ArraySeqStEphSLit;
+⚠ tests/Chap28/TestMaxContigSubSumReducedMcsseStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap28/TestMaxContigSubSumReducedMcsseStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::ArraySeqStEphSLit;
+⚠ tests/Chap28/TestMaxContigSubSumReducedStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap28/TestMaxContigSubSumReducedStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::ArraySeqStEphSLit;
+⚠ tests/Chap35/TestOrderStatSelectMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap35/TestOrderStatSelectMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::ArraySeqMtEphChap19SLit;
+⚠ tests/Chap35/TestOrderStatSelectMtPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap35/TestOrderStatSelectMtPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::ArrayMtPerSLit;
+⚠ tests/Chap35/TestOrderStatSelectStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap35/TestOrderStatSelectStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::ArraySeqStEphSLit;
+⚠ tests/Chap35/TestOrderStatSelectStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap35/TestOrderStatSelectStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::{ArraySeqStPerBaseTrait, *};
+⚠ tests/Chap36/BenchQuickSort.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap36/BenchQuickSort.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Benchmarks for Chapter 36 quicksort: St vs Mt, all three pivot strategies.
+         3 | //! Uses shuffled data to avoid O(n) recursion depth on first-element pivot.
+⚠ tests/Chap36/TestQuickSortMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap36/TestQuickSortMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::ArraySeqMtEphChap19SLit;
+⚠ tests/Chap36/TestQuickSortMtEphSlice.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap36/TestQuickSortMtEphSlice.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | #![allow(clippy::unnecessary_mut_passed)]
+⚠ tests/Chap36/TestQuickSortStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap36/TestQuickSortStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::ArraySeqStEphSLit;
+⚠ tests/Chap37/TestAVLTreeSeq.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestAVLTreeSeq.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for AVLTreeSeq base trait functionality.
+         3 | 
+⚠ tests/Chap37/TestAVLTreeSeqMtPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestAVLTreeSeqMtPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Tests for AVLTreeSeqMtPer.
+⚠ tests/Chap37/TestAVLTreeSeqStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestAVLTreeSeqStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | use apas_verus::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::*;
+         3 | use apas_verus::Types::Types::*;
+⚠ tests/Chap37/TestAVLTreeSeqStEph18.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestAVLTreeSeqStEph18.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for AVLTreeSeq Eph (Chap18-style operations built using base APIs).
+         3 | 
+⚠ tests/Chap37/TestAVLTreeSeqStEphChap37.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestAVLTreeSeqStEphChap37.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::{AVLTreeSeqStEphLit, ArraySeqStEphSLit};
+⚠ tests/Chap37/TestAVLTreeSeqStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestAVLTreeSeqStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::AVLTreeSeqStPerLit;
+⚠ tests/Chap37/TestAVLTreeSeqStPer18.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestAVLTreeSeqStPer18.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for AVLTreeSeq Chapter 18 algorithms.
+         3 | 
+⚠ tests/Chap37/TestAVLTreeSeqStPer19.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestAVLTreeSeqStPer19.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::AVLTreeSeqStPerLit;
+⚠ tests/Chap37/TestBSTAVLMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestBSTAVLMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Tests for BSTAVLMtEph.
+⚠ tests/Chap37/TestBSTAVLStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestBSTAVLStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for BSTAVLStEph.
+         3 | 
+⚠ tests/Chap37/TestBSTBBAlphaMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestBSTBBAlphaMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Tests for BSTBBAlphaMtEph.
+⚠ tests/Chap37/TestBSTBBAlphaStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestBSTBBAlphaStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for BSTBBAlphaStEph.
+         3 | 
+⚠ tests/Chap37/TestBSTMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestBSTMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+⚠ tests/Chap37/TestBSTPlainMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestBSTPlainMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Tests for BSTPlainMtEph.
+⚠ tests/Chap37/TestBSTPlainStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestBSTPlainStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for BSTPlainStEph.
+         3 | 
+⚠ tests/Chap37/TestBSTRBMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestBSTRBMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Tests for BSTRBMtEph.
+⚠ tests/Chap37/TestBSTRBStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestBSTRBStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for BSTRBStEph.
+         3 | 
+⚠ tests/Chap37/TestBSTSetAVLMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestBSTSetAVLMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Tests for BSTSetAVLMtEph.
+⚠ tests/Chap37/TestBSTSetBBAlphaMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestBSTSetBBAlphaMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Tests for BSTSetBBAlphaMtEph.
+⚠ tests/Chap37/TestBSTSetPlainMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestBSTSetPlainMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Tests for BSTSetPlainMtEph.
+⚠ tests/Chap37/TestBSTSetRBMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestBSTSetRBMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Tests for BSTSetRBMtEph.
+⚠ tests/Chap37/TestBSTSetSplayMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestBSTSetSplayMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Tests for BSTSetSplayMtEph.
+⚠ tests/Chap37/TestBSTSplayMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestBSTSplayMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Tests for BSTSplayMtEph.
+⚠ tests/Chap37/TestBSTSplayStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap37/TestBSTSplayStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | use apas_verus::BSTSplayStEphLit;
+         3 | use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::{ArraySeqStPerBaseTrait, *};
+⚠ tests/Chap38/TestBSTParaMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap38/TestBSTParaMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | use vstd::prelude::Ghost;
+         3 | 
+⚠ tests/Chap38/TestBSTParaStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap38/TestBSTParaStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | use vstd::prelude::Ghost;
+         3 | 
+⚠ tests/Chap39/TestBSTParaTreapMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap39/TestBSTParaTreapMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for BSTParaTreapMtEph.
+         3 | 
+⚠ tests/Chap39/TestBSTSetTreapMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap39/TestBSTSetTreapMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for BSTSetTreapMtEph.
+         3 | 
+⚠ tests/Chap39/TestBSTTreapMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap39/TestBSTTreapMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for BSTTreapMtEph.
+         3 | 
+⚠ tests/Chap39/TestBSTTreapStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap39/TestBSTTreapStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for BSTTreapStEph.
+         3 | 
+⚠ tests/Chap40/TestBSTKeyValueStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap40/TestBSTKeyValueStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use rand::{Rng, RngExt};
+⚠ tests/Chap40/TestBSTReducedStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap40/TestBSTReducedStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use rand::{Rng, RngExt};
+⚠ tests/Chap40/TestBSTSizeStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap40/TestBSTSizeStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use rand::{Rng, RngExt};
+⚠ tests/Chap41/TestAVLTreeSetMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap41/TestAVLTreeSetMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for AVLTreeSetMtEph with parallelism verification
+         3 | 
+⚠ tests/Chap41/TestAVLTreeSetMtPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap41/TestAVLTreeSetMtPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Tests for AVLTreeSetMtPer.
+⚠ tests/Chap41/TestAVLTreeSetStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap41/TestAVLTreeSetStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for AVLTreeSetStEph
+         3 | 
+⚠ tests/Chap41/TestAVLTreeSetStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap41/TestAVLTreeSetStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for AVLTreeSetStPer
+         3 | 
+⚠ tests/Chap41/TestArraySetEnumMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap41/TestArraySetEnumMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for ArraySetEnumMtEph
+         3 | 
+⚠ tests/Chap41/TestArraySetStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap41/TestArraySetStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for ArraySetStEph
+         3 | 
+⚠ tests/Chap41/TestExample41_3.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap41/TestExample41_3.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Example41_3
+         3 | 
+⚠ tests/Chap42/TestExample42_1.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap42/TestExample42_1.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chapter 42 Example 42.1.
+         3 | 
+⚠ tests/Chap42/TestTableMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap42/TestTableMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chapter 42 multi-threaded ephemeral table implementation.
+         3 | 
+⚠ tests/Chap42/TestTableStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap42/TestTableStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chapter 42 single-threaded ephemeral table implementation.
+         3 | 
+⚠ tests/Chap42/TestTableStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap42/TestTableStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chapter 42 single-threaded persistent table implementation.
+         3 | 
+⚠ tests/Chap43/TestAugOrderedTableMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap43/TestAugOrderedTableMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for multi-threaded ephemeral reducer-augmented ordered table implementation.
+         3 | 
+⚠ tests/Chap43/TestAugOrderedTableStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap43/TestAugOrderedTableStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for single-threaded ephemeral reducer-augmented ordered table implementation.
+         3 | 
+⚠ tests/Chap43/TestAugOrderedTableStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap43/TestAugOrderedTableStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for single-threaded persistent reducer-augmented ordered table implementation.
+         3 | 
+⚠ tests/Chap43/TestExample43_1.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap43/TestExample43_1.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Example 43.1.
+         3 | 
+⚠ tests/Chap43/TestOrderedSetMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap43/TestOrderedSetMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Comprehensive tests for OrderedSetMtEph - multi-threaded ephemeral ordered set implementation.
+         3 | 
+⚠ tests/Chap43/TestOrderedSetStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap43/TestOrderedSetStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Comprehensive tests for OrderedSetStEph - ephemeral ordered set implementation.
+         3 | 
+⚠ tests/Chap43/TestOrderedSetStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap43/TestOrderedSetStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Comprehensive tests for OrderedSetStPer - persistent ordered set implementation.
+         3 | 
+⚠ tests/Chap43/TestOrderedTableMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap43/TestOrderedTableMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap43 OrderedTableMtEph.
+         3 | 
+⚠ tests/Chap43/TestOrderedTableMtPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap43/TestOrderedTableMtPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap43 OrderedTableMtPer.
+         3 | 
+⚠ tests/Chap43/TestOrderedTableStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap43/TestOrderedTableStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap43 OrderedTableStEph.
+         3 | 
+⚠ tests/Chap43/TestOrderedTableStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap43/TestOrderedTableStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Comprehensive tests for OrderedTableStPer - persistent ordered table implementation.
+         3 | 
+⚠ tests/Chap44/TestDocumentIndex.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap44/TestDocumentIndex.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Chapter 44: Document Index Tests
+         3 | 
+⚠ tests/Chap44/TestExample44_1.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap44/TestExample44_1.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Chapter 44: Example 44.1 Tests - Tweet Document Collection
+         3 | 
+⚠ tests/Chap45/TestBalancedTreePQ.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap45/TestBalancedTreePQ.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Test for Chapter 45: BalancedTreePQ - Priority Queue using AVL Trees
+         3 | 
+⚠ tests/Chap45/TestBinaryHeapPQ.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap45/TestBinaryHeapPQ.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for BinaryHeapPQ.
+         3 | 
+⚠ tests/Chap45/TestExample45_2.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap45/TestExample45_2.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Example 45.2.
+         3 | 
+⚠ tests/Chap45/TestHeapsortExample.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap45/TestHeapsortExample.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap45 HeapsortExample.
+         3 | 
+⚠ tests/Chap45/TestLeftistHeapPQ.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap45/TestLeftistHeapPQ.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for LeftistHeapPQ.
+         3 | 
+⚠ tests/Chap45/TestSortedListPQ.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap45/TestSortedListPQ.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chapter 45: SortedListPQ - Priority Queue using Sorted List
+         3 | 
+⚠ tests/Chap45/TestUnsortedListPQ.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap45/TestUnsortedListPQ.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chapter 45: UnsortedListPQ Priority Queue implementation
+         3 | 
+⚠ tests/Chap47/TestDoubleHashFlatHashTable.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap47/TestDoubleHashFlatHashTable.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | use vstd::prelude::Ghost;
+         3 | use apas_verus::Chap47::DoubleHashFlatHashTableStEph::DoubleHashFlatHashTableStEph::*;
+⚠ tests/Chap47/TestLinProbFlatHashTable.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap47/TestLinProbFlatHashTable.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | use vstd::prelude::Ghost;
+         3 | use apas_verus::Chap47::FlatHashTable::FlatHashTable::*;
+⚠ tests/Chap47/TestLinkedListChainedHashTable.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap47/TestLinkedListChainedHashTable.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | use vstd::prelude::Ghost;
+         3 | use apas_verus::Chap18::LinkedListStEph::LinkedListStEph::*;
+⚠ tests/Chap47/TestParaHashTableStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap47/TestParaHashTableStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | use std::marker::PhantomData;
+         3 | 
+⚠ tests/Chap47/TestQuadProbFlatHashTable.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap47/TestQuadProbFlatHashTable.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | use vstd::prelude::Ghost;
+         3 | use apas_verus::Chap47::FlatHashTable::FlatHashTable::*;
+⚠ tests/Chap47/TestStructChainedHashTable.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap47/TestStructChainedHashTable.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | use vstd::prelude::Ghost;
+         3 | use apas_verus::Chap47::ChainedHashTable::ChainedHashTable::*;
+⚠ tests/Chap47/TestVecChainedHashTable.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap47/TestVecChainedHashTable.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | use vstd::prelude::Ghost;
+         3 | use apas_verus::Chap47::ChainedHashTable::ChainedHashTable::*;
+⚠ tests/Chap49/TestMinEditDistMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap49/TestMinEditDistMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for MinEditDistMtEph.
+         3 | 
+⚠ tests/Chap49/TestMinEditDistMtPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap49/TestMinEditDistMtPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for MinEditDistMtPer.
+         3 | 
+⚠ tests/Chap49/TestMinEditDistStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap49/TestMinEditDistStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for MinEditDistStEph.
+         3 | 
+⚠ tests/Chap49/TestMinEditDistStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap49/TestMinEditDistStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for MinEditDistStPer.
+         3 | 
+⚠ tests/Chap49/TestSubsetSumMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap49/TestSubsetSumMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for SubsetSumMtEph.
+         3 | 
+⚠ tests/Chap49/TestSubsetSumMtPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap49/TestSubsetSumMtPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for SubsetSumMtPer.
+         3 | 
+⚠ tests/Chap49/TestSubsetSumStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap49/TestSubsetSumStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for SubsetSumStEph.
+         3 | 
+⚠ tests/Chap49/TestSubsetSumStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap49/TestSubsetSumStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for SubsetSumStPer.
+         3 | 
+⚠ tests/Chap50/TestMatrixChainMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap50/TestMatrixChainMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for MatrixChainMtEph.
+         3 | 
+⚠ tests/Chap50/TestMatrixChainMtPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap50/TestMatrixChainMtPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for MatrixChainMtPer.
+         3 | 
+⚠ tests/Chap50/TestMatrixChainStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap50/TestMatrixChainStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Matrix Chain Multiplication StEph implementation.
+         3 | 
+⚠ tests/Chap50/TestMatrixChainStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap50/TestMatrixChainStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Matrix Chain Multiplication StPer implementation.
+         3 | 
+⚠ tests/Chap50/TestOBSTMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap50/TestOBSTMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for OBSTMtEph (Optimal Binary Search Tree).
+         3 | 
+⚠ tests/Chap50/TestOBSTMtPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap50/TestOBSTMtPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap50 OptBinSearchTreeMtPer.
+         3 | 
+⚠ tests/Chap50/TestOptBinSearchTreeStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap50/TestOptBinSearchTreeStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for OptBinSearchTreeStEph.
+         3 | 
+⚠ tests/Chap50/TestOptBinSearchTreeStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap50/TestOptBinSearchTreeStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for OptBinSearchTreeStPer.
+         3 | 
+⚠ tests/Chap50/TestProbability.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap50/TestProbability.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Probability.
+         3 | 
+⚠ tests/Chap51/TestBottomUpDPMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap51/TestBottomUpDPMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for BottomUpDPMtEph - Bottom-Up Dynamic Programming Multi-Threaded Ephemeral
+         3 | 
+⚠ tests/Chap51/TestBottomUpDPMtPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap51/TestBottomUpDPMtPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for BottomUpDPMtPer - Bottom-Up Dynamic Programming Multi-Threaded Persistent
+         3 | 
+⚠ tests/Chap51/TestBottomUpDPStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap51/TestBottomUpDPStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for BottomUpDPStEph - Bottom-Up Dynamic Programming Single-Threaded Ephemeral
+         3 | 
+⚠ tests/Chap51/TestBottomUpDPStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap51/TestBottomUpDPStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for BottomUpDPStPer - Bottom-Up Dynamic Programming Single-Threaded Persistent
+         3 | 
+⚠ tests/Chap51/TestTopDownDPMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap51/TestTopDownDPMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for TopDownDPMtEph - Top-Down Dynamic Programming Multi-Threaded Ephemeral
+         3 | 
+⚠ tests/Chap51/TestTopDownDPMtPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap51/TestTopDownDPMtPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for TopDownDPMtPer - Top-Down Dynamic Programming Multi-Threaded Persistent
+         3 | 
+⚠ tests/Chap51/TestTopDownDPStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap51/TestTopDownDPStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for TopDownDPStEph - Top-Down Dynamic Programming Single-Threaded Ephemeral
+         3 | 
+⚠ tests/Chap51/TestTopDownDPStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap51/TestTopDownDPStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for TopDownDPStPer - Top-Down Dynamic Programming Single-Threaded Persistent
+         3 | 
+⚠ tests/Chap52/TestAdjMatrixGraphMtPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap52/TestAdjMatrixGraphMtPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chapter 52: Adjacency Matrix Graph (persistent, multi-threaded).
+         3 | 
+⚠ tests/Chap52/TestAdjMatrixGraphStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap52/TestAdjMatrixGraphStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap52 AdjMatrixGraphStEph.
+         3 | 
+⚠ tests/Chap52/TestAdjMatrixGraphStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap52/TestAdjMatrixGraphStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap52 AdjMatrixGraphStPer.
+         3 | 
+⚠ tests/Chap52/TestAdjSeqGraphMtPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap52/TestAdjSeqGraphMtPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Tests for Chapter 52: Adjacency Sequence Graph (persistent, multi-threaded).
+⚠ tests/Chap52/TestAdjSeqGraphStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap52/TestAdjSeqGraphStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap52 AdjSeqGraphStEph.
+         3 | 
+⚠ tests/Chap52/TestAdjSeqGraphStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap52/TestAdjSeqGraphStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap52 AdjSeqGraphStPer.
+         3 | 
+⚠ tests/Chap52/TestAdjTableGraphMtPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap52/TestAdjTableGraphMtPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Tests for AdjTableGraphMtPer with TRUE parallel operations.
+⚠ tests/Chap52/TestAdjTableGraphStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap52/TestAdjTableGraphStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for AdjTableGraphStEph.
+         3 | 
+⚠ tests/Chap52/TestAdjTableGraphStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap52/TestAdjTableGraphStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap52 AdjTableGraphStPer.
+         3 | 
+⚠ tests/Chap52/TestEdgeSetGraphMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap52/TestEdgeSetGraphMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for EdgeSetGraphMtEph
+         3 | //!
+⚠ tests/Chap52/TestEdgeSetGraphMtPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap52/TestEdgeSetGraphMtPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Tests for EdgeSetGraphMtPer
+⚠ tests/Chap52/TestEdgeSetGraphStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap52/TestEdgeSetGraphStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for EdgeSetGraphStEph
+         3 | 
+⚠ tests/Chap52/TestEdgeSetGraphStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap52/TestEdgeSetGraphStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for EdgeSetGraphStPer
+         3 | 
+⚠ tests/Chap53/TestGraphSearchMtPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap53/TestGraphSearchMtPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Tests for Chap53 GraphSearchMtPer.
+⚠ tests/Chap53/TestGraphSearchStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap53/TestGraphSearchStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap53 GraphSearchStEph.
+         3 | 
+⚠ tests/Chap53/TestGraphSearchStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap53/TestGraphSearchStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap53 GraphSearchStPer.
+         3 | 
+⚠ tests/Chap53/TestPQMinStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap53/TestPQMinStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap53 PQMinStEph.
+         3 | 
+⚠ tests/Chap53/TestPQMinStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap53/TestPQMinStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap53 PQMinStPer.
+         3 | 
+⚠ tests/Chap54/TestBFSMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap54/TestBFSMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::ArraySeqMtEphChap19SLit;
+⚠ tests/Chap54/TestBFSMtPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap54/TestBFSMtPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::ArrayMtPerSLit;
+⚠ tests/Chap54/TestBFSStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap54/TestBFSStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::ArraySeqStEphSLit;
+⚠ tests/Chap54/TestBFSStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap54/TestBFSStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | 
+         3 | use apas_verus::ArraySeqStPerSLit;
+⚠ tests/Chap55/TestCycleDetectStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap55/TestCycleDetectStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap55 CycleDetectStEph.
+         3 | 
+⚠ tests/Chap55/TestCycleDetectStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap55/TestCycleDetectStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap55 CycleDetectStPer.
+         3 | 
+⚠ tests/Chap55/TestDFSStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap55/TestDFSStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for DFS - Sequential Ephemeral.
+         3 | 
+⚠ tests/Chap55/TestDFSStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap55/TestDFSStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for DFS - Sequential Persistent.
+         3 | 
+⚠ tests/Chap55/TestSCCStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap55/TestSCCStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap55 SCCStEph.
+         3 | 
+⚠ tests/Chap55/TestSCCStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap55/TestSCCStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap55 SCCStPer.
+         3 | 
+⚠ tests/Chap55/TestTopoSortStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap55/TestTopoSortStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap55 TopoSortStEph.
+         3 | 
+⚠ tests/Chap55/TestTopoSortStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap55/TestTopoSortStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chap55 TopoSortStPer.
+         3 | 
+⚠ tests/Chap56/TestAllPairsResultStEphF64.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap56/TestAllPairsResultStEphF64.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //!
+         3 | //! Test suite for AllPairsResultStEphF64.
+⚠ tests/Chap56/TestAllPairsResultStEphI64.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap56/TestAllPairsResultStEphI64.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //!
+         3 | //! Test suite for AllPairsResultStEphI64.
+⚠ tests/Chap56/TestAllPairsResultStPerF64.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap56/TestAllPairsResultStPerF64.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //!
+         3 | //! Test suite for AllPairsResultStPerF64.
+⚠ tests/Chap56/TestAllPairsResultStPerI64.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap56/TestAllPairsResultStPerI64.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //!
+         3 | //! Test suite for AllPairsResultStPerI64.
+⚠ tests/Chap56/TestExample56_1.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap56/TestExample56_1.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Tests for Example56_1 - Path Weight Computation.
+⚠ tests/Chap56/TestExample56_3.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap56/TestExample56_3.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Tests for Example56_3 - Negative Weight Cycles.
+⚠ tests/Chap56/TestPathWeightUtilsStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap56/TestPathWeightUtilsStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //!
+         3 | //! Test suite for PathWeightUtilsStEph.
+⚠ tests/Chap56/TestPathWeightUtilsStPer.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap56/TestPathWeightUtilsStPer.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //!
+         3 | //! Test suite for PathWeightUtilsStPer.
+⚠ tests/Chap56/TestSSSPResultStEphF64.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap56/TestSSSPResultStEphF64.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //!
+         3 | //! Test suite for SSSPResultStEphF64.
+⚠ tests/Chap56/TestSSSPResultStEphI64.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap56/TestSSSPResultStEphI64.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //!
+         3 | //! Test suite for SSSPResultStEphI64.
+⚠ tests/Chap56/TestSSSPResultStPerF64.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap56/TestSSSPResultStPerF64.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //!
+         3 | //! Test suite for SSSPResultStPerF64.
+⚠ tests/Chap56/TestSSSPResultStPerI64.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap56/TestSSSPResultStPerI64.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //!
+         3 | //! Test suite for SSSPResultStPerI64.
+⚠ tests/Chap57/TestDijkstraStEphF64.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap57/TestDijkstraStEphF64.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Tests for DijkstraStEphF64.
+⚠ tests/Chap57/TestDijkstraStEphU64.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap57/TestDijkstraStEphU64.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //!
+         3 | //! Tests for DijkstraStEphU64
+⚠ tests/Chap57/TestStackStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap57/TestStackStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //!
+         3 | //! Tests for StackStEph
+⚠ tests/Chap58/TestBellmanFordStEphF64.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap58/TestBellmanFordStEphF64.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //!
+⚠ tests/Chap58/TestBellmanFordStEphI64.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap58/TestBellmanFordStEphI64.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //!
+         3 | //! Tests for Bellman-Ford Algorithm (Integer Weights)
+⚠ tests/Chap59/TestJohnsonMtEphF64.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap59/TestJohnsonMtEphF64.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | use apas_verus::Chap05::SetStEph::SetStEph::*;
+⚠ tests/Chap59/TestJohnsonMtEphI64.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap59/TestJohnsonMtEphI64.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | use apas_verus::Chap05::SetStEph::SetStEph::*;
+         3 | use apas_verus::Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128::*;
+⚠ tests/Chap59/TestJohnsonStEphF64.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap59/TestJohnsonStEphF64.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | use apas_verus::Chap05::SetStEph::SetStEph::*;
+⚠ tests/Chap59/TestJohnsonStEphI64.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap59/TestJohnsonStEphI64.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | use apas_verus::Chap05::SetStEph::SetStEph::*;
+         3 | use apas_verus::Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128::*;
+⚠ tests/Chap61/TestEdgeContractionMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap61/TestEdgeContractionMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chapter 61 Edge Contraction (Multi-threaded)
+         3 | 
+⚠ tests/Chap61/TestEdgeContractionStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap61/TestEdgeContractionStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chapter 61 Edge Contraction (Sequential)
+         3 | 
+⚠ tests/Chap61/TestVertexMatchingMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap61/TestVertexMatchingMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chapter 61 Vertex Matching (Multi-threaded)
+         3 | 
+⚠ tests/Chap61/TestVertexMatchingStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap61/TestVertexMatchingStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Tests for Chapter 61 Vertex Matching (Sequential)
+         3 | 
+⚠ tests/Chap62/TestStarContractionMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap62/TestStarContractionMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Chapter 62: Star Contraction - Multi-threaded Ephemeral Tests
+         3 | 
+⚠ tests/Chap62/TestStarContractionStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap62/TestStarContractionStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Chapter 62: Star Contraction - Sequential Ephemeral Tests
+         3 | 
+⚠ tests/Chap62/TestStarPartitionMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap62/TestStarPartitionMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Chapter 62: Star Partition - Multi-threaded Ephemeral Tests
+         3 | 
+⚠ tests/Chap62/TestStarPartitionStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap62/TestStarPartitionStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Chapter 62: Star Partition - Sequential Ephemeral Tests
+         3 | 
+⚠ tests/Chap63/TestConnectivityMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap63/TestConnectivityMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Chapter 63: Graph Connectivity - Multi-threaded Ephemeral Tests
+         3 | 
+⚠ tests/Chap63/TestConnectivityStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap63/TestConnectivityStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Chapter 63: Graph Connectivity - Sequential Ephemeral Tests
+         3 | 
+⚠ tests/Chap64/TestSpanTreeMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap64/TestSpanTreeMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Chapter 64: Spanning Tree via Star Contraction Tests (Parallel)
+⚠ tests/Chap64/TestSpanTreeStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap64/TestSpanTreeStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Chapter 64: Spanning Tree via Star Contraction Tests (Sequential)
+⚠ tests/Chap64/TestTSPApproxStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap64/TestTSPApproxStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Chapter 64: TSP 2-Approximation Tests (Sequential)
+⚠ tests/Chap65/TestKruskalStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap65/TestKruskalStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Chapter 65: Kruskal's MST Algorithm Tests (Sequential)
+⚠ tests/Chap65/TestPrimStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap65/TestPrimStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Chapter 65: Prim's MST Algorithm Tests (Sequential)
+⚠ tests/Chap65/TestUnionFindStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap65/TestUnionFindStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Chapter 65: Union-Find Tests (Sequential)
+⚠ tests/Chap66/TestBoruvkaMtEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap66/TestBoruvkaMtEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Tests for Chapter 66: Borůvka's MST Algorithm (Parallel Ephemeral)
+⚠ tests/Chap66/TestBoruvkaStEph.rs
+/home/milnes/projects/APAS-VERUS/tests/Chap66/TestBoruvkaStEph.rs:1: error: not_verusified - File has no verus! block — not verusified.
+         2 | //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+         3 | //! Tests for Chapter 66: Borůvka's MST Algorithm (Sequential Ephemeral)
 
 =================================================================
 2. Depends Upon
@@ -2584,6 +3595,257 @@ Chap66::BoruvkaMtEph  depends upon holed modules: Chap05::SetStEph
 Chap66::BoruvkaStEph  depends upon holed modules: Chap05::SetStEph
 Concurrency  depends upon only clean modules
 ParaPairs  depends upon holed modules: Chap02::HFSchedulerMtEph
+tests::Chap02::test_fibonacci_scheduler  depends upon only clean modules
+tests::Chap02::test_hf_scheduler  depends upon only clean modules
+tests::Chap02::test_threads_plus  depends upon only clean modules
+tests::Chap03::TestInsertionSortStEph  depends upon only clean modules
+tests::Chap05::TestKleeneStPer  depends upon only clean modules
+tests::Chap05::TestMappingStEph  depends upon only clean modules
+tests::Chap05::TestRelationStEph  depends upon only clean modules
+tests::Chap05::TestSetMtEph  depends upon only clean modules
+tests::Chap05::TestSetStEph  depends upon only clean modules
+tests::Chap06::TestDirGraphMtEph  depends upon only clean modules
+tests::Chap06::TestDirGraphStEph  depends upon only clean modules
+tests::Chap06::TestLabDirGraphMtEph  depends upon only clean modules
+tests::Chap06::TestLabDirGraphStEph  depends upon only clean modules
+tests::Chap06::TestLabUnDirGraphMtEph  depends upon only clean modules
+tests::Chap06::TestLabUnDirGraphStEph  depends upon only clean modules
+tests::Chap06::TestUnDirGraphMtEph  depends upon only clean modules
+tests::Chap06::TestUnDirGraphStEph  depends upon only clean modules
+tests::Chap06::TestWeighedDirGraphMtEphFloat  depends upon only clean modules
+tests::Chap06::TestWeighedDirGraphMtEphInt  depends upon only clean modules
+tests::Chap06::TestWeighedDirGraphStEphFloat  depends upon only clean modules
+tests::Chap06::TestWeighedDirGraphStEphInt  depends upon only clean modules
+tests::Chap06::TestWeighedUnDirGraphMtEphFloat  depends upon only clean modules
+tests::Chap06::TestWeighedUnDirGraphMtEphInt  depends upon only clean modules
+tests::Chap06::TestWeighedUnDirGraphStEphFloat  depends upon only clean modules
+tests::Chap06::TestWeighedUnDirGraphStEphInt  depends upon only clean modules
+tests::Chap06::TestWeightedDirGraphStEphI128  depends upon only clean modules
+tests::Chap06::TestWeightedDirGraphStEphI16  depends upon only clean modules
+tests::Chap06::TestWeightedDirGraphStEphI32  depends upon only clean modules
+tests::Chap06::TestWeightedDirGraphStEphI64  depends upon only clean modules
+tests::Chap06::TestWeightedDirGraphStEphI8  depends upon only clean modules
+tests::Chap06::TestWeightedDirGraphStEphIsize  depends upon only clean modules
+tests::Chap06::TestWeightedDirGraphStEphU128  depends upon only clean modules
+tests::Chap06::TestWeightedDirGraphStEphU16  depends upon only clean modules
+tests::Chap06::TestWeightedDirGraphStEphU32  depends upon only clean modules
+tests::Chap06::TestWeightedDirGraphStEphU64  depends upon only clean modules
+tests::Chap06::TestWeightedDirGraphStEphU8  depends upon only clean modules
+tests::Chap06::TestWeightedDirGraphStEphUsize  depends upon only clean modules
+tests::Chap11::TestFibonacciMt  depends upon only clean modules
+tests::Chap11::TestParaPairs  depends upon only clean modules
+tests::Chap12::test_exercise12_1  depends upon only clean modules
+tests::Chap12::test_exercise12_2  depends upon only clean modules
+tests::Chap12::test_exercise12_5  depends upon only clean modules
+tests::Chap17::TestMathSeq  depends upon only clean modules
+tests::Chap18::TestArraySeq  depends upon only clean modules
+tests::Chap18::TestArraySeqMtEph  depends upon only clean modules
+tests::Chap18::TestArraySeqMtPer  depends upon only clean modules
+tests::Chap18::TestArraySeqStEph  depends upon only clean modules
+tests::Chap18::TestArraySeqStPer  depends upon only clean modules
+tests::Chap18::TestLinkedListStEph  depends upon only clean modules
+tests::Chap18::TestLinkedListStPer  depends upon only clean modules
+tests::Chap19::TestArraySeqMtEph  depends upon only clean modules
+tests::Chap19::TestArraySeqStEph  depends upon only clean modules
+tests::Chap19::TestArraySeqStPer  depends upon only clean modules
+tests::Chap21::TestChap21  depends upon only clean modules
+tests::Chap23::TestBalBinTreeStEph  depends upon only clean modules
+tests::Chap23::TestPrimTreeSeqStPer  depends upon only clean modules
+tests::Chap26::TestDivConReduceMtPer  depends upon only clean modules
+tests::Chap26::TestDivConReduceStPer  depends upon only clean modules
+tests::Chap26::TestETSPMtEph  depends upon only clean modules
+tests::Chap26::TestETSPStEph  depends upon only clean modules
+tests::Chap26::TestMergeSortMtPer  depends upon only clean modules
+tests::Chap26::TestMergeSortStPer  depends upon only clean modules
+tests::Chap26::TestScanDCMtPer  depends upon only clean modules
+tests::Chap26::TestScanDCStPer  depends upon only clean modules
+tests::Chap27::TestReduceContractMtEph  depends upon only clean modules
+tests::Chap27::TestReduceContractStEph  depends upon only clean modules
+tests::Chap27::TestScanContractMtEph  depends upon only clean modules
+tests::Chap27::TestScanContractStEph  depends upon only clean modules
+tests::Chap28::TestMaxContigSubSumBruteStEph  depends upon only clean modules
+tests::Chap28::TestMaxContigSubSumDivConMtEph  depends upon only clean modules
+tests::Chap28::TestMaxContigSubSumDivConOptMtEph  depends upon only clean modules
+tests::Chap28::TestMaxContigSubSumDivConOptStEph  depends upon only clean modules
+tests::Chap28::TestMaxContigSubSumDivConStEph  depends upon only clean modules
+tests::Chap28::TestMaxContigSubSumIterStEph  depends upon only clean modules
+tests::Chap28::TestMaxContigSubSumOptMtEph  depends upon only clean modules
+tests::Chap28::TestMaxContigSubSumOptStEph  depends upon only clean modules
+tests::Chap28::TestMaxContigSubSumReducedMcsseStEph  depends upon only clean modules
+tests::Chap28::TestMaxContigSubSumReducedStEph  depends upon only clean modules
+tests::Chap35::TestOrderStatSelectMtEph  depends upon only clean modules
+tests::Chap35::TestOrderStatSelectMtPer  depends upon only clean modules
+tests::Chap35::TestOrderStatSelectStEph  depends upon only clean modules
+tests::Chap35::TestOrderStatSelectStPer  depends upon only clean modules
+tests::Chap36::BenchQuickSort  depends upon only clean modules
+tests::Chap36::TestQuickSortMtEph  depends upon only clean modules
+tests::Chap36::TestQuickSortMtEphSlice  depends upon only clean modules
+tests::Chap36::TestQuickSortStEph  depends upon only clean modules
+tests::Chap37::TestAVLTreeSeq  depends upon only clean modules
+tests::Chap37::TestAVLTreeSeqMtPer  depends upon only clean modules
+tests::Chap37::TestAVLTreeSeqStEph  depends upon only clean modules
+tests::Chap37::TestAVLTreeSeqStEph18  depends upon only clean modules
+tests::Chap37::TestAVLTreeSeqStEphChap37  depends upon only clean modules
+tests::Chap37::TestAVLTreeSeqStPer  depends upon only clean modules
+tests::Chap37::TestAVLTreeSeqStPer18  depends upon only clean modules
+tests::Chap37::TestAVLTreeSeqStPer19  depends upon only clean modules
+tests::Chap37::TestBSTAVLMtEph  depends upon only clean modules
+tests::Chap37::TestBSTAVLStEph  depends upon only clean modules
+tests::Chap37::TestBSTBBAlphaMtEph  depends upon only clean modules
+tests::Chap37::TestBSTBBAlphaStEph  depends upon only clean modules
+tests::Chap37::TestBSTMtEph  depends upon only clean modules
+tests::Chap37::TestBSTPlainMtEph  depends upon only clean modules
+tests::Chap37::TestBSTPlainStEph  depends upon only clean modules
+tests::Chap37::TestBSTRBMtEph  depends upon only clean modules
+tests::Chap37::TestBSTRBStEph  depends upon only clean modules
+tests::Chap37::TestBSTSetAVLMtEph  depends upon only clean modules
+tests::Chap37::TestBSTSetBBAlphaMtEph  depends upon only clean modules
+tests::Chap37::TestBSTSetPlainMtEph  depends upon only clean modules
+tests::Chap37::TestBSTSetRBMtEph  depends upon only clean modules
+tests::Chap37::TestBSTSetSplayMtEph  depends upon only clean modules
+tests::Chap37::TestBSTSplayMtEph  depends upon only clean modules
+tests::Chap37::TestBSTSplayStEph  depends upon only clean modules
+tests::Chap38::TestBSTParaMtEph  depends upon only clean modules
+tests::Chap38::TestBSTParaStEph  depends upon only clean modules
+tests::Chap39::TestBSTParaTreapMtEph  depends upon only clean modules
+tests::Chap39::TestBSTSetTreapMtEph  depends upon only clean modules
+tests::Chap39::TestBSTTreapMtEph  depends upon only clean modules
+tests::Chap39::TestBSTTreapStEph  depends upon only clean modules
+tests::Chap40::TestBSTKeyValueStEph  depends upon only clean modules
+tests::Chap40::TestBSTReducedStEph  depends upon only clean modules
+tests::Chap40::TestBSTSizeStEph  depends upon only clean modules
+tests::Chap41::TestAVLTreeSetMtEph  depends upon only clean modules
+tests::Chap41::TestAVLTreeSetMtPer  depends upon only clean modules
+tests::Chap41::TestAVLTreeSetStEph  depends upon only clean modules
+tests::Chap41::TestAVLTreeSetStPer  depends upon only clean modules
+tests::Chap41::TestArraySetEnumMtEph  depends upon only clean modules
+tests::Chap41::TestArraySetStEph  depends upon only clean modules
+tests::Chap41::TestExample41_3  depends upon only clean modules
+tests::Chap42::TestExample42_1  depends upon only clean modules
+tests::Chap42::TestTableMtEph  depends upon only clean modules
+tests::Chap42::TestTableStEph  depends upon only clean modules
+tests::Chap42::TestTableStPer  depends upon only clean modules
+tests::Chap43::TestAugOrderedTableMtEph  depends upon only clean modules
+tests::Chap43::TestAugOrderedTableStEph  depends upon only clean modules
+tests::Chap43::TestAugOrderedTableStPer  depends upon only clean modules
+tests::Chap43::TestExample43_1  depends upon only clean modules
+tests::Chap43::TestOrderedSetMtEph  depends upon only clean modules
+tests::Chap43::TestOrderedSetStEph  depends upon only clean modules
+tests::Chap43::TestOrderedSetStPer  depends upon only clean modules
+tests::Chap43::TestOrderedTableMtEph  depends upon only clean modules
+tests::Chap43::TestOrderedTableMtPer  depends upon only clean modules
+tests::Chap43::TestOrderedTableStEph  depends upon only clean modules
+tests::Chap43::TestOrderedTableStPer  depends upon only clean modules
+tests::Chap44::TestDocumentIndex  depends upon only clean modules
+tests::Chap44::TestExample44_1  depends upon only clean modules
+tests::Chap45::TestBalancedTreePQ  depends upon only clean modules
+tests::Chap45::TestBinaryHeapPQ  depends upon only clean modules
+tests::Chap45::TestExample45_2  depends upon only clean modules
+tests::Chap45::TestHeapsortExample  depends upon only clean modules
+tests::Chap45::TestLeftistHeapPQ  depends upon only clean modules
+tests::Chap45::TestSortedListPQ  depends upon only clean modules
+tests::Chap45::TestUnsortedListPQ  depends upon only clean modules
+tests::Chap47::TestDoubleHashFlatHashTable  depends upon only clean modules
+tests::Chap47::TestLinProbFlatHashTable  depends upon only clean modules
+tests::Chap47::TestLinkedListChainedHashTable  depends upon only clean modules
+tests::Chap47::TestParaHashTableStEph  depends upon only clean modules
+tests::Chap47::TestQuadProbFlatHashTable  depends upon only clean modules
+tests::Chap47::TestStructChainedHashTable  depends upon only clean modules
+tests::Chap47::TestVecChainedHashTable  depends upon only clean modules
+tests::Chap49::TestMinEditDistMtEph  depends upon only clean modules
+tests::Chap49::TestMinEditDistMtPer  depends upon only clean modules
+tests::Chap49::TestMinEditDistStEph  depends upon only clean modules
+tests::Chap49::TestMinEditDistStPer  depends upon only clean modules
+tests::Chap49::TestSubsetSumMtEph  depends upon only clean modules
+tests::Chap49::TestSubsetSumMtPer  depends upon only clean modules
+tests::Chap49::TestSubsetSumStEph  depends upon only clean modules
+tests::Chap49::TestSubsetSumStPer  depends upon only clean modules
+tests::Chap50::TestMatrixChainMtEph  depends upon only clean modules
+tests::Chap50::TestMatrixChainMtPer  depends upon only clean modules
+tests::Chap50::TestMatrixChainStEph  depends upon only clean modules
+tests::Chap50::TestMatrixChainStPer  depends upon only clean modules
+tests::Chap50::TestOBSTMtEph  depends upon only clean modules
+tests::Chap50::TestOBSTMtPer  depends upon only clean modules
+tests::Chap50::TestOptBinSearchTreeStEph  depends upon only clean modules
+tests::Chap50::TestOptBinSearchTreeStPer  depends upon only clean modules
+tests::Chap50::TestProbability  depends upon only clean modules
+tests::Chap51::TestBottomUpDPMtEph  depends upon only clean modules
+tests::Chap51::TestBottomUpDPMtPer  depends upon only clean modules
+tests::Chap51::TestBottomUpDPStEph  depends upon only clean modules
+tests::Chap51::TestBottomUpDPStPer  depends upon only clean modules
+tests::Chap51::TestTopDownDPMtEph  depends upon only clean modules
+tests::Chap51::TestTopDownDPMtPer  depends upon only clean modules
+tests::Chap51::TestTopDownDPStEph  depends upon only clean modules
+tests::Chap51::TestTopDownDPStPer  depends upon only clean modules
+tests::Chap52::TestAdjMatrixGraphMtPer  depends upon only clean modules
+tests::Chap52::TestAdjMatrixGraphStEph  depends upon only clean modules
+tests::Chap52::TestAdjMatrixGraphStPer  depends upon only clean modules
+tests::Chap52::TestAdjSeqGraphMtPer  depends upon only clean modules
+tests::Chap52::TestAdjSeqGraphStEph  depends upon only clean modules
+tests::Chap52::TestAdjSeqGraphStPer  depends upon only clean modules
+tests::Chap52::TestAdjTableGraphMtPer  depends upon only clean modules
+tests::Chap52::TestAdjTableGraphStEph  depends upon only clean modules
+tests::Chap52::TestAdjTableGraphStPer  depends upon only clean modules
+tests::Chap52::TestEdgeSetGraphMtEph  depends upon only clean modules
+tests::Chap52::TestEdgeSetGraphMtPer  depends upon only clean modules
+tests::Chap52::TestEdgeSetGraphStEph  depends upon only clean modules
+tests::Chap52::TestEdgeSetGraphStPer  depends upon only clean modules
+tests::Chap53::TestGraphSearchMtPer  depends upon only clean modules
+tests::Chap53::TestGraphSearchStEph  depends upon only clean modules
+tests::Chap53::TestGraphSearchStPer  depends upon only clean modules
+tests::Chap53::TestPQMinStEph  depends upon only clean modules
+tests::Chap53::TestPQMinStPer  depends upon only clean modules
+tests::Chap54::TestBFSMtEph  depends upon only clean modules
+tests::Chap54::TestBFSMtPer  depends upon only clean modules
+tests::Chap54::TestBFSStEph  depends upon only clean modules
+tests::Chap54::TestBFSStPer  depends upon only clean modules
+tests::Chap55::TestCycleDetectStEph  depends upon only clean modules
+tests::Chap55::TestCycleDetectStPer  depends upon only clean modules
+tests::Chap55::TestDFSStEph  depends upon only clean modules
+tests::Chap55::TestDFSStPer  depends upon only clean modules
+tests::Chap55::TestSCCStEph  depends upon only clean modules
+tests::Chap55::TestSCCStPer  depends upon only clean modules
+tests::Chap55::TestTopoSortStEph  depends upon only clean modules
+tests::Chap55::TestTopoSortStPer  depends upon only clean modules
+tests::Chap56::TestAllPairsResultStEphF64  depends upon only clean modules
+tests::Chap56::TestAllPairsResultStEphI64  depends upon only clean modules
+tests::Chap56::TestAllPairsResultStPerF64  depends upon only clean modules
+tests::Chap56::TestAllPairsResultStPerI64  depends upon only clean modules
+tests::Chap56::TestExample56_1  depends upon only clean modules
+tests::Chap56::TestExample56_3  depends upon only clean modules
+tests::Chap56::TestPathWeightUtilsStEph  depends upon only clean modules
+tests::Chap56::TestPathWeightUtilsStPer  depends upon only clean modules
+tests::Chap56::TestSSSPResultStEphF64  depends upon only clean modules
+tests::Chap56::TestSSSPResultStEphI64  depends upon only clean modules
+tests::Chap56::TestSSSPResultStPerF64  depends upon only clean modules
+tests::Chap56::TestSSSPResultStPerI64  depends upon only clean modules
+tests::Chap57::TestDijkstraStEphF64  depends upon only clean modules
+tests::Chap57::TestDijkstraStEphU64  depends upon only clean modules
+tests::Chap57::TestStackStEph  depends upon only clean modules
+tests::Chap58::TestBellmanFordStEphF64  depends upon only clean modules
+tests::Chap58::TestBellmanFordStEphI64  depends upon only clean modules
+tests::Chap59::TestJohnsonMtEphF64  depends upon only clean modules
+tests::Chap59::TestJohnsonMtEphI64  depends upon only clean modules
+tests::Chap59::TestJohnsonStEphF64  depends upon only clean modules
+tests::Chap59::TestJohnsonStEphI64  depends upon only clean modules
+tests::Chap61::TestEdgeContractionMtEph  depends upon only clean modules
+tests::Chap61::TestEdgeContractionStEph  depends upon only clean modules
+tests::Chap61::TestVertexMatchingMtEph  depends upon only clean modules
+tests::Chap61::TestVertexMatchingStEph  depends upon only clean modules
+tests::Chap62::TestStarContractionMtEph  depends upon only clean modules
+tests::Chap62::TestStarContractionStEph  depends upon only clean modules
+tests::Chap62::TestStarPartitionMtEph  depends upon only clean modules
+tests::Chap62::TestStarPartitionStEph  depends upon only clean modules
+tests::Chap63::TestConnectivityMtEph  depends upon only clean modules
+tests::Chap63::TestConnectivityStEph  depends upon only clean modules
+tests::Chap64::TestSpanTreeMtEph  depends upon only clean modules
+tests::Chap64::TestSpanTreeStEph  depends upon only clean modules
+tests::Chap64::TestTSPApproxStEph  depends upon only clean modules
+tests::Chap65::TestKruskalStEph  depends upon only clean modules
+tests::Chap65::TestPrimStEph  depends upon only clean modules
+tests::Chap65::TestUnionFindStEph  depends upon only clean modules
+tests::Chap66::TestBoruvkaMtEph  depends upon only clean modules
+tests::Chap66::TestBoruvkaStEph  depends upon only clean modules
 
 =================================================================
 2.2. By File
@@ -2846,15 +4108,266 @@ src/Chap66/BoruvkaMtEph.rs  depends upon holed modules: Chap05::SetStEph
 src/Chap66/BoruvkaStEph.rs  depends upon holed modules: Chap05::SetStEph
 src/Concurrency.rs  depends upon only clean modules
 src/ParaPairs.rs  depends upon holed modules: Chap02::HFSchedulerMtEph
+tests/Chap02/test_fibonacci_scheduler.rs  depends upon only clean modules
+tests/Chap02/test_hf_scheduler.rs  depends upon only clean modules
+tests/Chap02/test_threads_plus.rs  depends upon only clean modules
+tests/Chap03/TestInsertionSortStEph.rs  depends upon only clean modules
+tests/Chap05/TestKleeneStPer.rs  depends upon only clean modules
+tests/Chap05/TestMappingStEph.rs  depends upon only clean modules
+tests/Chap05/TestRelationStEph.rs  depends upon only clean modules
+tests/Chap05/TestSetMtEph.rs  depends upon only clean modules
+tests/Chap05/TestSetStEph.rs  depends upon only clean modules
+tests/Chap06/TestDirGraphMtEph.rs  depends upon only clean modules
+tests/Chap06/TestDirGraphStEph.rs  depends upon only clean modules
+tests/Chap06/TestLabDirGraphMtEph.rs  depends upon only clean modules
+tests/Chap06/TestLabDirGraphStEph.rs  depends upon only clean modules
+tests/Chap06/TestLabUnDirGraphMtEph.rs  depends upon only clean modules
+tests/Chap06/TestLabUnDirGraphStEph.rs  depends upon only clean modules
+tests/Chap06/TestUnDirGraphMtEph.rs  depends upon only clean modules
+tests/Chap06/TestUnDirGraphStEph.rs  depends upon only clean modules
+tests/Chap06/TestWeighedDirGraphMtEphFloat.rs  depends upon only clean modules
+tests/Chap06/TestWeighedDirGraphMtEphInt.rs  depends upon only clean modules
+tests/Chap06/TestWeighedDirGraphStEphFloat.rs  depends upon only clean modules
+tests/Chap06/TestWeighedDirGraphStEphInt.rs  depends upon only clean modules
+tests/Chap06/TestWeighedUnDirGraphMtEphFloat.rs  depends upon only clean modules
+tests/Chap06/TestWeighedUnDirGraphMtEphInt.rs  depends upon only clean modules
+tests/Chap06/TestWeighedUnDirGraphStEphFloat.rs  depends upon only clean modules
+tests/Chap06/TestWeighedUnDirGraphStEphInt.rs  depends upon only clean modules
+tests/Chap06/TestWeightedDirGraphStEphI128.rs  depends upon only clean modules
+tests/Chap06/TestWeightedDirGraphStEphI16.rs  depends upon only clean modules
+tests/Chap06/TestWeightedDirGraphStEphI32.rs  depends upon only clean modules
+tests/Chap06/TestWeightedDirGraphStEphI64.rs  depends upon only clean modules
+tests/Chap06/TestWeightedDirGraphStEphI8.rs  depends upon only clean modules
+tests/Chap06/TestWeightedDirGraphStEphIsize.rs  depends upon only clean modules
+tests/Chap06/TestWeightedDirGraphStEphU128.rs  depends upon only clean modules
+tests/Chap06/TestWeightedDirGraphStEphU16.rs  depends upon only clean modules
+tests/Chap06/TestWeightedDirGraphStEphU32.rs  depends upon only clean modules
+tests/Chap06/TestWeightedDirGraphStEphU64.rs  depends upon only clean modules
+tests/Chap06/TestWeightedDirGraphStEphU8.rs  depends upon only clean modules
+tests/Chap06/TestWeightedDirGraphStEphUsize.rs  depends upon only clean modules
+tests/Chap11/TestFibonacciMt.rs  depends upon only clean modules
+tests/Chap11/TestParaPairs.rs  depends upon only clean modules
+tests/Chap12/test_exercise12_1.rs  depends upon only clean modules
+tests/Chap12/test_exercise12_2.rs  depends upon only clean modules
+tests/Chap12/test_exercise12_5.rs  depends upon only clean modules
+tests/Chap17/TestMathSeq.rs  depends upon only clean modules
+tests/Chap18/TestArraySeq.rs  depends upon only clean modules
+tests/Chap18/TestArraySeqMtEph.rs  depends upon only clean modules
+tests/Chap18/TestArraySeqMtPer.rs  depends upon only clean modules
+tests/Chap18/TestArraySeqStEph.rs  depends upon only clean modules
+tests/Chap18/TestArraySeqStPer.rs  depends upon only clean modules
+tests/Chap18/TestLinkedListStEph.rs  depends upon only clean modules
+tests/Chap18/TestLinkedListStPer.rs  depends upon only clean modules
+tests/Chap19/TestArraySeqMtEph.rs  depends upon only clean modules
+tests/Chap19/TestArraySeqStEph.rs  depends upon only clean modules
+tests/Chap19/TestArraySeqStPer.rs  depends upon only clean modules
+tests/Chap21/TestChap21.rs  depends upon only clean modules
+tests/Chap23/TestBalBinTreeStEph.rs  depends upon only clean modules
+tests/Chap23/TestPrimTreeSeqStPer.rs  depends upon only clean modules
+tests/Chap26/TestDivConReduceMtPer.rs  depends upon only clean modules
+tests/Chap26/TestDivConReduceStPer.rs  depends upon only clean modules
+tests/Chap26/TestETSPMtEph.rs  depends upon only clean modules
+tests/Chap26/TestETSPStEph.rs  depends upon only clean modules
+tests/Chap26/TestMergeSortMtPer.rs  depends upon only clean modules
+tests/Chap26/TestMergeSortStPer.rs  depends upon only clean modules
+tests/Chap26/TestScanDCMtPer.rs  depends upon only clean modules
+tests/Chap26/TestScanDCStPer.rs  depends upon only clean modules
+tests/Chap27/TestReduceContractMtEph.rs  depends upon only clean modules
+tests/Chap27/TestReduceContractStEph.rs  depends upon only clean modules
+tests/Chap27/TestScanContractMtEph.rs  depends upon only clean modules
+tests/Chap27/TestScanContractStEph.rs  depends upon only clean modules
+tests/Chap28/TestMaxContigSubSumBruteStEph.rs  depends upon only clean modules
+tests/Chap28/TestMaxContigSubSumDivConMtEph.rs  depends upon only clean modules
+tests/Chap28/TestMaxContigSubSumDivConOptMtEph.rs  depends upon only clean modules
+tests/Chap28/TestMaxContigSubSumDivConOptStEph.rs  depends upon only clean modules
+tests/Chap28/TestMaxContigSubSumDivConStEph.rs  depends upon only clean modules
+tests/Chap28/TestMaxContigSubSumIterStEph.rs  depends upon only clean modules
+tests/Chap28/TestMaxContigSubSumOptMtEph.rs  depends upon only clean modules
+tests/Chap28/TestMaxContigSubSumOptStEph.rs  depends upon only clean modules
+tests/Chap28/TestMaxContigSubSumReducedMcsseStEph.rs  depends upon only clean modules
+tests/Chap28/TestMaxContigSubSumReducedStEph.rs  depends upon only clean modules
+tests/Chap35/TestOrderStatSelectMtEph.rs  depends upon only clean modules
+tests/Chap35/TestOrderStatSelectMtPer.rs  depends upon only clean modules
+tests/Chap35/TestOrderStatSelectStEph.rs  depends upon only clean modules
+tests/Chap35/TestOrderStatSelectStPer.rs  depends upon only clean modules
+tests/Chap36/BenchQuickSort.rs  depends upon only clean modules
+tests/Chap36/TestQuickSortMtEph.rs  depends upon only clean modules
+tests/Chap36/TestQuickSortMtEphSlice.rs  depends upon only clean modules
+tests/Chap36/TestQuickSortStEph.rs  depends upon only clean modules
+tests/Chap37/TestAVLTreeSeq.rs  depends upon only clean modules
+tests/Chap37/TestAVLTreeSeqMtPer.rs  depends upon only clean modules
+tests/Chap37/TestAVLTreeSeqStEph.rs  depends upon only clean modules
+tests/Chap37/TestAVLTreeSeqStEph18.rs  depends upon only clean modules
+tests/Chap37/TestAVLTreeSeqStEphChap37.rs  depends upon only clean modules
+tests/Chap37/TestAVLTreeSeqStPer.rs  depends upon only clean modules
+tests/Chap37/TestAVLTreeSeqStPer18.rs  depends upon only clean modules
+tests/Chap37/TestAVLTreeSeqStPer19.rs  depends upon only clean modules
+tests/Chap37/TestBSTAVLMtEph.rs  depends upon only clean modules
+tests/Chap37/TestBSTAVLStEph.rs  depends upon only clean modules
+tests/Chap37/TestBSTBBAlphaMtEph.rs  depends upon only clean modules
+tests/Chap37/TestBSTBBAlphaStEph.rs  depends upon only clean modules
+tests/Chap37/TestBSTMtEph.rs  depends upon only clean modules
+tests/Chap37/TestBSTPlainMtEph.rs  depends upon only clean modules
+tests/Chap37/TestBSTPlainStEph.rs  depends upon only clean modules
+tests/Chap37/TestBSTRBMtEph.rs  depends upon only clean modules
+tests/Chap37/TestBSTRBStEph.rs  depends upon only clean modules
+tests/Chap37/TestBSTSetAVLMtEph.rs  depends upon only clean modules
+tests/Chap37/TestBSTSetBBAlphaMtEph.rs  depends upon only clean modules
+tests/Chap37/TestBSTSetPlainMtEph.rs  depends upon only clean modules
+tests/Chap37/TestBSTSetRBMtEph.rs  depends upon only clean modules
+tests/Chap37/TestBSTSetSplayMtEph.rs  depends upon only clean modules
+tests/Chap37/TestBSTSplayMtEph.rs  depends upon only clean modules
+tests/Chap37/TestBSTSplayStEph.rs  depends upon only clean modules
+tests/Chap38/TestBSTParaMtEph.rs  depends upon only clean modules
+tests/Chap38/TestBSTParaStEph.rs  depends upon only clean modules
+tests/Chap39/TestBSTParaTreapMtEph.rs  depends upon only clean modules
+tests/Chap39/TestBSTSetTreapMtEph.rs  depends upon only clean modules
+tests/Chap39/TestBSTTreapMtEph.rs  depends upon only clean modules
+tests/Chap39/TestBSTTreapStEph.rs  depends upon only clean modules
+tests/Chap40/TestBSTKeyValueStEph.rs  depends upon only clean modules
+tests/Chap40/TestBSTReducedStEph.rs  depends upon only clean modules
+tests/Chap40/TestBSTSizeStEph.rs  depends upon only clean modules
+tests/Chap41/TestAVLTreeSetMtEph.rs  depends upon only clean modules
+tests/Chap41/TestAVLTreeSetMtPer.rs  depends upon only clean modules
+tests/Chap41/TestAVLTreeSetStEph.rs  depends upon only clean modules
+tests/Chap41/TestAVLTreeSetStPer.rs  depends upon only clean modules
+tests/Chap41/TestArraySetEnumMtEph.rs  depends upon only clean modules
+tests/Chap41/TestArraySetStEph.rs  depends upon only clean modules
+tests/Chap41/TestExample41_3.rs  depends upon only clean modules
+tests/Chap42/TestExample42_1.rs  depends upon only clean modules
+tests/Chap42/TestTableMtEph.rs  depends upon only clean modules
+tests/Chap42/TestTableStEph.rs  depends upon only clean modules
+tests/Chap42/TestTableStPer.rs  depends upon only clean modules
+tests/Chap43/TestAugOrderedTableMtEph.rs  depends upon only clean modules
+tests/Chap43/TestAugOrderedTableStEph.rs  depends upon only clean modules
+tests/Chap43/TestAugOrderedTableStPer.rs  depends upon only clean modules
+tests/Chap43/TestExample43_1.rs  depends upon only clean modules
+tests/Chap43/TestOrderedSetMtEph.rs  depends upon only clean modules
+tests/Chap43/TestOrderedSetStEph.rs  depends upon only clean modules
+tests/Chap43/TestOrderedSetStPer.rs  depends upon only clean modules
+tests/Chap43/TestOrderedTableMtEph.rs  depends upon only clean modules
+tests/Chap43/TestOrderedTableMtPer.rs  depends upon only clean modules
+tests/Chap43/TestOrderedTableStEph.rs  depends upon only clean modules
+tests/Chap43/TestOrderedTableStPer.rs  depends upon only clean modules
+tests/Chap44/TestDocumentIndex.rs  depends upon only clean modules
+tests/Chap44/TestExample44_1.rs  depends upon only clean modules
+tests/Chap45/TestBalancedTreePQ.rs  depends upon only clean modules
+tests/Chap45/TestBinaryHeapPQ.rs  depends upon only clean modules
+tests/Chap45/TestExample45_2.rs  depends upon only clean modules
+tests/Chap45/TestHeapsortExample.rs  depends upon only clean modules
+tests/Chap45/TestLeftistHeapPQ.rs  depends upon only clean modules
+tests/Chap45/TestSortedListPQ.rs  depends upon only clean modules
+tests/Chap45/TestUnsortedListPQ.rs  depends upon only clean modules
+tests/Chap47/TestDoubleHashFlatHashTable.rs  depends upon only clean modules
+tests/Chap47/TestLinProbFlatHashTable.rs  depends upon only clean modules
+tests/Chap47/TestLinkedListChainedHashTable.rs  depends upon only clean modules
+tests/Chap47/TestParaHashTableStEph.rs  depends upon only clean modules
+tests/Chap47/TestQuadProbFlatHashTable.rs  depends upon only clean modules
+tests/Chap47/TestStructChainedHashTable.rs  depends upon only clean modules
+tests/Chap47/TestVecChainedHashTable.rs  depends upon only clean modules
+tests/Chap49/TestMinEditDistMtEph.rs  depends upon only clean modules
+tests/Chap49/TestMinEditDistMtPer.rs  depends upon only clean modules
+tests/Chap49/TestMinEditDistStEph.rs  depends upon only clean modules
+tests/Chap49/TestMinEditDistStPer.rs  depends upon only clean modules
+tests/Chap49/TestSubsetSumMtEph.rs  depends upon only clean modules
+tests/Chap49/TestSubsetSumMtPer.rs  depends upon only clean modules
+tests/Chap49/TestSubsetSumStEph.rs  depends upon only clean modules
+tests/Chap49/TestSubsetSumStPer.rs  depends upon only clean modules
+tests/Chap50/TestMatrixChainMtEph.rs  depends upon only clean modules
+tests/Chap50/TestMatrixChainMtPer.rs  depends upon only clean modules
+tests/Chap50/TestMatrixChainStEph.rs  depends upon only clean modules
+tests/Chap50/TestMatrixChainStPer.rs  depends upon only clean modules
+tests/Chap50/TestOBSTMtEph.rs  depends upon only clean modules
+tests/Chap50/TestOBSTMtPer.rs  depends upon only clean modules
+tests/Chap50/TestOptBinSearchTreeStEph.rs  depends upon only clean modules
+tests/Chap50/TestOptBinSearchTreeStPer.rs  depends upon only clean modules
+tests/Chap50/TestProbability.rs  depends upon only clean modules
+tests/Chap51/TestBottomUpDPMtEph.rs  depends upon only clean modules
+tests/Chap51/TestBottomUpDPMtPer.rs  depends upon only clean modules
+tests/Chap51/TestBottomUpDPStEph.rs  depends upon only clean modules
+tests/Chap51/TestBottomUpDPStPer.rs  depends upon only clean modules
+tests/Chap51/TestTopDownDPMtEph.rs  depends upon only clean modules
+tests/Chap51/TestTopDownDPMtPer.rs  depends upon only clean modules
+tests/Chap51/TestTopDownDPStEph.rs  depends upon only clean modules
+tests/Chap51/TestTopDownDPStPer.rs  depends upon only clean modules
+tests/Chap52/TestAdjMatrixGraphMtPer.rs  depends upon only clean modules
+tests/Chap52/TestAdjMatrixGraphStEph.rs  depends upon only clean modules
+tests/Chap52/TestAdjMatrixGraphStPer.rs  depends upon only clean modules
+tests/Chap52/TestAdjSeqGraphMtPer.rs  depends upon only clean modules
+tests/Chap52/TestAdjSeqGraphStEph.rs  depends upon only clean modules
+tests/Chap52/TestAdjSeqGraphStPer.rs  depends upon only clean modules
+tests/Chap52/TestAdjTableGraphMtPer.rs  depends upon only clean modules
+tests/Chap52/TestAdjTableGraphStEph.rs  depends upon only clean modules
+tests/Chap52/TestAdjTableGraphStPer.rs  depends upon only clean modules
+tests/Chap52/TestEdgeSetGraphMtEph.rs  depends upon only clean modules
+tests/Chap52/TestEdgeSetGraphMtPer.rs  depends upon only clean modules
+tests/Chap52/TestEdgeSetGraphStEph.rs  depends upon only clean modules
+tests/Chap52/TestEdgeSetGraphStPer.rs  depends upon only clean modules
+tests/Chap53/TestGraphSearchMtPer.rs  depends upon only clean modules
+tests/Chap53/TestGraphSearchStEph.rs  depends upon only clean modules
+tests/Chap53/TestGraphSearchStPer.rs  depends upon only clean modules
+tests/Chap53/TestPQMinStEph.rs  depends upon only clean modules
+tests/Chap53/TestPQMinStPer.rs  depends upon only clean modules
+tests/Chap54/TestBFSMtEph.rs  depends upon only clean modules
+tests/Chap54/TestBFSMtPer.rs  depends upon only clean modules
+tests/Chap54/TestBFSStEph.rs  depends upon only clean modules
+tests/Chap54/TestBFSStPer.rs  depends upon only clean modules
+tests/Chap55/TestCycleDetectStEph.rs  depends upon only clean modules
+tests/Chap55/TestCycleDetectStPer.rs  depends upon only clean modules
+tests/Chap55/TestDFSStEph.rs  depends upon only clean modules
+tests/Chap55/TestDFSStPer.rs  depends upon only clean modules
+tests/Chap55/TestSCCStEph.rs  depends upon only clean modules
+tests/Chap55/TestSCCStPer.rs  depends upon only clean modules
+tests/Chap55/TestTopoSortStEph.rs  depends upon only clean modules
+tests/Chap55/TestTopoSortStPer.rs  depends upon only clean modules
+tests/Chap56/TestAllPairsResultStEphF64.rs  depends upon only clean modules
+tests/Chap56/TestAllPairsResultStEphI64.rs  depends upon only clean modules
+tests/Chap56/TestAllPairsResultStPerF64.rs  depends upon only clean modules
+tests/Chap56/TestAllPairsResultStPerI64.rs  depends upon only clean modules
+tests/Chap56/TestExample56_1.rs  depends upon only clean modules
+tests/Chap56/TestExample56_3.rs  depends upon only clean modules
+tests/Chap56/TestPathWeightUtilsStEph.rs  depends upon only clean modules
+tests/Chap56/TestPathWeightUtilsStPer.rs  depends upon only clean modules
+tests/Chap56/TestSSSPResultStEphF64.rs  depends upon only clean modules
+tests/Chap56/TestSSSPResultStEphI64.rs  depends upon only clean modules
+tests/Chap56/TestSSSPResultStPerF64.rs  depends upon only clean modules
+tests/Chap56/TestSSSPResultStPerI64.rs  depends upon only clean modules
+tests/Chap57/TestDijkstraStEphF64.rs  depends upon only clean modules
+tests/Chap57/TestDijkstraStEphU64.rs  depends upon only clean modules
+tests/Chap57/TestStackStEph.rs  depends upon only clean modules
+tests/Chap58/TestBellmanFordStEphF64.rs  depends upon only clean modules
+tests/Chap58/TestBellmanFordStEphI64.rs  depends upon only clean modules
+tests/Chap59/TestJohnsonMtEphF64.rs  depends upon only clean modules
+tests/Chap59/TestJohnsonMtEphI64.rs  depends upon only clean modules
+tests/Chap59/TestJohnsonStEphF64.rs  depends upon only clean modules
+tests/Chap59/TestJohnsonStEphI64.rs  depends upon only clean modules
+tests/Chap61/TestEdgeContractionMtEph.rs  depends upon only clean modules
+tests/Chap61/TestEdgeContractionStEph.rs  depends upon only clean modules
+tests/Chap61/TestVertexMatchingMtEph.rs  depends upon only clean modules
+tests/Chap61/TestVertexMatchingStEph.rs  depends upon only clean modules
+tests/Chap62/TestStarContractionMtEph.rs  depends upon only clean modules
+tests/Chap62/TestStarContractionStEph.rs  depends upon only clean modules
+tests/Chap62/TestStarPartitionMtEph.rs  depends upon only clean modules
+tests/Chap62/TestStarPartitionStEph.rs  depends upon only clean modules
+tests/Chap63/TestConnectivityMtEph.rs  depends upon only clean modules
+tests/Chap63/TestConnectivityStEph.rs  depends upon only clean modules
+tests/Chap64/TestSpanTreeMtEph.rs  depends upon only clean modules
+tests/Chap64/TestSpanTreeStEph.rs  depends upon only clean modules
+tests/Chap64/TestTSPApproxStEph.rs  depends upon only clean modules
+tests/Chap65/TestKruskalStEph.rs  depends upon only clean modules
+tests/Chap65/TestPrimStEph.rs  depends upon only clean modules
+tests/Chap65/TestUnionFindStEph.rs  depends upon only clean modules
+tests/Chap66/TestBoruvkaMtEph.rs  depends upon only clean modules
+tests/Chap66/TestBoruvkaStEph.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   214 clean (no holes, no errors; 83%)
-   43 holed (holes or errors, 16%)
-   257 total
+   214 clean (no holes, no errors; 42%)
+   294 holed (holes or errors, 57%)
+   508 total
 
 Proof Functions:
    381 clean (99%)
@@ -2930,47 +4443,47 @@ Structural (info only): 179
    3  Chap62  (9 holes, 4 files)
    4  Chap66  (9 holes, 2 files)
    5  Chap61  (8 holes, 4 files)
-   6  Chap11  (6 holes, 5 files)
-   7  Chap63  (6 holes, 2 files)
-   8  Chap43  (6 holes, 11 files)
-   9  Chap41  (6 holes, 7 files)
+   6  Chap63  (6 holes, 2 files)
+   7  Chap41  (6 holes, 7 files)
+   8  Chap11  (6 holes, 5 files)
+   9  Chap43  (6 holes, 11 files)
    10  Chap47  (5 holes, 9 files)
-   11  Chap64  (4 holes, 3 files)
-   12  Chap26  (4 holes, 8 files)
-   13  Chap65  (2 holes, 3 files)
-   14  Chap59  (2 holes, 4 files)
-   15  Chap02  (1 holes, 2 files)
-   16  Chap45  (1 holes, 7 files)
-   17  Chap05  (0 holes, 5 files)
-   18  Chap58  (0 holes, 2 files)
-   19  Chap57  (0 holes, 3 files)
-   20  Concurrency  (0 holes, 1 files)
-   21  Chap03  (0 holes, 1 files)
-   22  Chap21  (0 holes, 12 files)
-   23  Chap40  (0 holes, 3 files)
-   24  Chap23  (0 holes, 2 files)
-   25  Chap55  (0 holes, 8 files)
-   26  Chap44  (0 holes, 2 files)
-   27  Chap12  (0 holes, 3 files)
-   28  Chap17  (0 holes, 1 files)
-   29  Chap42  (0 holes, 4 files)
-   30  Chap19  (0 holes, 4 files)
-   31  Chap35  (0 holes, 4 files)
-   32  Chap56  (0 holes, 12 files)
-   33  Chap52  (0 holes, 14 files)
-   34  Chap51  (0 holes, 8 files)
-   35  ParaPairs  (0 holes, 1 files)
-   36  Chap49  (0 holes, 8 files)
-   37  Chap06  (0 holes, 20 files)
-   38  Chap37  (0 holes, 19 files)
-   39  Chap28  (0 holes, 11 files)
-   40  Chap54  (0 holes, 4 files)
-   41  Chap50  (0 holes, 8 files)
-   42  Chap18  (0 holes, 7 files)
-   43  Chap36  (0 holes, 3 files)
-   44  Chap30  (0 holes, 1 files)
-   45  Chap53  (0 holes, 5 files)
-   46  Chap27  (0 holes, 4 files)
+   11  Chap26  (4 holes, 8 files)
+   12  Chap64  (4 holes, 3 files)
+   13  Chap59  (2 holes, 4 files)
+   14  Chap65  (2 holes, 3 files)
+   15  Chap45  (1 holes, 7 files)
+   16  Chap02  (1 holes, 2 files)
+   17  Chap03  (0 holes, 1 files)
+   18  Chap12  (0 holes, 3 files)
+   19  Chap56  (0 holes, 12 files)
+   20  Chap44  (0 holes, 2 files)
+   21  Chap23  (0 holes, 2 files)
+   22  Chap05  (0 holes, 5 files)
+   23  Chap18  (0 holes, 7 files)
+   24  Chap54  (0 holes, 4 files)
+   25  Chap19  (0 holes, 4 files)
+   26  Chap30  (0 holes, 1 files)
+   27  Chap21  (0 holes, 12 files)
+   28  Chap42  (0 holes, 4 files)
+   29  ParaPairs  (0 holes, 1 files)
+   30  Chap58  (0 holes, 2 files)
+   31  Chap49  (0 holes, 8 files)
+   32  Chap35  (0 holes, 4 files)
+   33  Chap55  (0 holes, 8 files)
+   34  Chap36  (0 holes, 3 files)
+   35  Chap17  (0 holes, 1 files)
+   36  Chap40  (0 holes, 3 files)
+   37  Chap50  (0 holes, 8 files)
+   38  Chap51  (0 holes, 8 files)
+   39  Concurrency  (0 holes, 1 files)
+   40  Chap53  (0 holes, 5 files)
+   41  Chap06  (0 holes, 20 files)
+   42  Chap37  (0 holes, 19 files)
+   43  Chap57  (0 holes, 3 files)
+   44  Chap52  (0 holes, 14 files)
+   45  Chap27  (0 holes, 4 files)
+   46  Chap28  (0 holes, 11 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
@@ -2979,16 +4492,16 @@ Structural (info only): 179
    1  src/Chap39/BSTParaTreapMtEph.rs  (16 holes)
    2  src/Chap38/BSTParaMtEph.rs  (13 holes)
    3  src/Chap26/ETSPMtEph.rs  (4 holes)
-   4  src/Chap11/FibonacciMtEph2Threads.rs  (2 holes)
-   5  src/Chap47/ParaHashTableStEph.rs  (2 holes)
+   4  src/Chap11/FibonacciMtEphRecomputes.rs  (2 holes)
+   5  src/Chap11/FibonacciMtEph2Threads.rs  (2 holes)
    6  src/Chap41/AVLTreeSetStEph.rs  (2 holes)
    7  src/Chap11/FibonacciMtPerTSM.rs  (2 holes)
-   8  src/Chap11/FibonacciMtEphRecomputes.rs  (2 holes)
-   9  src/Chap43/AugOrderedTableMtEph.rs  (1 holes)
-   10  src/Chap45/Example45_2.rs  (1 holes)
-   11  src/Chap02/HFSchedulerMtEph.rs  (1 holes)
-   12  src/Chap43/OrderedSetStPer.rs  (1 holes)
-   13  src/Chap38/BSTParaStEph.rs  (1 holes)
+   8  src/Chap47/ParaHashTableStEph.rs  (2 holes)
+   9  src/Chap45/Example45_2.rs  (1 holes)
+   10  src/Chap02/HFSchedulerMtEph.rs  (1 holes)
+   11  src/Chap38/BSTParaStEph.rs  (1 holes)
+   12  src/Chap43/AugOrderedTableMtEph.rs  (1 holes)
+   13  src/Chap43/OrderedSetStPer.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
@@ -3060,7 +4573,7 @@ HOLED CHAPTERS (16) — 99 holes
   Chap38            14     2  YES       
   Chap39            16     4  internal  Chap39::BSTParaTreapMtEph
   Chap41             6     7  internal  Chap41::AVLTreeSetStEph
-  Chap43             6    11  NO        Chap41::AVLTreeSetStEph, Chap42::TableStPer
+  Chap43             6    11  NO        Chap42::TableStPer, Chap41::AVLTreeSetStEph
   Chap45             1     7  YES       
   Chap47             5     9  internal  Chap47::ParaHashTableStEph
   Chap59             2     4  NO        Chap05::SetStEph
@@ -3099,8 +4612,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 20:23:43 -07:00
-Ended:     2026-03-19 20:23:44 -07:00
-Duration:  1562ms
+Started:   2026-03-19 21:14:20 -07:00
+Ended:     2026-03-19 21:14:22 -07:00
+Duration:  1706ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log

@@ -177,11 +177,15 @@ Warnings: 12 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 20:23:42 -07:00
-Ended:     2026-03-19 20:23:43 -07:00
-Duration:  59ms
+Started:   2026-03-19 20:54:17 -07:00
+Ended:     2026-03-19 20:54:17 -07:00
+Duration:  70ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
-Duration:  59ms
+================
+
+Started:   2026-03-19 20:54:17 -07:00
+Ended:     2026-03-19 20:54:17 -07:00
+Duration:  70ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log

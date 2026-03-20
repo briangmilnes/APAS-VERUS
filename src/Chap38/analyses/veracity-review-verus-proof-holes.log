@@ -1,5 +1,5 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap38/
-Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes /home/milnes/projects/APAS-VERUS/src/Chap38
+Full output: /home/milnes/projects/APAS-VERUS/src/Chap38/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
   1. File Holes
@@ -88,8 +88,8 @@ Table of Contents:
       1 × assume()
       12 × external_body
    Info: 4 × structural_false_positive
-      2 × UNSAFE_SEND_SYNC
       2 × RWLOCK_GHOST
+      2 × UNSAFE_SEND_SYNC
 ❌ BSTParaStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:152: error: assume() [algorithmic] - proof { assume(c == *x); } // Clone bridge: T::clone preserv
        148 |     fn clone_elem<T: Clone>(x: &T) -> (c: T)
@@ -153,15 +153,15 @@ Warnings: 4 total
    2 × assume_eq_clone_workaround
 
 Structural (info only): 4
-   2 × RWLOCK_GHOST
    2 × UNSAFE_SEND_SYNC
+   2 × RWLOCK_GHOST
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 20:36:43 -07:00
-Ended:     2026-03-19 20:36:43 -07:00
-Duration:  27ms
+Started:   2026-03-19 21:14:57 -07:00
+Ended:     2026-03-19 21:14:57 -07:00
+Duration:  25ms
 
-Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
+Full output: /home/milnes/projects/APAS-VERUS/src/Chap38/analyses/veracity-review-verus-proof-holes.log
