@@ -192,7 +192,8 @@ pub mod BSTParaMtEph {
         /// - APAS: Work O(|t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|) -- agrees with APAS; parallel.
         /// Requires `op` to be associative with identity `base`.
-        fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T;
+        fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T
+            requires forall|a: T, b: T| #[trigger] op.requires((a, b));
         /// - APAS: Work O(|t|), Span O(|t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|) -- agrees with APAS; sequential DFS traversal.
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
@@ -534,8 +535,11 @@ pub mod BSTParaMtEph {
         join_mid(Exposed::Node(left, key, right))
     }
 
-    fn min_key<T: MtKey + 'static>(tree: &ParamBST<T>) -> Option<T>
+    fn min_key<T: MtKey + 'static>(tree: &ParamBST<T>) -> (result: Option<T>)
         requires tree@.finite(),
+        ensures
+            result.is_none() <==> tree@.len() == 0,
+            result.is_some() ==> tree@.contains(result.unwrap()@),
         decreases tree@.len(),
     {
         match expose_internal(tree) {
@@ -664,16 +668,30 @@ pub mod BSTParaMtEph {
     fn filter_inner<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         predicate: &Arc<F>,
-    ) -> ParamBST<T> {
+        Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+    ) -> (filtered: ParamBST<T>)
+        requires
+            forall|t: &T| #[trigger] predicate.requires((t,)),
+            forall|x: T, keep: bool|
+                predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
+        ensures
+            filtered@.subset_of(tree@),
+            filtered@.finite(),
+            forall|v: T::V| #[trigger] filtered@.contains(v)
+                ==> tree@.contains(v) && spec_pred(v),
+            forall|v: T::V| tree@.contains(v) && spec_pred(v)
+                ==> #[trigger] filtered@.contains(v),
+    {
         match expose_internal(tree) {
             | Exposed::Leaf => new_leaf(),
             | Exposed::Node(left, key, right) => {
                 let pred_left = Arc::clone(predicate);
                 let pred_right = Arc::clone(predicate);
                 let Pair(left_filtered, right_filtered) =
-                    crate::ParaPair!(move || filter_inner(&left, &pred_left), move || {
-                        filter_inner(&right, &pred_right)
-                    });
+                    crate::ParaPair!(
+                        move || filter_inner(&left, &pred_left, Ghost::assume_new()),
+                        move || filter_inner(&right, &pred_right, Ghost::assume_new())
+                    );
                 if (**predicate)(&key) {
                     join_m(left_filtered, key, right_filtered)
                 } else {
@@ -683,7 +701,6 @@ pub mod BSTParaMtEph {
         }
     }
 
-    #[verifier::external_body]
     fn filter_parallel<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         predicate: F,
@@ -702,15 +719,19 @@ pub mod BSTParaMtEph {
                 ==> #[trigger] filtered@.contains(v),
     {
         let predicate = Arc::new(predicate);
-        filter_inner(tree, &predicate)
+        filter_inner(tree, &predicate, Ghost(spec_pred))
     }
 
-    #[verifier::external_body]
     fn reduce_inner<T: MtKey + 'static, F: Fn(T, T) -> T + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         op: &Arc<F>,
         identity: T,
-    ) -> T {
+    ) -> T
+        requires
+            tree@.finite(),
+            forall|a: T, b: T| #[trigger] op.requires((a, b)),
+        decreases tree@.len(),
+    {
         match expose_internal(tree) {
             | Exposed::Leaf => identity,
             | Exposed::Node(left, key, right) => {
@@ -718,11 +739,20 @@ pub mod BSTParaMtEph {
                 let op_right = Arc::clone(op);
                 let left_base = identity.clone();
                 let right_base = identity;
-                let Pair(left_acc, right_acc) =
-                    crate::ParaPair!(move || reduce_inner(&left, &op_left, left_base), move || {
-                        reduce_inner(&right, &op_right, right_base)
-                    });
-                let op_ref = op.as_ref();
+                proof {
+                    left@.lemma_subset_not_in_lt(tree@, key@);
+                    right@.lemma_subset_not_in_lt(tree@, key@);
+                }
+                let f1 = move || -> T
+                {
+                    reduce_inner(&left, &op_left, left_base)
+                };
+                let f2 = move || -> T
+                {
+                    reduce_inner(&right, &op_right, right_base)
+                };
+                let Pair(left_acc, right_acc) = crate::ParaPair!(f1, f2);
+                let op_ref = arc_deref(op);
                 let right_with_key = op_ref(key, right_acc);
                 op_ref(left_acc, right_with_key)
             }
@@ -733,7 +763,10 @@ pub mod BSTParaMtEph {
         tree: &ParamBST<T>,
         op: F,
         base: T,
-    ) -> T {
+    ) -> T
+        requires forall|a: T, b: T| #[trigger] op.requires((a, b)),
+    {
+        let _ = tree.size();
         let op = Arc::new(op);
         reduce_inner(tree, &op, base)
     }
