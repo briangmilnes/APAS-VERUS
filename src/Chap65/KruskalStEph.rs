@@ -7,7 +7,7 @@
 pub mod KruskalStEph {
 
     use vstd::prelude::*;
-    use crate::vstdplus::float::float::{WrappedF64, zero_dist};
+    use crate::vstdplus::float::float::{FloatTotalOrder, WrappedF64, zero_dist};
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
     use crate::Types::Types::*;
@@ -61,6 +61,9 @@ pub mod KruskalStEph {
             edges@.len() == old(edges)@.len(),
             forall|i: int| 0 <= i < edges@.len() ==>
                 old(edges)@.contains(#[trigger] edges@[i]),
+            forall|i: int, j: int| #![trigger edges@[i], edges@[j]]
+                0 <= i <= j < edges@.len() ==>
+                edges@[i].2.val.le(edges@[j].2.val),
     {
         edges.sort_by(|e1, e2| {
             let LabEdge(_u1, _v1, w1) = e1;

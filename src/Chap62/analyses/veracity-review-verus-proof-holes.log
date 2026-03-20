@@ -21,12 +21,12 @@ Table of Contents:
 =================================================================
 
 ❌ StarContractionMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:72: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap62/StarContractionMtEph.rs:72: error: external_body - #[verifier::external_body]
         73 |     pub fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G) -> R
    Holes: 1 total
       1 × external_body
 ❌ StarContractionStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:72: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap62/StarContractionStEph.rs:72: error: external_body - #[verifier::external_body]
         73 |     pub fn star_contract<V, R, F, G>(graph: &UnDirGraphStEph<V>, base: &F, expand: &G) -> R
    Holes: 1 total
       1 × external_body
@@ -84,8 +84,8 @@ Holes Found: 2 (actionable)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-20 07:51:29 -07:00
-Ended:     2026-03-20 07:51:29 -07:00
-Duration:  12ms
+Started:   2026-03-20 08:40:01 -07:00
+Ended:     2026-03-20 08:40:01 -07:00
+Duration:  6ms
 
 Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
