@@ -21,7 +21,6 @@ pub mod ConnectivityStEph {
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::Chap62::StarContractionStEph::StarContractionStEph::star_contract;
-    use crate::Chap62::StarPartitionStEph::StarPartitionStEph::sequential_star_partition;
     use crate::SetLit;
 
     verus! {
@@ -65,8 +64,7 @@ pub mod ConnectivityStEph {
     /// Algorithm 63.2: Count Connected Components
     ///
     /// Uses recursive star contraction to count the number of connected components.
-    /// Base case: No edges means each vertex is its own component.
-    /// Inductive case: Partition, build quotient graph, recurse.
+    /// Delegates to count_components_hof which implements the same algorithm via star_contract.
     ///
     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — Exercise 63.3 (edge-set representation)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS
@@ -76,24 +74,17 @@ pub mod ConnectivityStEph {
     ///
     /// Returns:
     /// - The number of connected components
-    #[verifier::external_body]
-    pub fn count_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N {
-        if graph.sizeE() == 0 {
-            return graph.sizeV();
-        }
-
-        let (centers, partition_map) = sequential_star_partition(graph);
-
-        let quotient_edges = build_quotient_edges(graph, &partition_map);
-        let quotient_graph = <UnDirGraphStEph<V> as UnDirGraphStEphTrait<V>>::from_sets(centers, quotient_edges);
-
-        count_components(&quotient_graph)
+    pub fn count_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N
+        requires spec_graphview_wf(graph@)
+    {
+        count_components_hof(graph)
     }
 
     /// Algorithm 63.3: Connected Components
     ///
     /// Computes all connected components and returns a mapping from each vertex
     /// to a representative of its component.
+    /// Delegates to connected_components_hof which implements the same algorithm via star_contract.
     ///
     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — Exercise 63.4 (edge-set representation)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS
@@ -104,30 +95,10 @@ pub mod ConnectivityStEph {
     /// Returns:
     /// - (representatives, component_map): Set of component representatives and
     ///   mapping from each vertex to its component representative
-    #[verifier::external_body]
-    pub fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>) {
-        if graph.sizeE() == 0 {
-            let mut component_map = HashMapWithViewPlus::new();
-            for vertex in graph.vertices().iter() {
-                let _ = component_map.insert(vertex.clone(), vertex.clone());
-            }
-            return (graph.vertices().clone(), component_map);
-        }
-
-        let (centers, partition_map) = sequential_star_partition(graph);
-
-        let quotient_edges = build_quotient_edges(graph, &partition_map);
-        let quotient_graph = <UnDirGraphStEph<V> as UnDirGraphStEphTrait<V>>::from_sets(centers, quotient_edges);
-
-        let (representatives, component_map_quotient) = connected_components(&quotient_graph);
-
-        let mut component_map = HashMapWithViewPlus::new();
-        for (u, v) in partition_map.iter() {
-            let component = component_map_quotient.get(v).unwrap_or(v);
-            let _ = component_map.insert(u.clone(), component.clone());
-        }
-
-        (representatives, component_map)
+    pub fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
+        requires spec_graphview_wf(graph@)
+    {
+        connected_components_hof(graph)
     }
 
     /// Build quotient graph edges by routing through partition map.

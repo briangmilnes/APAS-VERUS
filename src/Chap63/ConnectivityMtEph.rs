@@ -13,19 +13,14 @@ pub mod ConnectivityMtEph {
 
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::UnDirGraphMtEph::UnDirGraphMtEph::*;
-    use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
 
     use std::hash::Hash;
-    use std::sync::Arc;
-    use std::vec::Vec;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::Chap62::StarContractionMtEph::StarContractionMtEph::star_contract_mt;
-    use crate::Chap62::StarPartitionMtEph::StarPartitionMtEph::parallel_star_partition;
-    use crate::{ParaPair, SetLit};
 
     verus! {
 
@@ -73,10 +68,11 @@ pub mod ConnectivityMtEph {
 
     /// Algorithm 63.2: Count Connected Components (Parallel)
     ///
-    /// Uses recursive parallel star contraction to count connected components.
+    /// Uses parallel star contraction to count connected components.
+    /// Delegates to count_components_hof which implements the same algorithm via star_contract_mt.
     ///
     /// - APAS: Work O((n+m) lg n), Span O(lg² n) — Exercise 63.3 (edge-set, parallel)
-    /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(m) — route_edges_parallel merge is sequential
+    /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(m) — delegates to star_contract_mt
     ///
     /// Arguments:
     /// - graph: The undirected graph
@@ -84,26 +80,19 @@ pub mod ConnectivityMtEph {
     ///
     /// Returns:
     /// - The number of connected components
-    #[verifier::external_body]
-    pub fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N {
-        if graph.sizeE() == 0 {
-            return graph.sizeV();
-        }
-
-        let (centers, partition_map) = parallel_star_partition(graph, seed);
-
-        let quotient_edges = build_quotient_edges_parallel(graph, &partition_map);
-        let quotient_graph = <UnDirGraphMtEph<V> as UnDirGraphMtEphTrait<V>>::from_sets(centers, quotient_edges);
-
-        count_components_mt(&quotient_graph, seed + 1)
+    pub fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N
+        requires spec_graphview_wf(graph@)
+    {
+        count_components_hof(graph, seed)
     }
 
     /// Algorithm 63.3: Connected Components (Parallel)
     ///
     /// Computes all connected components in parallel.
+    /// Delegates to connected_components_hof which implements the same algorithm via star_contract_mt.
     ///
     /// - APAS: Work O((n+m) lg n), Span O(lg² n) — Exercise 63.4 (edge-set, parallel)
-    /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(n lg n) — compose_maps_parallel is sequential O(n) per round
+    /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(n lg n) — delegates to star_contract_mt
     ///
     /// Arguments:
     /// - graph: The undirected graph
@@ -112,99 +101,13 @@ pub mod ConnectivityMtEph {
     /// Returns:
     /// - (representatives, component_map): Set of component representatives and
     ///   mapping from each vertex to its component representative
-    #[verifier::external_body]
     pub fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
-    ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>) {
-        if graph.sizeE() == 0 {
-            let mut component_map = HashMapWithViewPlus::new();
-            for vertex in graph.vertices().iter() {
-                let _ = component_map.insert(vertex.clone(), vertex.clone());
-            }
-            return (graph.vertices().clone(), component_map);
-        }
-
-        let (centers, partition_map) = parallel_star_partition(graph, seed);
-
-        let quotient_edges = build_quotient_edges_parallel(graph, &partition_map);
-        let quotient_graph = <UnDirGraphMtEph<V> as UnDirGraphMtEphTrait<V>>::from_sets(centers, quotient_edges);
-
-        let (representatives, component_map_quotient) = connected_components_mt(&quotient_graph, seed + 1);
-
-        let component_map = compose_maps_parallel(&partition_map, &component_map_quotient);
-
-        (representatives, component_map)
-    }
-
-    /// Build quotient graph edges in parallel.
-    ///
-    /// - APAS: N/A — helper function implicit in Algorithm 63.2/63.3 Line 7.
-    /// - Claude-Opus-4.6: Work O(m), Span O(m) — delegates to route_edges_parallel whose merge is sequential
-    #[verifier::external_body]
-    fn build_quotient_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
-        graph: &UnDirGraphMtEph<V>,
-        partition_map: &HashMapWithViewPlus<V, V>,
-    ) -> SetStEph<Edge<V>> {
-        let edges_vec = graph.edges().iter().cloned().collect::<Vec<Edge<V>>>();
-        let edges_seq = ArraySeqStEphS::from_vec(edges_vec);
-        let n_edges = edges_seq.length();
-
-        let part_map_arc = Arc::new(partition_map.clone());
-
-        route_edges_parallel(&edges_seq, part_map_arc, 0, n_edges)
-    }
-
-    /// Parallel edge routing using divide-and-conquer.
-    ///
-    /// - APAS: N/A — helper function, not in prose.
-    /// - Claude-Opus-4.6: Work O(k), Span O(k) — sequential set union after ParaPair! makes span O(k) not O(lg k)
-    #[verifier::external_body]
-    fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
-        edges: &ArraySeqStEphS<Edge<V>>,
-        partition_map: Arc<HashMapWithViewPlus<V, V>>,
-        start: usize,
-        end: usize,
-    ) -> SetStEph<Edge<V>> {
-        let size = end - start;
-
-        if size == 0 {
-            return SetLit![];
-        }
-
-        if size == 1 {
-            let edge = edges.nth(start as N);
-            let Edge(u, v) = edge;
-            let u_center = partition_map.get(u).unwrap_or(u);
-            let v_center = partition_map.get(v).unwrap_or(v);
-
-            if u_center != v_center {
-                let new_edge = if u_center < v_center {
-                    Edge(u_center.clone(), v_center.clone())
-                } else {
-                    Edge(v_center.clone(), u_center.clone())
-                };
-                return SetLit![new_edge];
-            }
-            return SetLit![];
-        }
-
-        let mid = start + size / 2;
-
-        let edges1 = edges.clone();
-        let map1 = partition_map.clone();
-        let edges2 = edges.clone();
-        let map2 = partition_map;
-
-        let pair = ParaPair!(move || route_edges_parallel(&edges1, map1, start, mid), move || {
-            route_edges_parallel(&edges2, map2, mid, end)
-        });
-
-        let mut result = pair.0;
-        for edge in pair.1.iter() {
-            let _ = result.insert(edge.clone());
-        }
-        result
+    ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
+        requires spec_graphview_wf(graph@)
+    {
+        connected_components_hof(graph, seed)
     }
 
     /// Compose maps (P . C): for each (u -> v) in P, output (u -> C[v]).

@@ -6,18 +6,13 @@
 pub mod SpanTreeMtEph {
 
     use vstd::prelude::*;
-    use vstd::rwlock::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::UnDirGraphMtEph::UnDirGraphMtEph::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
 
     use std::hash::Hash;
-    use std::sync::Arc;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
-    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
-    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap62::StarContractionMtEph::StarContractionMtEph::star_contract_mt;
     use crate::SetLit;
 
@@ -29,19 +24,6 @@ pub mod SpanTreeMtEph {
 
     /// Namespace struct for trait impl.
     pub struct SpanTreeMtEph;
-
-    pub struct SpanTreeMtEphEdgesInv;
-    impl<V: StT + MtT + Hash + Ord> RwLockPredicate<SetStEph<Edge<V>>> for SpanTreeMtEphEdgesInv {
-        open spec fn inv(self, v: SetStEph<Edge<V>>) -> bool { v@.finite() }
-    }
-    fn new_spanning_edges_arc<V: StT + MtT + Hash + Ord>(
-        val: SetStEph<Edge<V>>,
-    ) -> (arc: Arc<RwLock<SetStEph<Edge<V>>, SpanTreeMtEphEdgesInv>>)
-        requires val@.finite(),
-        ensures arc.pred() == SpanTreeMtEphEdgesInv,
-    {
-        new_arc_rwlock(val, Ghost(SpanTreeMtEphEdgesInv))
-    }
 
     // 8. traits
 
@@ -68,126 +50,95 @@ pub mod SpanTreeMtEph {
     ///
     /// - APAS: Work O((n+m) lg n), Span O(lg² n)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — expand closure
-    ///   uses 2-way join() splits, inner loop is sequential O(E).
-    #[verifier::external_body]
+    ///   is sequential; parallelism comes from star_contract_mt framework.
     pub fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
-    ) -> SetStEph<Edge<V>> {
-        // Base: no edges means no spanning tree edges
-        let base = |_vertices: &SetStEph<V>| SetLit![];
+    ) -> SetStEph<Edge<V>>
+        requires
+            spec_graphview_wf(graph@),
+            valid_key_type_Edge::<V>(),
+    {
+        // Base: no edges means no spanning tree edges.
+        let base = |_vertices: &SetStEph<V>| -> (result: SetStEph<Edge<V>>)
+            requires valid_key_type_Edge::<V>()
+        {
+            SetLit![]
+        };
 
-        // Expand: add star partition edges and map quotient tree edges back
-        // Parallel version: Work O(|V| + |E|), Span O(lg² |V|)
+        // Expand: add star partition edges and map quotient tree edges back.
         let expand = |_v: &SetStEph<V>,
                       original_edges: &SetStEph<Edge<V>>,
                       _centers: &SetStEph<V>,
                       partition_map: &HashMapWithViewPlus<V, V>,
-                      quotient_tree: SetStEph<Edge<V>>| {
-            let spanning_edges = new_spanning_edges_arc(SetLit![]);
+                      quotient_tree: SetStEph<Edge<V>>|
+            -> (result: SetStEph<Edge<V>>)
+            requires
+                valid_key_type_Edge::<V>(),
+                obeys_key_model::<V>(),
+                original_edges.spec_setsteph_wf(),
+                quotient_tree.spec_setsteph_wf(),
+        {
+            let mut spanning_edges: SetStEph<Edge<V>> = SetLit![];
 
-            // Part 1: Add edges from vertices to their centers (star edges) - PARALLEL
-            // Convert HashMap to Vec for parallel processing
-            let partition_vec: Vec<(V, V)> = partition_map
-                .iter()
-                .map(|(v, c)| (v.clone(), c.clone()))
-                .collect();
-
-            if !partition_vec.is_empty() {
-                let mid = partition_vec.len() / 2;
-                let left_vec = partition_vec[..mid].to_vec();
-                let right_vec = partition_vec[mid..].to_vec();
-
-                let spanning_edges_clone1 = Arc::clone(&spanning_edges);
-                let spanning_edges_clone2 = Arc::clone(&spanning_edges);
-                let f1 = move || {
-                    for (vertex, center) in left_vec {
-                        if vertex != center {
-                            let edge = if vertex < center {
-                                Edge(vertex, center)
-                            } else {
-                                Edge(center, vertex)
-                            };
-                            let (mut current, write_handle) = spanning_edges_clone1.acquire_write();
-                            current.insert(edge);
-                            write_handle.release_write(current);
-                        }
-                    }
-                };
-                let f2 = move || {
-                    for (vertex, center) in right_vec {
-                        if vertex != center {
-                            let edge = if vertex < center {
-                                Edge(vertex, center)
-                            } else {
-                                Edge(center, vertex)
-                            };
-                            let (mut current, write_handle) = spanning_edges_clone2.acquire_write();
-                            current.insert(edge);
-                            write_handle.release_write(current);
-                        }
-                    }
-                };
-                join(f1, f2);
+            // Part 1: Collect edges from partition map (vertex → center edges).
+            let it_pm = partition_map.iter();
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            for pair in iter: it_pm
+                invariant
+                    spanning_edges.spec_setsteph_wf(),
+                    valid_key_type_Edge::<V>(),
+            {
+                let (vertex, center) = pair;
+                if vertex != center {
+                    let edge = if vertex < center {
+                        Edge(vertex.clone(), center.clone())
+                    } else {
+                        Edge(center.clone(), vertex.clone())
+                    };
+                    let _ = spanning_edges.insert(edge);
+                }
             }
 
-            // Part 2: Map quotient tree edges back to original edges - PARALLEL
-            // Convert sets to vectors for parallel processing
-            let quotient_vec: Vec<Edge<V>> = quotient_tree.iter().cloned().collect();
-            let original_vec: Vec<Edge<V>> = original_edges.iter().cloned().collect();
-
-            if !quotient_vec.is_empty() {
-                let mid = quotient_vec.len() / 2;
-                let left_quotient = quotient_vec[..mid].to_vec();
-                let right_quotient = quotient_vec[mid..].to_vec();
-
-                let partition_map_clone1 = partition_map.clone();
-                let original_vec_clone1 = original_vec.clone();
-                let spanning_edges_clone1 = Arc::clone(&spanning_edges);
-                let partition_map_clone2 = partition_map.clone();
-                let original_vec_clone2 = original_vec.clone();
-                let spanning_edges_clone2 = Arc::clone(&spanning_edges);
-
-                let f1 = move || {
-                    for quotient_edge in left_quotient {
-                        let Edge(c1, c2) = quotient_edge;
-
-                        for original_edge in &original_vec_clone1 {
-                            let Edge(u, v) = original_edge;
-                            let u_center = partition_map_clone1.get(u).unwrap_or(u);
-                            let v_center = partition_map_clone1.get(v).unwrap_or(v);
-
-                            if (u_center == &c1 && v_center == &c2) || (u_center == &c2 && v_center == &c1) {
-                                let (mut current, write_handle) = spanning_edges_clone1.acquire_write();
-                                current.insert(original_edge.clone());
-                                write_handle.release_write(current);
+            // Part 2: Map quotient tree edges back to original edges.
+            let it_qt = quotient_tree.iter();
+            let ghost qt_seq = it_qt@.1;
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            for qe in iter: it_qt
+                invariant
+                    iter.elements == qt_seq,
+                    spanning_edges.spec_setsteph_wf(),
+                    valid_key_type_Edge::<V>(),
+                    obeys_key_model::<V>(),
+                    original_edges.spec_setsteph_wf(),
+            {
+                let Edge(c1, c2) = qe;
+                let mut it_oe = original_edges.iter();
+                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+                loop
+                    invariant
+                        spanning_edges.spec_setsteph_wf(),
+                        valid_key_type_Edge::<V>(),
+                        obeys_key_model::<V>(),
+                        it_oe@.0 <= it_oe@.1.len(),
+                    decreases it_oe@.1.len() - it_oe@.0,
+                {
+                    match it_oe.next() {
+                        None => break,
+                        Some(oe) => {
+                            let Edge(u, v) = oe;
+                            let u_center = partition_map.get(u).unwrap_or(u);
+                            let v_center = partition_map.get(v).unwrap_or(v);
+                            if (u_center == c1 && v_center == c2) || (u_center == c2 && v_center == c1) {
+                                let _ = spanning_edges.insert(oe.clone());
                                 break;
                             }
                         }
                     }
-                };
-                let f2 = move || {
-                    for quotient_edge in right_quotient {
-                        let Edge(c1, c2) = quotient_edge;
-
-                        for original_edge in &original_vec_clone2 {
-                            let Edge(u, v) = original_edge;
-                            let u_center = partition_map_clone2.get(u).unwrap_or(u);
-                            let v_center = partition_map_clone2.get(v).unwrap_or(v);
-
-                            if (u_center == &c1 && v_center == &c2) || (u_center == &c2 && v_center == &c1) {
-                                let (mut current, write_handle) = spanning_edges_clone2.acquire_write();
-                                current.insert(original_edge.clone());
-                                write_handle.release_write(current);
-                                break;
-                            }
-                        }
-                    }
-                };
-                join(f1, f2);
+                }
             }
 
-            Arc::try_unwrap(spanning_edges).unwrap().into_inner()
+            spanning_edges
         };
 
         star_contract_mt(graph, seed, &base, &expand)
