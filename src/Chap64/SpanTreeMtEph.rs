@@ -14,14 +14,11 @@ pub mod SpanTreeMtEph {
 
     use std::hash::Hash;
     use std::sync::Arc;
+    use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
-    #[cfg(not(verus_keep_ghost))]
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
-    #[cfg(not(verus_keep_ghost))]
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
-    #[cfg(not(verus_keep_ghost))]
     use crate::Chap62::StarContractionMtEph::StarContractionMtEph::star_contract_mt;
-    #[cfg(not(verus_keep_ghost))]
     use crate::SetLit;
 
     pub type T<V> = UnDirGraphMtEph<V>;
@@ -73,7 +70,6 @@ pub mod SpanTreeMtEph {
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — expand closure
     ///   uses 2-way join() splits, inner loop is sequential O(E).
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
@@ -201,57 +197,43 @@ pub mod SpanTreeMtEph {
     ///
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(|V| + |E_tree|), Span O(|E_tree|).
-    #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(
         graph: &UnDirGraphMtEph<V>,
         tree_edges: &SetStEph<Edge<V>>,
-    ) -> B {
+    ) -> (result: B)
+        requires
+            spec_graphview_wf(graph@),
+            valid_key_type_for_graph::<V>(),
+            tree_edges.spec_setsteph_wf(),
+        ensures
+            result ==> tree_edges@.len() == (
+                if graph@.V.len() > 0 { (graph@.V.len() - 1) as nat } else { 0nat }),
+    {
         let n = graph.sizeV();
-        let expected_edges = if n > 0 { n - 1 } else { 0 };
+        let expected_edges: N = if n > 0 { (n - 1) as N } else { 0 };
 
         if tree_edges.size() != expected_edges {
             return false;
         }
 
-        // Parallel verification of edges
-        let edges_vec: Vec<Edge<V>> = tree_edges.iter().cloned().collect();
-        if edges_vec.is_empty() {
-            return true;
+        let graph_edges = graph.edges();
+        let it = tree_edges.iter();
+        let ghost edge_seq = it@.1;
+
+        for edge in iter: it
+            invariant
+                iter.elements == edge_seq,
+                edge_seq.map(|i: int, e: Edge<V>| e@).to_set() == tree_edges@,
+        {
+            if !graph_edges.mem(edge) {
+                let rev = Edge(edge.1.clone_plus(), edge.0.clone_plus());
+                if !graph_edges.mem(&rev) {
+                    return false;
+                }
+            }
         }
 
-        let valid = Arc::new(std::sync::Mutex::new(true));
-
-        let mid = edges_vec.len() / 2;
-        let left_edges = edges_vec[..mid].to_vec();
-        let right_edges = edges_vec[mid..].to_vec();
-
-        let graph_edges = graph.edges();
-        let graph_edges_clone = graph_edges.clone();
-        let valid_clone1 = Arc::clone(&valid);
-        let valid_clone2 = Arc::clone(&valid);
-
-        let f1 = move || {
-            for edge in left_edges {
-                let Edge(u, v) = &edge;
-                if !graph_edges_clone.mem(&edge) && !graph_edges_clone.mem(&Edge(v.clone(), u.clone())) {
-                    *valid_clone1.lock().unwrap() = false;
-                    return;
-                }
-            }
-        };
-        let f2 = move || {
-            for edge in right_edges {
-                let Edge(u, v) = &edge;
-                if !graph_edges.mem(&edge) && !graph_edges.mem(&Edge(v.clone(), u.clone())) {
-                    *valid_clone2.lock().unwrap() = false;
-                    return;
-                }
-            }
-        };
-        join(f1, f2);
-
-        *valid.lock().unwrap()
+        true
     }
 
     } // verus!

@@ -14,14 +14,10 @@ pub mod StarContractionMtEph {
     use crate::Types::Types::*;
 
     use std::hash::Hash;
-    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
-    #[cfg(not(verus_keep_ghost))]
     use std::sync::Arc;
-    #[cfg(not(verus_keep_ghost))]
     use std::vec::Vec;
-    #[cfg(not(verus_keep_ghost))]
+    use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::Chap62::StarPartitionMtEph::StarPartitionMtEph::parallel_star_partition;
-    #[cfg(not(verus_keep_ghost))]
     use crate::{ParaPair, SetLit};
 
     verus! {
@@ -54,7 +50,6 @@ pub mod StarContractionMtEph {
             requires Self::spec_starcontractionmteph_wf(graph);
     }
 
-    #[cfg(not(verus_keep_ghost))]
     pub type T<V> = UnDirGraphMtEph<V>;
 
     /// Algorithm 62.5: Star Contraction (Parallel)
@@ -75,7 +70,6 @@ pub mod StarContractionMtEph {
     /// Returns:
     /// - Result of type R as computed by base and expand functions
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G) -> R
     where
         V: StT + MtT + Hash + Ord + 'static,
@@ -102,7 +96,6 @@ pub mod StarContractionMtEph {
     /// - APAS: (no cost stated) — helper not in prose.
     /// - Claude-Opus-4.6: Work O(m), Span O(lg m) — delegates to route_edges_parallel which uses ParaPair fork-join.
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         centers: &SetStEph<V>,
@@ -124,7 +117,6 @@ pub mod StarContractionMtEph {
     /// - APAS: (no cost stated) — helper not in prose.
     /// - Claude-Opus-4.6: Work O(k), Span O(lg k) — binary fork-join via ParaPair; k = end - start.
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
         edges: &ArraySeqStEphS<Edge<V>>,
         partition_map: Arc<HashMapWithViewPlus<V, V>>,
@@ -179,7 +171,6 @@ pub mod StarContractionMtEph {
     /// - APAS: Work O((n + m) lg n), Span O(lg^2 n)
     /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — delegates to star_contract_mt which has sequential partition.
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,

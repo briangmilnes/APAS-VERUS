@@ -16,12 +16,10 @@ pub mod ConnectivityStEph {
     use crate::Types::Types::*;
 
     use std::hash::Hash;
+    use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
-    #[cfg(not(verus_keep_ghost))]
     use crate::Chap62::StarContractionStEph::StarContractionStEph::star_contract;
-    #[cfg(not(verus_keep_ghost))]
     use crate::Chap62::StarPartitionStEph::StarPartitionStEph::sequential_star_partition;
-    #[cfg(not(verus_keep_ghost))]
     use crate::SetLit;
 
     verus! {
@@ -60,7 +58,6 @@ pub mod ConnectivityStEph {
             requires Self::spec_connectivitysteph_wf(graph);
     }
 
-    #[cfg(not(verus_keep_ghost))]
     pub type T<V> = UnDirGraphStEph<V>;
 
     /// Algorithm 63.2: Count Connected Components
@@ -78,7 +75,6 @@ pub mod ConnectivityStEph {
     /// Returns:
     /// - The number of connected components
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn count_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N {
         if graph.sizeE() == 0 {
             return graph.sizeV();
@@ -107,7 +103,6 @@ pub mod ConnectivityStEph {
     /// - (representatives, component_map): Set of component representatives and
     ///   mapping from each vertex to its component representative
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>) {
         if graph.sizeE() == 0 {
             let mut component_map = HashMapWithViewPlus::new();
@@ -138,24 +133,44 @@ pub mod ConnectivityStEph {
     ///
     /// - APAS: N/A — helper function implicit in Algorithm 63.2/63.3 Line 7.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — single pass over edges
-    #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     fn build_quotient_edges<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
         partition_map: &HashMapWithViewPlus<V, V>,
-    ) -> SetStEph<Edge<V>> {
-        let mut quotient_edges: SetStEph<Edge<V>> = SetLit![];
+    ) -> (quotient_edges: SetStEph<Edge<V>>)
+        requires
+            spec_graphview_wf(graph@),
+            valid_key_type_Edge::<V>(),
+        ensures
+            quotient_edges.spec_setsteph_wf(),
+    {
+        let mut quotient_edges: SetStEph<Edge<V>> = SetStEph::empty();
+        let graph_edges = graph.edges();
 
-        for edge in graph.edges().iter() {
-            let Edge(u, v) = edge;
-            let u_center = partition_map.get(u).unwrap_or(u);
-            let v_center = partition_map.get(v).unwrap_or(v);
+        let it = graph_edges.iter();
+        let ghost edge_seq = it@.1;
+
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+        for edge in iter: it
+            invariant
+                iter.elements == edge_seq,
+                edge_seq.map(|i: int, e: Edge<V>| e@).to_set() == graph_edges@,
+                quotient_edges.spec_setsteph_wf(),
+                valid_key_type_Edge::<V>(),
+        {
+            let u_center = match partition_map.get(&edge.0) {
+                Some(c) => c.clone_plus(),
+                None => edge.0.clone_plus(),
+            };
+            let v_center = match partition_map.get(&edge.1) {
+                Some(c) => c.clone_plus(),
+                None => edge.1.clone_plus(),
+            };
 
             if u_center != v_center {
                 let new_edge = if u_center < v_center {
-                    Edge(u_center.clone(), v_center.clone())
+                    Edge(u_center, v_center)
                 } else {
-                    Edge(v_center.clone(), u_center.clone())
+                    Edge(v_center, u_center)
                 };
                 let _ = quotient_edges.insert(new_edge);
             }
@@ -171,7 +186,6 @@ pub mod ConnectivityStEph {
     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — same as Algorithm 63.2
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N {
         let base = |vertices: &SetStEph<V>| vertices.size();
 
@@ -187,7 +201,6 @@ pub mod ConnectivityStEph {
     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — same as Algorithm 63.3
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>) {
         let base = |vertices: &SetStEph<V>| {
             let mut map = HashMapWithViewPlus::new();

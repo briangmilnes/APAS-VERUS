@@ -11,21 +11,18 @@ pub mod TSPApproxStEph {
     use vstd::prelude::*;
 
     use std::hash::Hash;
-    use crate::vstdplus::float::float::WrappedF64;
+    use crate::vstdplus::float::float::{WrappedF64, zero_dist};
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
     use crate::Types::Types::*;
 
-    #[cfg(not(verus_keep_ghost))]
+    use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::{HashSetWithViewPlus, HashSetWithViewPlusTrait};
     #[cfg(not(verus_keep_ghost))]
     use std::vec::Vec;
     #[cfg(not(verus_keep_ghost))]
-    use crate::vstdplus::float::float::zero_dist;
-    #[cfg(not(verus_keep_ghost))]
     use crate::SetLit;
 
-    #[cfg(not(verus_keep_ghost))]
     pub type T<V> = LabUnDirGraphStEph<V, WrappedF64>;
 
     verus! {
@@ -90,7 +87,6 @@ pub mod TSPApproxStEph {
     /// Returns:
     /// - Vector of vertices in Euler tour order
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn euler_tour<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         start: &V,
@@ -108,7 +104,6 @@ pub mod TSPApproxStEph {
     /// - Claude-Opus-4.6: Work O(n * m_tree), Span O(n * m_tree) — for each vertex,
     ///   scans neighbors (O(m)) and tree_edges (O(m_tree)) to find matching edges.
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     fn euler_tour_dfs<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         current: &V,
@@ -171,26 +166,37 @@ pub mod TSPApproxStEph {
     ///
     /// Returns:
     /// - Vector of vertices with each vertex appearing exactly once (except start/end)
-    #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
-    pub fn shortcut_tour<V: HashOrd>(euler_tour: &[V]) -> Vec<V> {
-        if euler_tour.is_empty() {
+    pub fn shortcut_tour<V: HashOrd>(euler_tour: &[V]) -> (result: Vec<V>)
+        requires valid_key_type::<V>(),
+        ensures euler_tour@.len() == 0 ==> result@.len() == 0,
+    {
+        if euler_tour.len() == 0 {
             return Vec::new();
         }
 
-        let mut shortcut = Vec::new();
+        let mut shortcut: Vec<V> = Vec::new();
         let mut visited = HashSetWithViewPlus::<V>::new();
 
-        for vertex in euler_tour.iter() {
+        let mut i: usize = 0;
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+        while i < euler_tour.len()
+            invariant
+                0 <= i <= euler_tour@.len(),
+                valid_key_type::<V>(),
+            decreases euler_tour.len() - i,
+        {
+            let vertex = &euler_tour[i];
             if !visited.contains(vertex) {
-                shortcut.push(vertex.clone());
-                let _ = visited.insert(vertex.clone());
+                shortcut.push(vertex.clone_plus());
+                let _ = visited.insert(vertex.clone_plus());
             }
+            i = i + 1;
         }
 
-        // Add starting vertex at end to complete cycle
-        if let Some(start) = shortcut.first() {
-            shortcut.push(start.clone());
+        // Add starting vertex at end to complete cycle.
+        if shortcut.len() > 0 {
+            let start = shortcut[0].clone_plus();
+            shortcut.push(start);
         }
 
         shortcut
@@ -202,22 +208,38 @@ pub mod TSPApproxStEph {
     ///
     /// - APAS: Work O(n), Span O(n)
     /// - Claude-Opus-4.6: Work O(n), Span O(n) — agrees with APAS.
-    #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn tour_weight<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         tour: &[V],
-    ) -> WrappedF64 {
+    ) -> (total: WrappedF64)
+        requires spec_labgraphview_wf(graph@),
+        ensures tour@.len() <= 1 ==> total@ == 0.0f64,
+    {
         let mut total = zero_dist();
 
-        for i in 0..tour.len() - 1 {
+        if tour.len() <= 1 {
+            return total;
+        }
+
+        let mut i: usize = 0;
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+        while i < tour.len() - 1
+            invariant
+                0 <= i <= tour@.len() - 1,
+                spec_labgraphview_wf(graph@),
+            decreases tour.len() - 1 - i,
+        {
             let u = &tour[i];
             let v = &tour[i + 1];
 
-            // Find edge weight
-            if let Some(weight) = get_edge_weight(graph, u, v) {
-                total += weight;
+            match get_edge_weight(graph, u, v) {
+                Some(weight) => {
+                    total = total.dist_add(&weight);
+                },
+                None => {},
             }
+
+            i = i + 1;
         }
 
         total
@@ -240,6 +262,11 @@ pub mod TSPApproxStEph {
         v: &V,
     ) -> (weight: Option<WrappedF64>)
         requires spec_labgraphview_wf(graph@),
+        ensures
+            weight.is_some() == (exists |l: f64|
+                graph@.A.contains((u@, v@, l)) || graph@.A.contains((v@, u@, l))),
+            weight.is_some() ==> (graph@.A.contains((u@, v@, weight.unwrap()@)) ||
+                                  graph@.A.contains((v@, u@, weight.unwrap()@))),
     {
         match graph.get_edge_label(u, v) {
             Some(w) => Some(*w),
@@ -265,22 +292,18 @@ pub mod TSPApproxStEph {
     ///
     /// Returns:
     /// - (tour, weight): Hamiltonian cycle and its total weight
-    #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn approx_metric_tsp<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         spanning_tree: &SetStEph<LabEdge<V, WrappedF64>>,
         start: &V,
-    ) -> (Vec<V>, WrappedF64) {
-        // Step 1: Compute Euler tour
+    ) -> (result: (Vec<V>, WrappedF64))
+        requires
+            spec_labgraphview_wf(graph@),
+            valid_key_type::<V>(),
+    {
         let euler = euler_tour(graph, start, spanning_tree);
-
-        // Step 2: Apply shortcuts
         let tour = shortcut_tour(&euler);
-
-        // Step 3: Compute tour weight
         let weight = tour_weight(graph, &tour);
-
         (tour, weight)
     }
 

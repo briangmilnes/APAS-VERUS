@@ -13,9 +13,7 @@ pub mod StarPartitionMtEph {
     use crate::Types::Types::*;
 
     use std::hash::Hash;
-    #[cfg(not(verus_keep_ghost))]
     use std::vec::Vec;
-    #[cfg(not(verus_keep_ghost))]
     use crate::SetLit;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::rand::rand::{seeded_rng, random_bool_seeded};
@@ -44,7 +42,6 @@ pub mod StarPartitionMtEph {
             requires Self::spec_starpartitionmteph_wf(graph);
     }
 
-    #[cfg(not(verus_keep_ghost))]
     pub type T<V> = UnDirGraphMtEph<V>;
 
     /// Algorithm 62.3: Parallel Star Partition.
@@ -52,7 +49,6 @@ pub mod StarPartitionMtEph {
     /// - APAS: Work O(n + m), Span O(lg n)
     /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — all loops sequential.
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn parallel_star_partition<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,

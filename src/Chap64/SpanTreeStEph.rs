@@ -11,10 +11,9 @@ pub mod SpanTreeStEph {
     use crate::Types::Types::*;
 
     use std::hash::Hash;
+    use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
-    #[cfg(not(verus_keep_ghost))]
     use crate::Chap62::StarContractionStEph::StarContractionStEph::star_contract;
-    #[cfg(not(verus_keep_ghost))]
     use crate::SetLit;
 
     pub type T<V> = UnDirGraphStEph<V>;
@@ -50,7 +49,6 @@ pub mod SpanTreeStEph {
     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS.
     #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
     pub fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>> {
         // Base: no edges means no spanning tree edges (isolated vertices)
         let base = |_vertices: &SetStEph<V>| SetLit![];
@@ -106,23 +104,38 @@ pub mod SpanTreeStEph {
     ///
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(|V| + |E_tree|), Span O(|V| + |E_tree|).
-    #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
-    pub fn verify_spanning_tree<V: HashOrd>(graph: &UnDirGraphStEph<V>, tree_edges: &SetStEph<Edge<V>>) -> B {
+    pub fn verify_spanning_tree<V: HashOrd>(
+        graph: &UnDirGraphStEph<V>,
+        tree_edges: &SetStEph<Edge<V>>,
+    ) -> (result: B)
+        requires
+            spec_graphview_wf(graph@),
+            tree_edges.spec_setsteph_wf(),
+        ensures
+            result ==> tree_edges@.len() == (
+                if graph@.V.len() > 0 { (graph@.V.len() - 1) as nat } else { 0nat }),
+    {
         let n = graph.sizeV();
-        let expected_edges = if n > 0 { n - 1 } else { 0 };
+        let expected_edges: N = if n > 0 { (n - 1) as N } else { 0 };
 
-        // Check edge count
         if tree_edges.size() != expected_edges {
             return false;
         }
 
-        // Check all edges are from original graph
-        for edge in tree_edges.iter() {
-            let Edge(u, v) = edge;
-            // For undirected graphs, Neighbor checks if u and v are connected
-            if !graph.Neighbor(u, v) {
-                return false;
+        let graph_edges = graph.edges();
+        let it = tree_edges.iter();
+        let ghost edge_seq = it@.1;
+
+        for edge in iter: it
+            invariant
+                iter.elements == edge_seq,
+                edge_seq.map(|i: int, e: Edge<V>| e@).to_set() == tree_edges@,
+        {
+            if !graph_edges.mem(edge) {
+                let rev = Edge(edge.1.clone_plus(), edge.0.clone_plus());
+                if !graph_edges.mem(&rev) {
+                    return false;
+                }
             }
         }
 
