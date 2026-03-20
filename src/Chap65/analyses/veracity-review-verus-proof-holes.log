@@ -21,14 +21,14 @@ Table of Contents:
 =================================================================
 
 ❌ KruskalStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:58: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/KruskalStEph.rs:58: error: external_body - #[verifier::external_body]
         59 |     fn sort_edges_by_weight<V: HashOrd>(edges: &mut Vec<LabEdge<V, WrappedF64>>)
    Holes: 1 total
       1 × external_body
 ❌ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:95: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/PrimStEph.rs:95: error: external_body - #[verifier::external_body]
         96 |     pub fn prim_mst<V: HashOrd + Display>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:72: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/PrimStEph.rs:72: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
         65 |         fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64
             ...
         70 |     /// - APAS: N/A — Verus-specific scaffolding.
@@ -91,8 +91,9 @@ Warnings: 1 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-20 08:40:05 -07:00
-Ended:     2026-03-20 08:40:05 -07:00
-Duration:  10ms
+Started:   2026-03-20 08:37:49 -07:00
+Ended:     2026-03-20 08:37:49 -07:00
+Duration:  8ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap65/analyses/veracity-review-verus-proof-holes.log

@@ -101,6 +101,12 @@ pub mod ParaHashTableStEph {
 
     // 7. proof fns
 
+    /// Exposes the spec-level second hash value (= 1) for probe coverage proofs.
+    /// Within this module, the closed fn body is visible, so this is provable.
+    pub proof fn lemma_spec_second_hash_value<Key>(key: Key, table_size: nat)
+        ensures spec_second_hash::<Key>(key, table_size) == 1nat,
+    {}
+
     /// Clone bridge for generic element: ensures cloned value equals original.
     /// Centralizes the clone-body assume pattern per partial_eq_eq_clone_standard.
     pub fn clone_elem<T: Clone>(x: &T) -> (c: T)
