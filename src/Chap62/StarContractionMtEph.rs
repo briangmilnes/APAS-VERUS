@@ -106,10 +106,11 @@ pub mod StarContractionMtEph {
         let edges_vec = graph.E.to_seq();
         let edges_seq = ArraySeqStEphS::from_vec(edges_vec);
         let n_edges = edges_seq.length();
+        let edges_arc = Arc::new(edges_seq);
 
         let part_map_arc = Arc::new(partition_map.clone());
 
-        let quotient_edges = route_edges_parallel(&edges_seq, part_map_arc, 0, n_edges);
+        let quotient_edges = route_edges_parallel(edges_arc, part_map_arc, 0, n_edges);
 
         UnDirGraphMtEph { V: centers.clone(), E: quotient_edges }
     }
@@ -118,13 +119,20 @@ pub mod StarContractionMtEph {
     ///
     /// - APAS: (no cost stated) — helper not in prose.
     /// - Claude-Opus-4.6: Work O(k), Span O(lg k) — binary fork-join via ParaPair; k = end - start.
-    #[verifier::external_body]
     fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
-        edges: &ArraySeqStEphS<Edge<V>>,
+        edges: Arc<ArraySeqStEphS<Edge<V>>>,
         partition_map: Arc<HashMapWithViewPlus<V, V>>,
         start: usize,
         end: usize,
-    ) -> SetStEph<Edge<V>> {
+    ) -> (result: SetStEph<Edge<V>>)
+        requires
+            start <= end,
+            end as nat <= (*edges)@.len(),
+            valid_key_type_Edge::<V>(),
+        ensures
+            result.spec_setsteph_wf(),
+        decreases end - start,
+    {
         let size = end - start;
 
         if size == 0 {
@@ -134,16 +142,24 @@ pub mod StarContractionMtEph {
         if size == 1 {
             let edge = edges.nth(start as N);
             let Edge(u, v) = edge;
-            let u_center = partition_map.get(u).unwrap_or(u);
-            let v_center = partition_map.get(v).unwrap_or(v);
+            let u_center = match partition_map.get(u) {
+                Some(val) => val.clone(),
+                None => u.clone(),
+            };
+            let v_center = match partition_map.get(v) {
+                Some(val) => val.clone(),
+                None => v.clone(),
+            };
 
             if u_center != v_center {
                 let new_edge = if u_center < v_center {
-                    Edge(u_center.clone(), v_center.clone())
+                    Edge(u_center, v_center)
                 } else {
-                    Edge(v_center.clone(), u_center.clone())
+                    Edge(v_center, u_center)
                 };
-                return SetLit![new_edge];
+                let mut new_edges: SetStEph<Edge<V>> = SetLit![];
+                let _ = new_edges.insert(new_edge);
+                return new_edges;
             }
             return SetLit![];
         }
@@ -152,18 +168,34 @@ pub mod StarContractionMtEph {
 
         let edges1 = edges.clone();
         let map1 = partition_map.clone();
-        let edges2 = edges.clone();
+        let edges2 = edges;
         let map2 = partition_map;
 
-        let pair = ParaPair!(move || route_edges_parallel(&edges1, map1, start, mid), move || {
-            route_edges_parallel(&edges2, map2, mid, end)
-        });
+        let f1 = move || -> (r: SetStEph<Edge<V>>)
+            requires
+                start <= mid,
+                (mid as nat) <= (*edges1)@.len(),
+                valid_key_type_Edge::<V>(),
+            ensures
+                r.spec_setsteph_wf(),
+        {
+            route_edges_parallel(edges1, map1, start, mid)
+        };
 
-        let mut result = pair.0;
-        for edge in pair.1.iter() {
-            let _ = result.insert(edge.clone());
-        }
-        result
+        let f2 = move || -> (r: SetStEph<Edge<V>>)
+            requires
+                mid <= end,
+                (end as nat) <= (*edges2)@.len(),
+                valid_key_type_Edge::<V>(),
+            ensures
+                r.spec_setsteph_wf(),
+        {
+            route_edges_parallel(edges2, map2, mid, end)
+        };
+
+        let Pair(left_edges, right_edges) = ParaPair!(f1, f2);
+
+        left_edges.union(&right_edges)
     }
 
     /// One round of parallel star contraction

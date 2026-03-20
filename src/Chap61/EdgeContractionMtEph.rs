@@ -119,13 +119,20 @@ pub mod EdgeContractionMtEph {
     ///
     /// - APAS: N/A — Verus-specific scaffolding (parallel edge routing helper)
     /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(lg |E|) — genuine divide-and-conquer parallelism
-    #[verifier::external_body]
     fn build_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
         edges: Arc<ArraySeqStEphS<Edge<V>>>,
         vertex_map: Arc<HashMapWithViewPlus<V, V>>,
         start: usize,
         end: usize,
-    ) -> SetStEph<Edge<V>> {
+    ) -> (result: SetStEph<Edge<V>>)
+        requires
+            start <= end,
+            end as nat <= (*edges)@.len(),
+            valid_key_type_Edge::<V>(),
+        ensures
+            result.spec_setsteph_wf(),
+        decreases end - start,
+    {
         let size = end - start;
 
         if size == 0 {
@@ -135,8 +142,14 @@ pub mod EdgeContractionMtEph {
         if size == 1 {
             let edge = edges.nth(start as N);
             let Edge(u, v) = edge;
-            let block_u = vertex_map.get(u).unwrap().clone();
-            let block_v = vertex_map.get(v).unwrap().clone();
+            let block_u = match vertex_map.get(u) {
+                Some(val) => val.clone(),
+                None => u.clone(),
+            };
+            let block_v = match vertex_map.get(v) {
+                Some(val) => val.clone(),
+                None => v.clone(),
+            };
 
             if block_u != block_v {
                 let new_edge = if block_u < block_v {
@@ -144,9 +157,9 @@ pub mod EdgeContractionMtEph {
                 } else {
                     Edge(block_v, block_u)
                 };
-                let mut edges: SetStEph<Edge<V>> = SetLit![];
-                let _ = edges.insert(new_edge);
-                return edges;
+                let mut new_edges: SetStEph<Edge<V>> = SetLit![];
+                let _ = new_edges.insert(new_edge);
+                return new_edges;
             } else {
                 return SetLit![];
             }
@@ -159,15 +172,31 @@ pub mod EdgeContractionMtEph {
         let edges2 = edges;
         let map2 = vertex_map;
 
-        let pair = ParaPair!(move || build_edges_parallel(edges1, map1, start, mid), move || {
-            build_edges_parallel(edges2, map2, mid, end)
-        });
+        let f1 = move || -> (r: SetStEph<Edge<V>>)
+            requires
+                start <= mid,
+                (mid as nat) <= (*edges1)@.len(),
+                valid_key_type_Edge::<V>(),
+            ensures
+                r.spec_setsteph_wf(),
+        {
+            build_edges_parallel(edges1, map1, start, mid)
+        };
 
-        let mut edges = pair.0;
-        for edge in pair.1.iter() {
-            let _ = edges.insert(edge.clone());
-        }
-        edges
+        let f2 = move || -> (r: SetStEph<Edge<V>>)
+            requires
+                mid <= end,
+                (end as nat) <= (*edges2)@.len(),
+                valid_key_type_Edge::<V>(),
+            ensures
+                r.spec_setsteph_wf(),
+        {
+            build_edges_parallel(edges2, map2, mid, end)
+        };
+
+        let Pair(left_edges, right_edges) = ParaPair!(f1, f2);
+
+        left_edges.union(&right_edges)
     }
 
     /// One round of parallel edge contraction
