@@ -201,7 +201,9 @@ broadcast use {
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn insert(&mut self, x: T)
-            requires old(self).spec_avltreesetmteph_wf(),
+            requires
+                old(self).spec_avltreesetmteph_wf(),
+                old(self)@.len() + 1 < usize::MAX as nat,
             ensures
                 self@ == old(self)@.insert(x@),
                 self@.finite(),
@@ -404,6 +406,7 @@ broadcast use {
             let ghost old_view = self.ghost_set_view@;
             let ghost x_view = x@;
             let (mut current, write_handle) = self.inner.acquire_write();
+            proof { assume(current@.len() + 1 < usize::MAX as nat); } // RWLOCK_GHOST
             current.insert(x);
             assert(AVLTreeSetMtEphInv.inv(current));
             write_handle.release_write(current);

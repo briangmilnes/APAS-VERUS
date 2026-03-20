@@ -88,7 +88,9 @@ broadcast use {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- delegates to AVLTreeSetStEph.insert (BST insert)
         fn insert(&mut self, x: T)
-            requires old(self).spec_orderedsetsteph_wf(),
+            requires
+                old(self).spec_orderedsetsteph_wf(),
+                old(self)@.len() + 1 < usize::MAX as nat,
             ensures
                 self@ == old(self)@.insert(x@),
                 self@.finite(),
@@ -152,7 +154,9 @@ broadcast use {
         /// - APAS: Work Θ(n log n), Span Θ(n log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- delegates to AVLTreeSetStEph.from_seq (n inserts)
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
-            requires seq.spec_avltreeseqstper_wf(),
+            requires
+                seq.spec_avltreeseqstper_wf(),
+                seq@.len() < usize::MAX as nat,
             ensures
                 constructed@.finite(),
                 constructed.spec_orderedsetsteph_wf();
@@ -364,9 +368,12 @@ broadcast use {
                     0 <= i <= n,
                     constructed.spec_orderedsetsteph_wf(),
                     constructed@.finite(),
+                    constructed@.len() <= i as nat,
+                    seq@.len() < usize::MAX as nat,
                 decreases n - i,
             {
                 let elem = seq.nth(i).clone();
+                // Capacity: constructed@.len() <= i < n < usize::MAX (from requires).
                 constructed.insert(elem);
                 i = i + 1;
             }
@@ -805,7 +812,10 @@ broadcast use {
         {
             assert(obeys_feq_full_trigger::<T>());
             let n = self.base_set.elements.length();
-            proof { self.base_set.elements@.unique_seq_to_set(); }
+            proof {
+                self.base_set.elements@.unique_seq_to_set();
+                lemma_wf_implies_len_bound::<T>(&self.base_set.elements.root);
+            }
             let ghost old_view = self@;
             let ghost old_elems = self.base_set.elements@;
             let mut left = Self::empty();
@@ -817,6 +827,7 @@ broadcast use {
                     self.base_set.elements.spec_avltreeseqsteph_wf(),
                     self.base_set.elements@.no_duplicates(),
                     n as nat == self.base_set.elements@.len(),
+                    n < usize::MAX as nat,
                     obeys_feq_full::<T>(),
                     old_view == self.base_set.elements@.to_set(),
                     old_elems == self.base_set.elements@,
@@ -825,6 +836,7 @@ broadcast use {
                     left@.finite(),
                     right.spec_orderedsetsteph_wf(),
                     right@.finite(),
+                    left@.len() + right@.len() <= j as nat,
                     left@.subset_of(old_view),
                     right@.subset_of(old_view),
                     left@.disjoint(right@),
@@ -973,7 +985,10 @@ broadcast use {
             assert(obeys_feq_full_trigger::<T>());
             let mut range = Self::empty();
             let n = self.base_set.elements.length();
-            proof { self.base_set.elements@.unique_seq_to_set(); }
+            proof {
+                self.base_set.elements@.unique_seq_to_set();
+                lemma_wf_implies_len_bound::<T>(&self.base_set.elements.root);
+            }
             let ghost vals = spec_inorder_values::<T>(self.base_set.elements.root);
             proof { lemma_inorder_values_maps_to_views::<T>(self.base_set.elements.root); }
             let mut i: usize = 0;
@@ -982,6 +997,7 @@ broadcast use {
                     self.base_set.elements.spec_avltreeseqsteph_wf(),
                     self.base_set.elements@.no_duplicates(),
                     n as nat == self.base_set.elements@.len(),
+                    n < usize::MAX as nat,
                     obeys_feq_full::<T>(),
                     vals == spec_inorder_values::<T>(self.base_set.elements.root),
                     vals.len() == self.base_set.elements@.len(),
@@ -990,6 +1006,7 @@ broadcast use {
                     range.spec_orderedsetsteph_wf(),
                     range@.finite(),
                     range@.subset_of(self@),
+                    range@.len() <= i as nat,
                 decreases n - i,
             {
                 let elem_ref = self.base_set.elements.nth(i);
@@ -1125,7 +1142,10 @@ broadcast use {
         {
             assert(obeys_feq_full_trigger::<T>());
             let n = self.base_set.elements.length();
-            proof { self.base_set.elements@.unique_seq_to_set(); }
+            proof {
+                self.base_set.elements@.unique_seq_to_set();
+                lemma_wf_implies_len_bound::<T>(&self.base_set.elements.root);
+            }
             let ghost old_view = self@;
             let ghost old_elems = self.base_set.elements@;
             let split_at: usize = if i >= n { n } else { i };
@@ -1137,6 +1157,7 @@ broadcast use {
                     self.base_set.elements.spec_avltreeseqsteph_wf(),
                     self.base_set.elements@.no_duplicates(),
                     n as nat == self.base_set.elements@.len(),
+                    n < usize::MAX as nat,
                     obeys_feq_full::<T>(),
                     old_view == self.base_set.elements@.to_set(),
                     old_elems == self.base_set.elements@,
@@ -1145,6 +1166,7 @@ broadcast use {
                     left@.finite(),
                     right.spec_orderedsetsteph_wf(),
                     right@.finite(),
+                    left@.len() + right@.len() <= j as nat,
                     left@.subset_of(old_view),
                     right@.subset_of(old_view),
                     split_at <= n,
@@ -1383,6 +1405,7 @@ broadcast use {
     }
 
     pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (constructed: OrderedSetStEph<T>)
+        requires elements@.len() < usize::MAX,
         ensures constructed@.finite(), constructed.spec_orderedsetsteph_wf()
     {
         let seq = AVLTreeSeqStPerS::from_vec(elements);

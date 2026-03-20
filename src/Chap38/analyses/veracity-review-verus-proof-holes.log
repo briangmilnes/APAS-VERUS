@@ -21,93 +21,93 @@ Table of Contents:
 =================================================================
 
 ❌ BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:353: error: assume() [rwlock:reader] - proof { assume(result.is_some() <==> self@.contains(key@)); 
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:353: error: assume() [rwlock:reader] - proof { assume(result.is_some() <==> self@.contains(key@)); 
        327 |         fn find(&self, key: &T) -> (found: Option<T>)
             ...
        351 |                 remaining = remaining - 1;
        352 |             }
        354 |             result
        355 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:451: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:451: error: external_body - #[verifier::external_body]
        452 |     fn expose_internal<T: MtKey + 'static>(tree: &ParamBST<T>) -> (exposed: Exposed<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:502: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:502: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
        503 |     fn split_inner<T: MtKey + 'static>(tree: &ParamBST<T>, key: &T) -> (parts: (ParamBST<T>, B, ParamBST<T>))
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:601: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:601: error: external_body [blocked_by: split_inner] - #[verifier::external_body]
        602 |     fn intersect_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> (common: ParamBST<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:634: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:634: error: external_body [blocked_by: split_inner] - #[verifier::external_body]
        635 |     fn difference_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> (remaining: ParamBST<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:667: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:667: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
        668 |     fn filter_inner<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:412: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:412: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        405 |         fn clone(&self) -> (cloned: Self)
             ...
        410 |                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
        411 |             };
        413 |             cloned
        414 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:427: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:427: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        418 |         fn clone(&self) -> (cloned: Self)
             ...
        425 |                 right: self.right.clone(),
        426 |             };
        428 |             cloned
        429 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:477: error: fn_missing_requires - fn join_mid — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:477: error: fn_missing_requires - fn join_mid — exec fn should have requires
        452 |     fn expose_internal<T: MtKey + 'static>(tree: &ParamBST<T>) -> (exposed: Exposed<T>)
             ...
        475 |     }
        476 | 
        478 |         ensures
        479 |             exposed is Leaf ==> result@ =~= Set::<<T as View>::V>::empty(),
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:532: error: fn_missing_requires - fn join_m — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:532: error: fn_missing_requires - fn join_m — exec fn should have requires
        503 |     fn split_inner<T: MtKey + 'static>(tree: &ParamBST<T>, key: &T) -> (parts: (ParamBST<T>, B, ParamBST<T>))
             ...
        530 |     }
        531 | 
        533 |         ensures result@ =~= left@.union(right@).insert(key@)
        534 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:557: error: fn_missing_requires - fn join_pair_inner — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:557: error: fn_missing_requires - fn join_pair_inner — exec fn should have requires
        538 |     fn min_key<T: MtKey + 'static>(tree: &ParamBST<T>) -> (result: Option<T>)
             ...
        555 |     }
        556 | 
        558 |         ensures joined@.finite()
        559 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:571: error: fn_missing_requires - fn union_inner — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:571: error: fn_missing_requires - fn union_inner — exec fn should have requires
        557 |     fn join_pair_inner<T: MtKey + 'static>(left: ParamBST<T>, right: ParamBST<T>) -> (joined: ParamBST<T>)
             ...
        569 |     }
        570 | 
        572 |         ensures combined@ == a@.union(b@), combined@.finite(),
        573 |         decreases a@.len(),
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:725: error: fn_missing_ensures - fn reduce_inner — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:725: error: fn_missing_ensures - fn reduce_inner — exec fn should have ensures
        704 |     fn filter_parallel<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(
             ...
        723 |     }
        724 | 
        726 |         tree: &ParamBST<T>,
        727 |         op: &Arc<F>,
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:762: error: fn_missing_ensures - fn reduce_parallel — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:762: error: fn_missing_ensures - fn reduce_parallel — exec fn should have ensures
        725 |     fn reduce_inner<T: MtKey + 'static, F: Fn(T, T) -> T + Send + Sync + 'static>(
             ...
        760 |     }
        761 | 
        763 |         tree: &ParamBST<T>,
        764 |         op: F,
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:242: info: structural_false_positive RWLOCK_GHOST expose — proof { assume(self@.len() == 0 ==> exposed is Leaf); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:281: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.len() && self@.finite()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:801: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:802: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:242: info: structural_false_positive RWLOCK_GHOST expose — proof { assume(self@.len() == 0 ==> exposed is Leaf); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:281: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.len() && self@.finite()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:801: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaMtEph.rs:802: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
    Holes: 6 total
       1 × assume()
       5 × external_body
          1 × root cause
          4 × downstream (blocked by root causes)
    Info: 4 × structural_false_positive
-      2 × RWLOCK_GHOST
       2 × UNSAFE_SEND_SYNC
+      2 × RWLOCK_GHOST
 ❌ BSTParaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:152: error: assume() [algorithmic] - proof { assume(c == *x); } // Clone bridge: T::clone preserv
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap38/BSTParaStEph.rs:152: error: assume() [algorithmic] - proof { assume(c == *x); } // Clone bridge: T::clone preserv
        148 |     fn clone_elem<T: Clone>(x: &T) -> (c: T)
             ...
        150 |     {
@@ -160,8 +160,8 @@ Function Specs:
 
 Holes Found: 7 (actionable)
    2 × assume() (28%)
-      1 × algorithmic
       1 × rwlock:reader
+      1 × algorithmic
    5 × external_body (71%)
       1 × root cause
       4 × downstream (blocked by root causes)
@@ -179,15 +179,13 @@ Structural (info only): 4
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-20 09:10:54 -07:00
-Ended:     2026-03-20 09:10:54 -07:00
-Duration:  31ms
+Started:   2026-03-20 09:18:23 -07:00
+Ended:     2026-03-20 09:18:23 -07:00
+Duration:  29ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
-====================
-
-Started:   2026-03-20 09:10:54 -07:00
-Ended:     2026-03-20 09:10:54 -07:00
-Duration:  31ms
+-03-20 09:18:23 -07:00
+Ended:     2026-03-20 09:18:23 -07:00
+Duration:  29ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log

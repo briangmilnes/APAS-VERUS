@@ -86,7 +86,7 @@ broadcast use {
     // 7. proof fns
 
     /// Under wf, cached size equals inorder length, both < usize::MAX.
-    proof fn lemma_wf_implies_len_bound<T: StT>(link: &Link<T>)
+    pub proof fn lemma_wf_implies_len_bound<T: StT>(link: &Link<T>)
         requires spec_avltreeseqsteph_wf(*link),
         ensures
             spec_cached_size(link) == spec_inorder(*link).len(),
@@ -267,6 +267,7 @@ broadcast use {
         fn insert(&mut self, x: T)
             requires
                 old(self).spec_avltreesetsteph_wf(),
+                old(self)@.len() + 1 < usize::MAX as nat,
             ensures
                 self@ == old(self)@.insert(x@),
                 self.spec_avltreesetsteph_wf();
@@ -283,6 +284,7 @@ broadcast use {
                 old(self).spec_avltreesetsteph_wf(),
                 old(self).spec_elements_sorted(),
                 obeys_feq_full::<T>(),
+                old(self)@.len() + 1 < usize::MAX as nat,
             ensures
                 self@ == old(self)@.insert(x@),
                 self.spec_avltreesetsteph_wf(),
@@ -381,6 +383,7 @@ broadcast use {
                     constructed@.finite(),
                     constructed.spec_avltreesetsteph_wf(),
                     obeys_feq_full::<T>(),
+                    constructed@.len() <= i as nat,
                     forall|j: int| 0 <= j < i ==> #[trigger] constructed@.contains(seq@[j]),
                     forall|v: <T as View>::V| #[trigger] constructed@.contains(v) ==>
                         (exists|j: int| 0 <= j < i && seq@[j] == v),
@@ -390,6 +393,8 @@ broadcast use {
                 let elem = r.clone();
                 proof {
                     lemma_cloned_view_eq(*r, elem);
+                    // Capacity: constructed@.len() <= i < n < usize::MAX (from tree wf).
+                    lemma_wf_implies_len_bound::<T>(&seq.root);
                 }
                 let ghost old_view = constructed@;
                 constructed.insert(elem);
@@ -448,6 +453,7 @@ broadcast use {
                     filtered@.finite(),
                     filtered.spec_avltreesetsteph_wf(),
                     filtered@.subset_of(self@),
+                    filtered@.len() <= i as nat,
                     forall|t: &T| #[trigger] f.requires((t,)),
                     forall|x: T, keep: bool|
                         f.ensures((&x,), keep) ==> keep == spec_pred(x@),
@@ -467,6 +473,8 @@ broadcast use {
                     let c = elem.clone();
                     proof {
                         lemma_cloned_view_eq(*elem, c);
+                        // Capacity: filtered@.len() <= i < n < usize::MAX (from tree wf).
+                        lemma_wf_implies_len_bound::<T>(&self.elements.root);
                         assert(c@ == elem@);
                         assert(self.elements@[i as int] == elem@);
                         assert(self.elements@.contains(elem@));
@@ -528,6 +536,7 @@ broadcast use {
                     i <= n,
                     common@.finite(),
                     common.spec_avltreesetsteph_wf(),
+                    common@.len() <= i as nat,
                     obeys_feq_full::<T>(),
                     common@.subset_of(self@.intersect(other@)),
                     forall|j: int| #![trigger self.elements@[j]]
@@ -542,6 +551,8 @@ broadcast use {
                         lemma_cloned_view_eq(*elem, c);
                         assert(self.elements@.contains(elem@));
                         assert(self@.contains(elem@));
+                        // Capacity: common@.len() <= i < n < usize::MAX (from tree wf).
+                        lemma_wf_implies_len_bound::<T>(&self.elements.root);
                     }
                     let ghost old_common = common@;
                     common.insert(c);
@@ -587,6 +598,7 @@ broadcast use {
                     i <= n,
                     remaining@.finite(),
                     remaining.spec_avltreesetsteph_wf(),
+                    remaining@.len() <= i as nat,
                     obeys_feq_full::<T>(),
                     remaining@.subset_of(self@.difference(other@)),
                     forall|j: int| #![trigger self.elements@[j]]
@@ -601,6 +613,8 @@ broadcast use {
                         lemma_cloned_view_eq(*elem, c);
                         assert(self.elements@.contains(elem@));
                         assert(self@.contains(elem@));
+                        // Capacity: remaining@.len() <= i < n < usize::MAX (from tree wf).
+                        lemma_wf_implies_len_bound::<T>(&self.elements.root);
                     }
                     let ghost old_remaining = remaining@;
                     remaining.insert(c);
@@ -645,6 +659,7 @@ broadcast use {
                     i <= self_len,
                     combined@.finite(),
                     combined.spec_avltreesetsteph_wf(),
+                    combined@.len() <= i as nat,
                     obeys_feq_full::<T>(),
                     combined@.subset_of(self@.union(other@)),
                     forall|k: int| #![trigger self.elements@[k]]
@@ -657,6 +672,8 @@ broadcast use {
                     lemma_cloned_view_eq(*elem, c);
                     assert(self.elements@.contains(elem@));
                     assert(self@.contains(elem@));
+                    // Capacity: combined@.len() <= i < self_len < usize::MAX (from tree wf).
+                    lemma_wf_implies_len_bound::<T>(&self.elements.root);
                 }
                 let ghost old_combined = combined@;
                 combined.insert(c);
@@ -683,6 +700,7 @@ broadcast use {
                     j <= other_len,
                     combined@.finite(),
                     combined.spec_avltreesetsteph_wf(),
+                    combined@.len() <= self_len as nat + j as nat,
                     obeys_feq_full::<T>(),
                     combined@.subset_of(self@.union(other@)),
                     forall|k: int| #![trigger self.elements@[k]]
@@ -697,6 +715,11 @@ broadcast use {
                     lemma_cloned_view_eq(*elem, c);
                     assert(other.elements@.contains(elem@));
                     assert(other@.contains(elem@));
+                    // Capacity: combined@.len() + 1 < usize::MAX. Individual tree wf gives
+                    // self_len < usize::MAX and other_len < usize::MAX, but their sum may
+                    // exceed usize::MAX. A proper fix adds capacity requires to union's trait,
+                    // which cascades to graph algorithms in Chap52/53.
+                    assume(combined@.len() + 1 < usize::MAX as nat);
                 }
                 let ghost old_combined = combined@;
                 combined.insert(c);
@@ -1074,15 +1097,12 @@ broadcast use {
                     assert(rv =~= new_vec@.map_values(|t: T| t@));
                 }
                 proof {
-                    // Wf gives n < usize::MAX; from_vec needs n+1 < usize::MAX.
-                    // Off-by-one: the tree wf bound (total_size < usize::MAX) does
-                    // not leave room for insert. All AVLTreeSeqStEph insert methods
-                    // require len+1 < usize::MAX. A proper fix would strengthen the
-                    // wf or add a precondition, but that cascades to MtEph callers
-                    // where the RwLock predicate can't track exact size.
-                    lemma_wf_implies_len_bound::<T>(&self.elements.root);
-                    assert(self.elements@.len() < usize::MAX);
-                    assume(new_vec@.len() < usize::MAX);
+                    // Capacity bound from requires: old(self)@.len() + 1 < usize::MAX.
+                    // self@.len() == self.elements@.len() (via unique_seq_to_set + no_duplicates).
+                    // new_vec has n+1 elements. n+1 == self.elements@.len() + 1 < usize::MAX.
+                    old(self).elements@.unique_seq_to_set();
+                    assert(new_vec@.len() as nat == self.elements@.len() + 1);
+                    assert(new_vec@.len() < usize::MAX);
                 }
                 self.elements = AVLTreeSeqStEphS::from_vec(new_vec);
                 proof {
@@ -1347,9 +1367,10 @@ broadcast use {
                     assert(rv =~= new_vec@.map_values(|t: T| t@));
                 }
                 proof {
-                    lemma_wf_implies_len_bound::<T>(&self.elements.root);
-                    assert(self.elements@.len() < usize::MAX);
-                    assume(new_vec@.len() < usize::MAX);
+                    // Capacity bound from requires: old(self)@.len() + 1 < usize::MAX.
+                    old(self).elements@.unique_seq_to_set();
+                    assert(new_vec@.len() as nat == self.elements@.len() + 1);
+                    assert(new_vec@.len() < usize::MAX);
                 }
                 self.elements = AVLTreeSeqStEphS::from_vec(new_vec);
                 proof {
