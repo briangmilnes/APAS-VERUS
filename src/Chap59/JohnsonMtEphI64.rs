@@ -43,22 +43,34 @@ pub mod JohnsonMtEphI64 {
     ///
     /// - APAS: Work O(mn log n), Span O(m log n), Parallelism Θ(n)
     /// - Claude-Opus-4.6: Work O(mn log n), Span O(m log n) — agrees with APAS; ParaPair! recursion achieves Θ(n) parallelism in Phase 3
-    #[verifier::external_body]
-    pub fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> AllPairsResultStEphI64 {
+    pub fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> (result: AllPairsResultStEphI64)
+        requires
+            graph@.V.len() > 0,
+            graph@.V.len() < usize::MAX as nat,
+            spec_labgraphview_wf(graph@),
+            valid_key_type_WeightedEdge::<usize, i128>(),
+            forall|v: usize| graph@.V.contains(v) <==> v < graph@.V.len(),
+        ensures
+            result.spec_n() as nat == graph@.V.len(),
+    {
         let n = graph.vertices().size();
+        assert(n as nat == graph@.V.len());
+        assert(n > 0);
+        assert(n < usize::MAX);
 
-        let (graph_with_dummy, dummy_idx) = add_dummy_source(&graph, n);
+        let (graph_with_dummy, dummy_idx) = add_dummy_source(graph, n);
 
         let bellman_ford_result = match bellman_ford(&graph_with_dummy, dummy_idx) {
-            | Ok(res) => res,
-            | Err(_) => {
+            Ok(res) => res,
+            Err(_) => {
                 return create_negative_cycle_result(n);
             }
         };
 
-        let potentials = ArraySeqStEphS::tabulate(&|i| bellman_ford_result.get_distance(i), n);
+        let get_dist = |i: usize| -> (d: i64) { bellman_ford_result.get_distance(i) };
+        let potentials = ArraySeqStEphS::tabulate(&get_dist, n);
 
-        let reweighted_graph = reweight_graph(&graph, &potentials, n);
+        let reweighted_graph = reweight_graph(graph, &potentials, n);
 
         let (all_distances, all_predecessors) = parallel_dijkstra_all(&reweighted_graph, &potentials, 0, n, n);
 
@@ -134,23 +146,89 @@ pub mod JohnsonMtEphI64 {
     ///
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — iterates over vertices and edges
-    #[verifier::external_body]
-    fn add_dummy_source(graph: &WeightedDirGraphStEphI128<usize>, n: usize) -> (WeightedDirGraphStEphI128<usize>, usize) {
-        let mut vertices = SetStEph::empty();
-        for i in 0..n {
-            vertices.insert(i);
+    fn add_dummy_source(graph: &WeightedDirGraphStEphI128<usize>, n: usize) -> (augmented_and_idx: (WeightedDirGraphStEphI128<usize>, usize))
+        requires
+            n > 0,
+            n < usize::MAX,
+            n as nat == graph@.V.len(),
+            spec_labgraphview_wf(graph@),
+            valid_key_type_WeightedEdge::<usize, i128>(),
+            forall|v: usize| graph@.V.contains(v) <==> v < n,
+        ensures
+            spec_labgraphview_wf(augmented_and_idx.0@),
+            augmented_and_idx.0@.V.len() == (n + 1) as nat,
+            forall|v: usize| v <= n ==> augmented_and_idx.0@.V.contains(v),
+            augmented_and_idx.1 == n,
+    {
+        // Build vertex set {0, ..., n}.
+        let mut vertices = SetStEph::<usize>::empty();
+        let mut i: usize = 0;
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+        while i <= n
+            invariant
+                i <= n + 1,
+                vertices.spec_setsteph_wf(),
+                vertices@.len() == i as nat,
+                forall|k: usize| vertices@.contains(k) <==> k < i,
+                valid_key_type_WeightedEdge::<usize, i128>(),
+                n < usize::MAX,
+            decreases (n + 1) - i,
+        {
+            proof { assert(!vertices@.contains(i)); }
+            let _ = vertices.insert(i);
+            i = i + 1;
+        }
+        proof {
+            assert(i == n + 1);
+            assert(forall|k: usize| vertices@.contains(k) <==> k <= n);
         }
 
-        vertices.insert(n);
+        // Copy original edges.
+        let mut edges = SetStEph::<WeightedEdge<usize, i128>>::empty();
+        let arcs = graph.labeled_arcs();
+        let it = arcs.iter();
+        let ghost arcs_seq = it@.1;
 
-        let mut edges = SetStEph::empty();
-
-        for LabEdge(from, to, weight) in graph.labeled_arcs().iter() {
-            edges.insert(WeightedEdge(*from, *to, *weight));
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+        for labeled_edge in iter: it
+            invariant
+                iter.elements == arcs_seq,
+                arcs_seq.map(|i: int, e: LabEdge<usize, i128>| e@).to_set() =~= graph@.A,
+                edges.spec_setsteph_wf(),
+                vertices.spec_setsteph_wf(),
+                forall|k: usize| vertices@.contains(k) <==> k <= n,
+                spec_labgraphview_wf(graph@),
+                valid_key_type_WeightedEdge::<usize, i128>(),
+                forall|v: usize| graph@.V.contains(v) <==> v < n,
+                forall|a: usize, b: usize, w: i128|
+                    #[trigger] edges@.contains((a, b, w)) ==>
+                    vertices@.contains(a) && vertices@.contains(b),
+        {
+            let from = labeled_edge.0;
+            let to = labeled_edge.1;
+            let weight = labeled_edge.2;
+            if from <= n && to <= n {
+                let _ = edges.insert(WeightedEdge(from, to, weight));
+            }
         }
 
-        for v in 0..n {
-            edges.insert(WeightedEdge(n, v, 0i128));
+        // Add dummy edges from n to each vertex 0..n.
+        let mut j: usize = 0;
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+        while j < n
+            invariant
+                j <= n,
+                edges.spec_setsteph_wf(),
+                vertices.spec_setsteph_wf(),
+                forall|k: usize| vertices@.contains(k) <==> k <= n,
+                valid_key_type_WeightedEdge::<usize, i128>(),
+                forall|a: usize, b: usize, w: i128|
+                    #[trigger] edges@.contains((a, b, w)) ==>
+                    vertices@.contains(a) && vertices@.contains(b),
+            decreases n - j,
+        {
+            let _ = edges.insert(WeightedEdge(n, j, 0i128));
+            j = j + 1;
         }
 
         (WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges), n)
@@ -160,23 +238,85 @@ pub mod JohnsonMtEphI64 {
     ///
     /// - APAS: Work O(m), Span O(m)
     /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — rebuilds vertex set O(n) plus iterates edges O(m)
-    #[verifier::external_body]
     fn reweight_graph(
         graph: &WeightedDirGraphStEphI128<usize>,
         potentials: &ArraySeqStEphS<i64>,
         n: usize,
-    ) -> WeightedDirGraphStEphI128<usize> {
-        let mut vertices = SetStEph::empty();
-        for i in 0..n {
-            vertices.insert(i);
+    ) -> (reweighted: WeightedDirGraphStEphI128<usize>)
+        requires
+            n > 0,
+            n < usize::MAX,
+            n as nat == graph@.V.len(),
+            potentials.seq@.len() == n as int,
+            spec_labgraphview_wf(graph@),
+            valid_key_type_WeightedEdge::<usize, i128>(),
+            forall|v: usize| graph@.V.contains(v) <==> v < n,
+        ensures
+            spec_labgraphview_wf(reweighted@),
+            reweighted@.V.len() == n as nat,
+            forall|v: usize| v < n ==> reweighted@.V.contains(v),
+    {
+        // Build vertex set {0, ..., n-1}.
+        let mut vertices = SetStEph::<usize>::empty();
+        let mut i: usize = 0;
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+        while i < n
+            invariant
+                i <= n,
+                vertices.spec_setsteph_wf(),
+                vertices@.len() == i as nat,
+                forall|k: usize| vertices@.contains(k) <==> k < i,
+                valid_key_type_WeightedEdge::<usize, i128>(),
+                n > 0,
+                n < usize::MAX,
+            decreases n - i,
+        {
+            proof { assert(!vertices@.contains(i)); }
+            let _ = vertices.insert(i);
+            i = i + 1;
+        }
+        proof {
+            assert(vertices@.len() == n as nat);
+            assert(forall|k: usize| vertices@.contains(k) <==> k < n);
         }
 
-        let mut reweighted_edges = SetStEph::empty();
-        for LabEdge(from, to, weight) in graph.labeled_arcs().iter() {
-            let p_from = *potentials.nth(*from) as i128;
-            let p_to = *potentials.nth(*to) as i128;
-            let w_prime: i128 = *weight + p_from - p_to;
-            reweighted_edges.insert(WeightedEdge(*from, *to, w_prime));
+        // Reweight edges.
+        let mut reweighted_edges = SetStEph::<WeightedEdge<usize, i128>>::empty();
+        let arcs = graph.labeled_arcs();
+        let it = arcs.iter();
+        let ghost arcs_seq = it@.1;
+
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+        for labeled_edge in iter: it
+            invariant
+                iter.elements == arcs_seq,
+                arcs_seq.map(|i: int, e: LabEdge<usize, i128>| e@).to_set() =~= graph@.A,
+                reweighted_edges.spec_setsteph_wf(),
+                vertices.spec_setsteph_wf(),
+                vertices@.len() == n as nat,
+                forall|k: usize| vertices@.contains(k) <==> k < n,
+                spec_labgraphview_wf(graph@),
+                valid_key_type_WeightedEdge::<usize, i128>(),
+                forall|v: usize| graph@.V.contains(v) <==> v < n,
+                potentials.seq@.len() == n as int,
+                forall|a: usize, b: usize, w: i128|
+                    #[trigger] reweighted_edges@.contains((a, b, w)) ==>
+                    vertices@.contains(a) && vertices@.contains(b),
+        {
+            let from = labeled_edge.0;
+            let to = labeled_edge.1;
+            let weight = labeled_edge.2;
+            if from < n && to < n {
+                let p_from = *potentials.nth(from) as i128;
+                let p_to = *potentials.nth(to) as i128;
+                let diff: i128 = p_from - p_to;
+                let w_prime: i128 = if diff >= 0 {
+                    if weight <= i128::MAX - diff { weight + diff } else { i128::MAX }
+                } else {
+                    if weight >= i128::MIN - diff { weight + diff } else { i128::MIN }
+                };
+                let _ = reweighted_edges.insert(WeightedEdge(from, to, w_prime));
+            }
         }
 
         WeightedDirGraphStEphI128::from_weighed_edges(vertices, reweighted_edges)
@@ -187,6 +327,8 @@ pub mod JohnsonMtEphI64 {
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — builds n×n distance and predecessor matrices
     fn create_negative_cycle_result(n: usize) -> (result: AllPairsResultStEphI64)
+        requires
+            n < usize::MAX,
         ensures
             result.n == n,
             result.distances.seq@.len() == n as int,

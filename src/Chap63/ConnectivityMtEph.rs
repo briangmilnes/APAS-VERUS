@@ -19,6 +19,8 @@ pub mod ConnectivityMtEph {
     use std::hash::Hash;
     use std::sync::Arc;
     use std::vec::Vec;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::hash::obeys_key_model;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::Chap62::StarContractionMtEph::StarContractionMtEph::star_contract_mt;
@@ -214,10 +216,17 @@ pub mod ConnectivityMtEph {
         component_map: &HashMapWithViewPlus<V, V>,
     ) -> (result: HashMapWithViewPlus<V, V>)
         requires obeys_key_model::<V>(),
+        ensures
+            forall|k: V::V| #[trigger] result@.contains_key(k) ==> partition_map@.contains_key(k),
     {
         let mut result: HashMapWithViewPlus<V, V> = HashMapWithViewPlus::new();
 
-        for pair in partition_map.iter()
+        let it = partition_map.iter();
+        for pair in iter: it
+            invariant
+                obeys_key_model::<V>(),
+                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                forall|k: V::V| #[trigger] result@.contains_key(k) ==> partition_map@.contains_key(k),
         {
             let (u_ref, v_ref) = pair;
             let component = match component_map.get(v_ref) {
@@ -234,11 +243,14 @@ pub mod ConnectivityMtEph {
     ///
     /// - APAS: Work O((n+m) lg n), Span O(lg^2 n) — same as Algorithm 63.2 (parallel)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(m) — delegates to star_contract_mt (inherits merge bottleneck)
-    #[verifier::external_body]
-    pub fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N {
-        let base = |vertices: &SetStEph<V>| vertices.size();
+    pub fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N
+        requires spec_graphview_wf(graph@),
+    {
+        let base = |vertices: &SetStEph<V>| -> (n: N)
+            requires vertices.spec_setsteph_wf()
+        { vertices.size() };
 
-        let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, r: N| r;
+        let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, r: N| -> (result: N) { r };
 
         star_contract_mt(graph, seed, &base, &expand)
     }
@@ -247,26 +259,51 @@ pub mod ConnectivityMtEph {
     ///
     /// - APAS: Work O((n+m) lg n), Span O(lg^2 n) — same as Algorithm 63.3 (parallel)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(n lg n) — delegates to star_contract_mt (inherits compose bottleneck)
-    #[verifier::external_body]
     pub fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
-    ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>) {
-        let base = |vertices: &SetStEph<V>| {
+    ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
+        requires spec_graphview_wf(graph@),
+    {
+        let base = |vertices: &SetStEph<V>| -> (result: (SetStEph<V>, HashMapWithViewPlus<V, V>))
+            requires
+                vertices.spec_setsteph_wf(),
+                obeys_key_model::<V>(),
+                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+        {
             let mut map = HashMapWithViewPlus::new();
-            for v in vertices.iter() {
+            let it = vertices.iter();
+            let ghost elem_seq = it@.1;
+            for v in iter: it
+                invariant
+                    iter.elements == elem_seq,
+                    obeys_key_model::<V>(),
+                    forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            {
                 let _ = map.insert(v.clone(), v.clone());
             }
-            (vertices.clone(), map)
+            (vertices.clone_plus(), map)
         };
 
         let expand = |_v: &SetStEph<V>,
                       _e: &SetStEph<Edge<V>>,
                       _centers: &SetStEph<V>,
                       partition_map: &HashMapWithViewPlus<V, V>,
-                      (reps, component_map): (SetStEph<V>, HashMapWithViewPlus<V, V>)| {
+                      reps_and_map: (SetStEph<V>, HashMapWithViewPlus<V, V>)|
+            -> (result: (SetStEph<V>, HashMapWithViewPlus<V, V>))
+            requires
+                obeys_key_model::<V>(),
+                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+        {
+            let (reps, component_map) = reps_and_map;
             let mut result_map = HashMapWithViewPlus::new();
-            for (u, v) in partition_map.iter() {
+            let it = partition_map.iter();
+            for pair in iter: it
+                invariant
+                    obeys_key_model::<V>(),
+                    forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            {
+                let (u, v) = pair;
                 let component = component_map.get(v).unwrap_or(v);
                 let _ = result_map.insert(u.clone(), component.clone());
             }
