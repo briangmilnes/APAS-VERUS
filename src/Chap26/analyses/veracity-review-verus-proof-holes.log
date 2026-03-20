@@ -24,11 +24,11 @@ Table of Contents:
    3 clean proof functions
 ✓ DivConReduceStPer.rs
 ❌ ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:611: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:611: error: external_body - #[verifier::external_body]
        612 |     fn point_distance(a: &Point, b: &Point) -> (d: f64)
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:670: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:670: error: external_body - #[verifier::external_body]
        671 |     fn find_best_swap_par(
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:627: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:627: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
    Holes: 2 total
       2 × external_body
    Info: 1 × structural_false_positive
@@ -107,9 +107,9 @@ Structural (info only): 1
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-20 09:10:54 -07:00
-Ended:     2026-03-20 09:10:54 -07:00
-Duration:  35ms
+Started:   2026-03-20 10:12:40 -07:00
+Ended:     2026-03-20 10:12:40 -07:00
+Duration:  53ms
 
 Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
-ew-verus-proof-holes.log
+output: src/Chap26/analyses/veracity-review-verus-proof-holes.log

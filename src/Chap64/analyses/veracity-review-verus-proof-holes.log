@@ -21,7 +21,7 @@ Table of Contents:
 =================================================================
 
 ⚠ SpanTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:54: error: fn_missing_ensures - fn spanning_tree_star_contraction_mt — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap64/SpanTreeMtEph.rs:54: error: fn_missing_ensures - fn spanning_tree_star_contraction_mt — exec fn should have ensures
         45 |         fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(graph: &UnDirGraphMtEph<V>, tree: &SetStEph<Edge<V>>) -> B
             ...
         52 |     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — expand closure
@@ -29,7 +29,7 @@ Table of Contents:
         55 |         graph: &UnDirGraphMtEph<V>,
         56 |         seed: u64,
 ⚠ SpanTreeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:51: error: fn_missing_ensures - fn spanning_tree_star_contraction — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap64/SpanTreeStEph.rs:51: error: fn_missing_ensures - fn spanning_tree_star_contraction — exec fn should have ensures
         43 |         fn verify_spanning_tree<V: HashOrd>(graph: &UnDirGraphStEph<V>, tree: &SetStEph<Edge<V>>) -> B
             ...
         49 |     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n)
@@ -37,7 +37,7 @@ Table of Contents:
         52 |         requires
         53 |             spec_graphview_wf(graph@),
 ⚠ TSPApproxStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:315: error: fn_missing_ensures - fn approx_metric_tsp — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap64/TSPApproxStEph.rs:315: error: fn_missing_ensures - fn approx_metric_tsp — exec fn should have ensures
        279 |     fn get_edge_weight<V: HashOrd>(
             ...
        313 |     /// Returns:
@@ -98,12 +98,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-20 09:10:55 -07:00
-Ended:     2026-03-20 09:10:55 -07:00
+Started:   2026-03-20 10:12:42 -07:00
+Ended:     2026-03-20 10:12:42 -07:00
 Duration:  8ms
 
 Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
-:10:55 -07:00
-Duration:  8ms
-
-Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap64/analyses/veracity-review-verus-proof-holes.log

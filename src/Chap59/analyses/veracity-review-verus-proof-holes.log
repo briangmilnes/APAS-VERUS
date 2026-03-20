@@ -24,14 +24,14 @@ Table of Contents:
 ✓ JohnsonMtEphI64.rs
 ✓ JohnsonStEphF64.rs
 ⚠ JohnsonStEphI64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:73: error: fn_missing_requires - fn adjust_distance — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap59/JohnsonStEphI64.rs:73: error: fn_missing_requires - fn adjust_distance — exec fn should have requires
         54 |         fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>)
             ...
         71 |     /// - APAS: N/A — Verus-specific scaffolding.
         72 |     /// - Claude-Opus-4.6: Work O(1), Span O(1).
         74 |         ensures
         75 |             d_prime == UNREACHABLE ==> result == UNREACHABLE,
-/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:89: error: fn_missing_requires - fn reweight_edge — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap59/JohnsonStEphI64.rs:89: error: fn_missing_requires - fn reweight_edge — exec fn should have requires
         73 |     fn adjust_distance(d_prime: i64, h_u: i64, h_v: i64) -> (result: i64)
             ...
         87 |     /// - APAS: N/A — Verus-specific scaffolding.
@@ -94,9 +94,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-20 09:10:55 -07:00
-Ended:     2026-03-20 09:10:55 -07:00
-Duration:  8ms
+Started:   2026-03-20 10:12:42 -07:00
+Ended:     2026-03-20 10:12:42 -07:00
+Duration:  9ms
 
 Full output: src/Chap59/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap59/analyses/veracity-review-verus-proof-holes.log
