@@ -1,5 +1,5 @@
-$ ./target/release/veracity-review-proof-holes /home/milnes/projects/APAS-VERUS/src/Chap39
-Full output: /home/milnes/projects/APAS-VERUS/src/Chap39/analyses/veracity-review-verus-proof-holes.log
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap39/
+Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
   1. File Holes
@@ -29,19 +29,19 @@ Table of Contents:
        212 |     fn tree_size<T: MtKey>(tree: &ParamTreap<T>) -> usize {
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:221: error: external_body [blocked_by: tree_size] - #[verifier::external_body]
        222 |     fn make_node<T: MtKey>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> (node: ParamTreap<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:234: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:234: error: external_body [blocked_by: make_node] - #[verifier::external_body]
        235 |     fn join_with_priority<T: MtKey + 'static>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> (result: ParamTreap<T>)
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:258: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
        259 |     fn split_inner<T: MtKey + 'static>(tree: &ParamTreap<T>, key: &T) -> (parts: (ParamTreap<T>, bool, ParamTreap<T>))
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:288: error: external_body [blocked_by: split_inner] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:288: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
        289 |     fn join_pair_inner<T: MtKey + 'static>(left: ParamTreap<T>, right: ParamTreap<T>) -> (joined: ParamTreap<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:303: error: external_body [blocked_by: split_inner] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:303: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
        304 |     fn union_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (combined: ParamTreap<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:318: error: external_body [blocked_by: join_pair_inner] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:318: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
        319 |     fn intersect_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (common: ParamTreap<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:337: error: external_body [blocked_by: join_pair_inner] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:337: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
        338 |     fn difference_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (remaining: ParamTreap<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:356: error: external_body [blocked_by: join_pair_inner] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:356: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
        357 |     fn filter_inner<T: MtKey + 'static, F: Pred<T>>(tree: &ParamTreap<T>, predicate: &Arc<F>) -> ParamTreap<T> {
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:374: error: external_body [blocked_by: filter_inner] - #[verifier::external_body]
        375 |     fn filter_parallel<T: MtKey + 'static, F: Pred<T>>(
@@ -208,8 +208,8 @@ Structural (info only): 10
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 21:24:53 -07:00
-Ended:     2026-03-19 21:24:53 -07:00
-Duration:  42ms
+Started:   2026-03-19 21:31:08 -07:00
+Ended:     2026-03-19 21:31:08 -07:00
+Duration:  41ms
 
-Full output: /home/milnes/projects/APAS-VERUS/src/Chap39/analyses/veracity-review-verus-proof-holes.log
+Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log

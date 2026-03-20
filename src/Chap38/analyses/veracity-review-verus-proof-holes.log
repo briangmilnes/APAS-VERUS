@@ -1,5 +1,5 @@
-$ ./target/release/veracity-review-proof-holes /home/milnes/projects/APAS-VERUS/src/Chap38
-Full output: /home/milnes/projects/APAS-VERUS/src/Chap38/analyses/veracity-review-verus-proof-holes.log
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap38/
+Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
   1. File Holes
@@ -34,15 +34,15 @@ Table of Contents:
        487 |     fn split_inner<T: MtKey + 'static>(tree: &ParamBST<T>, key: &T) -> (parts: (ParamBST<T>, B, ParamBST<T>))
 /home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:517: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
        518 |     fn min_key<T: MtKey + 'static>(tree: &ParamBST<T>) -> Option<T> {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:528: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:528: error: external_body [blocked_by: split_inner] - #[verifier::external_body]
        529 |     fn join_pair_inner<T: MtKey + 'static>(left: ParamBST<T>, right: ParamBST<T>) -> (joined: ParamBST<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:542: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:542: error: external_body [blocked_by: split_inner] - #[verifier::external_body]
        543 |     fn union_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> (combined: ParamBST<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:558: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:558: error: external_body [blocked_by: join_pair_inner] - #[verifier::external_body]
        559 |     fn intersect_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> (common: ParamBST<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:577: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:577: error: external_body [blocked_by: join_pair_inner] - #[verifier::external_body]
        578 |     fn difference_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> (remaining: ParamBST<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:598: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:598: error: external_body [blocked_by: join_pair_inner] - #[verifier::external_body]
        599 |     fn filter_inner<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(
 /home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:621: error: external_body [blocked_by: filter_inner] - #[verifier::external_body]
        622 |     fn filter_parallel<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(
@@ -90,8 +90,8 @@ Table of Contents:
          1 × root cause
          11 × downstream (blocked by root causes)
    Info: 4 × structural_false_positive
-      2 × RWLOCK_GHOST
       2 × UNSAFE_SEND_SYNC
+      2 × RWLOCK_GHOST
 ❌ BSTParaStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:152: error: assume() [algorithmic] - proof { assume(c == *x); } // Clone bridge: T::clone preserv
        148 |     fn clone_elem<T: Clone>(x: &T) -> (c: T)
@@ -146,8 +146,8 @@ Function Specs:
 
 Holes Found: 14 (actionable)
    2 × assume() (14%)
-      1 × algorithmic
       1 × rwlock:reader
+      1 × algorithmic
    12 × external_body (85%)
       1 × root cause
       11 × downstream (blocked by root causes)
@@ -157,15 +157,15 @@ Warnings: 4 total
    2 × assume_eq_clone_workaround
 
 Structural (info only): 4
-   2 × RWLOCK_GHOST
    2 × UNSAFE_SEND_SYNC
+   2 × RWLOCK_GHOST
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 21:24:53 -07:00
-Ended:     2026-03-19 21:24:53 -07:00
-Duration:  29ms
+Started:   2026-03-19 21:31:02 -07:00
+Ended:     2026-03-19 21:31:02 -07:00
+Duration:  27ms
 
-Full output: /home/milnes/projects/APAS-VERUS/src/Chap38/analyses/veracity-review-verus-proof-holes.log
+Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
