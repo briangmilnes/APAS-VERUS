@@ -74,6 +74,9 @@ pub mod ETSPMtEph {
 
     //		5. spec fns
 
+    /// Uninterpreted Euclidean distance between two points.
+    pub uninterp spec fn spec_point_distance(a: Point, b: Point) -> f64;
+
     /// Two points are identical (same coordinates).
     pub open spec fn spec_point_eq(a: Point, b: Point) -> bool {
         a.x == b.x && a.y == b.y
@@ -601,19 +604,21 @@ pub mod ETSPMtEph {
     use std::sync::Arc;
 
     pub trait ETSPPointTrait {
-        fn distance(&self, other: &Point) -> f64;
+        fn distance(&self, other: &Point) -> (d: f64)
+            ensures d == spec_point_distance(*self, *other);
     }
 
     #[verifier::external_body]
-    fn point_distance(a: &Point, b: &Point) -> f64 {
+    fn point_distance(a: &Point, b: &Point) -> (d: f64)
+        ensures d == spec_point_distance(*a, *b),
+    {
         let dx = a.x - b.x;
         let dy = a.y - b.y;
         (dx * dx + dy * dy).sqrt()
     }
 
     impl ETSPPointTrait for Point {
-        #[verifier::external_body]
-        fn distance(&self, other: &Point) -> f64 {
+        fn distance(&self, other: &Point) -> (d: f64) {
             point_distance(self, other)
         }
     }
@@ -646,18 +651,34 @@ pub mod ETSPMtEph {
     /// Parallel find-best-swap: recursively splits the outer loop over left_tour
     /// and runs both halves in parallel via HFScheduler join().
     /// Work Θ(n·m), Span Θ(m·lg n) where n = left_tour.len(), m = right_tour.len().
-    #[verifier::external_body]
-    pub fn find_best_swap_impl(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (usize, usize) {
-        let lt = Arc::new(left_tour.clone());
-        let rt = Arc::new(right_tour.clone());
-        let (li, ri, _) = find_best_swap_par(lt, rt, 0, left_tour.len());
+    pub fn find_best_swap_impl(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (result: (usize, usize))
+        requires
+            left_tour@.len() >= 1,
+            right_tour@.len() >= 1,
+        ensures
+            result.0 < left_tour@.len(),
+            result.1 < right_tour@.len(),
+    {
+        let lt_cloned = left_tour.clone();
+        let rt_cloned = right_tour.clone();
+        let lt = Arc::new(lt_cloned);
+        let rt = Arc::new(rt_cloned);
+        let (li, ri, _cost) = find_best_swap_par(lt, rt, 0, left_tour.len());
         (li, ri)
     }
 
     #[verifier::external_body]
     fn find_best_swap_par(
         left_tour: Arc<Vec<Edge>>, right_tour: Arc<Vec<Edge>>, lo: usize, hi: usize,
-    ) -> (usize, usize, f64) {
+    ) -> (result: (usize, usize, f64))
+        requires
+            (*left_tour)@.len() >= 1,
+            (*right_tour)@.len() >= 1,
+            hi <= (*left_tour)@.len(),
+        ensures
+            result.0 < (*left_tour)@.len(),
+            result.1 < (*right_tour)@.len(),
+    {
         const THRESHOLD: usize = 16;
         if hi <= lo {
             return (0, 0, f64::MAX);

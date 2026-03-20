@@ -24,19 +24,13 @@ Table of Contents:
    3 clean proof functions
 ✓ DivConReduceStPer.rs
 ❌ ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:607: error: external_body - #[verifier::external_body]
-       608 |     fn point_distance(a: &Point, b: &Point) -> f64 {
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:615: error: external_body [blocked_by: point_distance] - #[verifier::external_body]
-       616 |         fn distance(&self, other: &Point) -> f64 {
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:649: error: external_body [blocked_by: find_best_swap_par] - #[verifier::external_body]
-       650 |     pub fn find_best_swap_impl(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (usize, usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:657: error: external_body [blocked_by: distance] - #[verifier::external_body]
-       658 |     fn find_best_swap_par(
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:622: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
-   Holes: 4 total
-      4 × external_body
-         1 × root cause
-         3 × downstream (blocked by root causes)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:611: error: external_body - #[verifier::external_body]
+       612 |     fn point_distance(a: &Point, b: &Point) -> (d: f64)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:670: error: external_body - #[verifier::external_body]
+       671 |     fn find_best_swap_par(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:627: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
+   Holes: 2 total
+      2 × external_body
    Info: 1 × structural_false_positive
       1 × OPAQUE_EXTERNAL
    Proof functions: 4 total (4 clean, 0 holed)
@@ -96,17 +90,15 @@ Proof Functions:
    17 total
 
 Function Specs:
-   57 exec fns with complete spec (requires+ensures) (49%)
+   57 exec fns with complete spec (requires+ensures) (48%)
    0 exec fns missing spec (0%)
-   59 proof/spec fns clean (50%)
+   60 proof/spec fns clean (51%)
    0 proof/spec fns with holes (0%)
-   116 total fns
+   117 total fns
 
 
-Holes Found: 4 (actionable)
-   4 × external_body (100%)
-      1 × root cause
-      3 × downstream (blocked by root causes)
+Holes Found: 2 (actionable)
+   2 × external_body (100%)
 
 Structural (info only): 1
    1 × OPAQUE_EXTERNAL
@@ -115,9 +107,9 @@ Structural (info only): 1
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-20 07:47:51 -07:00
-Ended:     2026-03-20 07:47:51 -07:00
-Duration:  28ms
+Started:   2026-03-20 08:15:06 -07:00
+Ended:     2026-03-20 08:15:06 -07:00
+Duration:  34ms
 
 Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
