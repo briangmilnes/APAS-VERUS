@@ -30,7 +30,7 @@ pub mod BSTParaMtEph {
 
     // 3. broadcast use
 
-    broadcast use vstd::set::group_set_axioms;
+    broadcast use {vstd::set::group_set_axioms, vstd::set_lib::group_set_properties};
 
     // 4. type definitions
 
@@ -448,7 +448,22 @@ pub mod BSTParaMtEph {
     }
 
     #[verifier::external_body]
-    fn expose_internal<T: MtKey + 'static>(tree: &ParamBST<T>) -> Exposed<T> {
+    fn expose_internal<T: MtKey + 'static>(tree: &ParamBST<T>) -> (exposed: Exposed<T>)
+        ensures
+            tree@.finite(),
+            exposed is Leaf ==> tree@.len() == 0,
+            exposed matches Exposed::Node(left, key, right) ==> (
+                tree@.contains(key@)
+                && left@.finite()
+                && right@.finite()
+                && left@.subset_of(tree@)
+                && right@.subset_of(tree@)
+                && tree@ =~= left@.union(right@).insert(key@)
+                && !left@.contains(key@)
+                && !right@.contains(key@)
+                && left@.disjoint(right@)
+            ),
+    {
         let handle = tree.root.acquire_read();
         let exposed = match handle.borrow() {
             | None => Exposed::Leaf,
@@ -486,9 +501,14 @@ pub mod BSTParaMtEph {
     #[verifier::external_body]
     fn split_inner<T: MtKey + 'static>(tree: &ParamBST<T>, key: &T) -> (parts: (ParamBST<T>, B, ParamBST<T>))
         ensures
-            parts.1 == tree@.contains(key@),
             parts.0@.finite(),
-            parts.2@.finite()
+            parts.2@.finite(),
+            parts.1 == tree@.contains(key@),
+            tree@.finite(),
+            !parts.0@.contains(key@) && !parts.2@.contains(key@),
+            tree@ =~= parts.0@.union(parts.2@).union(
+                if parts.1 { Set::<<T as View>::V>::empty().insert(key@) } else { Set::<<T as View>::V>::empty() }
+            ),
     {
         match expose_internal(tree) {
             | Exposed::Leaf => (new_leaf(), false, new_leaf()),
@@ -514,21 +534,26 @@ pub mod BSTParaMtEph {
         join_mid(Exposed::Node(left, key, right))
     }
 
-    #[verifier::external_body]
-    fn min_key<T: MtKey + 'static>(tree: &ParamBST<T>) -> Option<T> {
+    fn min_key<T: MtKey + 'static>(tree: &ParamBST<T>) -> Option<T>
+        requires tree@.finite(),
+        decreases tree@.len(),
+    {
         match expose_internal(tree) {
             | Exposed::Leaf => None,
-            | Exposed::Node(left, key, _) => match min_key(&left) {
-                | Some(rec) => Some(rec),
-                | None => Some(key),
+            | Exposed::Node(left, key, _) => {
+                proof { left@.lemma_subset_not_in_lt(tree@, key@); }
+                match min_key(&left) {
+                    | Some(rec) => Some(rec),
+                    | None => Some(key),
+                }
             },
         }
     }
 
-    #[verifier::external_body]
     fn join_pair_inner<T: MtKey + 'static>(left: ParamBST<T>, right: ParamBST<T>) -> (joined: ParamBST<T>)
         ensures joined@.finite()
     {
+        let _ = left.size();
         match expose_internal(&right) {
             | Exposed::Leaf => left,
             | Exposed::Node(_, key, _) => {
@@ -539,18 +564,32 @@ pub mod BSTParaMtEph {
         }
     }
 
-    #[verifier::external_body]
     fn union_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> (combined: ParamBST<T>)
-        ensures combined@ == a@.union(b@), combined@.finite()
+        ensures combined@ == a@.union(b@), combined@.finite(),
+        decreases a@.len(),
     {
-        match (expose_internal(a), expose_internal(b)) {
-            | (Exposed::Leaf, _) => b.clone(),
-            | (_, Exposed::Leaf) => a.clone(),
-            | (Exposed::Node(al, ak, ar), _) => {
-                let (bl, _, br) = split_inner(b, &ak);
-                let Pair(left_union, right_union) =
-                    crate::ParaPair!(move || union_inner(&al, &bl), move || union_inner(&ar, &br));
-                join_m(left_union, ak, right_union)
+        let _ = b.size();
+        match expose_internal(a) {
+            | Exposed::Leaf => b.clone(),
+            | Exposed::Node(al, ak, ar) => {
+                if b.is_empty() {
+                    a.clone()
+                } else {
+                    let (bl, _found, br) = split_inner(b, &ak);
+                    proof { al@.lemma_subset_not_in_lt(a@, ak@); }
+                    let f1 = move || -> (result: ParamBST<T>)
+                        ensures result@ == al@.union(bl@), result@.finite()
+                    {
+                        union_inner(&al, &bl)
+                    };
+                    let f2 = move || -> (result: ParamBST<T>)
+                        ensures result@ == ar@.union(br@), result@.finite()
+                    {
+                        union_inner(&ar, &br)
+                    };
+                    let Pair(left_union, right_union) = crate::ParaPair!(f1, f2);
+                    join_m(left_union, ak, right_union)
+                }
             }
         }
     }
@@ -559,16 +598,30 @@ pub mod BSTParaMtEph {
     fn intersect_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> (common: ParamBST<T>)
         ensures common@ == a@.intersect(b@), common@.finite()
     {
-        match (expose_internal(a), expose_internal(b)) {
-            | (Exposed::Leaf, _) | (_, Exposed::Leaf) => new_leaf(),
-            | (Exposed::Node(al, ak, ar), _) => {
-                let (bl, found, br) = split_inner(b, &ak);
-                let Pair(left_res, right_res) =
-                    crate::ParaPair!(move || intersect_inner(&al, &bl), move || { intersect_inner(&ar, &br) });
-                if found {
-                    join_m(left_res, ak, right_res)
+        let _ = b.size();
+        match expose_internal(a) {
+            | Exposed::Leaf => new_leaf(),
+            | Exposed::Node(al, ak, ar) => {
+                if b.is_empty() {
+                    new_leaf()
                 } else {
-                    join_pair_inner(left_res, right_res)
+                    let (bl, found, br) = split_inner(b, &ak);
+                    let f1 = move || -> (result: ParamBST<T>)
+                        ensures result@ == al@.intersect(bl@), result@.finite()
+                    {
+                        intersect_inner(&al, &bl)
+                    };
+                    let f2 = move || -> (result: ParamBST<T>)
+                        ensures result@ == ar@.intersect(br@), result@.finite()
+                    {
+                        intersect_inner(&ar, &br)
+                    };
+                    let Pair(left_res, right_res) = crate::ParaPair!(f1, f2);
+                    if found {
+                        join_m(left_res, ak, right_res)
+                    } else {
+                        join_pair_inner(left_res, right_res)
+                    }
                 }
             }
         }
@@ -578,18 +631,30 @@ pub mod BSTParaMtEph {
     fn difference_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> (remaining: ParamBST<T>)
         ensures remaining@ == a@.difference(b@), remaining@.finite()
     {
-        match (expose_internal(a), expose_internal(b)) {
-            | (Exposed::Leaf, _) => new_leaf(),
-            | (_, Exposed::Leaf) => a.clone(),
-            | (Exposed::Node(al, ak, ar), _) => {
-                let (bl, found, br) = split_inner(b, &ak);
-                let Pair(left_res, right_res) = crate::ParaPair!(move || difference_inner(&al, &bl), move || {
-                    difference_inner(&ar, &br)
-                });
-                if found {
-                    join_pair_inner(left_res, right_res)
+        let _ = b.size();
+        match expose_internal(a) {
+            | Exposed::Leaf => new_leaf(),
+            | Exposed::Node(al, ak, ar) => {
+                if b.is_empty() {
+                    a.clone()
                 } else {
-                    join_m(left_res, ak, right_res)
+                    let (bl, found, br) = split_inner(b, &ak);
+                    let f1 = move || -> (result: ParamBST<T>)
+                        ensures result@ == al@.difference(bl@), result@.finite()
+                    {
+                        difference_inner(&al, &bl)
+                    };
+                    let f2 = move || -> (result: ParamBST<T>)
+                        ensures result@ == ar@.difference(br@), result@.finite()
+                    {
+                        difference_inner(&ar, &br)
+                    };
+                    let Pair(left_res, right_res) = crate::ParaPair!(f1, f2);
+                    if found {
+                        join_pair_inner(left_res, right_res)
+                    } else {
+                        join_m(left_res, ak, right_res)
+                    }
                 }
             }
         }
@@ -664,7 +729,6 @@ pub mod BSTParaMtEph {
         }
     }
 
-    #[verifier::external_body]
     fn reduce_parallel<T: MtKey + 'static, F: Fn(T, T) -> T + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         op: F,
@@ -674,14 +738,20 @@ pub mod BSTParaMtEph {
         reduce_inner(tree, &op, base)
     }
 
-    #[verifier::external_body]
     fn collect_in_order<T: MtKey + 'static>(tree: &ParamBST<T>, out: &mut Vec<T>)
         requires tree@.finite(),
         ensures out@.len() == old(out)@.len() + tree@.len(),
+        decreases tree@.len(),
     {
         match expose_internal(tree) {
             | Exposed::Leaf => {}
             | Exposed::Node(left, key, right) => {
+                proof {
+                    left@.lemma_subset_not_in_lt(tree@, key@);
+                    right@.lemma_subset_not_in_lt(tree@, key@);
+                    assert(!left@.union(right@).contains(key@));
+                    assert(tree@.len() == left@.len() + right@.len() + 1);
+                }
                 collect_in_order(&left, out);
                 out.push(key);
                 collect_in_order(&right, out);

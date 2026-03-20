@@ -35,7 +35,7 @@ pub mod BSTParaTreapMtEph {
 
     // 3. broadcast use
 
-    broadcast use vstd::set::group_set_axioms;
+    broadcast use {vstd::set::group_set_axioms, vstd::set_lib::group_set_properties};
 
     // 4. type definitions
 
@@ -167,6 +167,9 @@ pub mod BSTParaTreapMtEph {
                 && left@.subset_of(tree@)
                 && right@.subset_of(tree@)
                 && tree@ =~= left@.union(right@).insert(key@)
+                && !left@.contains(key@)
+                && !right@.contains(key@)
+                && left@.disjoint(right@)
             ),
     {
         let rwlock = arc_deref(&tree.root);
@@ -198,42 +201,54 @@ pub mod BSTParaTreapMtEph {
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    #[verifier::external_body]
-    fn tree_priority<T: MtKey>(tree: &ParamTreap<T>) -> i64 {
-        let handle = tree.root.acquire_read();
-        let result = handle.borrow().as_ref().map_or(i64::MIN, |node| node.priority);
+    fn tree_priority<T: MtKey + 'static>(tree: &ParamTreap<T>) -> i64 {
+        let rwlock = arc_deref(&tree.root);
+        let handle = rwlock.acquire_read();
+        let result = match handle.borrow() {
+            None => i64::MIN,
+            Some(node) => node.priority,
+        };
         handle.release_read();
         result
     }
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    #[verifier::external_body]
-    fn tree_size<T: MtKey>(tree: &ParamTreap<T>) -> usize {
-        let handle = tree.root.acquire_read();
-        let result = handle.borrow().as_ref().map_or(0, |node| node.size);
+    fn tree_size<T: MtKey + 'static>(tree: &ParamTreap<T>) -> usize {
+        let rwlock = arc_deref(&tree.root);
+        let handle = rwlock.acquire_read();
+        let result = match handle.borrow() {
+            None => 0usize,
+            Some(node) => node.size,
+        };
         handle.release_read();
         result
     }
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    #[verifier::external_body]
-    fn make_node<T: MtKey>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> (node: ParamTreap<T>)
+    fn make_node<T: MtKey + 'static>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> (node: ParamTreap<T>)
+        requires left@.finite(), right@.finite(),
         ensures node@ =~= left@.union(right@).insert(key@), node@.finite()
     {
-        let size = 1 + tree_size(&left) + tree_size(&right);
-        ParamTreap {
-            root: new_param_treap_arc(
-                Some(Box::new(NodeInner { key, priority, size, left, right })),
-            ),
-            ghost_locked_root: Ghost(Set::empty()),
-        }
+        let lsz = tree_size(&left);
+        let rsz = tree_size(&right);
+        let size: usize = if rsz < usize::MAX - 1 && lsz < usize::MAX - 1 - rsz {
+            1 + lsz + rsz
+        } else {
+            usize::MAX - 1
+        };
+        let ghost contents = left@.union(right@).insert(key@);
+        new_param_treap(
+            Some(Box::new(NodeInner { key, priority, size, left, right })),
+            Ghost(contents),
+        )
     }
 
-    #[verifier::external_body]
     fn join_with_priority<T: MtKey + 'static>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> (result: ParamTreap<T>)
+        requires left@.finite(), right@.finite(),
         ensures result@ =~= left@.union(right@).insert(key@), result@.finite(),
+        decreases left@.len() + right@.len(),
     {
         let left_priority = tree_priority(&left);
         let right_priority = tree_priority(&right);
@@ -242,12 +257,14 @@ pub mod BSTParaTreapMtEph {
         }
         if left_priority > right_priority {
             if let Some((ll, lk, lp, lr)) = expose_internal(&left) {
+                proof { lr@.lemma_subset_not_in_lt(left@, lk@); }
                 let merged_right = join_with_priority(lr, key, priority, right);
                 return make_node(ll, lk, lp, merged_right);
             }
             make_node(left, key, priority, right)
         } else {
             if let Some((rl, rk, rp, rr)) = expose_internal(&right) {
+                proof { rl@.lemma_subset_not_in_lt(right@, rk@); }
                 let merged_left = join_with_priority(left, key, priority, rl);
                 return make_node(merged_left, rk, rp, rr);
             }
@@ -285,14 +302,23 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    #[verifier::external_body]
     fn join_pair_inner<T: MtKey + 'static>(left: ParamTreap<T>, right: ParamTreap<T>) -> (joined: ParamTreap<T>)
         ensures joined@.finite(), joined@ =~= left@.union(right@),
+        decreases left@.len() + right@.len(),
     {
+        let _ = left.size();
         match expose_internal(&right) {
             | None => left,
             | Some((r_left, r_key, r_priority, r_right)) => {
                 let (split_left, _, split_right) = split_inner(&left, &r_key);
+                proof {
+                    r_left@.lemma_subset_not_in_lt(right@, r_key@);
+                    r_right@.lemma_subset_not_in_lt(right@, r_key@);
+                    assert(split_left@.subset_of(left@));
+                    assert(split_right@.subset_of(left@));
+                    vstd::set_lib::lemma_len_subset(split_left@, left@);
+                    vstd::set_lib::lemma_len_subset(split_right@, left@);
+                }
                 let combined_left = join_pair_inner(split_left, r_left);
                 let combined_right = join_pair_inner(split_right, r_right);
                 join_with_priority(combined_left, r_key, r_priority, combined_right)
@@ -300,16 +326,27 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    #[verifier::external_body]
     fn union_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (combined: ParamTreap<T>)
         ensures combined@.finite(), combined@ == a@.union(b@),
+        decreases a@.len(),
     {
+        let _ = b.size();
         match expose_internal(a) {
             | None => b.clone(),
             | Some((al, ak, ap, ar)) => {
                 let (bl, _, br) = split_inner(b, &ak);
-                let Pair(left_union, right_union) =
-                    crate::ParaPair!(move || union_inner(&al, &bl), move || union_inner(&ar, &br));
+                proof { al@.lemma_subset_not_in_lt(a@, ak@); }
+                let f1 = move || -> (result: ParamTreap<T>)
+                    ensures result@.finite(), result@ == al@.union(bl@)
+                {
+                    union_inner(&al, &bl)
+                };
+                let f2 = move || -> (result: ParamTreap<T>)
+                    ensures result@.finite(), result@ == ar@.union(br@)
+                {
+                    union_inner(&ar, &br)
+                };
+                let Pair(left_union, right_union) = crate::ParaPair!(f1, f2);
                 join_with_priority(left_union, ak, ap, right_union)
             }
         }
@@ -416,7 +453,6 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    #[verifier::external_body]
     fn reduce_parallel<T: MtKey + 'static, F>(tree: &ParamTreap<T>, op: F, base: T) -> T
     where
         F: Fn(T, T) -> T + Send + Sync + 'static,
@@ -425,14 +461,20 @@ pub mod BSTParaTreapMtEph {
         reduce_inner(tree, &op, base)
     }
 
-    #[verifier::external_body]
     fn collect_in_order<T: MtKey + 'static>(tree: &ParamTreap<T>, out: &mut Vec<T>)
         requires tree@.finite(),
         ensures out@.len() == old(out)@.len() + tree@.len(),
+        decreases tree@.len(),
     {
         match expose_internal(tree) {
             | None => {}
             | Some((left, key, _priority, right)) => {
+                proof {
+                    left@.lemma_subset_not_in_lt(tree@, key@);
+                    right@.lemma_subset_not_in_lt(tree@, key@);
+                    assert(!left@.union(right@).contains(key@));
+                    assert(tree@.len() == left@.len() + right@.len() + 1);
+                }
                 collect_in_order(&left, out);
                 out.push(key);
                 collect_in_order(&right, out);
@@ -597,6 +639,8 @@ pub mod BSTParaTreapMtEph {
             match exposed {
                 | Exposed::Leaf => ParamTreap::new(),
                 | Exposed::Node(left, key, right) => {
+                    let _ = left.size();
+                    let _ = right.size();
                     let priority = priority_for(&key);
                     join_with_priority(left, key, priority, right)
                 }
