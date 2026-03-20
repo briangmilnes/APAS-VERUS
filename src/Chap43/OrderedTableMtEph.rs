@@ -572,7 +572,7 @@ broadcast use {
         {
             proof { assert(obeys_view_eq_trigger::<K>()); }
             // Acquire write, scan entries by key comparison for ordered split.
-            let (mut locked_val, write_handle) = self.locked_table.acquire_write();
+            let (locked_val, write_handle) = self.locked_table.acquire_write();
             let len = locked_val.base_seq.length();
             let mut left_entries: Vec<Pair<K, V>> = Vec::new();
             let mut found_value: Option<V> = None;

@@ -28,8 +28,8 @@ test_verify_one_file! {
                 .insert(3u64, 30u64);
 
             let mut it: OrderedTableStPerIter<u64, u64> = t.iter();
-            let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
-            let ghost mut items: Seq<Pair<u64, u64>> = Seq::empty();
+            let ghost iter_seq: Seq<(u64, u64)> = it@.1;
+            let ghost mut items: Seq<(u64, u64)> = Seq::empty();
 
             #[verifier::loop_isolation(false)]
             loop
@@ -41,7 +41,7 @@ test_verify_one_file! {
                 decreases iter_seq.len() - it@.0,
             {
                 if let Some(x) = it.next() {
-                    proof { items = items.push(*x); }
+                    proof { items = items.push(x@); }
                 } else {
                     break;
                 }
@@ -70,8 +70,8 @@ test_verify_one_file! {
                 .insert(3u64, 30u64);
 
             let mut it: OrderedTableStPerIter<u64, u64> = (&t).into_iter();
-            let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
-            let ghost mut items: Seq<Pair<u64, u64>> = Seq::empty();
+            let ghost iter_seq: Seq<(u64, u64)> = it@.1;
+            let ghost mut items: Seq<(u64, u64)> = Seq::empty();
 
             #[verifier::loop_isolation(false)]
             loop
@@ -83,7 +83,7 @@ test_verify_one_file! {
                 decreases iter_seq.len() - it@.0,
             {
                 if let Some(x) = it.next() {
-                    proof { items = items.push(*x); }
+                    proof { items = items.push(x@); }
                 } else {
                     break;
                 }
@@ -112,8 +112,8 @@ test_verify_one_file! {
                 .insert(3u64, 30u64);
 
             let it: OrderedTableStPerIter<u64, u64> = t.iter();
-            let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
-            let ghost mut items: Seq<Pair<u64, u64>> = Seq::empty();
+            let ghost iter_seq: Seq<(u64, u64)> = it@.1;
+            let ghost mut items: Seq<(u64, u64)> = Seq::empty();
 
             for x in iter: it
                 invariant
@@ -121,7 +121,7 @@ test_verify_one_file! {
                     items =~= iter_seq.take(iter.pos),
                     iter.pos <= iter_seq.len(),
             {
-                proof { items = items.push(*x); }
+                proof { items = items.push(x@); }
             }
 
             assert(items =~= iter_seq);
@@ -146,8 +146,8 @@ test_verify_one_file! {
                 .insert(3u64, 30u64);
 
             let it: OrderedTableStPerIter<u64, u64> = (&t).into_iter();
-            let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
-            let ghost mut items: Seq<Pair<u64, u64>> = Seq::empty();
+            let ghost iter_seq: Seq<(u64, u64)> = it@.1;
+            let ghost mut items: Seq<(u64, u64)> = Seq::empty();
 
             for x in iter: it
                 invariant
@@ -155,7 +155,7 @@ test_verify_one_file! {
                     items =~= iter_seq.take(iter.pos),
                     iter.pos <= iter_seq.len(),
             {
-                proof { items = items.push(*x); }
+                proof { items = items.push(x@); }
             }
 
             assert(items =~= iter_seq);
