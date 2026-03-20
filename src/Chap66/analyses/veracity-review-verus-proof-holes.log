@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap66/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap66/BoruvkaMtEph.rs
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -41,8 +41,6 @@ Table of Contents:
        511 |     fn reroute_edges_mt<V: StTInMtT + Hash + Ord + 'static>(
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:556: error: external_body - #[verifier::external_body]
        557 |     pub fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:571: error: external_body - #[verifier::external_body]
-       572 |     pub fn mst_weight<V: StT + Hash>(
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:51: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         47 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
@@ -50,19 +48,25 @@ Table of Contents:
         50 |             let r = self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3;
         52 |             r
         53 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:571: error: fn_missing_requires - fn mst_weight — exec fn should have requires
+       557 |     pub fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(
+            ...
+       569 |     /// - APAS: N/A — utility function, not in prose.
+       570 |     /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential scan of edges.
+       572 |         edges: &SetStEph<LabeledEdge<V>>,
+       573 |         mst_labels: &SetStEph<usize>,
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:571: error: fn_missing_ensures - fn mst_weight — exec fn should have ensures
+       557 |     pub fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(
+            ...
+       569 |     /// - APAS: N/A — utility function, not in prose.
+       570 |     /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential scan of edges.
+       572 |         edges: &SetStEph<LabeledEdge<V>>,
+       573 |         mst_labels: &SetStEph<usize>,
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:130: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
-   Holes: 11 total
-      11 × external_body
+   Holes: 10 total
+      10 × external_body
    Info: 1 × structural_false_positive
       1 × OPAQUE_EXTERNAL
-⚠ BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:66: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        62 |         fn eq(&self, other: &Self) -> (r: bool)
-            ...
-        64 |         {
-        65 |             let r = self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3;
-        67 |             r
-        68 |         }
 
 =================================================================
 2. Depends Upon
@@ -73,23 +77,21 @@ Table of Contents:
 =================================================================
 
 BoruvkaMtEph  depends upon only clean modules
-BoruvkaStEph  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
 BoruvkaMtEph.rs  depends upon only clean modules
-BoruvkaStEph.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   1 clean (no holes, no errors; 50%)
-   1 holed (holes or errors, 50%)
-   2 total
+   0 clean (no holes, no errors; 0%)
+   1 holed (holes or errors, 100%)
+   1 total
 
 Proof Functions:
    0 clean (0%)
@@ -97,18 +99,20 @@ Proof Functions:
    0 total
 
 Function Specs:
-   31 exec fns with complete spec (requires+ensures) (79%)
-   1 exec fns missing spec (2%)
-   7 proof/spec fns clean (17%)
+   18 exec fns with complete spec (requires+ensures) (81%)
+   1 exec fns missing spec (4%)
+   3 proof/spec fns clean (13%)
    0 proof/spec fns with holes (0%)
-   39 total fns
+   22 total fns
 
 
-Holes Found: 11 (actionable)
-   11 × external_body (100%)
+Holes Found: 10 (actionable)
+   10 × external_body (100%)
 
-Warnings: 2 total
-   2 × assume_eq_clone_workaround
+Warnings: 3 total
+   1 × fn_missing_requires
+   1 × fn_missing_ensures
+   1 × assume_eq_clone_workaround
 
 Structural (info only): 1
    1 × OPAQUE_EXTERNAL
@@ -117,8 +121,8 @@ Structural (info only): 1
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 16:06:42 -07:00
-Ended:     2026-03-19 16:06:42 -07:00
-Duration:  9ms
+Started:   2026-03-19 17:12:24 -07:00
+Ended:     2026-03-19 17:12:24 -07:00
+Duration:  10ms
 
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log

@@ -568,15 +568,30 @@ pub mod BoruvkaMtEph {
     ///
     /// - APAS: N/A — utility function, not in prose.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential scan of edges.
-    #[verifier::external_body]
     pub fn mst_weight<V: StT + Hash>(
         edges: &SetStEph<LabeledEdge<V>>,
         mst_labels: &SetStEph<usize>,
-    ) -> WrappedF64 {
+    ) -> WrappedF64
+        requires
+            edges.spec_setsteph_wf(),
+            mst_labels.spec_setsteph_wf(),
+    {
         let mut total = zero_dist();
-        for LabeledEdge(_, _, w, label) in edges.iter() {
-            if mst_labels.mem(label) {
-                total += *w;
+        let mut it = edges.iter();
+        let ghost iter_seq = it@.1;
+        loop
+            invariant
+                iter_invariant(&it),
+                iter_seq == it@.1,
+            decreases iter_seq.len() - it@.0,
+        {
+            if let Some(edge) = it.next() {
+                let LabeledEdge(_, _, w, label) = edge;
+                if mst_labels.mem(label) {
+                    total = total.dist_add(w);
+                }
+            } else {
+                break;
             }
         }
         total

@@ -16,7 +16,6 @@ pub mod VertexMatchingStEph {
     #[cfg(not(verus_keep_ghost))]
     use std::collections::HashMap;
     use std::hash::Hash;
-    #[cfg(not(verus_keep_ghost))]
     use crate::SetLit;
 
     verus! {
@@ -49,14 +48,22 @@ pub mod VertexMatchingStEph {
     ///
     /// - APAS: Work Θ(|E|), Span Θ(|E|)
     /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — agrees with APAS
-    #[verifier::external_body]
-    #[cfg(not(verus_keep_ghost))]
-    pub fn greedy_matching<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>> {
+    pub fn greedy_matching<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> (matching: SetStEph<Edge<V>>)
+        requires
+            spec_graphview_wf(graph@),
+            valid_key_type_Edge::<V>(),
+        ensures true,
+    {
         let mut matching: SetStEph<Edge<V>> = SetLit![];
         let mut matched_vertices: SetStEph<V> = SetLit![];
 
-        for edge in graph.edges().iter() {
-            let Edge(u, v) = edge;
+        for edge in graph.edges().iter()
+            invariant
+                valid_key_type_Edge::<V>(),
+                matching.spec_setsteph_wf(),
+                matched_vertices.spec_setsteph_wf(),
+        {
+            let Edge(ref u, ref v) = edge;
 
             if !matched_vertices.mem(u) && !matched_vertices.mem(v) {
                 let _ = matching.insert(edge.clone());
