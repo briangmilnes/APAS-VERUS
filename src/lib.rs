@@ -253,6 +253,7 @@ pub mod standards {
     pub mod partial_eq_eq_clone_standard;
     pub mod arc_usage_standard;
     pub mod finite_sets_standard;
+    pub mod capacity_bounds_standard;
 }
 
 pub mod vstdplus {

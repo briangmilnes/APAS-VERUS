@@ -8,7 +8,7 @@ set -euo pipefail
 
 AGENTS=(agent1 agent2 agent3 agent4)
 MAIN_DIR="/home/milnes/projects/APAS-VERUS"
-INTERVAL=1800  # 30 minutes
+INTERVAL=${1:-300}  # default 5 minutes; pass 1800 for overnight
 
 main_head() {
     git -C "$MAIN_DIR" rev-parse origin/main 2>/dev/null

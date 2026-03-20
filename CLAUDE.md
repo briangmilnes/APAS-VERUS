@@ -40,6 +40,7 @@ is to get code to **verify (prove)** with Verus.
 | 19 | `helper_function_placement_standard.rs` | Placing helpers in traits vs. free functions |
 | 20 | `using_rand_standard.rs` | Using randomness in verified code |
 | 21 | `using_hashmap_standard.rs` | Replacing std::collections::HashMap with verified types |
+| 22 | `capacity_bounds_standard.rs` | Integer max bounds in requires for insert/push/resize |
 - Run `scripts/validate.sh` after making changes
 - Fix verification errors before moving on
 - Prefer verified code over unverified code, even if it requires restructuring
