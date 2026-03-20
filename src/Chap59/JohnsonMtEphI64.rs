@@ -50,6 +50,7 @@ pub mod JohnsonMtEphI64 {
             spec_labgraphview_wf(graph@),
             valid_key_type_WeightedEdge::<usize, i128>(),
             forall|v: usize| graph@.V.contains(v) <==> v < graph@.V.len(),
+            graph@.A.len() * 2 + 2 <= usize::MAX as int,
         ensures
             result.spec_n() as nat == graph@.V.len(),
     {
@@ -71,6 +72,10 @@ pub mod JohnsonMtEphI64 {
         let potentials = ArraySeqStEphS::tabulate(&get_dist, n);
 
         let reweighted_graph = reweight_graph(graph, &potentials, n);
+        proof {
+            assert(reweighted_graph@.A.len() <= graph@.A.len());
+            assert(reweighted_graph@.A.len() * 2 + 2 <= usize::MAX as int);
+        }
 
         let (all_distances, all_predecessors) = parallel_dijkstra_all(&reweighted_graph, &potentials, 0, n, n);
 
@@ -85,17 +90,32 @@ pub mod JohnsonMtEphI64 {
     ///
     /// - APAS: N/A — internal helper, not named in prose.
     /// - Claude-Opus-4.6: Work O(k * m log n), Span O(m log n) where k = end - start — binary split with ParaPair! gives log k depth, each leaf runs Dijkstra O(m log n)
-    #[verifier::external_body]
     fn parallel_dijkstra_all(
         graph: &WeightedDirGraphStEphI128<usize>,
         potentials: &ArraySeqStEphS<i64>,
         start: usize,
         end: usize,
         n: usize,
-    ) -> (
+    ) -> (result: (
         ArraySeqStEphS<ArraySeqStEphS<i64>>,
         ArraySeqStEphS<ArraySeqStEphS<usize>>,
-    ) {
+    ))
+        requires
+            start <= end,
+            end <= n,
+            n > 0,
+            n < usize::MAX,
+            n as nat == graph@.V.len(),
+            potentials.seq@.len() == n as int,
+            spec_labgraphview_wf(graph@),
+            valid_key_type_WeightedEdge::<usize, i128>(),
+            forall|v: usize| graph@.V.contains(v) <==> v < n,
+            graph@.A.len() * 2 + 2 <= usize::MAX as int,
+        ensures
+            result.0.seq@.len() == (end - start) as int,
+            result.1.seq@.len() == (end - start) as int,
+        decreases end - start,
+    {
         let range_size = end - start;
 
         if range_size == 0 {
@@ -131,10 +151,45 @@ pub mod JohnsonMtEphI64 {
         let potentials_left = potentials.clone();
         let potentials_right = potentials.clone();
 
-        let Pair((left_dist, left_pred), (right_dist, right_pred)) = crate::ParaPair!(
-            move || parallel_dijkstra_all(&graph_left, &potentials_left, start, mid, n),
-            move || parallel_dijkstra_all(&graph_right, &potentials_right, mid, end, n)
-        );
+        let f1 = move || -> (r: (ArraySeqStEphS<ArraySeqStEphS<i64>>, ArraySeqStEphS<ArraySeqStEphS<usize>>))
+            requires
+                start <= mid,
+                mid <= n,
+                n > 0,
+                n < usize::MAX,
+                n as nat == graph_left@.V.len(),
+                potentials_left.seq@.len() == n as int,
+                spec_labgraphview_wf(graph_left@),
+                valid_key_type_WeightedEdge::<usize, i128>(),
+                forall|v: usize| graph_left@.V.contains(v) <==> v < n,
+                graph_left@.A.len() * 2 + 2 <= usize::MAX as int,
+            ensures
+                r.0.seq@.len() == (mid - start) as int,
+                r.1.seq@.len() == (mid - start) as int,
+        {
+            parallel_dijkstra_all(&graph_left, &potentials_left, start, mid, n)
+        };
+
+        let f2 = move || -> (r: (ArraySeqStEphS<ArraySeqStEphS<i64>>, ArraySeqStEphS<ArraySeqStEphS<usize>>))
+            requires
+                mid <= end,
+                end <= n,
+                n > 0,
+                n < usize::MAX,
+                n as nat == graph_right@.V.len(),
+                potentials_right.seq@.len() == n as int,
+                spec_labgraphview_wf(graph_right@),
+                valid_key_type_WeightedEdge::<usize, i128>(),
+                forall|v: usize| graph_right@.V.contains(v) <==> v < n,
+                graph_right@.A.len() * 2 + 2 <= usize::MAX as int,
+            ensures
+                r.0.seq@.len() == (end - mid) as int,
+                r.1.seq@.len() == (end - mid) as int,
+        {
+            parallel_dijkstra_all(&graph_right, &potentials_right, mid, end, n)
+        };
+
+        let Pair((left_dist, left_pred), (right_dist, right_pred)) = crate::ParaPair!(f1, f2);
 
         let combined_dist = ArraySeqStEphS::append(&left_dist, &right_dist);
         let combined_pred = ArraySeqStEphS::append(&left_pred, &right_pred);
@@ -251,10 +306,12 @@ pub mod JohnsonMtEphI64 {
             spec_labgraphview_wf(graph@),
             valid_key_type_WeightedEdge::<usize, i128>(),
             forall|v: usize| graph@.V.contains(v) <==> v < n,
+            graph@.A.len() * 2 + 2 <= usize::MAX as int,
         ensures
             spec_labgraphview_wf(reweighted@),
             reweighted@.V.len() == n as nat,
             forall|v: usize| v < n ==> reweighted@.V.contains(v),
+            reweighted@.A.len() <= graph@.A.len(),
     {
         // Build vertex set {0, ..., n-1}.
         let mut vertices = SetStEph::<usize>::empty();
@@ -290,8 +347,10 @@ pub mod JohnsonMtEphI64 {
         for labeled_edge in iter: it
             invariant
                 iter.elements == arcs_seq,
+                iter.pos <= arcs_seq.len(),
                 arcs_seq.map(|i: int, e: LabEdge<usize, i128>| e@).to_set() =~= graph@.A,
                 reweighted_edges.spec_setsteph_wf(),
+                reweighted_edges@.len() <= iter.pos as nat,
                 vertices.spec_setsteph_wf(),
                 vertices@.len() == n as nat,
                 forall|k: usize| vertices@.contains(k) <==> k < n,
@@ -319,7 +378,29 @@ pub mod JohnsonMtEphI64 {
             }
         }
 
-        WeightedDirGraphStEphI128::from_weighed_edges(vertices, reweighted_edges)
+        proof {
+            // Prove reweighted@.A.len() <= graph@.A.len().
+            // After the loop: reweighted_edges@.len() <= arcs_seq.len().
+            // Prove arcs_seq.len() == graph@.A.len() via injective mapping.
+            let view_fn = |k: LabEdge<usize, i128>| k@;
+            assert forall|x: LabEdge<usize, i128>, y: LabEdge<usize, i128>|
+                #[trigger] view_fn(x) == #[trigger] view_fn(y) implies x == y
+            by {};
+            arcs_seq.lemma_no_duplicates_injective(view_fn);
+            let mapped = arcs_seq.map_values(view_fn);
+            mapped.unique_seq_to_set();
+            assert(mapped =~= arcs_seq.map(|i: int, k: LabEdge<usize, i128>| k@));
+            assert(mapped.to_set() =~= graph@.A);
+            assert(arcs_seq.len() == graph@.A.len());
+        }
+
+        let result = WeightedDirGraphStEphI128::from_weighed_edges(vertices, reweighted_edges);
+        proof {
+            assert(result@.A.len() == reweighted_edges@.len());
+            assert(reweighted_edges@.len() <= arcs_seq.len() as nat);
+            assert(arcs_seq.len() == graph@.A.len());
+        }
+        result
     }
 
     /// Create result for negative cycle case.
