@@ -1,6 +1,6 @@
-Chapter Status — 46 chapters, 30 clean, 16 holed, 99 holes (global), 257 modules
+Chapter Status — 46 chapters, 32 clean, 14 holed, 69 holes (global), 257 modules
 
-CLEAN CHAPTERS (30)
+CLEAN CHAPTERS (32)
   Chapter        Files
   -------------- -----
   Chap03             1
@@ -31,10 +31,12 @@ CLEAN CHAPTERS (30)
   Chap56            12
   Chap57             3
   Chap58             2
+  Chap63             2
+  Chap66             2
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (16) — 99 holes
+HOLED CHAPTERS (14) — 69 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
   Chap02             1     2  internal  Chap02::HFSchedulerMtEph
@@ -47,12 +49,10 @@ HOLED CHAPTERS (16) — 99 holes
   Chap45             1     7  YES       
   Chap47             5     9  internal  Chap47::ParaHashTableStEph
   Chap59             2     4  NO        Chap05::SetStEph
-  Chap61             8     4  NO        Chap05::SetStEph
-  Chap62             9     4  NO        Chap05::SetStEph
-  Chap63             6     2  NO        Chap05::SetStEph
-  Chap64             4     3  NO        Chap05::SetStEph
+  Chap61             1     4  NO        Chap05::SetStEph
+  Chap62             3     4  NO        Chap05::SetStEph
+  Chap64             2     3  NO        Chap05::SetStEph
   Chap65             2     3  NO        Chap05::SetStEph
-  Chap66             9     2  NO        Chap05::SetStEph
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
