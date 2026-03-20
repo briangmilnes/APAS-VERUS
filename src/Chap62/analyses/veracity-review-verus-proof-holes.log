@@ -21,14 +21,12 @@ Table of Contents:
 =================================================================
 
 ❌ StarContractionMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap62/StarContractionMtEph.rs:72: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap62/StarContractionMtEph.rs:72: error: external_body - #[verifier::external_body]
         73 |     pub fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G) -> R
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap62/StarContractionMtEph.rs:121: error: external_body - #[verifier::external_body]
-       122 |     fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
-   Holes: 2 total
-      2 × external_body
+   Holes: 1 total
+      1 × external_body
 ❌ StarContractionStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap62/StarContractionStEph.rs:72: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap62/StarContractionStEph.rs:72: error: external_body - #[verifier::external_body]
         73 |     pub fn star_contract<V, R, F, G>(graph: &UnDirGraphStEph<V>, base: &F, expand: &G) -> R
    Holes: 1 total
       1 × external_body
@@ -79,16 +77,16 @@ Function Specs:
    19 total fns
 
 
-Holes Found: 3 (actionable)
-   3 × external_body (100%)
+Holes Found: 2 (actionable)
+   2 × external_body (100%)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 23:00:28 -07:00
-Ended:     2026-03-19 23:00:28 -07:00
-Duration:  5ms
+Started:   2026-03-19 23:11:23 -07:00
+Ended:     2026-03-19 23:11:23 -07:00
+Duration:  7ms
 
 Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
+Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
