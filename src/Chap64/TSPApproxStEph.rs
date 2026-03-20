@@ -86,24 +86,27 @@ pub mod TSPApproxStEph {
     ///
     /// Returns:
     /// - Vector of vertices in Euler tour order
-    #[verifier::external_body]
     pub fn euler_tour<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         start: &V,
         tree_edges: &SetStEph<LabEdge<V, WrappedF64>>,
-    ) -> Vec<V> {
+    ) -> (tour: Vec<V>)
+        requires spec_labgraphview_wf(graph@),
+        ensures true,
+    {
         let mut tour = Vec::new();
         let mut visited_edges = HashSetWithViewPlus::<(V, V)>::new();
+        let fuel = tree_edges.elements.len();
 
-        euler_tour_dfs(graph, start, None, tree_edges, &mut tour, &mut visited_edges);
+        euler_tour_dfs(graph, start, None, tree_edges, &mut tour, &mut visited_edges, fuel);
 
         tour
     }
 
+    /// DFS helper for Euler tour with fuel-based termination.
     /// - APAS: N/A — internal helper for euler_tour.
     /// - Claude-Opus-4.6: Work O(n * m_tree), Span O(n * m_tree) — for each vertex,
     ///   scans neighbors (O(m)) and tree_edges (O(m_tree)) to find matching edges.
-    #[verifier::external_body]
     fn euler_tour_dfs<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         current: &V,
@@ -111,45 +114,62 @@ pub mod TSPApproxStEph {
         tree_edges: &SetStEph<LabEdge<V, WrappedF64>>,
         tour: &mut Vec<V>,
         visited_edges: &mut HashSetWithViewPlus<(V, V)>,
-    ) {
+        fuel: usize,
+    )
+        requires spec_labgraphview_wf(graph@),
+        ensures true,
+        decreases fuel,
+    {
         tour.push(current.clone());
 
-        // Visit all neighbors connected by tree edges
-        let neighbors = get_neighbors(graph, current);
-        for neighbor in neighbors.iter() {
-            // Skip parent to avoid immediate backtrack
-            if let Some(p) = parent {
-                if neighbor == p {
-                    continue;
-                }
-            }
+        if fuel == 0 {
+            return;
+        }
 
-            // Check if edge is in tree and not yet traversed
-            let edge_key = if current < neighbor {
-                (current.clone(), neighbor.clone())
-            } else {
-                (neighbor.clone(), current.clone())
+        // Visit all neighbors connected by tree edges.
+        let neighbors = get_neighbors(graph, current);
+        let ng_vec = neighbors.elements.to_vec();
+        let mut i: usize = 0;
+        while i < ng_vec.len() {
+            let neighbor = &ng_vec[i];
+
+            // Skip parent to avoid immediate backtrack.
+            let skip = match parent {
+                Some(p) => neighbor == p,
+                None => false,
             };
 
-            if visited_edges.contains(&edge_key) {
-                continue;
-            }
+            if !skip {
+                // Check if edge is in tree and not yet traversed.
+                let edge_key = if current < neighbor {
+                    (current.clone(), neighbor.clone())
+                } else {
+                    (neighbor.clone(), current.clone())
+                };
 
-            // Check if edge exists in tree_edges
-            let mut edge_found = false;
-            for edge in tree_edges.iter() {
-                let LabEdge(u, v, _) = edge;
-                if (u == current && v == neighbor) || (u == neighbor && v == current) {
-                    edge_found = true;
-                    break;
+                if !visited_edges.contains(&edge_key) {
+                    // Check if edge exists in tree_edges.
+                    let mut edge_found = false;
+                    let te_vec = tree_edges.elements.to_vec();
+                    let mut j: usize = 0;
+                    while j < te_vec.len() {
+                        let LabEdge(u, v, _) = &te_vec[j];
+                        if (u == current && v == neighbor) || (u == neighbor && v == current) {
+                            edge_found = true;
+                            break;
+                        }
+                        j = j + 1;
+                    }
+
+                    if edge_found {
+                        visited_edges.insert(edge_key);
+                        euler_tour_dfs(graph, neighbor, Some(current), tree_edges, tour, visited_edges, fuel - 1);
+                        tour.push(current.clone());
+                    }
                 }
             }
 
-            if edge_found {
-                visited_edges.insert(edge_key);
-                euler_tour_dfs(graph, neighbor, Some(current), tree_edges, tour, visited_edges);
-                tour.push(current.clone());
-            }
+            i = i + 1;
         }
     }
 
