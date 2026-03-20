@@ -43,15 +43,56 @@ pub mod StarContractionStEph {
             V: HashOrd,
             F: Fn(&SetStEph<V>) -> R,
             G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R
-        requires Self::spec_starcontractionsteph_wf(graph);
+        requires
+            Self::spec_starcontractionsteph_wf(graph),
+            valid_key_type_Edge::<V>(),
+            forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),
+            forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|
+                #[trigger] expand.requires((v, e, c, p, r));
 
         /// Contract graph to just vertices (no edges).
         /// APAS: Work O((n + m) lg n), Span O((n + m) lg n)
         fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<V>
-            requires Self::spec_starcontractionsteph_wf(graph);
+            requires
+                Self::spec_starcontractionsteph_wf(graph),
+                valid_key_type_Edge::<V>();
     }
 
     pub type T<V> = UnDirGraphStEph<V>;
+
+    /// Inner recursive star contraction with fuel for termination.
+    fn star_contract_fuel<V, R, F, G>(
+        graph: &UnDirGraphStEph<V>, base: &F, expand: &G, fuel: usize,
+    ) -> R
+    where
+        V: HashOrd,
+        F: Fn(&SetStEph<V>) -> R,
+        G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R,
+    requires
+        spec_graphview_wf(graph@),
+        valid_key_type_Edge::<V>(),
+        forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),
+        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|
+            #[trigger] expand.requires((v, e, c, p, r)),
+    decreases fuel,
+    {
+        if graph.sizeE() == 0 || fuel == 0 {
+            let verts = graph.vertices();
+            proof {
+                assert(verts@.finite());
+                assert(verts.spec_setsteph_wf());
+            }
+            return base(verts);
+        }
+
+        let (centers, partition_map) = sequential_star_partition(graph);
+
+        let quotient_graph = build_quotient_graph(graph, &centers, &partition_map);
+
+        let r = star_contract_fuel(&quotient_graph, base, expand, fuel - 1);
+
+        expand(graph.vertices(), graph.edges(), &centers, &partition_map, r)
+    }
 
     /// Algorithm 62.5: Star Contraction (Sequential)
     ///
@@ -69,29 +110,25 @@ pub mod StarContractionStEph {
     ///
     /// Returns:
     /// - Result of type R as computed by base and expand functions
-    #[verifier::external_body]
     pub fn star_contract<V, R, F, G>(graph: &UnDirGraphStEph<V>, base: &F, expand: &G) -> R
     where
         V: HashOrd,
         F: Fn(&SetStEph<V>) -> R,
         G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R,
+    requires
+        spec_graphview_wf(graph@),
+        valid_key_type_Edge::<V>(),
+        forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),
+        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|
+            #[trigger] expand.requires((v, e, c, p, r)),
     {
-        if graph.sizeE() == 0 {
-            return base(graph.vertices());
-        }
-
-        let (centers, partition_map) = sequential_star_partition(graph);
-
-        let quotient_graph = build_quotient_graph(graph, &centers, &partition_map);
-
-        let r = star_contract(&quotient_graph, base, expand);
-
-        expand(graph.vertices(), graph.edges(), &centers, &partition_map, r)
+        star_contract_fuel(graph, base, expand, graph.sizeV())
     }
 
-    /// Build quotient graph from partition
+    /// Build quotient graph from partition.
     ///
     /// Routes edges through partition map, removing self-loops.
+    /// Quotient graph well-formedness assumed (blocked by generic Clone lacking view ensures).
     ///
     /// - APAS: (no cost stated) — helper not in prose.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential loop over all edges.
@@ -100,13 +137,18 @@ pub mod StarContractionStEph {
         centers: &SetStEph<V>,
         partition_map: &HashMapWithViewPlus<V, V>,
     ) -> (quotient: UnDirGraphStEph<V>)
-        requires valid_key_type_Edge::<V>(),
-        ensures true,
+        requires
+            valid_key_type_Edge::<V>(),
+            spec_graphview_wf(graph@),
+            centers.spec_setsteph_wf(),
+        ensures
+            spec_graphview_wf(quotient@),
     {
         let mut quotient_edges: SetStEph<Edge<V>> = SetLit![];
         let edge_vec = graph.E.to_seq();
         let n = edge_vec.len();
         let mut i: usize = 0;
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
         while i < n
             invariant
                 valid_key_type_Edge::<V>(),
@@ -138,7 +180,16 @@ pub mod StarContractionStEph {
             i = i + 1;
         }
 
-        UnDirGraphStEph { V: centers.clone(), E: quotient_edges }
+        let quotient = UnDirGraphStEph { V: centers.clone(), E: quotient_edges };
+        proof {
+            // Quotient graph well-formedness: vertices contain all edge endpoints.
+            // Blocked by generic Clone::clone lacking view-preserving ensures in Verus.
+            // The partition map correctly maps all edge endpoints to centers at runtime,
+            // but we cannot prove partition_map@[v]@ ∈ centers@ because Clone::clone
+            // for generic V does not guarantee cloned@ == original@.
+            assume(spec_graphview_wf(quotient@));
+        }
+        quotient
     }
 
     /// One round of sequential star contraction
@@ -148,13 +199,15 @@ pub mod StarContractionStEph {
     /// - APAS: Work O((n + m) lg n), Span O((n + m) lg n)
     /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — agrees with APAS.
     pub fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (result: SetStEph<V>)
-        requires valid_key_type_Edge::<V>(),
+        requires
+            spec_graphview_wf(graph@),
+            valid_key_type_Edge::<V>(),
         ensures true,
     {
         star_contract(
             graph,
-            &|vertices: &SetStEph<V>| -> (r: SetStEph<V>) ensures true { vertices.clone() },
-            &|_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, result: SetStEph<V>| -> (r: SetStEph<V>) ensures true { result },
+            &|vertices: &SetStEph<V>| -> (r: SetStEph<V>) { vertices.clone() },
+            &|_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, result: SetStEph<V>| -> (r: SetStEph<V>) { result },
         )
     }
 

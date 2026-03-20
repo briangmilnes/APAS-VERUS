@@ -40,7 +40,7 @@ pub mod ConnectivityMtEph {
         /// Count connected components using parallel star contraction.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
         fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N
-            requires Self::spec_connectivitymteph_wf(graph);
+            requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();
 
         /// Find connected components using parallel star contraction.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
@@ -48,12 +48,12 @@ pub mod ConnectivityMtEph {
             graph: &UnDirGraphMtEph<V>,
             seed: u64,
         ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
-            requires Self::spec_connectivitymteph_wf(graph);
+            requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();
 
         /// Count components using higher-order function approach.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
         fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N
-            requires Self::spec_connectivitymteph_wf(graph);
+            requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();
 
         /// Find components using higher-order function approach.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
@@ -61,7 +61,7 @@ pub mod ConnectivityMtEph {
             graph: &UnDirGraphMtEph<V>,
             seed: u64,
         ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
-            requires Self::spec_connectivitymteph_wf(graph);
+            requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();
     }
 
     pub type T<V> = UnDirGraphMtEph<V>;
@@ -81,7 +81,9 @@ pub mod ConnectivityMtEph {
     /// Returns:
     /// - The number of connected components
     pub fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N
-        requires spec_graphview_wf(graph@)
+        requires
+            spec_graphview_wf(graph@),
+            valid_key_type_Edge::<V>(),
     {
         count_components_hof(graph, seed)
     }
@@ -105,7 +107,9 @@ pub mod ConnectivityMtEph {
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
     ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
-        requires spec_graphview_wf(graph@)
+        requires
+            spec_graphview_wf(graph@),
+            valid_key_type_Edge::<V>(),
     {
         connected_components_hof(graph, seed)
     }
@@ -147,7 +151,9 @@ pub mod ConnectivityMtEph {
     /// - APAS: Work O((n+m) lg n), Span O(lg^2 n) — same as Algorithm 63.2 (parallel)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(m) — delegates to star_contract_mt (inherits merge bottleneck)
     pub fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N
-        requires spec_graphview_wf(graph@),
+        requires
+            spec_graphview_wf(graph@),
+            valid_key_type_Edge::<V>(),
     {
         let base = |vertices: &SetStEph<V>| -> (n: N)
             requires vertices.spec_setsteph_wf()
@@ -166,7 +172,9 @@ pub mod ConnectivityMtEph {
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
     ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
-        requires spec_graphview_wf(graph@),
+        requires
+            spec_graphview_wf(graph@),
+            valid_key_type_Edge::<V>(),
     {
         let base = |vertices: &SetStEph<V>| -> (result: (SetStEph<V>, HashMapWithViewPlus<V, V>))
             requires

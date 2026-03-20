@@ -21,63 +21,63 @@ Table of Contents:
 =================================================================
 
 ⚠ ConnectivityMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:83: error: fn_missing_ensures - fn count_components_mt — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap63/ConnectivityMtEph.rs:83: error: fn_missing_ensures - fn count_components_mt — exec fn should have ensures
         60 |         fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static>(
             ...
         81 |     /// Returns:
         82 |     /// - The number of connected components
-        84 |         requires spec_graphview_wf(graph@)
-        85 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:104: error: fn_missing_ensures - fn connected_components_mt — exec fn should have ensures
+        84 |         requires
+        85 |             spec_graphview_wf(graph@),
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap63/ConnectivityMtEph.rs:106: error: fn_missing_ensures - fn connected_components_mt — exec fn should have ensures
         83 |     pub fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N
             ...
-       102 |     /// - (representatives, component_map): Set of component representatives and
-       103 |     ///   mapping from each vertex to its component representative
-       105 |         graph: &UnDirGraphMtEph<V>,
-       106 |         seed: u64,
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:149: error: fn_missing_ensures - fn count_components_hof — exec fn should have ensures
-       117 |     fn compose_maps_parallel<V: StT + MtT + Hash + Ord + 'static>(
+       104 |     /// - (representatives, component_map): Set of component representatives and
+       105 |     ///   mapping from each vertex to its component representative
+       107 |         graph: &UnDirGraphMtEph<V>,
+       108 |         seed: u64,
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap63/ConnectivityMtEph.rs:153: error: fn_missing_ensures - fn count_components_hof — exec fn should have ensures
+       121 |     fn compose_maps_parallel<V: StT + MtT + Hash + Ord + 'static>(
             ...
-       147 |     /// - APAS: Work O((n+m) lg n), Span O(lg^2 n) — same as Algorithm 63.2 (parallel)
-       148 |     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(m) — delegates to star_contract_mt (inherits merge bottleneck)
-       150 |         requires spec_graphview_wf(graph@),
-       151 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityMtEph.rs:165: error: fn_missing_ensures - fn connected_components_hof — exec fn should have ensures
-       149 |     pub fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N
+       151 |     /// - APAS: Work O((n+m) lg n), Span O(lg^2 n) — same as Algorithm 63.2 (parallel)
+       152 |     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(m) — delegates to star_contract_mt (inherits merge bottleneck)
+       154 |         requires
+       155 |             spec_graphview_wf(graph@),
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap63/ConnectivityMtEph.rs:171: error: fn_missing_ensures - fn connected_components_hof — exec fn should have ensures
+       153 |     pub fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N
             ...
-       163 |     /// - APAS: Work O((n+m) lg n), Span O(lg^2 n) — same as Algorithm 63.3 (parallel)
-       164 |     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(n lg n) — delegates to star_contract_mt (inherits compose bottleneck)
-       166 |         graph: &UnDirGraphMtEph<V>,
-       167 |         seed: u64,
+       169 |     /// - APAS: Work O((n+m) lg n), Span O(lg^2 n) — same as Algorithm 63.3 (parallel)
+       170 |     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(n lg n) — delegates to star_contract_mt (inherits compose bottleneck)
+       172 |         graph: &UnDirGraphMtEph<V>,
+       173 |         seed: u64,
 ⚠ ConnectivityStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:77: error: fn_missing_ensures - fn count_components — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap63/ConnectivityStEph.rs:77: error: fn_missing_ensures - fn count_components — exec fn should have ensures
         58 |         fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
             ...
         75 |     /// Returns:
         76 |     /// - The number of connected components
-        78 |         requires spec_graphview_wf(graph@)
-        79 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:98: error: fn_missing_ensures - fn connected_components — exec fn should have ensures
+        78 |         requires
+        79 |             spec_graphview_wf(graph@),
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap63/ConnectivityStEph.rs:100: error: fn_missing_ensures - fn connected_components — exec fn should have ensures
         77 |     pub fn count_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N
             ...
-        96 |     /// - (representatives, component_map): Set of component representatives and
-        97 |     ///   mapping from each vertex to its component representative
-        99 |         requires spec_graphview_wf(graph@)
-       100 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:161: error: fn_missing_ensures - fn count_components_hof — exec fn should have ensures
-       109 |     fn build_quotient_edges<V: HashOrd>(
+        98 |     /// - (representatives, component_map): Set of component representatives and
+        99 |     ///   mapping from each vertex to its component representative
+       101 |         requires
+       102 |             spec_graphview_wf(graph@),
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap63/ConnectivityStEph.rs:165: error: fn_missing_ensures - fn count_components_hof — exec fn should have ensures
+       113 |     fn build_quotient_edges<V: HashOrd>(
             ...
-       159 |     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — same as Algorithm 63.2
-       160 |     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
-       162 |         requires spec_graphview_wf(graph@),
-       163 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap63/ConnectivityStEph.rs:179: error: fn_missing_ensures - fn connected_components_hof — exec fn should have ensures
-       161 |     pub fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N
+       163 |     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — same as Algorithm 63.2
+       164 |     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
+       166 |         requires
+       167 |             spec_graphview_wf(graph@),
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap63/ConnectivityStEph.rs:185: error: fn_missing_ensures - fn connected_components_hof — exec fn should have ensures
+       165 |     pub fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N
             ...
-       177 |     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — same as Algorithm 63.3
-       178 |     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
-       180 |         requires spec_graphview_wf(graph@),
-       181 |     {
+       183 |     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — same as Algorithm 63.3
+       184 |     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
+       186 |         requires
+       187 |             spec_graphview_wf(graph@),
 
 =================================================================
 2. Depends Upon
@@ -130,12 +130,12 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-20 09:10:55 -07:00
-Ended:     2026-03-20 09:10:55 -07:00
+Started:   2026-03-20 10:42:26 -07:00
+Ended:     2026-03-20 10:42:26 -07:00
 Duration:  5ms
 
 Full output: src/Chap63/analyses/veracity-review-verus-proof-holes.log
--03-20 09:10:55 -07:00
+-03-20 10:42:26 -07:00
 Duration:  5ms
 
 Full output: src/Chap63/analyses/veracity-review-verus-proof-holes.log
