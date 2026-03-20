@@ -62,6 +62,10 @@ pub mod OrderedTableStPer {
 
     // 6. spec fns
 
+    pub open spec fn spec_rank_pred<K: StT + Ord + TotalOrder>(x: K::V, k: K) -> bool {
+        exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, k) && t@ != k@
+    }
+
     proof fn lemma_keys_no_dups_implies_no_duplicates<KV, VV>(entries: Seq<(KV, VV)>)
         requires spec_keys_no_dups(entries),
         ensures entries.no_duplicates(),
@@ -2795,42 +2799,159 @@ pub mod OrderedTableStPer {
             table
         }
 
-        #[verifier::external_body]
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
         {
+            proof {
+                assert(obeys_feq_full_trigger::<K>());
+            }
             let len = self.base_set.elements.length();
+            let ghost seq = self.base_set.elements@;
+            let ghost dom = self@.dom();
+            let ghost pred = |x: K::V| -> bool
+                { exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@ };
             let mut count: usize = 0;
+            let ghost mut counted: Set<K::V> = Set::empty();
             let mut i: usize = 0;
-            while i < len {
+            proof {
+                assert(obeys_feq_full_trigger::<K>());
+                assert(obeys_feq_full::<K>());
+                lemma_entries_to_map_finite::<K::V, V::V>(seq);
+                assert(counted.finite());
+                assert(counted.len() == 0);
+            }
+            while i < len
+                invariant
+                    self.spec_orderedtablestper_wf(),
+                    obeys_feq_full::<K>(),
+                    len as nat == seq.len(),
+                    seq == self.base_set.elements@,
+                    dom == self@.dom(),
+                    spec_keys_no_dups(seq),
+                    0 <= i <= len,
+                    0 <= count <= i,
+                    count as int == counted.len(),
+                    counted.finite(),
+                    forall|x: K::V| #[trigger] counted.contains(x)
+                        ==> spec_rank_pred::<K>(x, *k),
+                    forall|x: K::V| #[trigger] counted.contains(x) ==> dom.contains(x),
+                    forall|j: int| 0 <= j < i as int && spec_rank_pred::<K>(seq[j].0, *k)
+                        ==> #[trigger] counted.contains(seq[j].0),
+                    forall|x: K::V| counted.contains(x) ==>
+                        exists|j: int| 0 <= j < i as int && #[trigger] seq[j].0 == x,
+                decreases len - i,
+            {
                 let pair = self.base_set.elements.nth(i);
-                if pair.0 < *k {
-                    count += 1;
+                let c = TotalOrder::cmp(&pair.0, k);
+                match c {
+                    core::cmp::Ordering::Less => {
+                        proof {
+                            assert(pair.0@ != k@);
+                            assert(TotalOrder::le(pair.0, *k));
+                            assert(spec_rank_pred::<K>(pair.0@, *k));
+                            lemma_entries_to_map_contains_key::<K::V, V::V>(seq, i as int);
+                            if counted.contains(pair.0@) {
+                                let witness = choose|j: int| 0 <= j < i as int && (#[trigger] seq[j]).0 == pair.0@;
+                                assert(seq[witness].0 == seq[i as int].0);
+                            }
+                            assert(!counted.contains(pair.0@));
+                            counted = counted.insert(pair.0@);
+                        }
+                        count = count + 1;
+                    },
+                    _ => {
+                        proof {
+                            if spec_rank_pred::<K>(seq[i as int].0, *k) {
+                                let t_wit: K = choose|t: K| #![trigger t@]
+                                    t@ == seq[i as int].0 && TotalOrder::le(t, *k) && t@ != k@;
+                                assert(t_wit == pair.0);
+                                assert(TotalOrder::le(pair.0, *k));
+                                match c {
+                                    core::cmp::Ordering::Equal => {
+                                    },
+                                    core::cmp::Ordering::Greater => {
+                                        K::antisymmetric(pair.0, *k);
+                                    },
+                                    _ => {},
+                                }
+                            }
+                        }
+                    },
                 }
-                i += 1;
+                i = i + 1;
+            }
+            proof {
+                assert(counted =~= dom.filter(pred)) by {
+                    assert forall|x: K::V| counted.contains(x)
+                        implies #[trigger] dom.filter(pred).contains(x) by {
+                        assert(dom.contains(x));
+                        assert(spec_rank_pred::<K>(x, *k));
+                    };
+                    assert forall|x: K::V| dom.filter(pred).contains(x)
+                        implies #[trigger] counted.contains(x) by {
+                        assert(dom.contains(x));
+                        assert(spec_rank_pred::<K>(x, *k));
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(seq, x);
+                        let idx = choose|idx: int| 0 <= idx < seq.len()
+                            && (#[trigger] seq[idx]).0 == x;
+                        assert(spec_rank_pred::<K>(seq[idx].0, *k));
+                        assert(counted.contains(seq[idx].0));
+                    };
+                };
+                dom.lemma_len_filter(pred);
             }
             count
         }
 
-        #[verifier::external_body]
         fn select_key(&self, i: usize) -> (key: Option<K>)
             where K: TotalOrder
         {
-            let entries = self.collect();
-            let len = entries.length();
-            if i >= len {
-                return None;
+            proof {
+                assert(obeys_feq_full_trigger::<K>());
+                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+                lemma_entries_to_map_finite::<K::V, V::V>(self.base_set.elements@);
             }
-            // Collect all keys, sort, return i-th.
-            let mut keys: Vec<K> = Vec::new();
-            let mut j: usize = 0;
-            while j < len {
-                let pair = entries.nth(j);
-                keys.push(pair.0.clone());
-                j += 1;
+            let len = self.base_set.elements.length();
+            if i >= self.size() {
+                None
+            } else {
+                let mut j: usize = 0;
+                let mut result_key: Option<K> = None;
+                while j < len
+                    invariant
+                        j <= len,
+                        len as nat == self.base_set.elements@.len(),
+                        self.spec_orderedtablestper_wf(),
+                        obeys_view_eq::<K>(),
+                        obeys_feq_full::<K>(),
+                        obeys_feq_full::<Pair<K, V>>(),
+                        self@.dom().finite(),
+                        i < self@.dom().len(),
+                        match result_key {
+                            None => true,
+                            Some(rk) =>
+                                self@.dom().contains(rk@)
+                                && self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, rk) && t@ != rk@).len() == i as int,
+                        },
+                    decreases len - j,
+                {
+                    let candidate = self.base_set.elements.nth(j);
+                    let rank_val = self.rank_key(&candidate.0);
+                    if rank_val == i && result_key.is_none() {
+                        let pair_clone = candidate.clone_plus();
+                        proof {
+                            lemma_cloned_view_eq(*candidate, pair_clone);
+                            let ghost _pv = pair_clone.0@;
+                            let ghost _cv = candidate.0@;
+                            assert(pair_clone.0 == candidate.0);
+                            lemma_entries_to_map_contains_key::<K::V, V::V>(self.base_set.elements@, j as int);
+                        }
+                        result_key = Some(pair_clone.0);
+                    }
+                    j = j + 1;
+                }
+                result_key
             }
-            keys.sort();
-            Some(keys[i].clone())
         }
 
         fn split_rank_key(&self, i: usize) -> (parts: (Self, Self))

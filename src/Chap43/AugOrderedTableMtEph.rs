@@ -343,6 +343,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- external_body, parallel via ParaPair! but get_key_range dominates
         fn reduce_range_parallel(&self, k1: &K, k2: &K) -> (reduced: V)
             where K: TotalOrder
+            requires self.spec_augorderedtablemteph_wf()
             ensures self@.dom().finite();
     }
 
