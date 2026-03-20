@@ -61,24 +61,34 @@ pub mod BSTParaMtEph {
 
     #[verifier::reject_recursive_types(T)]
     pub struct ParamBST<T: MtKey> {
-        pub root: Arc<RwLock<Option<Box<NodeInner<T>>>, BSTParaMtEphInv>>,
+        pub(crate) root: Arc<RwLock<Option<Box<NodeInner<T>>>, BSTParaMtEphInv>>,
+        pub(crate) ghost_locked_root: Ghost<Set<<T as View>::V>>,
     }
 
-    fn new_param_bst_arc<T: MtKey>(
+    fn new_param_bst<T: MtKey>(
         val: Option<Box<NodeInner<T>>>,
-    ) -> (arc: Arc<RwLock<Option<Box<NodeInner<T>>>, BSTParaMtEphInv>>)
+        Ghost(contents): Ghost<Set<<T as View>::V>>,
+    ) -> (tree: ParamBST<T>)
         requires BSTParaMtEphInv.inv(val),
-        ensures arc.pred() == BSTParaMtEphInv,
+        ensures tree@ =~= contents,
     {
-        new_arc_rwlock(val, Ghost(BSTParaMtEphInv))
+        ParamBST {
+            root: new_arc_rwlock(val, Ghost(BSTParaMtEphInv)),
+            ghost_locked_root: Ghost(contents),
+        }
     }
 
     // 5. view impls
 
+    impl<T: MtKey> ParamBST<T> {
+        pub closed spec fn spec_ghost_locked_root(self) -> Set<<T as View>::V> {
+            self.ghost_locked_root@
+        }
+    }
+
     impl<T: MtKey> View for ParamBST<T> {
         type V = Set<<T as View>::V>;
-        #[verifier::external_body]
-        open spec fn view(&self) -> Set<<T as View>::V> { Set::empty() }
+        open spec fn view(&self) -> Set<<T as View>::V> { self.spec_ghost_locked_root() }
     }
 
     impl<T: MtKey> View for Exposed<T> {
@@ -199,9 +209,7 @@ pub mod BSTParaMtEph {
         fn new() -> (empty: Self)
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_bstparamteph_wf()
         {
-            let empty = ParamBST { root: new_param_bst_arc(None) };
-            proof { assume(empty@ == Set::<<T as View>::V>::empty() && empty.spec_bstparamteph_wf()); }
-            empty
+            new_param_bst(None, Ghost(Set::empty()))
         }
 
         fn singleton(key: T) -> (tree: Self)
@@ -211,11 +219,11 @@ pub mod BSTParaMtEph {
         {
             let left = Self::new();
             let right = Self::new();
-            let tree = ParamBST {
-                root: new_param_bst_arc(Some(Box::new(NodeInner { key, size: 1, left, right }))),
-            };
-            proof { assume(tree@ == Set::<<T as View>::V>::empty().insert(key@) && tree@.finite()); }
-            tree
+            let ghost kv = key@;
+            new_param_bst(
+                Some(Box::new(NodeInner { key, size: 1, left, right })),
+                Ghost(Set::<<T as View>::V>::empty().insert(kv)),
+            )
         }
 
         fn expose(&self) -> (exposed: Exposed<T>)
@@ -239,8 +247,7 @@ pub mod BSTParaMtEph {
         {
             match exposed {
                 Exposed::Leaf => {
-                    let joined = Self::new();
-                    joined
+                    Self::new()
                 },
                 Exposed::Node(left, key, right) => {
                     let lsz = left.size();
@@ -250,11 +257,12 @@ pub mod BSTParaMtEph {
                     } else {
                         usize::MAX
                     };
-                    let joined = ParamBST {
-                        root: new_param_bst_arc(Some(Box::new(NodeInner { key, size: sz, left, right }))),
-                    };
-                    proof { assume(exposed is Leaf ==> joined@ == Set::<<T as View>::V>::empty()); }
-                    joined
+                    let ghost kv = key@;
+                    let ghost contents = left@.union(right@).insert(kv);
+                    new_param_bst(
+                        Some(Box::new(NodeInner { key, size: sz, left, right })),
+                        Ghost(contents),
+                    )
                 },
             }
         }
@@ -431,17 +439,19 @@ pub mod BSTParaMtEph {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
-            let cloned = ParamBST { root: clone_arc_rwlock(&self.root) };
-            proof { assume(cloned@ == self@); }
-            cloned
+            ParamBST {
+                root: clone_arc_rwlock(&self.root),
+                ghost_locked_root: Ghost(self.ghost_locked_root@),
+            }
         }
     }
 
     // 12. outside-verus algorithmic helpers (external_body, pending full proofs)
 
-    #[verifier::external_body]
-    fn new_leaf<T: MtKey>() -> ParamBST<T> {
-        ParamBST { root: new_param_bst_arc(None) }
+    fn new_leaf<T: MtKey>() -> (tree: ParamBST<T>)
+        ensures tree@ =~= Set::<<T as View>::V>::empty()
+    {
+        new_param_bst(None, Ghost(Set::empty()))
     }
 
     #[verifier::external_body]
@@ -455,15 +465,27 @@ pub mod BSTParaMtEph {
         exposed
     }
 
-    #[verifier::external_body]
-    fn join_mid<T: MtKey + 'static>(exposed: Exposed<T>) -> ParamBST<T> {
+    fn join_mid<T: MtKey + 'static>(exposed: Exposed<T>) -> (result: ParamBST<T>)
+        ensures
+            exposed is Leaf ==> result@ =~= Set::<<T as View>::V>::empty(),
+            exposed matches Exposed::Node(l, k, r) ==> result@ =~= l@.union(r@).insert(k@),
+    {
         match exposed {
             | Exposed::Leaf => new_leaf(),
             | Exposed::Node(left, key, right) => {
-                let size = 1 + left.size() + right.size();
-                ParamBST {
-                    root: new_param_bst_arc(Some(Box::new(NodeInner { key, size, left, right }))),
-                }
+                let lsz = left.size();
+                let rsz = right.size();
+                let size: usize = if lsz < usize::MAX && rsz < usize::MAX - lsz {
+                    1 + lsz + rsz
+                } else {
+                    usize::MAX
+                };
+                let ghost kv = key@;
+                let ghost contents = left@.union(right@).insert(kv);
+                new_param_bst(
+                    Some(Box::new(NodeInner { key, size, left, right })),
+                    Ghost(contents),
+                )
             }
         }
     }
@@ -493,8 +515,9 @@ pub mod BSTParaMtEph {
         }
     }
 
-    #[verifier::external_body]
-    fn join_m<T: MtKey + 'static>(left: ParamBST<T>, key: T, right: ParamBST<T>) -> ParamBST<T> {
+    fn join_m<T: MtKey + 'static>(left: ParamBST<T>, key: T, right: ParamBST<T>) -> (result: ParamBST<T>)
+        ensures result@ =~= left@.union(right@).insert(key@)
+    {
         join_mid(Exposed::Node(left, key, right))
     }
 
@@ -652,6 +675,11 @@ pub mod BSTParaMtEph {
     } // verus!
 
     // 13. derive impls outside verus!
+
+    // Ghost<Set<T::V>> contains FnSpec (PhantomData at runtime), which lacks Send/Sync.
+    // ParamBST is safe to send/share: the Ghost field is erased at runtime.
+    unsafe impl<T: MtKey> Send for ParamBST<T> {}
+    unsafe impl<T: MtKey> Sync for ParamBST<T> {}
 
     impl<T: MtKey> std::fmt::Debug for NodeInner<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
