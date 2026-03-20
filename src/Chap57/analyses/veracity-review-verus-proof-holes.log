@@ -22,15 +22,15 @@ Table of Contents:
 
 ✓ DijkstraStEphF64.rs
 ⚠ DijkstraStEphU64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:104: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap57/DijkstraStEphU64.rs:104: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
         88 |         fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
             ...
        102 |     /// - APAS: N/A — Verus-specific scaffolding.
        103 |     /// - Claude-Opus-4.6: Work O(1), Span O(1).
        105 |         ensures r.dist == dist, r.vertex == vertex,
        106 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:111: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:128: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap57/DijkstraStEphU64.rs:111: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap57/DijkstraStEphU64.rs:128: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
 ✓ StackStEph.rs
 
 =================================================================
@@ -89,15 +89,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 21:20:51 -07:00
-Ended:     2026-03-19 21:20:51 -07:00
+Started:   2026-03-19 21:50:02 -07:00
+Ended:     2026-03-19 21:50:02 -07:00
 Duration:  4ms
 
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
-=
-
-Started:   2026-03-19 21:20:51 -07:00
-Ended:     2026-03-19 21:20:51 -07:00
-Duration:  4ms
-
-Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
