@@ -73,6 +73,22 @@ pub mod DoubleHashFlatHashTableStEph {
 
     // 7. proof fns
 
+    /// Modular probe identity: (h + (j - h + m) % m) % m == j for 0 <= h, j < m.
+    proof fn lemma_probe_mod_identity(h: int, j: int, m: int)
+        requires 0 <= h < m, 0 <= j < m, m > 0,
+        ensures (h + (j - h + m) % m) % m == j,
+    {
+        if j >= h {
+            vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(j - h, m);
+            vstd::arithmetic::div_mod::lemma_small_mod((j - h) as nat, m as nat);
+            vstd::arithmetic::div_mod::lemma_small_mod(j as nat, m as nat);
+        } else {
+            vstd::arithmetic::div_mod::lemma_small_mod((j - h + m) as nat, m as nat);
+            vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(j, m);
+            vstd::arithmetic::div_mod::lemma_small_mod(j as nat, m as nat);
+        }
+    }
+
     // 9. impls
 
     impl DoubleHashFlatHashTableStEph {
@@ -99,6 +115,17 @@ pub mod DoubleHashFlatHashTableStEph {
     {
         open spec fn spec_impl_wf(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) -> bool {
             spec_doublehashflathashsteph_wf(table)
+        }
+
+        /// Flat tables require at least one Empty slot for insertion.
+        open spec fn spec_has_insert_capacity(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) -> bool {
+            exists |j: int| #![trigger table.table@[j]]
+                0 <= j < table.table@.len() && table.table@[j] is Empty
+        }
+
+        /// Flat tables require new_size > current_size for resize.
+        open spec fn spec_resize_ok(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, new_size: usize) -> bool {
+            new_size as int > table.current_size as int
         }
 
         /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
@@ -361,9 +388,21 @@ pub mod DoubleHashFlatHashTableStEph {
                 }
                 attempt = attempt + 1;
             }
-            // Exhausted all m positions.
+            // Exhausted all m positions — unreachable given spec_has_insert_capacity.
+            // spec_second_hash == 1 (via lemma), so step == 1 and double hashing
+            // degenerates to linear probing. All m positions are visited.
             proof {
-                assume(false); // Table full: unreachable with load factor < 1.
+                lemma_spec_second_hash_value::<Key>(key, m as nat);
+                assert(step as int == 1int);
+                assert forall |j: int| 0 <= j < m as int
+                    implies !(#[trigger] table.table@[j] is Empty) by {
+                    lemma_probe_mod_identity(h as int, j, m as int);
+                    let d = (j - h as int + m as int) % (m as int);
+                    assert(d * 1int == d) by(nonlinear_arith);
+                }
+                assert(table.table@.len() == m as int);
+                assert(table.table@ =~= old(table).table@);
+                assert(false);
             }
             diverge::<()>();
         }
@@ -677,6 +716,7 @@ pub mod DoubleHashFlatHashTableStEph {
                 invariant
                     i <= table.table@.len(),
                     table.table@.len() == table.current_size as int,
+                    pairs@.len() <= i as int,
                     spec_seq_pairs_to_map(pairs@) =~=
                         spec_table_to_map::<Key, Value, FlatEntry<Key, Value>>(
                             table.table@.subrange(0, i as int)),
@@ -755,6 +795,11 @@ pub mod DoubleHashFlatHashTableStEph {
 
             // Phase 3: reinsert all pairs.
             let mut j: usize = 0;
+            proof {
+                assert forall |idx: int| 0 <= idx < new_table.table@.len()
+                    implies (#[trigger] new_table.table@[idx]) is Empty by {}
+                lemma_all_empties_count::<Key, Value>(new_table.table@);
+            }
             while j < pairs.len()
                 invariant
                     j <= pairs@.len(),
@@ -765,12 +810,29 @@ pub mod DoubleHashFlatHashTableStEph {
                     Self::spec_impl_wf(&new_table),
                     new_table@ =~= spec_seq_pairs_to_map(pairs@.subrange(0, j as int)),
                     new_table.spec_hash == table.spec_hash,
+                    pairs@.len() <= table.current_size as int,
+                    new_size as int > table.current_size as int,
+                    spec_count_empties(new_table.table@) >= (new_size - j) as int,
                 decreases pairs.len() - j,
             {
                 let key = clone_elem(&pairs[j].0);
                 let value = clone_elem(&pairs[j].1);
+                proof {
+                    assert((new_size - j) as int > 0int) by {
+                        assert(j as int <= pairs@.len());
+                        assert(pairs@.len() <= table.current_size as int);
+                        assert(new_size as int > table.current_size as int);
+                    }
+                    lemma_empties_positive_implies_exists_empty::<Key, Value>(
+                        new_table.table@);
+                }
+                let ghost old_new_table_seq = new_table.table@;
                 Self::insert(&mut new_table, key, value);
                 proof {
+                    let s = choose |s: int| #[trigger] spec_other_slots_preserved(
+                        old_new_table_seq, new_table.table@, s);
+                    lemma_one_slot_change_empties::<Key, Value>(
+                        old_new_table_seq, new_table.table@, s);
                     assert(pairs@.subrange(0, (j + 1) as int).drop_last()
                         =~= pairs@.subrange(0, j as int));
                     assert(pairs@.subrange(0, (j + 1) as int).last()
