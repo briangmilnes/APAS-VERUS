@@ -21,41 +21,20 @@ Table of Contents:
 =================================================================
 
 ❌ KruskalStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:60: error: external_body - #[verifier::external_body]
-        61 |     pub fn kruskal_mst<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:100: error: fn_missing_ensures - fn mst_weight — exec fn should have ensures
-        61 |     pub fn kruskal_mst<V: HashOrd>(
-            ...
-        98 |     /// - APAS: (no cost stated) — utility function
-        99 |     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
-       101 |         requires mst_edges.spec_setsteph_wf(),
-       102 |     {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/KruskalStEph.rs:125: error: fn_missing_ensures - fn verify_mst_size — exec fn should have ensures
-       100 |     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64
-            ...
-       123 |     /// - APAS: (no cost stated) — validation utility
-       124 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-       126 |         n_vertices: N,
-       127 |         mst_edges: &SetStEph<LabEdge<V, WrappedF64>>,
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/KruskalStEph.rs:58: error: external_body - #[verifier::external_body]
+        59 |     fn sort_edges_by_weight<V: HashOrd>(edges: &mut Vec<LabEdge<V, WrappedF64>>)
    Holes: 1 total
       1 × external_body
 ❌ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:95: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/PrimStEph.rs:95: error: external_body - #[verifier::external_body]
         96 |     pub fn prim_mst<V: HashOrd + Display>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:72: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/PrimStEph.rs:72: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
         65 |         fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64
             ...
         70 |     /// - APAS: N/A — Verus-specific scaffolding.
         71 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         73 |         ensures entry.priority == priority, entry.vertex == vertex, entry.parent == parent,
         74 |     {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap65/PrimStEph.rs:150: error: fn_missing_ensures - fn mst_weight — exec fn should have ensures
-        96 |     pub fn prim_mst<V: HashOrd + Display>(
-            ...
-       148 |     /// - APAS: (no cost stated) — utility function
-       149 |     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
-       151 |         requires mst_edges.spec_setsteph_wf(),
-       152 |     {
    Holes: 1 total
       1 × external_body
 ✓ UnionFindStEph.rs
@@ -95,27 +74,26 @@ Proof Functions:
    0 total
 
 Function Specs:
-   19 exec fns with complete spec (requires+ensures) (65%)
-   4 exec fns missing spec (13%)
+   23 exec fns with complete spec (requires+ensures) (76%)
+   1 exec fns missing spec (3%)
    6 proof/spec fns clean (20%)
    0 proof/spec fns with holes (0%)
-   29 total fns
+   30 total fns
 
 
 Holes Found: 2 (actionable)
    2 × external_body (100%)
 
-Warnings: 4 total
+Warnings: 1 total
    1 × fn_missing_requires
-   3 × fn_missing_ensures
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-19 20:00:07 -07:00
-Ended:     2026-03-19 20:00:07 -07:00
-Duration:  10ms
+Started:   2026-03-19 20:00:02 -07:00
+Ended:     2026-03-19 20:00:02 -07:00
+Duration:  7ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
+Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log

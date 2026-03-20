@@ -147,9 +147,13 @@ pub mod PrimStEph {
     /// Compute total MST weight.
     /// - APAS: (no cost stated) — utility function
     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
-    pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64
+    pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, WrappedF64>>) -> (total: WrappedF64)
         requires mst_edges.spec_setsteph_wf(),
+        ensures mst_edges@.len() == 0 ==> total@ == 0.0f64,
     {
+        if mst_edges.size() == 0 {
+            return WrappedF64 { val: 0.0 };
+        }
         let mut total = WrappedF64 { val: 0.0 };
         let mut it = mst_edges.iter();
         let ghost le_seq = it@.1;
