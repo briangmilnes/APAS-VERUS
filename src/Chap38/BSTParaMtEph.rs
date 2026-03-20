@@ -360,42 +360,35 @@ pub mod BSTParaMtEph {
                 parts.2@.finite()
         { split_inner(self, key) }
 
-        #[verifier::external_body]
         fn join_pair(&self, other: Self) -> (joined: Self)
             ensures joined@.finite()
         { join_pair_inner(self.clone(), other) }
 
-        #[verifier::external_body]
         fn union(&self, other: &Self) -> (combined: Self)
             ensures combined@ == self@.union(other@), combined@.finite()
         { union_inner(self, other) }
 
-        #[verifier::external_body]
         fn intersect(&self, other: &Self) -> (common: Self)
             ensures common@ == self@.intersect(other@), common@.finite()
         { intersect_inner(self, other) }
 
-        #[verifier::external_body]
         fn difference(&self, other: &Self) -> (remaining: Self)
             ensures remaining@ == self@.difference(other@), remaining@.finite()
         { difference_inner(self, other) }
 
-        #[verifier::external_body]
         fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(
             &self,
             predicate: F,
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
         ) -> (filtered: Self)
         {
-            filter_parallel(self, predicate)
+            filter_parallel(self, predicate, Ghost(spec_pred))
         }
 
-        #[verifier::external_body]
         fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T {
             reduce_parallel(self, op, base)
         }
 
-        #[verifier::external_body]
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
             ensures seq@.len() == self@.len()
         {
@@ -533,7 +526,9 @@ pub mod BSTParaMtEph {
     }
 
     #[verifier::external_body]
-    fn join_pair_inner<T: MtKey + 'static>(left: ParamBST<T>, right: ParamBST<T>) -> ParamBST<T> {
+    fn join_pair_inner<T: MtKey + 'static>(left: ParamBST<T>, right: ParamBST<T>) -> (joined: ParamBST<T>)
+        ensures joined@.finite()
+    {
         match expose_internal(&right) {
             | Exposed::Leaf => left,
             | Exposed::Node(_, key, _) => {
@@ -545,7 +540,9 @@ pub mod BSTParaMtEph {
     }
 
     #[verifier::external_body]
-    fn union_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {
+    fn union_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> (combined: ParamBST<T>)
+        ensures combined@ == a@.union(b@), combined@.finite()
+    {
         match (expose_internal(a), expose_internal(b)) {
             | (Exposed::Leaf, _) => b.clone(),
             | (_, Exposed::Leaf) => a.clone(),
@@ -559,7 +556,9 @@ pub mod BSTParaMtEph {
     }
 
     #[verifier::external_body]
-    fn intersect_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {
+    fn intersect_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> (common: ParamBST<T>)
+        ensures common@ == a@.intersect(b@), common@.finite()
+    {
         match (expose_internal(a), expose_internal(b)) {
             | (Exposed::Leaf, _) | (_, Exposed::Leaf) => new_leaf(),
             | (Exposed::Node(al, ak, ar), _) => {
@@ -576,7 +575,9 @@ pub mod BSTParaMtEph {
     }
 
     #[verifier::external_body]
-    fn difference_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> ParamBST<T> {
+    fn difference_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> (remaining: ParamBST<T>)
+        ensures remaining@ == a@.difference(b@), remaining@.finite()
+    {
         match (expose_internal(a), expose_internal(b)) {
             | (Exposed::Leaf, _) => new_leaf(),
             | (_, Exposed::Leaf) => a.clone(),
@@ -621,7 +622,20 @@ pub mod BSTParaMtEph {
     fn filter_parallel<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         predicate: F,
-    ) -> ParamBST<T> {
+        Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+    ) -> (filtered: ParamBST<T>)
+        requires
+            forall|t: &T| #[trigger] predicate.requires((t,)),
+            forall|x: T, keep: bool|
+                predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
+        ensures
+            filtered@.subset_of(tree@),
+            filtered@.finite(),
+            forall|v: T::V| #[trigger] filtered@.contains(v)
+                ==> tree@.contains(v) && spec_pred(v),
+            forall|v: T::V| tree@.contains(v) && spec_pred(v)
+                ==> #[trigger] filtered@.contains(v),
+    {
         let predicate = Arc::new(predicate);
         filter_inner(tree, &predicate)
     }
@@ -661,7 +675,10 @@ pub mod BSTParaMtEph {
     }
 
     #[verifier::external_body]
-    fn collect_in_order<T: MtKey + 'static>(tree: &ParamBST<T>, out: &mut Vec<T>) {
+    fn collect_in_order<T: MtKey + 'static>(tree: &ParamBST<T>, out: &mut Vec<T>)
+        requires tree@.finite(),
+        ensures out@.len() == old(out)@.len() + tree@.len(),
+    {
         match expose_internal(tree) {
             | Exposed::Leaf => {}
             | Exposed::Node(left, key, right) => {

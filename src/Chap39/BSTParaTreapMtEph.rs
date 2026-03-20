@@ -33,7 +33,11 @@ pub mod BSTParaTreapMtEph {
 
     verus! {
 
-    //		4. type definitions
+    // 3. broadcast use
+
+    broadcast use vstd::set::group_set_axioms;
+
+    // 4. type definitions
 
     /// RwLock predicate for treap nodes. Children live behind separate locks,
     /// so we can only check one-level properties: a present node has size >= 1.
@@ -56,18 +60,21 @@ pub mod BSTParaTreapMtEph {
 
     #[verifier::reject_recursive_types(T)]
     pub struct ParamTreap<T: MtKey> {
-        pub root: Arc<RwLock<Option<Box<NodeInner<T>>>, BSTParaTreapMtEphInv>>,
+        pub(crate) root: Arc<RwLock<Option<Box<NodeInner<T>>>, BSTParaTreapMtEphInv>>,
+        pub(crate) ghost_locked_root: Ghost<Set<<T as View>::V>>,
     }
 
     // 5. view impls
 
+    impl<T: MtKey> ParamTreap<T> {
+        pub closed spec fn spec_ghost_locked_root(self) -> Set<<T as View>::V> {
+            self.ghost_locked_root@
+        }
+    }
+
     impl<T: MtKey> View for ParamTreap<T> {
         type V = Set<T::V>;
-
-        #[verifier::external_body]
-        open spec fn view(&self) -> Set<T::V> {
-            Set::empty()
-        }
+        open spec fn view(&self) -> Set<T::V> { self.spec_ghost_locked_root() }
     }
 
 
@@ -91,13 +98,35 @@ pub mod BSTParaTreapMtEph {
         new_arc_rwlock(val, Ghost(BSTParaTreapMtEphInv))
     }
 
-    //		11. derive impls in verus!
+    fn new_param_treap<T: MtKey>(
+        val: Option<Box<NodeInner<T>>>,
+        Ghost(contents): Ghost<Set<<T as View>::V>>,
+    ) -> (tree: ParamTreap<T>)
+        requires BSTParaTreapMtEphInv.inv(val),
+        ensures tree@ =~= contents,
+    {
+        ParamTreap {
+            root: new_param_treap_arc(val),
+            ghost_locked_root: Ghost(contents),
+        }
+    }
+
+    fn new_leaf<T: MtKey>() -> (tree: ParamTreap<T>)
+        ensures tree@ =~= Set::<<T as View>::V>::empty()
+    {
+        new_param_treap(None, Ghost(Set::empty()))
+    }
+
+    // 11. derive impls in verus!
 
     impl<T: MtKey> Clone for ParamTreap<T> {
         fn clone(&self) -> (cloned: Self)
-            ensures true
+            ensures cloned@ == self@
         {
-            ParamTreap { root: self.root.clone() }
+            ParamTreap {
+                root: clone_arc_rwlock(&self.root),
+                ghost_locked_root: Ghost(self.ghost_locked_root@),
+            }
         }
     }
 
@@ -124,6 +153,36 @@ pub mod BSTParaTreapMtEph {
                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
             }
         }
+    }
+
+    #[verifier::external_body]
+    fn expose_internal<T: MtKey + 'static>(tree: &ParamTreap<T>) -> (parts: Option<(ParamTreap<T>, T, i64, ParamTreap<T>)>)
+        ensures
+            tree@.finite(),
+            parts is None ==> tree@.len() == 0,
+            parts matches Some((left, key, _, right)) ==> (
+                tree@.contains(key@)
+                && left@.finite()
+                && right@.finite()
+                && left@.subset_of(tree@)
+                && right@.subset_of(tree@)
+                && tree@ =~= left@.union(right@).insert(key@)
+            ),
+    {
+        let rwlock = arc_deref(&tree.root);
+        let handle = rwlock.acquire_read();
+        let result = match handle.borrow() {
+            None => None,
+            Some(node) => {
+                let left = node.left.clone();
+                let key = node.key.clone();
+                let priority = node.priority;
+                let right = node.right.clone();
+                Some((left, key, priority, right))
+            },
+        };
+        handle.release_read();
+        result
     }
 
     /// - APAS: Work Θ(1), Span Θ(1)
@@ -160,19 +219,21 @@ pub mod BSTParaTreapMtEph {
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     #[verifier::external_body]
-    fn make_node<T: MtKey>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> ParamTreap<T> {
+    fn make_node<T: MtKey>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> (node: ParamTreap<T>)
+        ensures node@ =~= left@.union(right@).insert(key@), node@.finite()
+    {
         let size = 1 + tree_size(&left) + tree_size(&right);
         ParamTreap {
             root: new_param_treap_arc(
                 Some(Box::new(NodeInner { key, priority, size, left, right })),
             ),
+            ghost_locked_root: Ghost(Set::empty()),
         }
     }
 
     #[verifier::external_body]
-    fn join_with_priority<T: MtKey + 'static>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> ParamTreap<T>
-    where
-        ParamTreap<T>: ParamTreapTrait<T>,
+    fn join_with_priority<T: MtKey + 'static>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> (result: ParamTreap<T>)
+        ensures result@ =~= left@.union(right@).insert(key@), result@.finite(),
     {
         let left_priority = tree_priority(&left);
         let right_priority = tree_priority(&right);
@@ -180,13 +241,13 @@ pub mod BSTParaTreapMtEph {
             return make_node(left, key, priority, right);
         }
         if left_priority > right_priority {
-            if let Some((ll, lk, lp, lr)) = left.expose_with_priority() {
+            if let Some((ll, lk, lp, lr)) = expose_internal(&left) {
                 let merged_right = join_with_priority(lr, key, priority, right);
                 return make_node(ll, lk, lp, merged_right);
             }
             make_node(left, key, priority, right)
         } else {
-            if let Some((rl, rk, rp, rr)) = right.expose_with_priority() {
+            if let Some((rl, rk, rp, rr)) = expose_internal(&right) {
                 let merged_left = join_with_priority(left, key, priority, rl);
                 return make_node(merged_left, rk, rp, rr);
             }
@@ -195,12 +256,19 @@ pub mod BSTParaTreapMtEph {
     }
 
     #[verifier::external_body]
-    fn split_inner<T: MtKey + 'static>(tree: &ParamTreap<T>, key: &T) -> (ParamTreap<T>, bool, ParamTreap<T>)
-    where
-        ParamTreap<T>: ParamTreapTrait<T>,
+    fn split_inner<T: MtKey + 'static>(tree: &ParamTreap<T>, key: &T) -> (parts: (ParamTreap<T>, bool, ParamTreap<T>))
+        ensures
+            parts.0@.finite(),
+            parts.2@.finite(),
+            parts.1 == tree@.contains(key@),
+            tree@.finite(),
+            !parts.0@.contains(key@) && !parts.2@.contains(key@),
+            tree@ =~= parts.0@.union(parts.2@).union(
+                if parts.1 { Set::<T::V>::empty().insert(key@) } else { Set::<T::V>::empty() }
+            ),
     {
-        match tree.expose_with_priority() {
-            | None => (ParamTreap::new(), false, ParamTreap::new()),
+        match expose_internal(tree) {
+            | None => (new_leaf(), false, new_leaf()),
             | Some((left, root_key, priority, right)) => match key.cmp(&root_key) {
                 | Less => {
                     let (ll, found, lr) = split_inner(&left, key);
@@ -218,11 +286,10 @@ pub mod BSTParaTreapMtEph {
     }
 
     #[verifier::external_body]
-    fn join_pair_inner<T: MtKey + 'static>(left: ParamTreap<T>, right: ParamTreap<T>) -> ParamTreap<T>
-    where
-        ParamTreap<T>: ParamTreapTrait<T>,
+    fn join_pair_inner<T: MtKey + 'static>(left: ParamTreap<T>, right: ParamTreap<T>) -> (joined: ParamTreap<T>)
+        ensures joined@.finite(), joined@ =~= left@.union(right@),
     {
-        match right.expose_with_priority() {
+        match expose_internal(&right) {
             | None => left,
             | Some((r_left, r_key, r_priority, r_right)) => {
                 let (split_left, _, split_right) = split_inner(&left, &r_key);
@@ -234,11 +301,10 @@ pub mod BSTParaTreapMtEph {
     }
 
     #[verifier::external_body]
-    fn union_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> ParamTreap<T>
-    where
-        ParamTreap<T>: ParamTreapTrait<T>,
+    fn union_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (combined: ParamTreap<T>)
+        ensures combined@.finite(), combined@ == a@.union(b@),
     {
-        match a.expose_with_priority() {
+        match expose_internal(a) {
             | None => b.clone(),
             | Some((al, ak, ap, ar)) => {
                 let (bl, _, br) = split_inner(b, &ak);
@@ -250,12 +316,11 @@ pub mod BSTParaTreapMtEph {
     }
 
     #[verifier::external_body]
-    fn intersect_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> ParamTreap<T>
-    where
-        ParamTreap<T>: ParamTreapTrait<T>,
+    fn intersect_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (common: ParamTreap<T>)
+        ensures common@.finite(), common@ == a@.intersect(b@),
     {
-        match a.expose_with_priority() {
-            | None => ParamTreap::new(),
+        match expose_internal(a) {
+            | None => new_leaf(),
             | Some((al, ak, ap, ar)) => {
                 let (bl, found, br) = split_inner(b, &ak);
                 let Pair(left_res, right_res) =
@@ -270,12 +335,11 @@ pub mod BSTParaTreapMtEph {
     }
 
     #[verifier::external_body]
-    fn difference_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> ParamTreap<T>
-    where
-        ParamTreap<T>: ParamTreapTrait<T>,
+    fn difference_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (remaining: ParamTreap<T>)
+        ensures remaining@.finite(), remaining@ == a@.difference(b@),
     {
-        match a.expose_with_priority() {
-            | None => ParamTreap::new(),
+        match expose_internal(a) {
+            | None => new_leaf(),
             | Some((al, ak, ap, ar)) => {
                 let (bl, found, br) = split_inner(b, &ak);
                 let Pair(left_res, right_res) =
@@ -290,12 +354,9 @@ pub mod BSTParaTreapMtEph {
     }
 
     #[verifier::external_body]
-    fn filter_inner<T: MtKey + 'static, F: Pred<T>>(tree: &ParamTreap<T>, predicate: &Arc<F>) -> ParamTreap<T>
-    where
-        ParamTreap<T>: ParamTreapTrait<T>,
-    {
-        match tree.expose_with_priority() {
-            | None => ParamTreap::new(),
+    fn filter_inner<T: MtKey + 'static, F: Pred<T>>(tree: &ParamTreap<T>, predicate: &Arc<F>) -> ParamTreap<T> {
+        match expose_internal(tree) {
+            | None => new_leaf(),
             | Some((left, key, priority, right)) => {
                 let pred_left = Arc::clone(predicate);
                 let pred_right = Arc::clone(predicate);
@@ -311,9 +372,22 @@ pub mod BSTParaTreapMtEph {
     }
 
     #[verifier::external_body]
-    fn filter_parallel<T: MtKey + 'static, F: Pred<T>>(tree: &ParamTreap<T>, predicate: F) -> ParamTreap<T>
-    where
-        ParamTreap<T>: ParamTreapTrait<T>,
+    fn filter_parallel<T: MtKey + 'static, F: Pred<T>>(
+        tree: &ParamTreap<T>,
+        predicate: F,
+        Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+    ) -> (filtered: ParamTreap<T>)
+        requires
+            forall|t: &T| #[trigger] predicate.requires((t,)),
+            forall|x: T, keep: bool|
+                predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
+        ensures
+            filtered@.finite(),
+            filtered@.subset_of(tree@),
+            forall|v: T::V| #[trigger] filtered@.contains(v)
+                ==> tree@.contains(v) && spec_pred(v),
+            forall|v: T::V| tree@.contains(v) && spec_pred(v)
+                ==> #[trigger] filtered@.contains(v),
     {
         let predicate = Arc::new(predicate);
         filter_inner(tree, &predicate)
@@ -322,10 +396,9 @@ pub mod BSTParaTreapMtEph {
     #[verifier::external_body]
     fn reduce_inner<T: MtKey + 'static, F>(tree: &ParamTreap<T>, op: &Arc<F>, identity: T) -> T
     where
-        ParamTreap<T>: ParamTreapTrait<T>,
         F: Fn(T, T) -> T + Send + Sync + 'static,
     {
-        match tree.expose_with_priority() {
+        match expose_internal(tree) {
             | None => identity,
             | Some((left, key, _priority, right)) => {
                 let op_left = Arc::clone(op);
@@ -346,7 +419,6 @@ pub mod BSTParaTreapMtEph {
     #[verifier::external_body]
     fn reduce_parallel<T: MtKey + 'static, F>(tree: &ParamTreap<T>, op: F, base: T) -> T
     where
-        ParamTreap<T>: ParamTreapTrait<T>,
         F: Fn(T, T) -> T + Send + Sync + 'static,
     {
         let op = Arc::new(op);
@@ -355,10 +427,10 @@ pub mod BSTParaTreapMtEph {
 
     #[verifier::external_body]
     fn collect_in_order<T: MtKey + 'static>(tree: &ParamTreap<T>, out: &mut Vec<T>)
-    where
-        ParamTreap<T>: ParamTreapTrait<T>,
+        requires tree@.finite(),
+        ensures out@.len() == old(out)@.len() + tree@.len(),
     {
-        match tree.expose_with_priority() {
+        match expose_internal(tree) {
             | None => {}
             | Some((left, key, _priority, right)) => {
                 collect_in_order(&left, out);
@@ -501,11 +573,7 @@ pub mod BSTParaTreapMtEph {
         fn new() -> (tree: Self)
             ensures tree.spec_bstparatreapmteph_wf()
         {
-            let tree = ParamTreap {
-                root: new_param_treap_arc(None),
-            };
-            proof { assume(tree@.finite() && tree@.len() == 0); }
-            tree
+            new_param_treap(None, Ghost(Set::empty()))
         }
 
         /// - APAS: Work O(1), Span O(1)
@@ -520,39 +588,11 @@ pub mod BSTParaTreapMtEph {
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn expose_with_priority(&self) -> (parts: Option<(ParamTreap<T>, T, i64, ParamTreap<T>)>) {
-            let rwlock = arc_deref(&self.root);
-            let handle = rwlock.acquire_read();
-            let result = match handle.borrow() {
-                None => None,
-                Some(node) => {
-                    let left = node.left.clone();
-                    let key = node.key.clone();
-                    let priority = node.priority;
-                    let right = node.right.clone();
-                    Some((left, key, priority, right))
-                },
-            };
-            handle.release_read();
-            proof {
-                assume(
-                    self@.finite()
-                    && (result is None ==> self@.len() == 0)
-                    && (result matches Some((left, key, _, right)) ==> (
-                        self@.contains(key@)
-                        && left@.finite()
-                        && right@.finite()
-                        && left@.subset_of(self@)
-                        && right@.subset_of(self@)
-                        && self@ =~= left@.union(right@).insert(key@)
-                    ))
-                );
-            }
-            result
+            expose_internal(self)
         }
 
         /// - APAS: Work O(log(|left| + |right|)), Span O(log(|left| + |right|))
         /// - Claude-Opus-4.6: Work O(log(|left| + |right|)), Span O(log(|left| + |right|)) — delegates to join_with_priority
-        #[verifier::external_body]
         fn join_mid(exposed: Exposed<T>) -> (tree: Self) {
             match exposed {
                 | Exposed::Leaf => ParamTreap::new(),
@@ -670,41 +710,34 @@ pub mod BSTParaTreapMtEph {
 
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|)
-        #[verifier::external_body]
         fn split(&self, key: &T) -> (parts: (Self, bool, Self)) { split_inner(self, key) }
 
         /// - APAS: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
         /// - Claude-Opus-4.6: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
-        #[verifier::external_body]
         fn join_pair(&self, other: Self) -> (joined: Self) { join_pair_inner(self.clone(), other) }
 
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
-        #[verifier::external_body]
         fn union(&self, other: &Self) -> (combined: Self) { union_inner(self, other) }
 
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
-        #[verifier::external_body]
         fn intersect(&self, other: &Self) -> (common: Self) { intersect_inner(self, other) }
 
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n)
-        #[verifier::external_body]
         fn difference(&self, other: &Self) -> (diff: Self) { difference_inner(self, other) }
 
         /// - APAS: Work O(|t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
-        #[verifier::external_body]
         fn filter<F: Pred<T>>(
             &self,
             predicate: F,
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
-        ) -> (filtered: Self) { filter_parallel(self, predicate) }
+        ) -> (filtered: Self) { filter_parallel(self, predicate, Ghost(spec_pred)) }
 
         /// - APAS: Work O(|t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|)
-        #[verifier::external_body]
         fn reduce<F>(&self, op: F, base: T) -> (reduced: T)
         where
             F: Fn(T, T) -> T + Send + Sync + 'static,
@@ -714,7 +747,6 @@ pub mod BSTParaTreapMtEph {
 
         /// - APAS: Work O(|t|), Span O(|t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|)
-        #[verifier::external_body]
         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
             let mut out = Vec::with_capacity(self.size());
             collect_in_order(self, &mut out);
@@ -724,7 +756,7 @@ pub mod BSTParaTreapMtEph {
 
     } // verus!
 
-    //		12. macros
+    // 12. macros
 
     #[macro_export]
     macro_rules! ParamTreapLit {
@@ -738,7 +770,12 @@ pub mod BSTParaTreapMtEph {
         }};
     }
 
-    //		13. derive impls outside verus!
+    // 13. derive impls outside verus!
+
+    // Ghost<Set<T::V>> contains FnSpec (PhantomData at runtime), which lacks Send/Sync.
+    // ParamTreap is safe to send/share: the Ghost field is erased at runtime.
+    unsafe impl<T: MtKey> Send for ParamTreap<T> {}
+    unsafe impl<T: MtKey> Sync for ParamTreap<T> {}
 
     impl fmt::Debug for BSTParaTreapMtEphInv {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
