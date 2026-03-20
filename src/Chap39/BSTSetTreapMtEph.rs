@@ -128,6 +128,7 @@ pub mod BSTSetTreapMtEph {
         fn reduce<F>(&self, op: F, base: T) -> (reduced: T)
         where
             F: Fn(T, T) -> T + Send + Sync + 'static
+            requires forall|a: T, b: T| #[trigger] op.requires((a, b)),
             ensures true;
         /// - APAS: Work Θ(n), Span Θ(n)
         fn iter_in_order(&self) -> (ordered: ArraySeqStPerS<T>)
