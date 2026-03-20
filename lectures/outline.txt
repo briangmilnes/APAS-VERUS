@@ -23,6 +23,12 @@ Slide count: 60 at most.
  .. Quantitatives
 . APAS-VERUS work and talk
 . Verus Overview
+. Verus size
+  .. loc lop
+  .. Why is it so long? Pedantry.
+  .. My agents seem to like proving iteration.
+  .. They were quite hard to get right, but now are much better worked out.
+  .. So they have 
 . Verus Pracitcality
 . Verus Problems
 . The Agents

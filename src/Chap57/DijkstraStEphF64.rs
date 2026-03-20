@@ -15,6 +15,7 @@ pub mod DijkstraStEphF64 {
 
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEphTrait;
+    use crate::Chap06::WeightedDirGraphStEphF64::WeightedDirGraphStEphF64::*;
     use crate::Chap45::BinaryHeapPQ::BinaryHeapPQ::*;
     use crate::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::*;
     use crate::vstdplus::float::float::*;

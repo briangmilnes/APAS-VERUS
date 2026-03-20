@@ -18,8 +18,7 @@ pub mod BellmanFordStEphF64 {
 
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEphTrait;
-    // Blocked: WeightedDirGraphStEphF64 does not exist.
-    // use crate::Chap06::WeightedDirGraphStEphF64::WeightedDirGraphStEphF64::*;
+    use crate::Chap06::WeightedDirGraphStEphF64::WeightedDirGraphStEphF64::*;
     use crate::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::*;
     use crate::vstdplus::float::float::*;
     use crate::Types::Types::*;

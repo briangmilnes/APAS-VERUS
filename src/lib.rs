@@ -330,6 +330,7 @@ pub mod Chap06 {
     pub mod WeightedDirGraphStEphI64;
     pub mod WeightedDirGraphStEphI128;
     pub mod WeightedDirGraphStEphIsize;
+    pub mod WeightedDirGraphStEphF64;
     // Int/Float aggregate graph modules removed: Rust lacks sum types
     // (no `impl Trait for i8 | i16 | i32 | ...`), so these can't be expressed cleanly.
     // Use per-type variants above instead.

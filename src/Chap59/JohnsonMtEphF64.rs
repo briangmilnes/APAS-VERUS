@@ -9,7 +9,9 @@
 
 pub mod JohnsonMtEphF64 {
 
+    use crate::Chap06::WeightedDirGraphStEphF64::WeightedDirGraphStEphF64::*;
+
     verus! {
-        // Placeholder. Full verusification blocked: requires f64 graph types.
+        // Algorithm implementation requires DijkstraStEphF64 and BellmanFordStEphF64.
     }
 }
