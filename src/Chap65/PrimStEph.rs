@@ -57,8 +57,9 @@ pub mod PrimStEph {
         fn prim_mst<V: HashOrd>(
             graph: &LabUnDirGraphStEph<V, WrappedF64>,
             start: V,
-        ) -> SetStEph<LabEdge<V, WrappedF64>>
-            requires Self::spec_primsteph_wf(graph);
+        ) -> (result: SetStEph<LabEdge<V, WrappedF64>>)
+            requires Self::spec_primsteph_wf(graph),
+            ensures result.spec_setsteph_wf();
 
         /// Compute total weight of MST.
         /// APAS: Work O(m), Span O(1)
@@ -96,7 +97,14 @@ pub mod PrimStEph {
     pub fn prim_mst<V: HashOrd + Display>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         start: &V,
-    ) -> SetStEph<LabEdge<V, WrappedF64>> {
+    ) -> (result: SetStEph<LabEdge<V, WrappedF64>>)
+        requires
+            spec_labgraphview_wf(graph@),
+            obeys_key_model::<V>(),
+            valid_key_type_LabEdge::<V, WrappedF64>(),
+        ensures
+            result.spec_setsteph_wf(),
+    {
         let mut mst_edges = SetLit![];
         let mut visited = HashSetWithViewPlus::<V>::new();
 

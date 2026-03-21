@@ -12,8 +12,10 @@ pub mod KruskalStEph {
     use crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
     use crate::Types::Types::*;
     use std::hash::Hash;
+    use std::cmp::Ordering;
     use crate::Chap65::UnionFindStEph::UnionFindStEph::*;
     use crate::vstdplus::feq::feq::obeys_feq_full;
+    use crate::vstdplus::pervasives_plus::pervasives_plus::vec_swap;
     use crate::SetLit;
 
     pub type T<V> = LabUnDirGraphStEph<V, WrappedF64>;
@@ -54,8 +56,7 @@ pub mod KruskalStEph {
             requires Self::spec_kruskalsteph_wf(graph), mst.spec_setsteph_wf();
     }
 
-    /// Sort edges by weight (external_body: closure-based sort not verifiable).
-    #[verifier::external_body]
+    /// Sort edges by weight — verified selection sort.
     fn sort_edges_by_weight<V: HashOrd>(edges: &mut Vec<LabEdge<V, WrappedF64>>)
         ensures
             edges@.len() == old(edges)@.len(),
@@ -65,11 +66,98 @@ pub mod KruskalStEph {
                 0 <= i <= j < edges@.len() ==>
                 edges@[i].2.val.le(edges@[j].2.val),
     {
-        edges.sort_by(|e1, e2| {
-            let LabEdge(_u1, _v1, w1) = e1;
-            let LabEdge(_u2, _v2, w2) = e2;
-            w1.cmp(w2)
-        });
+        broadcast use crate::vstdplus::float::float::group_float_finite_total_order;
+
+        let n = edges.len();
+        let mut i: usize = 0;
+        while i < n
+            invariant
+                n == edges@.len(),
+                i <= n,
+                forall|k: int| 0 <= k < n ==>
+                    old(edges)@.contains(#[trigger] edges@[k]),
+                forall|a: int, b: int| #![trigger edges@[a], edges@[b]]
+                    0 <= a <= b < i as int ==>
+                    edges@[a].2.val.le(edges@[b].2.val),
+                forall|a: int, b: int| #![trigger edges@[a], edges@[b]]
+                    0 <= a < i as int && i as int <= b < n ==>
+                    edges@[a].2.val.le(edges@[b].2.val),
+            decreases n - i,
+        {
+            // Find index of minimum weight edge in [i..n).
+            let mut min_idx: usize = i;
+            let mut j: usize = i + 1;
+            while j < n
+                invariant
+                    n == edges@.len(),
+                    i <= min_idx < j <= n,
+                    forall|k: int| i as int <= k < j as int ==>
+                        edges@[min_idx as int].2.val.le(#[trigger] edges@[k].2.val),
+                decreases n - j,
+            {
+                let ghost old_min = min_idx;
+                match edges[j].2.float_cmp(&edges[min_idx].2) {
+                    Ordering::Less => {
+                        min_idx = j;
+                        proof {
+                            assert forall|k: int| i as int <= k < j as int + 1
+                                implies edges@[j as int].2.val.le(#[trigger] edges@[k].2.val)
+                            by {
+                                if k < j as int {
+                                    WrappedF64::transitive(
+                                        edges@[j as int].2,
+                                        edges@[old_min as int].2,
+                                        edges@[k].2,
+                                    );
+                                }
+                            };
+                        }
+                    }
+                    _ => {
+                        // edges[min_idx] ≤ edges[j]; invariant extends to j+1 automatically.
+                    }
+                }
+                j += 1;
+            }
+
+            // Swap minimum into position i.
+            if min_idx != i {
+                vec_swap(edges, i, min_idx);
+            }
+
+            // Prove outer invariant for i+1.
+            proof {
+                let new_i = i as int + 1;
+                // Prefix [0..new_i) sorted.
+                assert forall|a: int, b: int| 0 <= a <= b < new_i
+                    implies edges@[a].2.val.le(#[trigger] edges@[b].2.val)
+                by {
+                    if b == i as int && a < i as int {
+                        // a < i: edges[a] ≤ old prefix-leq-suffix, which gives edges[a] ≤ edges[i].
+                        assert(edges@[a].2.val.le(edges@[i as int].2.val));
+                    }
+                    // a == b == i: reflexive; or a < b < i: old sorted-prefix invariant.
+                };
+                // Prefix [0..new_i) ≤ suffix [new_i..n).
+                assert forall|a: int, b: int| 0 <= a < new_i && new_i <= b < n
+                    implies edges@[a].2.val.le(#[trigger] edges@[b].2.val)
+                by {
+                    // edges[i] = old min of [i..n), so edges[i] ≤ edges[b] for b > i.
+                    assert(edges@[i as int].2.val.le(edges@[b].2.val));
+                    if a < i as int {
+                        // a in old prefix: edges[a] ≤ edges[i] (old prefix-leq-suffix invariant).
+                        WrappedF64::transitive(
+                            edges@[a].2,
+                            edges@[i as int].2,
+                            edges@[b].2,
+                        );
+                    }
+                    // a == i: handled by the first assert above.
+                };
+            }
+
+            i += 1;
+        }
     }
 
     /// Algorithm 65.2: Kruskal's MST Algorithm.

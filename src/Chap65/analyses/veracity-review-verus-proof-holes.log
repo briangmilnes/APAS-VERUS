@@ -20,21 +20,24 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ KruskalStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:58: error: external_body - #[verifier::external_body]
-        59 |     fn sort_edges_by_weight<V: HashOrd>(edges: &mut Vec<LabEdge<V, WrappedF64>>)
-   Holes: 1 total
-      1 × external_body
-❌ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:95: error: external_body - #[verifier::external_body]
-        96 |     pub fn prim_mst<V: HashOrd + Display>(
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:72: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
-        65 |         fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64
+⚠ KruskalStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/KruskalStEph.rs:60: error: fn_missing_requires - fn sort_edges_by_weight — exec fn should have requires
+        52 |         fn verify_mst_size<V: HashOrd>(
             ...
-        70 |     /// - APAS: N/A — Verus-specific scaffolding.
-        71 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        73 |         ensures entry.priority == priority, entry.vertex == vertex, entry.parent == parent,
-        74 |     {
+        58 | 
+        59 |     /// Sort edges by weight — verified selection sort.
+        61 |         ensures
+        62 |             edges@.len() == old(edges)@.len(),
+❌ PrimStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:96: error: external_body - #[verifier::external_body]
+        97 |     pub fn prim_mst<V: HashOrd + Display>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:73: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
+        66 |         fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64
+            ...
+        71 |     /// - APAS: N/A — Verus-specific scaffolding.
+        72 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        74 |         ensures entry.priority == priority, entry.vertex == vertex, entry.parent == parent,
+        75 |     {
    Holes: 1 total
       1 × external_body
 ✓ UnionFindStEph.rs
@@ -66,3 +69,33 @@ UnionFindStEph.rs  depends upon only clean modules
 Modules:
    1 clean (no holes, no errors; 33%)
    2 holed (holes or errors, 66%)
+   3 total
+
+Proof Functions:
+   0 clean (0%)
+   0 holed (0%)
+   0 total
+
+Function Specs:
+   22 exec fns with complete spec (requires+ensures) (73%)
+   2 exec fns missing spec (6%)
+   6 proof/spec fns clean (20%)
+   0 proof/spec fns with holes (0%)
+   30 total fns
+
+
+Holes Found: 1 (actionable)
+   1 × external_body (100%)
+
+Warnings: 2 total
+   2 × fn_missing_requires
+
+=================================================================
+5. Started/Ended/Duration
+=================================================================
+
+Started:   2026-03-20 19:44:00 -07:00
+Ended:     2026-03-20 19:44:00 -07:00
+Duration:  19ms
+
+Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
