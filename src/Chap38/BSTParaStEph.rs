@@ -24,6 +24,7 @@ pub mod BSTParaStEph {
     use vstd::rwlock::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::{OrdSpec, PartialEqSpec, PartialOrdSpec};
+    #[cfg(verus_keep_ghost)]
     use vstd::pervasive::cloned;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
