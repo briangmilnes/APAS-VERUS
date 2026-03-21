@@ -11,6 +11,8 @@ pub mod ParaHashTableStEph {
     // 2. imports
     // 4. type definitions (inside verus!: LoadAndSize, HashTable)
     // 6. spec fns (inside verus!: spec_hashtable_wf, spec_seq_pairs_to_map, spec_table_to_map, spec_other_slots_preserved)
+    // 7. proof fns (inside verus!: clone_elem, lemma_table_to_map_*)
+    // 7a. helpers (inside verus!: call_hash_fn)
     // 8. traits (inside verus!: EntryTrait, ParaHashTableStEphTrait)
     // 9. impls (inside verus!: View for HashTable)
     // 13. derive impls outside verus!
@@ -101,17 +103,7 @@ pub mod ParaHashTableStEph {
             ==> #[trigger] new_seq[j] == old_seq[j]
     }
 
-    /// Abstract second hash value for double hashing.
-    /// Closed so body is hidden from SMT; runtime `compute_second_hash` links via ensures.
-    pub closed spec fn spec_second_hash<Key>(key: Key, table_size: nat) -> nat { 1 }
-
     // 7. proof fns
-
-    /// Exposes the spec-level second hash value (= 1) for probe coverage proofs.
-    /// Within this module, the closed fn body is visible, so this is provable.
-    pub proof fn lemma_spec_second_hash_value<Key>(key: Key, table_size: nat)
-        ensures spec_second_hash::<Key>(key, table_size) == 1nat,
-    {}
 
     /// Clone bridge for generic element: ensures cloned value equals original.
     /// Uses the standard clone-body assume bridge per partial_eq_eq_clone_standard.
@@ -506,60 +498,6 @@ pub mod ParaHashTableStEph {
             index as nat == (spec_hash@)(*key) % (table_size as nat),
     {
         (hash_fn)(key, table_size)
-    }
-
-    /// Linear probe: (hash(key) + attempt) % table_size.
-    pub fn linear_probe<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (slot: usize)
-        requires table_size > 0,
-        ensures slot < table_size,
-    {
-        let h = call_hash_fn(hash_fn, key, table_size, spec_hash);
-        (h.wrapping_add(attempt)) % table_size
-    }
-
-    /// Quadratic probe: (hash(key) + attempt²) % table_size.
-    pub fn quadratic_probe<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (slot: usize)
-        requires table_size > 0,
-        ensures slot < table_size,
-    {
-        let h = call_hash_fn(hash_fn, key, table_size, spec_hash);
-        (h.wrapping_add(attempt.wrapping_mul(attempt))) % table_size
-    }
-
-    /// Computes a second hash value for double hashing.
-    /// External_body because Verus cannot reason about std::hash types.
-    #[verifier::external_body]
-    pub fn compute_second_hash<Key: std::hash::Hash>(key: &Key, table_size: usize) -> (step: usize)
-        requires table_size > 0,
-        ensures
-            step >= 1,
-            table_size > 1 ==> step < table_size,
-            step as nat == spec_second_hash(*key, table_size as nat),
-    {
-        use std::collections::hash_map::DefaultHasher;
-        use std::hash::Hasher;
-        if table_size <= 1 {
-            return 1;
-        }
-        let mut hasher = DefaultHasher::new();
-        key.hash(&mut hasher);
-        let hash = hasher.finish();
-        let base = (table_size - 1) as u64;
-        let mut step = ((hash % base) + 1) as usize;
-        if step % 2 == 0 && step < table_size - 1 {
-            step += 1;
-        }
-        step
-    }
-
-    /// Double hash probe: (hash(key) + attempt * second_hash(key, table_size)) % table_size.
-    pub fn double_hash_probe<Key: std::hash::Hash, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (slot: usize)
-        requires table_size > 0,
-        ensures slot < table_size,
-    {
-        let h = call_hash_fn(hash_fn, key, table_size, spec_hash);
-        let h2 = compute_second_hash(key, table_size);
-        (h.wrapping_add(attempt.wrapping_mul(h2))) % table_size
     }
 
     // 8. traits
