@@ -3,7 +3,7 @@
 # Usage: rtt.sh [filter]  (e.g. rtt.sh bst, rtt.sh Chap37)
 # Filter is a case-insensitive substring match on test names.
 
-set -euo pipefail
+set -uo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_ROOT"
@@ -17,5 +17,11 @@ LOGDIR="$PROJECT_ROOT/logs"
 mkdir -p "$LOGDIR"
 LOGFILE="$LOGDIR/rtt.$(date +%Y%m%d-%H%M%S).log"
 
+START_SEC=$(date +%s)
+echo "Starting RTT at $(date '+%H:%M:%S')"
 timeout 120 cargo nextest run --release -j 6 --no-fail-fast --no-tests warn "${FILTER[@]}" 2>&1 \
     | sed 's/\x1b\[[0-9;]*[mGKHABCDEFJST]//g' | tee "$LOGFILE"
+RC=${PIPESTATUS[0]}
+ELAPSED=$(( $(date +%s) - START_SEC ))
+echo "Elapsed: ${ELAPSED}s" | tee -a "$LOGFILE"
+exit $RC

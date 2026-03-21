@@ -10,8 +10,10 @@ pub mod trait_rec_caller {
 
     use vstd::prelude::*;
     use crate::experiments::trait_rec_vs_iter::trait_rec_vs_iter::{
-        StackTrait, RecStack, spec_sum,
+        StackTrait, RecStack,
     };
+    #[cfg(verus_keep_ghost)]
+    use crate::experiments::trait_rec_vs_iter::trait_rec_vs_iter::spec_sum;
 
     verus! {
 

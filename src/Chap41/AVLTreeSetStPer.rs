@@ -163,6 +163,7 @@ broadcast use {
             self.elements.spec_avltreeseqstper_wf()
             && self.elements@.no_duplicates()
             && self@.finite()
+            && obeys_feq_full::<T>()
         }
 
         fn size(&self) -> (count: usize)
@@ -186,6 +187,7 @@ broadcast use {
 
         fn empty() -> (empty: Self)
         {
+            assert(obeys_feq_full_trigger::<T>());
             let empty = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::empty() };
             assert(empty.elements@ =~= Seq::<<T as View>::V>::empty());
             assert(empty@ =~= Set::<<T as View>::V>::empty());
@@ -194,6 +196,7 @@ broadcast use {
 
         fn singleton(x: T) -> (tree: Self)
         {
+            assert(obeys_feq_full_trigger::<T>());
             let ghost x_view = x@;
             let tree = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::singleton(x) };
             proof {
@@ -220,9 +223,9 @@ broadcast use {
             tree
         }
 
+        #[verifier::loop_isolation(false)]
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let mut constructed = Self::empty();
             let n = seq.length();
             let mut i: usize = 0;
@@ -233,7 +236,7 @@ broadcast use {
                     i <= n,
                     constructed@.finite(),
                     constructed.spec_avltreesetstper_wf(),
-                    obeys_feq_full::<T>(),
+
                     forall|j: int| 0 <= j < i ==> #[trigger] constructed@.contains(seq@[j]),
                     forall|v: <T as View>::V| #[trigger] constructed@.contains(v) ==>
                         (exists|j: int| 0 <= j < i && seq@[j] == v),
@@ -283,13 +286,13 @@ broadcast use {
             constructed
         }
 
+        #[verifier::loop_isolation(false)]
         fn filter<F: PredSt<T>>(
             &self,
             f: F,
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
         ) -> (filtered: Self)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let mut filtered = Self::empty();
             let n = self.elements.length();
             let mut i: usize = 0;
@@ -301,7 +304,7 @@ broadcast use {
                     filtered@.finite(),
                     filtered.spec_avltreesetstper_wf(),
                     filtered@.subset_of(self@),
-                    obeys_feq_full::<T>(),
+
                     forall|t: &T| #[trigger] f.requires((t,)),
                     forall|x: T, keep: bool|
                         f.ensures((&x,), keep) ==> keep == spec_pred(x@),
@@ -367,9 +370,9 @@ broadcast use {
             filtered
         }
 
+        #[verifier::loop_isolation(false)]
         fn intersection(&self, other: &Self) -> (common: Self)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let mut common = Self::empty();
             let n = self.elements.length();
             let mut i: usize = 0;
@@ -381,7 +384,7 @@ broadcast use {
                     i <= n,
                     common@.finite(),
                     common.spec_avltreesetstper_wf(),
-                    obeys_feq_full::<T>(),
+
                     common@.subset_of(self@.intersect(other@)),
                     forall|j: int| #![trigger self.elements@[j]]
                         0 <= j < i && other@.contains(self.elements@[j])
@@ -426,9 +429,9 @@ broadcast use {
             common
         }
 
+        #[verifier::loop_isolation(false)]
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let mut remaining = Self::empty();
             let n = self.elements.length();
             let mut i: usize = 0;
@@ -440,7 +443,7 @@ broadcast use {
                     i <= n,
                     remaining@.finite(),
                     remaining.spec_avltreesetstper_wf(),
-                    obeys_feq_full::<T>(),
+
                     remaining@.subset_of(self@.difference(other@)),
                     forall|j: int| #![trigger self.elements@[j]]
                         0 <= j < i && !other@.contains(self.elements@[j])
@@ -485,9 +488,9 @@ broadcast use {
             remaining
         }
 
+        #[verifier::loop_isolation(false)]
         fn union(&self, other: &Self) -> (combined: Self)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let mut combined = Self::empty();
             let self_len = self.elements.length();
             let mut i: usize = 0;
@@ -498,7 +501,7 @@ broadcast use {
                     i <= self_len,
                     combined@.finite(),
                     combined.spec_avltreesetstper_wf(),
-                    obeys_feq_full::<T>(),
+
                     combined@.subset_of(self@.union(other@)),
                     forall|k: int| #![trigger self.elements@[k]]
                         0 <= k < i ==> combined@.contains(self.elements@[k]),
@@ -536,7 +539,7 @@ broadcast use {
                     j <= other_len,
                     combined@.finite(),
                     combined.spec_avltreesetstper_wf(),
-                    obeys_feq_full::<T>(),
+
                     combined@.subset_of(self@.union(other@)),
                     forall|k: int| #![trigger self.elements@[k]]
                         0 <= k < self_len ==> combined@.contains(self.elements@[k]),
@@ -588,15 +591,15 @@ broadcast use {
             combined
         }
 
+        #[verifier::loop_isolation(false)]
         fn find(&self, x: &T) -> (found: B)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let n = self.elements.length();
             let mut i: usize = 0;
             while i < n
                 invariant
                     self.elements.spec_avltreeseqstper_wf(),
-                    obeys_feq_full::<T>(),
+
                     n as int == self.elements.spec_seq().len(),
                     i <= n,
                     forall|k: int| #![trigger self.elements@[k]]
@@ -623,9 +626,9 @@ broadcast use {
             false
         }
 
+        #[verifier::loop_isolation(false)]
         fn delete(&self, x: &T) -> (updated: Self)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let n = self.elements.length();
             let mut result_vec: Vec<T> = Vec::new();
             let mut i: usize = 0;
@@ -636,7 +639,7 @@ broadcast use {
                 invariant
                     self.elements.spec_avltreeseqstper_wf(),
                     self.elements@.no_duplicates(),
-                    obeys_feq_full::<T>(),
+
                     n as int == self.elements.spec_seq().len(),
                     i <= n,
                     result_vec@.len() == i as int - skipped,
@@ -751,6 +754,7 @@ broadcast use {
             updated
         }
 
+        #[verifier::loop_isolation(false)]
         fn insert(&self, x: T) -> (updated: Self)
         {
             let ghost x_view = x@;
@@ -784,14 +788,13 @@ broadcast use {
                     hi = mid;
                 }
             }
-            assert(obeys_feq_full_trigger::<T>());
             let mut new_vec: Vec<T> = Vec::new();
             let ghost mut rv: Seq<<T as View>::V> = Seq::empty();
             let mut i: usize = 0;
             while i < lo
                 invariant
                     self.elements.spec_avltreeseqstper_wf(),
-                    obeys_feq_full::<T>(),
+
                     n as int == self.elements.spec_seq().len(),
                     i <= lo, lo <= n,
                     new_vec@.len() == i as int,
@@ -855,7 +858,7 @@ broadcast use {
             while j < n
                 invariant
                     self.elements.spec_avltreeseqstper_wf(),
-                    obeys_feq_full::<T>(),
+
                     n as int == self.elements.spec_seq().len(),
                     lo <= j, j <= n,
                     new_vec@.len() == (j + 1) as int,

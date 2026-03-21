@@ -1,7 +1,7 @@
 #!/bin/bash
 # Verus verification. Usage: validate.sh [full|dev_only|exp] [--time]
 
-set -euo pipefail
+set -uo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 VERUS=~/projects/verus/source/target-verus/release/verus
@@ -32,8 +32,13 @@ mkdir -p "$LOGDIR"
 LOGFILE="$LOGDIR/validate.$(date +%Y%m%d-%H%M%S).log"
 
 cd "$PROJECT_ROOT"
-echo "Starting verification"
+START_SEC=$(date +%s)
+echo "Starting verification at $(date '+%H:%M:%S')"
 # Limit parallelism to 8 threads (default is num_cpus-1, can lock machine)
-time timeout 130 "$VERUS" --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors \
+timeout 130 "$VERUS" --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors \
     --num-threads 8 \
     "${CFG_FLAG[@]}" "${TIME_FLAG[@]}" 2>&1 | sed 's/\x1b\[[0-9;]*m//g' | tee "$LOGFILE"
+RC=${PIPESTATUS[0]}
+ELAPSED=$(( $(date +%s) - START_SEC ))
+echo "Elapsed: ${ELAPSED}s" | tee -a "$LOGFILE"
+exit $RC

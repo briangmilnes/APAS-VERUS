@@ -21,16 +21,16 @@ Table of Contents:
 =================================================================
 
 ⚠ BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:51: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:51: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         47 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
         49 |         {
         50 |             let r = self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3;
         52 |             r
         53 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:149: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:149: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
 ⚠ BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaStEph.rs:66: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:66: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         62 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
         64 |         {
@@ -92,12 +92,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-21 08:46:44 -07:00
-Ended:     2026-03-21 08:46:44 -07:00
-Duration:  16ms
+Started:   2026-03-21 10:32:08 -07:00
+Ended:     2026-03-21 10:32:08 -07:00
+Duration:  15ms
 
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
-2026-03-21 08:46:44 -07:00
-Duration:  16ms
-
-Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap66/analyses/veracity-review-verus-proof-holes.log

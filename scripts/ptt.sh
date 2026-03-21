@@ -3,7 +3,7 @@
 # Usage: ptt.sh [filter]  (e.g. ptt.sh Chap05)
 # Filter is a case-insensitive substring match on test names.
 
-set -euo pipefail
+set -uo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 VERUS=~/projects/verus/source/target-verus/release/verus
@@ -22,6 +22,8 @@ mkdir -p "$LOGDIR"
 LOGFILE="$LOGDIR/ptt.$(date +%Y%m%d-%H%M%S).log"
 
 cd "$PROJECT_ROOT"
+START_SEC=$(date +%s)
+echo "Starting PTT at $(date '+%H:%M:%S')"
 {
 "$VERUS" \
     --compile --crate-type=lib --crate-name apas_verus src/lib.rs \
@@ -33,3 +35,7 @@ cd "$PROJECT_ROOT/rust_verify_test"
 cargo nextest run --release -j 6 --no-fail-fast --no-tests warn "${FILTER[@]}" 2>&1 \
     | sed 's/\x1b\[[0-9;]*[mGKHABCDEFJST]//g'
 } | tee "$LOGFILE"
+RC=${PIPESTATUS[0]}
+ELAPSED=$(( $(date +%s) - START_SEC ))
+echo "Elapsed: ${ELAPSED}s" | tee -a "$LOGFILE"
+exit $RC

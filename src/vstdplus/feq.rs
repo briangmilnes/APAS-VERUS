@@ -72,6 +72,14 @@ pub mod feq {
         &&& obeys_feq_eq::<T>()
     }
 
+    /// Combined feq for two types — use in `spec_X_wf` for KV modules.
+    pub open spec fn obeys_feq_fulls<
+        T: Eq + View + Clone + Sized,
+        U: Eq + View + Clone + Sized,
+    >() -> bool {
+        obeys_feq_full::<T>() && obeys_feq_full::<U>()
+    }
+
     // Trigger function for broadcast axiom: obeys_feq_full holds for well-behaved types.
     pub open spec fn obeys_feq_full_trigger<T>() -> bool { true }
 
