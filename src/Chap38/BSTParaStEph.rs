@@ -413,12 +413,15 @@ pub mod BSTParaStEph {
         /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|) -- agrees with APAS; sequential.
         /// Requires `op` to be associative with identity `base`.
         fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (result: T)
-            requires self@.finite(), forall|a: T, b: T| op.requires((a, b)),
+            requires
+                self@.finite(),
+                forall|a: T, b: T| op.requires((a, b)),
             ensures self@.len() == 0 ==> result@ == base@;
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|) -- helper for in_order.
         fn collect_in_order(&self, out: &mut Vec<T>)
-            requires self@.finite(),
+            requires
+                self@.finite(),
             ensures out@.len() == old(out)@.len() + self@.len();
         /// - APAS: Work O(|t|), Span O(|t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|) -- agrees with APAS.

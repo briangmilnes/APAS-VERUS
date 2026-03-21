@@ -683,7 +683,8 @@ pub mod BSTParaMtEph {
     }
 
     fn expose_internal<T: MtKey>(tree: &ParamBST<T>) -> (exposed: Exposed<T>)
-        requires tree@.finite(),
+        requires
+            tree@.finite(),
         ensures
             tree@.finite(),
             exposed is Leaf ==> tree@.len() == 0,
@@ -719,9 +720,9 @@ pub mod BSTParaMtEph {
                 let k = clone_elem(&node.key);
                 let r = node.right.clone();
                 proof {
-                    // k == node.key from clone_elem ensures.
+                    // k == node.key from clone_elem ensures (value equality).
                     // l@ == node.left@ and r@ == node.right@ from ParamBST::clone ensures.
-                    // Ordering transfers: spec fn on equal args yields equal results.
+                    // Ordering properties transfer directly since k == node.key.
                     assert forall |t: T| (#[trigger] l@.contains(t@))
                         implies t.cmp_spec(&k) == Less by {
                         assert(node.left@.contains(t@));
@@ -934,7 +935,8 @@ pub mod BSTParaMtEph {
     }
 
     fn min_key<T: MtKey>(tree: &ParamBST<T>) -> (result: Option<T>)
-        requires tree@.finite(),
+        requires
+            tree@.finite(),
         ensures
             result.is_none() <==> tree@.len() == 0,
             result.is_some() ==> tree@.contains(result.unwrap()@),
@@ -1596,7 +1598,8 @@ pub mod BSTParaMtEph {
         op: F,
         base: T,
     ) -> (result: T)
-        requires forall|a: T, b: T| #[trigger] op.requires((a, b)),
+        requires
+            forall|a: T, b: T| #[trigger] op.requires((a, b)),
         ensures tree@.len() == 0 ==> result@ == base@,
     {
         let _ = tree.size();
@@ -1605,7 +1608,8 @@ pub mod BSTParaMtEph {
     }
 
     fn collect_in_order<T: MtKey>(tree: &ParamBST<T>, out: &mut Vec<T>)
-        requires tree@.finite(),
+        requires
+            tree@.finite(),
         ensures out@.len() == old(out)@.len() + tree@.len(),
         decreases tree@.len(),
     {

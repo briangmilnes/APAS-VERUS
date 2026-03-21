@@ -1565,27 +1565,41 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    #[verifier::exec_allows_no_decreases_clause]
-    fn filter_inner<T: MtKey + ClonePreservesView + 'static, F: Pred<T>>(tree: &ParamTreap<T>, predicate: &Arc<F>) -> (result: ParamTreap<T>)
+    // Sequential (non-parallel) filter: carries Ghost(spec_pred) through recursion to prove
+    // full predicate semantics. Parallel closures cannot capture Ghost<spec_fn(T::V) -> bool>
+    // because T::V is a ghost type that does not implement Send. Sequential recursion avoids
+    // the Send constraint entirely while preserving correctness.
+    fn filter_inner<T: MtKey + ClonePreservesView + 'static, F: Pred<T>>(
+        tree: &ParamTreap<T>,
+        predicate: &Arc<F>,
+        Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+    ) -> (result: ParamTreap<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
             forall|t: &T| #[trigger] ((**predicate).requires((t,))),
+            forall|x: T, keep: bool| #[trigger] (**predicate).ensures((&x,), keep)
+                ==> keep == spec_pred(x@),
             tree@.len() < usize::MAX as nat,
-        ensures result@.finite(), result@.subset_of(tree@),
+        ensures
+            result@.finite(),
+            result@.subset_of(tree@),
+            forall|v: T::V| #[trigger] result@.contains(v)
+                ==> tree@.contains(v) && spec_pred(v),
+            forall|v: T::V| #[trigger] tree@.contains(v) && spec_pred(v)
+                ==> result@.contains(v),
+        decreases tree@.len(),
     {
         proof { use_type_invariant(tree); }
         match expose_internal(tree) {
             | Exposed::Leaf => new_leaf(),
             | Exposed::Node(left, key, right) => {
                 let ap = tree_priority_internal(tree);
-                let pred_left = Arc::clone(predicate);
-                let pred_right = Arc::clone(predicate);
                 let ghost lv = left@;
                 let ghost rv = right@;
                 let ghost kv = key@;
                 let ghost tv = tree@;
-                // Ordering foralls while exec vars are live (before closures move them).
+                // Ordering foralls while exec vars are live.
                 proof {
                     assert forall|t: T| #[trigger] lv.contains(t@) implies t.cmp_spec(&key) == Less by {
                         assert(left@.contains(t@));
@@ -1593,20 +1607,19 @@ pub mod BSTParaTreapMtEph {
                     assert forall|t: T| #[trigger] rv.contains(t@) implies t.cmp_spec(&key) == Greater by {
                         assert(right@.contains(t@));
                     };
+                    // Termination: subtrees are strictly smaller than tree.
+                    vstd::set_lib::lemma_set_disjoint_lens(lv, rv);
+                    assert(lv.len() + rv.len() < tv.len());
                 }
-                let f1 = move || -> (r: ParamTreap<T>)
-                    ensures r@.finite(), r@.subset_of(left@)
-                { filter_inner(&left, &pred_left) };
-                let f2 = move || -> (r: ParamTreap<T>)
-                    ensures r@.finite(), r@.subset_of(right@)
-                { filter_inner(&right, &pred_right) };
-                let Pair(left_filtered, right_filtered) = crate::ParaPair!(f1, f2);
+                // Sequential recursive calls.
+                let left_filtered = filter_inner(&left, predicate, Ghost(spec_pred));
+                let right_filtered = filter_inner(&right, predicate, Ghost(spec_pred));
                 proof { use_type_invariant(&left_filtered); use_type_invariant(&right_filtered); }
                 proof {
-                    // Subset established by closure ensures.
+                    // Subset from recursive call ensures.
                     assert(left_filtered@.subset_of(lv));
                     assert(right_filtered@.subset_of(rv));
-                    // Ordering foralls for filtered results (from ambient lv/rv ordering foralls).
+                    // Ordering foralls for filtered results (from ambient lv/rv ordering).
                     assert forall|t: T| #[trigger] left_filtered@.contains(t@) implies t.cmp_spec(&key) == Less by {
                         assert(lv.contains(t@));
                     };
@@ -1618,27 +1631,25 @@ pub mod BSTParaTreapMtEph {
                     // Disjointness.
                     assert(lv.disjoint(rv));
                     assert(left_filtered@.disjoint(right_filtered@));
-                    // left_filtered@ ⊆ lv < key, right_filtered@ ⊆ rv > key.
+                    // BST ordering across the two filtered partitions.
                     assert forall|s: T, o: T| #![trigger left_filtered@.contains(s@), right_filtered@.contains(o@)]
                         left_filtered@.contains(s@) && right_filtered@.contains(o@) ==> s.cmp_spec(&o) == Less by {
-                        // Reveal and explicit if-case to force unit facts from the conjunction.
                         reveal(ParamTreap::spec_ghost_locked_root);
                         if left_filtered@.contains(s@) && right_filtered@.contains(o@) {
-                            // Both are unit facts here — E-matching fires on one-var ordering foralls.
                             assert(s.cmp_spec(&key) == Less);
                             assert(o.cmp_spec(&key) == Greater);
                             lemma_cmp_antisymmetry(o, key);
                             lemma_cmp_transitivity(s, key, o);
                         }
                     };
-                    // Length: lf.len() + rf.len() ≤ lv.len() + rv.len() < tree@.len() < usize::MAX.
+                    // Length bounds for join preconditions.
                     vstd::set_lib::lemma_len_subset(left_filtered@, lv);
                     vstd::set_lib::lemma_len_subset(right_filtered@, rv);
                     vstd::set_lib::lemma_set_disjoint_lens(lv, rv);
                     assert(lv.len() + rv.len() < tree@.len());
                     assert(left_filtered@.len() + right_filtered@.len() < usize::MAX as nat);
                     // Subset of tree@ for both result variants.
-                    assert(tv == lv.union(rv).insert(kv));  // lift from expose =~=
+                    assert(tv == lv.union(rv).insert(kv));
                     assert(left_filtered@.union(right_filtered@).insert(kv).subset_of(tv)) by {
                         assert forall|x: T::V| #[trigger]
                             left_filtered@.union(right_filtered@).insert(kv).contains(x)
@@ -1657,9 +1668,84 @@ pub mod BSTParaTreapMtEph {
                         };
                     };
                 }
-                if (**predicate)(&key) {
+                let keep = (**predicate)(&key);
+                proof {
+                    // keep == spec_pred(kv): follows from predicate ensures + our requires.
+                    assert((**predicate).ensures((&key,), keep));
+                    assert(keep == spec_pred(kv));
+                }
+                if keep {
+                    proof {
+                        let lf = left_filtered@;
+                        let rf = right_filtered@;
+                        // Forward: lf.union(rf).insert(kv).contains(v) ==> spec_pred(v).
+                        assert forall|v: T::V| #[trigger]
+                            lf.union(rf).insert(kv).contains(v) implies spec_pred(v) by {
+                            if v == kv {
+                                assert(spec_pred(kv));
+                            } else if lf.contains(v) {
+                                assert(left_filtered@.contains(v));
+                            } else {
+                                assert(rf.contains(v));
+                                assert(right_filtered@.contains(v));
+                            }
+                        };
+                        // Backward: tv.contains(v) && spec_pred(v) ==> lf.union(rf).insert(kv).contains(v).
+                        assert forall|v: T::V| #[trigger]
+                            tv.contains(v) && spec_pred(v)
+                            implies lf.union(rf).insert(kv).contains(v) by {
+                            if v == kv {
+                                // kv is in the insert.
+                            } else {
+                                // v ≠ kv and v ∈ tv → v ∈ lv or v ∈ rv (tv = lv.union(rv).insert(kv)).
+                                assert(lv.union(rv).contains(v));
+                                if lv.contains(v) {
+                                    assert(left_filtered@.contains(v));
+                                    assert(lf.contains(v));
+                                } else {
+                                    assert(rv.contains(v));
+                                    assert(right_filtered@.contains(v));
+                                    assert(rf.contains(v));
+                                }
+                            }
+                        };
+                    }
                     join_with_priority(left_filtered, key, ap, right_filtered)
                 } else {
+                    proof {
+                        let lf = left_filtered@;
+                        let rf = right_filtered@;
+                        // Forward: lf.union(rf).contains(v) ==> spec_pred(v).
+                        assert forall|v: T::V| #[trigger]
+                            lf.union(rf).contains(v) implies spec_pred(v) by {
+                            if lf.contains(v) {
+                                assert(left_filtered@.contains(v));
+                            } else {
+                                assert(rf.contains(v));
+                                assert(right_filtered@.contains(v));
+                            }
+                        };
+                        // Backward: tv.contains(v) && spec_pred(v) ==> lf.union(rf).contains(v).
+                        // kv is excluded; spec_pred(kv) = keep = false vacuously handles v == kv.
+                        assert forall|v: T::V| #[trigger]
+                            tv.contains(v) && spec_pred(v)
+                            implies lf.union(rf).contains(v) by {
+                            if v == kv {
+                                // spec_pred(kv) = keep = false; contradicts antecedent spec_pred(v).
+                                assert(!spec_pred(kv));
+                            } else {
+                                assert(lv.union(rv).contains(v));
+                                if lv.contains(v) {
+                                    assert(left_filtered@.contains(v));
+                                    assert(lf.contains(v));
+                                } else {
+                                    assert(rv.contains(v));
+                                    assert(right_filtered@.contains(v));
+                                    assert(rf.contains(v));
+                                }
+                            }
+                        };
+                    }
                     join_pair_inner(left_filtered, right_filtered)
                 }
             }
@@ -1687,22 +1773,7 @@ pub mod BSTParaTreapMtEph {
                 ==> #[trigger] filtered@.contains(v),
     {
         let predicate = Arc::new(predicate);
-        let filtered = filter_inner(tree, &predicate);
-        proof {
-            // Structural blocker: Ghost<spec_fn(T::V) -> bool> cannot be captured in
-            // parallel closures because T::V is a Verus spec type and does not implement
-            // the Rust Send trait. Strengthening filter_inner's ensures to include the
-            // predicate postcondition requires capturing spec_pred in the parallel closure
-            // ensures, which requires T::V: Send — a constraint the Verus type system
-            // cannot satisfy for spec-only associated types. This assume connects the
-            // structural subset result from filter_inner to the full spec_pred postcondition.
-            assume(
-                filtered@.subset_of(tree@)
-                && (forall|v: T::V| #[trigger] filtered@.contains(v) ==> tree@.contains(v) && spec_pred(v))
-                && (forall|v: T::V| tree@.contains(v) && spec_pred(v) ==> #[trigger] filtered@.contains(v))
-            );
-        }
-        filtered
+        filter_inner(tree, &predicate, Ghost(spec_pred))
     }
 
     fn reduce_inner<T: MtKey + ClonePreservesView + 'static, F>(tree: &ParamTreap<T>, op: &Arc<F>, identity: T) -> T

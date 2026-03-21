@@ -21,36 +21,36 @@ Table of Contents:
 =================================================================
 
 ❌ BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:152: error: assume() [algorithmic] - proof { assume(c == *x); } // Clone bridge: T::clone preserv
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap38/BSTParaMtEph.rs:152: error: assume() [algorithmic] - proof { assume(c == *x); } // Clone bridge: T::clone preserv
        148 |     fn clone_elem<T: Clone>(x: &T) -> (c: T)
             ...
        150 |     {
        151 |         let c = x.clone();
        153 |         c
        154 |     }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:636: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap38/BSTParaMtEph.rs:636: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        629 |         fn clone(&self) -> (cloned: Self)
             ...
        634 |                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
        635 |             };
        637 |             cloned
        638 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:651: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap38/BSTParaMtEph.rs:651: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        642 |         fn clone(&self) -> (cloned: Self)
             ...
        649 |                 right: self.right.clone(),
        650 |             };
        652 |             cloned
        653 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1634: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1635: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap38/BSTParaMtEph.rs:1638: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap38/BSTParaMtEph.rs:1639: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
    Holes: 1 total
       1 × assume()
    Info: 2 × structural_false_positive
       2 × UNSAFE_SEND_SYNC
    Proof functions: 6 total (6 clean, 0 holed)
 ❌ BSTParaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:152: error: assume() [algorithmic] - proof { assume(c == *x); } // Clone bridge: T::clone preserv
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap38/BSTParaStEph.rs:152: error: assume() [algorithmic] - proof { assume(c == *x); } // Clone bridge: T::clone preserv
        148 |     fn clone_elem<T: Clone>(x: &T) -> (c: T)
             ...
        150 |     {
@@ -114,8 +114,8 @@ Structural (info only): 2
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-21 07:39:51 -07:00
-Ended:     2026-03-21 07:39:51 -07:00
-Duration:  42ms
+Started:   2026-03-21 08:39:34 -07:00
+Ended:     2026-03-21 08:39:34 -07:00
+Duration:  71ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
