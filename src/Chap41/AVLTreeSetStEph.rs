@@ -125,6 +125,29 @@ broadcast use {
         }
     }
 
+    /// An empty AVL tree set has its elements trivially sorted.
+    proof fn lemma_empty_set_is_sorted<T: StT + Ord + TotalOrder>(set: &AVLTreeSetStEph<T>)
+        requires
+            set@ =~= Set::<<T as View>::V>::empty(),
+            set.spec_avltreesetsteph_wf(),
+        ensures
+            set.spec_elements_sorted(),
+    {
+        // From wf: set.elements@.no_duplicates() holds.
+        // unique_seq_to_set() gives: set.elements@.len() == set.elements@.to_set().len()
+        // set.elements@.to_set() == set@ =~= Set::empty() ==> len == 0
+        // Hence set.elements@.len() == 0, so set.elements@ =~= Seq::empty().
+        set.elements@.unique_seq_to_set();
+        assert(set.elements@.len() == 0);
+        lemma_inorder_values_maps_to_views::<T>(set.elements.root);
+        let vals = spec_inorder_values::<T>(set.elements.root);
+        // vals.map_values(|t: T| t@) =~= set.elements@ which has len 0.
+        // map_values preserves length, so vals.len() == 0.
+        // spec_seq_sorted(Seq::empty()) holds vacuously (no (i,j) pair to violate it).
+        assert(vals.len() == 0);
+        assert(set.spec_elements_sorted());
+    }
+
     /// Appending an element >= all existing preserves sortedness.
     proof fn lemma_push_sorted<T: TotalOrder>(s: Seq<T>, v: T)
         requires
@@ -299,6 +322,58 @@ broadcast use {
                 self@ == old(self)@.remove(x@),
                 self.spec_avltreesetsteph_wf(),
                 self.spec_elements_sorted();
+        /// Filter preserving sortedness.
+        fn filter_sorted<F: PredSt<T>>(
+            &self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self)
+            requires
+                self.spec_avltreesetsteph_wf(),
+                self.spec_elements_sorted(),
+                obeys_feq_full::<T>(),
+                forall|t: &T| #[trigger] f.requires((t,)),
+                forall|x: T, keep: bool|
+                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),
+            ensures
+                filtered@.subset_of(self@),
+                filtered.spec_avltreesetsteph_wf(),
+                filtered.spec_elements_sorted(),
+                forall|v: T::V| #[trigger] filtered@.contains(v)
+                    ==> self@.contains(v) && spec_pred(v),
+                forall|v: T::V| self@.contains(v) && spec_pred(v)
+                    ==> #[trigger] filtered@.contains(v);
+        /// Intersection preserving sortedness.
+        fn intersection_sorted(&self, other: &Self) -> (common: Self)
+            requires
+                self.spec_avltreesetsteph_wf(),
+                self.spec_elements_sorted(),
+                other.spec_avltreesetsteph_wf(),
+            ensures
+                common@ == self@.intersect(other@),
+                common.spec_avltreesetsteph_wf(),
+                common.spec_elements_sorted();
+        /// Difference preserving sortedness.
+        fn difference_sorted(&self, other: &Self) -> (remaining: Self)
+            requires
+                self.spec_avltreesetsteph_wf(),
+                self.spec_elements_sorted(),
+                other.spec_avltreesetsteph_wf(),
+            ensures
+                remaining@ == self@.difference(other@),
+                remaining.spec_avltreesetsteph_wf(),
+                remaining.spec_elements_sorted();
+        /// Union preserving sortedness; requires combined capacity bound.
+        fn union_sorted(&self, other: &Self) -> (combined: Self)
+            requires
+                self.spec_avltreesetsteph_wf(),
+                self.spec_elements_sorted(),
+                other.spec_avltreesetsteph_wf(),
+                self@.len() + other@.len() < usize::MAX as nat,
+            ensures
+                combined@ == self@.union(other@),
+                combined.spec_avltreesetsteph_wf(),
+                combined.spec_elements_sorted();
     }
 
 
@@ -1688,6 +1763,340 @@ broadcast use {
                     assert(TotalOrder::le(orig_vals[mi], orig_vals[mj]));
                 };
             }
+        }
+
+        fn filter_sorted<F: PredSt<T>>(
+            &self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self)
+        {
+            assert(obeys_feq_full_trigger::<T>());
+            let mut filtered = Self::empty();
+            proof { lemma_empty_set_is_sorted(&filtered); }
+            let n = self.elements.length();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    self.elements.spec_avltreeseqsteph_wf(),
+                    n as int == self.elements.spec_seq().len(),
+                    i <= n,
+                    filtered@.finite(),
+                    filtered.spec_avltreesetsteph_wf(),
+                    filtered.spec_elements_sorted(),
+                    filtered@.subset_of(self@),
+                    filtered@.len() <= i as nat,
+                    obeys_feq_full::<T>(),
+                    forall|t: &T| #[trigger] f.requires((t,)),
+                    forall|x: T, keep: bool|
+                        f.ensures((&x,), keep) ==> keep == spec_pred(x@),
+                    forall|v: T::V| #[trigger] filtered@.contains(v) ==> spec_pred(v),
+                    forall|j: int| #![trigger self.elements@[j]]
+                        0 <= j < i && spec_pred(self.elements@[j])
+                        ==> filtered@.contains(self.elements@[j]),
+                decreases n - i,
+            {
+                let elem = self.elements.nth(i);
+                let keep = f(elem);
+                proof {
+                    assert(keep == spec_pred(self.elements@[i as int]));
+                }
+                if keep {
+                    let c = elem.clone();
+                    proof {
+                        lemma_cloned_view_eq(*elem, c);
+                        assert(c@ == elem@);
+                        assert(self.elements@[i as int] == elem@);
+                        assert(self.elements@.contains(elem@));
+                        assert(self@.contains(elem@));
+                        lemma_wf_implies_len_bound::<T>(&self.elements.root);
+                        assert(filtered@.len() + 1 < usize::MAX as nat);
+                    }
+                    let ghost old_filtered = filtered@;
+                    filtered.insert_sorted(c);
+                    proof {
+                        assert(filtered@.subset_of(self@)) by {
+                            assert forall|x| #[trigger] filtered@.contains(x)
+                                implies self@.contains(x) by {
+                                if !old_filtered.contains(x) { assert(x == elem@); }
+                            };
+                        };
+                        assert forall|v: T::V| #[trigger] filtered@.contains(v)
+                            implies spec_pred(v) by {
+                            if !old_filtered.contains(v) { assert(v == c@); }
+                        };
+                        assert forall|j: int| #![trigger self.elements@[j]]
+                            0 <= j < (i + 1) as int && spec_pred(self.elements@[j])
+                            implies filtered@.contains(self.elements@[j]) by {
+                            if j < i as int {
+                                assert(old_filtered.contains(self.elements@[j]));
+                            } else {
+                                assert(filtered@.contains(c@));
+                            }
+                        };
+                    }
+                }
+                i += 1;
+            }
+            proof {
+                assert forall|v: T::V| self@.contains(v) && spec_pred(v)
+                    implies #[trigger] filtered@.contains(v) by {
+                    assert(self.elements@.to_set().contains(v));
+                    assert(self.elements@.contains(v));
+                    let j = choose|j: int| 0 <= j < self.elements@.len()
+                        && self.elements@[j] == v;
+                    assert(spec_pred(self.elements@[j]));
+                };
+            }
+            filtered
+        }
+
+        fn intersection_sorted(&self, other: &Self) -> (common: Self)
+        {
+            assert(obeys_feq_full_trigger::<T>());
+            let mut common = Self::empty();
+            proof { lemma_empty_set_is_sorted(&common); }
+            let n = self.elements.length();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    self.elements.spec_avltreeseqsteph_wf(),
+                    other.spec_avltreesetsteph_wf(),
+                    n as int == self.elements.spec_seq().len(),
+                    i <= n,
+                    common@.finite(),
+                    common.spec_avltreesetsteph_wf(),
+                    common.spec_elements_sorted(),
+                    common@.len() <= i as nat,
+                    obeys_feq_full::<T>(),
+                    common@.subset_of(self@.intersect(other@)),
+                    forall|j: int| #![trigger self.elements@[j]]
+                        0 <= j < i && other@.contains(self.elements@[j])
+                        ==> common@.contains(self.elements@[j]),
+                decreases n - i,
+            {
+                let elem = self.elements.nth(i);
+                if other.find(elem) {
+                    let c = elem.clone();
+                    proof {
+                        lemma_cloned_view_eq(*elem, c);
+                        assert(self.elements@.contains(elem@));
+                        assert(self@.contains(elem@));
+                        lemma_wf_implies_len_bound::<T>(&self.elements.root);
+                        assert(common@.len() + 1 < usize::MAX as nat);
+                    }
+                    let ghost old_common = common@;
+                    common.insert_sorted(c);
+                    proof {
+                        assert(common@.subset_of(self@.intersect(other@))) by {
+                            assert forall|x| #[trigger] common@.contains(x)
+                                implies self@.intersect(other@).contains(x) by {
+                                if !old_common.contains(x) { assert(x == elem@); }
+                            };
+                        };
+                    }
+                }
+                i += 1;
+            }
+            proof {
+                assert forall|x| self@.intersect(other@).contains(x)
+                    implies #[trigger] common@.contains(x) by {
+                    assert(self.elements@.to_set().contains(x));
+                    assert(self.elements@.contains(x));
+                    let j = choose|j: int| 0 <= j < self.elements@.len()
+                        && self.elements@[j] == x;
+                    assert(self.elements@[j] == x);
+                    assert(other@.contains(self.elements@[j]));
+                };
+                assert(common@ =~= self@.intersect(other@));
+            }
+            common
+        }
+
+        fn difference_sorted(&self, other: &Self) -> (remaining: Self)
+        {
+            assert(obeys_feq_full_trigger::<T>());
+            let mut remaining = Self::empty();
+            proof { lemma_empty_set_is_sorted(&remaining); }
+            let n = self.elements.length();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    self.elements.spec_avltreeseqsteph_wf(),
+                    other.spec_avltreesetsteph_wf(),
+                    n as int == self.elements.spec_seq().len(),
+                    i <= n,
+                    remaining@.finite(),
+                    remaining.spec_avltreesetsteph_wf(),
+                    remaining.spec_elements_sorted(),
+                    remaining@.len() <= i as nat,
+                    obeys_feq_full::<T>(),
+                    remaining@.subset_of(self@.difference(other@)),
+                    forall|j: int| #![trigger self.elements@[j]]
+                        0 <= j < i && !other@.contains(self.elements@[j])
+                        ==> remaining@.contains(self.elements@[j]),
+                decreases n - i,
+            {
+                let elem = self.elements.nth(i);
+                if !other.find(elem) {
+                    let c = elem.clone();
+                    proof {
+                        lemma_cloned_view_eq(*elem, c);
+                        assert(self.elements@.contains(elem@));
+                        assert(self@.contains(elem@));
+                        lemma_wf_implies_len_bound::<T>(&self.elements.root);
+                        assert(remaining@.len() + 1 < usize::MAX as nat);
+                    }
+                    let ghost old_remaining = remaining@;
+                    remaining.insert_sorted(c);
+                    proof {
+                        assert(remaining@.subset_of(self@.difference(other@))) by {
+                            assert forall|x| #[trigger] remaining@.contains(x)
+                                implies self@.difference(other@).contains(x) by {
+                                if !old_remaining.contains(x) {
+                                    assert(x == elem@);
+                                }
+                            };
+                        };
+                    }
+                }
+                i += 1;
+            }
+            proof {
+                assert forall|x| self@.difference(other@).contains(x)
+                    implies #[trigger] remaining@.contains(x) by {
+                    assert(self.elements@.to_set().contains(x));
+                    assert(self.elements@.contains(x));
+                    let j = choose|j: int| 0 <= j < self.elements@.len()
+                        && self.elements@[j] == x;
+                    assert(self.elements@[j] == x);
+                    assert(!other@.contains(self.elements@[j]));
+                };
+                assert(remaining@ =~= self@.difference(other@));
+            }
+            remaining
+        }
+
+        fn union_sorted(&self, other: &Self) -> (combined: Self)
+        {
+            assert(obeys_feq_full_trigger::<T>());
+            let mut combined = Self::empty();
+            proof { lemma_empty_set_is_sorted(&combined); }
+            let self_len = self.elements.length();
+            let mut i: usize = 0;
+            // Establish: self_len == self@.len() and other.elements.length() == other@.len().
+            // Needed for the capacity bound in the second loop.
+            proof {
+                self.elements@.unique_seq_to_set();
+                other.elements@.unique_seq_to_set();
+            }
+            while i < self_len
+                invariant
+                    self.elements.spec_avltreeseqsteph_wf(),
+                    self_len as int == self.elements.spec_seq().len(),
+                    self_len as nat == self@.len(),
+                    i <= self_len,
+                    combined@.finite(),
+                    combined.spec_avltreesetsteph_wf(),
+                    combined.spec_elements_sorted(),
+                    combined@.len() <= i as nat,
+                    obeys_feq_full::<T>(),
+                    combined@.subset_of(self@.union(other@)),
+                    forall|k: int| #![trigger self.elements@[k]]
+                        0 <= k < i ==> combined@.contains(self.elements@[k]),
+                decreases self_len - i,
+            {
+                let elem = self.elements.nth(i);
+                let c = elem.clone();
+                proof {
+                    lemma_cloned_view_eq(*elem, c);
+                    assert(self.elements@.contains(elem@));
+                    assert(self@.contains(elem@));
+                    lemma_wf_implies_len_bound::<T>(&self.elements.root);
+                    assert(combined@.len() + 1 < usize::MAX as nat);
+                }
+                let ghost old_combined = combined@;
+                combined.insert_sorted(c);
+                proof {
+                    assert(combined@.subset_of(self@.union(other@))) by {
+                        assert forall|x| #[trigger] combined@.contains(x)
+                            implies self@.union(other@).contains(x) by {
+                            if !old_combined.contains(x) { assert(x == elem@); }
+                        };
+                    };
+                }
+                i += 1;
+            }
+            let other_len = other.elements.length();
+            let mut j: usize = 0;
+            proof {
+                other.elements@.unique_seq_to_set();
+            }
+            while j < other_len
+                invariant
+                    self.elements.spec_avltreeseqsteph_wf(),
+                    other.elements.spec_avltreeseqsteph_wf(),
+                    self_len as int == self.elements.spec_seq().len(),
+                    other_len as int == other.elements.spec_seq().len(),
+                    self_len as nat == self@.len(),
+                    other_len as nat == other@.len(),
+                    j <= other_len,
+                    combined@.finite(),
+                    combined.spec_avltreesetsteph_wf(),
+                    combined.spec_elements_sorted(),
+                    combined@.len() <= self_len as nat + j as nat,
+                    obeys_feq_full::<T>(),
+                    self@.len() + other@.len() < usize::MAX as nat,
+                    combined@.subset_of(self@.union(other@)),
+                    forall|k: int| #![trigger self.elements@[k]]
+                        0 <= k < self_len ==> combined@.contains(self.elements@[k]),
+                    forall|k: int| #![trigger other.elements@[k]]
+                        0 <= k < j ==> combined@.contains(other.elements@[k]),
+                decreases other_len - j,
+            {
+                let elem = other.elements.nth(j);
+                let c = elem.clone();
+                proof {
+                    lemma_cloned_view_eq(*elem, c);
+                    assert(other.elements@.contains(elem@));
+                    assert(other@.contains(elem@));
+                    // combined@.len() <= self_len + j < self_len + other_len
+                    //   == self@.len() + other@.len() < usize::MAX (from invariant + requires)
+                    assert(combined@.len() + 1 < usize::MAX as nat);
+                }
+                let ghost old_combined = combined@;
+                combined.insert_sorted(c);
+                proof {
+                    assert(combined@.subset_of(self@.union(other@))) by {
+                        assert forall|x| #[trigger] combined@.contains(x)
+                            implies self@.union(other@).contains(x) by {
+                            if !old_combined.contains(x) { assert(x == elem@); }
+                        };
+                    };
+                }
+                j += 1;
+            }
+            proof {
+                assert forall|x| self@.union(other@).contains(x)
+                    implies #[trigger] combined@.contains(x) by {
+                    if self@.contains(x) {
+                        assert(self.elements@.to_set().contains(x));
+                        assert(self.elements@.contains(x));
+                        let k = choose|k: int| 0 <= k < self.elements@.len()
+                            && self.elements@[k] == x;
+                        assert(self.elements@[k] == x);
+                    } else {
+                        assert(other@.contains(x));
+                        assert(other.elements@.to_set().contains(x));
+                        assert(other.elements@.contains(x));
+                        let k = choose|k: int| 0 <= k < other.elements@.len()
+                            && other.elements@[k] == x;
+                        assert(other.elements@[k] == x);
+                    }
+                };
+                assert(combined@ =~= self@.union(other@));
+            }
+            combined
         }
     }
 
