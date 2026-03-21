@@ -270,6 +270,7 @@ pub mod vstdplus {
     pub mod partial_order;
     pub mod feq;
     pub mod clone_plus;
+    pub mod clone_view;
     pub mod smart_ptrs;
     pub mod arc_rwlock;
     pub mod checked_int;

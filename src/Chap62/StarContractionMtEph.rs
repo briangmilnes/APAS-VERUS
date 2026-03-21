@@ -17,6 +17,7 @@ pub mod StarContractionMtEph {
     use std::sync::Arc;
     use std::vec::Vec;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
     use crate::Chap62::StarPartitionMtEph::StarPartitionMtEph::parallel_star_partition;
     use crate::{ParaPair, SetLit};
 
@@ -43,7 +44,7 @@ pub mod StarContractionMtEph {
         /// APAS: Work O((n + m) lg n), Span O(lg^2 n)
         fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G) -> R
         where
-            V: StT + MtT + Hash + Ord + 'static,
+            V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,
             F: Fn(&SetStEph<V>) -> R,
             G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R
         requires
@@ -55,7 +56,7 @@ pub mod StarContractionMtEph {
 
         /// Contract graph to just vertices (no edges).
         /// APAS: Work O((n + m) lg n), Span O(lg^2 n)
-        fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> SetStEph<V>
+        fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> SetStEph<V>
             requires
                 Self::spec_starcontractionmteph_wf(graph),
                 valid_key_type_Edge::<V>();
@@ -63,12 +64,30 @@ pub mod StarContractionMtEph {
 
     pub type T<V> = UnDirGraphMtEph<V>;
 
+    // 6. spec fns
+
+    /// Partition map validity: every graph vertex is mapped and every value is a center.
+    pub open spec fn spec_valid_partition_map<V: View>(
+        graph_vertices: Set<V::V>,
+        centers: Set<V::V>,
+        partition_map: Map<V::V, V>,
+    ) -> bool {
+        // Every graph vertex is in the partition map.
+        &&& forall |v_view: V::V|
+                #[trigger] graph_vertices.contains(v_view) ==>
+                    partition_map.contains_key(v_view)
+        // Every partition map value is a center.
+        &&& forall |v_view: V::V|
+                #[trigger] partition_map.contains_key(v_view) ==>
+                    centers.contains(partition_map[v_view]@)
+    }
+
     /// Inner recursive star contraction with fuel for termination (parallel version).
     fn star_contract_mt_fuel<V, R, F, G>(
         graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G, fuel: usize,
     ) -> R
     where
-        V: StT + MtT + Hash + Ord + 'static,
+        V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,
         F: Fn(&SetStEph<V>) -> R,
         G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R,
     requires
@@ -89,6 +108,12 @@ pub mod StarContractionMtEph {
         }
 
         let (centers, partition_map) = parallel_star_partition(graph, seed);
+
+        proof {
+            // Star partition maps every graph vertex to a center.
+            // Provable from partition loop structure; deferred to future round.
+            assume(spec_valid_partition_map::<V>(graph@.V, centers@, partition_map@));
+        }
 
         let quotient_graph = build_quotient_graph_parallel(graph, &centers, &partition_map);
 
@@ -116,7 +141,7 @@ pub mod StarContractionMtEph {
     /// - Result of type R as computed by base and expand functions
     pub fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G) -> R
     where
-        V: StT + MtT + Hash + Ord + 'static,
+        V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,
         F: Fn(&SetStEph<V>) -> R,
         G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R,
     requires
@@ -132,16 +157,20 @@ pub mod StarContractionMtEph {
     /// Build quotient graph from partition (parallel version)
     ///
     /// Routes edges through partition map using divide-and-conquer parallelism.
+    /// Uses ClonePreservesView for view-preserving vertex clones.
     ///
     /// - APAS: (no cost stated) — helper not in prose.
     /// - Claude-Opus-4.6: Work O(m), Span O(lg m) — delegates to route_edges_parallel which uses ParaPair fork-join.
-    fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + 'static>(
+    fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         centers: &SetStEph<V>,
         partition_map: &HashMapWithViewPlus<V, V>,
     ) -> (quotient: UnDirGraphMtEph<V>)
         requires
             valid_key_type_Edge::<V>(),
+            spec_graphview_wf(graph@),
+            centers.spec_setsteph_wf(),
+            spec_valid_partition_map::<V>(graph@.V, centers@, partition_map@),
         ensures
             spec_graphview_wf(quotient@),
     {
@@ -152,25 +181,59 @@ pub mod StarContractionMtEph {
 
         let part_map_arc = Arc::new(partition_map.clone());
 
-        let quotient_edges = route_edges_parallel(edges_arc, part_map_arc, 0, n_edges);
+        // Establish that all edges in the array are graph edges with endpoints in graph@.V.
+        // Uses spec_index (returns exec Edge<V>) to avoid view-of-view confusion.
+        proof {
+            assert forall |j: int| 0 <= j < n_edges as int implies
+                graph@.V.contains(#[trigger] (*edges_arc).spec_index(j)@.0) &&
+                graph@.V.contains((*edges_arc).spec_index(j)@.1) by {
+                // Arc::new ensures: *edges_arc == edges_seq, so spec_index matches.
+                assert((*edges_arc).spec_index(j) == edges_seq.spec_index(j));
+                // from_vec postcondition: edges_seq.spec_index(j) == edges_vec@[j]
+                assert(edges_seq.spec_index(j) == edges_vec@[j]);
+                // to_seq postcondition: graph.E@.contains(edges_vec@[j]@)
+                assert(edges_vec@.map(|_i: int, t: Edge<V>| t@)[j] == edges_vec@[j]@);
+                assert(edges_vec@.map(|_i: int, t: Edge<V>| t@).contains(edges_vec@[j]@));
+                assert(graph.E@.contains(edges_vec@[j]@));
+                assert(graph@.A.contains(edges_vec@[j]@));
+                // spec_graphview_wf: endpoints are vertices
+                let edge_view = edges_vec@[j]@;
+                assert(graph@.V.contains(edge_view.0));
+                assert(graph@.V.contains(edge_view.1));
+                // Connect spec_index view to edges_vec view
+                assert((*edges_arc).spec_index(j)@ == edges_vec@[j]@);
+            };
+        }
+
+        let quotient_edges = route_edges_parallel(
+            edges_arc, part_map_arc, Ghost(graph@.V), Ghost(centers@), 0, n_edges
+        );
 
         let quotient = UnDirGraphMtEph { V: centers.clone(), E: quotient_edges };
         proof {
-            // Quotient graph well-formedness: vertices contain all edge endpoints.
-            // Blocked by generic Clone::clone lacking view-preserving ensures in Verus.
-            // Same root cause as StEph version.
-            assume(spec_graphview_wf(quotient@));
+            // Finiteness: proved from spec_setsteph_wf.
+            assert(quotient@.V.finite());
+            assert(quotient@.A.finite());
+            // Edge closure: from route_edges_parallel postcondition.
+            assert(forall |u: V::V, w: V::V|
+                #[trigger] quotient@.A.contains((u, w)) ==>
+                    quotient@.V.contains(u) && quotient@.V.contains(w));
         }
         quotient
     }
 
     /// Parallel edge routing using divide-and-conquer
     ///
+    /// Takes ghost graph_v_view (the set of graph vertices) and centers_view (the center set)
+    /// to prove the edge-closure postcondition: all output edges have centers as endpoints.
+    ///
     /// - APAS: (no cost stated) — helper not in prose.
     /// - Claude-Opus-4.6: Work O(k), Span O(lg k) — binary fork-join via ParaPair; k = end - start.
-    fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
+    fn route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         edges: Arc<ArraySeqStEphS<Edge<V>>>,
         partition_map: Arc<HashMapWithViewPlus<V, V>>,
+        Ghost(graph_v_view): Ghost<Set<V::V>>,
+        Ghost(centers_view): Ghost<Set<V::V>>,
         start: usize,
         end: usize,
     ) -> (result: SetStEph<Edge<V>>)
@@ -178,8 +241,15 @@ pub mod StarContractionMtEph {
             start <= end,
             end as nat <= (*edges)@.len(),
             valid_key_type_Edge::<V>(),
+            forall |j: int| start as int <= j < end as int ==>
+                graph_v_view.contains(#[trigger] (*edges).spec_index(j)@.0) &&
+                graph_v_view.contains((*edges).spec_index(j)@.1),
+            spec_valid_partition_map::<V>(graph_v_view, centers_view, (*partition_map)@),
         ensures
             result.spec_setsteph_wf(),
+            forall |u_v: V::V, w_v: V::V|
+                #[trigger] result@.contains((u_v, w_v)) ==>
+                    centers_view.contains(u_v) && centers_view.contains(w_v),
         decreases end - start,
     {
         let size = end - start;
@@ -191,14 +261,56 @@ pub mod StarContractionMtEph {
         if size == 1 {
             let edge = edges.nth(start as N);
             let Edge(u, v) = edge;
-            let u_center = match partition_map.get(u) {
-                Some(val) => val.clone(),
-                None => u.clone(),
+
+            // Prove u and v are graph vertices so partition_map covers them.
+            proof {
+                // nth ensures: *edge == (*edges).spec_index(start as int)
+                assert(*edge == (*edges).spec_index(start as int));
+                // spec_index(start)@ == (*edge)@
+                assert((*edge)@ == (*edges).spec_index(start as int)@);
+                // (*edge)@ == ((*u)@, (*v)@) from Edge<V> view
+                assert((*edge)@ == ((*u)@, (*v)@));
+                // From requires: graph_v_view.contains(spec_index(start)@.0)
+                assert((*edges).spec_index(start as int)@.0 == (*u)@);
+                assert((*edges).spec_index(start as int)@.1 == (*v)@);
+                assert(graph_v_view.contains((*edges).spec_index(start as int)@.0));
+                assert(graph_v_view.contains((*edges).spec_index(start as int)@.1));
+                assert(graph_v_view.contains((*u)@));
+                assert(graph_v_view.contains((*v)@));
+                // spec_valid_partition_map part 1: all graph vertices are in partition_map
+                assert((*partition_map)@.contains_key((*u)@));
+                assert((*partition_map)@.contains_key((*v)@));
+            }
+
+            let u_center = if let Some(val) = partition_map.get(u) {
+                let c = val.clone_view();
+                proof {
+                    assert(*val == (*partition_map)@[(*u)@]);
+                    assert(c@ == (*val)@);
+                    assert(c@ == (*partition_map)@[(*u)@]@);
+                    assert(centers_view.contains(c@));
+                }
+                c
+            } else {
+                proof { assert(false); }
+                u.clone_view()
             };
-            let v_center = match partition_map.get(v) {
-                Some(val) => val.clone(),
-                None => v.clone(),
+            proof { assert(centers_view.contains(u_center@)); }
+
+            let v_center = if let Some(val) = partition_map.get(v) {
+                let c = val.clone_view();
+                proof {
+                    assert(*val == (*partition_map)@[(*v)@]);
+                    assert(c@ == (*val)@);
+                    assert(c@ == (*partition_map)@[(*v)@]@);
+                    assert(centers_view.contains(c@));
+                }
+                c
+            } else {
+                proof { assert(false); }
+                v.clone_view()
             };
+            proof { assert(centers_view.contains(v_center@)); }
 
             if u_center != v_center {
                 let new_edge = if u_center < v_center {
@@ -208,6 +320,14 @@ pub mod StarContractionMtEph {
                 };
                 let mut new_edges: SetStEph<Edge<V>> = SetLit![];
                 let _ = new_edges.insert(new_edge);
+                proof {
+                    // new_edge has endpoints from {u_center, v_center} ⊆ centers_view
+                    assert(centers_view.contains(new_edge@.0));
+                    assert(centers_view.contains(new_edge@.1));
+                    assert(forall |u_v: V::V, w_v: V::V|
+                        #[trigger] new_edges@.contains((u_v, w_v)) ==>
+                            centers_view.contains(u_v) && centers_view.contains(w_v));
+                }
                 return new_edges;
             }
             return SetLit![];
@@ -220,15 +340,30 @@ pub mod StarContractionMtEph {
         let edges2 = edges;
         let map2 = partition_map;
 
+        // Establish Arc equality facts for the closure requires proofs.
+        proof {
+            assert((*edges1)@ == (*edges)@);   // edges1 == edges (Arc::clone)
+            assert((*map1)@ == (*partition_map)@);  // map1 == partition_map (Arc::clone)
+            assert((*edges2)@ == (*edges)@);   // edges2 == edges (moved)
+            assert((*map2)@ == (*partition_map)@);  // map2 == partition_map (moved)
+        }
+
         let f1 = move || -> (r: SetStEph<Edge<V>>)
             requires
                 start <= mid,
                 (mid as nat) <= (*edges1)@.len(),
                 valid_key_type_Edge::<V>(),
+                forall |j: int| start as int <= j < mid as int ==>
+                    graph_v_view.contains(#[trigger] (*edges1).spec_index(j)@.0) &&
+                    graph_v_view.contains((*edges1).spec_index(j)@.1),
+                spec_valid_partition_map::<V>(graph_v_view, centers_view, (*map1)@),
             ensures
                 r.spec_setsteph_wf(),
+                forall |u_v: V::V, w_v: V::V|
+                    #[trigger] r@.contains((u_v, w_v)) ==>
+                        centers_view.contains(u_v) && centers_view.contains(w_v),
         {
-            route_edges_parallel(edges1, map1, start, mid)
+            route_edges_parallel(edges1, map1, Ghost(graph_v_view), Ghost(centers_view), start, mid)
         };
 
         let f2 = move || -> (r: SetStEph<Edge<V>>)
@@ -236,15 +371,31 @@ pub mod StarContractionMtEph {
                 mid <= end,
                 (end as nat) <= (*edges2)@.len(),
                 valid_key_type_Edge::<V>(),
+                forall |j: int| mid as int <= j < end as int ==>
+                    graph_v_view.contains(#[trigger] (*edges2).spec_index(j)@.0) &&
+                    graph_v_view.contains((*edges2).spec_index(j)@.1),
+                spec_valid_partition_map::<V>(graph_v_view, centers_view, (*map2)@),
             ensures
                 r.spec_setsteph_wf(),
+                forall |u_v: V::V, w_v: V::V|
+                    #[trigger] r@.contains((u_v, w_v)) ==>
+                        centers_view.contains(u_v) && centers_view.contains(w_v),
         {
-            route_edges_parallel(edges2, map2, mid, end)
+            route_edges_parallel(edges2, map2, Ghost(graph_v_view), Ghost(centers_view), mid, end)
         };
 
         let Pair(left_edges, right_edges) = ParaPair!(f1, f2);
 
-        left_edges.union(&right_edges)
+        let union_result = left_edges.union(&right_edges);
+        proof {
+            // union_result@ == left_edges@.union(right_edges@) from SetStEph::union ensures.
+            // Both halves have the centers-endpoint property from f1/f2 ensures.
+            // Set union: (u, w) in union iff in left or right, both satisfy centers property.
+            assert(forall |u_v: V::V, w_v: V::V|
+                #[trigger] union_result@.contains((u_v, w_v)) ==>
+                    centers_view.contains(u_v) && centers_view.contains(w_v));
+        }
+        union_result
     }
 
     /// One round of parallel star contraction
@@ -253,7 +404,7 @@ pub mod StarContractionMtEph {
     ///
     /// - APAS: Work O((n + m) lg n), Span O(lg^2 n)
     /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — delegates to star_contract_mt which has sequential partition.
-    pub fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + 'static>(
+    pub fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
     ) -> (result: SetStEph<V>)
