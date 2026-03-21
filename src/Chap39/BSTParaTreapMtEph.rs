@@ -30,6 +30,7 @@ pub mod BSTParaTreapMtEph {
     use vstd::std_specs::cmp::OrdSpec;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
 
     verus! {
@@ -119,14 +120,12 @@ pub mod BSTParaTreapMtEph {
 
     // 7. proof fns
 
-    /// Centralises the clone-body assume pattern per partial_eq_eq_clone_standard.
+    /// Clone a MtKey element with a view-preserving postcondition.
     // veracity: no_requires
-    fn clone_elem<T: MtKey>(x: &T) -> (c: T)
+    fn clone_elem<T: MtKey + ClonePreservesView>(x: &T) -> (c: T)
         ensures c@ == x@,
     {
-        let c = x.clone();
-        proof { assume(c@ == x@); } // Clone bridge: T::clone preserves view.
-        c
+        x.clone_view()
     }
 
     /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
@@ -311,7 +310,7 @@ pub mod BSTParaTreapMtEph {
         new_param_treap(None, Ghost(Set::empty()))
     }
 
-    fn expose_internal<T: MtKey + 'static>(tree: &ParamTreap<T>) -> (exposed: Exposed<T>)
+    fn expose_internal<T: MtKey + ClonePreservesView + 'static>(tree: &ParamTreap<T>) -> (exposed: Exposed<T>)
         requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
         ensures
             tree@.len() == 0 ==> exposed is Leaf,
@@ -372,7 +371,7 @@ pub mod BSTParaTreapMtEph {
         exposed
     }
 
-    fn expose_with_priority_internal<T: MtKey + 'static>(tree: &ParamTreap<T>) -> (parts: Option<(ParamTreap<T>, T, i64, ParamTreap<T>)>)
+    fn expose_with_priority_internal<T: MtKey + ClonePreservesView + 'static>(tree: &ParamTreap<T>) -> (parts: Option<(ParamTreap<T>, T, i64, ParamTreap<T>)>)
         requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
         ensures
             tree@.len() == 0 ==> parts is None,
@@ -417,7 +416,7 @@ pub mod BSTParaTreapMtEph {
         hasher.finish() as i64
     }
 
-    fn tree_priority_internal<T: MtKey + 'static>(tree: &ParamTreap<T>) -> (p: i64)
+    fn tree_priority_internal<T: MtKey + ClonePreservesView + 'static>(tree: &ParamTreap<T>) -> (p: i64)
         ensures true,
     {
         let handle = tree.root.acquire_read();
@@ -430,7 +429,7 @@ pub mod BSTParaTreapMtEph {
     }
 
     /// Build a new tree from (left, key, priority, right) maintaining BST and heap ordering.
-    fn make_node<T: MtKey + 'static>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> (node: ParamTreap<T>)
+    fn make_node<T: MtKey + ClonePreservesView + 'static>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> (node: ParamTreap<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
@@ -476,7 +475,7 @@ pub mod BSTParaTreapMtEph {
     }
 
     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority (treap heap).
-    fn join_with_priority<T: MtKey + 'static>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> (result: ParamTreap<T>)
+    fn join_with_priority<T: MtKey + ClonePreservesView + 'static>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> (result: ParamTreap<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
@@ -631,7 +630,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    fn split_inner<T: MtKey + 'static>(tree: &ParamTreap<T>, key: &T) -> (parts: (ParamTreap<T>, bool, ParamTreap<T>))
+    fn split_inner<T: MtKey + ClonePreservesView + 'static>(tree: &ParamTreap<T>, key: &T) -> (parts: (ParamTreap<T>, bool, ParamTreap<T>))
         requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
         ensures
             parts.1 == tree@.contains(key@),
@@ -801,7 +800,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    fn join_pair_inner<T: MtKey + 'static>(left: ParamTreap<T>, right: ParamTreap<T>) -> (joined: ParamTreap<T>)
+    fn join_pair_inner<T: MtKey + ClonePreservesView + 'static>(left: ParamTreap<T>, right: ParamTreap<T>) -> (joined: ParamTreap<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
@@ -1036,7 +1035,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    fn union_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (combined: ParamTreap<T>)
+    fn union_inner<T: MtKey + ClonePreservesView + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (combined: ParamTreap<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
@@ -1217,7 +1216,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    fn intersect_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (common: ParamTreap<T>)
+    fn intersect_inner<T: MtKey + ClonePreservesView + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (common: ParamTreap<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
@@ -1391,7 +1390,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    fn difference_inner<T: MtKey + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (remaining: ParamTreap<T>)
+    fn difference_inner<T: MtKey + ClonePreservesView + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (remaining: ParamTreap<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
@@ -1567,7 +1566,7 @@ pub mod BSTParaTreapMtEph {
     }
 
     #[verifier::exec_allows_no_decreases_clause]
-    fn filter_inner<T: MtKey + 'static, F: Pred<T>>(tree: &ParamTreap<T>, predicate: &Arc<F>) -> (result: ParamTreap<T>)
+    fn filter_inner<T: MtKey + ClonePreservesView + 'static, F: Pred<T>>(tree: &ParamTreap<T>, predicate: &Arc<F>) -> (result: ParamTreap<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
@@ -1667,7 +1666,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    fn filter_parallel<T: MtKey + 'static, F: Pred<T>>(
+    fn filter_parallel<T: MtKey + ClonePreservesView + 'static, F: Pred<T>>(
         tree: &ParamTreap<T>,
         predicate: F,
         Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
@@ -1690,10 +1689,13 @@ pub mod BSTParaTreapMtEph {
         let predicate = Arc::new(predicate);
         let filtered = filter_inner(tree, &predicate);
         proof {
-            // The spec_fn closure spec_pred is not Send, so it cannot be captured in the parallel
-            // closures inside filter_inner. The correctness of filter (each element is kept iff
-            // pred(element@) is true) follows from the structure of filter_inner but the proof
-            // thread cannot be connected back to spec_pred without Send. This is a known limitation.
+            // Structural blocker: Ghost<spec_fn(T::V) -> bool> cannot be captured in
+            // parallel closures because T::V is a Verus spec type and does not implement
+            // the Rust Send trait. Strengthening filter_inner's ensures to include the
+            // predicate postcondition requires capturing spec_pred in the parallel closure
+            // ensures, which requires T::V: Send — a constraint the Verus type system
+            // cannot satisfy for spec-only associated types. This assume connects the
+            // structural subset result from filter_inner to the full spec_pred postcondition.
             assume(
                 filtered@.subset_of(tree@)
                 && (forall|v: T::V| #[trigger] filtered@.contains(v) ==> tree@.contains(v) && spec_pred(v))
@@ -1703,7 +1705,7 @@ pub mod BSTParaTreapMtEph {
         filtered
     }
 
-    fn reduce_inner<T: MtKey + 'static, F>(tree: &ParamTreap<T>, op: &Arc<F>, identity: T) -> T
+    fn reduce_inner<T: MtKey + ClonePreservesView + 'static, F>(tree: &ParamTreap<T>, op: &Arc<F>, identity: T) -> T
     where
         F: Fn(T, T) -> T + Send + Sync + 'static,
         requires
@@ -1736,7 +1738,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    fn reduce_parallel<T: MtKey + 'static, F>(tree: &ParamTreap<T>, op: F, base: T) -> T
+    fn reduce_parallel<T: MtKey + ClonePreservesView + 'static, F>(tree: &ParamTreap<T>, op: F, base: T) -> T
     where
         F: Fn(T, T) -> T + Send + Sync + 'static,
         requires
@@ -1749,7 +1751,7 @@ pub mod BSTParaTreapMtEph {
         reduce_inner(tree, &op, base)
     }
 
-    fn collect_in_order<T: MtKey + 'static>(tree: &ParamTreap<T>, out: &mut Vec<T>)
+    fn collect_in_order<T: MtKey + ClonePreservesView + 'static>(tree: &ParamTreap<T>, out: &mut Vec<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
@@ -1773,7 +1775,7 @@ pub mod BSTParaTreapMtEph {
 
     // 8. traits
 
-    pub trait ParamTreapTrait<T: MtKey + 'static>: Sized + View<V = Set<T::V>> {
+    pub trait ParamTreapTrait<T: MtKey + ClonePreservesView + 'static>: Sized + View<V = Set<T::V>> {
         spec fn spec_bstparatreapmteph_wf(&self) -> bool;
 
         /// - APAS: Work O(1), Span O(1)
@@ -1917,7 +1919,7 @@ pub mod BSTParaTreapMtEph {
             ensures self@.finite(), ordered.spec_len() == self@.len();
     }
 
-    impl<T: MtKey + 'static> ParamTreapTrait<T> for ParamTreap<T> {
+    impl<T: MtKey + ClonePreservesView + 'static> ParamTreapTrait<T> for ParamTreap<T> {
         open spec fn spec_bstparatreapmteph_wf(&self) -> bool { self@.finite() }
 
         fn new() -> (tree: Self) { new_param_treap(None, Ghost(Set::empty())) }
@@ -2053,7 +2055,7 @@ pub mod BSTParaTreapMtEph {
 
     // 11. derive impls in verus!
 
-    impl<T: MtKey + 'static> Clone for ParamTreap<T> {
+    impl<T: MtKey + ClonePreservesView + 'static> Clone for ParamTreap<T> {
         #[verifier::exec_allows_no_decreases_clause]
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@,
@@ -2101,7 +2103,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    impl<T: MtKey> Clone for NodeInner<T> {
+    impl<T: MtKey + ClonePreservesView + 'static> Clone for NodeInner<T> {
         fn clone(&self) -> (cloned: Self)
             ensures true
         {
@@ -2115,7 +2117,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    impl<T: MtKey> Clone for Exposed<T> {
+    impl<T: MtKey + ClonePreservesView + 'static> Clone for Exposed<T> {
         fn clone(&self) -> (cloned: Self)
             ensures true
         {
@@ -2194,13 +2196,13 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    impl<T: MtKey> fmt::Debug for ParamTreap<T> {
+    impl<T: MtKey + ClonePreservesView + 'static> fmt::Debug for ParamTreap<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "ParamTreap(size: {})", self.size())
         }
     }
 
-    impl<T: MtKey> fmt::Display for ParamTreap<T> {
+    impl<T: MtKey + ClonePreservesView + 'static> fmt::Display for ParamTreap<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "ParamTreap(size: {})", self.size())
         }
