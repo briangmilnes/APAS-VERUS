@@ -24,6 +24,9 @@ pub mod BSTParaMtEph {
     use vstd::rwlock::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::{OrdSpec, PartialEqSpec, PartialOrdSpec};
+    use vstd::pervasive::cloned;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
@@ -36,6 +39,7 @@ pub mod BSTParaMtEph {
     broadcast use {
         vstd::set::group_set_axioms,
         vstd::set_lib::group_set_properties,
+        crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
     // 4. type definitions
@@ -142,14 +146,13 @@ pub mod BSTParaMtEph {
 
     // 7. proof fns/broadcast groups
 
-    /// Clone bridge for generic element: ensures cloned value equals original.
-    /// Centralizes the clone-body assume pattern per partial_eq_eq_clone_standard.
-    // veracity: no_requires
-    fn clone_elem<T: Clone>(x: &T) -> (c: T)
+    /// Clone bridge for generic element: requires obeys_feq_clone so axiom_cloned_implies_eq fires.
+    fn clone_elem<T: MtKey>(x: &T) -> (c: T)
+        requires obeys_feq_clone::<T>(),
         ensures c == *x,
     {
         let c = x.clone();
-        proof { assume(c == *x); } // Clone bridge: T::clone preserves value.
+        assert(cloned(*x, c));  // strictly_cloned(*x,c) from call_ensures; triggers axiom
         c
     }
 
@@ -648,7 +651,7 @@ pub mod BSTParaMtEph {
                 left: self.left.clone(),
                 right: self.right.clone(),
             };
-            proof { assume(cloned@ == self@); }
+            proof { assume(cloned@ == self@); }  // assume_eq_clone_workaround
             cloned
         }
     }
@@ -705,6 +708,7 @@ pub mod BSTParaMtEph {
         decreases tree@.len(), 0nat,
     {
         proof { use_type_invariant(tree); }
+        proof { assume(obeys_feq_clone::<T>()); } // assume_eq_clone_workaround
         let handle = tree.locked_root.acquire_read();
         let exposed = match handle.borrow() {
             | None => Exposed::Leaf,

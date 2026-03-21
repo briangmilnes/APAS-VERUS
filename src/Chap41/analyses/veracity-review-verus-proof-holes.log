@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap41/AVLTreeSetStEph.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap41/ArraySetStEph.rs
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,12 +20,87 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ AVLTreeSetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:722: error: assume() [algorithmic] - assume(combined@.len() + 1 < usize::MAX as nat);
-       649 |         fn union(&self, other: &Self) -> (combined: Self)
+⚠ ArraySetStEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/ArraySetStEph.rs:1244: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1240 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       720 |                     // exceed usize::MAX. The full fix requires bounding both at usize::MAX/2,
-       721 |                     // but callers like PQMinStEph build large frontiers from scratch.
-       723 |                 }
-       724 |                 let ghost old_combined = combined@;
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:1716: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1242 |         {
+      1243 |             proof {
+      1245 |                 assume(other.spec_arraysetsteph_wf());
+      1246 |             }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/ArraySetStEph.rs:1245: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1240 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1243 |             proof {
+      1244 |                 assume(self.spec_arraysetsteph_wf());
+      1246 |             }
+      1247 |             let equal = self.size() == other.size() && {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/ArraySetStEph.rs:1267: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1240 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1265 |                 all_found
+      1266 |             };
+      1268 |             equal
+      1269 |         }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/ArraySetStEph.rs:1280: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1273 |         fn clone(&self) -> (cloned: Self)
+            ...
+      1278 |             };
+      1279 |             proof {
+      1281 |                 lemma_seq_map_cloned_view_eq(
+      1282 |                     self.elements.seq@,
+
+=================================================================
+2. Depends Upon
+=================================================================
+
+=================================================================
+2.1. By Module
+=================================================================
+
+ArraySetStEph  depends upon only clean modules
+
+=================================================================
+2.2. By File
+=================================================================
+
+ArraySetStEph.rs  depends upon only clean modules
+
+=================================================================
+3. Summary of Holes
+=================================================================
+
+Modules:
+   1 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
+   1 total
+
+Proof Functions:
+   7 clean (100%)
+   0 holed (0%)
+   7 total
+
+Function Specs:
+   27 exec fns with complete spec (requires+ensures) (67%)
+   0 exec fns missing spec (0%)
+   13 proof/spec fns clean (32%)
+   0 proof/spec fns with holes (0%)
+   40 total fns
+
+
+Holes Found: 0 (actionable)
+
+Warnings: 4 total
+   4 × assume_eq_clone_workaround
+
+No proof holes found! All proofs are complete.
+
+=================================================================
+5. Started/Ended/Duration
+=================================================================
+
+Started:   2026-03-21 11:01:52 -07:00
+Ended:     2026-03-21 11:01:52 -07:00
+Duration:  59ms
+
+Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log

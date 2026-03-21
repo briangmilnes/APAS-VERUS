@@ -11,6 +11,7 @@ pub mod BSTParaStEph {
     // 4. type definitions
     // 5. view impls
     // 6. spec fns
+    // 7. proof fns
     // 8. traits
     // 9. impls
     // 11. derive impls in verus!
@@ -23,8 +24,9 @@ pub mod BSTParaStEph {
     use vstd::rwlock::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::{OrdSpec, PartialEqSpec, PartialOrdSpec};
-
-
+    use vstd::pervasive::cloned;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
@@ -33,7 +35,10 @@ pub mod BSTParaStEph {
 
     // 3. broadcast use
 
-    broadcast use vstd::set::group_set_axioms;
+    broadcast use {
+        vstd::set::group_set_axioms,
+        crate::vstdplus::feq::feq::group_feq_axioms,
+    };
 
     // 4. type definitions
 
@@ -142,14 +147,13 @@ pub mod BSTParaStEph {
 
     // 7. proof fns
 
-    /// Clone bridge for generic element: ensures cloned value equals original.
-    /// Centralizes the clone-body assume pattern per partial_eq_eq_clone_standard.
-    // veracity: no_requires
-    fn clone_elem<T: Clone>(x: &T) -> (c: T)
+    /// Clone bridge for generic element: requires obeys_feq_clone so axiom_cloned_implies_eq fires.
+    fn clone_elem<T: StT>(x: &T) -> (c: T)
+        requires obeys_feq_clone::<T>(),
         ensures c == *x,
     {
         let c = x.clone();
-        proof { assume(c == *x); } // Clone bridge: T::clone preserves value.
+        assert(cloned(*x, c));  // strictly_cloned(*x,c) from call_ensures; triggers axiom
         c
     }
 
@@ -471,6 +475,7 @@ pub mod BSTParaStEph {
             decreases self@.len(), 0nat,
         {
             proof { use_type_invariant(self); }
+            proof { assume(obeys_feq_clone::<T>()); } // assume_eq_clone_workaround
             let handle = self.locked_root.acquire_read();
             let exposed = match handle.borrow() {
                 | None => {
