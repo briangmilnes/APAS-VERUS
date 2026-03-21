@@ -21,13 +21,13 @@ Table of Contents:
 =================================================================
 
 ❌ AugOrderedTableMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/AugOrderedTableMtEph.rs:121: error: external_body - #[verifier::external_body]
-       122 |     proof fn lemma_mt_reducer_clone_total<V: MtVal, F: MtReduceFn<V>>(
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/AugOrderedTableMtEph.rs:672: error: external_body - #[verifier::external_body]
+       673 |         fn reduce_range_parallel(&self, k1: &K, k2: &K) -> (reduced: V)
    Holes: 1 total
       1 × external_body
-   Proof functions: 2 total (2 clean, 0 holed)
+   Proof functions: 1 total (1 clean, 0 holed)
 ⚠ AugOrderedTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/AugOrderedTableStEph.rs:851: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/AugOrderedTableStEph.rs:851: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        847 |         fn clone(&self) -> (cloned: Self)
             ...
        849 |         {
@@ -35,177 +35,267 @@ Table of Contents:
        852 |             Self {
        853 |                 base_table: base_cloned,
 ❌ AugOrderedTableStPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/AugOrderedTableStPer.rs:118: error: external_body - #[verifier::external_body]
-       119 |     proof fn lemma_reducer_clone_total<V: StT + Ord, F: Fn(&V, &V) -> V + Clone>(
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/AugOrderedTableStPer.rs:124: error: assume() [closure] - assume(forall|v1: &V, v2: &V| #[trigger] cloned.requires((v1
+       117 |     proof fn lemma_reducer_clone_total<V: StT + Ord, F: Fn(&V, &V) -> V + Clone>(
+            ...
+       122 |         ensures forall|v1: &V, v2: &V| #[trigger] cloned.requires((v1, v2)),
+       123 |     {
+       125 |     }
+       126 | 
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/AugOrderedTableStPer.rs:117: error: proof_fn_with_holes - proof fn lemma_reducer_clone_total — contains assume/external_body/admit, needs proof
+       109 |     proof fn lemma_aug_view<K: StT + Ord, V: StT + Ord, F: Fn(&V, &V) -> V + Clone>(
+            ...
+       115 |     /// Clone bridge for closures: cloning a total reducer preserves totality.
+       116 |     /// Analogous to the eq/clone bridge pattern for values.
+       118 |         original: &F,
+       119 |         cloned: &F,
    Holes: 1 total
-      1 × external_body
-   Proof functions: 2 total (2 clean, 0 holed)
+      1 × assume()
+   Proof functions: 2 total (1 clean, 1 holed)
 ✓ Example43_1.rs
    1 clean proof function
 ℹ OrderedSetMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:245: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.len()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:273: info: structural_false_positive RWLOCK_GHOST find — proof { assume(found == self@.contains(x@)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:283: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:355: info: structural_false_positive RWLOCK_GHOST to_seq — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:413: info: structural_false_positive RWLOCK_GHOST first — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:425: info: structural_false_positive RWLOCK_GHOST last — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:437: info: structural_false_positive RWLOCK_GHOST previous — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:449: info: structural_false_positive RWLOCK_GHOST next — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:462: info: structural_false_positive RWLOCK_GHOST split — assume(left.spec_orderedsetsteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:463: info: structural_false_positive RWLOCK_GHOST split — assume(right.spec_orderedsetsteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:487: info: structural_false_positive RWLOCK_GHOST get_range — proof { assume(range.spec_orderedsetsteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:498: info: structural_false_positive RWLOCK_GHOST rank — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:510: info: structural_false_positive RWLOCK_GHOST select — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:523: info: structural_false_positive RWLOCK_GHOST split_rank — assume(left.spec_orderedsetsteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetMtEph.rs:524: info: structural_false_positive RWLOCK_GHOST split_rank — assume(right.spec_orderedsetsteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:245: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:273: info: structural_false_positive RWLOCK_GHOST find — proof { assume(found == self@.contains(x@)); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:283: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:355: info: structural_false_positive RWLOCK_GHOST to_seq — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:413: info: structural_false_positive RWLOCK_GHOST first — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:425: info: structural_false_positive RWLOCK_GHOST last — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:437: info: structural_false_positive RWLOCK_GHOST previous — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:449: info: structural_false_positive RWLOCK_GHOST next — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:462: info: structural_false_positive RWLOCK_GHOST split — assume(left.spec_orderedsetsteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:463: info: structural_false_positive RWLOCK_GHOST split — assume(right.spec_orderedsetsteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:487: info: structural_false_positive RWLOCK_GHOST get_range — proof { assume(range.spec_orderedsetsteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:498: info: structural_false_positive RWLOCK_GHOST rank — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:510: info: structural_false_positive RWLOCK_GHOST select — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:523: info: structural_false_positive RWLOCK_GHOST split_rank — assume(left.spec_orderedsetsteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetMtEph.rs:524: info: structural_false_positive RWLOCK_GHOST split_rank — assume(right.spec_orderedsetsteph_wf()); [medium]
    Info: 15 × structural_false_positive
 ❌ OrderedSetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:1134: error: assume() [algorithmic] - assume(self@.filter(|x: T::V| exists|t: T| #[trigger] TotalO
-      1118 |         fn select(&self, i: usize) -> (selected: Option<T>)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:1140: error: assume() [algorithmic] - assume(self@.filter(|x: T::V| exists|t: T| #[trigger] TotalO
+      1124 |         fn select(&self, i: usize) -> (selected: Option<T>)
             ...
-      1132 |                     // Filter cardinality requires sortedness of the backing sequence,
-      1133 |                     // which is true for AVL trees but not captured in the wf spec.
-      1135 |                 }
-      1136 |                 Some(result)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStEph.rs:1294: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+      1138 |                     // Filter cardinality requires sortedness of the backing sequence,
+      1139 |                     // which is true for AVL trees but not captured in the wf spec.
+      1141 |                 }
+      1142 |                 Some(result)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStEph.rs:1300: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
    Holes: 1 total
       1 × assume()
    Info: 1 × structural_false_positive
       1 × STD_TRAIT_IMPL
 ❌ OrderedSetStPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStPer.rs:1031: error: assume() [algorithmic] - assume(self@.filter(|x: T::V| exists|t: T| #[trigger] TotalO
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStPer.rs:1031: error: assume() [algorithmic] - assume(self@.filter(|x: T::V| exists|t: T| #[trigger] TotalO
       1015 |         fn select(&self, i: usize) -> (selected: Option<T>)
             ...
       1029 |                     // Filter cardinality requires sortedness of the backing sequence,
       1030 |                     // which is true for AVL trees but not captured in the wf spec.
       1032 |                 }
       1033 |                 Some(result)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedSetStPer.rs:1201: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedSetStPer.rs:1201: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
    Holes: 1 total
       1 × assume()
    Info: 1 × structural_false_positive
       1 × STD_TRAIT_IMPL
 ⚠ OrderedTableMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:791: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:791: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        786 |         fn clone(&self) -> (cloned: Self)
             ...
        789 |             let read_handle = self.locked_table.acquire_read();
        790 |             let inner = read_handle.borrow().clone();
        792 |             read_handle.release_read();
        793 |             let ghost view = inner@;
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:795: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:795: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        786 |         fn clone(&self) -> (cloned: Self)
             ...
        793 |             let ghost view = inner@;
        794 |             proof {
        796 |                 assume(inner.spec_orderedtablesteph_wf());
        797 |             }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:796: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:796: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        786 |         fn clone(&self) -> (cloned: Self)
             ...
        794 |             proof {
        795 |                 assume(view.dom().finite());
        797 |             }
        798 |             OrderedTableMtEph {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:317: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.dom().len()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:338: info: structural_false_positive RWLOCK_GHOST find — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:356: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(!locked_val@.contains_key(k@) ==> locked_val@ [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:358: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:373: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:381: info: structural_false_positive RWLOCK_GHOST domain — assume(self@.dom().finite()); [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:386: info: structural_false_positive RWLOCK_GHOST domain — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:432: info: structural_false_positive RWLOCK_GHOST intersection — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:449: info: structural_false_positive RWLOCK_GHOST union — proof { assume(locked_val@.dom().len() + other_ref@.dom().le [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:451: info: structural_false_positive RWLOCK_GHOST union — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:467: info: structural_false_positive RWLOCK_GHOST difference — proof { assume(other_ref.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:469: info: structural_false_positive RWLOCK_GHOST difference — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:483: info: structural_false_positive RWLOCK_GHOST restrict — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:496: info: structural_false_positive RWLOCK_GHOST subtract — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:503: info: structural_false_positive RWLOCK_GHOST reduce — proof { assume(self@.dom().finite()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:506: info: structural_false_positive RWLOCK_GHOST reduce — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:513: info: structural_false_positive RWLOCK_GHOST collect — proof { assume(self@.dom().finite()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:526: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:528: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:538: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:540: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:550: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:552: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:562: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:564: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:569: info: structural_false_positive OPAQUE_EXTERNAL split_key — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:604: info: structural_false_positive RWLOCK_GHOST split_key — proof { assume(empty_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:610: info: structural_false_positive RWLOCK_GHOST split_key — assume(left_inner.spec_orderedtablesteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:611: info: structural_false_positive RWLOCK_GHOST split_key — assume(right_inner.spec_orderedtablesteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:626: info: structural_false_positive RWLOCK_GHOST get_key_range — proof { assume(range.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:637: info: structural_false_positive RWLOCK_GHOST rank_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:649: info: structural_false_positive RWLOCK_GHOST select_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:661: info: structural_false_positive RWLOCK_GHOST split_rank_key — proof { assume(empty_val.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:664: info: structural_false_positive RWLOCK_GHOST split_rank_key — assume(left.spec_orderedtablesteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:665: info: structural_false_positive RWLOCK_GHOST split_rank_key — assume(right.spec_orderedtablesteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:761: info: structural_false_positive RWLOCK_GHOST from_st — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:814: info: structural_false_positive UNSAFE_SEND_SYNC OrderedTableMtEph — unsafe impl<K: MtKey, V: MtVal> Send for OrderedTableMtEph<K, V> {} [high]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtEph.rs:815: info: structural_false_positive UNSAFE_SEND_SYNC OrderedTableMtEph — unsafe impl<K: MtKey, V: MtVal> Sync for OrderedTableMtEph<K, V> {} [high]
-❌ OrderedTableMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:316: error: assume() [algorithmic] - proof { assume(len < usize::MAX); } // RWLOCK_GHOST domain —
-       310 |         fn domain(&self) -> (domain: OrderedSetMtEph<K>) {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:317: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.dom().len()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:338: info: structural_false_positive RWLOCK_GHOST find — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:356: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(!locked_val@.contains_key(k@) ==> locked_val@ [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:358: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:373: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:381: info: structural_false_positive RWLOCK_GHOST domain — assume(self@.dom().finite()); [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:386: info: structural_false_positive RWLOCK_GHOST domain — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:432: info: structural_false_positive RWLOCK_GHOST intersection — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:449: info: structural_false_positive RWLOCK_GHOST union — proof { assume(locked_val@.dom().len() + other_ref@.dom().le [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:451: info: structural_false_positive RWLOCK_GHOST union — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:467: info: structural_false_positive RWLOCK_GHOST difference — proof { assume(other_ref.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:469: info: structural_false_positive RWLOCK_GHOST difference — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:483: info: structural_false_positive RWLOCK_GHOST restrict — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:496: info: structural_false_positive RWLOCK_GHOST subtract — proof { assume(locked_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:503: info: structural_false_positive RWLOCK_GHOST reduce — proof { assume(self@.dom().finite()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:506: info: structural_false_positive RWLOCK_GHOST reduce — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:513: info: structural_false_positive RWLOCK_GHOST collect — proof { assume(self@.dom().finite()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:526: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:528: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:538: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:540: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:550: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:552: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:562: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:564: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:569: info: structural_false_positive OPAQUE_EXTERNAL split_key — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:604: info: structural_false_positive RWLOCK_GHOST split_key — proof { assume(empty_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:610: info: structural_false_positive RWLOCK_GHOST split_key — assume(left_inner.spec_orderedtablesteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:611: info: structural_false_positive RWLOCK_GHOST split_key — assume(right_inner.spec_orderedtablesteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:626: info: structural_false_positive RWLOCK_GHOST get_key_range — proof { assume(range.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:637: info: structural_false_positive RWLOCK_GHOST rank_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:649: info: structural_false_positive RWLOCK_GHOST select_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:661: info: structural_false_positive RWLOCK_GHOST split_rank_key — proof { assume(empty_val.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:664: info: structural_false_positive RWLOCK_GHOST split_rank_key — assume(left.spec_orderedtablesteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:665: info: structural_false_positive RWLOCK_GHOST split_rank_key — assume(right.spec_orderedtablesteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:761: info: structural_false_positive RWLOCK_GHOST from_st — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:814: info: structural_false_positive UNSAFE_SEND_SYNC OrderedTableMtEph — unsafe impl<K: MtKey, V: MtVal> Send for OrderedTableMtEph<K, V> {} [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtEph.rs:815: info: structural_false_positive UNSAFE_SEND_SYNC OrderedTableMtEph — unsafe impl<K: MtKey, V: MtVal> Sync for OrderedTableMtEph<K, V> {} [high]
+⚠ OrderedTableMtPer.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:536: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       531 |         fn clone(&self) -> (cloned: Self)
             ...
-       314 |             let entries = inner.collect();
-       315 |             let len = entries.length();
-       317 |             read_handle.release_read();
-       318 |             let mut result = OrderedSetMtEph::empty();
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:527: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       522 |         fn clone(&self) -> (cloned: Self)
+       534 |             let read_handle = self.locked_table.acquire_read();
+       535 |             let inner = read_handle.borrow().clone();
+       537 |             read_handle.release_read();
+       538 |             let ghost view = inner@;
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:540: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       531 |         fn clone(&self) -> (cloned: Self)
             ...
-       525 |             let read_handle = self.locked_table.acquire_read();
-       526 |             let inner = read_handle.borrow().clone();
-       528 |             read_handle.release_read();
-       529 |             let ghost view = inner@;
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:531: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       522 |         fn clone(&self) -> (cloned: Self)
+       538 |             let ghost view = inner@;
+       539 |             proof {
+       541 |                 assume(inner.spec_orderedtablestper_wf());
+       542 |             }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:541: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       531 |         fn clone(&self) -> (cloned: Self)
             ...
-       529 |             let ghost view = inner@;
-       530 |             proof {
-       532 |                 assume(inner.spec_orderedtablestper_wf());
-       533 |             }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:532: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       522 |         fn clone(&self) -> (cloned: Self)
-            ...
-       530 |             proof {
-       531 |                 assume(view.dom().finite());
-       533 |             }
-       534 |             OrderedTableMtPer {
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:80: info: structural_false_positive RWLOCK_GHOST from_st_table — assume(inner.spec_orderedtablestper_wf()); [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:241: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.dom().len()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:410: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:421: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:432: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:443: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:492: info: structural_false_positive RWLOCK_GHOST rank_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableMtPer.rs:504: info: structural_false_positive RWLOCK_GHOST select_key — proof { assume(inner@ =~= self@); } [medium]
-   Holes: 1 total
-      1 × assume()
-   Info: 8 × structural_false_positive
-      8 × RWLOCK_GHOST
+       539 |             proof {
+       540 |                 assume(view.dom().finite());
+       542 |             }
+       543 |             OrderedTableMtPer {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:80: info: structural_false_positive RWLOCK_GHOST from_st_table — assume(inner.spec_orderedtablestper_wf()); [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:241: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.dom().len()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:419: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:430: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:441: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:452: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:501: info: structural_false_positive RWLOCK_GHOST rank_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableMtPer.rs:513: info: structural_false_positive RWLOCK_GHOST select_key — proof { assume(inner@ =~= self@); } [medium]
 ℹ OrderedTableStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableStEph.rs:3116: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStEph.rs:3117: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
    Info: 1 × structural_false_positive
    1 clean proof function
-⚠ OrderedTableStPer.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableStPer.rs:3339: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      3335 |         fn eq(&self, other: &Self) -> (equal: bool)
+❌ OrderedTableStPer.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:1035: error: assume() [algorithmic] - proof { assume(result_vec@.len() < usize::MAX); }
+       989 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (table: Self)
             ...
-      3337 |         {
-      3338 |             let equal = self.base_set == other.base_set;
-      3340 |             equal
-      3341 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableStPer.rs:3351: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      3345 |         fn clone(&self) -> (copy: Self)
+      1033 |                 i += 1;
+      1034 |             }
+      1036 |             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
+      1037 |             proof {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:1127: error: assume() [algorithmic] - proof { assume(result_vec@.len() < usize::MAX); }
+      1090 |         fn map<F: Fn(&V) -> V>(&self, f: F) -> (table: Self)
             ...
-      3349 |                 base_set: self.base_set.clone(),
-      3350 |             };
-      3352 |             copy
-      3353 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap43/OrderedTableStPer.rs:3222: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+      1125 |                 i += 1;
+      1126 |             }
+      1128 |             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
+      1129 |             proof {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:1246: error: assume() [algorithmic] - proof { assume(result_vec@.len() < usize::MAX); }
+      1181 |         fn filter<F: Fn(&K, &V) -> B>(&self, f: F, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (table: Self)
+            ...
+      1244 |                 i += 1;
+      1245 |             }
+      1247 |             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
+      1248 |             proof {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:1404: error: assume() [algorithmic] - proof { assume(result_vec@.len() < usize::MAX); }
+      1301 |         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)
+            ...
+      1402 |                 i += 1;
+      1403 |             }
+      1405 |             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
+      1406 |             proof {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:1690: error: assume() [algorithmic] - proof { assume(result_vec@.len() < usize::MAX); }
+      1476 |         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)
+            ...
+      1688 |                 i += 1;
+      1689 |             }
+      1691 |             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
+      1692 |             proof {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:1884: error: assume() [algorithmic] - proof { assume(result_vec@.len() < usize::MAX); }
+      1818 |         fn difference(&self, other: &Self) -> (table: Self)
+            ...
+      1882 |                 i += 1;
+      1883 |             }
+      1885 |             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
+      1886 |             proof {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:2000: error: assume() [algorithmic] - proof { assume(result_vec@.len() < usize::MAX); }
+      1943 |         fn restrict(&self, keys: &ArraySetStEph<K>) -> (table: Self)
+            ...
+      1998 |                 i += 1;
+      1999 |             }
+      2001 |             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
+      2002 |             proof {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:2118: error: assume() [algorithmic] - proof { assume(result_vec@.len() < usize::MAX); }
+      2061 |         fn subtract(&self, keys: &ArraySetStEph<K>) -> (table: Self)
+            ...
+      2116 |                 i += 1;
+      2117 |             }
+      2119 |             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
+      2120 |             proof {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:2662: error: assume() [algorithmic] - proof { assume(left_vec@.len() < usize::MAX); }
+      2586 |         fn split_key(&self, k: &K) -> (parts: (Self, Option<V>, Self))
+            ...
+      2660 |                 i += 1;
+      2661 |             }
+      2663 |             let left_seq = AVLTreeSeqStPerS::from_vec(left_vec);
+      2664 |             proof {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:2786: error: assume() [algorithmic] - proof { assume(result_vec@.len() < usize::MAX); }
+      2745 |         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
+            ...
+      2784 |                 i += 1;
+      2785 |             }
+      2787 |             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
+      2788 |             proof {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:3067: error: assume() [algorithmic] - assume(left_vec@.len() < usize::MAX);
+      2979 |         fn split_rank_key(&self, i: usize) -> (parts: (Self, Self))
+            ...
+      3065 |             }
+      3066 |             proof {
+      3068 |                 assume(right_vec@.len() < usize::MAX);
+      3069 |             }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:3068: error: assume() [algorithmic] - assume(right_vec@.len() < usize::MAX);
+      2979 |         fn split_rank_key(&self, i: usize) -> (parts: (Self, Self))
+            ...
+      3066 |             proof {
+      3067 |                 assume(left_vec@.len() < usize::MAX);
+      3069 |             }
+      3070 |             let left_seq = AVLTreeSeqStPerS::from_vec(left_vec);
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:3354: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      3350 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      3352 |         {
+      3353 |             let equal = self.base_set == other.base_set;
+      3355 |             equal
+      3356 |         }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:3366: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      3360 |         fn clone(&self) -> (copy: Self)
+            ...
+      3364 |                 base_set: self.base_set.clone(),
+      3365 |             };
+      3367 |             copy
+      3368 |         }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStPer.rs:3237: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+   Holes: 12 total
+      12 × assume()
+   Info: 1 × structural_false_positive
+      1 × STD_TRAIT_IMPL
+   Proof functions: 7 total (7 clean, 0 holed)
 
 =================================================================
 2. Depends Upon
@@ -253,21 +343,23 @@ Modules:
    11 total
 
 Proof Functions:
-   14 clean (100%)
-   0 holed (0%)
-   14 total
+   12 clean (92%)
+   1 holed (7%)
+   13 total
 
 Function Specs:
    563 exec fns with complete spec (requires+ensures) (83%)
    0 exec fns missing spec (0%)
-   112 proof/spec fns clean (16%)
-   0 proof/spec fns with holes (0%)
-   675 total fns
+   110 proof/spec fns clean (16%)
+   1 proof/spec fns with holes (0%)
+   674 total fns
 
 
-Holes Found: 5 (actionable)
-   3 × assume() (60%)
-   2 × external_body (40%)
+Holes Found: 16 (actionable)
+   15 × assume() (93%)
+      14 × algorithmic
+      1 × closure
+   1 × external_body (6%)
 
 Warnings: 9 total
    9 × assume_eq_clone_workaround
@@ -282,8 +374,15 @@ Structural (info only): 65
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-21 12:58:27 -07:00
-Ended:     2026-03-21 12:58:27 -07:00
-Duration:  306ms
+Started:   2026-03-21 13:45:04 -07:00
+Ended:     2026-03-21 13:45:04 -07:00
+Duration:  206ms
+
+Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
+===================================
+
+Started:   2026-03-21 13:45:04 -07:00
+Ended:     2026-03-21 13:45:04 -07:00
+Duration:  206ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log

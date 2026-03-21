@@ -21,14 +21,14 @@ Table of Contents:
 =================================================================
 
 ⚠ ChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:144: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ChainedHashTable.rs:144: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        140 |             fn clone(&self) -> (cloned: Self)
             ...
        142 |             {
        143 |                 let cloned = ChainEntry { chain: self.chain.clone(), _phantom: PhantomData };
        145 |                 cloned
        146 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap47/ChainedHashTable.rs:154: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ChainedHashTable.rs:154: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        150 |             fn eq(&self, other: &Self) -> (equal: bool)
             ...
        152 |             {
@@ -36,11 +36,11 @@ Table of Contents:
        155 |                 equal
        156 |             }
 ℹ DoubleHashFlatHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:111: info: structural_false_positive OPAQUE_EXTERNAL second_hash — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/DoubleHashFlatHashTableStEph.rs:111: info: structural_false_positive OPAQUE_EXTERNAL second_hash — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
    2 clean proof functions
 ⚠ FlatHashTable.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:293: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/FlatHashTable.rs:293: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        285 |         fn clone(&self) -> (cloned: Self)
             ...
        291 |                 FlatEntry::Deleted => FlatEntry::Deleted,
@@ -52,65 +52,65 @@ Table of Contents:
 ✓ LinkedListChainedHashTableStEph.rs
    1 clean proof function
 ❌ ParaHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:115: error: assume() [algorithmic] - proof { assume(c == *x); } // Clone bridge: T::clone preserv
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:115: error: assume() [algorithmic] - proof { assume(c == *x); } // Clone bridge: T::clone preserv
        111 |     pub fn clone_elem<T: Clone>(x: &T) -> (c: T)
             ...
        113 |     {
        114 |         let c = x.clone();
        116 |         c
        117 |     }
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:493: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:493: error: external_body - #[verifier::external_body]
        494 |     pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (index: usize)
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:563: error: fn_missing_wf_ensures - fn createTable — ensures should include table.spec_hashtable_wf() for return type HashTable
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:563: error: fn_missing_wf_ensures - fn createTable — ensures should include table.spec_hashtable_wf() for return type HashTable
        555 |         open spec fn spec_resize_ok(table: &HashTable<Key, Value, Entry, Metrics, H>, new_size: usize) -> bool {
             ...
        561 |         /// - APAS: Work O(m), Span O(m) where m is initial size.
        562 |         /// - Claude-Opus-4.6: Work O(m), Span O(m) — agrees with APAS; iterates m times to create entries.
        564 |             requires
        565 |                 initial_size > 0,
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:614: error: fn_missing_wf_requires - fn insert — requires should include table.spec_hashtable_wf() for input type HashTable
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:614: error: fn_missing_wf_requires - fn insert — requires should include table.spec_hashtable_wf() for input type HashTable
        563 |         fn createTable(hash_fn: H, initial_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (table: HashTable<Key, Value, Entry, Metrics, H>)
             ...
        612 |         /// - APAS: Work O(1) expected, Span O(1).
        613 |         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
        615 |             requires
        616 |                 Self::spec_impl_wf(old(table)),
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:631: error: fn_missing_wf_requires - fn lookup — requires should include table.spec_hashtable_wf() for input type HashTable
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:631: error: fn_missing_wf_requires - fn lookup — requires should include table.spec_hashtable_wf() for input type HashTable
        614 |         fn insert(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)
             ...
        629 |         /// - APAS: Work O(1) expected, Span O(1).
        630 |         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
        632 |             requires
        633 |                 Self::spec_impl_wf(table),
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:643: error: fn_missing_wf_requires - fn delete — requires should include table.spec_hashtable_wf() for input type HashTable
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:643: error: fn_missing_wf_requires - fn delete — requires should include table.spec_hashtable_wf() for input type HashTable
        631 |         fn lookup(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (found: Option<Value>)
             ...
        641 |         /// - APAS: Work O(1) expected, Span O(1).
        642 |         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
        644 |             requires
        645 |                 Self::spec_impl_wf(old(table)),
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:658: error: fn_missing_wf_requires - fn metrics — requires should include table.spec_hashtable_wf() for input type HashTable
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:658: error: fn_missing_wf_requires - fn metrics — requires should include table.spec_hashtable_wf() for input type HashTable
        643 |         fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
             ...
        656 |         /// - APAS: N/A — Verus-specific scaffolding.
        657 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
        659 |             requires Self::spec_impl_wf(table),
        660 |             ensures m == &table.metrics,
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:667: error: fn_missing_wf_requires - fn loadAndSize — requires should include table.spec_hashtable_wf() for input type HashTable
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:667: error: fn_missing_wf_requires - fn loadAndSize — requires should include table.spec_hashtable_wf() for input type HashTable
        658 |         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
             ...
        665 |         /// - APAS: Work O(1), Span O(1).
        666 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads only.
        668 |             requires Self::spec_impl_wf(table),
        669 |             ensures
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:684: error: fn_missing_wf_requires - fn resize — requires should include table.spec_hashtable_wf() for input type HashTable
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:684: error: fn_missing_wf_requires - fn resize — requires should include table.spec_hashtable_wf() for input type HashTable
        667 |         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
             ...
        682 |         ///   m is old size, m' is new size.
        683 |         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
        685 |             requires
        686 |                 new_size > 0,
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:684: error: fn_missing_wf_ensures - fn resize — ensures should include resized.spec_hashtable_wf() for return type HashTable
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/ParaHashTableStEph.rs:684: error: fn_missing_wf_ensures - fn resize — ensures should include resized.spec_hashtable_wf() for return type HashTable
        667 |         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
             ...
        682 |         ///   m is old size, m' is new size.
@@ -122,7 +122,7 @@ Table of Contents:
       1 × external_body
    Proof functions: 12 total (12 clean, 0 holed)
 ❌ QuadProbFlatHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/QuadProbFlatHashTableStEph.rs:383: error: assume(false) - assume(false); // Table full: unreachable with load factor < — needs diverge(); use `assume(false); diverge()`
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/QuadProbFlatHashTableStEph.rs:383: error: assume(false) - assume(false); // Table full: unreachable with load factor < — needs diverge(); use `assume(false); diverge()`
         85 |         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
             ...
        381 |             // Exhausted all m positions.
@@ -132,28 +132,28 @@ Table of Contents:
    Holes: 1 total
       1 × assume(false)
 ⚠ StructChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:843: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:843: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        831 |             fn clone(&self) -> (cloned: Self)
             ...
        841 |                     },
        842 |                 };
        844 |                 cloned
        845 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:860: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:860: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        849 |             fn eq(&self, other: &Self) -> (equal: bool)
             ...
        858 |                         _ => false,
        859 |                     };
        861 |                 equal
        862 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:877: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:877: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        868 |             fn clone(&self) -> (cloned: Self)
             ...
        875 |                     },
        876 |                 };
        878 |                 cloned
        879 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:891: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:891: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        883 |             fn eq(&self, other: &Self) -> (equal: bool)
             ...
        889 |                     _ => false,
@@ -234,12 +234,15 @@ Structural (info only): 1
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-21 12:43:17 -07:00
-Ended:     2026-03-21 12:43:17 -07:00
-Duration:  85ms
+Started:   2026-03-21 13:45:04 -07:00
+Ended:     2026-03-21 13:45:04 -07:00
+Duration:  88ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log
-21 12:43:17 -07:00
-Duration:  85ms
+========================================================
+
+Started:   2026-03-21 13:45:04 -07:00
+Ended:     2026-03-21 13:45:04 -07:00
+Duration:  88ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log

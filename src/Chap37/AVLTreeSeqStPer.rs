@@ -111,6 +111,8 @@ pub mod AVLTreeSeqStPer {
     }
 
     /// Well-formedness: cached height and size match the actual tree structure.
+    /// Includes a capacity bound mirroring the StEph pattern: the subtree size fits in usize
+    /// with room to spare, enabling safe insertion without overflow.
     pub open spec fn spec_avltreeseqstper_wf<T: StT>(link: Link<T>) -> bool
         decreases link,
     {
@@ -125,6 +127,7 @@ pub mod AVLTreeSeqStPer {
                 )
                 && node.size as nat == 1 + spec_cached_size(&node.left)
                     + spec_cached_size(&node.right)
+                && (spec_cached_size(&node.left) + spec_cached_size(&node.right) + 1 < usize::MAX)
             }
         }
     }
@@ -132,7 +135,7 @@ pub mod AVLTreeSeqStPer {
     // 7. proof fns
 
     /// Under well-formedness, cached size equals in-order sequence length.
-    proof fn lemma_size_eq_inorder_len<T: StT>(link: &Link<T>)
+    pub proof fn lemma_size_eq_inorder_len<T: StT>(link: &Link<T>)
         requires spec_avltreeseqstper_wf(*link),
         ensures spec_cached_size(link) == spec_inorder(*link).len(),
         decreases *link,
@@ -159,6 +162,38 @@ pub mod AVLTreeSeqStPer {
                 lemma_height_le_size::<T>(&node.right);
             }
         }
+    }
+
+    /// Under well-formedness, the cached size is strictly less than usize::MAX.
+    /// This follows directly from the capacity bound in spec_avltreeseqstper_wf.
+    pub proof fn lemma_size_lt_usize_max<T: StT>(link: &Link<T>)
+        requires spec_avltreeseqstper_wf(*link),
+        ensures spec_cached_size(link) < usize::MAX,
+        decreases *link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_size_lt_usize_max::<T>(&node.left);
+                lemma_size_lt_usize_max::<T>(&node.right);
+                // wf: size = 1 + left_size + right_size AND left_size + right_size + 1 < usize::MAX.
+                // So size = 1 + left_size + right_size < usize::MAX.
+            }
+        }
+    }
+
+    /// Under struct-level well-formedness, the sequence length is bounded by usize::MAX.
+    /// This broadcast lemma fires automatically when `s.spec_avltreeseqstper_wf()` is in context.
+    pub broadcast proof fn lemma_wf_implies_len_bound_stper<T: StT>(s: AVLTreeSeqStPerS<T>)
+        requires #[trigger] s.spec_avltreeseqstper_wf(),
+        ensures s@.len() < usize::MAX,
+    {
+        lemma_size_lt_usize_max::<T>(&s.root);
+        lemma_size_eq_inorder_len::<T>(&s.root);
+    }
+
+    pub broadcast group group_avltreeseqstper_len_bound {
+        lemma_wf_implies_len_bound_stper,
     }
 
     // 8. traits
@@ -207,6 +242,7 @@ pub mod AVLTreeSeqStPer {
             ensures sub.spec_avltreeseqstper_wf();
 
         fn from_vec(values: Vec<T>) -> (tree: Self)
+            requires values@.len() < usize::MAX,
             ensures
                 tree.spec_avltreeseqstper_wf(),
                 tree.spec_seq() =~= values@.map_values(|t: T| t@);
@@ -248,7 +284,7 @@ pub mod AVLTreeSeqStPer {
 
     fn mk<T: StT>(value: T, left: Link<T>, right: Link<T>) -> (node: Arc<Node<T>>)
         requires
-            1 + spec_cached_size(&left) + spec_cached_size(&right) <= N::MAX as nat,
+            1 + spec_cached_size(&left) + spec_cached_size(&right) < N::MAX as nat,
             1 + spec_nat_max(spec_cached_height(&left), spec_cached_height(&right)) <= N::MAX as nat,
         ensures
             spec_inorder(Some(node)) =~= spec_inorder(left) + seq![value@] + spec_inorder(right),
@@ -281,12 +317,13 @@ pub mod AVLTreeSeqStPer {
             assert(spec_avltreeseqstper_wf(y.right));
             assert(spec_avltreeseqstper_wf(x.left));
             assert(spec_avltreeseqstper_wf(x.right));
-            // Size bound: y.size is usize, so 1 + size(x) + size(C) <= N::MAX.
-            // x.size is usize, so 1 + size(A) + size(B) <= N::MAX.
-            // Combined: 2 + size(A) + size(B) + size(C) <= N::MAX (== y.size).
+            // Size bound (strict <):
+            // y.size < usize::MAX (wf capacity bound), y.size = 1 + x.size + size(C).
+            // x.size = 1 + size(A) + size(B), so 2 + size(A) + size(B) + size(C) < usize::MAX.
             // For first mk (new_y = mk(y_val, B, C)):
-            //   1 + size(B) + size(C) <= 2 + size(A) + size(B) + size(C) == y.size <= N::MAX.
-            assert(1 + spec_cached_size(&x.right) + spec_cached_size(&y.right) <= N::MAX as nat);
+            //   1 + size(B) + size(C) <= 2 + size(A) + size(B) + size(C) - 1 < usize::MAX.
+            lemma_size_lt_usize_max::<T>(&y.left);  // x.size < usize::MAX
+            assert(1 + spec_cached_size(&x.right) + spec_cached_size(&y.right) < N::MAX as nat);
             // Height: h(B) <= x.height-1, h(C) <= y.height-1.
             // max(h(B), h(C)) < y.height. So 1 + max(h(B), h(C)) <= y.height <= N::MAX.
             assert(1 + spec_nat_max(
@@ -296,7 +333,9 @@ pub mod AVLTreeSeqStPer {
         let y_val = y.value.clone_plus();
         let new_y = mk(y_val, t2, y.right.clone());
         proof {
-            assert(1 + spec_cached_size(&x.left) + spec_cached_size(&Some(new_y)) <= N::MAX as nat);
+            // new_y.size = 1 + size(B) + size(C) < usize::MAX (from above).
+            // 1 + size(A) + new_y.size = 2 + size(A) + size(B) + size(C) < usize::MAX.
+            assert(1 + spec_cached_size(&x.left) + spec_cached_size(&Some(new_y)) < N::MAX as nat);
             lemma_height_le_size::<T>(&x.left);
             lemma_height_le_size::<T>(&Some(new_y));
             assert(1 + spec_nat_max(
@@ -322,10 +361,13 @@ pub mod AVLTreeSeqStPer {
             assert(spec_avltreeseqstper_wf(x.right));
             assert(spec_avltreeseqstper_wf(y.left));
             assert(spec_avltreeseqstper_wf(y.right));
-            // First mk (new_x = mk(x_val, A, B)): A=x.left, B=y.left.
-            // 1 + size(A) + size(B) ≤ x.size ≤ N::MAX (since x.size is usize,
-            // and size(y) = 1 + size(B) + size(C), so x.size = 1 + size(A) + size(y) ≥ 2 + size(A) + size(B)).
-            assert(1 + spec_cached_size(&x.left) + spec_cached_size(&y.left) <= N::MAX as nat);
+            // Size bound (strict <):
+            // x.size < usize::MAX (wf capacity bound), x.size = 1 + size(A) + y.size.
+            // y.size = 1 + size(B) + size(C), so 2 + size(A) + size(B) + size(C) < usize::MAX.
+            // For first mk (new_x = mk(x_val, A, B)):
+            //   1 + size(A) + size(B) <= 2 + size(A) + size(B) + size(C) - 1 < usize::MAX.
+            lemma_size_lt_usize_max::<T>(&x.right);  // y.size < usize::MAX
+            assert(1 + spec_cached_size(&x.left) + spec_cached_size(&y.left) < N::MAX as nat);
             assert(1 + spec_nat_max(
                 spec_cached_height(&x.left), spec_cached_height(&y.left)) <= N::MAX as nat);
         }
@@ -333,7 +375,9 @@ pub mod AVLTreeSeqStPer {
         let x_val = x.value.clone_plus();
         let new_x = mk(x_val, x.left.clone(), t2);
         proof {
-            assert(1 + spec_cached_size(&Some(new_x)) + spec_cached_size(&y.right) <= N::MAX as nat);
+            // new_x.size = 1 + size(A) + size(B) < usize::MAX (from above).
+            // 1 + new_x.size + size(C) = 2 + size(A) + size(B) + size(C) < usize::MAX.
+            assert(1 + spec_cached_size(&Some(new_x)) + spec_cached_size(&y.right) < N::MAX as nat);
             lemma_height_le_size::<T>(&Some(new_x));
             lemma_height_le_size::<T>(&y.right);
             assert(1 + spec_nat_max(
@@ -372,7 +416,9 @@ pub mod AVLTreeSeqStPer {
                 let n_val = n.value.clone_plus();
                 proof {
                     assert(spec_cached_size(&Some(rotated)) == left_size);
-                    assert(1 + left_size + spec_cached_size(&n.right) <= N::MAX as nat);
+                    // n.size < usize::MAX (wf), n.size = 1 + left_size + right_size.
+                    // 1 + left_size + right_size = 1 + rotated_size + right_size < usize::MAX.
+                    assert(1 + left_size + spec_cached_size(&n.right) < N::MAX as nat);
                     lemma_height_le_size::<T>(&Some(rotated));
                     lemma_height_le_size::<T>(&n.right);
                 }
@@ -399,7 +445,8 @@ pub mod AVLTreeSeqStPer {
                 let n_val = n.value.clone_plus();
                 proof {
                     assert(spec_cached_size(&Some(rotated)) == right_size);
-                    assert(1 + spec_cached_size(&n.left) + right_size <= N::MAX as nat);
+                    // n.size < usize::MAX (wf), n.size = 1 + left_size + right_size.
+                    assert(1 + spec_cached_size(&n.left) + right_size < N::MAX as nat);
                     lemma_height_le_size::<T>(&n.left);
                     lemma_height_le_size::<T>(&Some(rotated));
                 }
@@ -495,7 +542,7 @@ pub mod AVLTreeSeqStPer {
     }
 
     fn build_balanced_from_slice<T: StT>(a: &[T]) -> (link: Link<T>)
-        requires 0nat < usize::MAX as nat,
+        requires a.len() < usize::MAX,
         ensures
             spec_avltreeseqstper_wf(link),
             spec_inorder(link) =~= a@.map_values(|t: T| t@),
@@ -518,6 +565,8 @@ pub mod AVLTreeSeqStPer {
             lemma_height_le_size::<T>(&right);
             assert(obeys_feq_full_trigger::<T>());
             assert(cloned(a@[mid as int], val));
+            // mid + (a.len() - mid - 1) + 1 = a.len() < usize::MAX, so mk's strict bound holds.
+            assert(1 + spec_cached_size(&left) + spec_cached_size(&right) < usize::MAX as nat);
         }
         let node = mk(val, left, right);
         proof {
@@ -636,6 +685,12 @@ pub mod AVLTreeSeqStPer {
 
         fn subseq_copy(&self, start: N, length: N) -> (sub: Self) {
             let n = self.length();
+            proof {
+                lemma_size_eq_inorder_len::<T>(&self.root);
+                lemma_size_lt_usize_max::<T>(&self.root);
+                // n as nat == spec_cached_size(&self.root) < usize::MAX.
+                assert(n < usize::MAX);
+            }
             let s = if start < n { start } else { n };
             let sum = start.wrapping_add(length);
             let sat = if sum >= start { sum } else { usize::MAX };
@@ -649,11 +704,19 @@ pub mod AVLTreeSeqStPer {
                 invariant
                     self.spec_avltreeseqstper_wf(),
                     n as int == self.spec_seq().len(),
+                    n < usize::MAX,
                     s <= i, i <= e, e <= n,
+                    vals@.len() == (i - s) as nat,
                 decreases e - i,
             {
                 vals.push(self.nth(i).clone());
                 i += 1;
+            }
+            proof {
+                assert(vals@.len() <= e as nat);
+                assert(e <= n);
+                assert(n < usize::MAX);
+                assert(vals@.len() < usize::MAX);
             }
             Self::from_vec(vals)
         }

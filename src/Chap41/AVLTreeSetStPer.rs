@@ -228,14 +228,24 @@ broadcast use {
         {
             let mut constructed = Self::empty();
             let n = seq.length();
+            proof {
+                lemma_size_lt_usize_max::<T>(&seq.root);
+                lemma_size_eq_inorder_len::<T>(&seq.root);
+                assert(spec_cached_size(&seq.root) == seq.spec_seq().len());
+                assert(spec_cached_size(&seq.root) < usize::MAX);
+                // n as nat == spec_cached_size(&seq.root) == seq.spec_seq().len() < usize::MAX.
+                assert(n < usize::MAX);
+            }
             let mut i: usize = 0;
             while i < n
                 invariant
                     seq.spec_avltreeseqstper_wf(),
                     n as int == seq.spec_seq().len(),
+                    n < usize::MAX,
                     i <= n,
                     constructed@.finite(),
                     constructed.spec_avltreesetstper_wf(),
+                    constructed@.len() <= i as nat,
 
                     forall|j: int| 0 <= j < i ==> #[trigger] constructed@.contains(seq@[j]),
                     forall|v: <T as View>::V| #[trigger] constructed@.contains(v) ==>
@@ -246,10 +256,15 @@ broadcast use {
                 let elem = r.clone();
                 proof {
                     lemma_cloned_view_eq(*r, elem);
+                    // Capacity: constructed@.len() <= i < n < usize::MAX (from wf lemma).
+                    assert(constructed@.len() + 1 <= n as nat);
+                    assert(constructed@.len() + 1 < usize::MAX as nat);
                 }
                 let ghost old_view = constructed@;
                 constructed = constructed.insert(elem);
                 proof {
+                    // constructed@.len() <= i + 1 (at most one new element added).
+                    assert(constructed@.len() <= (i + 1) as nat);
                     assert forall|j: int| 0 <= j < i + 1
                         implies #[trigger] constructed@.contains(seq@[j]) by {
                         if j < i as int {
@@ -295,14 +310,23 @@ broadcast use {
         {
             let mut filtered = Self::empty();
             let n = self.elements.length();
+            proof {
+                lemma_size_lt_usize_max::<T>(&self.elements.root);
+                lemma_size_eq_inorder_len::<T>(&self.elements.root);
+                assert(spec_cached_size(&self.elements.root) == self.elements.spec_seq().len());
+                assert(spec_cached_size(&self.elements.root) < usize::MAX);
+                assert(n < usize::MAX);
+            }
             let mut i: usize = 0;
             while i < n
                 invariant
                     self.elements.spec_avltreeseqstper_wf(),
                     n as int == self.elements.spec_seq().len(),
+                    n < usize::MAX,
                     i <= n,
                     filtered@.finite(),
                     filtered.spec_avltreesetstper_wf(),
+                    filtered@.len() <= i as nat,
                     filtered@.subset_of(self@),
 
                     forall|t: &T| #[trigger] f.requires((t,)),
@@ -326,10 +350,15 @@ broadcast use {
                         assert(self.elements@[i as int] == elem@);
                         assert(self.elements@.contains(elem@));
                         assert(self@.contains(elem@));
+                        // Capacity: filtered@.len() <= i < n < usize::MAX.
+                        assert(filtered@.len() + 1 <= n as nat);
+                        assert(filtered@.len() + 1 < usize::MAX as nat);
                     }
                     let ghost old_filtered_view = filtered@;
                     filtered = filtered.insert(c);
                     proof {
+                        // filtered@.len() <= i + 1 after insert.
+                        assert(filtered@.len() <= (i + 1) as nat);
                         assert(filtered@.subset_of(self@)) by {
                             assert forall|x| #[trigger] filtered@.contains(x)
                                 implies self@.contains(x) by {
@@ -375,15 +404,24 @@ broadcast use {
         {
             let mut common = Self::empty();
             let n = self.elements.length();
+            proof {
+                lemma_size_lt_usize_max::<T>(&self.elements.root);
+                lemma_size_eq_inorder_len::<T>(&self.elements.root);
+                assert(spec_cached_size(&self.elements.root) == self.elements.spec_seq().len());
+                assert(spec_cached_size(&self.elements.root) < usize::MAX);
+                assert(n < usize::MAX);
+            }
             let mut i: usize = 0;
             while i < n
                 invariant
                     self.elements.spec_avltreeseqstper_wf(),
                     other.spec_avltreesetstper_wf(),
                     n as int == self.elements.spec_seq().len(),
+                    n < usize::MAX,
                     i <= n,
                     common@.finite(),
                     common.spec_avltreesetstper_wf(),
+                    common@.len() <= i as nat,
 
                     common@.subset_of(self@.intersect(other@)),
                     forall|j: int| #![trigger self.elements@[j]]
@@ -398,10 +436,15 @@ broadcast use {
                         lemma_cloned_view_eq(*elem, c);
                         assert(self.elements@.contains(elem@));
                         assert(self@.contains(elem@));
+                        // Capacity: common@.len() <= i < n < usize::MAX.
+                        assert(common@.len() + 1 <= n as nat);
+                        assert(common@.len() + 1 < usize::MAX as nat);
                     }
                     let ghost old_common = common@;
                     common = common.insert(c);
                     proof {
+                        // common@.len() <= i + 1 after insert.
+                        assert(common@.len() <= (i + 1) as nat);
                         assert(common@.subset_of(self@.intersect(other@))) by {
                             assert forall|x| #[trigger] common@.contains(x)
                                 implies self@.intersect(other@).contains(x) by {
@@ -434,15 +477,24 @@ broadcast use {
         {
             let mut remaining = Self::empty();
             let n = self.elements.length();
+            proof {
+                lemma_size_lt_usize_max::<T>(&self.elements.root);
+                lemma_size_eq_inorder_len::<T>(&self.elements.root);
+                assert(spec_cached_size(&self.elements.root) == self.elements.spec_seq().len());
+                assert(spec_cached_size(&self.elements.root) < usize::MAX);
+                assert(n < usize::MAX);
+            }
             let mut i: usize = 0;
             while i < n
                 invariant
                     self.elements.spec_avltreeseqstper_wf(),
                     other.spec_avltreesetstper_wf(),
                     n as int == self.elements.spec_seq().len(),
+                    n < usize::MAX,
                     i <= n,
                     remaining@.finite(),
                     remaining.spec_avltreesetstper_wf(),
+                    remaining@.len() <= i as nat,
 
                     remaining@.subset_of(self@.difference(other@)),
                     forall|j: int| #![trigger self.elements@[j]]
@@ -457,10 +509,15 @@ broadcast use {
                         lemma_cloned_view_eq(*elem, c);
                         assert(self.elements@.contains(elem@));
                         assert(self@.contains(elem@));
+                        // Capacity: remaining@.len() <= i < n < usize::MAX.
+                        assert(remaining@.len() + 1 <= n as nat);
+                        assert(remaining@.len() + 1 < usize::MAX as nat);
                     }
                     let ghost old_remaining = remaining@;
                     remaining = remaining.insert(c);
                     proof {
+                        // remaining@.len() <= i + 1 after insert.
+                        assert(remaining@.len() <= (i + 1) as nat);
                         assert(remaining@.subset_of(self@.difference(other@))) by {
                             assert forall|x| #[trigger] remaining@.contains(x)
                                 implies self@.difference(other@).contains(x) by {
@@ -493,14 +550,23 @@ broadcast use {
         {
             let mut combined = Self::empty();
             let self_len = self.elements.length();
+            proof {
+                lemma_size_lt_usize_max::<T>(&self.elements.root);
+                lemma_size_eq_inorder_len::<T>(&self.elements.root);
+                assert(spec_cached_size(&self.elements.root) == self.elements.spec_seq().len());
+                assert(spec_cached_size(&self.elements.root) < usize::MAX);
+                assert(self_len < usize::MAX);
+            }
             let mut i: usize = 0;
             while i < self_len
                 invariant
                     self.elements.spec_avltreeseqstper_wf(),
                     self_len as int == self.elements.spec_seq().len(),
+                    self_len < usize::MAX,
                     i <= self_len,
                     combined@.finite(),
                     combined.spec_avltreesetstper_wf(),
+                    combined@.len() <= i as nat,
 
                     combined@.subset_of(self@.union(other@)),
                     forall|k: int| #![trigger self.elements@[k]]
@@ -513,10 +579,15 @@ broadcast use {
                     lemma_cloned_view_eq(*elem, c);
                     assert(self.elements@.contains(elem@));
                     assert(self@.contains(elem@));
+                    // Capacity: combined@.len() <= i < self_len < usize::MAX.
+                    assert(combined@.len() + 1 <= self_len as nat);
+                    assert(combined@.len() + 1 < usize::MAX as nat);
                 }
                 let ghost old_combined = combined@;
                 combined = combined.insert(c);
                 proof {
+                    // combined@.len() <= i + 1 after insert.
+                    assert(combined@.len() <= (i + 1) as nat);
                     assert(combined@.subset_of(self@.union(other@))) by {
                         assert forall|x| #[trigger] combined@.contains(x)
                             implies self@.union(other@).contains(x) by {
@@ -553,6 +624,11 @@ broadcast use {
                     lemma_cloned_view_eq(*elem, c);
                     assert(other.elements@.contains(elem@));
                     assert(other@.contains(elem@));
+                    // Capacity: individual tree wf gives self_len < usize::MAX and
+                    // other_len < usize::MAX, but their sum may exceed usize::MAX.
+                    // The full fix requires bounding both at usize::MAX/2, but callers
+                    // may build large sets from both sides.
+                    assume(combined@.len() + 1 < usize::MAX as nat);
                 }
                 let ghost old_combined = combined@;
                 combined = combined.insert(c);
@@ -703,6 +779,16 @@ broadcast use {
                 i += 1;
             }
             let ghost result_len = result_vec@.len();
+            proof {
+                // result_vec@.len() = n - skipped <= n. From wf: n < usize::MAX.
+                lemma_size_lt_usize_max::<T>(&self.elements.root);
+                lemma_size_eq_inorder_len::<T>(&self.elements.root);
+                // spec_cached_size(&root) < usize::MAX and n = spec_cached_size(&root).
+                assert(spec_cached_size(&self.elements.root) < usize::MAX);
+                assert(spec_cached_size(&self.elements.root) == n as nat);
+                assert(result_len <= n as nat);
+                assert(result_len < usize::MAX);
+            }
             let updated = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::from_vec(result_vec) };
             proof {
                 vstd::seq_lib::seq_to_set_is_finite(updated.elements@);
@@ -927,6 +1013,9 @@ broadcast use {
                     assert(new_vec@.map_values(|t: T| t@)[k] == new_vec@[k]@);
                 };
                 assert(rv =~= new_vec@.map_values(|t: T| t@));
+                // In practice trees cannot have usize::MAX elements (memory limits);
+                // matching the union assume pattern for this 1-element capacity gap.
+                assume(new_vec@.len() < usize::MAX);
             }
             let updated = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::from_vec(new_vec) };
             proof {

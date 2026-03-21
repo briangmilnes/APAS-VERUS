@@ -313,8 +313,17 @@ pub mod OrderedTableMtPer {
             let inner = read_handle.borrow();
             let entries = inner.collect();
             let len = entries.length();
-            proof { assume(len < usize::MAX); } // RWLOCK_GHOST domain — capacity bound lost across RwLock
             read_handle.release_read();
+            proof {
+                // entries.spec_avltreeseqstper_wf() is guaranteed by collect().
+                // lemma_size_lt_usize_max: spec_cached_size(&entries.root) < usize::MAX.
+                // lemma_size_eq_inorder_len: spec_cached_size(&entries.root) == entries@.len().
+                // entries.length() ensures len as nat == entries@.len().
+                // Therefore len < usize::MAX.
+                lemma_size_lt_usize_max::<Pair<K, V>>(&entries.root);
+                lemma_size_eq_inorder_len::<Pair<K, V>>(&entries.root);
+                assert(len < usize::MAX);
+            }
             let mut result = OrderedSetMtEph::empty();
             let mut i: usize = 0;
             while i < len

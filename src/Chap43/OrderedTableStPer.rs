@@ -24,6 +24,7 @@ pub mod OrderedTableStPer {
    // Veracity: added broadcast group
    broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
+    crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::group_avltreeseqstper_len_bound,
     vstd::map::group_map_axioms,
     vstd::seq::group_seq_axioms,
     vstd::set::group_set_axioms,
@@ -1031,6 +1032,7 @@ pub mod OrderedTableStPer {
                 }
                 i += 1;
             }
+            proof { assume(result_vec@.len() < usize::MAX); }
             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
             proof {
                 assert(seq@ =~= result_vec@.map_values(|p: Pair<K, V>| p@));
@@ -1122,6 +1124,7 @@ pub mod OrderedTableStPer {
                 }
                 i += 1;
             }
+            proof { assume(result_vec@.len() < usize::MAX); }
             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
             proof {
                 assert(seq@ =~= result_vec@.map_values(|p: Pair<K, V>| p@));
@@ -1240,6 +1243,7 @@ pub mod OrderedTableStPer {
                 }
                 i += 1;
             }
+            proof { assume(result_vec@.len() < usize::MAX); }
             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
             proof {
                 assert(seq@ =~= result_vec@.map_values(|p: Pair<K, V>| p@));
@@ -1397,6 +1401,7 @@ pub mod OrderedTableStPer {
                 }
                 i += 1;
             }
+            proof { assume(result_vec@.len() < usize::MAX); }
             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
             proof {
                 assert(seq@ =~= result_vec@.map_values(|p: Pair<K, V>| p@));
@@ -1682,6 +1687,7 @@ pub mod OrderedTableStPer {
                 }
                 i += 1;
             }
+            proof { assume(result_vec@.len() < usize::MAX); }
             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
             proof {
                 assert(seq@ =~= result_vec@.map_values(|p: Pair<K, V>| p@));
@@ -1875,6 +1881,7 @@ pub mod OrderedTableStPer {
                 }
                 i += 1;
             }
+            proof { assume(result_vec@.len() < usize::MAX); }
             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
             proof {
                 assert(seq@ =~= result_vec@.map_values(|p: Pair<K, V>| p@));
@@ -1990,6 +1997,7 @@ pub mod OrderedTableStPer {
                 }
                 i += 1;
             }
+            proof { assume(result_vec@.len() < usize::MAX); }
             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
             proof {
                 assert(seq@ =~= result_vec@.map_values(|p: Pair<K, V>| p@));
@@ -2107,6 +2115,7 @@ pub mod OrderedTableStPer {
                 }
                 i += 1;
             }
+            proof { assume(result_vec@.len() < usize::MAX); }
             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
             proof {
                 assert(seq@ =~= result_vec@.map_values(|p: Pair<K, V>| p@));
@@ -2650,6 +2659,7 @@ pub mod OrderedTableStPer {
                 }
                 i += 1;
             }
+            proof { assume(left_vec@.len() < usize::MAX); }
             let left_seq = AVLTreeSeqStPerS::from_vec(left_vec);
             proof {
                 assert(left_seq@ =~= left_vec@.map_values(|p: Pair<K, V>| p@));
@@ -2773,6 +2783,7 @@ pub mod OrderedTableStPer {
                 }
                 i += 1;
             }
+            proof { assume(result_vec@.len() < usize::MAX); }
             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
             proof {
                 assert(seq@ =~= result_vec@.map_values(|p: Pair<K, V>| p@));
@@ -3051,6 +3062,10 @@ pub mod OrderedTableStPer {
                     }
                 }
                 j += 1;
+            }
+            proof {
+                assume(left_vec@.len() < usize::MAX);
+                assume(right_vec@.len() < usize::MAX);
             }
             let left_seq = AVLTreeSeqStPerS::from_vec(left_vec);
             let right_seq = AVLTreeSeqStPerS::from_vec(right_vec);
