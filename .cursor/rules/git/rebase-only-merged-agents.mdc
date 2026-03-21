@@ -1,0 +1,28 @@
+# Rebase Only Merged Agents
+
+When rebasing after a merge, **only rebase the agents whose branches you just merged**. Do not rebase agents that are still running.
+
+## Rule
+
+After merging `agentN/ready` into main and pushing:
+
+```bash
+# Rebase ONLY the merged agent(s), not all four
+cd ~/projects/APAS-VERUS-agent2
+git fetch && git rebase origin/main && git push origin agent2/ready --force-with-lease
+```
+
+Do NOT run `scripts/rebase-agents.sh` unless you are certain all agents are idle.
+
+## The Stash Test
+
+If you find yourself needing to `git stash` in an agent worktree before rebasing, **STOP**. That means the agent has uncommitted work, which means it is probably running an active session. Stashing and rebasing under a running agent corrupts its working state.
+
+**If you have to stash, you are breaking something.** Ask the user first.
+
+## Why
+
+- Agent worktrees may have active Claude sessions editing files.
+- `git stash` + `git rebase` + `git push --force` yanks the working tree out from under a running session.
+- The session sees its files disappear or change, leading to corrupted edits and lost work.
+- `scripts/rebase-agents.sh` rebases ALL agents indiscriminately. Only use it when all agents are confirmed idle.

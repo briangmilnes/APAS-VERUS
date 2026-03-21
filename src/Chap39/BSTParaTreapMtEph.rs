@@ -26,6 +26,7 @@ pub mod BSTParaTreapMtEph {
 
     use vstd::prelude::*;
     use vstd::rwlock::*;
+    #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::OrdSpec;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;

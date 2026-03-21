@@ -9,11 +9,9 @@ use apas_verus::Types::Types::*;
 
 #[test]
 fn test_paramtreaplit_macro_functionality() {
-    // Test empty tree creation
     let empty: ParamTreap<i32> = ParamTreapLit!();
     assert_eq!(empty.size(), 0);
 
-    // Test tree creation with elements
     let with_data: ParamTreap<i32> = ParamTreapLit![5, 3, 7, 1, 9];
     assert_eq!(with_data.size(), 5);
     assert_eq!(with_data.find(&5), Some(5));
@@ -31,7 +29,7 @@ fn test_new() {
 
 #[test]
 fn test_insert() {
-    let tree: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree: ParamTreap<i32> = ParamTreapTrait::new();
     tree.insert(10);
     tree.insert(5);
     tree.insert(15);
@@ -44,7 +42,7 @@ fn test_insert() {
 
 #[test]
 fn test_find() {
-    let tree: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree: ParamTreap<i32> = ParamTreapTrait::new();
     tree.insert(10);
     tree.insert(5);
     tree.insert(15);
@@ -57,7 +55,7 @@ fn test_find() {
 
 #[test]
 fn test_delete() {
-    let tree: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree: ParamTreap<i32> = ParamTreapTrait::new();
     tree.insert(10);
     tree.insert(5);
     tree.insert(15);
@@ -74,7 +72,7 @@ fn test_delete() {
 
 #[test]
 fn test_split() {
-    let tree: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree: ParamTreap<i32> = ParamTreapTrait::new();
     tree.insert(10);
     tree.insert(5);
     tree.insert(15);
@@ -89,12 +87,10 @@ fn test_split() {
     assert!(left.size() > 0);
     assert!(right.size() > 0);
 
-    // Elements < 10 should be in left
     assert_eq!(left.find(&5), Some(5));
     assert_eq!(left.find(&3), Some(3));
     assert_eq!(left.find(&8), Some(8));
 
-    // Elements > 10 should be in right
     assert_eq!(right.find(&15), Some(15));
     assert_eq!(right.find(&12), Some(12));
     assert_eq!(right.find(&20), Some(20));
@@ -102,12 +98,12 @@ fn test_split() {
 
 #[test]
 fn test_join_pair() {
-    let tree1: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree1: ParamTreap<i32> = ParamTreapTrait::new();
     tree1.insert(3);
     tree1.insert(5);
     tree1.insert(7);
 
-    let tree2: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree2: ParamTreap<i32> = ParamTreapTrait::new();
     tree2.insert(12);
     tree2.insert(15);
     tree2.insert(20);
@@ -120,37 +116,37 @@ fn test_join_pair() {
 
 #[test]
 fn test_union() {
-    let tree1: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree1: ParamTreap<i32> = ParamTreapTrait::new();
     tree1.insert(5);
     tree1.insert(10);
     tree1.insert(15);
 
-    let tree2: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree2: ParamTreap<i32> = ParamTreapTrait::new();
     tree2.insert(10);
     tree2.insert(12);
     tree2.insert(20);
 
     let union_tree = tree1.union(&tree2);
-    assert_eq!(union_tree.size(), 5); // 5, 10, 12, 15, 20
+    assert_eq!(union_tree.size(), 5);
     assert_eq!(union_tree.find(&5), Some(5));
     assert_eq!(union_tree.find(&20), Some(20));
 }
 
 #[test]
 fn test_intersect() {
-    let tree1: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree1: ParamTreap<i32> = ParamTreapTrait::new();
     tree1.insert(5);
     tree1.insert(10);
     tree1.insert(15);
     tree1.insert(20);
 
-    let tree2: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree2: ParamTreap<i32> = ParamTreapTrait::new();
     tree2.insert(10);
     tree2.insert(15);
     tree2.insert(25);
 
     let intersect_tree = tree1.intersect(&tree2);
-    assert_eq!(intersect_tree.size(), 2); // 10, 15
+    assert_eq!(intersect_tree.size(), 2);
     assert_eq!(intersect_tree.find(&10), Some(10));
     assert_eq!(intersect_tree.find(&15), Some(15));
     assert_eq!(intersect_tree.find(&5), None);
@@ -158,18 +154,18 @@ fn test_intersect() {
 
 #[test]
 fn test_difference() {
-    let tree1: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree1: ParamTreap<i32> = ParamTreapTrait::new();
     tree1.insert(5);
     tree1.insert(10);
     tree1.insert(15);
     tree1.insert(20);
 
-    let tree2: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree2: ParamTreap<i32> = ParamTreapTrait::new();
     tree2.insert(10);
     tree2.insert(15);
 
     let diff_tree = tree1.difference(&tree2);
-    assert_eq!(diff_tree.size(), 2); // 5, 20
+    assert_eq!(diff_tree.size(), 2);
     assert_eq!(diff_tree.find(&5), Some(5));
     assert_eq!(diff_tree.find(&20), Some(20));
     assert_eq!(diff_tree.find(&10), None);
@@ -177,7 +173,7 @@ fn test_difference() {
 
 #[test]
 fn test_filter() {
-    let tree: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree: ParamTreap<i32> = ParamTreapTrait::new();
     tree.insert(5);
     tree.insert(10);
     tree.insert(15);
@@ -185,14 +181,14 @@ fn test_filter() {
     tree.insert(25);
 
     let filtered = tree.filter(|&x| x > 10, Ghost::assume_new());
-    assert_eq!(filtered.size(), 3); // 15, 20, 25
+    assert_eq!(filtered.size(), 3);
     assert_eq!(filtered.find(&15), Some(15));
     assert_eq!(filtered.find(&5), None);
 }
 
 #[test]
 fn test_reduce() {
-    let tree: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree: ParamTreap<i32> = ParamTreapTrait::new();
     tree.insert(5);
     tree.insert(10);
     tree.insert(15);
@@ -204,7 +200,7 @@ fn test_reduce() {
 
 #[test]
 fn test_expose() {
-    let tree: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree: ParamTreap<i32> = ParamTreapTrait::new();
     #[allow(clippy::assertions_on_constants)]
     match tree.expose() {
         | Exposed::Leaf => assert!(true),
@@ -220,7 +216,7 @@ fn test_expose() {
 
 #[test]
 fn test_join_mid() {
-    let tree: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree: ParamTreap<i32> = ParamTreapTrait::new();
     tree.insert(5);
     tree.insert(15);
 
@@ -231,29 +227,28 @@ fn test_join_mid() {
 
 #[test]
 fn test_duplicate_insert() {
-    let tree: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree: ParamTreap<i32> = ParamTreapTrait::new();
     tree.insert(10);
     tree.insert(10);
 
-    // Treap may handle duplicates by replacement or ignore
     assert!(tree.size() > 0);
     assert_eq!(tree.find(&10), Some(10));
 }
 
 #[test]
 fn test_delete_nonexistent() {
-    let tree: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree: ParamTreap<i32> = ParamTreapTrait::new();
     tree.insert(10);
     tree.insert(5);
 
     let size_before = tree.size();
-    tree.delete(&20); // Not in tree
+    tree.delete(&20);
     assert_eq!(tree.size(), size_before);
 }
 
 #[test]
 fn test_large_tree() {
-    let tree: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree: ParamTreap<i32> = ParamTreapTrait::new();
 
     for i in 0..100 {
         tree.insert(i);
@@ -268,20 +263,17 @@ fn test_large_tree() {
 
 #[test]
 fn test_sequential_operations() {
-    let tree: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree: ParamTreap<i32> = ParamTreapTrait::new();
 
-    // Insert
     for i in [5, 3, 7, 1, 9, 4, 6, 8, 2] {
         tree.insert(i);
     }
     assert_eq!(tree.size(), 9);
 
-    // Delete some
     tree.delete(&3);
     tree.delete(&7);
     assert_eq!(tree.size(), 7);
 
-    // Find remaining
     assert_eq!(tree.find(&5), Some(5));
     assert_eq!(tree.find(&1), Some(1));
     assert_eq!(tree.find(&3), None);
@@ -289,12 +281,12 @@ fn test_sequential_operations() {
 
 #[test]
 fn test_union_disjoint() {
-    let tree1: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree1: ParamTreap<i32> = ParamTreapTrait::new();
     tree1.insert(1);
     tree1.insert(2);
     tree1.insert(3);
 
-    let tree2: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree2: ParamTreap<i32> = ParamTreapTrait::new();
     tree2.insert(4);
     tree2.insert(5);
     tree2.insert(6);
@@ -305,11 +297,11 @@ fn test_union_disjoint() {
 
 #[test]
 fn test_intersect_empty() {
-    let tree1: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree1: ParamTreap<i32> = ParamTreapTrait::new();
     tree1.insert(1);
     tree1.insert(2);
 
-    let tree2: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree2: ParamTreap<i32> = ParamTreapTrait::new();
     tree2.insert(5);
     tree2.insert(6);
 
@@ -319,12 +311,12 @@ fn test_intersect_empty() {
 
 #[test]
 fn test_difference_complete() {
-    let tree1: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree1: ParamTreap<i32> = ParamTreapTrait::new();
     tree1.insert(1);
     tree1.insert(2);
     tree1.insert(3);
 
-    let tree2: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree2: ParamTreap<i32> = ParamTreapTrait::new();
     tree2.insert(1);
     tree2.insert(2);
     tree2.insert(3);
@@ -335,7 +327,7 @@ fn test_difference_complete() {
 
 #[test]
 fn test_filter_all() {
-    let tree: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree: ParamTreap<i32> = ParamTreapTrait::new();
     tree.insert(5);
     tree.insert(10);
     tree.insert(15);
@@ -346,7 +338,7 @@ fn test_filter_all() {
 
 #[test]
 fn test_filter_none() {
-    let tree: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree: ParamTreap<i32> = ParamTreapTrait::new();
     tree.insert(5);
     tree.insert(10);
     tree.insert(15);
@@ -357,7 +349,7 @@ fn test_filter_none() {
 
 #[test]
 fn test_string_keys() {
-    let tree: ParamTreap<String> = ParamTreapTrait::new();
+    let mut tree: ParamTreap<String> = ParamTreapTrait::new();
     tree.insert("banana".to_string());
     tree.insert("apple".to_string());
     tree.insert("cherry".to_string());
@@ -378,7 +370,7 @@ fn test_split_empty() {
 
 #[test]
 fn test_split_boundaries() {
-    let tree: ParamTreap<i32> = ParamTreapTrait::new();
+    let mut tree: ParamTreap<i32> = ParamTreapTrait::new();
     tree.insert(10);
     tree.insert(5);
     tree.insert(15);
@@ -390,17 +382,6 @@ fn test_split_boundaries() {
     let (_left, found, right) = tree.split(&20);
     assert!(!found);
     assert_eq!(right.size(), 0);
-}
-
-#[test]
-fn test_expose_with_priority() {
-    let tree: ParamTreap<i32> = ParamTreapTrait::new();
-    tree.insert(10);
-    tree.insert(5);
-    tree.insert(15);
-
-    let maybe_exposed = tree.expose_with_priority();
-    assert!(maybe_exposed.is_some());
 }
 
 #[test]

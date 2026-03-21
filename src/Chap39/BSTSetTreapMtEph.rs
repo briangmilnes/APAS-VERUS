@@ -22,6 +22,7 @@ pub mod BSTSetTreapMtEph {
     use std::cmp::Ordering::{Less, Greater};
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::OrdSpec;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap39::BSTParaTreapMtEph::BSTParaTreapMtEph::*;

@@ -50,79 +50,72 @@ Table of Contents:
 ✓ LinkedListChainedHashTableStEph.rs
    1 clean proof function
 ❌ ParaHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:116: error: assume() [algorithmic] - proof { assume(c == *x); } // Clone bridge: T::clone preserv
-       112 |     pub fn clone_elem<T: Clone>(x: &T) -> (c: T)
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:123: error: assume() [algorithmic] - proof { assume(c == *x); } // Clone bridge: T::clone preserv
+       119 |     pub fn clone_elem<T: Clone>(x: &T) -> (c: T)
             ...
-       114 |     {
-       115 |         let c = x.clone();
-       117 |         c
-       118 |     }
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:494: error: external_body - #[verifier::external_body]
-       495 |     pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (index: usize)
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:112: error: fn_missing_requires - fn clone_elem — exec fn should have requires
-       106 |     pub proof fn lemma_spec_second_hash_value<Key>(key: Key, table_size: nat)
+       121 |     {
+       122 |         let c = x.clone();
+       124 |         c
+       125 |     }
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:501: error: external_body - #[verifier::external_body]
+       502 |     pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (index: usize)
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:625: error: fn_missing_wf_ensures - fn createTable — ensures should include table.spec_hashtable_wf() for return type HashTable
+       617 |         open spec fn spec_resize_ok(table: &HashTable<Key, Value, Entry, Metrics, H>, new_size: usize) -> bool {
             ...
-       110 |     /// Clone bridge for generic element: ensures cloned value equals original.
-       111 |     /// Centralizes the clone-body assume pattern per partial_eq_eq_clone_standard.
-       113 |         ensures c == *x,
-       114 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:618: error: fn_missing_wf_ensures - fn createTable — ensures should include table.spec_hashtable_wf() for return type HashTable
-       610 |         open spec fn spec_resize_ok(table: &HashTable<Key, Value, Entry, Metrics, H>, new_size: usize) -> bool {
+       623 |         /// - APAS: Work O(m), Span O(m) where m is initial size.
+       624 |         /// - Claude-Opus-4.6: Work O(m), Span O(m) — agrees with APAS; iterates m times to create entries.
+       626 |             requires
+       627 |                 initial_size > 0,
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:676: error: fn_missing_wf_requires - fn insert — requires should include table.spec_hashtable_wf() for input type HashTable
+       625 |         fn createTable(hash_fn: H, initial_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (table: HashTable<Key, Value, Entry, Metrics, H>)
             ...
-       616 |         /// - APAS: Work O(m), Span O(m) where m is initial size.
-       617 |         /// - Claude-Opus-4.6: Work O(m), Span O(m) — agrees with APAS; iterates m times to create entries.
-       619 |             requires
-       620 |                 initial_size > 0,
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:669: error: fn_missing_wf_requires - fn insert — requires should include table.spec_hashtable_wf() for input type HashTable
-       618 |         fn createTable(hash_fn: H, initial_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (table: HashTable<Key, Value, Entry, Metrics, H>)
+       674 |         /// - APAS: Work O(1) expected, Span O(1).
+       675 |         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
+       677 |             requires
+       678 |                 Self::spec_impl_wf(old(table)),
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:693: error: fn_missing_wf_requires - fn lookup — requires should include table.spec_hashtable_wf() for input type HashTable
+       676 |         fn insert(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)
             ...
-       667 |         /// - APAS: Work O(1) expected, Span O(1).
-       668 |         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
-       670 |             requires
-       671 |                 Self::spec_impl_wf(old(table)),
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:686: error: fn_missing_wf_requires - fn lookup — requires should include table.spec_hashtable_wf() for input type HashTable
-       669 |         fn insert(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)
+       691 |         /// - APAS: Work O(1) expected, Span O(1).
+       692 |         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
+       694 |             requires
+       695 |                 Self::spec_impl_wf(table),
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:705: error: fn_missing_wf_requires - fn delete — requires should include table.spec_hashtable_wf() for input type HashTable
+       693 |         fn lookup(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (found: Option<Value>)
             ...
-       684 |         /// - APAS: Work O(1) expected, Span O(1).
-       685 |         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
-       687 |             requires
-       688 |                 Self::spec_impl_wf(table),
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:696: error: fn_missing_wf_requires - fn delete — requires should include table.spec_hashtable_wf() for input type HashTable
-       686 |         fn lookup(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (found: Option<Value>)
+       703 |         /// - APAS: Work O(1) expected, Span O(1).
+       704 |         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
+       706 |             requires
+       707 |                 Self::spec_impl_wf(old(table)),
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:720: error: fn_missing_wf_requires - fn metrics — requires should include table.spec_hashtable_wf() for input type HashTable
+       705 |         fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
             ...
-       694 |         /// - APAS: Work O(1) expected, Span O(1).
-       695 |         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
-       697 |             requires
-       698 |                 Self::spec_impl_wf(old(table)),
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:709: error: fn_missing_wf_requires - fn metrics — requires should include table.spec_hashtable_wf() for input type HashTable
-       696 |         fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
+       718 |         /// - APAS: N/A — Verus-specific scaffolding.
+       719 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
+       721 |             requires Self::spec_impl_wf(table),
+       722 |             ensures m == &table.metrics,
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:729: error: fn_missing_wf_requires - fn loadAndSize — requires should include table.spec_hashtable_wf() for input type HashTable
+       720 |         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
             ...
-       707 |         /// - APAS: N/A — Verus-specific scaffolding.
-       708 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
-       710 |             requires Self::spec_impl_wf(table),
-       711 |             ensures m == &table.metrics,
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:718: error: fn_missing_wf_requires - fn loadAndSize — requires should include table.spec_hashtable_wf() for input type HashTable
-       709 |         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
+       727 |         /// - APAS: Work O(1), Span O(1).
+       728 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads only.
+       730 |             requires Self::spec_impl_wf(table),
+       731 |             ensures
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:746: error: fn_missing_wf_requires - fn resize — requires should include table.spec_hashtable_wf() for input type HashTable
+       729 |         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
             ...
-       716 |         /// - APAS: Work O(1), Span O(1).
-       717 |         /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads only.
-       719 |             requires Self::spec_impl_wf(table),
-       720 |             ensures
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:735: error: fn_missing_wf_requires - fn resize — requires should include table.spec_hashtable_wf() for input type HashTable
-       718 |         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
+       744 |         ///   m is old size, m' is new size.
+       745 |         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
+       747 |             requires
+       748 |                 new_size > 0,
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:746: error: fn_missing_wf_ensures - fn resize — ensures should include resized.spec_hashtable_wf() for return type HashTable
+       729 |         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
             ...
-       733 |         ///   m is old size, m' is new size.
-       734 |         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
-       736 |             requires
-       737 |                 new_size > 0,
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:735: error: fn_missing_wf_ensures - fn resize — ensures should include resized.spec_hashtable_wf() for return type HashTable
-       718 |         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
-            ...
-       733 |         ///   m is old size, m' is new size.
-       734 |         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
-       736 |             requires
-       737 |                 new_size > 0,
-/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:524: info: structural_false_positive OPAQUE_EXTERNAL compute_second_hash — #[verifier::external_body] [medium]
+       744 |         ///   m is old size, m' is new size.
+       745 |         /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
+       747 |             requires
+       748 |                 new_size > 0,
+/home/milnes/projects/APAS-VERUS/src/Chap47/ParaHashTableStEph.rs:531: info: structural_false_positive OPAQUE_EXTERNAL compute_second_hash — #[verifier::external_body] [medium]
    Holes: 2 total
       1 × assume()
       1 × external_body
@@ -230,8 +223,7 @@ Holes Found: 3 (actionable)
    1 × assume() (33%)
    1 × external_body (33%)
 
-Warnings: 16 total
-   1 × fn_missing_requires
+Warnings: 15 total
    6 × fn_missing_wf_requires
    2 × fn_missing_wf_ensures
    7 × assume_eq_clone_workaround
@@ -243,8 +235,12 @@ Structural (info only): 1
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-20 19:13:59 -07:00
-Ended:     2026-03-20 19:13:59 -07:00
-Duration:  74ms
+Started:   2026-03-20 22:03:52 -07:00
+Ended:     2026-03-20 22:03:53 -07:00
+Duration:  60ms
+
+Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log
+20 22:03:53 -07:00
+Duration:  60ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log
