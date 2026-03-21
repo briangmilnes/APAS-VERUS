@@ -219,16 +219,15 @@ pub mod BSTParaMtEph {
     }
 
     /// Ordering axioms for generic MtKey: obeys_cmp_spec and view_ord_consistent.
-    /// Consolidates the two standard ordering assumes into one proof function.
-    /// Callers get both properties from a single call.
+    /// Callers supply these as preconditions and this function restates them as postconditions.
     proof fn lemma_cmp_order_axioms<T: MtKey>()
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
         ensures
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
-    {
-        assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-        assume(view_ord_consistent::<T>());
-    }
+    {}
 
     // 8. traits
 
@@ -276,19 +275,25 @@ pub mod BSTParaMtEph {
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
         fn insert(&mut self, key: T)
-            requires old(self)@.len() < usize::MAX as nat,
+            requires
+                old(self)@.len() < usize::MAX as nat,
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures self.spec_bstparamteph_wf();
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
         fn delete(&mut self, key: &T)
+            requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
             ensures self.spec_bstparamteph_wf();
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
         fn find(&self, key: &T) -> (found: Option<T>)
+            requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
             ensures found.is_some() <==> self@.contains(key@);
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
         fn split(&self, key: &T) -> (parts: (Self, B, Self))
+            requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
             ensures
                 parts.1 == self@.contains(key@),
                 parts.0@.finite(),
@@ -296,7 +301,10 @@ pub mod BSTParaMtEph {
         /// - APAS: Work O(lg(|t1| + |t2|)), Span O(lg(|t1| + |t2|))
         /// - Claude-Opus-4.6: Work O(lg(|t1| + |t2|)), Span O(lg(|t1| + |t2|)) -- agrees with APAS.
         fn join_pair(&self, other: Self) -> (joined: Self)
-            requires self@.len() + other@.len() <= usize::MAX as nat,
+            requires
+                self@.len() + other@.len() <= usize::MAX as nat,
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures joined@.finite();
         /// Joins two disjoint BSTs where all elements of self are less than all elements of right.
         fn join_pair_inner(&self, right: &Self) -> (joined: Self)
@@ -304,21 +312,28 @@ pub mod BSTParaMtEph {
                 self@.finite(), right@.finite(),
                 self@.disjoint(right@),
                 self@.len() + right@.len() <= usize::MAX as nat,
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
                 forall|s: T, o: T| #![trigger self@.contains(s@), right@.contains(o@)]
                     self@.contains(s@) && right@.contains(o@) ==> s.cmp_spec(&o) == Less,
             ensures joined@.finite(), joined@ =~= self@.union(right@);
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n) -- agrees with APAS; parallel.
         fn union(&self, other: &Self) -> (combined: Self)
-            requires self@.len() + other@.len() <= usize::MAX as nat,
+            requires
+                self@.len() + other@.len() <= usize::MAX as nat,
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures combined@ == self@.union(other@), combined@.finite();
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n) -- agrees with APAS; parallel.
         fn intersect(&self, other: &Self) -> (common: Self)
+            requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
             ensures common@ == self@.intersect(other@), common@.finite();
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n) -- agrees with APAS; parallel.
         fn difference(&self, other: &Self) -> (remaining: Self)
+            requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
             ensures remaining@ == self@.difference(other@), remaining@.finite();
         /// - APAS: Work O(|t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|) -- agrees with APAS; parallel.
@@ -328,6 +343,8 @@ pub mod BSTParaMtEph {
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
         ) -> (filtered: Self)
             requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
                 forall|t: &T| #[trigger] predicate.requires((t,)),
                 forall|x: T, keep: bool|
                     predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
@@ -723,7 +740,10 @@ pub mod BSTParaMtEph {
     }
 
     fn split_inner<T: MtKey>(tree: &ParamBST<T>, key: &T) -> (parts: (ParamBST<T>, B, ParamBST<T>))
-        requires tree@.finite(),
+        requires
+            tree@.finite(),
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
         ensures
             parts.0@.finite(),
             parts.2@.finite(),
@@ -886,7 +906,10 @@ pub mod BSTParaMtEph {
     }
 
     fn find_recursive<T: MtKey>(tree: &ParamBST<T>, key: &T) -> (found: Option<T>)
-        requires tree@.finite(),
+        requires
+            tree@.finite(),
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
         ensures found.is_some() <==> tree@.contains(key@),
         decreases tree@.len(),
     {
@@ -931,7 +954,10 @@ pub mod BSTParaMtEph {
 
 
     fn union_inner<T: MtKey>(a: &ParamBST<T>, b: &ParamBST<T>) -> (combined: ParamBST<T>)
-        requires a@.finite(), b@.finite(), a@.len() + b@.len() <= usize::MAX as nat,
+        requires
+            a@.finite(), b@.finite(), a@.len() + b@.len() <= usize::MAX as nat,
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
         ensures combined@ == a@.union(b@), combined@.finite(),
         decreases a@.len(),
     {
@@ -1042,7 +1068,10 @@ pub mod BSTParaMtEph {
     }
 
     fn intersect_inner<T: MtKey>(a: &ParamBST<T>, b: &ParamBST<T>) -> (common: ParamBST<T>)
-        requires a@.finite(), b@.finite(),
+        requires
+            a@.finite(), b@.finite(),
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
         ensures common@ == a@.intersect(b@), common@.finite(),
         decreases a@.len(),
     {
@@ -1211,7 +1240,10 @@ pub mod BSTParaMtEph {
     }
 
     fn difference_inner<T: MtKey>(a: &ParamBST<T>, b: &ParamBST<T>) -> (remaining: ParamBST<T>)
-        requires a@.finite(), b@.finite(),
+        requires
+            a@.finite(), b@.finite(),
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
         ensures remaining@ == a@.difference(b@), remaining@.finite(),
         decreases a@.len(),
     {
@@ -1385,6 +1417,8 @@ pub mod BSTParaMtEph {
     ) -> (filtered: ParamBST<T>)
         requires
             tree@.finite(),
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
             forall|t: &T| #[trigger] predicate.requires((t,)),
             forall|x: T, keep: bool|
                 predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
@@ -1501,6 +1535,8 @@ pub mod BSTParaMtEph {
         Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
     ) -> (filtered: ParamBST<T>)
         requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
             forall|t: &T| #[trigger] predicate.requires((t,)),
             forall|x: T, keep: bool|
                 predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
