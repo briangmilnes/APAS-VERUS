@@ -726,116 +726,53 @@ Table of Contents:
 ✓ src/Chap37/BSTSplayStEph.rs
    1 clean proof function
 ❌ src/Chap38/BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:193: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-       188 |     proof fn lemma_cmp_order_axioms<T: MtKey>()
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:152: error: assume() [algorithmic] - proof { assume(c == *x); } // Clone bridge: T::clone preserv
+       148 |     fn clone_elem<T: Clone>(x: &T) -> (c: T)
             ...
-       191 |             view_ord_consistent::<T>(),
-       192 |     {
-       194 |         assume(view_ord_consistent::<T>());
-       195 |     }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:194: error: assume() [algorithmic] - assume(view_ord_consistent::<T>());
-       188 |     proof fn lemma_cmp_order_axioms<T: MtKey>()
+       150 |     {
+       151 |         let c = x.clone();
+       153 |         c
+       154 |     }
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:229: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
+       224 |     proof fn lemma_cmp_order_axioms<T: MtKey>()
             ...
-       192 |     {
-       193 |         assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-       195 |     }
-       196 | 
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:516: error: external_body - #[verifier::external_body]
-       517 |     fn expose_internal<T: MtKey + 'static>(tree: &ParamBST<T>) -> (exposed: Exposed<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:782: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
-       783 |     fn intersect_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> (common: ParamBST<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:815: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
-       816 |     fn difference_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> (remaining: ParamBST<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:848: error: external_body [blocked_by: expose_internal] - #[verifier::external_body]
-       849 |     fn filter_inner<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:188: error: proof_fn_with_holes - proof fn lemma_cmp_order_axioms — contains assume/external_body/admit, needs proof
-       173 |     proof fn lemma_cmp_equal_congruent_right<T: MtKey>(a: T, b: T, c: T)
+       227 |             view_ord_consistent::<T>(),
+       228 |     {
+       230 |         assume(view_ord_consistent::<T>());
+       231 |     }
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:230: error: assume() [algorithmic] - assume(view_ord_consistent::<T>());
+       224 |     proof fn lemma_cmp_order_axioms<T: MtKey>()
             ...
-       186 |     /// Consolidates the two standard ordering assumes into one proof function.
-       187 |     /// Callers get both properties from a single call.
-       189 |         ensures
-       190 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:477: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       470 |         fn clone(&self) -> (cloned: Self)
+       228 |     {
+       229 |         assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
+       231 |     }
+       232 | 
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:224: error: proof_fn_with_holes - proof fn lemma_cmp_order_axioms — contains assume/external_body/admit, needs proof
+       209 |     proof fn lemma_cmp_equal_congruent_right<T: MtKey>(a: T, b: T, c: T)
             ...
-       475 |                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
-       476 |             };
-       478 |             cloned
-       479 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:492: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       483 |         fn clone(&self) -> (cloned: Self)
+       222 |     /// Consolidates the two standard ordering assumes into one proof function.
+       223 |     /// Callers get both properties from a single call.
+       225 |         ensures
+       226 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:619: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       612 |         fn clone(&self) -> (cloned: Self)
             ...
-       490 |                 right: self.right.clone(),
-       491 |             };
-       493 |             cloned
-       494 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:544: error: fn_missing_requires - fn join_mid — exec fn should have requires
-       517 |     fn expose_internal<T: MtKey + 'static>(tree: &ParamBST<T>) -> (exposed: Exposed<T>)
+       617 |                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
+       618 |             };
+       620 |             cloned
+       621 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:634: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       625 |         fn clone(&self) -> (cloned: Self)
             ...
-       542 |     }
-       543 | 
-       545 |         ensures
-       546 |             exposed is Leaf ==> result@ =~= Set::<<T as View>::V>::empty(),
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:569: error: fn_missing_requires - fn split_inner — exec fn should have requires
-       544 |     fn join_mid<T: MtKey + 'static>(exposed: Exposed<T>) -> (result: ParamBST<T>)
-            ...
-       567 |     }
-       568 | 
-       570 |         ensures
-       571 |             parts.0@.finite(),
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:689: error: fn_missing_requires - fn join_m — exec fn should have requires
-       569 |     fn split_inner<T: MtKey + 'static>(tree: &ParamBST<T>, key: &T) -> (parts: (ParamBST<T>, B, ParamBST<T>))
-            ...
-       687 |     }
-       688 | 
-       690 |         ensures result@ =~= left@.union(right@).insert(key@)
-       691 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:695: error: fn_missing_requires - fn find_recursive — exec fn should have requires
-       689 |     fn join_m<T: MtKey + 'static>(left: ParamBST<T>, key: T, right: ParamBST<T>) -> (result: ParamBST<T>)
-            ...
-       693 |     }
-       694 | 
-       696 |         ensures found.is_some() <==> tree@.contains(key@),
-       697 |         decreases tree@.len(),
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:738: error: fn_missing_requires - fn join_pair_inner — exec fn should have requires
-       719 |     fn min_key<T: MtKey + 'static>(tree: &ParamBST<T>) -> (result: Option<T>)
-            ...
-       736 |     }
-       737 | 
-       739 |         ensures joined@.finite()
-       740 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:752: error: fn_missing_requires - fn union_inner — exec fn should have requires
-       738 |     fn join_pair_inner<T: MtKey + 'static>(left: ParamBST<T>, right: ParamBST<T>) -> (joined: ParamBST<T>)
-            ...
-       750 |     }
-       751 | 
-       753 |         ensures combined@ == a@.union(b@), combined@.finite(),
-       754 |         decreases a@.len(),
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:906: error: fn_missing_ensures - fn reduce_inner — exec fn should have ensures
-       885 |     fn filter_parallel<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(
-            ...
-       904 |     }
-       905 | 
-       907 |         tree: &ParamBST<T>,
-       908 |         op: &Arc<F>,
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:943: error: fn_missing_ensures - fn reduce_parallel — exec fn should have ensures
-       906 |     fn reduce_inner<T: MtKey + 'static, F: Fn(T, T) -> T + Send + Sync + 'static>(
-            ...
-       941 |     }
-       942 | 
-       944 |         tree: &ParamBST<T>,
-       945 |         op: F,
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:331: info: structural_false_positive RWLOCK_GHOST expose — proof { assume(self@.len() == 0 ==> exposed is Leaf); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:370: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.len() && self@.finite()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:982: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:983: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
-   Holes: 6 total
-      2 × assume()
-      4 × external_body
-         1 × root cause
-         3 × downstream (blocked by root causes)
-   Info: 4 × structural_false_positive
-      2 × RWLOCK_GHOST
+       632 |                 right: self.right.clone(),
+       633 |             };
+       635 |             cloned
+       636 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1598: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1599: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
+   Holes: 3 total
+      3 × assume()
+   Info: 2 × structural_false_positive
       2 × UNSAFE_SEND_SYNC
    Proof functions: 6 total (5 clean, 1 holed)
 ❌ src/Chap38/BSTParaStEph.rs
@@ -977,8 +914,8 @@ Table of Contents:
       9 × assume()
    Info: 4 × structural_false_positive
       2 × UNSAFE_SEND_SYNC
-      1 × OPAQUE_EXTERNAL
       1 × RWLOCK_GHOST
+      1 × OPAQUE_EXTERNAL
 ✓ src/Chap39/BSTSetTreapMtEph.rs
 ⚠ src/Chap39/BSTTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:362: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
@@ -2158,51 +2095,51 @@ Table of Contents:
    Info: 2 × structural_false_positive
 ✓ src/Chap61/VertexMatchingStEph.rs
 ❌ src/Chap62/StarContractionMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:162: error: assume() [rwlock:predicate] - assume(spec_graphview_wf(quotient@));
-       138 |     fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + 'static>(
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:115: error: assume() [algorithmic] - assume(spec_valid_partition_map::<V>(graph@.V, centers@, par
+        86 |     fn star_contract_mt_fuel<V, R, F, G>(
             ...
-       160 |             // Blocked by generic Clone::clone lacking view-preserving ensures in Verus.
-       161 |             // Same root cause as StEph version.
-       163 |         }
-       164 |         quotient
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:67: error: fn_missing_ensures - fn star_contract_mt_fuel — exec fn should have ensures
-        58 |         fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> SetStEph<V>
+       113 |             // Star partition maps every graph vertex to a center.
+       114 |             // Provable from partition loop structure; deferred to future round.
+       116 |         }
+       117 | 
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:86: error: fn_missing_ensures - fn star_contract_mt_fuel — exec fn should have ensures
+        70 |     pub open spec fn spec_valid_partition_map<V: View>(
             ...
-        65 | 
-        66 |     /// Inner recursive star contraction with fuel for termination (parallel version).
-        68 |         graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G, fuel: usize,
-        69 |     ) -> R
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:117: error: fn_missing_ensures - fn star_contract_mt — exec fn should have ensures
-        67 |     fn star_contract_mt_fuel<V, R, F, G>(
+        84 | 
+        85 |     /// Inner recursive star contraction with fuel for termination (parallel version).
+        87 |         graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G, fuel: usize,
+        88 |     ) -> R
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:142: error: fn_missing_ensures - fn star_contract_mt — exec fn should have ensures
+        86 |     fn star_contract_mt_fuel<V, R, F, G>(
             ...
-       115 |     /// Returns:
-       116 |     /// - Result of type R as computed by base and expand functions
-       118 |     where
-       119 |         V: StT + MtT + Hash + Ord + 'static,
+       140 |     /// Returns:
+       141 |     /// - Result of type R as computed by base and expand functions
+       143 |     where
+       144 |         V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,
    Holes: 1 total
       1 × assume()
 ❌ src/Chap62/StarContractionStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:190: error: assume() [algorithmic] - assume(spec_graphview_wf(quotient@));
-       135 |     fn build_quotient_graph<V: HashOrd>(
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:112: error: assume() [algorithmic] - assume(spec_valid_partition_map::<V>(graph@.V, centers@, par
+        83 |     fn star_contract_fuel<V, R, F, G>(
             ...
-       188 |             // but we cannot prove partition_map@[v]@ ∈ centers@ because Clone::clone
-       189 |             // for generic V does not guarantee cloned@ == original@.
-       191 |         }
-       192 |         quotient
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:64: error: fn_missing_ensures - fn star_contract_fuel — exec fn should have ensures
-        55 |         fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<V>
+       110 |             // Star partition maps every graph vertex to a center.
+       111 |             // Provable from partition loop structure; deferred to future round.
+       113 |         }
+       114 | 
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:83: error: fn_missing_ensures - fn star_contract_fuel — exec fn should have ensures
+        67 |     pub open spec fn spec_valid_partition_map<V: View>(
             ...
-        62 | 
-        63 |     /// Inner recursive star contraction with fuel for termination.
-        65 |         graph: &UnDirGraphStEph<V>, base: &F, expand: &G, fuel: usize,
-        66 |     ) -> R
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:113: error: fn_missing_ensures - fn star_contract — exec fn should have ensures
-        64 |     fn star_contract_fuel<V, R, F, G>(
+        81 | 
+        82 |     /// Inner recursive star contraction with fuel for termination.
+        84 |         graph: &UnDirGraphStEph<V>, base: &F, expand: &G, fuel: usize,
+        85 |     ) -> R
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:138: error: fn_missing_ensures - fn star_contract — exec fn should have ensures
+        83 |     fn star_contract_fuel<V, R, F, G>(
             ...
-       111 |     /// Returns:
-       112 |     /// - Result of type R as computed by base and expand functions
-       114 |     where
-       115 |         V: HashOrd,
+       136 |     /// Returns:
+       137 |     /// - Result of type R as computed by base and expand functions
+       139 |     where
+       140 |         V: HashOrd,
    Holes: 1 total
       1 × assume()
 ✓ src/Chap62/StarPartitionMtEph.rs
@@ -2874,32 +2811,29 @@ Proof Functions:
    393 total
 
 Function Specs:
-   5130 exec fns with complete spec (requires+ensures) (69%)
-   90 exec fns missing spec (1%)
-   2187 proof/spec fns clean (29%)
+   5137 exec fns with complete spec (requires+ensures) (69%)
+   83 exec fns missing spec (1%)
+   2190 proof/spec fns clean (29%)
    2 proof/spec fns with holes (0%)
-   7409 total fns
+   7412 total fns
 
 
-Holes Found: 36 (actionable)
-   1 × assume(false) (2%)
-   20 × assume() (55%)
-      18 × algorithmic
-      1 × rwlock:predicate
+Holes Found: 33 (actionable)
+   1 × assume(false) (3%)
+   21 × assume() (63%)
+      20 × algorithmic
       1 × closure
-   14 × external_body (38%)
-      11 × root cause
-      3 × downstream (blocked by root causes)
-   1 × external (2%)
+   10 × external_body (30%)
+   1 × external (3%)
 
 Per-Chapter Holes:
-  Chap26:  2  Chap38:  7  Chap39:  9
+  Chap26:  2  Chap38:  4  Chap39:  9
   Chap41:  5  Chap43:  5  Chap45:  1
   Chap47:  3  Chap62:  2  Chap65:  2
 
-Warnings: 209 total
-   19 × fn_missing_requires
-   19 × fn_missing_ensures
+Warnings: 201 total
+   13 × fn_missing_requires
+   17 × fn_missing_ensures
    16 × fn_missing_wf_requires
    7 × fn_missing_wf_ensures
    148 × assume_eq_clone_workaround
@@ -2911,8 +2845,8 @@ Accepted (reviewed): 62 total
    5 × external_accept_hole
    4 × unsafe_block_accept_hole
    1 × enum_outside_verus_accept_hole
-   1 × struct_outside_verus_accept_hole
    1 × external_type_specification_accept_hole
+   1 × struct_outside_verus_accept_hole
 
 Accepted by Chapter:
   Chap02:  6  Chap11:  6  Chap12: 19
@@ -2920,8 +2854,8 @@ Accepted by Chapter:
   Chap37:  5  Chap40:  3  Chap41:  2
   Chap56:  2
 
-Structural (info only): 181
-   146 × RWLOCK_GHOST
+Structural (info only): 179
+   144 × RWLOCK_GHOST
    12 × STD_TRAIT_IMPL
    10 × UNSAFE_SEND_SYNC
    9 × OPAQUE_EXTERNAL
@@ -2938,79 +2872,79 @@ Structural (info only): 181
 =================================================================
 
    1  Chap39  (9 holes, 4 files)
-   2  Chap38  (7 holes, 2 files)
+   2  Chap41  (5 holes, 7 files)
    3  Chap43  (5 holes, 11 files)
-   4  Chap41  (5 holes, 7 files)
+   4  Chap38  (4 holes, 2 files)
    5  Chap47  (3 holes, 9 files)
-   6  Chap62  (2 holes, 4 files)
-   7  Chap26  (2 holes, 8 files)
+   6  Chap26  (2 holes, 8 files)
+   7  Chap62  (2 holes, 4 files)
    8  Chap65  (2 holes, 3 files)
    9  Chap45  (1 holes, 7 files)
-   10  Chap06  (0 holes, 21 files)
-   11  Concurrency  (0 holes, 1 files)
-   12  Chap30  (0 holes, 1 files)
-   13  Chap53  (0 holes, 5 files)
-   14  Chap55  (0 holes, 8 files)
-   15  Chap21  (0 holes, 12 files)
-   16  Chap19  (0 holes, 4 files)
-   17  Chap59  (0 holes, 4 files)
-   18  Chap12  (0 holes, 3 files)
-   19  Chap17  (0 holes, 1 files)
-   20  Chap40  (0 holes, 3 files)
-   21  Chap56  (0 holes, 12 files)
-   22  Chap64  (0 holes, 3 files)
-   23  Chap23  (0 holes, 2 files)
-   24  Chap63  (0 holes, 2 files)
-   25  Chap27  (0 holes, 4 files)
-   26  Chap36  (0 holes, 3 files)
-   27  Chap35  (0 holes, 4 files)
-   28  Chap42  (0 holes, 4 files)
-   29  Chap57  (0 holes, 3 files)
-   30  Chap50  (0 holes, 8 files)
-   31  Chap58  (0 holes, 2 files)
+   10  Chap61  (0 holes, 4 files)
+   11  Chap53  (0 holes, 5 files)
+   12  Chap27  (0 holes, 4 files)
+   13  Concurrency  (0 holes, 1 files)
+   14  Chap58  (0 holes, 2 files)
+   15  Chap19  (0 holes, 4 files)
+   16  Chap54  (0 holes, 4 files)
+   17  Chap11  (0 holes, 5 files)
+   18  Chap05  (0 holes, 5 files)
+   19  Chap51  (0 holes, 8 files)
+   20  Chap63  (0 holes, 2 files)
+   21  Chap35  (0 holes, 4 files)
+   22  Chap21  (0 holes, 12 files)
+   23  Chap64  (0 holes, 3 files)
+   24  Chap36  (0 holes, 3 files)
+   25  Chap30  (0 holes, 1 files)
+   26  Chap02  (0 holes, 2 files)
+   27  Chap37  (0 holes, 19 files)
+   28  Chap44  (0 holes, 2 files)
+   29  Chap40  (0 holes, 3 files)
+   30  Chap06  (0 holes, 21 files)
+   31  Chap50  (0 holes, 8 files)
    32  Chap52  (0 holes, 14 files)
-   33  Chap18  (0 holes, 7 files)
-   34  Chap44  (0 holes, 2 files)
-   35  Chap02  (0 holes, 2 files)
-   36  Chap05  (0 holes, 5 files)
-   37  Chap11  (0 holes, 5 files)
-   38  Chap28  (0 holes, 11 files)
-   39  Chap49  (0 holes, 8 files)
-   40  Chap51  (0 holes, 8 files)
-   41  Chap61  (0 holes, 4 files)
-   42  Chap37  (0 holes, 19 files)
-   43  ParaPairs  (0 holes, 1 files)
-   44  Chap03  (0 holes, 1 files)
-   45  Chap66  (0 holes, 2 files)
-   46  Chap54  (0 holes, 4 files)
+   33  Chap56  (0 holes, 12 files)
+   34  Chap17  (0 holes, 1 files)
+   35  Chap03  (0 holes, 1 files)
+   36  Chap49  (0 holes, 8 files)
+   37  Chap57  (0 holes, 3 files)
+   38  Chap23  (0 holes, 2 files)
+   39  Chap18  (0 holes, 7 files)
+   40  Chap55  (0 holes, 8 files)
+   41  Chap28  (0 holes, 11 files)
+   42  Chap42  (0 holes, 4 files)
+   43  Chap12  (0 holes, 3 files)
+   44  Chap66  (0 holes, 2 files)
+   45  ParaPairs  (0 holes, 1 files)
+   46  Chap59  (0 holes, 4 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
 =================================================================
 
    1  src/Chap39/BSTParaTreapMtEph.rs  (9 holes)
-   2  src/Chap38/BSTParaMtEph.rs  (6 holes)
-   3  src/Chap26/ETSPMtEph.rs  (2 holes)
-   4  src/Chap47/ParaHashTableStEph.rs  (2 holes)
-   5  src/Chap65/KruskalStEph.rs  (1 holes)
-   6  src/Chap65/PrimStEph.rs  (1 holes)
-   7  src/Chap43/AugOrderedTableStPer.rs  (1 holes)
-   8  src/Chap43/OrderedSetStPer.rs  (1 holes)
-   9  src/Chap41/AVLTreeSetStEph.rs  (1 holes)
-   10  src/Chap62/StarContractionStEph.rs  (1 holes)
-   11  src/Chap43/OrderedTableMtPer.rs  (1 holes)
-   12  src/Chap45/Example45_2.rs  (1 holes)
-   13  src/Chap62/StarContractionMtEph.rs  (1 holes)
-   14  src/Chap38/BSTParaStEph.rs  (1 holes)
-   15  src/Chap43/AugOrderedTableMtEph.rs  (1 holes)
+   2  src/Chap38/BSTParaMtEph.rs  (3 holes)
+   3  src/Chap47/ParaHashTableStEph.rs  (2 holes)
+   4  src/Chap26/ETSPMtEph.rs  (2 holes)
+   5  src/Chap43/AugOrderedTableStPer.rs  (1 holes)
+   6  src/Chap43/AugOrderedTableMtEph.rs  (1 holes)
+   7  src/Chap62/StarContractionMtEph.rs  (1 holes)
+   8  src/Chap41/AVLTreeSetStEph.rs  (1 holes)
+   9  src/Chap45/Example45_2.rs  (1 holes)
+   10  src/Chap43/OrderedSetStPer.rs  (1 holes)
+   11  src/Chap65/KruskalStEph.rs  (1 holes)
+   12  src/Chap62/StarContractionStEph.rs  (1 holes)
+   13  src/Chap38/BSTParaStEph.rs  (1 holes)
+   14  src/Chap43/OrderedTableMtPer.rs  (1 holes)
+   15  src/Chap65/PrimStEph.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
 =================================================================
 
-   1  src/Chap38  (7 holes, 2 files)
-   2  src/Chap62  (2 holes, 4 files)
-   3  src/Chap26  (2 holes, 8 files)
+   1  src/Chap38  (4 holes, 2 files)
+   2  src/Chap26  (2 holes, 8 files)
+   3  src/Chap62  (2 holes, 4 files)
    4  src/Chap65  (2 holes, 3 files)
    5  src/Chap45  (1 holes, 7 files)
 
@@ -3030,7 +2964,7 @@ Structural (info only): 181
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 37 clean, 9 holed, 36 holes (global), 258 modules
+Chapter Status — 46 chapters, 37 clean, 9 holed, 33 holes (global), 258 modules
 
 CLEAN CHAPTERS (37)
   Chapter        Files
@@ -3073,11 +3007,11 @@ CLEAN CHAPTERS (37)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (9) — 36 holes
+HOLED CHAPTERS (9) — 33 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
   Chap26             2     8  YES       
-  Chap38             7     2  YES       
+  Chap38             4     2  YES       
   Chap39             9     4  internal  Chap39::BSTParaTreapMtEph
   Chap41             5     7  internal  Chap41::AVLTreeSetStEph
   Chap43             5    11  NO        Chap41::AVLTreeSetStEph
@@ -3098,8 +3032,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-20 11:12:37 -07:00
-Ended:     2026-03-20 11:12:38 -07:00
-Duration:  1739ms
+Started:   2026-03-20 19:12:56 -07:00
+Ended:     2026-03-20 19:12:57 -07:00
+Duration:  1842ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log

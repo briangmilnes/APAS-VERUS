@@ -21,57 +21,57 @@ Table of Contents:
 =================================================================
 
 ❌ BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:152: error: assume() [algorithmic] - proof { assume(c == *x); } // Clone bridge: T::clone preserv
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:152: error: assume() [algorithmic] - proof { assume(c == *x); } // Clone bridge: T::clone preserv
        148 |     fn clone_elem<T: Clone>(x: &T) -> (c: T)
             ...
        150 |     {
        151 |         let c = x.clone();
        153 |         c
        154 |     }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:229: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:229: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
        224 |     proof fn lemma_cmp_order_axioms<T: MtKey>()
             ...
        227 |             view_ord_consistent::<T>(),
        228 |     {
        230 |         assume(view_ord_consistent::<T>());
        231 |     }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:230: error: assume() [algorithmic] - assume(view_ord_consistent::<T>());
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:230: error: assume() [algorithmic] - assume(view_ord_consistent::<T>());
        224 |     proof fn lemma_cmp_order_axioms<T: MtKey>()
             ...
        228 |     {
        229 |         assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
        231 |     }
        232 | 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:224: error: proof_fn_with_holes - proof fn lemma_cmp_order_axioms — contains assume/external_body/admit, needs proof
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:224: error: proof_fn_with_holes - proof fn lemma_cmp_order_axioms — contains assume/external_body/admit, needs proof
        209 |     proof fn lemma_cmp_equal_congruent_right<T: MtKey>(a: T, b: T, c: T)
             ...
        222 |     /// Consolidates the two standard ordering assumes into one proof function.
        223 |     /// Callers get both properties from a single call.
        225 |         ensures
        226 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:619: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:619: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        612 |         fn clone(&self) -> (cloned: Self)
             ...
        617 |                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
        618 |             };
        620 |             cloned
        621 |         }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:634: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:634: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        625 |         fn clone(&self) -> (cloned: Self)
             ...
        632 |                 right: self.right.clone(),
        633 |             };
        635 |             cloned
        636 |         }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:1598: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:1599: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1598: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1599: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
    Holes: 3 total
       3 × assume()
    Info: 2 × structural_false_positive
       2 × UNSAFE_SEND_SYNC
    Proof functions: 6 total (5 clean, 1 holed)
 ❌ BSTParaStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:152: error: assume() [algorithmic] - proof { assume(c == *x); } // Clone bridge: T::clone preserv
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:152: error: assume() [algorithmic] - proof { assume(c == *x); } // Clone bridge: T::clone preserv
        148 |     fn clone_elem<T: Clone>(x: &T) -> (c: T)
             ...
        150 |     {
@@ -135,8 +135,9 @@ Structural (info only): 2
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-20 16:16:40 -07:00
-Ended:     2026-03-20 16:16:40 -07:00
-Duration:  43ms
+Started:   2026-03-20 19:12:55 -07:00
+Ended:     2026-03-20 19:12:55 -07:00
+Duration:  36ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
+tput: src/Chap38/analyses/veracity-review-verus-proof-holes.log
