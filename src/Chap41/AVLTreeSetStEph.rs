@@ -717,8 +717,8 @@ broadcast use {
                     assert(other@.contains(elem@));
                     // Capacity: combined@.len() + 1 < usize::MAX. Individual tree wf gives
                     // self_len < usize::MAX and other_len < usize::MAX, but their sum may
-                    // exceed usize::MAX. A proper fix adds capacity requires to union's trait,
-                    // which cascades to graph algorithms in Chap52/53.
+                    // exceed usize::MAX. The full fix requires bounding both at usize::MAX/2,
+                    // but callers like PQMinStEph build large frontiers from scratch.
                     assume(combined@.len() + 1 < usize::MAX as nat);
                 }
                 let ghost old_combined = combined@;
