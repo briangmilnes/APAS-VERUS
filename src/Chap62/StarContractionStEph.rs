@@ -14,6 +14,7 @@ pub mod StarContractionStEph {
 
     use std::hash::Hash;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
     use crate::Chap62::StarPartitionStEph::StarPartitionStEph::sequential_star_partition;
     use crate::SetLit;
 
@@ -60,6 +61,24 @@ pub mod StarContractionStEph {
 
     pub type T<V> = UnDirGraphStEph<V>;
 
+    // 6. spec fns
+
+    /// Partition map validity: every graph vertex is mapped and every value is a center.
+    pub open spec fn spec_valid_partition_map<V: View>(
+        graph_vertices: Set<V::V>,
+        centers: Set<V::V>,
+        partition_map: Map<V::V, V>,
+    ) -> bool {
+        // Every graph vertex is in the partition map.
+        &&& forall |v_view: V::V|
+                #[trigger] graph_vertices.contains(v_view) ==>
+                    partition_map.contains_key(v_view)
+        // Every partition map value is a center.
+        &&& forall |v_view: V::V|
+                #[trigger] partition_map.contains_key(v_view) ==>
+                    centers.contains(partition_map[v_view]@)
+    }
+
     /// Inner recursive star contraction with fuel for termination.
     fn star_contract_fuel<V, R, F, G>(
         graph: &UnDirGraphStEph<V>, base: &F, expand: &G, fuel: usize,
@@ -86,6 +105,12 @@ pub mod StarContractionStEph {
         }
 
         let (centers, partition_map) = sequential_star_partition(graph);
+
+        proof {
+            // Star partition maps every graph vertex to a center.
+            // Provable from partition loop structure; deferred to future round.
+            assume(spec_valid_partition_map::<V>(graph@.V, centers@, partition_map@));
+        }
 
         let quotient_graph = build_quotient_graph(graph, &centers, &partition_map);
 
@@ -128,7 +153,7 @@ pub mod StarContractionStEph {
     /// Build quotient graph from partition.
     ///
     /// Routes edges through partition map, removing self-loops.
-    /// Quotient graph well-formedness assumed (blocked by generic Clone lacking view ensures).
+    /// Uses ClonePreservesView for view-preserving vertex clones.
     ///
     /// - APAS: (no cost stated) — helper not in prose.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential loop over all edges.
@@ -141,6 +166,7 @@ pub mod StarContractionStEph {
             valid_key_type_Edge::<V>(),
             spec_graphview_wf(graph@),
             centers.spec_setsteph_wf(),
+            spec_valid_partition_map::<V>(graph@.V, centers@, partition_map@),
         ensures
             spec_graphview_wf(quotient@),
     {
@@ -155,19 +181,75 @@ pub mod StarContractionStEph {
                 quotient_edges.spec_setsteph_wf(),
                 i <= n,
                 n == edge_vec@.len(),
+                // Every edge in quotient_edges has both endpoints in centers.
+                forall |u_v: V::V, w_v: V::V|
+                    #[trigger] quotient_edges@.contains((u_v, w_v)) ==>
+                        centers@.contains(u_v) && centers@.contains(w_v),
+                // Partition map properties flow from outer scope.
+                spec_valid_partition_map::<V>(graph@.V, centers@, partition_map@),
+                spec_graphview_wf(graph@),
             decreases n - i,
         {
             let edge = &edge_vec[i];
             let Edge(u, v) = edge;
 
-            let u_center = match partition_map.get(u) {
-                Some(val) => val.clone(),
-                None => u.clone(),
+            // Prove u and v are in the graph's vertex set.
+            proof {
+                // edge_vec comes from graph.E.to_seq(), so element i's view is in graph.E@.
+                // By Seq::map definition: map(f)[i] == f(i, seq[i]) == seq[i]@
+                assert(edge_vec@.map(|_j: int, t: Edge<V>| t@)[i as int] == edge_vec@[i as int]@);
+                // Contains: the element at index i witnesses the existential.
+                assert(edge_vec@.map(|_j: int, t: Edge<V>| t@).contains(edge_vec@[i as int]@));
+                // to_seq postcondition: graph.E@.contains(x) <==> edge_vec@.map(f).contains(x)
+                assert(graph.E@.contains(edge_vec@[i as int]@));
+                // graph@.A == graph.E@ (from UnDirGraphStEph::view)
+                // Edge(u, v)@ == (u@, v@) from Edge<V>::view
+                assert(edge_vec@[i as int]@ == ((*u)@, (*v)@));
+                assert(graph@.A.contains(((*u)@, (*v)@)));
+                // spec_graphview_wf: arc endpoints are vertices
+                assert(graph@.V.contains((*u)@));
+                assert(graph@.V.contains((*v)@));
+                // spec_valid_partition_map part 1: every graph vertex is in partition_map
+                assert(partition_map@.contains_key((*u)@));
+                assert(partition_map@.contains_key((*v)@));
+            }
+
+            // Resolve u's center using if-let so val stays in scope for the proof.
+            let u_center = if let Some(val) = partition_map.get(u) {
+                let c = val.clone_view();
+                proof {
+                    // get ensures: *val == partition_map@[u@] (Some branch)
+                    assert(*val == partition_map@[(*u)@]);
+                    // clone_view ensures: c@ == (*val)@
+                    assert(c@ == (*val)@);
+                    // Combined: c@ == partition_map@[u@]@
+                    assert(c@ == partition_map@[(*u)@]@);
+                    // spec_valid_partition_map part 2: mapped value's view is in centers@
+                    assert(centers@.contains(c@));
+                }
+                c
+            } else {
+                // None contradicts partition_map@.contains_key(u@) proved above.
+                proof { assert(false); }
+                u.clone_view()
             };
-            let v_center = match partition_map.get(v) {
-                Some(val) => val.clone(),
-                None => v.clone(),
+            proof { assert(centers@.contains(u_center@)); }
+
+            // Resolve v's center using the same pattern.
+            let v_center = if let Some(val) = partition_map.get(v) {
+                let c = val.clone_view();
+                proof {
+                    assert(*val == partition_map@[(*v)@]);
+                    assert(c@ == (*val)@);
+                    assert(c@ == partition_map@[(*v)@]@);
+                    assert(centers@.contains(c@));
+                }
+                c
+            } else {
+                proof { assert(false); }
+                v.clone_view()
             };
+            proof { assert(centers@.contains(v_center@)); }
 
             if u_center != v_center {
                 let new_edge = if u_center < v_center {
@@ -181,14 +263,6 @@ pub mod StarContractionStEph {
         }
 
         let quotient = UnDirGraphStEph { V: centers.clone(), E: quotient_edges };
-        proof {
-            // Quotient graph well-formedness: vertices contain all edge endpoints.
-            // Blocked by generic Clone::clone lacking view-preserving ensures in Verus.
-            // The partition map correctly maps all edge endpoints to centers at runtime,
-            // but we cannot prove partition_map@[v]@ ∈ centers@ because Clone::clone
-            // for generic V does not guarantee cloned@ == original@.
-            assume(spec_graphview_wf(quotient@));
-        }
         quotient
     }
 

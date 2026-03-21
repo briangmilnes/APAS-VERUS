@@ -74,9 +74,11 @@ broadcast use {
     pub trait PredSt<T>: Fn(&T) -> B {}
     impl<F, T> PredSt<T> for F where F: Fn(&T) -> B {}
 
+    use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
+
     /// Type that can be hashed and ordered (for graph vertices).
-    pub trait HashOrd: StT + Hash + Ord {}
-    impl<T> HashOrd for T where T: StT + Hash + Ord {}
+    pub trait HashOrd: StT + Hash + Ord + ClonePreservesView {}
+    impl<T> HashOrd for T where T: StT + Hash + Ord + ClonePreservesView {}
 
     /// Edge wrapper to enable Display/Debug for pairs (V,V) under baseline bounds.
     #[verifier::reject_recursive_types(V)]
@@ -241,6 +243,44 @@ broadcast use {
         &&& obeys_key_model::<LabEdge<V, W>>() && obeys_feq_full::<LabEdge<V, W>>()
         // Also require Pair for neighbor results
         &&& obeys_key_model::<Pair<V, W>>() && obeys_feq_full::<Pair<V, W>>()
+    }
+
+    //      12. derive impls in verus!
+
+    #[cfg(verus_keep_ghost)]
+    impl<V: StT + Hash + ClonePreservesView> ClonePreservesView for Edge<V> {
+        fn clone_view(&self) -> (result: Self)
+            ensures result@ == self@,
+        {
+            Edge(self.0.clone_view(), self.1.clone_view())
+        }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl<V: StT + Hash + ClonePreservesView, L: StT + Hash + ClonePreservesView> ClonePreservesView for LabEdge<V, L> {
+        fn clone_view(&self) -> (result: Self)
+            ensures result@ == self@,
+        {
+            LabEdge(self.0.clone_view(), self.1.clone_view(), self.2.clone_view())
+        }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl<V: StT + Hash + ClonePreservesView, W: StT + Hash + ClonePreservesView> ClonePreservesView for WeightedEdge<V, W> {
+        fn clone_view(&self) -> (result: Self)
+            ensures result@ == self@,
+        {
+            WeightedEdge(self.0.clone_view(), self.1.clone_view(), self.2.clone_view())
+        }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl<K: vstd::prelude::View + Clone + ClonePreservesView, V: vstd::prelude::View + Clone + ClonePreservesView> ClonePreservesView for Pair<K, V> {
+        fn clone_view(&self) -> (result: Self)
+            ensures result@ == self@,
+        {
+            Pair(self.0.clone_view(), self.1.clone_view())
+        }
     }
 
     } // verus!
