@@ -1311,6 +1311,8 @@ pub mod OrderedTableStPer {
             }
             while i < len
                 invariant
+                    self.spec_orderedtablestper_wf(),
+                    other.spec_orderedtablestper_wf(),
                     self.base_set.elements.spec_avltreeseqstper_wf(),
                     other.base_set.elements.spec_avltreeseqstper_wf(),
                     spec_keys_no_dups(self.base_set.elements@),

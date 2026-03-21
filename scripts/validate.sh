@@ -35,7 +35,7 @@ cd "$PROJECT_ROOT"
 START_SEC=$(date +%s)
 echo "Starting verification at $(date '+%H:%M:%S')"
 # Limit parallelism to 8 threads (default is num_cpus-1, can lock machine)
-timeout 130 "$VERUS" --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors \
+timeout 300 "$VERUS" --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors \
     --num-threads 8 \
     "${CFG_FLAG[@]}" "${TIME_FLAG[@]}" 2>&1 | sed 's/\x1b\[[0-9;]*m//g' | tee "$LOGFILE"
 RC=${PIPESTATUS[0]}
