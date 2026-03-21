@@ -27,7 +27,6 @@ pub mod BSTParaMtEph {
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
-    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
 
     verus! {
@@ -41,13 +40,26 @@ pub mod BSTParaMtEph {
 
     // 4. type definitions
 
-    pub struct BSTParaMtEphInv;
+    pub struct BSTParaMtEphInv<T: MtKey> {
+        pub ghost contents: Set<<T as View>::V>,
+    }
 
-    impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for BSTParaMtEphInv {
+    impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for BSTParaMtEphInv<T> {
         open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
             match v {
-                Option::None => true,
-                Option::Some(box_node) => (*box_node).size >= 1,
+                Option::None => self.contents =~= Set::<<T as View>::V>::empty(),
+                Option::Some(box_node) => {
+                    self.contents =~= (*box_node).left@.union((*box_node).right@).insert((*box_node).key@)
+                    && (*box_node).size >= 1
+                    && (*box_node).left@.finite() && (*box_node).right@.finite()
+                    && (*box_node).left@.disjoint((*box_node).right@)
+                    && !(*box_node).left@.contains((*box_node).key@)
+                    && !(*box_node).right@.contains((*box_node).key@)
+                    && (*box_node).left@.len() + (*box_node).right@.len() < usize::MAX as nat
+                    && (*box_node).size as nat == (*box_node).left@.len() + (*box_node).right@.len() + 1
+                    && (forall|t: T| (#[trigger] (*box_node).left@.contains(t@)) ==> t.cmp_spec(&(*box_node).key) == Less)
+                    && (forall|t: T| (#[trigger] (*box_node).right@.contains(t@)) ==> t.cmp_spec(&(*box_node).key) == Greater)
+                }
             }
         }
     }
@@ -68,7 +80,7 @@ pub mod BSTParaMtEph {
 
     #[verifier::reject_recursive_types(T)]
     pub struct ParamBST<T: MtKey> {
-        pub(crate) root: Arc<RwLock<Option<Box<NodeInner<T>>>, BSTParaMtEphInv>>,
+        pub(crate) locked_root: RwLock<Option<Box<NodeInner<T>>>, BSTParaMtEphInv<T>>,
         pub(crate) ghost_locked_root: Ghost<Set<<T as View>::V>>,
     }
 
@@ -76,11 +88,16 @@ pub mod BSTParaMtEph {
         val: Option<Box<NodeInner<T>>>,
         Ghost(contents): Ghost<Set<<T as View>::V>>,
     ) -> (tree: ParamBST<T>)
-        requires BSTParaMtEphInv.inv(val),
+        requires
+            (BSTParaMtEphInv::<T> { contents }).inv(val),
+            contents.finite(),
+            forall|v: <T as View>::V| contents.contains(v)
+                ==> exists|t: T| t@ == v,
         ensures tree@ =~= contents,
     {
+        let ghost pred = BSTParaMtEphInv::<T> { contents };
         ParamBST {
-            root: new_arc_rwlock(val, Ghost(BSTParaMtEphInv)),
+            locked_root: RwLock::new(val, Ghost(pred)),
             ghost_locked_root: Ghost(contents),
         }
     }
@@ -88,6 +105,14 @@ pub mod BSTParaMtEph {
     // 5. view impls
 
     impl<T: MtKey> ParamBST<T> {
+        #[verifier::type_invariant]
+        spec fn wf(self) -> bool {
+            self.ghost_locked_root@.finite()
+            && self.ghost_locked_root@ =~= self.locked_root.pred().contents
+            && (forall|v: <T as View>::V| self.ghost_locked_root@.contains(v)
+                ==> exists|t: T| t@ == v)
+        }
+
         pub closed spec fn spec_ghost_locked_root(self) -> Set<<T as View>::V> {
             self.ghost_locked_root@
         }
@@ -116,6 +141,17 @@ pub mod BSTParaMtEph {
     }
 
     // 7. proof fns/broadcast groups
+
+    /// Clone bridge for generic element: ensures cloned value equals original.
+    /// Centralizes the clone-body assume pattern per partial_eq_eq_clone_standard.
+    // veracity: no_requires
+    fn clone_elem<T: Clone>(x: &T) -> (c: T)
+        ensures c == *x,
+    {
+        let c = x.clone();
+        proof { assume(c == *x); } // Clone bridge: T::clone preserves value.
+        c
+    }
 
     /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
     proof fn lemma_cmp_antisymmetry<T: MtKey>(a: T, b: T)
@@ -196,7 +232,7 @@ pub mod BSTParaMtEph {
 
     // 8. traits
 
-    pub trait ParamBSTTrait<T: MtKey + 'static>: Sized + View<V = Set<<T as View>::V>> {
+    pub trait ParamBSTTrait<T: MtKey>: Sized + View<V = Set<<T as View>::V>> {
         spec fn spec_bstparamteph_wf(&self) -> bool;
 
         /// - APAS: Work O(1), Span O(1)
@@ -216,7 +252,19 @@ pub mod BSTParaMtEph {
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
         fn join_mid(exposed: Exposed<T>) -> (joined: Self)
-            ensures exposed is Leaf ==> joined@ == Set::<<T as View>::V>::empty();
+            requires
+                exposed matches Exposed::Node(l, k, r) ==> {
+                    l@.finite() && r@.finite()
+                    && l@.disjoint(r@)
+                    && !l@.contains(k@)
+                    && !r@.contains(k@)
+                    && l@.len() + r@.len() < usize::MAX as nat
+                    && (forall|t: T| (#[trigger] l@.contains(t@)) ==> t.cmp_spec(&k) == Less)
+                    && (forall|t: T| (#[trigger] r@.contains(t@)) ==> t.cmp_spec(&k) == Greater)
+                },
+            ensures
+                exposed is Leaf ==> joined@ == Set::<<T as View>::V>::empty(),
+                exposed matches Exposed::Node(l, k, r) ==> joined@ =~= l@.union(r@).insert(k@);
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
         fn size(&self) -> (count: usize)
@@ -227,12 +275,13 @@ pub mod BSTParaMtEph {
             ensures empty == (self@.len() == 0), self@.finite();
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
-        /// Interior mutability via RwLock precludes `old()` specs on `&self`.
-        fn insert(&self, key: T);
+        fn insert(&mut self, key: T)
+            requires old(self)@.len() < usize::MAX as nat,
+            ensures self.spec_bstparamteph_wf();
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
-        /// Interior mutability via RwLock precludes `old()` specs on `&self`.
-        fn delete(&self, key: &T);
+        fn delete(&mut self, key: &T)
+            ensures self.spec_bstparamteph_wf();
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
         fn find(&self, key: &T) -> (found: Option<T>)
@@ -247,10 +296,21 @@ pub mod BSTParaMtEph {
         /// - APAS: Work O(lg(|t1| + |t2|)), Span O(lg(|t1| + |t2|))
         /// - Claude-Opus-4.6: Work O(lg(|t1| + |t2|)), Span O(lg(|t1| + |t2|)) -- agrees with APAS.
         fn join_pair(&self, other: Self) -> (joined: Self)
+            requires self@.len() + other@.len() <= usize::MAX as nat,
             ensures joined@.finite();
+        /// Joins two disjoint BSTs where all elements of self are less than all elements of right.
+        fn join_pair_inner(&self, right: &Self) -> (joined: Self)
+            requires
+                self@.finite(), right@.finite(),
+                self@.disjoint(right@),
+                self@.len() + right@.len() <= usize::MAX as nat,
+                forall|s: T, o: T| #![trigger self@.contains(s@), right@.contains(o@)]
+                    self@.contains(s@) && right@.contains(o@) ==> s.cmp_spec(&o) == Less,
+            ensures joined@.finite(), joined@ =~= self@.union(right@);
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n) -- agrees with APAS; parallel.
         fn union(&self, other: &Self) -> (combined: Self)
+            requires self@.len() + other@.len() <= usize::MAX as nat,
             ensures combined@ == self@.union(other@), combined@.finite();
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         /// - Claude-Opus-4.6: Work O(m · lg(n/m)), Span O(lg n) -- agrees with APAS; parallel.
@@ -291,7 +351,7 @@ pub mod BSTParaMtEph {
 
     // 9. impls
 
-    impl<T: MtKey + 'static> ParamBSTTrait<T> for ParamBST<T> {
+    impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
         open spec fn spec_bstparamteph_wf(&self) -> bool {
             self@.finite()
         }
@@ -319,55 +379,59 @@ pub mod BSTParaMtEph {
         fn expose(&self) -> (exposed: Exposed<T>)
             ensures self@.len() == 0 ==> exposed is Leaf
         {
-            let rwlock = arc_deref(&self.root);
-            let handle = rwlock.acquire_read();
-            let exposed = match handle.borrow() {
-                None => Exposed::Leaf,
-                Some(node) => {
-                    Exposed::Node(node.left.clone(), node.key.clone(), node.right.clone())
-                },
-            };
-            handle.release_read();
-            proof { assume(self@.len() == 0 ==> exposed is Leaf); }
-            exposed
+            proof { use_type_invariant(self); }
+            expose_internal(self)
         }
 
         fn join_mid(exposed: Exposed<T>) -> (joined: Self)
-            ensures exposed is Leaf ==> joined@ == Set::<<T as View>::V>::empty()
         {
             match exposed {
-                Exposed::Leaf => {
-                    Self::new()
-                },
-                Exposed::Node(left, key, right) => {
-                    let lsz = left.size();
-                    let rsz = right.size();
-                    let sz: usize = if lsz < usize::MAX && rsz < usize::MAX - lsz {
-                        1 + lsz + rsz
-                    } else {
-                        usize::MAX
-                    };
+                | Exposed::Leaf => new_leaf(),
+                | Exposed::Node(left, key, right) => {
                     let ghost kv = key@;
                     let ghost contents = left@.union(right@).insert(kv);
+                    let lsz = left.size();
+                    let rsz = right.size();
+                    let size: usize = 1 + lsz + rsz;
+                    proof {
+                        vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                        assert(!left@.union(right@).contains(kv));
+                        assert(contents.len() == size as nat);
+                        use_type_invariant(&left);
+                        use_type_invariant(&right);
+                        assert forall|v: <T as View>::V| contents.contains(v)
+                            implies exists|t: T| t@ == v by {
+                            if left@.contains(v) {
+                            } else if right@.contains(v) {
+                            } else {
+                                assert(v == kv);
+                                assert(key@ == v);
+                            }
+                        };
+                    }
                     new_param_bst(
-                        Some(Box::new(NodeInner { key, size: sz, left, right })),
+                        Some(Box::new(NodeInner { key, size, left, right })),
                         Ghost(contents),
                     )
-                },
+                }
             }
         }
 
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite()
         {
-            let rwlock = arc_deref(&self.root);
-            let handle = rwlock.acquire_read();
+            proof { use_type_invariant(self); }
+            let handle = self.locked_root.acquire_read();
             let count = match handle.borrow() {
                 None => 0usize,
-                Some(node) => node.size,
+                Some(node) => {
+                    proof {
+                        vstd::set_lib::lemma_set_disjoint_lens(node.left@, node.right@);
+                    }
+                    node.size
+                }
             };
             handle.release_read();
-            proof { assume(count == self@.len() && self@.finite()); }
             count
         }
 
@@ -375,47 +439,36 @@ pub mod BSTParaMtEph {
             ensures empty == (self@.len() == 0), self@.finite()
         { self.size() == 0 }
 
-        fn insert(&self, key: T) {
+        fn insert(&mut self, key: T)
+        {
+            let _sz = self.size();
             let (left, _, right) = split_inner(self, &key);
-            let lsz = left.size();
-            let rsz = right.size();
-            let sz: usize = if lsz < usize::MAX && rsz < usize::MAX - lsz {
-                1 + lsz + rsz
-            } else {
-                usize::MAX
-            };
-            let rwlock_self = arc_deref(&self.root);
-            let (_old, write_handle) = rwlock_self.acquire_write();
-            write_handle.release_write(Some(Box::new(NodeInner { key, size: sz, left, right })));
+            proof {
+                vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+            }
+            *self = Self::join_mid(Exposed::Node(left, key, right));
         }
 
-        fn delete(&self, key: &T) {
+        fn delete(&mut self, key: &T)
+        {
+            let _sz = self.size();
             let (left, _, right) = split_inner(self, key);
-            let merged = ParamBSTTrait::<T>::join_pair(&left, right);
-            match merged.expose() {
-                Exposed::Leaf => {
-                    let rwlock_self = arc_deref(&self.root);
-                    let (_old, write_handle) = rwlock_self.acquire_write();
-                    write_handle.release_write(None);
-                },
-                Exposed::Node(l, k, r) => {
-                    let lsz = l.size();
-                    let rsz = r.size();
-                    let sz: usize = if lsz < usize::MAX && rsz < usize::MAX - lsz {
-                        1 + lsz + rsz
-                    } else {
-                        usize::MAX
-                    };
-                    let rwlock_self = arc_deref(&self.root);
-                    let (_old, write_handle) = rwlock_self.acquire_write();
-                    write_handle.release_write(Some(Box::new(NodeInner { key: k, size: sz, left: l, right: r })));
-                },
+            proof {
+                lemma_cmp_order_axioms::<T>();
+                vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                assert forall|s: T, o: T| #![trigger left@.contains(s@), right@.contains(o@)]
+                    left@.contains(s@) && right@.contains(o@) implies s.cmp_spec(&o) == Less by {
+                    lemma_cmp_antisymmetry(o, *key);
+                    lemma_cmp_transitivity(s, *key, o);
+                };
             }
+            *self = left.join_pair_inner(&right);
         }
 
         fn find(&self, key: &T) -> (found: Option<T>)
             ensures found.is_some() <==> self@.contains(key@)
         {
+            proof { use_type_invariant(self); }
             find_recursive(self, key)
         }
 
@@ -424,23 +477,112 @@ pub mod BSTParaMtEph {
                 parts.1 == self@.contains(key@),
                 parts.0@.finite(),
                 parts.2@.finite()
-        { split_inner(self, key) }
+        {
+            proof { use_type_invariant(self); }
+            split_inner(self, key)
+        }
 
         fn join_pair(&self, other: Self) -> (joined: Self)
             ensures joined@.finite()
-        { join_pair_inner(self.clone(), other) }
+        {
+            proof { use_type_invariant(self); use_type_invariant(&other); }
+            union_inner(self, &other)
+        }
+
+        fn join_pair_inner(&self, right: &Self) -> (joined: Self)
+            ensures joined@.finite(), joined@ =~= self@.union(right@),
+            decreases right@.len(),
+        {
+            proof {
+                lemma_cmp_order_axioms::<T>();
+                use_type_invariant(self);
+                use_type_invariant(right);
+            }
+            let ghost lv = self@;
+            let ghost rv = right@;
+            match expose_internal(right) {
+                | Exposed::Leaf => {
+                    proof { assert(lv.union(rv) =~= lv); }
+                    self.clone()
+                }
+                | Exposed::Node(rl, rk, rr) => {
+                    let ghost rlv = rl@;
+                    let ghost rrv = rr@;
+                    let ghost rkv = rk@;
+                    proof {
+                        assert(rv =~= rlv.union(rrv).insert(rkv));
+                        vstd::set_lib::lemma_set_disjoint_lens(rlv, rrv);
+                        assert(rv.len() == rlv.len() + rrv.len() + 1);
+                        // self ⊥ rl: rl ⊆ right, self ⊥ right.
+                        assert forall|x| rlv.contains(x) implies rv.contains(x) by {};
+                        assert(lv.disjoint(rlv));
+                        assert(lv.len() + rlv.len() <= usize::MAX as nat);
+                        // Ordering for recursive call: self < rl.
+                        assert forall|s: T, o: T| #![trigger lv.contains(s@), rlv.contains(o@)]
+                            lv.contains(s@) && rlv.contains(o@) implies s.cmp_spec(&o) == Less by {
+                            assert(rv.contains(o@));
+                        };
+                        // Ordering: self < rk.
+                        assert forall|t: T| (#[trigger] lv.contains(t@))
+                            implies t.cmp_spec(&rk) == Less by {
+                            assert(rv.contains(rkv));
+                        };
+                    }
+                    let merged = self.join_pair_inner(&rl);
+                    let ghost mv = merged@;
+                    proof {
+                        assert(mv =~= lv.union(rlv));
+                        use_type_invariant(&merged);
+                        // merged ⊥ rr.
+                        assert forall|x| !(mv.contains(x) && rrv.contains(x)) by {
+                            if mv.contains(x) && rrv.contains(x) {
+                                if lv.contains(x) { assert(rv.contains(x)); }
+                                else { assert(rlv.contains(x)); }
+                            }
+                        };
+                        assert(!mv.contains(rkv));
+                        assert(!rrv.contains(rkv));
+                        // Ordering: merged < rk.
+                        assert forall|t: T| (#[trigger] mv.contains(t@))
+                            implies t.cmp_spec(&rk) == Less by {
+                            if lv.contains(t@) {
+                            } else {
+                                assert(rlv.contains(t@));
+                            }
+                        };
+                        // Size bound.
+                        vstd::set_lib::lemma_set_disjoint_lens(mv, rrv);
+                        assert(mv.len() + rrv.len() < usize::MAX as nat);
+                    }
+                    let result = Self::join_mid(Exposed::Node(merged, rk, rr));
+                    proof {
+                        assert(result@ =~= lv.union(rv));
+                    }
+                    result
+                }
+            }
+        }
 
         fn union(&self, other: &Self) -> (combined: Self)
             ensures combined@ == self@.union(other@), combined@.finite()
-        { union_inner(self, other) }
+        {
+            proof { use_type_invariant(self); use_type_invariant(other); }
+            union_inner(self, other)
+        }
 
         fn intersect(&self, other: &Self) -> (common: Self)
             ensures common@ == self@.intersect(other@), common@.finite()
-        { intersect_inner(self, other) }
+        {
+            proof { use_type_invariant(self); use_type_invariant(other); }
+            intersect_inner(self, other)
+        }
 
         fn difference(&self, other: &Self) -> (remaining: Self)
             ensures remaining@ == self@.difference(other@), remaining@.finite()
-        { difference_inner(self, other) }
+        {
+            proof { use_type_invariant(self); use_type_invariant(other); }
+            difference_inner(self, other)
+        }
 
         fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(
             &self,
@@ -496,16 +638,26 @@ pub mod BSTParaMtEph {
 
     impl<T: MtKey> Clone for ParamBST<T> {
         fn clone(&self) -> (cloned: Self)
-            ensures cloned@ == self@
+            ensures cloned@ == self@,
+            decreases self@.len(), 1nat,
         {
-            ParamBST {
-                root: clone_arc_rwlock(&self.root),
-                ghost_locked_root: Ghost(self.ghost_locked_root@),
+            proof { use_type_invariant(self); }
+            let _sz = self.size();
+            let exposed = expose_internal(self);
+            match exposed {
+                Exposed::Leaf => Self::new(),
+                Exposed::Node(l, k, r) => {
+                    proof {
+                        vstd::set_lib::lemma_set_disjoint_lens(l@, r@);
+                        assert(l@.len() + r@.len() + 1 == self@.len());
+                    }
+                    Self::join_mid(Exposed::Node(l, k, r))
+                }
             }
         }
     }
 
-    // 12. outside-verus algorithmic helpers (external_body, pending full proofs)
+    // Free functions (algorithmic helpers)
 
     fn new_leaf<T: MtKey>() -> (tree: ParamBST<T>)
         ensures tree@ =~= Set::<<T as View>::V>::empty()
@@ -513,8 +665,8 @@ pub mod BSTParaMtEph {
         new_param_bst(None, Ghost(Set::empty()))
     }
 
-    #[verifier::external_body]
-    fn expose_internal<T: MtKey + 'static>(tree: &ParamBST<T>) -> (exposed: Exposed<T>)
+    fn expose_internal<T: MtKey>(tree: &ParamBST<T>) -> (exposed: Exposed<T>)
+        requires tree@.finite(),
         ensures
             tree@.finite(),
             exposed is Leaf ==> tree@.len() == 0,
@@ -528,45 +680,50 @@ pub mod BSTParaMtEph {
                 && !left@.contains(key@)
                 && !right@.contains(key@)
                 && left@.disjoint(right@)
+                && left@.len() + right@.len() < usize::MAX as nat
                 && (forall|t: T| (#[trigger] left@.contains(t@)) ==> t.cmp_spec(&key) == Less)
                 && (forall|t: T| (#[trigger] right@.contains(t@)) ==> t.cmp_spec(&key) == Greater)
             ),
+        decreases tree@.len(), 0nat,
     {
-        let handle = tree.root.acquire_read();
+        proof { use_type_invariant(tree); }
+        let handle = tree.locked_root.acquire_read();
         let exposed = match handle.borrow() {
             | None => Exposed::Leaf,
-            | Some(node) => Exposed::Node(node.left.clone(), node.key.clone(), node.right.clone()),
+            | Some(node) => {
+                proof {
+                    vstd::set_lib::lemma_set_disjoint_lens(node.left@, node.right@);
+                    assert(node.left@.len() < tree@.len());
+                    assert(node.right@.len() < tree@.len());
+                    // Size bound from the lock predicate inv field.
+                    assert(node.left@.len() + node.right@.len() < usize::MAX as nat);
+                }
+                let l = node.left.clone();
+                let k = clone_elem(&node.key);
+                let r = node.right.clone();
+                proof {
+                    // k == node.key from clone_elem ensures.
+                    // l@ == node.left@ and r@ == node.right@ from ParamBST::clone ensures.
+                    // Ordering transfers: spec fn on equal args yields equal results.
+                    assert forall |t: T| (#[trigger] l@.contains(t@))
+                        implies t.cmp_spec(&k) == Less by {
+                        assert(node.left@.contains(t@));
+                    }
+                    assert forall |t: T| (#[trigger] r@.contains(t@))
+                        implies t.cmp_spec(&k) == Greater by {
+                        assert(node.right@.contains(t@));
+                    }
+                    assert(l@.len() + r@.len() < usize::MAX as nat);
+                }
+                Exposed::Node(l, k, r)
+            }
         };
         handle.release_read();
         exposed
     }
 
-    fn join_mid<T: MtKey + 'static>(exposed: Exposed<T>) -> (result: ParamBST<T>)
-        ensures
-            exposed is Leaf ==> result@ =~= Set::<<T as View>::V>::empty(),
-            exposed matches Exposed::Node(l, k, r) ==> result@ =~= l@.union(r@).insert(k@),
-    {
-        match exposed {
-            | Exposed::Leaf => new_leaf(),
-            | Exposed::Node(left, key, right) => {
-                let lsz = left.size();
-                let rsz = right.size();
-                let size: usize = if lsz < usize::MAX && rsz < usize::MAX - lsz {
-                    1 + lsz + rsz
-                } else {
-                    usize::MAX
-                };
-                let ghost kv = key@;
-                let ghost contents = left@.union(right@).insert(kv);
-                new_param_bst(
-                    Some(Box::new(NodeInner { key, size, left, right })),
-                    Ghost(contents),
-                )
-            }
-        }
-    }
-
-    fn split_inner<T: MtKey + 'static>(tree: &ParamBST<T>, key: &T) -> (parts: (ParamBST<T>, B, ParamBST<T>))
+    fn split_inner<T: MtKey>(tree: &ParamBST<T>, key: &T) -> (parts: (ParamBST<T>, B, ParamBST<T>))
+        requires tree@.finite(),
         ensures
             parts.0@.finite(),
             parts.2@.finite(),
@@ -578,8 +735,10 @@ pub mod BSTParaMtEph {
             ),
             forall|t: T| (#[trigger] parts.0@.contains(t@)) ==> t.cmp_spec(&key) == Less,
             forall|t: T| (#[trigger] parts.2@.contains(t@)) ==> t.cmp_spec(&key) == Greater,
+            parts.0@.disjoint(parts.2@),
         decreases tree@.len(),
     {
+        let _sz = tree.size();
         proof {
             lemma_cmp_order_axioms::<T>();
             reveal(vstd::laws_cmp::obeys_cmp_ord);
@@ -598,11 +757,27 @@ pub mod BSTParaMtEph {
                 proof {
                     lv.lemma_subset_not_in_lt(tree@, rkv);
                     rv.lemma_subset_not_in_lt(tree@, rkv);
+                    vstd::set_lib::lemma_set_disjoint_lens(lv, rv);
                 }
                 match key.cmp(&root_key) {
                     | Less => {
                         let (ll, found, lr) = split_inner(&left, key);
-                        let rebuilt = join_mid(Exposed::Node(lr, root_key, right));
+                        proof {
+                            // lr ⊂ left, so lr is disjoint from right and ordered < root_key.
+                            assert forall|x| #[trigger] lr@.contains(x) implies lv.contains(x) by {
+                                assert(ll@.union(lr@).contains(x));
+                            };
+                            vstd::set_lib::lemma_len_subset(lr@, lv);
+                            // Size bound: lr ⊂ left, so lr@.len() <= left@.len(), and
+                            // left@.len() + right@.len() + 1 == tree@.len() <= usize::MAX.
+                            assert(lr@.len() + rv.len() < usize::MAX as nat);
+                            // Ordering for join_mid: lr ⊂ left, left < root_key.
+                            assert forall|t: T| (#[trigger] lr@.contains(t@))
+                                implies t.cmp_spec(&root_key) == Less by {
+                                assert(lv.contains(t@));
+                            };
+                        }
+                        let rebuilt = ParamBST::<T>::join_mid(Exposed::Node(lr, root_key, right));
                         let ghost llv = ll@;
                         let ghost lrv = lr@;
                         proof {
@@ -613,20 +788,25 @@ pub mod BSTParaMtEph {
                                 reveal(vstd::laws_cmp::obeys_cmp_ord);
                                 reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
                                 if lrv.contains(t@) {
-                                    // From recursive split ensures.
                                 } else if rv.contains(t@) {
-                                    // t > rk (expose). Antisymmetry: rk < t.
-                                    // kref < rk (cmp). Transitivity: kref < t.
-                                    // Reveals handle: kref < t → t > kref.
                                     lemma_cmp_antisymmetry(t, rk);
                                     lemma_cmp_transitivity(kref, rk, t);
                                 } else {
-                                    // t@ == rkv. Congruence: t compares like rk.
-                                    // rk > kref (antisymmetry of kref < rk).
-                                    // So t > kref.
                                     assert(t@ == rkv);
                                     assert(t.cmp_spec(&rk) == Equal);
                                     lemma_cmp_equal_congruent(t, rk, kref);
+                                }
+                            };
+                            // Disjointness: ll < key < rebuilt.
+                            use_type_invariant(&ll);
+                            assert forall|x| !(#[trigger] llv.contains(x) && rebuilt@.contains(x)) by {
+                                if llv.contains(x) && rebuilt@.contains(x) {
+                                    assert(exists|t: T| t@ == x);
+                                    let ghost t: T = choose|t: T| t@ == x;
+                                    assert(llv.contains(t@));
+                                    assert(t.cmp_spec(&key) == Less);
+                                    assert(rebuilt@.contains(t@));
+                                    assert(t.cmp_spec(&key) == Greater);
                                 }
                             };
                         }
@@ -634,7 +814,20 @@ pub mod BSTParaMtEph {
                     }
                     | Greater => {
                         let (rl, found, rr) = split_inner(&right, key);
-                        let rebuilt = join_mid(Exposed::Node(left, root_key, rl));
+                        proof {
+                            assert forall|x| #[trigger] rl@.contains(x) implies rv.contains(x) by {
+                                assert(rl@.union(rr@).contains(x));
+                            };
+                            vstd::set_lib::lemma_len_subset(rl@, rv);
+                            // Size bound for join_mid.
+                            assert(rl@.len() + lv.len() < usize::MAX as nat);
+                            // Ordering for join_mid: rl ⊂ right, right > root_key.
+                            assert forall|t: T| (#[trigger] rl@.contains(t@))
+                                implies t.cmp_spec(&root_key) == Greater by {
+                                assert(rv.contains(t@));
+                            };
+                        }
+                        let rebuilt = ParamBST::<T>::join_mid(Exposed::Node(left, root_key, rl));
                         let ghost rlv = rl@;
                         let ghost rrv = rr@;
                         proof {
@@ -645,20 +838,26 @@ pub mod BSTParaMtEph {
                                 reveal(vstd::laws_cmp::obeys_cmp_ord);
                                 reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
                                 if rlv.contains(t@) {
-                                    // From recursive split ensures.
                                 } else if lv.contains(t@) {
-                                    // kref > rk (cmp). Antisymmetry: rk < kref.
-                                    // t < rk (expose). Transitivity: t < kref.
                                     lemma_cmp_antisymmetry(kref, rk);
                                     lemma_cmp_transitivity(t, rk, kref);
                                 } else {
-                                    // t@ == rkv. Congruence: t compares like rk.
-                                    // rk < kref (antisymmetry of kref > rk).
-                                    // So t < kref.
                                     assert(t@ == rkv);
                                     assert(t.cmp_spec(&rk) == Equal);
                                     lemma_cmp_antisymmetry(kref, rk);
                                     lemma_cmp_equal_congruent(t, rk, kref);
+                                }
+                            };
+                            // Disjointness: rebuilt < key < rr.
+                            use_type_invariant(&rr);
+                            assert forall|x| !(#[trigger] rebuilt@.contains(x) && rrv.contains(x)) by {
+                                if rebuilt@.contains(x) && rrv.contains(x) {
+                                    assert(exists|t: T| t@ == x);
+                                    let ghost t: T = choose|t: T| t@ == x;
+                                    assert(rebuilt@.contains(t@));
+                                    assert(t.cmp_spec(&key) == Less);
+                                    assert(rrv.contains(t@));
+                                    assert(t.cmp_spec(&key) == Greater);
                                 }
                             };
                         }
@@ -686,13 +885,8 @@ pub mod BSTParaMtEph {
         }
     }
 
-    fn join_m<T: MtKey + 'static>(left: ParamBST<T>, key: T, right: ParamBST<T>) -> (result: ParamBST<T>)
-        ensures result@ =~= left@.union(right@).insert(key@)
-    {
-        join_mid(Exposed::Node(left, key, right))
-    }
-
-    fn find_recursive<T: MtKey + 'static>(tree: &ParamBST<T>, key: &T) -> (found: Option<T>)
+    fn find_recursive<T: MtKey>(tree: &ParamBST<T>, key: &T) -> (found: Option<T>)
+        requires tree@.finite(),
         ensures found.is_some() <==> tree@.contains(key@),
         decreases tree@.len(),
     {
@@ -716,7 +910,7 @@ pub mod BSTParaMtEph {
         }
     }
 
-    fn min_key<T: MtKey + 'static>(tree: &ParamBST<T>) -> (result: Option<T>)
+    fn min_key<T: MtKey>(tree: &ParamBST<T>) -> (result: Option<T>)
         requires tree@.finite(),
         ensures
             result.is_none() <==> tree@.len() == 0,
@@ -735,21 +929,9 @@ pub mod BSTParaMtEph {
         }
     }
 
-    fn join_pair_inner<T: MtKey + 'static>(left: ParamBST<T>, right: ParamBST<T>) -> (joined: ParamBST<T>)
-        ensures joined@.finite()
-    {
-        let _ = left.size();
-        match expose_internal(&right) {
-            | Exposed::Leaf => left,
-            | Exposed::Node(_, key, _) => {
-                let min_k = min_key(&right).unwrap_or(key);
-                let (_, _, reduced_right) = split_inner(&right, &min_k);
-                join_m(left, min_k, reduced_right)
-            }
-        }
-    }
 
-    fn union_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> (combined: ParamBST<T>)
+    fn union_inner<T: MtKey>(a: &ParamBST<T>, b: &ParamBST<T>) -> (combined: ParamBST<T>)
+        requires a@.finite(), b@.finite(), a@.len() + b@.len() <= usize::MAX as nat,
         ensures combined@ == a@.union(b@), combined@.finite(),
         decreases a@.len(),
     {
@@ -761,7 +943,26 @@ pub mod BSTParaMtEph {
                     a.clone()
                 } else {
                     let (bl, _found, br) = split_inner(b, &ak);
-                    proof { al@.lemma_subset_not_in_lt(a@, ak@); }
+                    let ghost alv = al@;
+                    let ghost arv = ar@;
+                    let ghost blv = bl@;
+                    let ghost brv = br@;
+                    let ghost akv = ak@;
+                    proof {
+                        alv.lemma_subset_not_in_lt(a@, akv);
+                        use_type_invariant(&al);
+                        use_type_invariant(&ar);
+                        use_type_invariant(&bl);
+                        use_type_invariant(&br);
+                        // Bound the recursive call inputs: al ⊂ a, bl ⊆ b, ar ⊂ a, br ⊆ b.
+                        vstd::set_lib::lemma_set_disjoint_lens(alv, arv);
+                        assert(blv.subset_of(b@));
+                        assert(brv.subset_of(b@));
+                        vstd::set_lib::lemma_len_subset(blv, b@);
+                        vstd::set_lib::lemma_len_subset(brv, b@);
+                        assert(alv.len() + blv.len() <= usize::MAX as nat);
+                        assert(arv.len() + brv.len() <= usize::MAX as nat);
+                    }
                     let f1 = move || -> (result: ParamBST<T>)
                         ensures result@ == al@.union(bl@), result@.finite()
                     {
@@ -773,24 +974,108 @@ pub mod BSTParaMtEph {
                         union_inner(&ar, &br)
                     };
                     let Pair(left_union, right_union) = crate::ParaPair!(f1, f2);
-                    join_m(left_union, ak, right_union)
+                    proof {
+                        lemma_cmp_order_axioms::<T>();
+                        // Ordering: left_union = al@ ∪ bl@ (all < ak), right_union = ar@ ∪ br@ (all > ak).
+                        assert forall|t: T| (#[trigger] left_union@.contains(t@))
+                            implies t.cmp_spec(&ak) == Less by {
+                            if alv.contains(t@) {} else { assert(blv.contains(t@)); }
+                        };
+                        assert forall|t: T| (#[trigger] right_union@.contains(t@))
+                            implies t.cmp_spec(&ak) == Greater by {
+                            if arv.contains(t@) {} else { assert(brv.contains(t@)); }
+                        };
+                        assert(!left_union@.contains(akv));
+                        assert(!right_union@.contains(akv));
+                        // Disjointness via existence witnesses.
+                        assert forall|x| !(left_union@.contains(x) && right_union@.contains(x)) by {
+                            if left_union@.contains(x) && right_union@.contains(x) {
+                                assert(alv.contains(x) || blv.contains(x));
+                                assert(exists|t: T| t@ == x);
+                                let ghost t: T = choose|t: T| t@ == x;
+                                assert(left_union@.contains(t@));
+                                assert(t.cmp_spec(&ak) == Less);
+                                assert(right_union@.contains(t@));
+                                assert(t.cmp_spec(&ak) == Greater);
+                            }
+                        };
+                        // Size bound.
+                        vstd::set_lib::lemma_set_disjoint_lens(left_union@, right_union@);
+                        let ghost lu_ru = left_union@.union(right_union@);
+                        assert(!lu_ru.contains(akv));
+                        assert forall|x| #[trigger] lu_ru.insert(akv).contains(x)
+                            implies a@.union(b@).contains(x) by {
+                            if x == akv { assert(a@.contains(akv)); }
+                            else if left_union@.contains(x) {
+                                if alv.contains(x) { assert(a@.contains(x)); }
+                                else { assert(blv.contains(x)); assert(b@.contains(x)); }
+                            } else {
+                                assert(right_union@.contains(x));
+                                if arv.contains(x) { assert(a@.contains(x)); }
+                                else { assert(brv.contains(x)); assert(b@.contains(x)); }
+                            }
+                        };
+                        assert(lu_ru.insert(akv).subset_of(a@.union(b@)));
+                        vstd::set_lib::lemma_len_union(a@, b@);
+                        vstd::set_lib::lemma_len_subset(lu_ru.insert(akv), a@.union(b@));
+                        assert(left_union@.len() + right_union@.len() < usize::MAX as nat);
+                    }
+                    let result = ParamBST::<T>::join_mid(Exposed::Node(left_union, ak, right_union));
+                    proof {
+                        assert forall|x| #[trigger] a@.union(b@).contains(x) <==>
+                            result@.contains(x) by {
+                            if blv.contains(x) || brv.contains(x) {
+                                assert(b@.remove(akv).contains(x));
+                                assert(b@.contains(x));
+                            }
+                            if b@.contains(x) && x != akv {
+                                assert(b@.remove(akv).contains(x));
+                                assert(blv.union(brv).contains(x));
+                            }
+                        };
+                        assert(result@ =~= a@.union(b@));
+                    }
+                    result
                 }
             }
         }
     }
 
-    #[verifier::external_body]
-    fn intersect_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> (common: ParamBST<T>)
-        ensures common@ == a@.intersect(b@), common@.finite()
+    fn intersect_inner<T: MtKey>(a: &ParamBST<T>, b: &ParamBST<T>) -> (common: ParamBST<T>)
+        requires a@.finite(), b@.finite(),
+        ensures common@ == a@.intersect(b@), common@.finite(),
+        decreases a@.len(),
     {
+        let _sa = a.size();
         let _ = b.size();
         match expose_internal(a) {
-            | Exposed::Leaf => new_leaf(),
+            | Exposed::Leaf => {
+                proof { assert(a@.intersect(b@) =~= Set::empty()); }
+                new_leaf()
+            },
             | Exposed::Node(al, ak, ar) => {
                 if b.is_empty() {
+                    proof { assert(a@.intersect(b@) =~= Set::empty()); }
                     new_leaf()
                 } else {
+                    let ghost sv = a@;
+                    let ghost alv = al@;
+                    let ghost arv = ar@;
+                    let ghost akv = ak@;
+                    proof {
+                        vstd::set_lib::lemma_set_disjoint_lens(alv, arv);
+                        assert(sv.len() == alv.len() + arv.len() + 1);
+                        lemma_cmp_order_axioms::<T>();
+                    }
                     let (bl, found, br) = split_inner(b, &ak);
+                    let ghost blv = bl@;
+                    let ghost brv = br@;
+                    proof {
+                        use_type_invariant(&al);
+                        use_type_invariant(&ar);
+                        use_type_invariant(&bl);
+                        use_type_invariant(&br);
+                    }
                     let f1 = move || -> (result: ParamBST<T>)
                         ensures result@ == al@.intersect(bl@), result@.finite()
                     {
@@ -802,28 +1087,164 @@ pub mod BSTParaMtEph {
                         intersect_inner(&ar, &br)
                     };
                     let Pair(left_res, right_res) = crate::ParaPair!(f1, f2);
+                    let ghost lrv = left_res@;
+                    let ghost rrv = right_res@;
                     if found {
-                        join_m(left_res, ak, right_res)
+                        proof {
+                            assert(lrv.subset_of(alv));
+                            assert(rrv.subset_of(arv));
+                            assert forall|x| !(lrv.contains(x) && rrv.contains(x)) by {
+                                if lrv.contains(x) && rrv.contains(x) {
+                                    assert(alv.contains(x) && arv.contains(x));
+                                }
+                            };
+                            assert(!lrv.contains(akv));
+                            assert(!rrv.contains(akv));
+                            vstd::set_lib::lemma_len_subset(lrv, alv);
+                            vstd::set_lib::lemma_len_subset(rrv, arv);
+                            assert forall|t: T| (#[trigger] lrv.contains(t@)) implies t.cmp_spec(&ak) == Less by {
+                                assert(alv.contains(t@));
+                            };
+                            assert forall|t: T| (#[trigger] rrv.contains(t@)) implies t.cmp_spec(&ak) == Greater by {
+                                assert(arv.contains(t@));
+                            };
+                        }
+                        let result = ParamBST::<T>::join_mid(Exposed::Node(left_res, ak, right_res));
+                        proof {
+                            assert forall|x| #[trigger] sv.intersect(b@).contains(x) <==>
+                                result@.contains(x) by {
+                                if lrv.contains(x) {
+                                    assert(alv.contains(x) && blv.contains(x));
+                                    assert(b@.remove(akv).contains(x));
+                                }
+                                if rrv.contains(x) {
+                                    assert(arv.contains(x) && brv.contains(x));
+                                    assert(b@.remove(akv).contains(x));
+                                }
+                                if sv.contains(x) && b@.contains(x) && x != akv {
+                                    assert(b@.remove(akv).contains(x));
+                                    assert(blv.union(brv).contains(x));
+                                    if alv.contains(x) {
+                                        assert(exists|t: T| t@ == x);
+                                        let ghost t: T = choose|t: T| t@ == x;
+                                        assert(alv.contains(t@));
+                                        assert(t.cmp_spec(&ak) == Less);
+                                        assert(!brv.contains(x));
+                                        assert(blv.contains(x));
+                                        assert(lrv.contains(x));
+                                    } else {
+                                        assert(arv.contains(x));
+                                        assert(exists|t: T| t@ == x);
+                                        let ghost t: T = choose|t: T| t@ == x;
+                                        assert(arv.contains(t@));
+                                        assert(t.cmp_spec(&ak) == Greater);
+                                        assert(!blv.contains(x));
+                                        assert(brv.contains(x));
+                                        assert(rrv.contains(x));
+                                    }
+                                }
+                            };
+                            assert(result@ =~= sv.intersect(b@));
+                        }
+                        result
                     } else {
-                        join_pair_inner(left_res, right_res)
+                        proof {
+                            assert(lrv.subset_of(alv));
+                            assert(rrv.subset_of(arv));
+                            assert forall|x| !(lrv.contains(x) && rrv.contains(x)) by {
+                                if lrv.contains(x) && rrv.contains(x) {
+                                    assert(alv.contains(x) && arv.contains(x));
+                                }
+                            };
+                            vstd::set_lib::lemma_len_subset(lrv, alv);
+                            vstd::set_lib::lemma_len_subset(rrv, arv);
+                            assert forall|s: T, o: T| #![trigger lrv.contains(s@), rrv.contains(o@)] lrv.contains(s@) && rrv.contains(o@)
+                                implies s.cmp_spec(&o) == Less by {
+                                assert(alv.contains(s@));
+                                assert(arv.contains(o@));
+                                lemma_cmp_antisymmetry(o, ak);
+                                lemma_cmp_transitivity(s, ak, o);
+                            };
+                        }
+                        let result = left_res.join_pair_inner(&right_res);
+                        proof {
+                            assert forall|x| #[trigger] sv.intersect(b@).contains(x) <==>
+                                result@.contains(x) by {
+                                if lrv.contains(x) {
+                                    assert(alv.contains(x) && blv.contains(x));
+                                    assert(b@.remove(akv).contains(x));
+                                }
+                                if rrv.contains(x) {
+                                    assert(arv.contains(x) && brv.contains(x));
+                                    assert(b@.remove(akv).contains(x));
+                                }
+                                if sv.contains(x) && b@.contains(x) {
+                                    assert(b@.remove(akv).contains(x));
+                                    assert(blv.union(brv).contains(x));
+                                    if alv.contains(x) {
+                                        assert(exists|t: T| t@ == x);
+                                        let ghost t: T = choose|t: T| t@ == x;
+                                        assert(alv.contains(t@));
+                                        assert(t.cmp_spec(&ak) == Less);
+                                        assert(!brv.contains(x));
+                                        assert(blv.contains(x));
+                                        assert(lrv.contains(x));
+                                    } else {
+                                        assert(arv.contains(x));
+                                        assert(exists|t: T| t@ == x);
+                                        let ghost t: T = choose|t: T| t@ == x;
+                                        assert(arv.contains(t@));
+                                        assert(t.cmp_spec(&ak) == Greater);
+                                        assert(!blv.contains(x));
+                                        assert(brv.contains(x));
+                                        assert(rrv.contains(x));
+                                    }
+                                }
+                            };
+                            assert(result@ =~= sv.intersect(b@));
+                        }
+                        result
                     }
                 }
             }
         }
     }
 
-    #[verifier::external_body]
-    fn difference_inner<T: MtKey + 'static>(a: &ParamBST<T>, b: &ParamBST<T>) -> (remaining: ParamBST<T>)
-        ensures remaining@ == a@.difference(b@), remaining@.finite()
+    fn difference_inner<T: MtKey>(a: &ParamBST<T>, b: &ParamBST<T>) -> (remaining: ParamBST<T>)
+        requires a@.finite(), b@.finite(),
+        ensures remaining@ == a@.difference(b@), remaining@.finite(),
+        decreases a@.len(),
     {
+        let _sa = a.size();
         let _ = b.size();
         match expose_internal(a) {
-            | Exposed::Leaf => new_leaf(),
+            | Exposed::Leaf => {
+                proof { assert(a@.difference(b@) =~= Set::empty()); }
+                new_leaf()
+            },
             | Exposed::Node(al, ak, ar) => {
                 if b.is_empty() {
+                    proof { assert(a@.difference(b@) =~= a@); }
                     a.clone()
                 } else {
+                    let ghost sv = a@;
+                    let ghost alv = al@;
+                    let ghost arv = ar@;
+                    let ghost akv = ak@;
+                    proof {
+                        vstd::set_lib::lemma_set_disjoint_lens(alv, arv);
+                        assert(sv.len() == alv.len() + arv.len() + 1);
+                        lemma_cmp_order_axioms::<T>();
+                    }
                     let (bl, found, br) = split_inner(b, &ak);
+                    let ghost blv = bl@;
+                    let ghost brv = br@;
+                    proof {
+                        use_type_invariant(&al);
+                        use_type_invariant(&ar);
+                        use_type_invariant(&bl);
+                        use_type_invariant(&br);
+                    }
                     let f1 = move || -> (result: ParamBST<T>)
                         ensures result@ == al@.difference(bl@), result@.finite()
                     {
@@ -835,23 +1256,135 @@ pub mod BSTParaMtEph {
                         difference_inner(&ar, &br)
                     };
                     let Pair(left_res, right_res) = crate::ParaPair!(f1, f2);
+                    let ghost lrv = left_res@;
+                    let ghost rrv = right_res@;
                     if found {
-                        join_pair_inner(left_res, right_res)
+                        proof {
+                            assert(lrv.subset_of(alv));
+                            assert(rrv.subset_of(arv));
+                            assert forall|x| !(lrv.contains(x) && rrv.contains(x)) by {
+                                if lrv.contains(x) && rrv.contains(x) {
+                                    assert(alv.contains(x) && arv.contains(x));
+                                }
+                            };
+                            vstd::set_lib::lemma_len_subset(lrv, alv);
+                            vstd::set_lib::lemma_len_subset(rrv, arv);
+                            assert forall|s: T, o: T| #![trigger lrv.contains(s@), rrv.contains(o@)] lrv.contains(s@) && rrv.contains(o@)
+                                implies s.cmp_spec(&o) == Less by {
+                                assert(alv.contains(s@));
+                                assert(arv.contains(o@));
+                                lemma_cmp_antisymmetry(o, ak);
+                                lemma_cmp_transitivity(s, ak, o);
+                            };
+                        }
+                        let result = left_res.join_pair_inner(&right_res);
+                        proof {
+                            assert forall|x| #[trigger] sv.difference(b@).contains(x) <==>
+                                result@.contains(x) by {
+                                if lrv.contains(x) {
+                                    assert(alv.contains(x) && !blv.contains(x));
+                                    assert(sv.contains(x));
+                                    assert(x != akv);
+                                    assert(exists|t: T| t@ == x);
+                                    let ghost t: T = choose|t: T| t@ == x;
+                                    assert(alv.contains(t@));
+                                    assert(t.cmp_spec(&ak) == Less);
+                                    assert(!brv.contains(x));
+                                    assert(!b@.contains(x));
+                                }
+                                if rrv.contains(x) {
+                                    assert(arv.contains(x) && !brv.contains(x));
+                                    assert(sv.contains(x));
+                                    assert(x != akv);
+                                    assert(exists|t: T| t@ == x);
+                                    let ghost t: T = choose|t: T| t@ == x;
+                                    assert(arv.contains(t@));
+                                    assert(t.cmp_spec(&ak) == Greater);
+                                    assert(!blv.contains(x));
+                                    assert(!b@.contains(x));
+                                }
+                                if sv.contains(x) && !b@.contains(x) {
+                                    assert(!blv.union(brv).contains(x));
+                                    if alv.contains(x) {
+                                        assert(alv.difference(blv).contains(x));
+                                    } else if arv.contains(x) {
+                                        assert(arv.difference(brv).contains(x));
+                                    }
+                                }
+                            };
+                            assert(result@ =~= sv.difference(b@));
+                        }
+                        result
                     } else {
-                        join_m(left_res, ak, right_res)
+                        proof {
+                            assert(lrv.subset_of(alv));
+                            assert(rrv.subset_of(arv));
+                            assert forall|x| !(lrv.contains(x) && rrv.contains(x)) by {
+                                if lrv.contains(x) && rrv.contains(x) {
+                                    assert(alv.contains(x) && arv.contains(x));
+                                }
+                            };
+                            assert(!lrv.contains(akv));
+                            assert(!rrv.contains(akv));
+                            vstd::set_lib::lemma_len_subset(lrv, alv);
+                            vstd::set_lib::lemma_len_subset(rrv, arv);
+                            assert forall|t: T| (#[trigger] lrv.contains(t@)) implies t.cmp_spec(&ak) == Less by {
+                                assert(alv.contains(t@));
+                            };
+                            assert forall|t: T| (#[trigger] rrv.contains(t@)) implies t.cmp_spec(&ak) == Greater by {
+                                assert(arv.contains(t@));
+                            };
+                        }
+                        let result = ParamBST::<T>::join_mid(Exposed::Node(left_res, ak, right_res));
+                        proof {
+                            assert(blv.union(brv) =~= b@);
+                            assert forall|x| #[trigger] sv.difference(b@).contains(x) <==>
+                                result@.contains(x) by {
+                                if lrv.contains(x) {
+                                    assert(alv.contains(x) && !blv.contains(x));
+                                    assert(sv.contains(x));
+                                    assert(exists|t: T| t@ == x);
+                                    let ghost t: T = choose|t: T| t@ == x;
+                                    assert(alv.contains(t@));
+                                    assert(t.cmp_spec(&ak) == Less);
+                                    assert(!brv.contains(x));
+                                    assert(!blv.union(brv).contains(x));
+                                }
+                                if rrv.contains(x) {
+                                    assert(arv.contains(x) && !brv.contains(x));
+                                    assert(sv.contains(x));
+                                    assert(exists|t: T| t@ == x);
+                                    let ghost t: T = choose|t: T| t@ == x;
+                                    assert(arv.contains(t@));
+                                    assert(t.cmp_spec(&ak) == Greater);
+                                    assert(!blv.contains(x));
+                                    assert(!blv.union(brv).contains(x));
+                                }
+                                if sv.contains(x) && !b@.contains(x) && x != akv {
+                                    assert(!blv.union(brv).contains(x));
+                                    if alv.contains(x) {
+                                        assert(alv.difference(blv).contains(x));
+                                    } else if arv.contains(x) {
+                                        assert(arv.difference(brv).contains(x));
+                                    }
+                                }
+                            };
+                            assert(result@ =~= sv.difference(b@));
+                        }
+                        result
                     }
                 }
             }
         }
     }
 
-    #[verifier::external_body]
-    fn filter_inner<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(
+    fn filter_inner<T: MtKey, F: Fn(&T) -> bool + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         predicate: &Arc<F>,
         Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
     ) -> (filtered: ParamBST<T>)
         requires
+            tree@.finite(),
             forall|t: &T| #[trigger] predicate.requires((t,)),
             forall|x: T, keep: bool|
                 predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
@@ -862,27 +1395,107 @@ pub mod BSTParaMtEph {
                 ==> tree@.contains(v) && spec_pred(v),
             forall|v: T::V| tree@.contains(v) && spec_pred(v)
                 ==> #[trigger] filtered@.contains(v),
+        decreases tree@.len(),
     {
         match expose_internal(tree) {
             | Exposed::Leaf => new_leaf(),
             | Exposed::Node(left, key, right) => {
-                let pred_left = Arc::clone(predicate);
-                let pred_right = Arc::clone(predicate);
-                let Pair(left_filtered, right_filtered) =
-                    crate::ParaPair!(
-                        move || filter_inner(&left, &pred_left, Ghost::assume_new()),
-                        move || filter_inner(&right, &pred_right, Ghost::assume_new())
-                    );
+                let ghost lv = left@;
+                let ghost rv = right@;
+                let ghost kv = key@;
+                proof {
+                    // Expose ensures gives us the size bound for left/right subtrees.
+                    vstd::set_lib::lemma_set_disjoint_lens(lv, rv);
+                    assert(!lv.union(rv).contains(kv));
+                    assert(lv.len() + rv.len() < usize::MAX as nat);
+                    use_type_invariant(&left);
+                    use_type_invariant(&right);
+                }
+                // Sequential: borrow predicate for both recursive calls (spec_fn is not Send,
+                // so parallel closures cannot capture it; sequential avoids the issue).
+                let left_filtered = filter_inner(&left, predicate, Ghost(spec_pred));
+                let right_filtered = filter_inner(&right, predicate, Ghost(spec_pred));
+                proof {
+                    lemma_cmp_order_axioms::<T>();
+                    vstd::set_lib::lemma_len_subset(left_filtered@, lv);
+                    vstd::set_lib::lemma_len_subset(right_filtered@, rv);
+                    // Disjointness: subsets of disjoint sets.
+                    assert forall|x| !(left_filtered@.contains(x) && right_filtered@.contains(x)) by {
+                        if left_filtered@.contains(x) && right_filtered@.contains(x) {
+                            assert(lv.contains(x) && rv.contains(x));
+                        }
+                    };
+                    // key is not in either filtered subtree (it's not in lv or rv).
+                    assert(!left_filtered@.contains(kv));
+                    assert(!right_filtered@.contains(kv));
+                    // Ordering: filtered subsets inherit ordering from parent subtrees.
+                    assert forall|t: T| (#[trigger] left_filtered@.contains(t@))
+                        implies t.cmp_spec(&key) == Less by {
+                        assert(lv.contains(t@));
+                    };
+                    assert forall|t: T| (#[trigger] right_filtered@.contains(t@))
+                        implies t.cmp_spec(&key) == Greater by {
+                        assert(rv.contains(t@));
+                    };
+                    assert(left_filtered@.len() + right_filtered@.len() <= usize::MAX as nat);
+                }
                 if (**predicate)(&key) {
-                    join_m(left_filtered, key, right_filtered)
+                    let result = ParamBST::<T>::join_mid(
+                        Exposed::Node(left_filtered, key, right_filtered),
+                    );
+                    proof {
+                        // result@ = left_filtered@ ∪ right_filtered@ ∪ {kv}.
+                        assert forall|v: T::V| #[trigger] result@.contains(v)
+                            implies tree@.contains(v) && spec_pred(v) by {
+                            if v == kv { assert(tree@.contains(kv)); }
+                            else if left_filtered@.contains(v) { assert(lv.contains(v)); }
+                            else { assert(rv.contains(v)); }
+                        };
+                        assert forall|v: T::V| tree@.contains(v) && spec_pred(v)
+                            implies #[trigger] result@.contains(v) by {
+                            if v == kv { assert(result@.contains(kv)); }
+                            else if lv.contains(v) { assert(left_filtered@.contains(v)); }
+                            else { assert(rv.contains(v)); assert(right_filtered@.contains(v)); }
+                        };
+                    }
+                    result
                 } else {
-                    join_pair_inner(left_filtered, right_filtered)
+                    proof {
+                        assert(!spec_pred(kv));
+                        // Ordering for join_pair_inner: all of left_filtered < all of right_filtered.
+                        // s ∈ left_filtered ⊆ lv (all < key), o ∈ right_filtered ⊆ rv (all > key).
+                        assert forall|s: T, o: T|
+                            #![trigger left_filtered@.contains(s@), right_filtered@.contains(o@)]
+                            left_filtered@.contains(s@) && right_filtered@.contains(o@)
+                            implies s.cmp_spec(&o) == Less by {
+                            assert(lv.contains(s@));
+                            assert(rv.contains(o@));
+                            lemma_cmp_antisymmetry(o, key);
+                            lemma_cmp_transitivity(s, key, o);
+                        };
+                    }
+                    let result = left_filtered.join_pair_inner(&right_filtered);
+                    proof {
+                        // result@ = left_filtered@ ∪ right_filtered@.
+                        assert forall|v: T::V| #[trigger] result@.contains(v)
+                            implies tree@.contains(v) && spec_pred(v) by {
+                            if left_filtered@.contains(v) { assert(lv.contains(v)); }
+                            else { assert(right_filtered@.contains(v)); assert(rv.contains(v)); }
+                        };
+                        assert forall|v: T::V| tree@.contains(v) && spec_pred(v)
+                            implies #[trigger] result@.contains(v) by {
+                            if v == kv { assert(false); }
+                            else if lv.contains(v) { assert(left_filtered@.contains(v)); }
+                            else { assert(rv.contains(v)); assert(right_filtered@.contains(v)); }
+                        };
+                    }
+                    result
                 }
             }
         }
     }
 
-    fn filter_parallel<T: MtKey + 'static, F: Fn(&T) -> bool + Send + Sync + 'static>(
+    fn filter_parallel<T: MtKey, F: Fn(&T) -> bool + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         predicate: F,
         Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
@@ -899,18 +1512,20 @@ pub mod BSTParaMtEph {
             forall|v: T::V| tree@.contains(v) && spec_pred(v)
                 ==> #[trigger] filtered@.contains(v),
     {
+        proof { use_type_invariant(tree); }
         let predicate = Arc::new(predicate);
         filter_inner(tree, &predicate, Ghost(spec_pred))
     }
 
-    fn reduce_inner<T: MtKey + 'static, F: Fn(T, T) -> T + Send + Sync + 'static>(
+    fn reduce_inner<T: MtKey, F: Fn(T, T) -> T + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         op: &Arc<F>,
         identity: T,
-    ) -> T
+    ) -> (result: T)
         requires
             tree@.finite(),
             forall|a: T, b: T| #[trigger] op.requires((a, b)),
+        ensures tree@.len() == 0 ==> result@ == identity@,
         decreases tree@.len(),
     {
         match expose_internal(tree) {
@@ -940,19 +1555,20 @@ pub mod BSTParaMtEph {
         }
     }
 
-    fn reduce_parallel<T: MtKey + 'static, F: Fn(T, T) -> T + Send + Sync + 'static>(
+    fn reduce_parallel<T: MtKey, F: Fn(T, T) -> T + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         op: F,
         base: T,
-    ) -> T
+    ) -> (result: T)
         requires forall|a: T, b: T| #[trigger] op.requires((a, b)),
+        ensures tree@.len() == 0 ==> result@ == base@,
     {
         let _ = tree.size();
         let op = Arc::new(op);
         reduce_inner(tree, &op, base)
     }
 
-    fn collect_in_order<T: MtKey + 'static>(tree: &ParamBST<T>, out: &mut Vec<T>)
+    fn collect_in_order<T: MtKey>(tree: &ParamBST<T>, out: &mut Vec<T>)
         requires tree@.finite(),
         ensures out@.len() == old(out)@.len() + tree@.len(),
         decreases tree@.len(),
