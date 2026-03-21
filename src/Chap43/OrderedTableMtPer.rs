@@ -312,14 +312,10 @@ pub mod OrderedTableMtPer {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let entries = inner.collect();
+            let len = entries.length();
+            proof { assume(len < usize::MAX); } // RWLOCK_GHOST domain — capacity bound lost across RwLock
             read_handle.release_read();
             let mut result = OrderedSetMtEph::empty();
-            let len = entries.length();
-            proof {
-                // StPer wf does not establish strict < usize::MAX bound on sequence length.
-                // The table size is bounded by construction but the bound is lost across RwLock.
-                assume(len < usize::MAX);
-            }
             let mut i: usize = 0;
             while i < len
                 invariant

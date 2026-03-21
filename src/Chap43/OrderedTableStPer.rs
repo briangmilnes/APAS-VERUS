@@ -395,6 +395,7 @@ pub mod OrderedTableStPer {
     /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1) with persistent semantics.
     pub trait OrderedTableStPerTrait<K: StT + Ord, V: StT + Ord>: Sized + View<V = Map<K::V, V::V>> {
         spec fn spec_orderedtablestper_wf(&self) -> bool;
+        spec fn spec_orderedtablestper_find_wf(&self) -> bool;
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- delegates to TableStPer.size
@@ -413,7 +414,7 @@ pub mod OrderedTableStPer {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableStPer.find (linear scan)
         fn find(&self, k: &K) -> (found: Option<V>)
-            requires self.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+            requires self.spec_orderedtablestper_find_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
             ensures
                 match found {
                     Some(v) => self@.contains_key(k@) && self@[k@] == v@,
@@ -682,6 +683,14 @@ pub mod OrderedTableStPer {
     impl<K: StT + Ord, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
         open spec fn spec_orderedtablestper_wf(&self) -> bool {
             self.base_set.spec_avltreesetstper_wf()
+            && spec_keys_no_dups(self.base_set.elements@)
+        }
+
+        // Weaker wf predicate that only requires the seq wf and no-dup keys.
+        // Used in find's precondition so callers only need the components that
+        // loop invariants can cheaply carry.
+        open spec fn spec_orderedtablestper_find_wf(&self) -> bool {
+            self.base_set.elements.spec_avltreeseqstper_wf()
             && spec_keys_no_dups(self.base_set.elements@)
         }
 
