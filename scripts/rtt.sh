@@ -13,5 +13,9 @@ if [ $# -gt 0 ]; then
     FILTER=(-E "test(/(?i)$1/)")
 fi
 
+LOGDIR="$PROJECT_ROOT/logs"
+mkdir -p "$LOGDIR"
+LOGFILE="$LOGDIR/rtt.$(date +%Y%m%d-%H%M%S).log"
+
 timeout 120 cargo nextest run --release -j 6 --no-fail-fast --no-tests warn "${FILTER[@]}" 2>&1 \
-    | sed 's/\x1b\[[0-9;]*[mGKHABCDEFJST]//g'
+    | sed 's/\x1b\[[0-9;]*[mGKHABCDEFJST]//g' | tee "$LOGFILE"

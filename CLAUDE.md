@@ -312,6 +312,17 @@ scripts/ptt.sh               # compile PTT library + run proof time tests
 scripts/rtt.sh               # run time tests (cargo nextest)
 ```
 
+- **All three scripts log to `logs/`** with timestamped filenames:
+  `logs/validate.YYYYMMDD-HHMMSS.log`, `logs/rtt.YYYYMMDD-HHMMSS.log`,
+  `logs/ptt.YYYYMMDD-HHMMSS.log`. Output goes to both stdout and the log file (via tee).
+  Log files are git-ignored. To review the most recent run:
+  ```bash
+  ls -t logs/validate.*.log | head -1 | xargs cat   # last validate
+  ls -t logs/rtt.*.log | head -1 | xargs cat         # last RTT
+  ls -t logs/ptt.*.log | head -1 | xargs cat         # last PTT
+  ```
+  When diagnosing failures, **read the log file** rather than re-running the suite. The log
+  contains the complete output including all errors, warnings, and test results.
 - Verus includes its own vstd. Do not pass `-L dependency` or `--extern vstd`.
 - **Never pipe, grep, sed, or tail the output of `scripts/validate.sh`**. The verification
   output contains the error messages you need to read to fix proofs. If the output is large,

@@ -32,3 +32,17 @@ Always show the full output from verus verification:
 - Never use `grep` to filter verus output
 - Show complete verification results including all errors and warnings
 - **Always echo the output into your response text as a markdown code block** - do not rely on the terminal widget which collapses output
+
+## Logs
+
+All three scripts (`validate.sh`, `rtt.sh`, `ptt.sh`) log to `logs/` with timestamped
+filenames (e.g., `logs/validate.20260321-073354.log`). To review the last run without
+re-executing:
+
+```bash
+ls -t logs/validate.*.log | head -1 | xargs cat
+ls -t logs/rtt.*.log | head -1 | xargs cat
+ls -t logs/ptt.*.log | head -1 | xargs cat
+```
+
+Read the log file to diagnose failures rather than re-running the suite.

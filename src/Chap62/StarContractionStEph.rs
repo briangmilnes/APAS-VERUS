@@ -16,6 +16,7 @@ pub mod StarContractionStEph {
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
     use crate::Chap62::StarPartitionStEph::StarPartitionStEph::sequential_star_partition;
+    #[cfg(verus_keep_ghost)]
     use crate::Chap62::StarPartitionStEph::StarPartitionStEph::spec_valid_partition_map;
     use crate::SetLit;
 

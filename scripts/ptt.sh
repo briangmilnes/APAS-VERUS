@@ -17,7 +17,12 @@ fi
 
 mkdir -p "$PROJECT_ROOT/target/verus"
 
+LOGDIR="$PROJECT_ROOT/logs"
+mkdir -p "$LOGDIR"
+LOGFILE="$LOGDIR/ptt.$(date +%Y%m%d-%H%M%S).log"
+
 cd "$PROJECT_ROOT"
+{
 "$VERUS" \
     --compile --crate-type=lib --crate-name apas_verus src/lib.rs \
     -o "$RLIB_PATH" \
@@ -27,3 +32,4 @@ cd "$PROJECT_ROOT"
 cd "$PROJECT_ROOT/rust_verify_test"
 cargo nextest run --release -j 6 --no-fail-fast --no-tests warn "${FILTER[@]}" 2>&1 \
     | sed 's/\x1b\[[0-9;]*[mGKHABCDEFJST]//g'
+} | tee "$LOGFILE"
