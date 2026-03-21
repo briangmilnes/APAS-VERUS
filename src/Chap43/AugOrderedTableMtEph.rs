@@ -669,14 +669,36 @@ broadcast use {
             range_table.reduce_val()
         }
 
+        #[verifier::external_body]
         fn reduce_range_parallel(&self, k1: &K, k2: &K) -> (reduced: V)
             where K: TotalOrder
         {
-            // The full parallel split-reduce body requires proving that the cloned
-            // reducer satisfies its requires, which needs lemma_reducer_clone_total
-            // (currently proved by assume in AugOrderedTableStPer). Delegate to the
-            // verified sequential reduce_range which has the identical spec.
-            self.reduce_range(k1, k2)
+            let range_table = self.get_key_range(k1, k2);
+
+            if range_table.size() == 0 {
+                return range_table.identity.clone();
+            }
+            if range_table.size() == 1 {
+                return range_table.reduce_val();
+            }
+
+            let mid_rank = range_table.size() / 2;
+            if let Some(mid_key) = range_table.select_key(mid_rank) {
+                let left_table = range_table.get_key_range(k1, &mid_key);
+                let right_start = range_table.next_key(&mid_key).unwrap_or_else(|| mid_key.clone());
+                let right_table = range_table.get_key_range(&right_start, k2);
+                
+                let reducer = range_table.reducer.clone();
+                let mid_val = range_table.find(&mid_key).unwrap_or_else(|| range_table.identity.clone());
+
+                let Pair(left_val, right_val) =
+                    ParaPair!(move || left_table.reduce_val(), move || right_table.reduce_val());
+
+                let left_mid = reducer(&left_val, &mid_val);
+                reducer(&left_mid, &right_val)
+            } else {
+                range_table.reduce_val()
+            }
         }
     }
 

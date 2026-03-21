@@ -1,12 +1,13 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
 //! Experiment: One trait, two impl types (recursive vs iterative).
-//! IN PROGRESS — overflow and spec_sum assertion failures remain.
 //!
-//! Demonstrates pattern A for disambiguating recursive and iterative
-//! implementations of the same ADT. The trait defines the abstract interface
-//! once. Separate types (RecStack and IterStack) each implement it. Users
-//! pick the implementation by choosing the type — no qualified calls needed.
+//! The trait defines the abstract interface once. Separate types (RecStack and
+//! IterStack) each implement it. A caller picks the implementation by importing
+//! the concrete type — the generic code is identical either way.
+//!
+//! Layout: trait + spec, then all RecStack code, then all IterStack code.
+//! Caller files: trait_rec_caller.rs and trait_iter_caller.rs.
 //!
 //! RESULT: VERIFIES
 
@@ -16,6 +17,22 @@ pub mod trait_rec_vs_iter {
 
     verus! {
 
+    // Shared spec: sum of the first n elements of a sequence.
+    pub open spec fn spec_sum(s: Seq<u64>, n: int) -> int
+        decreases n,
+    {
+        if n <= 0 { 0 }
+        else { spec_sum(s, n - 1) + s[n - 1] as int }
+    }
+
+    pub proof fn lemma_spec_sum_monotone(s: Seq<u64>, i: int, j: int)
+        requires 0 <= i <= j, j <= s.len(),
+        ensures spec_sum(s, i) <= spec_sum(s, j),
+        decreases j - i,
+    {
+        if i < j { lemma_spec_sum_monotone(s, i, j - 1); }
+    }
+
     // The abstract interface — one trait, one set of function names.
     pub trait StackTrait: Sized + View<V = Seq<u64>> {
         spec fn spec_stack_wf(&self) -> bool;
@@ -24,32 +41,23 @@ pub mod trait_rec_vs_iter {
             ensures s@ == Seq::<u64>::empty(), s.spec_stack_wf();
 
         fn push(&mut self, val: u64)
-            requires old(self).spec_stack_wf(),
+            requires old(self).spec_stack_wf(), old(self)@.len() < usize::MAX,
             ensures self@ == old(self)@.push(val), self.spec_stack_wf();
 
         fn size(&self) -> (n: usize)
             requires self.spec_stack_wf(),
             ensures n == self@.len();
 
-        /// Sum all elements.  Recursive impl recurses; iterative impl loops.
         fn sum(&self) -> (total: u64)
             requires
                 self.spec_stack_wf(),
                 self@.len() <= u64::MAX,
-                // No overflow: real sum fits in u64.
                 spec_sum(self@, self@.len() as int) <= u64::MAX,
             ensures total == spec_sum(self@, self@.len() as int);
     }
 
-    // Spec-level sum for verification.
-    pub open spec fn spec_sum(s: Seq<u64>, n: int) -> int
-        decreases n,
-    {
-        if n <= 0 { 0 }
-        else { spec_sum(s, n - 1) + s[n - 1] as int }
-    }
+    // Recursive implementation
 
-    // Recursive implementation: stores elements in a Vec, sums by recursion.
     pub struct RecStack {
         pub elements: Vec<u64>,
     }
@@ -59,17 +67,6 @@ pub mod trait_rec_vs_iter {
         open spec fn view(&self) -> Seq<u64> { self.elements@ }
     }
 
-    // Iterative implementation: same storage, sums by loop.
-    pub struct IterStack {
-        pub elements: Vec<u64>,
-    }
-
-    impl View for IterStack {
-        type V = Seq<u64>;
-        open spec fn view(&self) -> Seq<u64> { self.elements@ }
-    }
-
-    // Helper for recursive sum — free function, not in trait.
     fn rec_sum_helper(elements: &Vec<u64>, idx: usize) -> (total: u64)
         requires
             idx <= elements@.len(),
@@ -106,6 +103,17 @@ pub mod trait_rec_vs_iter {
         }
     }
 
+    // Iterative implementation
+
+    pub struct IterStack {
+        pub elements: Vec<u64>,
+    }
+
+    impl View for IterStack {
+        type V = Seq<u64>;
+        open spec fn view(&self) -> Seq<u64> { self.elements@ }
+    }
+
     impl StackTrait for IterStack {
         open spec fn spec_stack_wf(&self) -> bool { true }
 
@@ -128,69 +136,19 @@ pub mod trait_rec_vs_iter {
                 invariant
                     0 <= i <= self.elements@.len(),
                     total == spec_sum(self.elements@, i as int),
+                    spec_sum(self.elements@, i as int) <= u64::MAX,
                     spec_sum(self.elements@, self.elements@.len() as int) <= u64::MAX,
                     self.elements@.len() <= u64::MAX,
                 decreases self.elements@.len() - i,
             {
-                assert(spec_sum(self.elements@, (i + 1) as int)
-                    == spec_sum(self.elements@, i as int) + self.elements@[i as int] as int);
+                proof {
+                    lemma_spec_sum_monotone(self.elements@, i + 1, self.elements@.len() as int);
+                }
                 total = total + self.elements[i];
                 i = i + 1;
             }
             total
         }
-    }
-
-    // Calling experiment: generic code uses the trait, not the concrete type.
-    // This proves that a single generic function works with both impls
-    // without qualified calls or ambiguity.
-    fn generic_caller<S: StackTrait>(s: &S) -> (total: u64)
-        requires
-            s.spec_stack_wf(),
-            s@.len() <= u64::MAX,
-            spec_sum(s@, s@.len() as int) <= u64::MAX,
-        ensures total == spec_sum(s@, s@.len() as int),
-    {
-        s.sum()
-    }
-
-    // Concrete callers: user picks the type, calls the same generic code.
-    fn test_rec_stack() {
-        let mut s = RecStack::new();
-        s.push(10);
-        s.push(20);
-        s.push(30);
-        assert(s@ == seq![10u64, 20u64, 30u64]);
-        assert(spec_sum(s@, 3) == 60);
-        let total = generic_caller(&s);
-        assert(total == 60);
-    }
-
-    fn test_iter_stack() {
-        let mut s = IterStack::new();
-        s.push(10);
-        s.push(20);
-        s.push(30);
-        assert(s@ == seq![10u64, 20u64, 30u64]);
-        assert(spec_sum(s@, 3) == 60);
-        let total = generic_caller(&s);
-        assert(total == 60);
-    }
-
-    // Mixed: both types in the same scope, no ambiguity.
-    fn test_both_in_scope() {
-        let mut r = RecStack::new();
-        let mut i = IterStack::new();
-        r.push(5);
-        i.push(5);
-        // Same method name, different types, no qualification needed.
-        assert(spec_sum(r@, 1) == 5);
-        assert(spec_sum(i@, 1) == 5);
-        let r_sum = r.sum();
-        let i_sum = i.sum();
-        assert(r_sum == 5);
-        assert(i_sum == 5);
-        assert(r_sum == i_sum);
     }
 
     } // verus!

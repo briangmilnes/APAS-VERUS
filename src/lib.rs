@@ -172,7 +172,9 @@ pub mod experiments {
 //    pub mod tree_module_style;
 //    pub mod tree_mut_data_updates;
 //    pub mod tree_mut_structure_updates;
-    // pub mod trait_rec_vs_iter; // IN PROGRESS — 4 errors
+    pub mod trait_rec_vs_iter;
+    pub mod trait_rec_caller;
+    pub mod trait_iter_caller;
     // pub mod unsigned_int;
     // pub mod proven_partialeq;
     // pub mod use_proven_partialeq;
