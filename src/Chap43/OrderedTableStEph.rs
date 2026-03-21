@@ -25,6 +25,7 @@ pub mod OrderedTableStEph {
 // Veracity: added broadcast group
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
+    crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::group_avltreeseqstper_len_bound,
     vstd::map::group_map_axioms,
 };
 

@@ -349,6 +349,12 @@ broadcast use {
                 elements.push(cloned);
                 i = i + 1;
             }
+            proof {
+                // eph_seq is wf (loop invariant). From StEph lemma: eph_seq@.len() < usize::MAX.
+                // After loop: elements@.len() = len = eph_seq.length() as nat.
+                lemma_wf_implies_len_bound::<T>(&eph_seq.root);
+                assert(elements@.len() < usize::MAX);
+            }
             let result = AVLTreeSeqStPerS::from_vec(elements);
             proof {
                 assert(elements@.map_values(|t: T| t@) =~= eph_seq@);

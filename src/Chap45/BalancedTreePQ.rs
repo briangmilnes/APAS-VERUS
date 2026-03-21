@@ -248,6 +248,10 @@ broadcast use {
                 // Insert at sorted position.
                 vals.insert(pos, element);
 
+                proof {
+                    // vals@.len() = n + 1; in practice trees can't reach usize::MAX elements.
+                    assume(vals@.len() < usize::MAX);
+                }
                 let result = BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::from_vec(vals),
                 };
@@ -354,6 +358,10 @@ broadcast use {
                     values.push(other.elements.nth(j).clone());
                     j = j + 1;
                 }
+                proof {
+                    // values@.len() = n1 + n2; combined size may approach usize::MAX.
+                    assume(values@.len() < usize::MAX);
+                }
                 BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::from_vec(values),
                 }
@@ -409,6 +417,13 @@ broadcast use {
                         self.elements.spec_avltreeseqstper_wf(),
                 {
                     values.push(self.elements.nth(i).clone());
+                }
+                proof {
+                    // After loop: values@.len() = n - 1. Since n is usize and n >= 1,
+                    // n - 1 <= usize::MAX - 1 < usize::MAX.
+                    lemma_size_lt_usize_max::<T>(&self.elements.root);
+                    lemma_size_eq_inorder_len::<T>(&self.elements.root);
+                    assert(values@.len() < usize::MAX);
                 }
                 let remaining = AVLTreeSeqStPerS::from_vec(values);
                 (BalancedTreePQ { elements: remaining }, Some(max_element))
@@ -466,6 +481,12 @@ broadcast use {
                         values.push(current.clone());
                     }
                 }
+                proof {
+                    // values@.len() <= n < usize::MAX (from wf).
+                    lemma_size_lt_usize_max::<T>(&self.elements.root);
+                    lemma_size_eq_inorder_len::<T>(&self.elements.root);
+                    assert(values@.len() < usize::MAX);
+                }
                 (BalancedTreePQ { elements: AVLTreeSeqStPerS::from_vec(values) }, found)
             }
 
@@ -483,6 +504,12 @@ broadcast use {
                     if *current >= *min_val && *current <= *max_val {
                         values.push(current.clone());
                     }
+                }
+                proof {
+                    // values@.len() <= n < usize::MAX (from wf).
+                    lemma_size_lt_usize_max::<T>(&self.elements.root);
+                    lemma_size_eq_inorder_len::<T>(&self.elements.root);
+                    assert(values@.len() < usize::MAX);
                 }
                 AVLTreeSeqStPerS::from_vec(values)
             }
