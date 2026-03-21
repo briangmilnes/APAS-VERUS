@@ -20,54 +20,36 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ StarContractionMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:115: error: assume() [algorithmic] - assume(spec_valid_partition_map::<V>(graph@.V, centers@, par
-        86 |     fn star_contract_mt_fuel<V, R, F, G>(
-            ...
-       113 |             // Star partition maps every graph vertex to a center.
-       114 |             // Provable from partition loop structure; deferred to future round.
-       116 |         }
-       117 | 
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:86: error: fn_missing_ensures - fn star_contract_mt_fuel — exec fn should have ensures
+⚠ StarContractionMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap62/StarContractionMtEph.rs:86: error: fn_missing_ensures - fn star_contract_mt_fuel — exec fn should have ensures
         70 |     pub open spec fn spec_valid_partition_map<V: View>(
             ...
         84 | 
         85 |     /// Inner recursive star contraction with fuel for termination (parallel version).
         87 |         graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G, fuel: usize,
         88 |     ) -> R
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:142: error: fn_missing_ensures - fn star_contract_mt — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap62/StarContractionMtEph.rs:139: error: fn_missing_ensures - fn star_contract_mt — exec fn should have ensures
         86 |     fn star_contract_mt_fuel<V, R, F, G>(
             ...
-       140 |     /// Returns:
-       141 |     /// - Result of type R as computed by base and expand functions
-       143 |     where
-       144 |         V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,
-   Holes: 1 total
-      1 × assume()
-❌ StarContractionStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:112: error: assume() [algorithmic] - assume(spec_valid_partition_map::<V>(graph@.V, centers@, par
-        83 |     fn star_contract_fuel<V, R, F, G>(
+       137 |     /// Returns:
+       138 |     /// - Result of type R as computed by base and expand functions
+       140 |     where
+       141 |         V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,
+⚠ StarContractionStEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap62/StarContractionStEph.rs:66: error: fn_missing_ensures - fn star_contract_fuel — exec fn should have ensures
+        57 |         fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<V>
             ...
-       110 |             // Star partition maps every graph vertex to a center.
-       111 |             // Provable from partition loop structure; deferred to future round.
-       113 |         }
-       114 | 
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:83: error: fn_missing_ensures - fn star_contract_fuel — exec fn should have ensures
-        67 |     pub open spec fn spec_valid_partition_map<V: View>(
+        64 | 
+        65 |     /// Inner recursive star contraction with fuel for termination.
+        67 |         graph: &UnDirGraphStEph<V>, base: &F, expand: &G, fuel: usize,
+        68 |     ) -> R
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap62/StarContractionStEph.rs:119: error: fn_missing_ensures - fn star_contract — exec fn should have ensures
+        66 |     fn star_contract_fuel<V, R, F, G>(
             ...
-        81 | 
-        82 |     /// Inner recursive star contraction with fuel for termination.
-        84 |         graph: &UnDirGraphStEph<V>, base: &F, expand: &G, fuel: usize,
-        85 |     ) -> R
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:138: error: fn_missing_ensures - fn star_contract — exec fn should have ensures
-        83 |     fn star_contract_fuel<V, R, F, G>(
-            ...
-       136 |     /// Returns:
-       137 |     /// - Result of type R as computed by base and expand functions
-       139 |     where
-       140 |         V: HashOrd,
-   Holes: 1 total
-      1 × assume()
+       117 |     /// Returns:
+       118 |     /// - Result of type R as computed by base and expand functions
+       120 |     where
+       121 |         V: HashOrd,
 ✓ StarPartitionMtEph.rs
 ✓ StarPartitionStEph.rs
 
@@ -108,32 +90,29 @@ Proof Functions:
    0 total
 
 Function Specs:
-   13 exec fns with complete spec (requires+ensures) (56%)
-   4 exec fns missing spec (17%)
-   6 proof/spec fns clean (26%)
+   11 exec fns with complete spec (requires+ensures) (55%)
+   4 exec fns missing spec (20%)
+   5 proof/spec fns clean (25%)
    0 proof/spec fns with holes (0%)
-   23 total fns
+   20 total fns
 
 
-Holes Found: 2 (actionable)
-   2 × assume() (100%)
+Holes Found: 0 (actionable)
 
 Warnings: 4 total
    4 × fn_missing_ensures
+
+No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-20 22:07:20 -07:00
-Ended:     2026-03-20 22:07:20 -07:00
-Duration:  9ms
+Started:   2026-03-20 23:50:26 -07:00
+Ended:     2026-03-20 23:50:26 -07:00
+Duration:  14ms
 
 Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
-=
-
-Started:   2026-03-20 22:07:20 -07:00
-Ended:     2026-03-20 22:07:20 -07:00
-Duration:  9ms
+Duration:  14ms
 
 Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log

@@ -37,6 +37,7 @@ pub mod ETSPMtEph {
     //		2. imports
 
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
+    use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
 
 
     //		3. broadcast use
@@ -667,7 +668,6 @@ pub mod ETSPMtEph {
         (li, ri)
     }
 
-    #[verifier::external_body]
     fn find_best_swap_par(
         left_tour: Arc<Vec<Edge>>, right_tour: Arc<Vec<Edge>>, lo: usize, hi: usize,
     ) -> (result: (usize, usize, f64))
@@ -678,19 +678,45 @@ pub mod ETSPMtEph {
         ensures
             result.0 < (*left_tour)@.len(),
             result.1 < (*right_tour)@.len(),
+        decreases hi - lo,
     {
-        const THRESHOLD: usize = 16;
+        let lv: &Vec<Edge> = arc_deref(&left_tour);
+        let rv: &Vec<Edge> = arc_deref(&right_tour);
+        // *lv == *left_tour, *rv == *right_tour, so lv@.len() == (*left_tour)@.len().
+
         if hi <= lo {
             return (0, 0, f64::MAX);
         }
-        if hi - lo <= THRESHOLD {
+        if hi - lo <= 16 {
             let mut best_cost = f64::MAX;
-            let mut best_li = 0usize;
-            let mut best_ri = 0usize;
-            for li in lo..hi {
-                for ri in 0..right_tour.len() {
-                    let el = &left_tour[li];
-                    let er = &right_tour[ri];
+            let mut best_li: usize = 0;
+            let mut best_ri: usize = 0;
+            let mut li: usize = lo;
+            while li < hi
+                invariant
+                    lo <= li,
+                    li <= hi,
+                    hi <= lv@.len(),
+                    lv@.len() == (*left_tour)@.len(),
+                    rv@.len() == (*right_tour)@.len(),
+                    best_li < lv@.len(),
+                    best_ri < rv@.len(),
+                decreases hi - li,
+            {
+                let mut ri: usize = 0;
+                while ri < rv.len()
+                    invariant
+                        ri <= rv@.len(),
+                        lv@.len() == (*left_tour)@.len(),
+                        rv@.len() == (*right_tour)@.len(),
+                        best_li < lv@.len(),
+                        best_ri < rv@.len(),
+                        li < hi,
+                        hi <= lv@.len(),
+                    decreases rv@.len() - ri,
+                {
+                    let el: &Edge = &lv[li];
+                    let er: &Edge = &rv[ri];
                     let cost = el.from.distance(&er.to) + er.from.distance(&el.to)
                              - el.from.distance(&el.to) - er.from.distance(&er.to);
                     if cost < best_cost {
@@ -698,16 +724,68 @@ pub mod ETSPMtEph {
                         best_li = li;
                         best_ri = ri;
                     }
+                    ri = ri + 1;
                 }
+                li = li + 1;
             }
             (best_li, best_ri, best_cost)
         } else {
             let mid = lo + (hi - lo) / 2;
+            // Ghost lengths before moving into closures.
+            let ghost ll: nat = lv@.len();   // == (*left_tour)@.len()
+            let ghost rl: nat = rv@.len();   // == (*right_tour)@.len()
+
             let lt1 = Arc::clone(&left_tour);
             let rt1 = Arc::clone(&right_tour);
-            let f1 = move || find_best_swap_par(lt1, rt1, lo, mid);
-            let f2 = move || find_best_swap_par(left_tour, right_tour, mid, hi);
+
+            // lt1 == left_tour and rt1 == right_tour from Arc::clone spec.
+            // Ghost captures from the clones for use inside f1.
+            let ghost lt1_ll: nat = (*lt1)@.len();
+            let ghost rt1_rl: nat = (*rt1)@.len();
+            assert(lt1_ll == ll);
+            assert(rt1_rl == rl);
+            assert(ll >= 1);
+            assert(rl >= 1);
+            assert(mid <= ll);
+
+            // Prove decreasing argument for both recursive calls.
+            assert(mid - lo < hi - lo) by { assert(hi - lo > 16usize); };
+            assert(hi - mid < hi - lo) by { assert(hi - lo > 16usize); };
+
+            let f1 = move || -> (r: (usize, usize, f64))
+                ensures r.0 < lt1_ll, r.1 < rt1_rl,
+            {
+                proof {
+                    assert((*lt1)@.len() == lt1_ll);
+                    assert((*rt1)@.len() == rt1_rl);
+                    assert((*lt1)@.len() >= 1);
+                    assert((*rt1)@.len() >= 1);
+                    assert(mid <= (*lt1)@.len());
+                }
+                find_best_swap_par(lt1, rt1, lo, mid)
+            };
+
+            let f2 = move || -> (r: (usize, usize, f64))
+                ensures r.0 < ll, r.1 < rl,
+            {
+                proof {
+                    assert((*left_tour)@.len() == ll);
+                    assert((*right_tour)@.len() == rl);
+                    assert((*left_tour)@.len() >= 1);
+                    assert((*right_tour)@.len() >= 1);
+                    assert(hi <= (*left_tour)@.len());
+                }
+                find_best_swap_par(left_tour, right_tour, mid, hi)
+            };
+
             let (left_res, right_res) = join(f1, f2);
+
+            proof {
+                // lt1_ll == ll, so left_res.0 < lt1_ll implies left_res.0 < ll.
+                assert(left_res.0 < ll);
+                assert(left_res.1 < rl);
+            }
+
             if left_res.2 <= right_res.2 { left_res } else { right_res }
         }
     }

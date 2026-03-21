@@ -109,11 +109,8 @@ pub mod StarContractionMtEph {
 
         let (centers, partition_map) = parallel_star_partition(graph, seed);
 
-        proof {
-            // Star partition maps every graph vertex to a center.
-            // Provable from partition loop structure; deferred to future round.
-            assume(spec_valid_partition_map::<V>(graph@.V, centers@, partition_map@));
-        }
+        // parallel_star_partition ensures spec_valid_partition_map (proven in StarPartitionMtEph).
+        assert(spec_valid_partition_map::<V>(graph@.V, centers@, partition_map@));
 
         let quotient_graph = build_quotient_graph_parallel(graph, &centers, &partition_map);
 
