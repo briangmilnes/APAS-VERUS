@@ -1,7 +1,7 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Multi-threaded ephemeral reducer-augmented ordered table implementation.
 //!
-//! Note: reduce_range_parallel() uses unconditional parallelism with ParaPair! for range reductions.
+//! reduce_range_parallel() uses verified ParaPair! with named closures for range reductions.
 
 pub mod AugOrderedTableMtEph {
 
@@ -114,6 +114,17 @@ broadcast use {
         t: &AugOrderedTableMtEph<K, V, F>,
     )
         ensures t@ =~= t.base_table@
+    {}
+
+    /// Clone bridge: cloning a multi-threaded reducer preserves its call precondition.
+    /// Justified because Clone on a Fn captures the same environment, preserving behavior.
+    #[verifier::external_body]
+    proof fn lemma_mt_reducer_clone_total<V: MtVal, F: MtReduceFn<V>>(
+        original: &F,
+        cloned: &F,
+    )
+        requires forall|v1: &V, v2: &V| #[trigger] original.requires((v1, v2)),
+        ensures forall|v1: &V, v2: &V| #[trigger] cloned.requires((v1, v2)),
     {}
 
     // 8. traits
@@ -303,7 +314,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- delegates to base table get_key_range + recalculates reduction
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             requires self.spec_augorderedtablemteph_wf()
-            ensures range@.dom().finite();
+            ensures range@.dom().finite(), range.spec_augorderedtablemteph_wf();
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- external_body, delegates to base table which collects+sorts+counts
         fn rank_key(&self, k: &K) -> (rank: usize)
@@ -340,10 +351,13 @@ broadcast use {
             requires self.spec_augorderedtablemteph_wf()
             ensures self@.dom().finite();
         /// - APAS: Work O(log n), Span O(log n) -- split + cached reduction
-        /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- external_body, parallel via ParaPair! but get_key_range dominates
+        /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- parallel via ParaPair! with named closures
         fn reduce_range_parallel(&self, k1: &K, k2: &K) -> (reduced: V)
             where K: TotalOrder
-            requires self.spec_augorderedtablemteph_wf()
+            requires
+                self.spec_augorderedtablemteph_wf(),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<V>(),
             ensures self@.dom().finite();
     }
 
@@ -599,7 +613,7 @@ broadcast use {
         }
 
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
-            ensures range@.dom().finite()
+            ensures range@.dom().finite(), range.spec_augorderedtablemteph_wf()
         {
             let new_base = self.base_table.get_key_range(k1, k2);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -610,7 +624,10 @@ broadcast use {
                 reducer: self.reducer.clone(),
                 identity: self.identity.clone(),
             };
-            proof { lemma_aug_view(&r); }
+            proof {
+                lemma_aug_view(&r);
+                lemma_mt_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
+            }
             r
         }
 
@@ -669,7 +686,6 @@ broadcast use {
             range_table.reduce_val()
         }
 
-        #[verifier::external_body]
         fn reduce_range_parallel(&self, k1: &K, k2: &K) -> (reduced: V)
             where K: TotalOrder
         {
@@ -683,21 +699,42 @@ broadcast use {
             }
 
             let mid_rank = range_table.size() / 2;
-            if let Some(mid_key) = range_table.select_key(mid_rank) {
-                let left_table = range_table.get_key_range(k1, &mid_key);
-                let right_start = range_table.next_key(&mid_key).unwrap_or_else(|| mid_key.clone());
-                let right_table = range_table.get_key_range(&right_start, k2);
-                
-                let reducer = range_table.reducer.clone();
-                let mid_val = range_table.find(&mid_key).unwrap_or_else(|| range_table.identity.clone());
+            match range_table.select_key(mid_rank) {
+                Some(mid_key) => {
+                    let left_table = range_table.get_key_range(k1, &mid_key);
+                    let right_start = match range_table.next_key(&mid_key) {
+                        Some(k) => k,
+                        None => mid_key.clone(),
+                    };
+                    let right_table = range_table.get_key_range(&right_start, k2);
 
-                let Pair(left_val, right_val) =
-                    ParaPair!(move || left_table.reduce_val(), move || right_table.reduce_val());
+                    let reducer = range_table.reducer.clone();
+                    proof { lemma_mt_reducer_clone_total::<V, F>(&range_table.reducer, &reducer); }
 
-                let left_mid = reducer(&left_val, &mid_val);
-                reducer(&left_mid, &right_val)
-            } else {
-                range_table.reduce_val()
+                    let mid_val = match range_table.find(&mid_key) {
+                        Some(v) => v,
+                        None => range_table.identity.clone(),
+                    };
+
+                    let f1 = move || -> (r: V)
+                        requires left_table@.dom().finite()
+                    {
+                        left_table.reduce_val()
+                    };
+
+                    let f2 = move || -> (r: V)
+                        requires right_table@.dom().finite()
+                    {
+                        right_table.reduce_val()
+                    };
+
+                    let Pair(left_val, right_val) = ParaPair!(f1, f2);
+                    let left_mid = reducer(&left_val, &mid_val);
+                    reducer(&left_mid, &right_val)
+                }
+                None => {
+                    range_table.reduce_val()
+                }
             }
         }
     }

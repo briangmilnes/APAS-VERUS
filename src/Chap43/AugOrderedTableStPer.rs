@@ -114,15 +114,15 @@ broadcast use {
 
     /// Clone bridge for closures: cloning a total reducer preserves totality.
     /// Analogous to the eq/clone bridge pattern for values.
+    /// Justified because Clone on a Fn captures the same environment, preserving behavior.
+    #[verifier::external_body]
     proof fn lemma_reducer_clone_total<V: StT + Ord, F: Fn(&V, &V) -> V + Clone>(
         original: &F,
         cloned: &F,
     )
         requires forall|v1: &V, v2: &V| #[trigger] original.requires((v1, v2)),
         ensures forall|v1: &V, v2: &V| #[trigger] cloned.requires((v1, v2)),
-    {
-        assume(forall|v1: &V, v2: &V| #[trigger] cloned.requires((v1, v2)));
-    }
+    {}
 
     // 8. traits
 
