@@ -21,8 +21,14 @@ pub mod ParaHashTableStEph {
 
     use vstd::prelude::*;
     use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
 
     verus! {
+
+    // 3. broadcast use
+
+    broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
     // 4. type definitions
 
@@ -108,7 +114,8 @@ pub mod ParaHashTableStEph {
     {}
 
     /// Clone bridge for generic element: ensures cloned value equals original.
-    /// Centralizes the clone-body assume pattern per partial_eq_eq_clone_standard.
+    /// Uses the standard clone-body assume bridge per partial_eq_eq_clone_standard.
+    // veracity: no_requires
     pub fn clone_elem<T: Clone>(x: &T) -> (c: T)
         ensures c == *x,
     {
@@ -686,6 +693,8 @@ pub mod ParaHashTableStEph {
         fn lookup(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (found: Option<Value>)
             requires
                 Self::spec_impl_wf(table),
+                obeys_feq_clone::<Key>(),
+                obeys_feq_clone::<Value>(),
             ensures
                 table@.dom().contains(*key) ==> found == Some(table@[*key]),
                 !table@.dom().contains(*key) ==> found is None;
@@ -696,6 +705,8 @@ pub mod ParaHashTableStEph {
         fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
             requires
                 Self::spec_impl_wf(old(table)),
+                obeys_feq_clone::<Key>(),
+                obeys_feq_clone::<Value>(),
             ensures
                 deleted == old(table)@.dom().contains(*key),
                 table@ == old(table)@.remove(*key),
@@ -737,6 +748,8 @@ pub mod ParaHashTableStEph {
                 new_size > 0,
                 Self::spec_impl_wf(table),
                 Self::spec_resize_ok(table, new_size),
+                obeys_feq_clone::<Key>(),
+                obeys_feq_clone::<Value>(),
             ensures
                 resized@ == table@,
                 resized.current_size == new_size,
