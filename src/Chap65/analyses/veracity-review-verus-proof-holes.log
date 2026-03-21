@@ -66,34 +66,3 @@ UnionFindStEph.rs  depends upon only clean modules
 Modules:
    1 clean (no holes, no errors; 33%)
    2 holed (holes or errors, 66%)
-   3 total
-
-Proof Functions:
-   0 clean (0%)
-   0 holed (0%)
-   0 total
-
-Function Specs:
-   23 exec fns with complete spec (requires+ensures) (76%)
-   1 exec fns missing spec (3%)
-   6 proof/spec fns clean (20%)
-   0 proof/spec fns with holes (0%)
-   30 total fns
-
-
-Holes Found: 2 (actionable)
-   2 × external_body (100%)
-
-Warnings: 1 total
-   1 × fn_missing_requires
-
-=================================================================
-5. Started/Ended/Duration
-=================================================================
-
-Started:   2026-03-20 19:12:56 -07:00
-Ended:     2026-03-20 19:12:56 -07:00
-Duration:  8ms
-
-Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-
