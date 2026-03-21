@@ -6,7 +6,7 @@ use apas_verus::Chap38::BSTParaMtEph::BSTParaMtEph::*;
 use apas_verus::Types::Types::*;
 
 fn make_tree(values: &[i32]) -> ParamBST<i32> {
-    let tree = ParamBST::new();
+    let mut tree = ParamBST::new();
     for &value in values {
         tree.insert(value);
     }
@@ -14,7 +14,7 @@ fn make_tree(values: &[i32]) -> ParamBST<i32> {
 }
 
 fn make_range_tree(start: i32, end: i32) -> ParamBST<i32> {
-    let tree = ParamBST::new();
+    let mut tree = ParamBST::new();
     for value in start..end {
         tree.insert(value);
     }
@@ -47,7 +47,7 @@ fn para_split_and_join_pair() {
 fn para_union_and_delete() {
     let a = make_tree(&[1, 3, 5, 7]);
     let b = make_tree(&[0, 2, 4, 6, 8]);
-    let union = a.union(&b);
+    let mut union = a.union(&b);
     assert_eq!(union.in_order(), ArraySeqStPerS::from_vec(vec![0, 1, 2, 3, 4, 5, 6, 7, 8]));
 
     union.delete(&4);
@@ -187,132 +187,10 @@ fn para_ops_on_empty_tree() {
 
 #[test]
 fn para_delete_nonexistent_key() {
-    let tree = make_tree(&[1, 3, 5]);
+    let mut tree = make_tree(&[1, 3, 5]);
     tree.delete(&2);
     assert_eq!(tree.in_order(), ArraySeqStPerS::from_vec(vec![1, 3, 5]));
     assert_eq!(tree.size(), 3);
-}
-
-// Concurrent operation verification tests for BSTParaMtEph
-#[test]
-fn para_concurrent_insertions() {
-    use std::sync::{Arc, Barrier};
-    use std::thread;
-
-    let tree = Arc::new(ParamBST::<i32>::new());
-    let barrier = Arc::new(Barrier::new(4));
-    let mut handles = vec![];
-
-    // Thread 1: Insert values 1-25
-    let tree1 = Arc::clone(&tree);
-    let barrier1 = Arc::clone(&barrier);
-    handles.push(thread::spawn(move || {
-        barrier1.wait();
-        for i in 1..=25 {
-            tree1.insert(i);
-        }
-        tree1.size()
-    }));
-
-    // Thread 2: Insert values 26-50
-    let tree2 = Arc::clone(&tree);
-    let barrier2 = Arc::clone(&barrier);
-    handles.push(thread::spawn(move || {
-        barrier2.wait();
-        for i in 26..=50 {
-            tree2.insert(i);
-        }
-        tree2.size()
-    }));
-
-    // Thread 3: Insert values 51-75
-    let tree3 = Arc::clone(&tree);
-    let barrier3 = Arc::clone(&barrier);
-    handles.push(thread::spawn(move || {
-        barrier3.wait();
-        for i in 51..=75 {
-            tree3.insert(i);
-        }
-        tree3.size()
-    }));
-
-    // Thread 4: Search operations
-    let tree4 = Arc::clone(&tree);
-    let barrier4 = Arc::clone(&barrier);
-    handles.push(thread::spawn(move || {
-        barrier4.wait();
-        let mut found_count = 0;
-        for i in 1..=75 {
-            if tree4.find(&i).is_some() {
-                found_count += 1;
-            }
-        }
-        found_count
-    }));
-
-    let results = handles.into_iter().map(|h| h.join().unwrap()).collect::<Vec<_>>();
-
-    // Verify results - exact counts may vary due to concurrent insertions and timing
-    // Each thread inserts 25 elements, but the size reflects total tree size when that thread finishes
-    // Due to concurrent execution, the size might be less than expected if other threads haven't finished
-    assert!(results[0] >= 1); // Thread 1 size - at least some insertions should succeed
-    assert!(results[1] >= 1); // Thread 2 size - at least some insertions should succeed
-    assert!(results[2] >= 1); // Thread 3 size - at least some insertions should succeed
-    // Thread 4 found count can vary due to timing
-}
-
-#[test]
-fn para_concurrent_operations_stress() {
-    use std::sync::{Arc, Barrier};
-    use std::thread;
-
-    let tree = Arc::new(ParamBST::<i32>::new());
-    let num_threads = 6;
-    let barrier = Arc::new(Barrier::new(num_threads));
-    let mut handles = vec![];
-
-    for thread_id in 0..num_threads {
-        let tree_clone = Arc::clone(&tree);
-        let barrier_clone = Arc::clone(&barrier);
-
-        handles.push(thread::spawn(move || {
-            barrier_clone.wait();
-
-            // Each thread inserts different ranges
-            let start = thread_id * 20;
-            let end = start + 20;
-
-            for i in start..end {
-                tree_clone.insert(i as i32);
-            }
-
-            // Test operations
-            let size = tree_clone.size();
-            let is_empty = tree_clone.is_empty();
-
-            // Test find operations
-            let mut found_own = 0;
-            for i in start..end {
-                if tree_clone.find(&(i as i32)).is_some() {
-                    found_own += 1;
-                }
-            }
-
-            (thread_id, size, is_empty, found_own)
-        }));
-    }
-
-    let results = handles.into_iter().map(|h| h.join().unwrap()).collect::<Vec<_>>();
-
-    // Verify each thread's results
-    for (thread_id, size, is_empty, found_own) in results {
-        // In concurrent execution, size might be less than 20 when a thread finishes
-        // if other threads haven't completed their insertions yet
-        assert!(size >= 1); // At least some insertions should be visible
-        assert!(!is_empty); // Tree should not be empty
-        assert!(found_own >= 0); // Should find some of its own insertions
-        println!("Thread {thread_id}: size={size}, empty={is_empty:?}, found_own={found_own}");
-    }
 }
 
 #[test]
@@ -461,14 +339,14 @@ fn para_concurrent_split_join() {
 
 #[test]
 fn para_concurrent_expose_join_mid() {
-    use std::sync::{Arc, Barrier};
+    use std::sync::Barrier;
     use std::thread;
 
-    let barrier = Arc::new(Barrier::new(3));
+    let barrier = std::sync::Arc::new(Barrier::new(3));
     let mut handles = vec![];
 
     // Thread 1: Create and expose tree structure
-    let barrier1 = Arc::clone(&barrier);
+    let barrier1 = std::sync::Arc::clone(&barrier);
     handles.push(thread::spawn(move || {
         barrier1.wait();
         let tree = make_tree(&[10, 5, 15, 3, 7, 12, 18]);
@@ -479,7 +357,7 @@ fn para_concurrent_expose_join_mid() {
     }));
 
     // Thread 2: Build tree using join_mid
-    let barrier2 = Arc::clone(&barrier);
+    let barrier2 = std::sync::Arc::clone(&barrier);
     handles.push(thread::spawn(move || {
         barrier2.wait();
         let left = ParamBST::join_mid(Exposed::Leaf);
@@ -489,7 +367,7 @@ fn para_concurrent_expose_join_mid() {
     }));
 
     // Thread 3: Complex join_mid operations
-    let barrier3 = Arc::clone(&barrier);
+    let barrier3 = std::sync::Arc::clone(&barrier);
     handles.push(thread::spawn(move || {
         barrier3.wait();
         let left_tree = make_tree(&[1, 2, 3]);
@@ -507,68 +385,20 @@ fn para_concurrent_expose_join_mid() {
 }
 
 #[test]
-fn para_concurrent_delete_operations() {
-    use std::sync::{Arc, Barrier};
-    use std::thread;
+fn para_sequential_insert_delete() {
+    // Tests insert/delete sequentially (previously concurrent, now &mut self).
+    let mut tree = ParamBST::<i32>::new();
+    for i in 0..75 {
+        tree.insert(i);
+    }
+    assert_eq!(tree.size(), 75);
 
-    let tree = Arc::new(make_range_tree(0, 100));
-    let barrier = Arc::new(Barrier::new(4));
-    let mut handles = vec![];
-
-    // Thread 1: Delete multiples of 10
-    let tree1 = Arc::clone(&tree);
-    let barrier1 = Arc::clone(&barrier);
-    handles.push(thread::spawn(move || {
-        barrier1.wait();
-        for i in (0..100).step_by(10) {
-            tree1.delete(&i);
-        }
-        tree1.size()
-    }));
-
-    // Thread 2: Delete multiples of 7
-    let tree2 = Arc::clone(&tree);
-    let barrier2 = Arc::clone(&barrier);
-    handles.push(thread::spawn(move || {
-        barrier2.wait();
-        for i in (0..100).step_by(7) {
-            tree2.delete(&i);
-        }
-        tree2.size()
-    }));
-
-    // Thread 3: Search for deleted elements
-    let tree3 = Arc::clone(&tree);
-    let barrier3 = Arc::clone(&barrier);
-    handles.push(thread::spawn(move || {
-        barrier3.wait();
-        let mut not_found = 0;
-        for i in (0..100).step_by(10) {
-            if tree3.find(&i).is_none() {
-                not_found += 1;
-            }
-        }
-        not_found
-    }));
-
-    // Thread 4: Check remaining elements
-    let tree4 = Arc::clone(&tree);
-    let barrier4 = Arc::clone(&barrier);
-    handles.push(thread::spawn(move || {
-        barrier4.wait();
-        let mut remaining = 0;
-        for i in 0..100 {
-            if tree4.find(&i).is_some() {
-                remaining += 1;
-            }
-        }
-        remaining
-    }));
-
-    let results = handles.into_iter().map(|h| h.join().unwrap()).collect::<Vec<_>>();
-
-    // Verify results - exact counts depend on deletion timing
-    assert!(results[0] <= 100); // Size after deletions
-    assert!(results[1] <= 100); // Size after deletions
-    // Count results can vary due to concurrent deletions
+    for i in (0..75).step_by(10) {
+        tree.delete(&i);
+    }
+    // 75 - 8 multiples of 10 in [0..75) = 67
+    assert_eq!(tree.size(), 67);
+    for i in (0..75).step_by(10) {
+        assert_eq!(tree.find(&i), None);
+    }
 }
