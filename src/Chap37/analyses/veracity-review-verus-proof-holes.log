@@ -283,8 +283,8 @@ Accepted (reviewed): 5 total
 
 Structural (info only): 27
    25 × RWLOCK_GHOST
-   1 × STD_TRAIT_IMPL
    1 × OPAQUE_EXTERNAL
+   1 × STD_TRAIT_IMPL
 
 No proof holes found! All proofs are complete.
 
@@ -292,15 +292,11 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-20 22:03:52 -07:00
-Ended:     2026-03-20 22:03:52 -07:00
-Duration:  187ms
+Started:   2026-03-20 22:07:19 -07:00
+Ended:     2026-03-20 22:07:19 -07:00
+Duration:  165ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
-=========
-
-Started:   2026-03-20 22:03:52 -07:00
-Ended:     2026-03-20 22:03:52 -07:00
-Duration:  187ms
+s
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
