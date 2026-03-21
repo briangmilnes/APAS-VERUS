@@ -19,6 +19,9 @@ pub mod PrimStEph {
     use std::hash::Hash;
     use crate::Chap45::BinaryHeapPQ::BinaryHeapPQ::*;
     use crate::SetLit;
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
 
     pub type T<V> = PQEntry<V>;
 
@@ -93,57 +96,199 @@ pub mod PrimStEph {
     ///   set, so ng() and get_edge_label() each cost O(m) per call. Total neighbor/weight
     ///   work across all vertices is O(nm) = O(m^2) in a dense graph. With an adjacency-list
     ///   graph representation this would be O(m lg n) as textbook states.
-    #[verifier::external_body]
+    #[verifier::exec_allows_no_decreases_clause]
     pub fn prim_mst<V: HashOrd + Display>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         start: &V,
     ) -> (result: SetStEph<LabEdge<V, WrappedF64>>)
         requires
             spec_labgraphview_wf(graph@),
-            obeys_key_model::<V>(),
             valid_key_type_LabEdge::<V, WrappedF64>(),
+            graph.labeled_edges.size() * 4 + 4 <= usize::MAX as int,
         ensures
             result.spec_setsteph_wf(),
     {
+        let m = graph.labeled_edges.size();
+        assert(m as int == graph@.A.len());
+        proof { assert(obeys_feq_full_trigger::<PQEntry<V>>()); }
+
+        // DA = directed adjacency pairs derived from undirected edges.
+        // Each undirected edge (u,v,l) in A contributes directed pairs (u,v) and (v,u).
+        let ghost DA_fwd = graph@.A.map(|e: (V::V, V::V, f64)| (e.0, e.1));
+        let ghost DA_rev = graph@.A.map(|e: (V::V, V::V, f64)| (e.1, e.0));
+        let ghost DA = DA_fwd.union(DA_rev);
+
+        proof {
+            graph@.A.lemma_map_finite(|e: (V::V, V::V, f64)| (e.0, e.1));
+            graph@.A.lemma_map_finite(|e: (V::V, V::V, f64)| (e.1, e.0));
+            vstd::set_lib::lemma_set_union_finite_iff(DA_fwd, DA_rev);
+            vstd::set_lib::lemma_map_size_bound(graph@.A, DA_fwd, |e: (V::V, V::V, f64)| (e.0, e.1));
+            vstd::set_lib::lemma_map_size_bound(graph@.A, DA_rev, |e: (V::V, V::V, f64)| (e.1, e.0));
+            vstd::set_lib::lemma_len_union(DA_fwd, DA_rev);
+            assert(DA.len() <= 2 * m as int);
+        }
+
         let mut mst_edges = SetLit![];
         let mut visited = HashSetWithViewPlus::<V>::new();
-
         let mut pq = BinaryHeapPQ::<PQEntry<V>>::singleton(pq_entry_new(zero_dist(), start.clone(), None));
+        let ghost mut remaining_budget: int = 2 * m as int;
+        let ghost mut used_pairs: Set<(V::V, V::V)> = Set::empty();
 
-        while !pq.is_empty() {
-            let (new_pq, entry_opt) = pq.delete_min();
-            pq = new_pq;
-
-            let entry = match entry_opt {
-                | Some(e) => e,
-                | None => break,
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+        while !pq.is_empty()
+            invariant
+                spec_labgraphview_wf(graph@),
+                valid_key_type_LabEdge::<V, WrappedF64>(),
+                obeys_feq_clone::<PQEntry<V>>(),
+                m as int == graph@.A.len(),
+                graph@.A.len() * 4 + 4 <= usize::MAX as int,
+                DA == DA_fwd.union(DA_rev),
+                DA_fwd == graph@.A.map(|e: (V::V, V::V, f64)| (e.0, e.1)),
+                DA_rev == graph@.A.map(|e: (V::V, V::V, f64)| (e.1, e.0)),
+                DA.finite(),
+                DA.len() <= 2 * m as int,
+                remaining_budget >= 0,
+                pq@.len() + remaining_budget <= 2 * m as int + 1,
+                BinaryHeapPQ::<PQEntry<V>>::spec_is_exec_heap(pq.spec_seq()),
+                used_pairs.subset_of(DA),
+                used_pairs.finite(),
+                used_pairs.len() as int == 2 * m as int - remaining_budget,
+                mst_edges.spec_setsteph_wf(),
+                visited@.finite(),
+                forall |e: (V::V, V::V)| #[trigger] used_pairs.contains(e) ==>
+                    visited@.contains(e.0),
+        {
+            // pq@.len() <= 2*m + 1, so pq@.len() * 2 <= (2*m+1)*2 = 4*m+2 <= 4*m+4 <= usize::MAX.
+            assert(pq@.len() * 2 <= usize::MAX as int) by {
+                vstd::set_lib::lemma_len_subset(used_pairs, DA);
             };
 
-            let u = entry.vertex;
-            let parent_u = entry.parent;
+            let (new_pq, min_elem) = pq.delete_min();
+            pq = new_pq;
 
-            if visited.contains(&u) {
-                continue;
-            }
+            if let Some(entry) = min_elem {
+                let u = entry.vertex;
+                let parent_u = entry.parent;
 
-            let _ = visited.insert(u.clone());
-
-            if let Some(parent_v) = parent_u {
-                if let Some(weight) = graph.get_edge_label(&parent_v, &u) {
-                    let edge = if parent_v < u {
-                        LabEdge(parent_v, u.clone(), *weight)
-                    } else {
-                        LabEdge(u.clone(), parent_v, *weight)
-                    };
-                    let _ = mst_edges.insert(edge);
+                if visited.contains(&u) {
+                    continue;
                 }
-            }
 
-            let neighbors = graph.ng(&u);
-            for v in neighbors.iter() {
-                if !visited.contains(v) {
-                    if let Some(weight) = graph.get_edge_label(&u, v) {
-                        pq = pq.insert(pq_entry_new(*weight, v.clone(), Some(u.clone())));
+                let _ = visited.insert(u.clone());
+
+                if let Some(parent_v) = parent_u {
+                    if let Some(weight) = graph.get_edge_label(&parent_v, &u) {
+                        let edge = if parent_v < u {
+                            LabEdge(parent_v.clone(), u.clone(), *weight)
+                        } else {
+                            LabEdge(u.clone(), parent_v.clone(), *weight)
+                        };
+                        let _ = mst_edges.insert(edge);
+                    }
+                }
+
+                let neighbors = graph.ng(&u);
+
+                // Prove neighbors.spec_setsteph_wf() so we can call iter().
+                proof {
+                    assert(neighbors.spec_setsteph_wf()) by {
+                        assert forall |w: V::V| neighbors@.contains(w)
+                            implies graph@.V.contains(w)
+                        by {
+                            let l = choose |l: f64|
+                                graph@.A.contains((u@, w, l)) || graph@.A.contains((w, u@, l));
+                            if graph@.A.contains((u@, w, l)) {
+                                assert(graph@.V.contains(w));
+                            } else {
+                                assert(graph@.V.contains(w));
+                            }
+                        };
+                        vstd::set_lib::lemma_set_subset_finite(graph@.V, neighbors@);
+                    };
+                }
+
+                let mut it = neighbors.iter();
+
+                // Every element in ng(u) is a directed adjacency pair (u@, v@) in DA.
+                proof {
+                    assert forall |j: int| 0 <= j < it@.1.len()
+                        implies DA.contains((u@, (#[trigger] it@.1[j])@))
+                    by {
+                        assert(neighbors@.contains(it@.1[j]@));
+                        let w: V::V = it@.1[j]@;
+                        let l = choose |l: f64|
+                            #![trigger graph@.A.contains((u@, w, l))]
+                            graph@.A.contains((u@, w, l)) || graph@.A.contains((w, u@, l));
+                        if graph@.A.contains((u@, w, l)) {
+                            assert(DA_fwd.contains((u@, w)));
+                            assert(DA.contains((u@, w)));
+                        } else {
+                            assert(graph@.A.contains((w, u@, l)));
+                            assert(DA_rev.contains((u@, w)));
+                            assert(DA.contains((u@, w)));
+                        }
+                    };
+                }
+
+                #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+                loop
+                    invariant
+                        spec_labgraphview_wf(graph@),
+                        valid_key_type_LabEdge::<V, WrappedF64>(),
+                        obeys_feq_clone::<PQEntry<V>>(),
+                        m as int == graph@.A.len(),
+                        graph@.A.len() * 4 + 4 <= usize::MAX as int,
+                        DA.finite(),
+                        DA.len() <= 2 * m as int,
+                        remaining_budget >= 0,
+                        pq@.len() + remaining_budget <= 2 * m as int,
+                        BinaryHeapPQ::<PQEntry<V>>::spec_is_exec_heap(pq.spec_seq()),
+                        used_pairs.subset_of(DA),
+                        used_pairs.finite(),
+                        used_pairs.len() as int == 2 * m as int - remaining_budget,
+                        it@.0 <= it@.1.len(),
+                        it@.1.no_duplicates(),
+                        mst_edges.spec_setsteph_wf(),
+                        visited@.contains(u@),
+                        visited@.finite(),
+                        forall |e: (V::V, V::V)| #[trigger] used_pairs.contains(e) ==>
+                            visited@.contains(e.0),
+                        forall |j: int| 0 <= j < it@.1.len() ==>
+                            DA.contains((u@, (#[trigger] it@.1[j])@)),
+                        forall |e: (V::V, V::V)| #[trigger] used_pairs.contains(e) ==>
+                            (e.0 != u@ || (exists |j: int| 0 <= j < it@.0 &&
+                                #[trigger] it@.1[j]@ == e.1)),
+                {
+                    match it.next() {
+                        None => break,
+                        Some(v) => {
+                            proof {
+                                // Current element is at position it@.0 - 1 (after next() advanced).
+                                let ghost pos = (it@.0 - 1) as int;
+                                let new_pair: (V::V, V::V) = (u@, v@);
+                                assert(DA.contains((u@, it@.1[pos]@)));
+                                assert(DA.contains(new_pair));
+                                // From inner invariant at top (pos = old it@.0):
+                                // all (u@, b) in used_pairs have j < pos. Combined with
+                                // no_duplicates, the current element at pos can't be in used_pairs.
+                                assert(!used_pairs.contains(new_pair));
+                                let new_used = used_pairs.insert(new_pair);
+                                assert(new_used.subset_of(DA));
+                                assert(new_used.finite());
+                                vstd::set_lib::lemma_len_subset(new_used, DA);
+                                assert(remaining_budget > 0);
+                                used_pairs = new_used;
+                                remaining_budget = remaining_budget - 1;
+                            }
+
+                            if !visited.contains(v) {
+                                // get_edge_label returns Some since v ∈ ng(u).
+                                if let Some(weight) = graph.get_edge_label(&u, v) {
+                                    assert(pq@.len() + 1 <= usize::MAX as int);
+                                    pq = pq.insert(pq_entry_new(*weight, v.clone(), Some(u.clone())));
+                                }
+                            }
+                        }
                     }
                 }
             }

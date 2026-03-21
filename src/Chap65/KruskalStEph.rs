@@ -17,6 +17,8 @@ pub mod KruskalStEph {
     use crate::vstdplus::feq::feq::obeys_feq_full;
     use crate::vstdplus::pervasives_plus::pervasives_plus::vec_swap;
     use crate::SetLit;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::hash::obeys_key_model;
 
     pub type T<V> = LabUnDirGraphStEph<V, WrappedF64>;
 

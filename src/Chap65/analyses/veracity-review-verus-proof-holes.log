@@ -21,25 +21,21 @@ Table of Contents:
 =================================================================
 
 ⚠ KruskalStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:60: error: fn_missing_requires - fn sort_edges_by_weight — exec fn should have requires
-        52 |         fn verify_mst_size<V: HashOrd>(
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/KruskalStEph.rs:62: error: fn_missing_requires - fn sort_edges_by_weight — exec fn should have requires
+        54 |         fn verify_mst_size<V: HashOrd>(
             ...
-        58 | 
-        59 |     /// Sort edges by weight — verified selection sort.
-        61 |         ensures
-        62 |             edges@.len() == old(edges)@.len(),
-❌ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:96: error: external_body - #[verifier::external_body]
-        97 |     pub fn prim_mst<V: HashOrd + Display>(
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:73: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
-        66 |         fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64
+        60 | 
+        61 |     /// Sort edges by weight — verified selection sort.
+        63 |         ensures
+        64 |             edges@.len() == old(edges)@.len(),
+⚠ PrimStEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/PrimStEph.rs:76: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
+        69 |         fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64
             ...
-        71 |     /// - APAS: N/A — Verus-specific scaffolding.
-        72 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        74 |         ensures entry.priority == priority, entry.vertex == vertex, entry.parent == parent,
-        75 |     {
-   Holes: 1 total
-      1 × external_body
+        74 |     /// - APAS: N/A — Verus-specific scaffolding.
+        75 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        77 |         ensures entry.priority == priority, entry.vertex == vertex, entry.parent == parent,
+        78 |     {
 ✓ UnionFindStEph.rs
 
 =================================================================
@@ -84,18 +80,24 @@ Function Specs:
    30 total fns
 
 
-Holes Found: 1 (actionable)
-   1 × external_body (100%)
+Holes Found: 0 (actionable)
 
 Warnings: 2 total
    2 × fn_missing_requires
+
+No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-21 07:39:52 -07:00
-Ended:     2026-03-21 07:39:52 -07:00
-Duration:  14ms
+Started:   2026-03-21 08:46:44 -07:00
+Ended:     2026-03-21 08:46:44 -07:00
+Duration:  16ms
+
+Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
+:   2026-03-21 08:46:44 -07:00
+Ended:     2026-03-21 08:46:44 -07:00
+Duration:  16ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
