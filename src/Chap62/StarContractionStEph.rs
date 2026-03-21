@@ -16,6 +16,7 @@ pub mod StarContractionStEph {
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
     use crate::Chap62::StarPartitionStEph::StarPartitionStEph::sequential_star_partition;
+    use crate::Chap62::StarPartitionStEph::StarPartitionStEph::spec_valid_partition_map;
     use crate::SetLit;
 
     verus! {
@@ -61,24 +62,6 @@ pub mod StarContractionStEph {
 
     pub type T<V> = UnDirGraphStEph<V>;
 
-    // 6. spec fns
-
-    /// Partition map validity: every graph vertex is mapped and every value is a center.
-    pub open spec fn spec_valid_partition_map<V: View>(
-        graph_vertices: Set<V::V>,
-        centers: Set<V::V>,
-        partition_map: Map<V::V, V>,
-    ) -> bool {
-        // Every graph vertex is in the partition map.
-        &&& forall |v_view: V::V|
-                #[trigger] graph_vertices.contains(v_view) ==>
-                    partition_map.contains_key(v_view)
-        // Every partition map value is a center.
-        &&& forall |v_view: V::V|
-                #[trigger] partition_map.contains_key(v_view) ==>
-                    centers.contains(partition_map[v_view]@)
-    }
-
     /// Inner recursive star contraction with fuel for termination.
     fn star_contract_fuel<V, R, F, G>(
         graph: &UnDirGraphStEph<V>, base: &F, expand: &G, fuel: usize,
@@ -106,11 +89,9 @@ pub mod StarContractionStEph {
 
         let (centers, partition_map) = sequential_star_partition(graph);
 
-        proof {
-            // Star partition maps every graph vertex to a center.
-            // Provable from partition loop structure; deferred to future round.
-            assume(spec_valid_partition_map::<V>(graph@.V, centers@, partition_map@));
-        }
+        // spec_valid_partition_map follows from sequential_star_partition's ensures:
+        // graph.V@ == graph@.V, result.0@ == centers@, result.1@ == partition_map@.
+        proof { assert(spec_valid_partition_map::<V>(graph@.V, centers@, partition_map@)); }
 
         let quotient_graph = build_quotient_graph(graph, &centers, &partition_map);
 

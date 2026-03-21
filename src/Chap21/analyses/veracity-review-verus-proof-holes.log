@@ -106,9 +106,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-20 22:07:18 -07:00
-Ended:     2026-03-20 22:07:18 -07:00
-Duration:  14ms
+Started:   2026-03-20 23:50:25 -07:00
+Ended:     2026-03-20 23:50:25 -07:00
+Duration:  13ms
 
 Full output: src/Chap21/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap21/analyses/veracity-review-verus-proof-holes.log
+veracity-review-verus-proof-holes.log
