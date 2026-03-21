@@ -1,8 +1,36 @@
-Logging to: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-search.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent4/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: obeys_feq_clone.*ArraySeqStEph\|feq_clone.*ArraySeq
+Pattern: sort
 Searching: /home/milnes/projects/verus/source/vstd
-Files: 103, Functions: 2479, Matches: 0
+Files: 103, Functions: 2479, Matches: 4
+
+[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:93: [0m
+/// ```rust
+/// {{#include ../../../../examples/multiset.rs:sorted_by_leq}}
+/// ```
+[38;5;22m    pub closed spec fn sort_by(self, leq: spec_fn(A, A) -> bool) -> Seq<A>[0m
+[38;5;22m        recommends[0m
+[38;5;22m            total_ordering(leq),[0m
+[38;5;22m        decreases self.len(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:151: [0m
+[38;5;22m    pub proof fn lemma_sort_by_ensures(self, leq: spec_fn(A, A) -> bool)[0m
+[38;5;22m        requires[0m
+[38;5;22m            total_ordering(leq),[0m
+[38;5;22m        ensures[0m
+[38;5;22m            self.to_multiset() =~= self.sort_by(leq).to_multiset(),[0m
+[38;5;22m            sorted_by(self.sort_by(leq), leq),[0m
+[38;5;22m            forall|x: A| !self.contains(x) ==> !(#[trigger] self.sort_by(leq).contains(x)),[0m
+[38;5;22m        decreases self.len(),[0m
+
+[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:2622: [0m
+[38;5;22m    pub closed spec fn sort(self) -> Self[0m
+
+[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:2626: [0m
+[38;5;22m    pub proof fn lemma_sort_ensures(self)[0m
+[38;5;22m        ensures[0m
+[38;5;22m            self.to_multiset() =~= self.sort().to_multiset(),[0m
+[38;5;22m            sorted_by(self.sort(), |x: int, y: int| x <= y),[0m
 

@@ -82,7 +82,7 @@ pub mod StarContractionStEph {
     /// Inner recursive star contraction with fuel for termination.
     fn star_contract_fuel<V, R, F, G>(
         graph: &UnDirGraphStEph<V>, base: &F, expand: &G, fuel: usize,
-    ) -> R
+    ) -> (result: R)
     where
         V: HashOrd,
         F: Fn(&SetStEph<V>) -> R,
@@ -93,6 +93,8 @@ pub mod StarContractionStEph {
         forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),
         forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|
             #[trigger] expand.requires((v, e, c, p, r)),
+    ensures
+        true,
     decreases fuel,
     {
         if graph.sizeE() == 0 || fuel == 0 {
@@ -107,9 +109,12 @@ pub mod StarContractionStEph {
         let (centers, partition_map) = sequential_star_partition(graph);
 
         proof {
-            // Star partition maps every graph vertex to a center.
-            // Provable from partition loop structure; deferred to future round.
-            assume(spec_valid_partition_map::<V>(graph@.V, centers@, partition_map@));
+            // sequential_star_partition ensures every graph vertex is mapped to a center.
+            assert forall |v_view: V::V| #[trigger] graph@.V.contains(v_view) implies
+                partition_map@.contains_key(v_view) by {};
+            assert forall |v_view: V::V| #[trigger] partition_map@.contains_key(v_view) implies
+                centers@.contains(partition_map@[v_view]@) by {};
+            assert(spec_valid_partition_map::<V>(graph@.V, centers@, partition_map@));
         }
 
         let quotient_graph = build_quotient_graph(graph, &centers, &partition_map);
@@ -135,7 +140,7 @@ pub mod StarContractionStEph {
     ///
     /// Returns:
     /// - Result of type R as computed by base and expand functions
-    pub fn star_contract<V, R, F, G>(graph: &UnDirGraphStEph<V>, base: &F, expand: &G) -> R
+    pub fn star_contract<V, R, F, G>(graph: &UnDirGraphStEph<V>, base: &F, expand: &G) -> (result: R)
     where
         V: HashOrd,
         F: Fn(&SetStEph<V>) -> R,
@@ -146,6 +151,8 @@ pub mod StarContractionStEph {
         forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),
         forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|
             #[trigger] expand.requires((v, e, c, p, r)),
+    ensures
+        true,
     {
         star_contract_fuel(graph, base, expand, graph.sizeV())
     }
