@@ -8,8 +8,8 @@ pub mod LinProbFlatHashTableStEph {
     // 1. module
     // 2. imports
     // 4. type definitions (inside verus!)
-    // 6. spec fns (inside verus!)
-    // 7. proof fns (inside verus!)
+    // 6. spec fns (inside verus!: spec_linprobflathashsteph_wf)
+    // 7. proof fns (inside verus!: spec_count_empties, lemma_*_empties, lemma_probe_mod_identity)
     // 9. impls (inside verus!)
 
     // 2. imports
@@ -68,6 +68,91 @@ pub mod LinProbFlatHashTableStEph {
     }
 
     // 7. proof fns
+
+    /// Counts the number of Empty entries in a flat hash table sequence.
+    pub open spec fn spec_count_empties<Key, Value>(
+        table: Seq<FlatEntry<Key, Value>>,
+    ) -> int
+        decreases table.len(),
+    {
+        if table.len() == 0 { 0 }
+        else if table.last() is Empty { spec_count_empties(table.drop_last()) + 1 }
+        else { spec_count_empties(table.drop_last()) }
+    }
+
+    /// An all-Empty sequence has empties count equal to its length.
+    pub proof fn lemma_all_empties_count<Key, Value>(table: Seq<FlatEntry<Key, Value>>)
+        requires forall |j: int| 0 <= j < table.len() ==> (#[trigger] table[j]) is Empty,
+        ensures spec_count_empties(table) == table.len(),
+        decreases table.len(),
+    {
+        if table.len() > 0 {
+            assert(table.last() == table[table.len() - 1]);
+            assert forall |j: int| 0 <= j < table.drop_last().len()
+                implies (#[trigger] table.drop_last()[j]) is Empty by {
+                assert(table.drop_last()[j] == table[j]);
+            }
+            lemma_all_empties_count::<Key, Value>(table.drop_last());
+        }
+    }
+
+    /// If empties count > 0, there exists an Empty slot.
+    pub proof fn lemma_empties_positive_implies_exists_empty<Key, Value>(
+        table: Seq<FlatEntry<Key, Value>>,
+    )
+        requires spec_count_empties(table) > 0,
+        ensures exists |j: int| 0 <= j < table.len() && (#[trigger] table[j]) is Empty,
+        decreases table.len(),
+    {
+        if table.last() is Empty {
+            assert(table[table.len() - 1] is Empty);
+        } else {
+            lemma_empties_positive_implies_exists_empty::<Key, Value>(table.drop_last());
+            let j = choose |j: int| 0 <= j < table.drop_last().len()
+                && (#[trigger] table.drop_last()[j]) is Empty;
+            assert(table[j] == table.drop_last()[j]);
+        }
+    }
+
+    /// Changing one slot decreases empties by at most 1.
+    pub proof fn lemma_one_slot_change_empties<Key, Value>(
+        old_table: Seq<FlatEntry<Key, Value>>,
+        new_table: Seq<FlatEntry<Key, Value>>,
+        s: int,
+    )
+        requires
+            old_table.len() == new_table.len(),
+            0 <= s < old_table.len(),
+            forall |j: int| 0 <= j < old_table.len() && j != s
+                ==> #[trigger] new_table[j] == old_table[j],
+        ensures
+            spec_count_empties(new_table) >= spec_count_empties(old_table) - 1,
+        decreases old_table.len(),
+    {
+        if old_table.len() == 1 {
+            assert(old_table.drop_last().len() == 0);
+            assert(spec_count_empties::<Key, Value>(old_table.drop_last()) == 0);
+            assert(new_table.drop_last().len() == 0);
+            assert(spec_count_empties::<Key, Value>(new_table.drop_last()) == 0);
+        } else if s == old_table.len() - 1 {
+            assert forall |j: int| 0 <= j < old_table.drop_last().len()
+                implies #[trigger] new_table.drop_last()[j] == old_table.drop_last()[j] by {
+                assert(new_table.drop_last()[j] == new_table[j]);
+                assert(old_table.drop_last()[j] == old_table[j]);
+            }
+            assert(new_table.drop_last() =~= old_table.drop_last());
+        } else {
+            assert(new_table.last() == old_table.last());
+            assert(s < old_table.drop_last().len());
+            assert forall |j: int| 0 <= j < old_table.drop_last().len() && j != s
+                implies #[trigger] new_table.drop_last()[j] == old_table.drop_last()[j] by {
+                assert(new_table.drop_last()[j] == new_table[j]);
+                assert(old_table.drop_last()[j] == old_table[j]);
+            }
+            lemma_one_slot_change_empties::<Key, Value>(
+                old_table.drop_last(), new_table.drop_last(), s);
+        }
+    }
 
     /// Modular probe identity: (h + (j - h + m) % m) % m == j for 0 <= h, j < m.
     proof fn lemma_probe_mod_identity(h: int, j: int, m: int)
