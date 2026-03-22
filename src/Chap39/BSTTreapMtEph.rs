@@ -386,6 +386,7 @@ pub mod BSTTreapMtEph {
 
     /// - APAS: Work Θ(1), Span Θ(1)
     fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> (sz: usize)
+        requires Lnk::spec_link_size_wf(link),
         ensures sz as nat == Lnk::spec_size_link(link),
     {
         match link {
@@ -395,7 +396,10 @@ pub mod BSTTreapMtEph {
     }
 
     fn update<T: StTInMtT + Ord>(node: &mut Node<T>)
-        requires 1 + Lnk::spec_size_link(&old(node).left) + Lnk::spec_size_link(&old(node).right) <= usize::MAX as nat,
+        requires
+            Lnk::spec_link_size_wf(&old(node).left),
+            Lnk::spec_link_size_wf(&old(node).right),
+            1 + Lnk::spec_size_link(&old(node).left) + Lnk::spec_size_link(&old(node).right) <= usize::MAX as nat,
         ensures
             node.size as nat == 1 + Lnk::spec_size_link(&node.left) + Lnk::spec_size_link(&node.right),
             node.key == old(node).key,

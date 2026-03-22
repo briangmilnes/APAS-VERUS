@@ -1776,7 +1776,7 @@ pub mod BSTParaTreapMtEph {
         filter_inner(tree, &predicate, Ghost(spec_pred))
     }
 
-    fn reduce_inner<T: MtKey + ClonePreservesView + 'static, F>(tree: &ParamTreap<T>, op: &Arc<F>, identity: T) -> T
+    fn reduce_inner<T: MtKey + ClonePreservesView + 'static, F>(tree: &ParamTreap<T>, op: &Arc<F>, identity: T) -> (result: T)
     where
         F: Fn(T, T) -> T + Send + Sync + 'static,
         requires
@@ -1784,6 +1784,7 @@ pub mod BSTParaTreapMtEph {
             view_ord_consistent::<T>(),
             tree@.finite(),
             forall|a: T, b: T| #[trigger] op.requires((a, b)),
+        ensures tree@.len() == 0 ==> result == identity,
         decreases tree@.len(),
     {
         match expose_internal(tree) {
@@ -1809,13 +1810,14 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    fn reduce_parallel<T: MtKey + ClonePreservesView + 'static, F>(tree: &ParamTreap<T>, op: F, base: T) -> T
+    fn reduce_parallel<T: MtKey + ClonePreservesView + 'static, F>(tree: &ParamTreap<T>, op: F, base: T) -> (result: T)
     where
         F: Fn(T, T) -> T + Send + Sync + 'static,
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
             forall|a: T, b: T| #[trigger] op.requires((a, b)),
+        ensures tree@.len() == 0 ==> result == base,
     {
         proof { use_type_invariant(tree); }
         let op = Arc::new(op);
