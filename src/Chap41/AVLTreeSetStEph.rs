@@ -269,7 +269,10 @@ broadcast use {
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m log(n/m)) where m = min(|self|, |other|), Span Θ(log n × log m)
         fn union(&self, other: &Self) -> (combined: Self)
-            requires self.spec_avltreesetsteph_wf(), other.spec_avltreesetsteph_wf(),
+            requires
+                self.spec_avltreesetsteph_wf(),
+                other.spec_avltreesetsteph_wf(),
+                self@.len() + other@.len() < usize::MAX as nat,
             ensures
                 combined@ == self@.union(other@),
                 combined.spec_avltreesetsteph_wf();
@@ -766,12 +769,19 @@ broadcast use {
             }
             let other_len = other.elements.length();
             let mut j: usize = 0;
+            proof {
+                self.elements@.unique_seq_to_set();
+                other.elements@.unique_seq_to_set();
+            }
             while j < other_len
                 invariant
                     self.elements.spec_avltreeseqsteph_wf(),
                     other.elements.spec_avltreeseqsteph_wf(),
                     self_len as int == self.elements.spec_seq().len(),
                     other_len as int == other.elements.spec_seq().len(),
+                    self_len as nat == self@.len(),
+                    other_len as nat == other@.len(),
+                    self@.len() + other@.len() < usize::MAX as nat,
                     j <= other_len,
                     combined@.finite(),
                     combined.spec_avltreesetsteph_wf(),
@@ -790,11 +800,8 @@ broadcast use {
                     lemma_cloned_view_eq(*elem, c);
                     assert(other.elements@.contains(elem@));
                     assert(other@.contains(elem@));
-                    // Capacity: combined@.len() + 1 < usize::MAX. Individual tree wf gives
-                    // self_len < usize::MAX and other_len < usize::MAX, but their sum may
-                    // exceed usize::MAX. The full fix requires bounding both at usize::MAX/2,
-                    // but callers like PQMinStEph build large frontiers from scratch.
-                    assume(combined@.len() + 1 < usize::MAX as nat);
+                    // combined@.len() <= self_len + j < self_len + other_len < usize::MAX.
+                    assert(combined@.len() + 1 < usize::MAX as nat);
                 }
                 let ghost old_combined = combined@;
                 combined.insert(c);

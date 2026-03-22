@@ -72,7 +72,9 @@ broadcast use {
                     self@.len() > 0 ==> min_elem.unwrap()@ == self@[0];
 
             fn insert(&self, element: T) -> (pq: Self)
-                requires self.spec_balancedtreepq_wf(),
+                requires
+                    self.spec_balancedtreepq_wf(),
+                    self@.len() + 1 < usize::MAX as nat,
                 ensures
                     pq@.len() == self@.len() + 1,
                     pq.spec_balancedtreepq_wf(),
@@ -88,7 +90,10 @@ broadcast use {
                     min_and_rest.0.spec_balancedtreepq_wf();
 
             fn meld(&self, other: &Self) -> (pq: Self)
-                requires self.spec_balancedtreepq_wf(), other.spec_balancedtreepq_wf(),
+                requires
+                    self.spec_balancedtreepq_wf(),
+                    other.spec_balancedtreepq_wf(),
+                    self@.len() + other@.len() < usize::MAX as nat,
                 ensures pq@.len() == self@.len() + other@.len(), pq.spec_balancedtreepq_wf();
 
             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> (pq: Self)
@@ -124,7 +129,10 @@ broadcast use {
                     max_and_rest.0.spec_balancedtreepq_wf();
 
             fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> (pq: Self)
-                requires self.spec_balancedtreepq_wf(), elements.spec_avltreeseqstper_wf(),
+                requires
+                    self.spec_balancedtreepq_wf(),
+                    elements.spec_avltreeseqstper_wf(),
+                    self@.len() + elements@.len() < usize::MAX as nat,
                 ensures pq@.len() == self@.len() + elements@.len(), pq.spec_balancedtreepq_wf();
 
             fn extract_all_sorted(&self) -> (sorted: AVLTreeSeqStPerS<T>)
@@ -147,6 +155,7 @@ broadcast use {
                 ensures sub@.len() <= self@.len();
 
             fn from_vec(elements: Vec<T>) -> (pq: Self)
+                requires elements@.len() < usize::MAX as nat,
                 ensures pq@.len() == elements@.len(), pq.spec_balancedtreepq_wf();
 
             fn to_vec(&self) -> (vec: Vec<T>)
@@ -173,7 +182,10 @@ broadcast use {
                     parts.2.spec_balancedtreepq_wf();
 
             fn join(left: &Self, right: &Self) -> (pq: Self)
-                requires left.spec_balancedtreepq_wf(), right.spec_balancedtreepq_wf(),
+                requires
+                    left.spec_balancedtreepq_wf(),
+                    right.spec_balancedtreepq_wf(),
+                    left@.len() + right@.len() < usize::MAX as nat,
                 ensures pq@.len() == left@.len() + right@.len(), pq.spec_balancedtreepq_wf();
         }
 
@@ -249,8 +261,11 @@ broadcast use {
                 vals.insert(pos, element);
 
                 proof {
-                    // vals@.len() = n + 1; in practice trees can't reach usize::MAX elements.
-                    assume(vals@.len() < usize::MAX);
+                    // vals@.len() = n + 1 = self@.len() + 1 < usize::MAX (from requires).
+                    // n = old_vals.len(), and old_vals.map_values(..) =~= self.elements.spec_seq()
+                    // (from values_in_order ensures), so n == self@.len() as nat.
+                    assert(n as nat == self@.len());
+                    assert(vals@.len() < usize::MAX);
                 }
                 let result = BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::from_vec(vals),
@@ -359,8 +374,12 @@ broadcast use {
                     j = j + 1;
                 }
                 proof {
-                    // values@.len() = n1 + n2; combined size may approach usize::MAX.
-                    assume(values@.len() < usize::MAX);
+                    // n1 = self.elements.length() ensures n1 as nat == self@.len().
+                    // n2 = other.elements.length() ensures n2 as nat == other@.len().
+                    // values@.len() = n1 + n2 = self@.len() + other@.len() < usize::MAX (from requires).
+                    assert(n1 as nat == self@.len());
+                    assert(n2 as nat == other@.len());
+                    assert(values@.len() < usize::MAX);
                 }
                 BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::from_vec(values),
@@ -372,14 +391,23 @@ broadcast use {
             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self {
                 let mut result = Self::empty();
                 let n = seq.length();
+                proof {
+                    lemma_size_lt_usize_max::<T>(&seq.root);
+                    lemma_size_eq_inorder_len::<T>(&seq.root);
+                }
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 for i in 0..n
                     invariant
                         result@.len() == i as int,
                         result.spec_balancedtreepq_wf(),
                         n as nat == seq.spec_seq().len(),
+                        n < usize::MAX,
                         seq.spec_avltreeseqstper_wf(),
                 {
+                    proof {
+                        // result@.len() = i < n < usize::MAX → result@.len() + 1 < usize::MAX.
+                        assert(result@.len() + 1 < usize::MAX as nat);
+                    }
                     result = result.insert(seq.nth(i).clone());
                 }
                 result
@@ -431,6 +459,11 @@ broadcast use {
 
             fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> Self {
                 let other = Self::from_seq(elements);
+                proof {
+                    // other@.len() == elements@.len() (from from_seq ensures).
+                    // self@.len() + elements@.len() < usize::MAX (from requires).
+                    assert(self@.len() + other@.len() < usize::MAX as nat);
+                }
                 self.meld(&other)
             }
 
@@ -523,7 +556,12 @@ broadcast use {
                         result@.len() == i as int,
                         result.spec_balancedtreepq_wf(),
                         n == elements@.len(),
+                        n < usize::MAX,
                 {
+                    proof {
+                        // result@.len() = i < n < usize::MAX → result@.len() + 1 < usize::MAX.
+                        assert(result@.len() + 1 < usize::MAX as nat);
+                    }
                     result = result.insert(elements[i].clone());
                 }
                 result
@@ -596,6 +634,10 @@ broadcast use {
                 let mut right = Self::empty();
                 let mut found = false;
                 let n = self.elements.length();
+                proof {
+                    lemma_size_lt_usize_max::<T>(&self.elements.root);
+                    lemma_size_eq_inorder_len::<T>(&self.elements.root);
+                }
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 for i in 0..n
                     invariant
@@ -603,8 +645,14 @@ broadcast use {
                         left.spec_balancedtreepq_wf(),
                         right.spec_balancedtreepq_wf(),
                         n == self.elements.spec_seq().len(),
+                        n < usize::MAX,
                         self.elements.spec_avltreeseqstper_wf(),
                 {
+                    proof {
+                        // left@.len() <= i < n < usize::MAX and right@.len() <= i < n < usize::MAX.
+                        assert(left@.len() + 1 < usize::MAX as nat);
+                        assert(right@.len() + 1 < usize::MAX as nat);
+                    }
                     let current = self.elements.nth(i);
                     if *current < *element {
                         left = left.insert(current.clone());
@@ -632,16 +680,26 @@ broadcast use {
             {
                 let mut result = Self::empty();
                 let n = self.elements.length();
+                proof {
+                    lemma_size_lt_usize_max::<T>(&self.elements.root);
+                    lemma_size_eq_inorder_len::<T>(&self.elements.root);
+                }
                 let mut i: usize = 0;
                 while i < n
                     invariant
                         i <= n,
                         n as nat == self.elements.spec_seq().len(),
+                        n < usize::MAX,
+                        result@.len() <= i as nat,
                         self.spec_balancedtreepq_wf(),
                         result.spec_balancedtreepq_wf(),
                         forall|t: &T| #[trigger] predicate.requires((t,)),
                     decreases n - i,
                 {
+                    proof {
+                        // result@.len() <= i < n < usize::MAX → result@.len() + 1 < usize::MAX.
+                        assert(result@.len() + 1 < usize::MAX as nat);
+                    }
                     let current = self.elements.nth(i);
                     if predicate(current) {
                         result = result.insert(current.clone());
@@ -655,16 +713,26 @@ broadcast use {
             {
                 let mut result = BalancedTreePQ::<U>::empty();
                 let n = self.elements.length();
+                proof {
+                    lemma_size_lt_usize_max::<T>(&self.elements.root);
+                    lemma_size_eq_inorder_len::<T>(&self.elements.root);
+                }
                 let mut i: usize = 0;
                 while i < n
                     invariant
                         i <= n,
                         n as nat == self.elements.spec_seq().len(),
+                        n < usize::MAX,
+                        result@.len() == i as nat,
                         self.spec_balancedtreepq_wf(),
                         result.spec_balancedtreepq_wf(),
                         forall|t: &T| #[trigger] f.requires((t,)),
                     decreases n - i,
                 {
+                    proof {
+                        // result@.len() = i < n < usize::MAX → result@.len() + 1 < usize::MAX.
+                        assert(result@.len() + 1 < usize::MAX as nat);
+                    }
                     let current = self.elements.nth(i);
                     let mapped_val = f(current);
                     result = result.insert(mapped_val);
