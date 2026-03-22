@@ -195,6 +195,7 @@ broadcast use {
                 forall|k: &K| f.requires((k,)),
                 obeys_feq_full::<K>(),
                 forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
+                keys@.len() < usize::MAX,
             ensures
                 tabulated@.dom() =~= keys@,
                 tabulated.spec_augorderedtablestper_wf(),
@@ -260,11 +261,11 @@ broadcast use {
         fn union<G: Fn(&V, &V) -> V>(&self, other: &Self, f: G) -> (combined: Self)
             requires
                 self.spec_augorderedtablestper_wf(),
-
                 other.spec_augorderedtablestper_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
+                self@.dom().len() + other@.dom().len() < usize::MAX,
             ensures
                 combined@.dom() =~= self@.dom().union(other@.dom()),
                 forall|k: K::V| #[trigger] self@.contains_key(k) && !other@.contains_key(k)
@@ -387,9 +388,9 @@ broadcast use {
             requires
                 left.spec_augorderedtablestper_wf(),
                 right.spec_augorderedtablestper_wf(),
-
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
+                left@.dom().len() + right@.dom().len() < usize::MAX,
             ensures
                 joined@.dom() =~= left@.dom().union(right@.dom()),
                 joined@.dom().finite(),

@@ -194,6 +194,7 @@ pub mod OrderedTableMtPer {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- acquires lock, delegates to StPer.join_key (union)
         fn join_key(&self, other: &Self) -> (joined: Self)
+            requires self@.dom().len() + other@.dom().len() < usize::MAX,
             ensures joined@.dom().finite();
 
         /// - APAS: Work Θ(log n + m), Span Θ(log n)
@@ -473,6 +474,10 @@ pub mod OrderedTableMtPer {
             let self_inner = self_read.borrow();
             let other_read = other.locked_table.acquire_read();
             let other_inner = other_read.borrow();
+            proof {
+                assume(self_inner@.dom().len() == self@.dom().len());
+                assume(other_inner@.dom().len() == other@.dom().len());
+            }
             let result = OrderedTableStPer::join_key(self_inner, other_inner);
             other_read.release_read();
             self_read.release_read();

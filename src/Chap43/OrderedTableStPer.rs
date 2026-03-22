@@ -446,7 +446,11 @@ pub mod OrderedTableStPer {
         /// - APAS: Work Θ(n log n), Span Θ(n log n)
         /// - Claude-Opus-4.6: Work Θ(n^2), Span Θ(n^2) -- delegates to TableStPer.tabulate (sequential insert loop)
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (table: Self)
-            requires keys.spec_arraysetsteph_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>(),
+            requires
+                keys.spec_arraysetsteph_wf(),
+                forall|k: &K| f.requires((k,)),
+                obeys_feq_full::<K>(),
+                keys@.len() < usize::MAX,
             ensures
                 table@.dom() =~= keys@,
                 table.spec_orderedtablestper_wf(),
@@ -510,6 +514,7 @@ pub mod OrderedTableStPer {
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
+                self@.dom().len() + other@.dom().len() < usize::MAX,
             ensures
                 table@.dom() =~= self@.dom().union(other@.dom()),
                 forall|k: K::V| #[trigger] self@.contains_key(k) && !other@.contains_key(k)
@@ -624,6 +629,7 @@ pub mod OrderedTableStPer {
                 right.spec_orderedtablestper_wf(),
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
+                left@.dom().len() + right@.dom().len() < usize::MAX,
             ensures
                 table@.dom() =~= left@.dom().union(right@.dom()),
                 table@.dom().finite(),
@@ -989,6 +995,12 @@ pub mod OrderedTableStPer {
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (table: Self)
         {
             let key_seq = keys.to_seq();
+            proof {
+                // key_seq@.no_duplicates() and key_seq@.to_set() =~= keys@ (from to_seq()).
+                // unique_seq_to_set: key_seq@.len() == key_seq@.to_set().len() == keys@.len().
+                key_seq@.unique_seq_to_set();
+                assert(key_seq.spec_len() == keys@.len());
+            }
             let len = key_seq.length();
             let mut result_vec: Vec<Pair<K, V>> = Vec::new();
             let mut i: usize = 0;
@@ -999,6 +1011,8 @@ pub mod OrderedTableStPer {
                     key_seq@.to_set() =~= keys@,
                     obeys_feq_full::<K>(),
                     len == key_seq.spec_len(),
+                    key_seq.spec_len() == keys@.len(),
+                    key_seq.spec_len() < usize::MAX,
                     0 <= i <= len,
                     forall|k: &K| f.requires((k,)),
                     result_vec@.len() == i as int,
@@ -1032,7 +1046,7 @@ pub mod OrderedTableStPer {
                 }
                 i += 1;
             }
-            proof { assume(result_vec@.len() < usize::MAX); }
+            assert(result_vec@.len() < usize::MAX);
             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
             proof {
                 assert(seq@ =~= result_vec@.map_values(|p: Pair<K, V>| p@));
@@ -1124,7 +1138,7 @@ pub mod OrderedTableStPer {
                 }
                 i += 1;
             }
-            proof { assume(result_vec@.len() < usize::MAX); }
+            assert(result_vec@.len() < usize::MAX);
             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
             proof {
                 assert(seq@ =~= result_vec@.map_values(|p: Pair<K, V>| p@));
@@ -1210,6 +1224,7 @@ pub mod OrderedTableStPer {
                     // Result entries have unique keys.
                     forall|a: int, b: int| 0 <= a < b < result_vec@.len() ==>
                         (#[trigger] result_vec@[a])@.0 != (#[trigger] result_vec@[b])@.0,
+                    result_vec@.len() <= i as nat,
                 decreases len - i,
             {
                 let pair = self.base_set.elements.nth(i);
@@ -1243,7 +1258,7 @@ pub mod OrderedTableStPer {
                 }
                 i += 1;
             }
-            proof { assume(result_vec@.len() < usize::MAX); }
+            assert(result_vec@.len() < usize::MAX);
             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
             proof {
                 assert(seq@ =~= result_vec@.map_values(|p: Pair<K, V>| p@));
@@ -1354,6 +1369,7 @@ pub mod OrderedTableStPer {
                         && other@.contains_key(self.base_set.elements@[m].0)
                         ==> 0 <= result_idx[m] < result_vec@.len()
                         && result_vec@[result_idx[m]]@.0 == self.base_set.elements@[m].0,
+                    result_vec@.len() <= i as nat,
                 decreases len - i,
             {
                 let pair = self.base_set.elements.nth(i);
@@ -1401,7 +1417,7 @@ pub mod OrderedTableStPer {
                 }
                 i += 1;
             }
-            proof { assume(result_vec@.len() < usize::MAX); }
+            assert(result_vec@.len() < usize::MAX);
             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
             proof {
                 assert(seq@ =~= result_vec@.map_values(|p: Pair<K, V>| p@));
@@ -1480,6 +1496,9 @@ pub mod OrderedTableStPer {
                 assert(obeys_feq_full_trigger::<V>());
                 assert(obeys_feq_full_trigger::<K>());
                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
+                // Bridge: dom().len() == elements@.len() via lemma_entries_to_map_len.
+                lemma_entries_to_map_len::<K::V, V::V>(self.base_set.elements@);
+                lemma_entries_to_map_len::<K::V, V::V>(other.base_set.elements@);
             }
             // Phase 1: all entries from self (merged with other where keys overlap).
             let self_len = self.base_set.elements.length();
@@ -1648,6 +1667,7 @@ pub mod OrderedTableStPer {
                     // No dups in all keys.
                     forall|a: int, b: int| 0 <= a < b < result_vec@.len() ==>
                         (#[trigger] result_vec@[a])@.0 != (#[trigger] result_vec@[b])@.0,
+                    result_vec@.len() <= self_len as nat + i as nat,
                 decreases other_len - i,
             {
                 let pair = other.base_set.elements.nth(i);
@@ -1687,7 +1707,7 @@ pub mod OrderedTableStPer {
                 }
                 i += 1;
             }
-            proof { assume(result_vec@.len() < usize::MAX); }
+            assert(result_vec@.len() < usize::MAX);
             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
             proof {
                 assert(seq@ =~= result_vec@.map_values(|p: Pair<K, V>| p@));
@@ -1848,6 +1868,7 @@ pub mod OrderedTableStPer {
                         && !other@.dom().contains(self.base_set.elements@[m].0)
                         ==> 0 <= result_idx[m] < result_vec@.len()
                         && result_vec@[result_idx[m]]@ == self.base_set.elements@[m],
+                    result_vec@.len() <= i as nat,
                 decreases len - i,
             {
                 let pair = self.base_set.elements.nth(i);
@@ -1881,7 +1902,7 @@ pub mod OrderedTableStPer {
                 }
                 i += 1;
             }
-            proof { assume(result_vec@.len() < usize::MAX); }
+            assert(result_vec@.len() < usize::MAX);
             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
             proof {
                 assert(seq@ =~= result_vec@.map_values(|p: Pair<K, V>| p@));
@@ -1968,6 +1989,7 @@ pub mod OrderedTableStPer {
                         && keys@.contains(self.base_set.elements@[m].0)
                         ==> 0 <= result_idx[m] < result_vec@.len()
                         && result_vec@[result_idx[m]]@ == self.base_set.elements@[m],
+                    result_vec@.len() <= i as nat,
                 decreases len - i,
             {
                 let pair = self.base_set.elements.nth(i);
@@ -1997,7 +2019,7 @@ pub mod OrderedTableStPer {
                 }
                 i += 1;
             }
-            proof { assume(result_vec@.len() < usize::MAX); }
+            assert(result_vec@.len() < usize::MAX);
             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
             proof {
                 assert(seq@ =~= result_vec@.map_values(|p: Pair<K, V>| p@));
@@ -2086,6 +2108,7 @@ pub mod OrderedTableStPer {
                         && !keys@.contains(self.base_set.elements@[m].0)
                         ==> 0 <= result_idx[m] < result_vec@.len()
                         && result_vec@[result_idx[m]]@ == self.base_set.elements@[m],
+                    result_vec@.len() <= i as nat,
                 decreases len - i,
             {
                 let pair = self.base_set.elements.nth(i);
@@ -2115,7 +2138,7 @@ pub mod OrderedTableStPer {
                 }
                 i += 1;
             }
-            proof { assume(result_vec@.len() < usize::MAX); }
+            assert(result_vec@.len() < usize::MAX);
             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
             proof {
                 assert(seq@ =~= result_vec@.map_values(|p: Pair<K, V>| p@));
@@ -2624,6 +2647,7 @@ pub mod OrderedTableStPer {
                     found ==> found_value->Some_0@ == self.base_set.elements@[found_idx].1,
                     !found ==> forall|m: int| 0 <= m < i as int ==>
                         (#[trigger] self.base_set.elements@[m]).0 != k@,
+                    left_vec@.len() <= i as nat,
                 decreases len - i,
             {
                 let pair = self.base_set.elements.nth(i);
@@ -2659,7 +2683,7 @@ pub mod OrderedTableStPer {
                 }
                 i += 1;
             }
-            proof { assume(left_vec@.len() < usize::MAX); }
+            assert(left_vec@.len() < usize::MAX);
             let left_seq = AVLTreeSeqStPerS::from_vec(left_vec);
             proof {
                 assert(left_seq@ =~= left_vec@.map_values(|p: Pair<K, V>| p@));
@@ -2760,6 +2784,7 @@ pub mod OrderedTableStPer {
                         && result_vec@[j]@ == self.base_set.elements@[result_src[j]],
                     forall|a: int, b: int| 0 <= a < b < result_vec@.len() ==>
                         (#[trigger] result_vec@[a])@.0 != (#[trigger] result_vec@[b])@.0,
+                    result_vec@.len() <= i as nat,
                 decreases len - i,
             {
                 let pair = self.base_set.elements.nth(i);
@@ -2783,7 +2808,7 @@ pub mod OrderedTableStPer {
                 }
                 i += 1;
             }
-            proof { assume(result_vec@.len() < usize::MAX); }
+            assert(result_vec@.len() < usize::MAX);
             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
             proof {
                 assert(seq@ =~= result_vec@.map_values(|p: Pair<K, V>| p@));
@@ -3023,6 +3048,7 @@ pub mod OrderedTableStPer {
                     // No dups in right.
                     forall|a: int, b: int| 0 <= a < b < right_vec@.len() ==>
                         (#[trigger] right_vec@[a])@.0 != (#[trigger] right_vec@[b])@.0,
+                    left_vec@.len() + right_vec@.len() == j as nat,
                 decreases len - j,
             {
                 let pair = self.base_set.elements.nth(j);
@@ -3063,10 +3089,8 @@ pub mod OrderedTableStPer {
                 }
                 j += 1;
             }
-            proof {
-                assume(left_vec@.len() < usize::MAX);
-                assume(right_vec@.len() < usize::MAX);
-            }
+            assert(left_vec@.len() < usize::MAX);
+            assert(right_vec@.len() < usize::MAX);
             let left_seq = AVLTreeSeqStPerS::from_vec(left_vec);
             let right_seq = AVLTreeSeqStPerS::from_vec(right_vec);
             proof {
