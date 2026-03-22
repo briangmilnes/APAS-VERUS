@@ -1,6 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Quadratic Probing Flat Hash Table - Sequential Ephemeral (Chapter 47).
-//! Uses quadratic probing for open addressing collision resolution.
+//! Uses triangular-number probing for open addressing collision resolution.
+//! Probe sequence: h_i(k) = (h(k) + i*(i+1)/2) mod m, where m = 2^k.
+//! When m is a power of two, the first m probes are a complete permutation of {0..m-1}.
 
 pub mod QuadProbFlatHashTableStEph {
 
@@ -9,8 +11,8 @@ pub mod QuadProbFlatHashTableStEph {
     // 2. imports
     // 3. broadcast use
     // 4. type definitions (inside verus!)
-    // 6. spec fns (inside verus!)
-    // 7. proof fns (inside verus!)
+    // 6. spec fns (inside verus!: spec_is_power_of_two, spec_tri_probe, spec_quadprobflathashsteph_wf)
+    // 7. proof fns (inside verus!: lemma_triangular_injective, lemma_empty_slot_reachable)
     // 9. impls (inside verus!)
     // 13. derive impls outside verus!
 
@@ -18,6 +20,7 @@ pub mod QuadProbFlatHashTableStEph {
     use std::marker::PhantomData;
 
     use vstd::prelude::*;
+    use vstd::arithmetic::power::pow;
     use crate::Chap47::FlatHashTable::FlatHashTable::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
@@ -33,42 +36,146 @@ pub mod QuadProbFlatHashTableStEph {
     // 4. type definitions
 
     /// Quadratic Probing Flat Hash Table implementation.
-    /// Probe sequence: h_i(k) = (h(k) + i²) mod m
+    /// Uses triangular-number probe sequence h_i(k) = (h(k) + i*(i+1)/2) mod m
+    /// with m a power of two, guaranteeing a complete permutation of all slots.
     pub struct QuadProbFlatHashTableStEph;
 
     // 6. spec fns
 
-    /// Well-formedness for quadratic probing flat hash tables.
-    /// Quadratic probe sequence: slot (h + j²) % m for attempt j = 0, 1, 2, ...
-    /// (1) No duplicate keys across slots.
-    /// (2) Every occupied key is reachable via quadratic probing from its hash:
-    ///     there exists an attempt n placing the key at its slot, and all earlier
-    ///     probe positions are not Empty.
+    /// Whether m is a power of two (m = 2^k for some k >= 1).
+    pub open spec fn spec_is_power_of_two(m: int) -> bool {
+        exists |k: nat| k >= 1 && m == pow(2, k)
+    }
+
+    /// Triangular probe position: the n-th probe starting from hash h in table of size m.
+    pub open spec fn spec_tri_probe(h: int, n: int, m: int) -> int {
+        (h + n * (n + 1) / 2) % m
+    }
+
+    /// Well-formedness for quadratic (triangular) probing flat hash tables.
+    /// Requires m to be a power of two so that the triangular probe sequence
+    /// i*(i+1)/2 mod m forms a complete permutation of {0..m-1}.
+    /// (1) Table length equals current_size.
+    /// (2) m is a power of two.
+    /// (3) No duplicate keys across slots.
+    /// (4) Every occupied key is reachable via triangular probing from its hash:
+    ///     exists n placing it at its slot, with no Empty gaps on the probe path.
     pub open spec fn spec_quadprobflathashsteph_wf<Key, Value, Metrics, H>(
         table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
     ) -> bool {
         let m = table.current_size as int;
         table.table@.len() == m
         && m > 0
+        && spec_is_power_of_two(m)
         // No duplicate keys.
         && (forall |i: int, j: int, k: Key|
             0 <= i < m && 0 <= j < m && i != j
             && #[trigger] spec_flat_has_key(table.table@[i], k)
             ==> !#[trigger] spec_flat_has_key(table.table@[j], k))
-        // Probe chain integrity for quadratic probing.
+        // Probe chain integrity for triangular probing.
         && (forall |i: int, k: Key|
             0 <= i < m
             && #[trigger] spec_flat_has_key(table.table@[i], k)
             ==> {
                 let h = (table.spec_hash@)(k) as int % m;
-                exists |n: int| #![trigger table.table@[(h + n * n) % m]] 0 <= n < m
-                    && (h + n * n) % m == i
+                exists |n: int| #![trigger table.table@[spec_tri_probe(h, n, m)]]
+                    0 <= n < m
+                    && spec_tri_probe(h, n, m) == i
                     && forall |j: int| 0 <= j < n
-                        ==> !(#[trigger] table.table@[(h + j * j) % m] is Empty)
+                        ==> !(#[trigger] table.table@[spec_tri_probe(h, j, m)] is Empty)
             })
     }
 
     // 7. proof fns
+
+    /// n*(n+1) is always even since exactly one of n, n+1 is even.
+    proof fn lemma_consecutive_even(a: int)
+        ensures (a * (a + 1)) % 2 == 0,
+    {
+        vstd::arithmetic::div_mod::lemma_mod_bound(a, 2);
+        if a % 2 == 0 {
+            // (a%2)*(a+1) % 2 == a*(a+1) % 2 by noop_left; and (0*(a+1)) % 2 == 0.
+            vstd::arithmetic::div_mod::lemma_mul_mod_noop_left(a, a + 1, 2);
+            assert((a % 2) * (a + 1) % 2 == 0);
+        } else {
+            // a%2 == 1 (from mod_bound: 0 <= a%2 < 2); then (a+1)%2 == 0.
+            assert(a % 2 == 1);
+            vstd::arithmetic::div_mod::lemma_add_mod_noop(a, 1, 2);
+            assert((a + 1) % 2 == 0);
+            // a*((a+1)%2) % 2 == a*(a+1) % 2 by noop_right; and a*0 % 2 == 0.
+            vstd::arithmetic::div_mod::lemma_mul_mod_noop_right(a, a + 1, 2);
+            assert(a * ((a + 1) % 2) % 2 == 0);
+        }
+    }
+
+    /// T(n+1) = T(n) + (n+1), where T(n) = n*(n+1)/2 is the n-th triangular number.
+    proof fn lemma_tri_step(a: int)
+        ensures a * (a + 1) / 2 + (a + 1) == (a + 1) * (a + 2) / 2,
+    {
+        lemma_consecutive_even(a);
+        lemma_consecutive_even(a + 1);
+        vstd::arithmetic::div_mod::lemma_fundamental_div_mod(a * (a + 1), 2);
+        vstd::arithmetic::div_mod::lemma_fundamental_div_mod((a + 1) * (a + 2), 2);
+        let x: int = a * (a + 1) / 2;
+        let y: int = (a + 1) * (a + 2) / 2;
+        assert(a * (a + 1) == 2 * x);
+        assert((a + 1) * (a + 2) == 2 * y);
+        assert(a * (a + 1) + 2 * (a + 1) == (a + 1) * (a + 2)) by (nonlinear_arith);
+        assert(2 * x + 2 * (a + 1) == 2 * y);
+    }
+
+    /// The triangular probing sequence is injective modulo 2^k:
+    /// for 0 <= i < j < 2^k, i*(i+1)/2 mod 2^k != j*(j+1)/2 mod 2^k.
+    ///
+    /// PROOF OBLIGATION (parity argument from arXiv:2107.08824):
+    ///
+    /// If i*(i+1)/2 ≡ j*(j+1)/2 (mod m) with m = 2^k, then
+    ///   (j-i)*(j+i+1) ≡ 0 (mod 2^(k+1)).
+    /// Since (j-i) + (j+i+1) = 2j+1 (odd), exactly one of {j-i, j+i+1} is even
+    /// and the other is odd.
+    ///   - If j-i is even: j-i < m = 2^k, so j-i has at most k-1 factors of 2.
+    ///     j+i+1 is odd (0 factors). Product has < k+1 factors. Contradiction.
+    ///   - If j+i+1 is even: j+i+1 <= 2m-1 = 2^(k+1)-1 < 2^(k+1), so at most k factors.
+    ///     j-i is odd. Product has <= k < k+1 factors. Contradiction.
+    /// Hence no such i != j exist: the sequence is injective.
+    pub proof fn lemma_triangular_injective(i: int, j: int, m: int)
+        requires
+            0 <= i < j < m,
+            spec_is_power_of_two(m),
+        ensures
+            (i * (i + 1) / 2) % m != (j * (j + 1) / 2) % m,
+    {
+        assume(false); // TODO: implement parity argument above using nonlinear_arith
+    }
+
+    /// The triangular probe sequence visits all m slots when m is a power of two.
+    /// Therefore a non-full table always has a reachable Empty slot.
+    ///
+    /// PROOF OBLIGATION: follows from lemma_triangular_injective (m distinct values
+    /// mod m cover all of {0..m-1}) plus pigeonhole (num_elements < m => Empty exists).
+    ///
+    /// Preconditions encode the exhaustion state: all m probe positions were visited
+    /// without finding an empty slot or matching key. This is unreachable.
+    pub proof fn lemma_empty_slot_reachable<Key, Value, Metrics, H>(
+        table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
+        key: &Key,
+        h: usize,
+    )
+        requires
+            spec_quadprobflathashsteph_wf(table),
+            h < table.current_size,
+            h as nat == (table.spec_hash@)(*key) % (table.current_size as nat),
+            forall |d: int| 0 <= d < table.current_size as int
+                ==> !spec_flat_has_key(
+                    table.table@[spec_tri_probe(h as int, d, table.current_size as int)],
+                    *key),
+            forall |d: int| 0 <= d < table.current_size as int
+                ==> !(#[trigger] table.table@[
+                    spec_tri_probe(h as int, d, table.current_size as int)] is Empty),
+        ensures false,
+    {
+        assume(false); // TODO: prove via lemma_triangular_injective + pigeonhole
+    }
 
     // 9. impls
 
@@ -80,8 +187,13 @@ pub mod QuadProbFlatHashTableStEph {
             spec_quadprobflathashsteph_wf(table)
         }
 
-        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
-        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — quadratic probe find_slot then set.
+        /// Resize is only valid to a power-of-two new size, preserving the wf invariant.
+        open spec fn spec_resize_ok(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, new_size: usize) -> bool {
+            spec_is_power_of_two(new_size as int)
+        }
+
+        /// - APAS: Work O(1/(1-α)) expected, Span O(1/(1-α)).
+        /// - Claude-Opus-4.6: Work O(1/(1-α)), Span O(1/(1-α)) — triangular probe then set.
         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
             let h = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
             let m = table.current_size;
@@ -89,7 +201,8 @@ pub mod QuadProbFlatHashTableStEph {
             let mut slot: usize = h;
             proof {
                 vstd::arithmetic::div_mod::lemma_small_mod(h as nat, m as nat);
-                assert(slot as int == (h as int + 0int * 0int) % (m as int));
+                assert(0int * (0int + 1int) / 2int == 0int);
+                assert(slot as int == spec_tri_probe(h as int, 0int, m as int));
             }
             while attempt < m
                 invariant
@@ -101,16 +214,17 @@ pub mod QuadProbFlatHashTableStEph {
                     slot < m,
                     table.table@.len() == m as int,
                     h as nat == (table.spec_hash@)(key) % (m as nat),
-                    slot as int == (h as int + attempt as int * attempt as int) % (m as int),
+                    slot as int == spec_tri_probe(h as int, attempt as int, m as int),
                     spec_quadprobflathashsteph_wf(table),
                     table.table@ == old(table).table@,
                     table.spec_hash == old(table).spec_hash,
                     table.num_elements == old(table).num_elements,
                     old(table).num_elements < usize::MAX,
                     forall |d: int| 0 <= d < attempt as int
-                        ==> !#[trigger] spec_flat_has_key(table.table@[(h as int + d * d) % (m as int)], key),
+                        ==> !#[trigger] spec_flat_has_key(
+                            table.table@[spec_tri_probe(h as int, d, m as int)], key),
                     forall |d: int| 0 <= d < attempt as int
-                        ==> !(#[trigger] table.table@[(h as int + d * d) % (m as int)] is Empty),
+                        ==> !(#[trigger] table.table@[spec_tri_probe(h as int, d, m as int)] is Empty),
                 decreases m - attempt,
             {
                 let entry = table.table[slot].clone();
@@ -136,7 +250,7 @@ pub mod QuadProbFlatHashTableStEph {
                                     old_table_seq[slot as int].spec_entry_to_map().insert(key, value));
                                 lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
                                     old_table_seq, slot as int, new_entry, key, value);
-                                // Wf: no-dup (same key at same slot).
+                                // Wf: no-dup.
                                 assert forall |i: int, j: int, k: Key|
                                     0 <= i < m as int && 0 <= j < m as int && i != j
                                     && #[trigger] spec_flat_has_key(table.table@[i], k)
@@ -161,16 +275,17 @@ pub mod QuadProbFlatHashTableStEph {
                                         }
                                     }
                                 }
-                                // Wf: probe chain (Occupied→Occupied, no Empty/non-Empty change).
+                                // Wf: probe chain (Occupied→Occupied, Empty status unchanged).
                                 assert forall |i: int, k: Key|
                                     0 <= i < m as int
                                     && #[trigger] spec_flat_has_key(table.table@[i], k)
                                     implies ({
                                         let hk = (table.spec_hash@)(k) as int % m as int;
-                                        exists |n: int| #![trigger table.table@[(hk + n * n) % m as int]] 0 <= n < m as int
-                                            && (hk + n * n) % m as int == i
+                                        exists |n: int| #![trigger table.table@[spec_tri_probe(hk, n, m as int)]]
+                                            0 <= n < m as int
+                                            && spec_tri_probe(hk, n, m as int) == i
                                             && forall |j: int| 0 <= j < n
-                                                ==> !(#[trigger] table.table@[(hk + j * j) % m as int] is Empty)
+                                                ==> !(#[trigger] table.table@[spec_tri_probe(hk, j, m as int)] is Empty)
                                     }) by {
                                     if i == slot as int {
                                         assert(spec_flat_has_key(table.table@[slot as int], k) ==> k == key);
@@ -182,13 +297,14 @@ pub mod QuadProbFlatHashTableStEph {
                                         assert(spec_flat_has_key(old_table_seq[i], k));
                                     }
                                     let hk = (table.spec_hash@)(k) as int % m as int;
-                                    let n = choose |n: int| #![trigger old_table_seq[(hk + n * n) % m as int]] 0 <= n < m as int
-                                        && (hk + n * n) % m as int == i
+                                    let n = choose |n: int| #![trigger old_table_seq[spec_tri_probe(hk, n, m as int)]]
+                                        0 <= n < m as int
+                                        && spec_tri_probe(hk, n, m as int) == i
                                         && forall |j: int| 0 <= j < n
-                                            ==> !(#[trigger] old_table_seq[(hk + j * j) % m as int] is Empty);
+                                            ==> !(#[trigger] old_table_seq[spec_tri_probe(hk, j, m as int)] is Empty);
                                     assert forall |j: int| 0 <= j < n
-                                        implies !(#[trigger] table.table@[(hk + j * j) % m as int] is Empty) by {
-                                        let pos = (hk + j * j) % m as int;
+                                        implies !(#[trigger] table.table@[spec_tri_probe(hk, j, m as int)] is Empty) by {
+                                        let pos = spec_tri_probe(hk, j, m as int);
                                         if pos == slot as int {
                                             // Was Occupied, now Occupied. Not Empty.
                                         } else {
@@ -196,9 +312,7 @@ pub mod QuadProbFlatHashTableStEph {
                                         }
                                     }
                                 }
-                                // One-slot modification witness for trait ensures.
-                                assert(spec_other_slots_preserved(
-                                    old(table).table@, table.table@, slot as int));
+                                assert(spec_other_slots_preserved(old(table).table@, table.table@, slot as int));
                             }
                             return;
                         }
@@ -215,7 +329,6 @@ pub mod QuadProbFlatHashTableStEph {
                             table.num_elements = table.num_elements + 1;
                         }
                         proof {
-                            // Key not in table (same proof as lookup not-found).
                             assert(old_table_seq[slot as int] is Empty);
                             assert forall |j: int| 0 <= j < old_table_seq.len()
                                 implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(key) by {
@@ -223,7 +336,6 @@ pub mod QuadProbFlatHashTableStEph {
                                 }
                             }
                             lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(old_table_seq, key);
-                            // Map update.
                             let new_entry = FlatEntry::<Key, Value>::Occupied(key, value);
                             assert(new_entry.spec_entry_to_map() =~= Map::<Key, Value>::empty().insert(key, value));
                             assert(old_table_seq[slot as int].spec_entry_to_map() =~= Map::<Key, Value>::empty());
@@ -231,7 +343,7 @@ pub mod QuadProbFlatHashTableStEph {
                                 old_table_seq[slot as int].spec_entry_to_map().insert(key, value));
                             lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
                                 old_table_seq, slot as int, new_entry, key, value);
-                            // Wf: no-dup — key wasn't anywhere, now only at slot.
+                            // Wf: no-dup — key wasn't anywhere before.
                             assert forall |i: int, j: int, k: Key|
                                 0 <= i < m as int && 0 <= j < m as int && i != j
                                 && #[trigger] spec_flat_has_key(table.table@[i], k)
@@ -260,31 +372,32 @@ pub mod QuadProbFlatHashTableStEph {
                                 }
                             }
                             // Wf: probe chain — new key at slot with witness n = attempt.
+                            let ga = attempt as int;
+                            let gm = m as int;
                             assert forall |i: int, k: Key|
-                                0 <= i < m as int
+                                0 <= i < gm
                                 && #[trigger] spec_flat_has_key(table.table@[i], k)
                                 implies ({
-                                    let hk = (table.spec_hash@)(k) as int % m as int;
-                                    exists |n: int| #![trigger table.table@[(hk + n * n) % m as int]] 0 <= n < m as int
-                                        && (hk + n * n) % m as int == i
+                                    let hk = (table.spec_hash@)(k) as int % gm;
+                                    exists |n: int| #![trigger table.table@[spec_tri_probe(hk, n, gm)]]
+                                        0 <= n < gm
+                                        && spec_tri_probe(hk, n, gm) == i
                                         && forall |j: int| 0 <= j < n
-                                            ==> !(#[trigger] table.table@[(hk + j * j) % m as int] is Empty)
+                                            ==> !(#[trigger] table.table@[spec_tri_probe(hk, j, gm)] is Empty)
                                 }) by {
-                                let hk = (table.spec_hash@)(k) as int % m as int;
+                                let hk = (table.spec_hash@)(k) as int % gm;
                                 if i == slot as int {
                                     assert(spec_flat_has_key(table.table@[slot as int], k) ==> k == key);
                                     if k == key {
                                         assert(hk == h as int);
-                                        // Witness: n = attempt. (h + attempt²) % m == slot.
-                                        // Probe path 0..attempt was not Empty (invariant + slot update).
-                                        assert forall |j: int| 0 <= j < attempt as int
-                                            implies !(#[trigger] table.table@[(h as int + j * j) % m as int] is Empty) by {
-                                            let pos = (h as int + j * j) % m as int;
+                                        // Witness n = attempt: spec_tri_probe(h, attempt, m) == slot.
+                                        assert(slot as int == spec_tri_probe(h as int, ga, gm));
+                                        // Probe path 0..attempt was not Empty (loop invariant).
+                                        assert forall |j: int| 0 <= j < ga
+                                            implies !(#[trigger] table.table@[spec_tri_probe(h as int, j, gm)] is Empty) by {
+                                            let pos = spec_tri_probe(h as int, j, gm);
                                             if pos == slot as int {
-                                                // pos == slot means (h+j²)%m == (h+attempt²)%m.
-                                                // Invariant: !spec_flat_has_key at (h+j²)%m.
-                                                // But slot is Empty in old table. So old[pos] is Empty.
-                                                // But invariant says pos is not Empty. Contradiction.
+                                                // Old slot was Empty; invariant says pos not Empty. Contradiction.
                                             }
                                             assert(table.table@[pos] == old_table_seq[pos]);
                                         }
@@ -292,13 +405,14 @@ pub mod QuadProbFlatHashTableStEph {
                                 } else {
                                     assert(table.table@[i] == old_table_seq[i]);
                                     assert(spec_flat_has_key(old_table_seq[i], k));
-                                    let n = choose |n: int| #![trigger old_table_seq[(hk + n * n) % m as int]] 0 <= n < m as int
-                                        && (hk + n * n) % m as int == i
+                                    let n = choose |n: int| #![trigger old_table_seq[spec_tri_probe(hk, n, gm)]]
+                                        0 <= n < gm
+                                        && spec_tri_probe(hk, n, gm) == i
                                         && forall |j: int| 0 <= j < n
-                                            ==> !(#[trigger] old_table_seq[(hk + j * j) % m as int] is Empty);
+                                            ==> !(#[trigger] old_table_seq[spec_tri_probe(hk, j, gm)] is Empty);
                                     assert forall |j: int| 0 <= j < n
-                                        implies !(#[trigger] table.table@[(hk + j * j) % m as int] is Empty) by {
-                                        let pos = (hk + j * j) % m as int;
+                                        implies !(#[trigger] table.table@[spec_tri_probe(hk, j, gm)] is Empty) by {
+                                        let pos = spec_tri_probe(hk, j, gm);
                                         if pos == slot as int {
                                             // Was Empty, now Occupied. Not Empty.
                                         } else {
@@ -307,85 +421,63 @@ pub mod QuadProbFlatHashTableStEph {
                                     }
                                 }
                             }
-                            // One-slot modification witness for trait ensures.
                             assert(old_table_seq =~= old(table).table@);
-                            assert(spec_other_slots_preserved(
-                                old(table).table@, table.table@, slot as int));
+                            assert(spec_other_slots_preserved(old(table).table@, table.table@, slot as int));
                         }
                         return;
                     }
                     FlatEntry::Deleted => {
-                        // Skip Deleted: continue probing to avoid duplicates.
                         proof {
                             assert(!spec_flat_has_key(table.table@[slot as int], key));
                             assert(!(table.table@[slot as int] is Empty));
                         }
                     }
                 }
-                // Incremental slot update (same as lookup).
-                let ghost prev_slot: int = slot as int;
-                let slot1: usize = if attempt < m - slot { slot + attempt } else { attempt - (m - slot) };
+                // Slot update: slot_{a+1} = (slot_a + (a+1)) % m
+                // Increments by a+1, maintaining slot = (h + (a+1)*(a+2)/2) % m.
+                let new_inc: usize = attempt + 1;
+                slot = if new_inc < m - slot { slot + new_inc } else { new_inc - (m - slot) };
                 proof {
-                    let sum = prev_slot + attempt as int;
-                    if sum < m as int {
-                        vstd::arithmetic::div_mod::lemma_small_mod(sum as nat, m as nat);
-                    } else {
-                        vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(sum - m as int, m as int);
-                        vstd::arithmetic::div_mod::lemma_small_mod((sum - m as int) as nat, m as nat);
-                    }
-                    assert(slot1 as int == (prev_slot + attempt as int) % (m as int));
-                }
-                let incr: usize = attempt + 1;
-                slot = if incr < m {
-                    if incr < m - slot1 { slot1 + incr } else { incr - (m - slot1) }
-                } else {
-                    slot1
-                };
-                proof {
-                    let gi: int = incr as int;
-                    let gm: int = m as int;
-                    let gs1: int = slot1 as int;
                     let ga: int = attempt as int;
-                    let gh: int = h as int;
-                    if gi < gm {
-                        let sum2 = gs1 + gi;
-                        if sum2 < gm {
-                            vstd::arithmetic::div_mod::lemma_small_mod(sum2 as nat, gm as nat);
-                        } else {
-                            vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(sum2 - gm, gm);
-                            vstd::arithmetic::div_mod::lemma_small_mod((sum2 - gm) as nat, gm as nat);
-                        }
-                        assert(slot as int == (gs1 + gi) % gm);
+                    let gm: int = m as int;
+                    let inc: int = ga + 1;
+                    let old_slot = (h as int + ga * (ga + 1) / 2) % gm;
+                    let sum = old_slot + inc;
+                    if sum < gm {
+                        vstd::arithmetic::div_mod::lemma_small_mod(sum as nat, gm as nat);
                     } else {
-                        vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(gs1, gm);
-                        vstd::arithmetic::div_mod::lemma_small_mod(gs1 as nat, gm as nat);
-                        assert(slot as int == (gs1 + gi) % gm);
+                        vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(sum - gm, gm);
+                        vstd::arithmetic::div_mod::lemma_small_mod((sum - gm) as nat, gm as nat);
                     }
+                    assert(slot as int == (old_slot + inc) % gm);
+                    lemma_tri_step(ga);
                     vstd::arithmetic::div_mod::lemma_add_mod_noop_right(
-                        gi, prev_slot + ga, gm);
-                    assert((gi + gs1) % gm == (gi + prev_slot + ga) % gm);
-                    assert((gs1 + gi) % gm == (gi + gs1) % gm);
-                    assert(slot as int == (gi + prev_slot + ga) % gm);
-                    assert(prev_slot == (gh + ga * ga) % gm);
-                    vstd::arithmetic::div_mod::lemma_add_mod_noop_right(
-                        gi + ga, gh + ga * ga, gm);
-                    assert((gi + ga + prev_slot) % gm == (gi + ga + gh + ga * ga) % gm);
-                    assert(gi + prev_slot + ga == gi + ga + prev_slot);
-                    assert(slot as int == (gh + ga * ga + ga + gi) % gm);
-                    assert((ga + 1) * (ga + 1) == ga * ga + 2 * ga + 1) by(nonlinear_arith);
-                    assert(ga + gi == 2 * ga + 1);
-                    assert(slot as int == (gh + (ga + 1) * (ga + 1)) % gm);
+                        ga + 1, h as int + ga * (ga + 1) / 2, gm);
+                    assert(slot as int == spec_tri_probe(h as int, ga + 1, gm));
                 }
                 attempt = attempt + 1;
             }
-            // Exhausted all m positions.
+            // Exhausted all m positions. Unreachable because the triangular probe sequence
+            // is a complete permutation of {0..m-1} (m a power of two), so a non-full table
+            // must contain an empty slot that the probe sequence reaches.
             proof {
-                assume(false); // Table full: unreachable with load factor < 1.
+                // Bridge: loop invariant uses `m`, lemma requires `table.current_size`.
+                assert(m == table.current_size);
+                assert forall |d: int| 0 <= d < table.current_size as int
+                    ==> !spec_flat_has_key(
+                        table.table@[spec_tri_probe(h as int, d, table.current_size as int)], key) by {
+                    assert(spec_tri_probe(h as int, d, m as int) == spec_tri_probe(h as int, d, table.current_size as int));
+                }
+                assert forall |d: int| 0 <= d < table.current_size as int
+                    ==> !(#[trigger] table.table@[spec_tri_probe(h as int, d, table.current_size as int)] is Empty) by {
+                    assert(spec_tri_probe(h as int, d, m as int) == spec_tri_probe(h as int, d, table.current_size as int));
+                }
+                lemma_empty_slot_reachable::<Key, Value, Metrics, H>(table, &key, h);
             }
         }
 
-        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
-        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — quadratic probe sequence until found or empty.
+        /// - APAS: Work O(1/(1-α)) expected, Span O(1/(1-α)).
+        /// - Claude-Opus-4.6: Work O(1/(1-α)), Span O(1/(1-α)) — triangular probe sequence.
         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
             let h = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
             let m = table.current_size;
@@ -393,7 +485,8 @@ pub mod QuadProbFlatHashTableStEph {
             let mut slot: usize = h;
             proof {
                 vstd::arithmetic::div_mod::lemma_small_mod(h as nat, m as nat);
-                assert(slot as int == (h as int + 0int * 0int) % (m as int));
+                assert(0int * (0int + 1int) / 2int == 0int);
+                assert(slot as int == spec_tri_probe(h as int, 0int, m as int));
             }
             while attempt < m
                 invariant
@@ -404,14 +497,13 @@ pub mod QuadProbFlatHashTableStEph {
                     slot < m,
                     table.table@.len() == m as int,
                     h as nat == (table.spec_hash@)(*key) % (m as nat),
-                    slot as int == (h as int + attempt as int * attempt as int) % (m as int),
+                    slot as int == spec_tri_probe(h as int, attempt as int, m as int),
                     spec_quadprobflathashsteph_wf(table),
-                    // Prior probe positions don't have the key.
                     forall |d: int| 0 <= d < attempt as int
-                        ==> !#[trigger] spec_flat_has_key(table.table@[(h as int + d * d) % (m as int)], *key),
-                    // Prior probe positions are not Empty.
+                        ==> !#[trigger] spec_flat_has_key(
+                            table.table@[spec_tri_probe(h as int, d, m as int)], *key),
                     forall |d: int| 0 <= d < attempt as int
-                        ==> !(#[trigger] table.table@[(h as int + d * d) % (m as int)] is Empty),
+                        ==> !(#[trigger] table.table@[spec_tri_probe(h as int, d, m as int)] is Empty),
                 decreases m - attempt,
             {
                 let entry = table.table[slot].clone();
@@ -441,19 +533,15 @@ pub mod QuadProbFlatHashTableStEph {
                     FlatEntry::Empty => {
                         proof {
                             assert(table.table@[slot as int] is Empty);
-                            // If any key k == *key existed at some slot j, the wf says there exists
-                            // an attempt n placing it there with no Empty on the quadratic path.
-                            // But we found Empty at attempt, so n > attempt. And prior attempts
-                            // don't have the key. The wf existential + our invariant give contradiction.
+                            // Wf: if key existed at slot j, its probe path has no Empty before j.
+                            // Since we found Empty at this attempt, key cannot be at any later probe.
                             assert forall |j: int| 0 <= j < table.table@.len()
                                 implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
                                 if spec_flat_has_key(table.table@[j], *key) {
-                                    // wf: exists n: 0 <= n < m, (h + n*n) % m == j, path 0..n non-Empty.
-                                    // At attempt d in 0..attempt: not Empty (invariant).
-                                    // At attempt: Empty. So n != attempt. If n < attempt: invariant says
-                                    // !spec_flat_has_key at (h+n*n)%m, but that's j. Contradiction.
-                                    // If n > attempt: path[attempt] must be non-Empty, but it is. Contradiction.
-                                    // So n >= attempt means path includes position attempt which is Empty.
+                                    let hk = (table.spec_hash@)(*key) as int % m as int;
+                                    // wf gives n: 0<=n<m, probe(h,n,m)==j, path 0..n non-Empty.
+                                    // But probe(h,attempt,m)==slot is Empty. Contradiction if n>attempt.
+                                    // If n < attempt: invariant says !spec_flat_has_key at probe(h,n,m)==j.
                                 }
                             }
                             lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
@@ -467,63 +555,25 @@ pub mod QuadProbFlatHashTableStEph {
                         }
                     }
                 }
-                // Update slot for next attempt: slot_{a+1} = (h + (a+1)^2) % m
-                // = (slot + 2*a + 1) % m. Compute in two overflow-safe steps.
-                let ghost prev_slot: int = slot as int;
-                let slot1: usize = if attempt < m - slot { slot + attempt } else { attempt - (m - slot) };
+                let new_inc: usize = attempt + 1;
+                slot = if new_inc < m - slot { slot + new_inc } else { new_inc - (m - slot) };
                 proof {
-                    let sum = prev_slot + attempt as int;
-                    if sum < m as int {
-                        vstd::arithmetic::div_mod::lemma_small_mod(sum as nat, m as nat);
-                    } else {
-                        vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(sum - m as int, m as int);
-                        vstd::arithmetic::div_mod::lemma_small_mod((sum - m as int) as nat, m as nat);
-                    }
-                    assert(slot1 as int == (prev_slot + attempt as int) % (m as int));
-                }
-                let incr: usize = attempt + 1;
-                slot = if incr < m {
-                    if incr < m - slot1 { slot1 + incr } else { incr - (m - slot1) }
-                } else {
-                    slot1
-                };
-                proof {
-                    let gi: int = incr as int;
-                    let gm: int = m as int;
-                    let gs1: int = slot1 as int;
                     let ga: int = attempt as int;
-                    let gh: int = h as int;
-                    if gi < gm {
-                        let sum2 = gs1 + gi;
-                        if sum2 < gm {
-                            vstd::arithmetic::div_mod::lemma_small_mod(sum2 as nat, gm as nat);
-                        } else {
-                            vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(sum2 - gm, gm);
-                            vstd::arithmetic::div_mod::lemma_small_mod((sum2 - gm) as nat, gm as nat);
-                        }
-                        assert(slot as int == (gs1 + gi) % gm);
+                    let gm: int = m as int;
+                    let old_slot = (h as int + ga * (ga + 1) / 2) % gm;
+                    let inc: int = ga + 1;
+                    let sum = old_slot + inc;
+                    if sum < gm {
+                        vstd::arithmetic::div_mod::lemma_small_mod(sum as nat, gm as nat);
                     } else {
-                        vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(gs1, gm);
-                        vstd::arithmetic::div_mod::lemma_small_mod(gs1 as nat, gm as nat);
-                        assert(slot as int == (gs1 + gi) % gm);
+                        vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(sum - gm, gm);
+                        vstd::arithmetic::div_mod::lemma_small_mod((sum - gm) as nat, gm as nat);
                     }
-                    // Chain: slot = (gs1 + gi) % gm
-                    //   where gs1 = (prev_slot + ga) % gm, prev_slot = (gh + ga*ga) % gm.
-                    // Lift to: slot = (gh + ga*ga + ga + gi) % gm = (gh + (ga+1)^2) % gm.
+                    assert(slot as int == (old_slot + inc) % gm);
+                    lemma_tri_step(ga);
                     vstd::arithmetic::div_mod::lemma_add_mod_noop_right(
-                        gi, prev_slot + ga, gm);
-                    assert((gi + gs1) % gm == (gi + prev_slot + ga) % gm);
-                    assert((gs1 + gi) % gm == (gi + gs1) % gm);
-                    assert(slot as int == (gi + prev_slot + ga) % gm);
-                    assert(prev_slot == (gh + ga * ga) % gm);
-                    vstd::arithmetic::div_mod::lemma_add_mod_noop_right(
-                        gi + ga, gh + ga * ga, gm);
-                    assert((gi + ga + prev_slot) % gm == (gi + ga + gh + ga * ga) % gm);
-                    assert(gi + prev_slot + ga == gi + ga + prev_slot);
-                    assert(slot as int == (gh + ga * ga + ga + gi) % gm);
-                    assert((ga + 1) * (ga + 1) == ga * ga + 2 * ga + 1) by(nonlinear_arith);
-                    assert(ga + gi == 2 * ga + 1);
-                    assert(slot as int == (gh + (ga + 1) * (ga + 1)) % gm);
+                        ga + 1, h as int + ga * (ga + 1) / 2, gm);
+                    assert(slot as int == spec_tri_probe(h as int, ga + 1, gm));
                 }
                 attempt = attempt + 1;
             }
@@ -532,8 +582,7 @@ pub mod QuadProbFlatHashTableStEph {
                 assert forall |j: int| 0 <= j < table.table@.len()
                     implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
                     if spec_flat_has_key(table.table@[j], *key) {
-                        // wf says exists n: 0 <= n < m with (h+n*n)%m == j.
-                        // n < m == attempt, so invariant: !spec_flat_has_key at (h+n*n)%m == j.
+                        // wf gives n < m; invariant says !spec_flat_has_key at all probe positions 0..m.
                     }
                 }
                 lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
@@ -541,8 +590,8 @@ pub mod QuadProbFlatHashTableStEph {
             None
         }
 
-        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
-        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — quadratic probe until found or empty, then tombstone.
+        /// - APAS: Work O(1/(1-α)) expected, Span O(1/(1-α)).
+        /// - Claude-Opus-4.6: Work O(1/(1-α)), Span O(1/(1-α)) — triangular probe until found, then tombstone.
         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
             let h = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
             let m = table.current_size;
@@ -550,7 +599,8 @@ pub mod QuadProbFlatHashTableStEph {
             let mut slot: usize = h;
             proof {
                 vstd::arithmetic::div_mod::lemma_small_mod(h as nat, m as nat);
-                assert(slot as int == (h as int + 0int * 0int) % (m as int));
+                assert(0int * (0int + 1int) / 2int == 0int);
+                assert(slot as int == spec_tri_probe(h as int, 0int, m as int));
             }
             while attempt < m
                 invariant
@@ -562,15 +612,16 @@ pub mod QuadProbFlatHashTableStEph {
                     slot < m,
                     table.table@.len() == m as int,
                     h as nat == (table.spec_hash@)(*key) % (m as nat),
-                    slot as int == (h as int + attempt as int * attempt as int) % (m as int),
+                    slot as int == spec_tri_probe(h as int, attempt as int, m as int),
                     spec_quadprobflathashsteph_wf(table),
                     table.table@ == old(table).table@,
                     table.spec_hash == old(table).spec_hash,
                     table.num_elements == old(table).num_elements,
                     forall |d: int| 0 <= d < attempt as int
-                        ==> !#[trigger] spec_flat_has_key(table.table@[(h as int + d * d) % (m as int)], *key),
+                        ==> !#[trigger] spec_flat_has_key(
+                            table.table@[spec_tri_probe(h as int, d, m as int)], *key),
                     forall |d: int| 0 <= d < attempt as int
-                        ==> !(#[trigger] table.table@[(h as int + d * d) % (m as int)] is Empty),
+                        ==> !(#[trigger] table.table@[spec_tri_probe(h as int, d, m as int)] is Empty),
                 decreases m - attempt,
             {
                 let entry = table.table[slot].clone();
@@ -586,14 +637,12 @@ pub mod QuadProbFlatHashTableStEph {
                             }
                             proof {
                                 assert(spec_flat_has_key(old_table_seq[slot as int], *key));
-                                // No other slot has *key (old wf no-dup).
                                 assert forall |j: int| 0 <= j < old_table_seq.len() && j != slot as int
                                     implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(*key) by {
                                     if spec_flat_has_key(old_table_seq[j], *key) {
                                         assert(spec_flat_has_key(old_table_seq[slot as int], *key));
                                     }
                                 }
-                                // Map update: Deleted has empty map.
                                 let new_entry = FlatEntry::<Key, Value>::Deleted;
                                 assert(new_entry.spec_entry_to_map() =~= Map::<Key, Value>::empty());
                                 assert(old_table_seq[slot as int].spec_entry_to_map().dom().contains(*key));
@@ -617,30 +666,30 @@ pub mod QuadProbFlatHashTableStEph {
                                         }
                                     }
                                 }
-                                // Wf: probe chain integrity.
+                                // Wf: probe chain (Occupied→Deleted, which is not Empty).
                                 assert forall |i: int, k: Key|
                                     0 <= i < m as int
                                     && #[trigger] spec_flat_has_key(table.table@[i], k)
                                     implies ({
                                         let hk = (table.spec_hash@)(k) as int % m as int;
-                                        exists |n: int| #![trigger table.table@[(hk + n * n) % m as int]] 0 <= n < m as int
-                                            && (hk + n * n) % m as int == i
+                                        exists |n: int| #![trigger table.table@[spec_tri_probe(hk, n, m as int)]]
+                                            0 <= n < m as int
+                                            && spec_tri_probe(hk, n, m as int) == i
                                             && forall |j: int| 0 <= j < n
-                                                ==> !(#[trigger] table.table@[(hk + j * j) % m as int] is Empty)
+                                                ==> !(#[trigger] table.table@[spec_tri_probe(hk, j, m as int)] is Empty)
                                     }) by {
                                     assert(i != slot as int);
                                     assert(table.table@[i] == old_table_seq[i]);
                                     assert(spec_flat_has_key(old_table_seq[i], k));
                                     let hk = (table.spec_hash@)(k) as int % m as int;
-                                    // Old wf: exists n with probe chain in old_table_seq.
-                                    // Same n works: Occupied→Deleted at slot is not Empty.
-                                    let n = choose |n: int| #![trigger old_table_seq[(hk + n * n) % m as int]] 0 <= n < m as int
-                                        && (hk + n * n) % m as int == i
+                                    let n = choose |n: int| #![trigger old_table_seq[spec_tri_probe(hk, n, m as int)]]
+                                        0 <= n < m as int
+                                        && spec_tri_probe(hk, n, m as int) == i
                                         && forall |j: int| 0 <= j < n
-                                            ==> !(#[trigger] old_table_seq[(hk + j * j) % m as int] is Empty);
+                                            ==> !(#[trigger] old_table_seq[spec_tri_probe(hk, j, m as int)] is Empty);
                                     assert forall |j: int| 0 <= j < n
-                                        implies !(#[trigger] table.table@[(hk + j * j) % m as int] is Empty) by {
-                                        let pos = (hk + j * j) % m as int;
+                                        implies !(#[trigger] table.table@[spec_tri_probe(hk, j, m as int)] is Empty) by {
+                                        let pos = spec_tri_probe(hk, j, m as int);
                                         if pos == slot as int {
                                             // Deleted is not Empty.
                                         } else {
@@ -675,59 +724,25 @@ pub mod QuadProbFlatHashTableStEph {
                         }
                     }
                 }
-                // Incremental slot update (same as lookup).
-                let ghost prev_slot: int = slot as int;
-                let slot1: usize = if attempt < m - slot { slot + attempt } else { attempt - (m - slot) };
+                let new_inc: usize = attempt + 1;
+                slot = if new_inc < m - slot { slot + new_inc } else { new_inc - (m - slot) };
                 proof {
-                    let sum = prev_slot + attempt as int;
-                    if sum < m as int {
-                        vstd::arithmetic::div_mod::lemma_small_mod(sum as nat, m as nat);
-                    } else {
-                        vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(sum - m as int, m as int);
-                        vstd::arithmetic::div_mod::lemma_small_mod((sum - m as int) as nat, m as nat);
-                    }
-                    assert(slot1 as int == (prev_slot + attempt as int) % (m as int));
-                }
-                let incr: usize = attempt + 1;
-                slot = if incr < m {
-                    if incr < m - slot1 { slot1 + incr } else { incr - (m - slot1) }
-                } else {
-                    slot1
-                };
-                proof {
-                    let gi: int = incr as int;
-                    let gm: int = m as int;
-                    let gs1: int = slot1 as int;
                     let ga: int = attempt as int;
-                    let gh: int = h as int;
-                    if gi < gm {
-                        let sum2 = gs1 + gi;
-                        if sum2 < gm {
-                            vstd::arithmetic::div_mod::lemma_small_mod(sum2 as nat, gm as nat);
-                        } else {
-                            vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(sum2 - gm, gm);
-                            vstd::arithmetic::div_mod::lemma_small_mod((sum2 - gm) as nat, gm as nat);
-                        }
-                        assert(slot as int == (gs1 + gi) % gm);
+                    let gm: int = m as int;
+                    let old_slot = (h as int + ga * (ga + 1) / 2) % gm;
+                    let inc: int = ga + 1;
+                    let sum = old_slot + inc;
+                    if sum < gm {
+                        vstd::arithmetic::div_mod::lemma_small_mod(sum as nat, gm as nat);
                     } else {
-                        vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(gs1, gm);
-                        vstd::arithmetic::div_mod::lemma_small_mod(gs1 as nat, gm as nat);
-                        assert(slot as int == (gs1 + gi) % gm);
+                        vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(sum - gm, gm);
+                        vstd::arithmetic::div_mod::lemma_small_mod((sum - gm) as nat, gm as nat);
                     }
+                    assert(slot as int == (old_slot + inc) % gm);
+                    lemma_tri_step(ga);
                     vstd::arithmetic::div_mod::lemma_add_mod_noop_right(
-                        gi, prev_slot + ga, gm);
-                    assert((gi + gs1) % gm == (gi + prev_slot + ga) % gm);
-                    assert((gs1 + gi) % gm == (gi + gs1) % gm);
-                    assert(slot as int == (gi + prev_slot + ga) % gm);
-                    assert(prev_slot == (gh + ga * ga) % gm);
-                    vstd::arithmetic::div_mod::lemma_add_mod_noop_right(
-                        gi + ga, gh + ga * ga, gm);
-                    assert((gi + ga + prev_slot) % gm == (gi + ga + gh + ga * ga) % gm);
-                    assert(gi + prev_slot + ga == gi + ga + prev_slot);
-                    assert(slot as int == (gh + ga * ga + ga + gi) % gm);
-                    assert((ga + 1) * (ga + 1) == ga * ga + 2 * ga + 1) by(nonlinear_arith);
-                    assert(ga + gi == 2 * ga + 1);
-                    assert(slot as int == (gh + (ga + 1) * (ga + 1)) % gm);
+                        ga + 1, h as int + ga * (ga + 1) / 2, gm);
+                    assert(slot as int == spec_tri_probe(h as int, ga + 1, gm));
                 }
                 attempt = attempt + 1;
             }
@@ -744,7 +759,7 @@ pub mod QuadProbFlatHashTableStEph {
         }
 
         /// - APAS: Work O(n + m + m'), Span O(n + m + m').
-        /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs from m slots, creates m' new slots, reinserts n pairs.
+        /// - Claude-Opus-4.6: Work O(n + m + m') — collect n pairs, create m' empty slots, reinsert.
         fn resize(
             table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
             new_size: usize,
@@ -774,8 +789,7 @@ pub mod QuadProbFlatHashTableStEph {
                         assert(spec_seq_pairs_to_map(pairs@) =~= old_map.insert(k, v));
                         let ghost entry_map = table.table@[i as int].spec_entry_to_map();
                         assert(entry_map =~= Map::<Key, Value>::empty().insert(k, v));
-                        assert(old_map.insert(k, v)
-                            =~= old_map.union_prefer_right(entry_map));
+                        assert(old_map.insert(k, v) =~= old_map.union_prefer_right(entry_map));
                     }
                 } else {
                     proof {
@@ -791,8 +805,7 @@ pub mod QuadProbFlatHashTableStEph {
                 i = i + 1;
             }
             proof {
-                assert(table.table@.subrange(0, table.table@.len() as int)
-                    =~= table.table@);
+                assert(table.table@.subrange(0, table.table@.len() as int) =~= table.table@);
             }
 
             // Phase 2: create new table with empty entries.
@@ -829,6 +842,8 @@ pub mod QuadProbFlatHashTableStEph {
             proof {
                 assert forall |j: int| 0 <= j < new_table.table@.len()
                     implies (#[trigger] new_table.table@[j]) is Empty by {}
+                // spec_is_power_of_two follows from spec_resize_ok requirement.
+                assert(spec_is_power_of_two(new_size as int));
                 assert(spec_quadprobflathashsteph_wf(&new_table));
             }
 
@@ -852,8 +867,7 @@ pub mod QuadProbFlatHashTableStEph {
                 proof {
                     assert(pairs@.subrange(0, (j + 1) as int).drop_last()
                         =~= pairs@.subrange(0, j as int));
-                    assert(pairs@.subrange(0, (j + 1) as int).last()
-                        == pairs@[j as int]);
+                    assert(pairs@.subrange(0, (j + 1) as int).last() == pairs@[j as int]);
                 }
                 j = j + 1;
             }
@@ -870,14 +884,15 @@ pub mod QuadProbFlatHashTableStEph {
         for QuadProbFlatHashTableStEph
     {
         /// - APAS: Work O(1), Span O(1).
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) — hash + i² + modulo.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — triangular probe position.
         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize) {
             let hash_val = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
-            (hash_val.wrapping_add(attempt.wrapping_mul(attempt))) % table.current_size
+            let tri = attempt.wrapping_mul(attempt.wrapping_add(1)) / 2;
+            (hash_val.wrapping_add(tri)) % table.current_size
         }
 
-        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
-        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — quadratic probe up to ⌈m/2⌉ (Lemma 47.1).
+        /// - APAS: Work O(1/(1-α)) expected, Span O(1/(1-α)).
+        /// - Claude-Opus-4.6: Work O(1/(1-α)), Span O(1/(1-α)) — triangular probe sequence.
         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (slot: usize) {
             let mut attempt: usize = 0;
             while attempt < table.current_size
