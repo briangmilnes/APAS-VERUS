@@ -1,3 +1,4 @@
+<!-- THESE ARE DONE. DO NOT WORK ON THESE TASKS. IGNORE THIS FILE. -->
 # Agent 1 — Round 50 (Revised)
 
 ## Primary Target: Chap47 ParaHashTableStEph — 3 Holes + 8 Warnings

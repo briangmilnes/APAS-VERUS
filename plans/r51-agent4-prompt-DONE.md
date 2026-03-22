@@ -1,3 +1,4 @@
+<!-- THESE ARE DONE. DO NOT WORK ON THESE TASKS. IGNORE THIS FILE. -->
 You are agent4 working in branch: ~/projects/APAS-VERUS-agent4/.
 Your worktree has been updated.
 Read senior-proof-engineer.mdc (from .cursor/rules).
