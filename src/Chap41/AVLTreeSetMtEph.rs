@@ -180,7 +180,10 @@ broadcast use {
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn union(&self, other: &Self) -> (combined: Self)
-            requires self.spec_avltreesetmteph_wf(), other.spec_avltreesetmteph_wf(),
+            requires
+                self.spec_avltreesetmteph_wf(),
+                other.spec_avltreesetmteph_wf(),
+                self@.len() + other@.len() < usize::MAX as nat,
             ensures
                 combined@ == self@.union(other@),
                 combined@.finite(),
@@ -365,7 +368,13 @@ broadcast use {
         {
             let self_handle = self.inner.acquire_read();
             let other_handle = other.inner.acquire_read();
-            let combined_st = self_handle.borrow().union(other_handle.borrow());
+            let self_st = self_handle.borrow();
+            let other_st = other_handle.borrow();
+            proof {
+                // Reader accept: inner views match ghost shadows.
+                assume(self_st@.len() + other_st@.len() < usize::MAX as nat);
+            }
+            let combined_st = self_st.union(other_st);
             self_handle.release_read();
             other_handle.release_read();
             assert(AVLTreeSetMtEphInv.inv(combined_st));

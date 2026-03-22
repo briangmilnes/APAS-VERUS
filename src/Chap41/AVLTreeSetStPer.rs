@@ -132,6 +132,7 @@ broadcast use {
             requires
                 self.spec_avltreesetstper_wf(),
                 other.spec_avltreesetstper_wf(),
+                self@.len() + other@.len() < usize::MAX as nat,
             ensures
                 combined@ == self@.union(other@),
                 combined.spec_avltreesetstper_wf();
@@ -150,7 +151,9 @@ broadcast use {
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn insert(&self, x: T) -> (updated: Self)
-            requires self.spec_avltreesetstper_wf(),
+            requires
+                self.spec_avltreesetstper_wf(),
+                self@.len() + 1 < usize::MAX as nat,
             ensures
                 updated@ == self@.insert(x@),
                 updated.spec_avltreesetstper_wf();
@@ -601,16 +604,25 @@ broadcast use {
             }
             let other_len = other.elements.length();
             let mut j: usize = 0;
+            proof {
+                self.elements@.unique_seq_to_set();
+                other.elements@.unique_seq_to_set();
+                lemma_size_lt_usize_max::<T>(&other.elements.root);
+                lemma_size_eq_inorder_len::<T>(&other.elements.root);
+            }
             while j < other_len
                 invariant
                     self.elements.spec_avltreeseqstper_wf(),
                     other.elements.spec_avltreeseqstper_wf(),
                     self_len as int == self.elements.spec_seq().len(),
                     other_len as int == other.elements.spec_seq().len(),
+                    self_len as nat == self@.len(),
+                    other_len as nat == other@.len(),
+                    self@.len() + other@.len() < usize::MAX as nat,
                     j <= other_len,
                     combined@.finite(),
                     combined.spec_avltreesetstper_wf(),
-
+                    combined@.len() <= self_len as nat + j as nat,
                     combined@.subset_of(self@.union(other@)),
                     forall|k: int| #![trigger self.elements@[k]]
                         0 <= k < self_len ==> combined@.contains(self.elements@[k]),
@@ -624,11 +636,8 @@ broadcast use {
                     lemma_cloned_view_eq(*elem, c);
                     assert(other.elements@.contains(elem@));
                     assert(other@.contains(elem@));
-                    // Capacity: individual tree wf gives self_len < usize::MAX and
-                    // other_len < usize::MAX, but their sum may exceed usize::MAX.
-                    // The full fix requires bounding both at usize::MAX/2, but callers
-                    // may build large sets from both sides.
-                    assume(combined@.len() + 1 < usize::MAX as nat);
+                    // combined@.len() <= self_len + j < self_len + other_len < usize::MAX.
+                    assert(combined@.len() + 1 < usize::MAX as nat);
                 }
                 let ghost old_combined = combined@;
                 combined = combined.insert(c);
@@ -1013,9 +1022,13 @@ broadcast use {
                     assert(new_vec@.map_values(|t: T| t@)[k] == new_vec@[k]@);
                 };
                 assert(rv =~= new_vec@.map_values(|t: T| t@));
-                // In practice trees cannot have usize::MAX elements (memory limits);
-                // matching the union assume pattern for this 1-element capacity gap.
-                assume(new_vec@.len() < usize::MAX);
+                // new_vec@.len() == n + 1 (from second loop exit with j == n).
+                // n as nat == self@.len() (from unique_seq_to_set + wf).
+                // self@.len() + 1 < usize::MAX (from requires).
+                self.elements@.unique_seq_to_set();
+                assert(n as nat == self@.len());
+                assert(new_vec@.len() == (n + 1) as nat);
+                assert(new_vec@.len() < usize::MAX);
             }
             let updated = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::from_vec(new_vec) };
             proof {
