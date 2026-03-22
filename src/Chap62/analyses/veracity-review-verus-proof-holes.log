@@ -21,14 +21,14 @@ Table of Contents:
 =================================================================
 
 ⚠ StarContractionMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:86: error: fn_missing_ensures - fn star_contract_mt_fuel — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap62/StarContractionMtEph.rs:86: error: fn_missing_ensures - fn star_contract_mt_fuel — exec fn should have ensures
         70 |     pub open spec fn spec_valid_partition_map<V: View>(
             ...
         84 | 
         85 |     /// Inner recursive star contraction with fuel for termination (parallel version).
         87 |         graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G, fuel: usize,
         88 |     ) -> R
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:139: error: fn_missing_ensures - fn star_contract_mt — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap62/StarContractionMtEph.rs:139: error: fn_missing_ensures - fn star_contract_mt — exec fn should have ensures
         86 |     fn star_contract_mt_fuel<V, R, F, G>(
             ...
        137 |     /// Returns:
@@ -36,14 +36,14 @@ Table of Contents:
        140 |     where
        141 |         V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,
 ⚠ StarContractionStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:67: error: fn_missing_ensures - fn star_contract_fuel — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap62/StarContractionStEph.rs:67: error: fn_missing_ensures - fn star_contract_fuel — exec fn should have ensures
         58 |         fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<V>
             ...
         65 | 
         66 |     /// Inner recursive star contraction with fuel for termination.
         68 |         graph: &UnDirGraphStEph<V>, base: &F, expand: &G, fuel: usize,
         69 |     ) -> R
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionStEph.rs:120: error: fn_missing_ensures - fn star_contract — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap62/StarContractionStEph.rs:120: error: fn_missing_ensures - fn star_contract — exec fn should have ensures
         67 |     fn star_contract_fuel<V, R, F, G>(
             ...
        118 |     /// Returns:
@@ -108,12 +108,11 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-21 14:30:55 -07:00
-Ended:     2026-03-21 14:30:55 -07:00
-Duration:  13ms
+Started:   2026-03-21 19:15:05 -07:00
+Ended:     2026-03-21 19:15:05 -07:00
+Duration:  31ms
 
 Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
-0:55 -07:00
-Duration:  13ms
+Duration:  31ms
 
 Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log

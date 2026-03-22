@@ -2042,6 +2042,7 @@ pub mod TableStPer {
             obeys_feq_full::<ArraySeqStPerS<V>>(),
             obeys_feq_full::<Pair<K, ArraySeqStPerS<V>>>(),
         ensures
+            grouped.spec_tablestper_wf(),
             forall|k: K::V| grouped@.contains_key(k)
                 <==> spec_collect_domain::<K::V, V::V>(pairs@).contains(k),
             forall|k: K::V| #[trigger] grouped@.contains_key(k)
