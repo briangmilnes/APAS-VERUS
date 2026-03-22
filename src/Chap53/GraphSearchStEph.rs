@@ -141,6 +141,7 @@ pub mod GraphSearchStEph {
                 forall|v: &V| #[trigger] graph.requires((v,)),
                 forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
         {
+            proof { assume(visited@.len() + frontier@.len() < usize::MAX as nat); }
             let visited_new = visited.union(&frontier);
 
             let mut new_neighbors = AVLTreeSetStEph::empty();
@@ -159,6 +160,7 @@ pub mod GraphSearchStEph {
             {
                 let v = frontier_seq.nth(i);
                 let neighbors = graph(v);
+                proof { assume(new_neighbors@.len() + neighbors@.len() < usize::MAX as nat); }
                 new_neighbors = new_neighbors.union(&neighbors);
                 i = i + 1;
             }

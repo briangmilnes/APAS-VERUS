@@ -129,7 +129,10 @@ broadcast use {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- delegates to AVLTreeSetStEph.union (sequential)
         fn union(&mut self, other: &Self)
-            requires old(self).spec_orderedsetsteph_wf(), other.spec_orderedsetsteph_wf(),
+            requires
+                old(self).spec_orderedsetsteph_wf(),
+                other.spec_orderedsetsteph_wf(),
+                old(self)@.len() + other@.len() < usize::MAX as nat,
             ensures
                 self@ == old(self)@.union(other@),
                 self@.finite(),
@@ -220,7 +223,10 @@ broadcast use {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- delegates to union (sequential)
         fn join(&mut self, other: Self)
-            requires old(self).spec_orderedsetsteph_wf(), other.spec_orderedsetsteph_wf(),
+            requires
+                old(self).spec_orderedsetsteph_wf(),
+                other.spec_orderedsetsteph_wf(),
+                old(self)@.len() + other@.len() < usize::MAX as nat,
             ensures self@ == old(self)@.union(other@), self@.finite(), self.spec_orderedsetsteph_wf();
         /// - APAS: Work Θ(log n + m), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then filters by range

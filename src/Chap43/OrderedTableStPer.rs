@@ -424,7 +424,11 @@ pub mod OrderedTableStPer {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableStPer.insert (linear dup check)
         fn insert(&self, k: K, v: V) -> (table: Self)
-            requires self.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
+            requires
+                self.spec_orderedtablestper_wf(),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                self@.dom().len() + 1 < usize::MAX as nat,
             ensures
                 table@.dom() =~= self@.dom().insert(k@),
                 table@.dom().finite(),
@@ -811,6 +815,10 @@ pub mod OrderedTableStPer {
 
         fn insert(&self, k: K, v: V) -> (table: Self)
         {
+            proof {
+                lemma_entries_to_map_len::<K::V, V::V>(self.base_set.elements@);
+                self.base_set.elements@.unique_seq_to_set();
+            }
             let len = self.base_set.elements.length();
             let mut i: usize = 0;
             while i < len
@@ -845,6 +853,11 @@ pub mod OrderedTableStPer {
                             pair_clone@,
                         );
                         assert(pair_clone@.0 == k@);
+                        deleted.elements@.unique_seq_to_set();
+                        self.base_set.elements@.unique_seq_to_set();
+                        assert(self.base_set@.contains(pair_clone@));
+                        assert(deleted@ =~= self.base_set@.remove(pair_clone@));
+                        assert(deleted@.len() < self.base_set@.len());
                     }
                     let new_pair = Pair(k, v);
                     let inserted = deleted.insert(new_pair);

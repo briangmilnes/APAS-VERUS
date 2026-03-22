@@ -84,7 +84,9 @@ broadcast use {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- delegates to AVLTreeSetStPer.insert (BST insert)
         fn insert(&self, x: T) -> (updated: Self)
-            requires self.spec_orderedsetstper_wf(),
+            requires
+                self.spec_orderedsetstper_wf(),
+                self@.len() + 1 < usize::MAX as nat,
             ensures updated@ == self@.insert(x@), updated@.finite(), updated.spec_orderedsetstper_wf();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- delegates to AVLTreeSetStPer.delete (BST delete)
@@ -112,7 +114,10 @@ broadcast use {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- delegates to AVLTreeSetStPer.union (sequential)
         fn union(&self, other: &Self) -> (combined: Self)
-            requires self.spec_orderedsetstper_wf(), other.spec_orderedsetstper_wf(),
+            requires
+                self.spec_orderedsetstper_wf(),
+                other.spec_orderedsetstper_wf(),
+                self@.len() + other@.len() < usize::MAX as nat,
             ensures combined@ == self@.union(other@), combined@.finite(), combined.spec_orderedsetstper_wf();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- delegates to AVLTreeSetStPer.difference (sequential)
@@ -177,7 +182,9 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then partitions into two sets
         fn split(&self, k: &T) -> (split: (Self, B, Self))
             where Self: Sized
-            requires self.spec_orderedsetstper_wf(),
+            requires
+                self.spec_orderedsetstper_wf(),
+                self@.len() + 1 < usize::MAX as nat,
             ensures
                 self@.finite(),
                 split.1 == self@.contains(k@),
@@ -192,12 +199,17 @@ broadcast use {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- delegates to union (sequential)
         fn join(left: &Self, right: &Self) -> (joined: Self)
-            requires left.spec_orderedsetstper_wf(), right.spec_orderedsetstper_wf(),
+            requires
+                left.spec_orderedsetstper_wf(),
+                right.spec_orderedsetstper_wf(),
+                left@.len() + right@.len() < usize::MAX as nat,
             ensures joined@ == left@.union(right@), joined@.finite();
         /// - APAS: Work Θ(log n + m), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then filters by range (verified with loop invariant)
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
-            requires self.spec_orderedsetstper_wf(),
+            requires
+                self.spec_orderedsetstper_wf(),
+                self@.len() + 1 < usize::MAX as nat,
             ensures
                 self@.finite(),
                 range@.finite(),
@@ -225,7 +237,9 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then partitions by rank (verified with loop invariant)
         fn split_rank(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized
-            requires self.spec_orderedsetstper_wf(),
+            requires
+                self.spec_orderedsetstper_wf(),
+                self@.len() + 1 < usize::MAX as nat,
             ensures
                 self@.finite(),
                 split.0@.finite(),
@@ -725,6 +739,8 @@ broadcast use {
                     elements.spec_avltreeseqstper_wf(),
                     elements@.no_duplicates(),
                     size as nat == elements@.len(),
+                    size as nat == self@.len(),
+                    self@.len() + 1 < usize::MAX as nat,
                     obeys_feq_full::<T>(),
                     self@.finite(),
                     self@ =~= elements@.to_set(),
@@ -734,6 +750,8 @@ broadcast use {
                     right@.subset_of(self@),
                     left.spec_orderedsetstper_wf(),
                     right.spec_orderedsetstper_wf(),
+                    left@.len() <= j as nat,
+                    right@.len() <= j as nat,
                     left@.disjoint(right@),
                     !left@.contains(k@),
                     !right@.contains(k@),
@@ -748,6 +766,7 @@ broadcast use {
                     // Coverage: every visited element is accounted for.
                     forall|idx: int| #![trigger elements@[idx]]
                         0 <= idx < j ==> left@.contains(elements@[idx]) || right@.contains(elements@[idx]) || elements@[idx] == k@,
+                    left@.len() + right@.len() <= j as nat,
                 decreases size - j,
             {
                 let elem = elements.nth(j);
@@ -768,6 +787,8 @@ broadcast use {
                     }
                     if v < *k {
                         let ghost old_left_view = left@;
+                        assert(left@.len() + 1 <= j as nat + 1 <= size as nat);
+                        assert(left@.len() + 1 < usize::MAX as nat);
                         left = left.insert(v);
                         proof {
                             assert(left@.subset_of(self@)) by {
@@ -807,6 +828,8 @@ broadcast use {
                         }
                     } else {
                         let ghost old_right_view = right@;
+                        assert(right@.len() + 1 <= j as nat + 1 <= size as nat);
+                        assert(right@.len() + 1 < usize::MAX as nat);
                         right = right.insert(v);
                         proof {
                             assert(right@.subset_of(self@)) by {
@@ -882,12 +905,17 @@ broadcast use {
                 invariant
                     i <= size,
                     elements.spec_avltreeseqstper_wf(),
+                    elements@.no_duplicates(),
                     size as nat == elements@.len(),
+                    size as nat == self@.len(),
+                    self@.len() + 1 < usize::MAX as nat,
                     self@.finite(),
                     self@ =~= elements@.to_set(),
                     result@.finite(),
                     result@.subset_of(self@),
                     result.spec_orderedsetstper_wf(),
+                    result@.len() <= i as nat,
+                    obeys_feq_full::<T>(),
                 decreases size - i,
             {
                 let elem = elements.nth(i);
@@ -910,6 +938,7 @@ broadcast use {
                         assert(s.to_set().contains(elem@));
                     }
                     let ghost old_result_view = result@;
+                    assert(result@.len() + 1 < usize::MAX as nat);
                     result = result.insert(v);
                     proof {
                         assert(result@.subset_of(self@)) by {
@@ -1051,6 +1080,8 @@ broadcast use {
                     elements.spec_avltreeseqstper_wf(),
                     elements@.no_duplicates(),
                     size as nat == elements@.len(),
+                    size as nat == self@.len(),
+                    self@.len() + 1 < usize::MAX as nat,
                     obeys_feq_full::<T>(),
                     self@.finite(),
                     self@ =~= elements@.to_set(),
@@ -1070,6 +1101,7 @@ broadcast use {
                     // Coverage: visited elements are in left or right.
                     forall|idx: int| #![trigger elements@[idx]]
                         0 <= idx < j ==> left@.contains(elements@[idx]) || right@.contains(elements@[idx]),
+                    left@.len() + right@.len() <= j as nat,
                 decreases size - j,
             {
                 let elem = elements.nth(j);
@@ -1081,6 +1113,8 @@ broadcast use {
                 }
                 if j < split_at {
                     let ghost old_left_view = left@;
+                    assert(left@.len() + 1 <= j as nat + 1 <= size as nat);
+                    assert(left@.len() + 1 < usize::MAX as nat);
                     left = left.insert(v);
                     proof {
                         assert(left@.subset_of(self@)) by {
@@ -1104,6 +1138,8 @@ broadcast use {
                     }
                 } else {
                     let ghost old_right_view = right@;
+                    assert(right@.len() + 1 <= j as nat + 1 <= size as nat);
+                    assert(right@.len() + 1 < usize::MAX as nat);
                     right = right.insert(v);
                     proof {
                         assert(right@.subset_of(self@)) by {

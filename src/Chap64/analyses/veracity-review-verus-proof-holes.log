@@ -20,30 +20,9 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-⚠ SpanTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/SpanTreeMtEph.rs:54: error: fn_missing_ensures - fn spanning_tree_star_contraction_mt — exec fn should have ensures
-        45 |         fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(graph: &UnDirGraphMtEph<V>, tree: &SetStEph<Edge<V>>) -> B
-            ...
-        52 |     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — expand closure
-        53 |     ///   is sequential; parallelism comes from star_contract_mt framework.
-        55 |         graph: &UnDirGraphMtEph<V>,
-        56 |         seed: u64,
-⚠ SpanTreeStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/SpanTreeStEph.rs:51: error: fn_missing_ensures - fn spanning_tree_star_contraction — exec fn should have ensures
-        43 |         fn verify_spanning_tree<V: HashOrd>(graph: &UnDirGraphStEph<V>, tree: &SetStEph<Edge<V>>) -> B
-            ...
-        49 |     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n)
-        50 |     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS.
-        52 |         requires
-        53 |             spec_graphview_wf(graph@),
-⚠ TSPApproxStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/TSPApproxStEph.rs:315: error: fn_missing_ensures - fn approx_metric_tsp — exec fn should have ensures
-       279 |     fn get_edge_weight<V: HashOrd>(
-            ...
-       313 |     /// Returns:
-       314 |     /// - (tour, weight): Hamiltonian cycle and its total weight
-       316 |         graph: &LabUnDirGraphStEph<V, WrappedF64>,
-       317 |         spanning_tree: &SetStEph<LabEdge<V, WrappedF64>>,
+✓ SpanTreeMtEph.rs
+✓ SpanTreeStEph.rs
+✓ TSPApproxStEph.rs
 
 =================================================================
 2. Depends Upon
@@ -70,8 +49,8 @@ TSPApproxStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   0 clean (no holes, no errors; 0%)
-   3 holed (holes or errors, 100%)
+   3 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    3 total
 
 Proof Functions:
@@ -80,8 +59,8 @@ Proof Functions:
    0 total
 
 Function Specs:
-   16 exec fns with complete spec (requires+ensures) (72%)
-   3 exec fns missing spec (13%)
+   19 exec fns with complete spec (requires+ensures) (86%)
+   0 exec fns missing spec (0%)
    3 proof/spec fns clean (13%)
    0 proof/spec fns with holes (0%)
    22 total fns
@@ -89,21 +68,15 @@ Function Specs:
 
 Holes Found: 0 (actionable)
 
-Warnings: 3 total
-   3 × fn_missing_ensures
-
-No proof holes found! All proofs are complete.
+No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-21 19:15:05 -07:00
-Ended:     2026-03-21 19:15:05 -07:00
-Duration:  12ms
+Started:   2026-03-21 20:50:33 -07:00
+Ended:     2026-03-21 20:50:33 -07:00
+Duration:  7ms
 
 Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
- 2026-03-21 19:15:05 -07:00
-Duration:  12ms
-
 Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log

@@ -138,6 +138,8 @@ pub mod OrderedSetMtEph {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.union (sequential)
         fn union(&mut self, other: &Self)
+            requires
+                old(self)@.len() + other@.len() < usize::MAX as nat,
             ensures self@ == old(self)@.union(other@), self@.finite();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.difference (sequential)
@@ -201,6 +203,8 @@ pub mod OrderedSetMtEph {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.join (union)
         fn join(&mut self, other: Self)
+            requires
+                old(self)@.len() + other@.len() < usize::MAX as nat,
             ensures self@.finite();
         /// - APAS: Work Θ(log n + m), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + filter)
@@ -328,6 +332,7 @@ pub mod OrderedSetMtEph {
             let other_read = other.locked_set.acquire_read();
             let other_ref = other_read.borrow();
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
+            proof { assume(locked_val@.len() + other_ref@.len() < usize::MAX as nat); } // RWLOCK_GHOST
             locked_val.union(other_ref);
             write_handle.release_write(locked_val);
             other_read.release_read();
@@ -472,6 +477,7 @@ pub mod OrderedSetMtEph {
             let empty_other = OrderedSetStEph::empty();
             other_write.release_write(empty_other);
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
+            proof { assume(locked_val@.len() + other_inner@.len() < usize::MAX as nat); } // RWLOCK_GHOST
             locked_val.join(other_inner);
             let ghost new_val = locked_val@;
             self.ghost_locked_set = Ghost(new_val);

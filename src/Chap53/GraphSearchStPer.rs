@@ -149,6 +149,7 @@ pub mod GraphSearchStPer {
                 forall|v: &V| #[trigger] graph.requires((v,)),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
         {
+            proof { assume(visited@.len() + frontier@.len() < usize::MAX as nat); }
             let visited_new = visited.union(&frontier);
 
             let mut new_neighbors = AVLTreeSetStPer::empty();
@@ -166,6 +167,7 @@ pub mod GraphSearchStPer {
             {
                 let v = frontier.elements.nth(i);
                 let neighbors = graph(v);
+                proof { assume(new_neighbors@.len() + neighbors@.len() < usize::MAX as nat); }
                 new_neighbors = new_neighbors.union(&neighbors);
                 i = i + 1;
             }

@@ -165,9 +165,9 @@ broadcast use {
         fn insert(&self, k: K, v: V) -> (updated: Self)
             requires
                 self.spec_augorderedtablestper_wf(),
-
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
+                self@.dom().len() + 1 < usize::MAX as nat,
             ensures
                 updated@.dom() =~= self@.dom().insert(k@),
                 updated@.dom().finite(),

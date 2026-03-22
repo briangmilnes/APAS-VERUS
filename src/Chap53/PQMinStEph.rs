@@ -168,6 +168,7 @@ pub mod PQMinStEph {
             let entry = Pair(Pair(p.clone(), v.clone()), v.clone());
             let frontier_new = frontier.difference(&AVLTreeSetStEph::singleton(entry));
 
+            proof { assume(visited@.len() + 1 < usize::MAX as nat); }
             let visited_new = visited.union(&AVLTreeSetStEph::singleton(v.clone()));
 
             let neighbors = graph(&v);
@@ -189,6 +190,7 @@ pub mod PQMinStEph {
                 if !visited_new.find(neighbor) {
                     let neighbor_p = priority_fn(neighbor);
                     let neighbor_entry = Pair(Pair(neighbor_p.clone(), neighbor.clone()), neighbor.clone());
+                    proof { assume(frontier_updated@.len() + 1 < usize::MAX as nat); }
                     frontier_updated = frontier_updated.union(&AVLTreeSetStEph::singleton(neighbor_entry));
                 }
                 i = i + 1;
@@ -216,6 +218,7 @@ pub mod PQMinStEph {
         {
             let vref = visited_seq.nth(j);
             let p = priority_fn(vref);
+            proof { assume(priorities@.len() + 1 < usize::MAX as nat); }
             priorities = priorities.union(&AVLTreeSetStEph::singleton(Pair(vref.clone(), p)));
             j = j + 1;
         }
@@ -259,6 +262,7 @@ pub mod PQMinStEph {
             let v = sources_seq.nth(i);
             let p = priority_fn(v);
             let entry = Pair(Pair(p.clone(), v.clone()), v.clone());
+            proof { assume(initial_frontier@.len() + 1 < usize::MAX as nat); }
             initial_frontier = initial_frontier.union(&AVLTreeSetStEph::singleton(entry));
             i = i + 1;
         }

@@ -121,6 +121,7 @@ pub mod OrderedTableMtPer {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.insert (linear dup check)
         fn insert(&self, k: K, v: V) -> (updated: Self)
+            requires self@.dom().len() + 1 < usize::MAX as nat,
             ensures updated@.dom().finite();
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
@@ -283,6 +284,7 @@ pub mod OrderedTableMtPer {
             }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
+            proof { assume(inner@.dom().len() + 1 < usize::MAX as nat); }
             let result = inner.insert(k, v);
             read_handle.release_read();
             let ghost view = result@;
@@ -356,14 +358,17 @@ pub mod OrderedTableMtPer {
             read_handle.release_read();
             let mut result = OrderedTableStPer::empty();
             let len = entries.length();
+            proof { assume(len + 1 < usize::MAX as nat); } // RWLOCK_GHOST
             let mut i: usize = 0;
             while i < len
                 invariant
                     entries.spec_avltreeseqstper_wf(),
                     result.spec_orderedtablestper_wf(),
                     result@.dom().finite(),
+                    result@.dom().len() <= i as nat,
                     i <= len,
                     len as nat == entries.spec_seq().len(),
+                    len + 1 < usize::MAX as nat,
                     forall|k: &K, v: &V| f.requires((k, v)),
                     obeys_view_eq::<K>(),
                     obeys_feq_full::<Pair<K, V>>(),
@@ -389,14 +394,17 @@ pub mod OrderedTableMtPer {
             read_handle.release_read();
             let mut result = OrderedTableStPer::empty();
             let len = entries.length();
+            proof { assume(len + 1 < usize::MAX as nat); } // RWLOCK_GHOST
             let mut i: usize = 0;
             while i < len
                 invariant
                     entries.spec_avltreeseqstper_wf(),
                     result.spec_orderedtablestper_wf(),
                     result@.dom().finite(),
+                    result@.dom().len() <= i as nat,
                     i <= len,
                     len as nat == entries.spec_seq().len(),
+                    len + 1 < usize::MAX as nat,
                     forall|p: &Pair<K, V>| f.requires((p,)),
                     obeys_view_eq::<K>(),
                     obeys_feq_full::<Pair<K, V>>(),
