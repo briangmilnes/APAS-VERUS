@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap59/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap59/JohnsonStEphI64.rs
 Full output: src/Chap59/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,18 +20,15 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-✓ JohnsonMtEphF64.rs
-✓ JohnsonMtEphI64.rs
-✓ JohnsonStEphF64.rs
 ⚠ JohnsonStEphI64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:73: error: fn_missing_requires - fn adjust_distance — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap59/JohnsonStEphI64.rs:73: error: fn_missing_requires - fn adjust_distance — exec fn should have requires
         54 |         fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>)
             ...
         71 |     /// - APAS: N/A — Verus-specific scaffolding.
         72 |     /// - Claude-Opus-4.6: Work O(1), Span O(1).
         74 |         ensures
         75 |             d_prime == UNREACHABLE ==> result == UNREACHABLE,
-/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphI64.rs:89: error: fn_missing_requires - fn reweight_edge — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap59/JohnsonStEphI64.rs:89: error: fn_missing_requires - fn reweight_edge — exec fn should have requires
         73 |     fn adjust_distance(d_prime: i64, h_u: i64, h_v: i64) -> (result: i64)
             ...
         87 |     /// - APAS: N/A — Verus-specific scaffolding.
@@ -47,18 +44,12 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
-JohnsonMtEphF64  depends upon only clean modules
-JohnsonMtEphI64  depends upon only clean modules
-JohnsonStEphF64  depends upon only clean modules
 JohnsonStEphI64  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
-JohnsonMtEphF64.rs  depends upon only clean modules
-JohnsonMtEphI64.rs  depends upon only clean modules
-JohnsonStEphF64.rs  depends upon only clean modules
 JohnsonStEphI64.rs  depends upon only clean modules
 
 =================================================================
@@ -66,9 +57,9 @@ JohnsonStEphI64.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   3 clean (no holes, no errors; 75%)
-   1 holed (holes or errors, 25%)
-   4 total
+   0 clean (no holes, no errors; 0%)
+   1 holed (holes or errors, 100%)
+   1 total
 
 Proof Functions:
    0 clean (0%)
@@ -76,11 +67,11 @@ Proof Functions:
    0 total
 
 Function Specs:
-   12 exec fns with complete spec (requires+ensures) (85%)
-   2 exec fns missing spec (14%)
+   6 exec fns with complete spec (requires+ensures) (75%)
+   2 exec fns missing spec (25%)
    0 proof/spec fns clean (0%)
    0 proof/spec fns with holes (0%)
-   14 total fns
+   8 total fns
 
 
 Holes Found: 0 (actionable)
@@ -94,11 +85,8 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-21 20:50:33 -07:00
-Ended:     2026-03-21 20:50:33 -07:00
+Started:   2026-03-21 21:21:50 -07:00
+Ended:     2026-03-21 21:21:50 -07:00
 Duration:  10ms
-
-Full output: src/Chap59/analyses/veracity-review-verus-proof-holes.log
-ms
 
 Full output: src/Chap59/analyses/veracity-review-verus-proof-holes.log
