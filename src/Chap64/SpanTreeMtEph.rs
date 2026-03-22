@@ -54,10 +54,11 @@ pub mod SpanTreeMtEph {
     pub fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
-    ) -> SetStEph<Edge<V>>
+    ) -> (result: SetStEph<Edge<V>>)
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
+        ensures result.spec_setsteph_wf(),
     {
         // Base: no edges means no spanning tree edges.
         let base = |_vertices: &SetStEph<V>| -> (result: SetStEph<Edge<V>>)

@@ -48,10 +48,11 @@ pub mod SpanTreeStEph {
     ///
     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS.
-    pub fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>>
+    pub fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (result: SetStEph<Edge<V>>)
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
+        ensures result.spec_setsteph_wf(),
     {
         // Base: no edges means no spanning tree edges (isolated vertices).
         let base = |_vertices: &SetStEph<V>| -> (result: SetStEph<Edge<V>>)
