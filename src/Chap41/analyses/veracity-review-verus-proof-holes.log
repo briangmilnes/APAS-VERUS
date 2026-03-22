@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap41/AVLTreeSetStPer.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap41/
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,36 +20,107 @@ Table of Contents:
 1. File Holes
 =================================================================
 
+ℹ AVLTreeSetMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtEph.rs:388: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtEph.rs:474: info: accept()
+   Info: 2 total
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtEph.rs:245: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtEph.rs:257: info: structural_false_positive RWLOCK_GHOST to_seq — assume(seq@.to_set() =~= self@); [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtEph.rs:314: info: structural_false_positive RWLOCK_GHOST filter — assume(filtered@.subset_of(self@)); [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtEph.rs:315: info: structural_false_positive RWLOCK_GHOST filter — assume(filtered.spec_avltreesetmteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtEph.rs:316: info: structural_false_positive RWLOCK_GHOST filter — assume(forall|v: T::V| #[trigger] filtered@.contains(v) [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtEph.rs:318: info: structural_false_positive RWLOCK_GHOST filter — assume(forall|v: T::V| self@.contains(v) && spec_pred(v) [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtEph.rs:338: info: structural_false_positive RWLOCK_GHOST intersection — assume(common@ == self@.intersect(other@)); [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtEph.rs:358: info: structural_false_positive RWLOCK_GHOST difference — assume(remaining@ == self@.difference(other@)); [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtEph.rs:378: info: structural_false_positive RWLOCK_GHOST union — assume(combined@ == self@.union(other@)); [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtEph.rs:409: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(current@.len() + 1 < usize::MAX as nat); } // [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtEph.rs:550: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph — unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtEph<T> {} [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtEph.rs:551: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph — unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {} [high]
+   Info: 12 × structural_false_positive
+⚠ AVLTreeSetMtPer.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtPer.rs:402: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       394 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       400 |             self_handle.release_read();
+       401 |             other_handle.release_read();
+       403 |             equal
+       404 |         }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtPer.rs:178: info: structural_false_positive RWLOCK_GHOST size — assume(count == self@.len()); [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtPer.rs:193: info: structural_false_positive RWLOCK_GHOST to_seq — assume(seq@.to_set() =~= self@); [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtPer.rs:265: info: structural_false_positive RWLOCK_GHOST filter — assume(filtered@.subset_of(self@)); [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtPer.rs:266: info: structural_false_positive RWLOCK_GHOST filter — assume(forall|v: T::V| #[trigger] filtered@.contains(v) [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtPer.rs:268: info: structural_false_positive RWLOCK_GHOST filter — assume(forall|v: T::V| self@.contains(v) && spec_pred(v) [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtPer.rs:288: info: structural_false_positive RWLOCK_GHOST intersection — assume(common@ == self@.intersect(other@)); [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtPer.rs:307: info: structural_false_positive RWLOCK_GHOST difference — assume(remaining@ == self@.difference(other@)); [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtPer.rs:326: info: structural_false_positive RWLOCK_GHOST union — assume(combined@ == self@.union(other@)); [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtPer.rs:337: info: structural_false_positive RWLOCK_GHOST find — assume(found == self@.contains(x@)); [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtPer.rs:355: info: structural_false_positive RWLOCK_GHOST delete — assume(updated@ == self@.remove(x@)); [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtPer.rs:372: info: structural_false_positive RWLOCK_GHOST insert — assume(updated@ == self@.insert(x@)); [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtPer.rs:415: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtPer.rs:454: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtPer — unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtPer<T> {} [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetMtPer.rs:455: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtPer — unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {} [high]
+❌ AVLTreeSetStEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetStEph.rs:797: error: assume() [algorithmic] - assume(combined@.len() + 1 < usize::MAX as nat);
+       724 |         fn union(&self, other: &Self) -> (combined: Self)
+            ...
+       795 |                     // exceed usize::MAX. The full fix requires bounding both at usize::MAX/2,
+       796 |                     // but callers like PQMinStEph build large frontiers from scratch.
+       798 |                 }
+       799 |                 let ghost old_combined = combined@;
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetStEph.rs:2125: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2121 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      2123 |         {
+      2124 |             proof {
+      2126 |                 assume(other.spec_avltreesetsteph_wf());
+      2127 |             }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetStEph.rs:2126: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2121 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      2124 |             proof {
+      2125 |                 assume(self.spec_avltreesetsteph_wf());
+      2127 |             }
+      2128 |             let equal = self.size() == other.size() && {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetStEph.rs:2148: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2121 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      2146 |                 all_found
+      2147 |             };
+      2149 |             equal
+      2150 |         }
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 5 total (5 clean, 0 holed)
 ❌ AVLTreeSetStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:631: error: assume() [algorithmic] - assume(combined@.len() + 1 < usize::MAX as nat);
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetStPer.rs:631: error: assume() [algorithmic] - assume(combined@.len() + 1 < usize::MAX as nat);
        549 |         fn union(&self, other: &Self) -> (combined: Self)
             ...
        629 |                     // The full fix requires bounding both at usize::MAX/2, but callers
        630 |                     // may build large sets from both sides.
        632 |                 }
        633 |                 let ghost old_combined = combined@;
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:1018: error: assume() [algorithmic] - assume(new_vec@.len() < usize::MAX);
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetStPer.rs:1018: error: assume() [algorithmic] - assume(new_vec@.len() < usize::MAX);
        844 |         fn insert(&self, x: T) -> (updated: Self)
             ...
       1016 |                 // In practice trees cannot have usize::MAX elements (memory limits);
       1017 |                 // matching the union assume pattern for this 1-element capacity gap.
       1019 |             }
       1020 |             let updated = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::from_vec(new_vec) };
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:1082: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetStPer.rs:1082: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1078 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1080 |         {
       1081 |             proof {
       1083 |                 assume(other.spec_avltreesetstper_wf());
       1084 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:1083: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetStPer.rs:1083: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1078 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1081 |             proof {
       1082 |                 assume(self.spec_avltreesetstper_wf());
       1084 |             }
       1085 |             let equal = self.size() == other.size() && {
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:1105: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/AVLTreeSetStPer.rs:1105: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1078 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1103 |                 all_found
@@ -58,6 +129,51 @@ Table of Contents:
       1107 |         }
    Holes: 2 total
       2 × assume()
+⚠ ArraySetEnumMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/ArraySetEnumMtEph.rs:950: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       946 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       948 |         {
+       949 |             let equal = self.universe_size == other.universe_size && self.bits == other.bits;
+       951 |             equal
+       952 |         }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/ArraySetEnumMtEph.rs:963: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       956 |         fn clone(&self) -> (cloned: Self)
+            ...
+       961 |                 universe_size: self.universe_size,
+       962 |             };
+       964 |             cloned
+       965 |         }
+⚠ ArraySetStEph.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/ArraySetStEph.rs:1244: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1240 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1242 |         {
+      1243 |             proof {
+      1245 |                 assume(other.spec_arraysetsteph_wf());
+      1246 |             }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/ArraySetStEph.rs:1245: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1240 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1243 |             proof {
+      1244 |                 assume(self.spec_arraysetsteph_wf());
+      1246 |             }
+      1247 |             let equal = self.size() == other.size() && {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/ArraySetStEph.rs:1267: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1240 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1265 |                 all_found
+      1266 |             };
+      1268 |             equal
+      1269 |         }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap41/ArraySetStEph.rs:1280: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1273 |         fn clone(&self) -> (cloned: Self)
+            ...
+      1278 |             };
+      1279 |             proof {
+      1281 |                 lemma_seq_map_cloned_view_eq(
+      1282 |                     self.elements.seq@,
+✓ Example41_3.rs
 
 =================================================================
 2. Depends Upon
@@ -67,48 +183,68 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
+AVLTreeSetMtEph  depends upon only clean modules
+AVLTreeSetMtPer  depends upon only clean modules
+AVLTreeSetStEph  depends upon only clean modules
 AVLTreeSetStPer  depends upon only clean modules
+ArraySetEnumMtEph  depends upon only clean modules
+ArraySetStEph  depends upon only clean modules
+Example41_3  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
+AVLTreeSetMtEph.rs  depends upon only clean modules
+AVLTreeSetMtPer.rs  depends upon only clean modules
+AVLTreeSetStEph.rs  depends upon only clean modules
 AVLTreeSetStPer.rs  depends upon only clean modules
+ArraySetEnumMtEph.rs  depends upon only clean modules
+ArraySetStEph.rs  depends upon only clean modules
+Example41_3.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   0 clean (no holes, no errors; 0%)
-   1 holed (holes or errors, 100%)
-   1 total
+   5 clean (no holes, no errors; 71%)
+   2 holed (holes or errors, 28%)
+   7 total
 
 Proof Functions:
-   0 clean (0%)
+   19 clean (100%)
    0 holed (0%)
-   0 total
+   19 total
 
 Function Specs:
-   27 exec fns with complete spec (requires+ensures) (84%)
-   0 exec fns missing spec (0%)
-   5 proof/spec fns clean (15%)
+   186 exec fns with complete spec (requires+ensures) (69%)
+   8 exec fns missing spec (2%)
+   73 proof/spec fns clean (27%)
    0 proof/spec fns with holes (0%)
-   32 total fns
+   267 total fns
 
 
-Holes Found: 2 (actionable)
-   2 × assume() (100%)
+Holes Found: 3 (actionable)
+   3 × assume() (100%)
 
-Warnings: 3 total
-   3 × assume_eq_clone_workaround
+Warnings: 13 total
+   13 × assume_eq_clone_workaround
+
+Accepted (reviewed): 2 total
+   2 × accept()
+
+Structural (info only): 26
+   21 × RWLOCK_GHOST
+   4 × UNSAFE_SEND_SYNC
+   1 × STD_TRAIT_IMPL
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-21 14:31:43 -07:00
-Ended:     2026-03-21 14:31:43 -07:00
-Duration:  16ms
+Started:   2026-03-21 18:13:11 -07:00
+Ended:     2026-03-21 18:13:11 -07:00
+Duration:  90ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
