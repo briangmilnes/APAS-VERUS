@@ -20,46 +20,25 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:712: error: assume() [algorithmic] - proof { assume(obeys_feq_clone::<T>()); } // assume_eq_clone
-       689 |     fn expose_internal<T: MtKey>(tree: &ParamBST<T>) -> (exposed: Exposed<T>)
+⚠ BSTParaMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap38/BSTParaMtEph.rs:642: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       635 |         fn clone(&self) -> (cloned: Self)
             ...
-       710 |     {
-       711 |         proof { use_type_invariant(tree); }
-       713 |         let handle = tree.locked_root.acquire_read();
-       714 |         let exposed = match handle.borrow() {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:640: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       633 |         fn clone(&self) -> (cloned: Self)
+       640 |                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
+       641 |             };
+       643 |             cloned
+       644 |         }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap38/BSTParaMtEph.rs:657: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       648 |         fn clone(&self) -> (cloned: Self)
             ...
-       638 |                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
-       639 |             };
-       641 |             cloned
-       642 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:655: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       646 |         fn clone(&self) -> (cloned: Self)
-            ...
-       653 |                 right: self.right.clone(),
-       654 |             };
-       656 |             cloned
-       657 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1643: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1644: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
-   Holes: 1 total
-      1 × assume()
-   Info: 2 × structural_false_positive
-      2 × UNSAFE_SEND_SYNC
-   Proof functions: 6 total (6 clean, 0 holed)
-❌ BSTParaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:479: error: assume() [algorithmic] - proof { assume(obeys_feq_clone::<T>()); } // assume_eq_clone
-       461 |         fn expose(&self) -> (exposed: Exposed<T>)
-            ...
-       477 |         {
-       478 |             proof { use_type_invariant(self); }
-       480 |             let handle = self.locked_root.acquire_read();
-       481 |             let exposed = match handle.borrow() {
-   Holes: 1 total
-      1 × assume()
-   Proof functions: 5 total (5 clean, 0 holed)
+       655 |                 right: self.right.clone(),
+       656 |             };
+       658 |             cloned
+       659 |         }
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap38/BSTParaMtEph.rs:1645: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap38/BSTParaMtEph.rs:1646: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
+✓ BSTParaStEph.rs
+   5 clean proof functions
 
 =================================================================
 2. Depends Upon
@@ -84,8 +63,8 @@ BSTParaStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   0 clean (no holes, no errors; 0%)
-   2 holed (holes or errors, 100%)
+   2 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    2 total
 
 Proof Functions:
@@ -101,8 +80,7 @@ Function Specs:
    130 total fns
 
 
-Holes Found: 2 (actionable)
-   2 × assume() (100%)
+Holes Found: 0 (actionable)
 
 Warnings: 2 total
    2 × assume_eq_clone_workaround
@@ -110,12 +88,14 @@ Warnings: 2 total
 Structural (info only): 2
    2 × UNSAFE_SEND_SYNC
 
+No proof holes found! All proofs are complete.
+
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-21 20:52:34 -07:00
-Ended:     2026-03-21 20:52:34 -07:00
-Duration:  50ms
+Started:   2026-03-21 21:27:39 -07:00
+Ended:     2026-03-21 21:27:39 -07:00
+Duration:  47ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log

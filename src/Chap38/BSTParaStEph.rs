@@ -28,6 +28,8 @@ pub mod BSTParaStEph {
     use vstd::pervasive::cloned;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
@@ -476,7 +478,7 @@ pub mod BSTParaStEph {
             decreases self@.len(), 0nat,
         {
             proof { use_type_invariant(self); }
-            proof { assume(obeys_feq_clone::<T>()); } // assume_eq_clone_workaround
+            proof { assert(obeys_feq_full_trigger::<T>()); }
             let handle = self.locked_root.acquire_read();
             let exposed = match handle.borrow() {
                 | None => {

@@ -60,6 +60,7 @@ pub mod KruskalStEph {
 
     /// Sort edges by weight — verified selection sort.
     fn sort_edges_by_weight<V: HashOrd>(edges: &mut Vec<LabEdge<V, WrappedF64>>)
+        requires forall|i: int| 0 <= i < edges@.len() ==> #[trigger] edges@[i].2.spec_is_finite(),
         ensures
             edges@.len() == old(edges)@.len(),
             forall|i: int| 0 <= i < edges@.len() ==>

@@ -74,6 +74,7 @@ pub mod PrimStEph {
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     fn pq_entry_new<V: HashOrd>(priority: WrappedF64, vertex: V, parent: Option<V>) -> (entry: PQEntry<V>)
+        requires priority.spec_is_finite(),
         ensures entry.priority == priority, entry.vertex == vertex, entry.parent == parent,
     {
         PQEntry {

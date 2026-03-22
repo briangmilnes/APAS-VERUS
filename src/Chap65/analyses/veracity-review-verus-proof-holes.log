@@ -20,22 +20,8 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-⚠ KruskalStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:62: error: fn_missing_requires - fn sort_edges_by_weight — exec fn should have requires
-        54 |         fn verify_mst_size<V: HashOrd>(
-            ...
-        60 | 
-        61 |     /// Sort edges by weight — verified selection sort.
-        63 |         ensures
-        64 |             edges@.len() == old(edges)@.len(),
-⚠ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:76: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
-        69 |         fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64
-            ...
-        74 |     /// - APAS: N/A — Verus-specific scaffolding.
-        75 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        77 |         ensures entry.priority == priority, entry.vertex == vertex, entry.parent == parent,
-        78 |     {
+✓ KruskalStEph.rs
+✓ PrimStEph.rs
 ✓ UnionFindStEph.rs
 
 =================================================================
@@ -63,8 +49,8 @@ UnionFindStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   1 clean (no holes, no errors; 33%)
-   2 holed (holes or errors, 66%)
+   3 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    3 total
 
 Proof Functions:
@@ -73,8 +59,8 @@ Proof Functions:
    0 total
 
 Function Specs:
-   22 exec fns with complete spec (requires+ensures) (73%)
-   2 exec fns missing spec (6%)
+   24 exec fns with complete spec (requires+ensures) (80%)
+   0 exec fns missing spec (0%)
    6 proof/spec fns clean (20%)
    0 proof/spec fns with holes (0%)
    30 total fns
@@ -82,18 +68,14 @@ Function Specs:
 
 Holes Found: 0 (actionable)
 
-Warnings: 2 total
-   2 × fn_missing_requires
-
-No proof holes found! All proofs are complete.
+No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-21 20:50:33 -07:00
-Ended:     2026-03-21 20:50:33 -07:00
-Duration:  11ms
+Started:   2026-03-21 21:27:43 -07:00
+Ended:     2026-03-21 21:27:43 -07:00
+Duration:  15ms
 
-Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
