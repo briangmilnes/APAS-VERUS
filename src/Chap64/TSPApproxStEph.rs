@@ -320,6 +320,7 @@ pub mod TSPApproxStEph {
         requires
             spec_labgraphview_wf(graph@),
             valid_key_type::<V>(),
+        ensures result.0@.len() <= 1 ==> result.1@ == 0.0f64,
     {
         let euler = euler_tour(graph, start, spanning_tree);
         let tour = shortcut_tour(&euler);

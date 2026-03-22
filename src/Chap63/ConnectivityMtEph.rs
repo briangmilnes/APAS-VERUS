@@ -80,10 +80,11 @@ pub mod ConnectivityMtEph {
     ///
     /// Returns:
     /// - The number of connected components
-    pub fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N
+    pub fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> (count: N)
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
+        ensures graph@.A.is_empty() ==> count as nat == graph@.V.len(),
     {
         count_components_hof(graph, seed)
     }
@@ -106,10 +107,11 @@ pub mod ConnectivityMtEph {
     pub fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
-    ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
+    ) -> (result: (SetStEph<V>, HashMapWithViewPlus<V, V>))
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
+        ensures graph@.A.is_empty() ==> result.0@ == graph@.V,
     {
         connected_components_hof(graph, seed)
     }
@@ -150,13 +152,15 @@ pub mod ConnectivityMtEph {
     ///
     /// - APAS: Work O((n+m) lg n), Span O(lg^2 n) — same as Algorithm 63.2 (parallel)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(m) — delegates to star_contract_mt (inherits merge bottleneck)
-    pub fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N
+    pub fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> (count: N)
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
+        ensures graph@.A.is_empty() ==> count as nat == graph@.V.len(),
     {
         let base = |vertices: &SetStEph<V>| -> (n: N)
             requires vertices.spec_setsteph_wf()
+            ensures n as nat == vertices@.len()
         { vertices.size() };
 
         let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, r: N| -> (result: N) { r };
@@ -171,16 +175,18 @@ pub mod ConnectivityMtEph {
     pub fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
-    ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
+    ) -> (result: (SetStEph<V>, HashMapWithViewPlus<V, V>))
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
+        ensures graph@.A.is_empty() ==> result.0@ == graph@.V,
     {
-        let base = |vertices: &SetStEph<V>| -> (result: (SetStEph<V>, HashMapWithViewPlus<V, V>))
+        let base = |vertices: &SetStEph<V>| -> (r: (SetStEph<V>, HashMapWithViewPlus<V, V>))
             requires
                 vertices.spec_setsteph_wf(),
                 obeys_key_model::<V>(),
                 forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            ensures r.0@ == vertices@,
         {
             let mut map = HashMapWithViewPlus::new();
             let it = vertices.iter();
