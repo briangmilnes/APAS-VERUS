@@ -82,8 +82,8 @@ Real Proof Targets: 0 (all actionable)
 Accepted (reviewed): 6 total
    2 × external_body_accept_hole
    1 × struct_outside_verus_accept_hole
-   1 × external_type_specification_accept_hole
    1 × enum_outside_verus_accept_hole
+   1 × external_type_specification_accept_hole
    1 × accept()
 
 Structural (info only): 4
@@ -95,15 +95,15 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-22 20:02:43 -07:00
-Ended:     2026-03-22 20:02:43 -07:00
+Started:   2026-03-22 22:13:53 -07:00
+Ended:     2026-03-22 22:13:53 -07:00
 Duration:  5ms
 
 Full output: src/Chap02/analyses/veracity-review-verus-proof-holes.log
-===============
+====================
 
-Started:   2026-03-22 20:02:43 -07:00
-Ended:     2026-03-22 20:02:43 -07:00
+Started:   2026-03-22 22:13:53 -07:00
+Ended:     2026-03-22 22:13:53 -07:00
 Duration:  5ms
 
 Full output: src/Chap02/analyses/veracity-review-verus-proof-holes.log

@@ -107,7 +107,7 @@
     "id": 14,
     "function": "lemma_point_in_seq_transitive",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "132-138",
+    "lines": "143-149",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_point_in_seq_transitive(p: Point, sub: Seq<Point>, sup: Seq<Point>)\n        requires\n            spec_point_in_seq(p, sub),\n            forall|i: int| #![trigger sub[i]] 0 <= i < sub.len() ==>\n                spec_point_in_seq(sub[i], sup),\n        ensures\n            spec_point_in_seq(p, sup),"
   },
@@ -115,7 +115,7 @@
     "id": 15,
     "function": "lemma_edge_valid_transitive",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "148-160",
+    "lines": "159-171",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_edge_valid_transitive(\n        edge: Edge,\n        sub_points: Seq<Point>,\n        points: Seq<Point>,\n    )\n        requires\n            spec_point_in_seq(edge.from, sub_points),\n            spec_point_in_seq(edge.to, sub_points),\n            forall|i: int| #![trigger sub_points[i]] 0 <= i < sub_points.len() ==>\n                spec_point_in_seq(sub_points[i], points),\n        ensures\n            spec_point_in_seq(edge.from, points),\n            spec_point_in_seq(edge.to, points),"
   },
@@ -123,7 +123,7 @@
     "id": 16,
     "function": "lemma_mod_successor",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "167-169",
+    "lines": "178-180",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_mod_successor(a: int, n: int)\n        requires n > 0,\n        ensures ((a % n) + 1) % n == (a + 1) % n,"
   },
@@ -131,7 +131,7 @@
     "id": 17,
     "function": "lemma_combined_cycle",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "177-201",
+    "lines": "188-212",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_combined_cycle(\n        combined: Seq<Edge>, lt: Seq<Edge>, rt: Seq<Edge>,\n        ln_i: int, rn_i: int, best_li: int, best_ri: int,\n        el_from: Point, el_to: Point, er_from: Point, er_to: Point,\n    )\n        requires\n            combined.len() == ln_i + rn_i,\n            ln_i >= 2, rn_i >= 2,\n            0 <= best_li < ln_i,\n            0 <= best_ri < rn_i,\n            lt.len() == ln_i, rt.len() == rn_i,\n            spec_edges_form_cycle(lt),\n            spec_edges_form_cycle(rt),\n            el_from == lt[best_li].from,\n            el_to == lt[best_li].to,\n            er_from == rt[best_ri].from,\n            er_to == rt[best_ri].to,\n            forall|k: int| #![trigger combined[k]] 0 <= k < ln_i - 1 ==>\n                combined[k] == lt[((best_li + 1 + k) % ln_i)],\n            combined[ln_i - 1] == (Edge { from: el_from, to: er_to }),\n            forall|m: int| #![trigger combined[(ln_i + m)]] 0 <= m < rn_i - 1 ==>\n                combined[(ln_i + m)] == rt[((best_ri + 1 + m) % rn_i)],\n            combined[ln_i + rn_i - 1] == (Edge { from: er_from, to: el_to }),\n        ensures\n            spec_edges_form_cycle(combined),"
   },
@@ -139,7 +139,7 @@
     "id": 18,
     "function": "etsp_parallel",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "311-315",
+    "lines": "322-326",
     "spec_strength": "unknown",
     "snippet": "        fn etsp_parallel(points: &Vec<Point>) -> (tour: Vec<Edge>)\n            requires\n                points@.len() >= 2,\n                points@.len() < usize::MAX / 2,\n            ensures spec_etsp(tour@, points@);"
   },
@@ -147,7 +147,7 @@
     "id": 19,
     "function": "etsp_parallel_inner",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "330-335",
+    "lines": "341-346",
     "spec_strength": "unknown",
     "snippet": "    fn etsp_parallel_inner(points: &Vec<Point>) -> (tour: Vec<Edge>)\n        requires\n            points@.len() >= 2,\n            points@.len() < usize::MAX / 2,\n        ensures spec_etsp(tour@, points@),\n        decreases points@.len(),"
   },
@@ -155,7 +155,7 @@
     "id": 20,
     "function": "sort_and_split",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "516-527",
+    "lines": "527-538",
     "spec_strength": "unknown",
     "snippet": "    pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))\n        requires points@.len() >= 4,\n        ensures\n            halves.0@.len() >= 2,\n            halves.1@.len() >= 2,\n            halves.0@.len() + halves.1@.len() == points@.len(),\n            halves.0@.len() < points@.len(),\n            halves.1@.len() < points@.len(),\n            forall|i: int| #![trigger halves.0@[i]] 0 <= i < halves.0@.len() ==>\n                spec_point_in_seq(halves.0@[i], points@),\n            forall|i: int| #![trigger halves.1@[i]] 0 <= i < halves.1@.len() ==>\n                spec_point_in_seq(halves.1@[i], points@),"
   },
@@ -163,7 +163,7 @@
     "id": 21,
     "function": "find_best_swap",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "579-585",
+    "lines": "590-596",
     "spec_strength": "unknown",
     "snippet": "    pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))\n        requires\n            left_tour@.len() >= 2,\n            right_tour@.len() >= 2,\n        ensures\n            (swap_indices.0 as int) < left_tour@.len(),\n            (swap_indices.1 as int) < right_tour@.len(),"
   },
@@ -171,7 +171,7 @@
     "id": 22,
     "function": "distance",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "608-609",
+    "lines": "619-620",
     "spec_strength": "unknown",
     "snippet": "        fn distance(&self, other: &Point) -> (d: f64)\n            ensures d == spec_point_distance(*self, *other);"
   },
@@ -179,15 +179,15 @@
     "id": 23,
     "function": "point_distance",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "613-614",
-    "spec_strength": "hole",
+    "lines": "623-624",
+    "spec_strength": "unknown",
     "snippet": "    fn point_distance(a: &Point, b: &Point) -> (d: f64)\n        ensures d == spec_point_distance(*a, *b),"
   },
   {
     "id": 24,
     "function": "sort_and_split_impl",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "629",
+    "lines": "642",
     "spec_strength": "hole",
     "snippet": "    pub fn sort_and_split_impl(points: &Vec<Point>) -> (Vec<Point>, Vec<Point>) {"
   },
@@ -195,7 +195,7 @@
     "id": 25,
     "function": "find_best_swap_impl",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "655-661",
+    "lines": "668-674",
     "spec_strength": "unknown",
     "snippet": "    pub fn find_best_swap_impl(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (result: (usize, usize))\n        requires\n            left_tour@.len() >= 1,\n            right_tour@.len() >= 1,\n        ensures\n            result.0 < left_tour@.len(),\n            result.1 < right_tour@.len(),"
   },
@@ -203,7 +203,7 @@
     "id": 26,
     "function": "find_best_swap_par",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "671-681",
+    "lines": "684-694",
     "spec_strength": "unknown",
     "snippet": "    fn find_best_swap_par(\n        left_tour: Arc<Vec<Edge>>, right_tour: Arc<Vec<Edge>>, lo: usize, hi: usize,\n    ) -> (result: (usize, usize, f64))\n        requires\n            (*left_tour)@.len() >= 1,\n            (*right_tour)@.len() >= 1,\n            hi <= (*left_tour)@.len(),\n        ensures\n            result.0 < (*left_tour)@.len(),\n            result.1 < (*right_tour)@.len(),\n        decreases hi - lo,"
   },

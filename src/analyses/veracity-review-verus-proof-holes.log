@@ -376,15 +376,15 @@ Table of Contents:
 ✓ src/Chap26/DivConReduceMtPer.rs
    3 clean proof functions
 ✓ src/Chap26/DivConReduceStPer.rs
-❌ src/Chap26/ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:612: error: external_body - #[verifier::external_body]
-       613 |     fn point_distance(a: &Point, b: &Point) -> (d: f64)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:628: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
-   Holes: 1 total
-      1 × external_body
-   Info: 1 × structural_false_positive
-      1 × OPAQUE_EXTERNAL
-   Proof functions: 4 total (4 clean, 0 holed)
+⚠ src/Chap26/ETSPMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:623: error: fn_missing_requires - fn point_distance — exec fn should have requires
+       619 |         fn distance(&self, other: &Point) -> (d: f64)
+            ...
+       621 |     }
+       622 | 
+       624 |         ensures d == spec_point_distance(*a, *b),
+       625 |     {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:641: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
 ✓ src/Chap26/ETSPStEph.rs
    3 clean proof functions
 ✓ src/Chap26/MergeSortMtPer.rs
@@ -2372,24 +2372,25 @@ Proof Functions:
    413 total
 
 Function Specs:
-   5153 exec fns with complete spec (requires+ensures) (69%)
-   61 exec fns missing spec (0%)
+   5152 exec fns with complete spec (requires+ensures) (69%)
+   62 exec fns missing spec (0%)
    2219 proof/spec fns clean (29%)
    0 proof/spec fns with holes (0%)
    7433 total fns
 
 
-Holes Found: 12 (actionable)
-   9 × assume() [algorithmic] (75%)
-   2 × external_body (16%)
-   1 × external (8%)
-Real Proof Targets: 12 (all actionable)
+Holes Found: 11 (actionable)
+   9 × assume() [algorithmic] (81%)
+   1 × external_body (9%)
+   1 × external (9%)
+Real Proof Targets: 11 (all actionable)
 
 Per-Chapter Holes:
-  Chap26:  1  Chap43:  2  Chap45:  1
-  Chap47:  2  Chap53:  6
+  Chap43:  2  Chap45:  1  Chap47:  2
+  Chap53:  6
 
-Warnings: 159 total
+Warnings: 160 total
+   1 × fn_missing_requires
    6 × fn_missing_wf_requires
    2 × fn_missing_wf_ensures
    151 × assume_eq_clone_workaround
@@ -2400,9 +2401,9 @@ Accepted (reviewed): 62 total
    10 × trivial_spec_wf
    5 × external_accept_hole
    4 × unsafe_block_accept_hole
-   1 × struct_outside_verus_accept_hole
    1 × enum_outside_verus_accept_hole
    1 × external_type_specification_accept_hole
+   1 × struct_outside_verus_accept_hole
 
 Accepted by Chapter:
   Chap02:  6  Chap11:  6  Chap12: 19
@@ -2428,51 +2429,51 @@ Structural (info only): 184
 =================================================================
 
    1  Chap53  (6 holes, 5 files)
-   2  Chap43  (2 holes, 11 files)
-   3  Chap47  (2 holes, 9 files)
-   4  Chap26  (1 holes, 8 files)
-   5  Chap45  (1 holes, 7 files)
-   6  Chap57  (0 holes, 3 files)
-   7  Chap61  (0 holes, 4 files)
-   8  Chap58  (0 holes, 2 files)
-   9  Chap62  (0 holes, 4 files)
-   10  Chap44  (0 holes, 2 files)
-   11  Chap39  (0 holes, 4 files)
-   12  ParaPairs  (0 holes, 1 files)
-   13  Chap42  (0 holes, 4 files)
-   14  Chap21  (0 holes, 12 files)
-   15  Chap30  (0 holes, 1 files)
-   16  Chap27  (0 holes, 4 files)
-   17  Chap49  (0 holes, 8 files)
-   18  Chap23  (0 holes, 2 files)
-   19  Chap11  (0 holes, 5 files)
-   20  Chap64  (0 holes, 3 files)
-   21  Chap19  (0 holes, 4 files)
+   2  Chap47  (2 holes, 9 files)
+   3  Chap43  (2 holes, 11 files)
+   4  Chap45  (1 holes, 7 files)
+   5  Chap62  (0 holes, 4 files)
+   6  Chap51  (0 holes, 8 files)
+   7  Chap38  (0 holes, 2 files)
+   8  Chap44  (0 holes, 2 files)
+   9  Chap26  (0 holes, 8 files)
+   10  Chap52  (0 holes, 14 files)
+   11  Chap11  (0 holes, 5 files)
+   12  Chap21  (0 holes, 12 files)
+   13  Chap49  (0 holes, 8 files)
+   14  Chap28  (0 holes, 11 files)
+   15  Chap63  (0 holes, 2 files)
+   16  Chap42  (0 holes, 4 files)
+   17  Chap30  (0 holes, 1 files)
+   18  Chap36  (0 holes, 3 files)
+   19  Chap41  (0 holes, 7 files)
+   20  Chap50  (0 holes, 8 files)
+   21  Chap03  (0 holes, 1 files)
    22  Chap05  (0 holes, 5 files)
-   23  Chap02  (0 holes, 2 files)
-   24  Chap36  (0 holes, 3 files)
-   25  Chap03  (0 holes, 1 files)
-   26  Chap06  (0 holes, 21 files)
-   27  Chap35  (0 holes, 4 files)
-   28  Chap18  (0 holes, 7 files)
-   29  Chap38  (0 holes, 2 files)
-   30  Chap63  (0 holes, 2 files)
-   31  Chap65  (0 holes, 3 files)
+   23  Chap61  (0 holes, 4 files)
+   24  Chap27  (0 holes, 4 files)
+   25  Chap57  (0 holes, 3 files)
+   26  Chap35  (0 holes, 4 files)
+   27  Chap59  (0 holes, 4 files)
+   28  Chap39  (0 holes, 4 files)
+   29  Chap19  (0 holes, 4 files)
+   30  Chap40  (0 holes, 3 files)
+   31  Chap37  (0 holes, 19 files)
    32  Chap12  (0 holes, 3 files)
-   33  Chap28  (0 holes, 11 files)
-   34  Chap17  (0 holes, 1 files)
-   35  Chap54  (0 holes, 4 files)
-   36  Chap55  (0 holes, 8 files)
-   37  Chap56  (0 holes, 12 files)
-   38  Chap52  (0 holes, 14 files)
-   39  Chap51  (0 holes, 8 files)
-   40  Chap50  (0 holes, 8 files)
-   41  Concurrency  (0 holes, 1 files)
-   42  Chap37  (0 holes, 19 files)
-   43  Chap66  (0 holes, 2 files)
-   44  Chap40  (0 holes, 3 files)
-   45  Chap59  (0 holes, 4 files)
-   46  Chap41  (0 holes, 7 files)
+   33  Chap65  (0 holes, 3 files)
+   34  ParaPairs  (0 holes, 1 files)
+   35  Chap56  (0 holes, 12 files)
+   36  Chap54  (0 holes, 4 files)
+   37  Chap66  (0 holes, 2 files)
+   38  Chap17  (0 holes, 1 files)
+   39  Chap02  (0 holes, 2 files)
+   40  Concurrency  (0 holes, 1 files)
+   41  Chap06  (0 holes, 21 files)
+   42  Chap55  (0 holes, 8 files)
+   43  Chap18  (0 holes, 7 files)
+   44  Chap23  (0 holes, 2 files)
+   45  Chap64  (0 holes, 3 files)
+   46  Chap58  (0 holes, 2 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
@@ -2481,10 +2482,9 @@ Structural (info only): 184
    1  src/Chap53/PQMinStEph.rs  (4 holes)
    2  src/Chap53/PQMinStPer.rs  (2 holes)
    3  src/Chap47/ParaHashTableStEph.rs  (2 holes)
-   4  src/Chap43/OrderedSetStPer.rs  (1 holes)
-   5  src/Chap45/Example45_2.rs  (1 holes)
-   6  src/Chap43/OrderedSetStEph.rs  (1 holes)
-   7  src/Chap26/ETSPMtEph.rs  (1 holes)
+   4  src/Chap45/Example45_2.rs  (1 holes)
+   5  src/Chap43/OrderedSetStEph.rs  (1 holes)
+   6  src/Chap43/OrderedSetStPer.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
@@ -2492,7 +2492,6 @@ Structural (info only): 184
 
    1  src/Chap53  (6 holes, 5 files)
    2  src/Chap45  (1 holes, 7 files)
-   3  src/Chap26  (1 holes, 8 files)
 
 =================================================================
 4.4. Not Verusified
@@ -2510,9 +2509,9 @@ Structural (info only): 184
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 41 clean, 5 holed, 12 holes (global), 258 modules
+Chapter Status — 46 chapters, 42 clean, 4 holed, 11 holes (global), 258 modules
 
-CLEAN CHAPTERS (41)
+CLEAN CHAPTERS (42)
   Chapter        Files
   -------------- -----
   Chap02             2
@@ -2526,6 +2525,7 @@ CLEAN CHAPTERS (41)
   Chap19             4
   Chap21            12
   Chap23             2
+  Chap26             8
   Chap27             4
   Chap28            11
   Chap30             1
@@ -2557,11 +2557,10 @@ CLEAN CHAPTERS (41)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (5) — 12 holes
+HOLED CHAPTERS (4) — 11 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
-  Chap26             1     8  YES       
-  Chap43             2    11  internal  Chap43::OrderedSetStPer, Chap43::OrderedSetStEph
+  Chap43             2    11  internal  Chap43::OrderedSetStEph, Chap43::OrderedSetStPer
   Chap45             1     7  YES       
   Chap47             2     9  internal  Chap47::ParaHashTableStEph
   Chap53             6     5  YES       
@@ -2574,8 +2573,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-22 20:02:45 -07:00
-Ended:     2026-03-22 20:02:47 -07:00
-Duration:  1651ms
+Started:   2026-03-22 22:13:55 -07:00
+Ended:     2026-03-22 22:13:57 -07:00
+Duration:  1791ms
 
 Full output: /home/milnes/projects/APAS-VERUS-agent4/analyses/veracity-review-verus-proof-holes.log
