@@ -12,6 +12,7 @@ pub mod PQMinStPer {
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::lemma_wf_implies_len_bound_stper;
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
@@ -157,6 +158,13 @@ pub mod PQMinStPer {
             forall|v: &V| #[trigger] graph.requires((v,)),
             forall|v: &V| #[trigger] priority_fn.requires((v,)),
             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+            // Vertex universe constraints for capacity proofs.
+            vertex_universe.finite(),
+            vertex_universe.len() + 1 < usize::MAX as nat,
+            visited_init@.subset_of(vertex_universe),
+            forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
+            forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
+                #[trigger] frontier_init@.contains(e) ==> vertex_universe.contains(e.1),
         ensures
             result.0.spec_avltreesetstper_wf(),
             result.1.spec_avltreesetstper_wf(),
@@ -173,20 +181,49 @@ pub mod PQMinStPer {
                 forall|v: &V| #[trigger] graph.requires((v,)),
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+                // Vertex universe invariants.
+                vertex_universe.finite(),
+                vertex_universe.len() + 1 < usize::MAX as nat,
+                visited@.subset_of(vertex_universe),
+                forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
+                forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
+                    #[trigger] frontier@.contains(e) ==> vertex_universe.contains(e.1),
         {
             let entry_ref = frontier.elements.nth(0);
-            let v = entry_ref.1.clone();
+            let v = entry_ref.1.clone_plus();
             let p = priority_fn(&v);
-            let entry = Pair(Pair(p.clone(), v.clone()), v.clone());
+            let v_clone1 = v.clone();
+            let v_clone2 = v.clone_plus();
+            let entry = Pair(Pair(p.clone(), v_clone1), v_clone2);
             let frontier_new = frontier.difference(&AVLTreeSetStPer::singleton(entry));
 
-            proof { assume(visited@.len() + 1 < usize::MAX as nat); }
-            let visited_new = visited.union(&AVLTreeSetStPer::singleton(v.clone()));
+            // Capacity: visited ⊆ vertex_universe from invariant.
+            proof {
+                vstd::set_lib::lemma_len_subset(visited@, vertex_universe);
+            }
+            let v_for_visited = v.clone_plus();
+            let visited_new = visited.union(&AVLTreeSetStPer::singleton(v_for_visited));
+            // Maintain visited@.subset_of(vertex_universe): v@ ∈ vertex_universe from frontier entry.
+            proof {
+                assert(obeys_feq_full_trigger::<V>());
+                assert(frontier@.contains(frontier.elements@[0 as int]));
+                assert(vertex_universe.contains(v@));
+                assert forall|a: <V as View>::V| visited_new@.contains(a)
+                    implies #[trigger] vertex_universe.contains(a) by {
+                }
+            }
 
             let neighbors = graph(&v);
             let mut frontier_updated = frontier_new;
             let nlen = neighbors.elements.length();
             let mut i: usize = 0;
+            // Establish neighbor vertices ∈ vertex_universe before inner loop.
+            proof {
+                assert forall|j: int| 0 <= j < neighbors.elements@.len()
+                    implies vertex_universe.contains(#[trigger] neighbors.elements@[j]) by {
+                    assert(neighbors@.contains(neighbors.elements@[j]));
+                }
+            }
             while i < nlen
                 invariant
                     i <= nlen,
@@ -195,14 +232,40 @@ pub mod PQMinStPer {
                     visited_new.spec_avltreesetstper_wf(),
                     frontier_updated.spec_avltreesetstper_wf(),
                     forall|v: &V| #[trigger] priority_fn.requires((v,)),
+                    // Vertex universe invariants for frontier vertex tracking.
+                    vertex_universe.finite(),
+                    vertex_universe.len() + 1 < usize::MAX as nat,
+                    forall|j: int| 0 <= j < neighbors.elements@.len()
+                        ==> vertex_universe.contains(#[trigger] neighbors.elements@[j]),
+                    forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
+                        #[trigger] frontier_updated@.contains(e) ==> vertex_universe.contains(e.1),
                 decreases nlen - i,
             {
                 let neighbor = neighbors.elements.nth(i);
                 if !visited_new.find(neighbor) {
                     let neighbor_p = priority_fn(neighbor);
-                    let neighbor_entry = Pair(Pair(neighbor_p.clone(), neighbor.clone()), neighbor.clone());
+                    let neighbor_clone1 = neighbor.clone();
+                    let neighbor_clone2 = neighbor.clone_plus();
+                    let neighbor_entry = Pair(Pair(neighbor_p.clone(), neighbor_clone1), neighbor_clone2);
+                    // Capacity: frontier@.len() + 1 < usize::MAX requires bounding frontier
+                    // through vertex_universe via injection (each entry uniquely determines a
+                    // vertex). Proving injection needs priority_fn view-determinism, which the
+                    // generic Fn interface does not guarantee.
+                    let ghost old_fu = frontier_updated@;
                     proof { assume(frontier_updated@.len() + 1 < usize::MAX as nat); }
                     frontier_updated = frontier_updated.union(&AVLTreeSetStPer::singleton(neighbor_entry));
+                    // Maintain frontier vertex invariant after union.
+                    proof {
+                        assert(obeys_feq_full_trigger::<V>());
+                        assert(neighbor_entry@.1 == neighbor@);
+                        assert(vertex_universe.contains(neighbors.elements@[i as int]));
+                        assert(vertex_universe.contains(neighbor_entry@.1));
+                        assert forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
+                            #[trigger] frontier_updated@.contains(e)
+                            implies vertex_universe.contains(e.1) by {
+                            if old_fu.contains(e) {}
+                        }
+                    }
                 }
                 i = i + 1;
             }
@@ -270,7 +333,15 @@ pub mod PQMinStPer {
         let mut initial_frontier = AVLTreeSetStPer::empty();
         let slen = sources.elements.length();
         let mut i: usize = 0;
+        // Establish sources.elements vertices ∈ vertex_universe.
+        proof {
+            assert forall|j: int| 0 <= j < sources.elements@.len()
+                implies vertex_universe.contains(#[trigger] sources.elements@[j]) by {
+                assert(sources@.contains(sources.elements@[j]));
+            }
+        }
         // Close initial_frontier+1 via loop counter: slen < usize::MAX from tree wf.
+        // Maintain frontier vertex invariant: all entry vertices ∈ vertex_universe.
         while i < slen
             invariant
                 i <= slen,
@@ -282,11 +353,21 @@ pub mod PQMinStPer {
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
                 initial_frontier@.len() <= i as nat,
+                // Frontier vertex invariant: all entry vertices belong to vertex_universe.
+                sources@.subset_of(vertex_universe),
+                vertex_universe.finite(),
+                vertex_universe.len() + 1 < usize::MAX as nat,
+                forall|j: int| 0 <= j < sources.elements@.len()
+                    ==> vertex_universe.contains(#[trigger] sources.elements@[j]),
+                forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
+                    #[trigger] initial_frontier@.contains(e) ==> vertex_universe.contains(e.1),
             decreases slen - i,
         {
             let v = sources.elements.nth(i);
             let p = priority_fn(v);
-            let entry = Pair(Pair(p.clone(), v.clone()), v.clone());
+            let v_clone1 = v.clone();
+            let v_clone2 = v.clone_plus();
+            let entry = Pair(Pair(p.clone(), v_clone1), v_clone2);
             proof {
                 // slen < usize::MAX from tree wf lemma.
                 lemma_wf_implies_len_bound_stper(sources.elements);
@@ -297,6 +378,16 @@ pub mod PQMinStPer {
             initial_frontier = initial_frontier.union(&AVLTreeSetStPer::singleton(entry));
             proof {
                 vstd::set_lib::lemma_len_union(old_if, Set::empty().insert(entry@));
+                // Maintain frontier vertex invariant: entry@.1 = v@ ∈ vertex_universe.
+                assert(obeys_feq_full_trigger::<V>());
+                assert(entry@.1 == v@);
+                assert(vertex_universe.contains(sources.elements@[i as int]));
+                assert(vertex_universe.contains(entry@.1));
+                assert forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
+                    #[trigger] initial_frontier@.contains(e)
+                    implies vertex_universe.contains(e.1) by {
+                    if old_if.contains(e) {}
+                }
             }
             i = i + 1;
         }

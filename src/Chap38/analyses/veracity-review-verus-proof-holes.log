@@ -21,22 +21,22 @@ Table of Contents:
 =================================================================
 
 ⚠ BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap38/BSTParaMtEph.rs:642: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:642: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        635 |         fn clone(&self) -> (cloned: Self)
             ...
        640 |                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
        641 |             };
        643 |             cloned
        644 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap38/BSTParaMtEph.rs:657: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:657: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        648 |         fn clone(&self) -> (cloned: Self)
             ...
        655 |                 right: self.right.clone(),
        656 |             };
        658 |             cloned
        659 |         }
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap38/BSTParaMtEph.rs:1645: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap38/BSTParaMtEph.rs:1646: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:1645: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:1646: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
 ✓ BSTParaStEph.rs
    5 clean proof functions
 
@@ -95,9 +95,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-22 22:37:10 -07:00
-Ended:     2026-03-22 22:37:11 -07:00
-Duration:  48ms
+Started:   2026-03-22 22:47:57 -07:00
+Ended:     2026-03-22 22:47:57 -07:00
+Duration:  35ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
