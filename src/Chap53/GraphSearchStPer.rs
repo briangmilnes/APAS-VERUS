@@ -44,18 +44,22 @@ pub mod GraphSearchStPer {
     pub trait GraphSearchStPerTrait<V: StT + Ord> {
         /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
         /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential; AVL set ops add log factor.
-        fn graph_search<G, S>(graph: &G, source: V, strategy: &S)                         -> (search: SearchResult<V>)
+        fn graph_search<G, S>(graph: &G, source: V, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
         where
             G: Fn(&V) -> AVLTreeSetStPer<V>,
             S: SelectionStrategy<V>,
             requires
                 forall|v: &V| #[trigger] graph.requires((v,)),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+                vertex_universe.finite(),
+                vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
+                vertex_universe.contains(source@),
+                forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
             ensures search.visited@.contains(source@);
 
         /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
         /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential; AVL set ops add log factor.
-        fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetStPer<V>, strategy: &S) -> (search: SearchResult<V>)
+        fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetStPer<V>, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
         where
             G: Fn(&V) -> AVLTreeSetStPer<V>,
             S: SelectionStrategy<V>,
@@ -63,16 +67,24 @@ pub mod GraphSearchStPer {
                 sources.spec_avltreesetstper_wf(),
                 forall|v: &V| #[trigger] graph.requires((v,)),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+                vertex_universe.finite(),
+                vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
+                sources@.subset_of(vertex_universe),
+                forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
             ensures sources@.subset_of(search.visited@);
 
         /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
         /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential; uses SelectAll (BFS).
-        fn reachable<G>(graph: &G, source: V)                                             -> (reachable_set: AVLTreeSetStPer<V>)
+        fn reachable<G>(graph: &G, source: V, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (reachable_set: AVLTreeSetStPer<V>)
         where
             G: Fn(&V) -> AVLTreeSetStPer<V>,
             requires
                 forall|v: &V| #[trigger] graph.requires((v,)),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+                vertex_universe.finite(),
+                vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
+                vertex_universe.contains(source@),
+                forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
             ensures reachable_set@.contains(source@);
     }
 
@@ -107,17 +119,31 @@ pub mod GraphSearchStPer {
         }
     }
 
-    pub fn graph_search<V: StT + Ord, G, S>(graph: &G, source: V, strategy: &S) -> (search: SearchResult<V>)
+    pub fn graph_search<V: StT + Ord, G, S>(
+        graph: &G, source: V, strategy: &S,
+        Ghost(vertex_universe): Ghost<Set<<V as View>::V>>,
+    ) -> (search: SearchResult<V>)
     where
         G: Fn(&V) -> AVLTreeSetStPer<V>,
         S: SelectionStrategy<V>,
         requires
             forall|v: &V| #[trigger] graph.requires((v,)),
             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+            vertex_universe.finite(),
+            vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
+            vertex_universe.contains(source@),
+            forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
         ensures search.visited@.contains(source@),
     {
         let sources = AVLTreeSetStPer::singleton(source);
-        graph_search_multi(graph, sources, strategy)
+        proof {
+            assert(sources@.subset_of(vertex_universe)) by {
+                assert forall|a: <V as View>::V| sources@.contains(a) implies #[trigger] vertex_universe.contains(a) by {
+                    assert(sources@ == Set::<<V as View>::V>::empty().insert(source@));
+                }
+            }
+        }
+        graph_search_multi(graph, sources, strategy, Ghost(vertex_universe))
     }
 
     /// Graph exploration loop (Algorithm 53.4).
@@ -127,12 +153,18 @@ pub mod GraphSearchStPer {
         strategy: &S,
         visited_init: AVLTreeSetStPer<V>,
         frontier_init: AVLTreeSetStPer<V>,
+        Ghost(vertex_universe): Ghost<Set<<V as View>::V>>,
     ) -> (visited_all: AVLTreeSetStPer<V>)
         requires
             visited_init.spec_avltreesetstper_wf(),
             frontier_init.spec_avltreesetstper_wf(),
             forall|v: &V| #[trigger] graph.requires((v,)),
             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+            vertex_universe.finite(),
+            vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
+            visited_init@.subset_of(vertex_universe),
+            frontier_init@.subset_of(vertex_universe),
+            forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
         ensures
             visited_init@.subset_of(visited_all@),
             frontier_init@.subset_of(visited_all@),
@@ -148,8 +180,16 @@ pub mod GraphSearchStPer {
                 frontier_init@.subset_of(visited@.union(frontier@)),
                 forall|v: &V| #[trigger] graph.requires((v,)),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+                vertex_universe.finite(),
+                vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
+                visited@.subset_of(vertex_universe),
+                frontier@.subset_of(vertex_universe),
+                forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
         {
-            proof { assume(visited@.len() + frontier@.len() < usize::MAX as nat); }
+            proof {
+                vstd::set_lib::lemma_len_subset(visited@, vertex_universe);
+                vstd::set_lib::lemma_len_subset(frontier@, vertex_universe);
+            }
             let visited_new = visited.union(&frontier);
 
             let mut new_neighbors = AVLTreeSetStPer::empty();
@@ -163,16 +203,36 @@ pub mod GraphSearchStPer {
                     new_neighbors.spec_avltreesetstper_wf(),
                     forall|v: &V| #[trigger] graph.requires((v,)),
                     forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+                    new_neighbors@.subset_of(vertex_universe),
+                    vertex_universe.finite(),
+                    vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
+                    forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
                 decreases nlen - i,
             {
                 let v = frontier.elements.nth(i);
                 let neighbors = graph(v);
-                proof { assume(new_neighbors@.len() + neighbors@.len() < usize::MAX as nat); }
+                proof {
+                    vstd::set_lib::lemma_len_subset(new_neighbors@, vertex_universe);
+                    vstd::set_lib::lemma_len_subset(neighbors@, vertex_universe);
+                }
                 new_neighbors = new_neighbors.union(&neighbors);
                 i = i + 1;
             }
 
             let frontier_new = new_neighbors.difference(&visited_new);
+
+            proof {
+                assert(visited_new@.subset_of(vertex_universe)) by {
+                    assert forall|a: <V as View>::V| visited_new@.contains(a)
+                        implies #[trigger] vertex_universe.contains(a) by {}
+                }
+                assert(frontier_new@.subset_of(vertex_universe)) by {
+                    assert forall|a: <V as View>::V| frontier_new@.contains(a)
+                        implies #[trigger] vertex_universe.contains(a) by {
+                        assert(new_neighbors@.contains(a));
+                    }
+                }
+            }
 
             visited = visited_new;
             frontier = frontier_new;
@@ -186,6 +246,7 @@ pub mod GraphSearchStPer {
         graph: &G,
         sources: AVLTreeSetStPer<V>,
         strategy: &S,
+        Ghost(vertex_universe): Ghost<Set<<V as View>::V>>,
     ) -> (search: SearchResult<V>)
     where
         G: Fn(&V) -> AVLTreeSetStPer<V>,
@@ -194,38 +255,49 @@ pub mod GraphSearchStPer {
             sources.spec_avltreesetstper_wf(),
             forall|v: &V| #[trigger] graph.requires((v,)),
             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+            vertex_universe.finite(),
+            vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
+            sources@.subset_of(vertex_universe),
+            forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
         ensures sources@.subset_of(search.visited@),
     {
-        let visited = graph_search_explore(graph, strategy, AVLTreeSetStPer::empty(), sources);
+        let visited = graph_search_explore(graph, strategy, AVLTreeSetStPer::empty(), sources, Ghost(vertex_universe));
         SearchResult { visited, parent: None }
     }
 
     impl<V: StT + Ord> GraphSearchStPerTrait<V> for SearchResult<V> {
-        fn graph_search<G, S>(graph: &G, source: V, strategy: &S) -> (search: SearchResult<V>)
+        fn graph_search<G, S>(graph: &G, source: V, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
         where G: Fn(&V) -> AVLTreeSetStPer<V>, S: SelectionStrategy<V>,
-        { graph_search(graph, source, strategy) }
+        { graph_search(graph, source, strategy, Ghost(vertex_universe)) }
 
-        fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetStPer<V>, strategy: &S) -> (search: SearchResult<V>)
+        fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetStPer<V>, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
         where G: Fn(&V) -> AVLTreeSetStPer<V>, S: SelectionStrategy<V>,
-        { graph_search_multi(graph, sources, strategy) }
+        { graph_search_multi(graph, sources, strategy, Ghost(vertex_universe)) }
 
-        fn reachable<G>(graph: &G, source: V) -> (reachable_set: AVLTreeSetStPer<V>)
+        fn reachable<G>(graph: &G, source: V, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (reachable_set: AVLTreeSetStPer<V>)
         where G: Fn(&V) -> AVLTreeSetStPer<V>,
-        { reachable(graph, source) }
+        { reachable(graph, source, Ghost(vertex_universe)) }
     }
 
     /// Find all vertices reachable from source (Problem 53.2) using SelectAll (BFS).
     /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
     /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
-    pub fn reachable<V: StT + Ord, G>(graph: &G, source: V) -> (reachable_set: AVLTreeSetStPer<V>)
+    pub fn reachable<V: StT + Ord, G>(
+        graph: &G, source: V,
+        Ghost(vertex_universe): Ghost<Set<<V as View>::V>>,
+    ) -> (reachable_set: AVLTreeSetStPer<V>)
     where
         G: Fn(&V) -> AVLTreeSetStPer<V>,
         requires
             forall|v: &V| #[trigger] graph.requires((v,)),
             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+            vertex_universe.finite(),
+            vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
+            vertex_universe.contains(source@),
+            forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
         ensures reachable_set@.contains(source@),
     {
-        let result = graph_search(graph, source, &SelectAll);
+        let result = graph_search(graph, source, &SelectAll, Ghost(vertex_universe));
         result.visited
     }
 

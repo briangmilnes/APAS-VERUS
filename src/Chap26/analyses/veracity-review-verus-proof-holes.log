@@ -24,9 +24,9 @@ Table of Contents:
    3 clean proof functions
 ✓ DivConReduceStPer.rs
 ❌ ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:612: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:612: error: external_body - #[verifier::external_body]
        613 |     fn point_distance(a: &Point, b: &Point) -> (d: f64)
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:628: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:628: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
    Holes: 1 total
       1 × external_body
    Info: 1 × structural_false_positive
@@ -97,6 +97,7 @@ Function Specs:
 
 Holes Found: 1 (actionable)
    1 × external_body (100%)
+Real Proof Targets: 1 (all actionable)
 
 Structural (info only): 1
    1 × OPAQUE_EXTERNAL
@@ -105,9 +106,9 @@ Structural (info only): 1
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-22 11:50:09 -07:00
-Ended:     2026-03-22 11:50:09 -07:00
-Duration:  34ms
+Started:   2026-03-22 19:40:29 -07:00
+Ended:     2026-03-22 19:40:29 -07:00
+Duration:  58ms
 
 Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
-nalyses/veracity-review-verus-proof-holes.log
+output: src/Chap26/analyses/veracity-review-verus-proof-holes.log

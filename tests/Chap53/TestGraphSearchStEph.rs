@@ -1,6 +1,7 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for Chap53 GraphSearchStEph.
 
+use vstd::prelude::Ghost;
 use apas_verus::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::*;
 use apas_verus::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
 use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::*;
@@ -9,7 +10,7 @@ use apas_verus::Types::Types::*;
 #[test]
 fn test_reachable_single_node() {
     let graph = |_v: &i32| AVLTreeSetStEph::empty();
-    let reachable_set = reachable(&graph, 1);
+    let reachable_set = reachable(&graph, 1, Ghost::assume_new());
     assert_eq!(reachable_set.size(), 1);
 }
 
@@ -22,7 +23,7 @@ fn test_reachable_simple_path() {
             AVLTreeSetStEph::empty()
         }
     };
-    let reachable_set = reachable(&graph, 1);
+    let reachable_set = reachable(&graph, 1, Ghost::assume_new());
     assert_eq!(reachable_set.size(), 2);
 }
 
@@ -35,7 +36,7 @@ fn test_graph_search_single_source() {
             AVLTreeSetStEph::empty()
         }
     };
-    let result = graph_search(&graph, 1, &SelectAll);
+    let result = graph_search(&graph, 1, &SelectAll, Ghost::assume_new());
     assert_eq!(result.visited.size(), 2);
 }
 
@@ -50,7 +51,7 @@ fn test_graph_search_multi_source() {
     };
     let mut sources = AVLTreeSetStEph::singleton(1);
     sources.insert(3);
-    let result = graph_search_multi(&graph, sources, &SelectAll);
+    let result = graph_search_multi(&graph, sources, &SelectAll, Ghost::assume_new());
     assert_eq!(result.visited.size(), 3);
 }
 
@@ -65,13 +66,13 @@ fn test_select_one_strategy() {
             AVLTreeSetStEph::empty()
         }
     };
-    let _result = graph_search(&graph, 1, &SelectOne);
+    let _result = graph_search(&graph, 1, &SelectOne, Ghost::assume_new());
 }
 
 #[test]
 fn test_empty_graph() {
     let graph = |_v: &i32| AVLTreeSetStEph::empty();
-    let reachable_set = reachable(&graph, 1);
+    let reachable_set = reachable(&graph, 1, Ghost::assume_new());
     assert_eq!(reachable_set.size(), 1);
 }
 
@@ -83,6 +84,6 @@ fn test_cycle_detection() {
         | 3 => AVLTreeSetStEph::singleton(1),
         | _ => AVLTreeSetStEph::empty(),
     };
-    let reachable_set = reachable(&graph, 1);
+    let reachable_set = reachable(&graph, 1, Ghost::assume_new());
     assert_eq!(reachable_set.size(), 3);
 }

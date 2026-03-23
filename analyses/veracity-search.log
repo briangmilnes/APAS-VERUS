@@ -1,53 +1,8 @@
-Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent2/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn _ ensures .*to_set.*len
+Pattern: fn .*to_set.*len
 Searching: /home/milnes/projects/verus/source/vstd
-Files: 103, Functions: 2479, Matches: 6
-
-[31m/home/milnes/projects/verus/source/vstd/set_lib.rs:750: [0m
-/// Conversion to a sequence and back to a set is the identity function.
-[38;5;22m    pub broadcast proof fn lemma_to_seq_to_set_id(self)[0m
-[38;5;22m        requires[0m
-[38;5;22m            self.finite(),[0m
-[38;5;22m        ensures[0m
-[38;5;22m            #[trigger] self.to_seq().to_set() =~= self,[0m
-[38;5;22m        decreases self.len(),[0m
-
-[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:1035: [0m
-/// A sequence of unique items, when converted to a set, produces a set with matching length
-[38;5;22m    pub proof fn unique_seq_to_set(self)[0m
-[38;5;22m        requires[0m
-[38;5;22m            self.no_duplicates(),[0m
-[38;5;22m        ensures[0m
-[38;5;22m            self.len() == self.to_set().len(),[0m
-[38;5;22m        decreases self.len(),[0m
-
-[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:1059: [0m
-/// The cardinality of a set of elements is always less than or
-/// equal to that of the full sequence of elements.
-[38;5;22m    pub proof fn lemma_cardinality_of_set(self)[0m
-[38;5;22m        ensures[0m
-[38;5;22m            self.to_set().len() <= self.len(),[0m
-[38;5;22m        decreases self.len(),[0m
-
-[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:1077: [0m
-/// A sequence is of length 0 if and only if its conversion to
-/// a set results in the empty set.
-[38;5;22m    pub proof fn lemma_cardinality_of_empty_set_is_0(self)[0m
-[38;5;22m        ensures[0m
-[38;5;22m            self.to_set().len() == 0 <==> self.len() == 0,[0m
-
-[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:2997: [0m
-[38;5;22mproof fn seq_to_set_rec_is_finite<A>(seq: Seq<A>)[0m
-[38;5;22m    ensures[0m
-[38;5;22m        seq_to_set_rec(seq).finite(),[0m
-[38;5;22m    decreases seq.len(),[0m
-
-[31m/home/milnes/projects/verus/source/vstd/seq_lib.rs:3013: [0m
-[38;5;22mproof fn seq_to_set_rec_contains<A>(seq: Seq<A>)[0m
-[38;5;22m    ensures[0m
-[38;5;22m        forall|a| #[trigger] seq.contains(a) <==> seq_to_set_rec(seq).contains(a),[0m
-[38;5;22m    decreases seq.len(),[0m
+Files: 103, Functions: 2479, Matches: 0
 
