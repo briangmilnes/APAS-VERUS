@@ -294,7 +294,7 @@ pub mod PQMinStEph {
         let vlen = visited_seq.length();
         let mut j: usize = 0;
         proof {
-            lemma_wf_implies_len_bound_steph(&visited_seq);
+            lemma_wf_implies_len_bound_steph(visited_seq);
         }
         while j < vlen
             invariant
@@ -356,7 +356,7 @@ pub mod PQMinStEph {
         let mut i: usize = 0;
         // Establish sources_seq vertices ∈ vertex_universe.
         proof {
-            lemma_wf_implies_len_bound_steph(&sources_seq);
+            lemma_wf_implies_len_bound_steph(sources_seq);
             assert forall|j: int| 0 <= j < sources_seq@.len()
                 implies vertex_universe.contains(#[trigger] sources_seq@[j]) by {
                 assert(sources@.contains(sources_seq@[j]));
