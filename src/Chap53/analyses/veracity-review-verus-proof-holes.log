@@ -24,7 +24,7 @@ Table of Contents:
 ✓ GraphSearchStEph.rs
 ✓ GraphSearchStPer.rs
 ❌ PQMinStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:269: error: assume() [algorithmic] - proof { assume(frontier_updated@.len() + 1 < usize::MAX as n
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:269: error: assume() [algorithmic] - proof { assume(frontier_updated@.len() + 1 < usize::MAX as n
        151 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(
             ...
        267 |                     // generic Fn interface does not guarantee.
@@ -33,16 +33,7 @@ Table of Contents:
        271 |                     // Maintain frontier vertex invariant after union.
    Holes: 1 total
       1 × assume()
-❌ PQMinStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:255: error: assume() [algorithmic] - proof { assume(frontier_updated@.len() + 1 < usize::MAX as n
-       148 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P>(
-            ...
-       253 |                     // generic Fn interface does not guarantee.
-       254 |                     let ghost old_fu = frontier_updated@;
-       256 |                     frontier_updated = frontier_updated.union(&AVLTreeSetStPer::singleton(neighbor_entry));
-       257 |                     // Maintain frontier vertex invariant after union.
-   Holes: 1 total
-      1 × assume()
+✓ PQMinStPer.rs
 
 =================================================================
 2. Depends Upon
@@ -73,8 +64,8 @@ PQMinStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   3 clean (no holes, no errors; 60%)
-   2 holed (holes or errors, 40%)
+   4 clean (no holes, no errors; 80%)
+   1 holed (holes or errors, 20%)
    5 total
 
 Proof Functions:
@@ -90,17 +81,17 @@ Function Specs:
    65 total fns
 
 
-Holes Found: 2 (actionable)
-   2 × assume() [algorithmic] (100%)
-Real Proof Targets: 2 (all actionable)
+Holes Found: 1 (actionable)
+   1 × assume() [algorithmic] (100%)
+Real Proof Targets: 1 (all actionable)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-23 07:02:03 -07:00
-Ended:     2026-03-23 07:02:03 -07:00
+Started:   2026-03-23 08:34:39 -07:00
+Ended:     2026-03-23 08:34:39 -07:00
 Duration:  22ms
 
 Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
+Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
