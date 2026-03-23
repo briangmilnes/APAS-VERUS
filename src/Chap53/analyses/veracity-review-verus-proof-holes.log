@@ -23,18 +23,9 @@ Table of Contents:
 ✓ GraphSearchMtPer.rs
 ✓ GraphSearchStEph.rs
 ✓ GraphSearchStPer.rs
-❌ PQMinStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/PQMinStEph.rs:269: error: assume() [algorithmic] - proof { assume(frontier_updated@.len() + 1 < usize::MAX as n
-       151 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(
-            ...
-       267 |                     // generic Fn interface does not guarantee.
-       268 |                     let ghost old_fu = frontier_updated@;
-       270 |                     frontier_updated = frontier_updated.union(&AVLTreeSetStEph::singleton(neighbor_entry));
-       271 |                     // Maintain frontier vertex invariant after union.
-   Holes: 1 total
-      1 × assume()
+✓ PQMinStEph.rs
 ❌ PQMinStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/PQMinStPer.rs:255: error: assume() [algorithmic] - proof { assume(frontier_updated@.len() + 1 < usize::MAX as n
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStPer.rs:255: error: assume() [algorithmic] - proof { assume(frontier_updated@.len() + 1 < usize::MAX as n
        148 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P>(
             ...
        253 |                     // generic Fn interface does not guarantee.
@@ -49,58 +40,3 @@ Table of Contents:
 =================================================================
 
 =================================================================
-2.1. By Module
-=================================================================
-
-GraphSearchMtPer  depends upon only clean modules
-GraphSearchStEph  depends upon only clean modules
-GraphSearchStPer  depends upon only clean modules
-PQMinStEph  depends upon only clean modules
-PQMinStPer  depends upon only clean modules
-
-=================================================================
-2.2. By File
-=================================================================
-
-GraphSearchMtPer.rs  depends upon only clean modules
-GraphSearchStEph.rs  depends upon only clean modules
-GraphSearchStPer.rs  depends upon only clean modules
-PQMinStEph.rs  depends upon only clean modules
-PQMinStPer.rs  depends upon only clean modules
-
-=================================================================
-3. Summary of Holes
-=================================================================
-
-Modules:
-   3 clean (no holes, no errors; 60%)
-   2 holed (holes or errors, 40%)
-   5 total
-
-Proof Functions:
-   0 clean (0%)
-   0 holed (0%)
-   0 total
-
-Function Specs:
-   59 exec fns with complete spec (requires+ensures) (90%)
-   0 exec fns missing spec (0%)
-   6 proof/spec fns clean (9%)
-   0 proof/spec fns with holes (0%)
-   65 total fns
-
-
-Holes Found: 2 (actionable)
-   2 × assume() [algorithmic] (100%)
-Real Proof Targets: 2 (all actionable)
-
-=================================================================
-5. Started/Ended/Duration
-=================================================================
-
-Started:   2026-03-23 08:11:49 -07:00
-Ended:     2026-03-23 08:11:49 -07:00
-Duration:  27ms
-
-Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
-c/Chap53/analyses/veracity-review-verus-proof-holes.log
