@@ -1,6 +1,7 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for Chap53 PQMinStPer.
 
+use vstd::prelude::Ghost;
 use apas_verus::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
 use apas_verus::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
 use apas_verus::Chap53::PQMinStPer::PQMinStPer::*;
@@ -21,7 +22,7 @@ fn test_graph_1() -> impl Fn(&N) -> AVLTreeSetStPer<N> {
 fn test_pq_min_empty_graph() {
     let graph = |_: &N| AVLTreeSetStPer::empty();
     let prio_fn = |v: &N| *v;
-    let result = pq_min(&graph, 1, &prio_fn);
+    let result = pq_min(&graph, 1, &prio_fn, Ghost::assume_new());
     assert_eq!(result.visited.size(), 1);
     assert!(result.visited.find(&1));
 }
@@ -36,7 +37,7 @@ fn test_pq_min_single_edge() {
         }
     };
     let prio_fn = |v: &N| *v;
-    let result = pq_min(&graph, 1, &prio_fn);
+    let result = pq_min(&graph, 1, &prio_fn, Ghost::assume_new());
     assert_eq!(result.visited.size(), 2);
     assert!(result.visited.find(&1));
     assert!(result.visited.find(&2));
@@ -46,7 +47,7 @@ fn test_pq_min_single_edge() {
 fn test_pq_min_dag() {
     let graph = test_graph_1();
     let prio_fn = |v: &N| *v;
-    let result = pq_min(&graph, 1, &prio_fn);
+    let result = pq_min(&graph, 1, &prio_fn, Ghost::assume_new());
     assert_eq!(result.visited.size(), 5);
     for i in 1..=5 {
         assert!(result.visited.find(&i));
@@ -62,7 +63,7 @@ fn test_pq_min_priority_order() {
         | _ => AVLTreeSetStPer::empty(),
     };
     let prio_fn = |v: &N| *v;
-    let result = pq_min(&graph, 1, &prio_fn);
+    let result = pq_min(&graph, 1, &prio_fn, Ghost::assume_new());
     assert_eq!(result.visited.size(), 5);
     assert_eq!(result.priorities.size(), 5);
 }
@@ -72,7 +73,7 @@ fn test_pq_min_multi_source() {
     let graph = test_graph_1();
     let sources = AVLTreeSetStPer::singleton(2).union(&AVLTreeSetStPer::singleton(5));
     let prio_fn = |v: &N| *v;
-    let result = pq_min_multi(&graph, sources, &prio_fn);
+    let result = pq_min_multi(&graph, sources, &prio_fn, Ghost::assume_new());
     assert_eq!(result.visited.size(), 3);
     assert!(result.visited.find(&2));
     assert!(result.visited.find(&4));
@@ -88,7 +89,7 @@ fn test_pq_min_linear_chain() {
         | _ => AVLTreeSetStPer::empty(),
     };
     let prio_fn = |v: &N| *v;
-    let result = pq_min(&graph, 1, &prio_fn);
+    let result = pq_min(&graph, 1, &prio_fn, Ghost::assume_new());
     assert_eq!(result.visited.size(), 4);
     for i in 1..=4 {
         assert!(result.visited.find(&i));
@@ -104,7 +105,7 @@ fn test_pq_min_cycle() {
         | _ => AVLTreeSetStPer::empty(),
     };
     let prio_fn = |v: &N| *v;
-    let result = pq_min(&graph, 1, &prio_fn);
+    let result = pq_min(&graph, 1, &prio_fn, Ghost::assume_new());
     assert_eq!(result.visited.size(), 3);
     assert!(result.visited.find(&1));
     assert!(result.visited.find(&2));

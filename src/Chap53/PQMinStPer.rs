@@ -8,6 +8,8 @@ pub mod PQMinStPer {
 
     use vstd::prelude::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::AVLTreeSeqStPerTrait;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::lemma_wf_implies_len_bound_stper;
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
     use crate::Types::Types::*;
     #[cfg(verus_keep_ghost)]
@@ -40,7 +42,7 @@ pub mod PQMinStPer {
 
         /// - APAS: (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
         /// - Claude-Opus-4.6: Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — find_min uses to_seq O(|F|) per round.
-        fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF)                         -> (search: PQMinResult<V, P>)
+        fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)
         where
             G: Fn(&V) -> AVLTreeSetStPer<V>,
             PF: Fn(&V) -> P,
@@ -48,13 +50,17 @@ pub mod PQMinStPer {
                 forall|v: &V| #[trigger] graph.requires((v,)),
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+                vertex_universe.finite(),
+                vertex_universe.len() + 1 < usize::MAX as nat,
+                vertex_universe.contains(source@),
+                forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
             ensures
                 spec_pqminstper_wf_generic(&search),
                 search.visited@.contains(source@);
 
         /// - APAS: (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
         /// - Claude-Opus-4.6: Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — find_min uses to_seq O(|F|) per round.
-        fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStPer<V>, priority_fn: &PF) -> (search: PQMinResult<V, P>)
+        fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStPer<V>, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)
         where
             G: Fn(&V) -> AVLTreeSetStPer<V>,
             PF: Fn(&V) -> P,
@@ -63,6 +69,10 @@ pub mod PQMinStPer {
                 forall|v: &V| #[trigger] graph.requires((v,)),
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+                vertex_universe.finite(),
+                vertex_universe.len() + 1 < usize::MAX as nat,
+                sources@.subset_of(vertex_universe),
+                forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
             ensures
                 spec_pqminstper_wf_generic(&search),
                 sources@.subset_of(search.visited@);
@@ -75,17 +85,17 @@ pub mod PQMinStPer {
             spec_pqminstper_wf_generic(self)
         }
 
-        fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF) -> (search: PQMinResult<V, P>)
+        fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)
         where G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P,
-        { pq_min(graph, source, priority_fn) }
+        { pq_min(graph, source, priority_fn, Ghost(vertex_universe)) }
 
-        fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStPer<V>, priority_fn: &PF) -> (search: PQMinResult<V, P>)
+        fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStPer<V>, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)
         where G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P,
-        { pq_min_multi(graph, sources, priority_fn) }
+        { pq_min_multi(graph, sources, priority_fn, Ghost(vertex_universe)) }
     }
 
     /// Priority-first search from single source (Section 53.4).
-    pub fn pq_min<V: StT + Ord, P: StT + Ord, G, PF>(graph: &G, source: V, priority_fn: &PF) -> (search: PQMinResult<V, P>)
+    pub fn pq_min<V: StT + Ord, P: StT + Ord, G, PF>(graph: &G, source: V, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)
     where
         G: Fn(&V) -> AVLTreeSetStPer<V>,
         PF: Fn(&V) -> P,
@@ -93,12 +103,24 @@ pub mod PQMinStPer {
             forall|v: &V| #[trigger] graph.requires((v,)),
             forall|v: &V| #[trigger] priority_fn.requires((v,)),
             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+            vertex_universe.finite(),
+            vertex_universe.len() + 1 < usize::MAX as nat,
+            vertex_universe.contains(source@),
+            forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
         ensures
             spec_pqminstper_wf_generic(&search),
             search.visited@.contains(source@),
     {
         let sources = AVLTreeSetStPer::singleton(source);
-        pq_min_multi(graph, sources, priority_fn)
+        proof {
+            assert(sources@.subset_of(vertex_universe)) by {
+                assert forall|a: <V as View>::V| sources@.contains(a)
+                    implies #[trigger] vertex_universe.contains(a) by {
+                    assert(sources@ == Set::<<V as View>::V>::empty().insert(source@));
+                }
+            }
+        }
+        pq_min_multi(graph, sources, priority_fn, Ghost(vertex_universe))
     }
 
     fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(
@@ -127,6 +149,7 @@ pub mod PQMinStPer {
         priority_fn: &PF,
         visited_init: AVLTreeSetStPer<V>,
         frontier_init: AVLTreeSetStPer<Pair<Pair<P, V>, V>>,
+        Ghost(vertex_universe): Ghost<Set<<V as View>::V>>,
     ) -> (result: (AVLTreeSetStPer<V>, AVLTreeSetStPer<Pair<V, P>>))
         requires
             visited_init.spec_avltreesetstper_wf(),
@@ -151,10 +174,8 @@ pub mod PQMinStPer {
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
         {
-            // Extract min-priority vertex.
             let entry_ref = frontier.elements.nth(0);
             let v = entry_ref.1.clone();
-
             let p = priority_fn(&v);
             let entry = Pair(Pair(p.clone(), v.clone()), v.clone());
             let frontier_new = frontier.difference(&AVLTreeSetStPer::singleton(entry));
@@ -190,7 +211,7 @@ pub mod PQMinStPer {
             frontier = frontier_updated;
         }
 
-        // Build priorities from visited.
+        // Build priorities from visited. Close priorities+1 via loop counter.
         let mut priorities = AVLTreeSetStPer::empty();
         let vlen = visited.elements.length();
         let mut j: usize = 0;
@@ -203,12 +224,21 @@ pub mod PQMinStPer {
                 visited_init@.subset_of(visited@),
                 priorities.spec_avltreesetstper_wf(),
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
+                priorities@.len() <= j as nat,
             decreases vlen - j,
         {
             let vref = visited.elements.nth(j);
             let p = priority_fn(vref);
-            proof { assume(priorities@.len() + 1 < usize::MAX as nat); }
-            priorities = priorities.union(&AVLTreeSetStPer::singleton(Pair(vref.clone(), p)));
+            let vp = Pair(vref.clone(), p);
+            proof {
+                lemma_wf_implies_len_bound_stper(visited.elements);
+                assert(priorities@.len() + 1 < usize::MAX as nat);
+            }
+            let ghost old_pri = priorities@;
+            priorities = priorities.union(&AVLTreeSetStPer::singleton(vp));
+            proof {
+                vstd::set_lib::lemma_len_union(old_pri, Set::empty().insert(vp@));
+            }
             j = j + 1;
         }
         (visited, priorities)
@@ -219,6 +249,7 @@ pub mod PQMinStPer {
         graph: &G,
         sources: AVLTreeSetStPer<V>,
         priority_fn: &PF,
+        Ghost(vertex_universe): Ghost<Set<<V as View>::V>>,
     ) -> (search: PQMinResult<V, P>)
     where
         G: Fn(&V) -> AVLTreeSetStPer<V>,
@@ -228,6 +259,10 @@ pub mod PQMinStPer {
             forall|v: &V| #[trigger] graph.requires((v,)),
             forall|v: &V| #[trigger] priority_fn.requires((v,)),
             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+            vertex_universe.finite(),
+            vertex_universe.len() + 1 < usize::MAX as nat,
+            sources@.subset_of(vertex_universe),
+            forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
         ensures
             spec_pqminstper_wf_generic(&search),
             sources@.subset_of(search.visited@),
@@ -235,6 +270,7 @@ pub mod PQMinStPer {
         let mut initial_frontier = AVLTreeSetStPer::empty();
         let slen = sources.elements.length();
         let mut i: usize = 0;
+        // Close initial_frontier+1 via loop counter: slen < usize::MAX from tree wf.
         while i < slen
             invariant
                 i <= slen,
@@ -245,17 +281,27 @@ pub mod PQMinStPer {
                 forall|v: &V| #[trigger] graph.requires((v,)),
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+                initial_frontier@.len() <= i as nat,
             decreases slen - i,
         {
             let v = sources.elements.nth(i);
             let p = priority_fn(v);
             let entry = Pair(Pair(p.clone(), v.clone()), v.clone());
-            proof { assume(initial_frontier@.len() + 1 < usize::MAX as nat); }
+            proof {
+                // slen < usize::MAX from tree wf lemma.
+                lemma_wf_implies_len_bound_stper(sources.elements);
+                // initial_frontier@.len() + 1 <= i + 1 <= slen < usize::MAX.
+                assert(initial_frontier@.len() + 1 < usize::MAX as nat);
+            }
+            let ghost old_if = initial_frontier@;
             initial_frontier = initial_frontier.union(&AVLTreeSetStPer::singleton(entry));
+            proof {
+                vstd::set_lib::lemma_len_union(old_if, Set::empty().insert(entry@));
+            }
             i = i + 1;
         }
 
-        let (visited, priorities) = pq_explore(graph, priority_fn, sources, initial_frontier);
+        let (visited, priorities) = pq_explore(graph, priority_fn, sources, initial_frontier, Ghost(vertex_universe));
 
         PQMinResult {
             visited,
