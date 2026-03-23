@@ -123,7 +123,7 @@
     "id": 16,
     "function": "pq_min",
     "file": "Chap53/PQMinStEph.rs",
-    "lines": "38-52",
+    "lines": "40-54",
     "spec_strength": "unknown",
     "snippet": "        fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)\n        where\n            G: Fn(&V) -> AVLTreeSetStEph<V>,\n            PF: Fn(&V) -> P,\n            requires\n                forall|v: &V| #[trigger] graph.requires((v,)),\n                forall|v: &V| #[trigger] priority_fn.requires((v,)),\n                forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),\n                vertex_universe.finite(),\n                vertex_universe.len() + 1 < usize::MAX as nat,\n                vertex_universe.contains(source@),\n                forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),\n            ensures\n                spec_pqminsteph_wf_generic(&search),\n                search.visited@.contains(source@);"
   },
@@ -131,15 +131,15 @@
     "id": 17,
     "function": "pq_min_multi",
     "file": "Chap53/PQMinStEph.rs",
-    "lines": "56-71",
-    "spec_strength": "hole",
+    "lines": "58-73",
+    "spec_strength": "unknown",
     "snippet": "        fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStEph<V>, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)\n        where\n            G: Fn(&V) -> AVLTreeSetStEph<V>,\n            PF: Fn(&V) -> P,\n            requires\n                sources.spec_avltreesetsteph_wf(),\n                forall|v: &V| #[trigger] graph.requires((v,)),\n                forall|v: &V| #[trigger] priority_fn.requires((v,)),\n                forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),\n                vertex_universe.finite(),\n                vertex_universe.len() + 1 < usize::MAX as nat,\n                sources@.subset_of(vertex_universe),\n                forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),\n            ensures\n                spec_pqminsteph_wf_generic(&search),\n                sources@.subset_of(search.visited@);"
   },
   {
     "id": 18,
     "function": "pq_find_min_priority",
     "file": "Chap53/PQMinStEph.rs",
-    "lines": "121-129",
+    "lines": "123-131",
     "spec_strength": "unknown",
     "snippet": "    fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(\n        frontier: &AVLTreeSetStEph<Pair<Pair<P, V>, V>>,\n    ) -> (result: Option<V>)\n        requires\n            frontier.spec_avltreesetsteph_wf(),\n            obeys_feq_clone::<V>(),\n        ensures\n            frontier@.len() == 0 ==> result.is_none(),\n            frontier@.len() > 0 ==> result.is_some(),"
   },
@@ -147,7 +147,7 @@
     "id": 19,
     "function": "pq_explore",
     "file": "Chap53/PQMinStEph.rs",
-    "lines": "148-164",
+    "lines": "150-166",
     "spec_strength": "hole",
     "snippet": "    fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(\n        graph: &G,\n        priority_fn: &PF,\n        visited_init: AVLTreeSetStEph<V>,\n        frontier_init: AVLTreeSetStEph<Pair<Pair<P, V>, V>>,\n        Ghost(vertex_universe): Ghost<Set<<V as View>::V>>,\n    ) -> (result: (AVLTreeSetStEph<V>, AVLTreeSetStEph<Pair<V, P>>))\n        requires\n            visited_init.spec_avltreesetsteph_wf(),\n            frontier_init.spec_avltreesetsteph_wf(),\n            forall|v: &V| #[trigger] graph.requires((v,)),\n            forall|v: &V| #[trigger] priority_fn.requires((v,)),\n            forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),\n        ensures\n            result.0.spec_avltreesetsteph_wf(),\n            result.1.spec_avltreesetsteph_wf(),\n            visited_init@.subset_of(result.0@),"
   },

@@ -24,7 +24,7 @@
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
 | 1 | Chap26 | DivConReduceMtPer | 5 | 5 | 0 | 3 | 8 | 0 | 8 | 0 | 0 |
 | 2 | Chap26 | DivConReduceStPer | 5 | 5 | 0 | 0 | 5 | 0 | 5 | 0 | 0 |
-| 3 | Chap26 | ETSPMtEph | 2 | 2 | 0 | 11 | 13 | 0 | 11 | 2 | 0 |
+| 3 | Chap26 | ETSPMtEph | 2 | 2 | 0 | 11 | 13 | 0 | 12 | 1 | 0 |
 | 4 | Chap26 | ETSPStEph | 2 | 2 | 0 | 8 | 7 | 3 | 7 | 0 | 3 |
 | 5 | Chap26 | MergeSortMtPer | 2 | 2 | 0 | 6 | 8 | 0 | 8 | 0 | 0 |
 | 6 | Chap26 | MergeSortStPer | 2 | 2 | 0 | 1 | 3 | 0 | 3 | 0 | 0 |
@@ -60,19 +60,19 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 14 | `lemma_point_in_seq_transitive` |  |  |  | Y | Y |  |  | unknown | 132&#8209;138 |
-| 15 | `lemma_edge_valid_transitive` |  |  |  | Y | Y |  |  | unknown | 148&#8209;160 |
-| 16 | `lemma_mod_successor` |  |  |  | Y | Y |  |  | unknown | 167&#8209;169 |
-| 17 | `lemma_combined_cycle` |  |  |  | Y | Y |  |  | unknown | 177&#8209;201 |
-| 18 | `etsp_parallel` | Y | Y |  |  | Y |  |  | unknown | 311&#8209;315 |
-| 19 | `etsp_parallel_inner` |  |  |  | Y | Y |  |  | unknown | 330&#8209;335 |
-| 20 | `sort_and_split` |  |  |  | Y | Y |  |  | unknown | 516&#8209;527 |
-| 21 | `find_best_swap` |  |  |  | Y | Y |  |  | unknown | 579&#8209;585 |
-| 22 | `distance` | Y | Y |  |  | Y |  |  | unknown | 608&#8209;609 |
-| 23 | `point_distance` |  |  |  | Y | Y |  |  | hole | 613&#8209;614 |
-| 24 | `sort_and_split_impl` |  |  |  | Y | Y |  |  | hole | 629 |
-| 25 | `find_best_swap_impl` |  |  |  | Y | Y |  |  | unknown | 655&#8209;661 |
-| 26 | `find_best_swap_par` |  |  |  | Y | Y |  |  | unknown | 671&#8209;681 |
+| 14 | `lemma_point_in_seq_transitive` |  |  |  | Y | Y |  |  | unknown | 143&#8209;149 |
+| 15 | `lemma_edge_valid_transitive` |  |  |  | Y | Y |  |  | unknown | 159&#8209;171 |
+| 16 | `lemma_mod_successor` |  |  |  | Y | Y |  |  | unknown | 178&#8209;180 |
+| 17 | `lemma_combined_cycle` |  |  |  | Y | Y |  |  | unknown | 188&#8209;212 |
+| 18 | `etsp_parallel` | Y | Y |  |  | Y |  |  | unknown | 322&#8209;326 |
+| 19 | `etsp_parallel_inner` |  |  |  | Y | Y |  |  | unknown | 341&#8209;346 |
+| 20 | `sort_and_split` |  |  |  | Y | Y |  |  | unknown | 527&#8209;538 |
+| 21 | `find_best_swap` |  |  |  | Y | Y |  |  | unknown | 590&#8209;596 |
+| 22 | `distance` | Y | Y |  |  | Y |  |  | unknown | 619&#8209;620 |
+| 23 | `point_distance` |  |  |  | Y | Y |  |  | unknown | 623&#8209;624 |
+| 24 | `sort_and_split_impl` |  |  |  | Y | Y |  |  | hole | 642 |
+| 25 | `find_best_swap_impl` |  |  |  | Y | Y |  |  | unknown | 668&#8209;674 |
+| 26 | `find_best_swap_par` |  |  |  | Y | Y |  |  | unknown | 684&#8209;694 |
 
 ### Chap26/ETSPStEph.rs
 

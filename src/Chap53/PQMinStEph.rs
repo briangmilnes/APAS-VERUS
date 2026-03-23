@@ -237,14 +237,19 @@ pub mod PQMinStEph {
         let visited_seq = visited.to_seq();
         let vlen = visited_seq.length();
         let mut j: usize = 0;
+        proof {
+            lemma_wf_implies_len_bound_steph(&visited_seq);
+        }
         while j < vlen
             invariant
                 j <= vlen,
                 vlen == visited_seq@.len(),
+                vlen < usize::MAX,
                 visited_seq.spec_avltreeseqsteph_wf(),
                 visited.spec_avltreesetsteph_wf(),
                 visited_init@.subset_of(visited@),
                 priorities.spec_avltreesetsteph_wf(),
+                priorities@.len() <= j as nat,
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
                 priorities@.len() <= j as nat,
             decreases vlen - j,
@@ -293,14 +298,18 @@ pub mod PQMinStEph {
         let sources_seq = sources.to_seq();
         let slen = sources_seq.length();
         let mut i: usize = 0;
-        // Close initial_frontier capacity via loop counter + len_bound lemma.
+        proof {
+            lemma_wf_implies_len_bound_steph(&sources_seq);
+        }
         while i < slen
             invariant
                 i <= slen,
                 slen == sources_seq@.len(),
+                slen < usize::MAX,
                 sources_seq.spec_avltreeseqsteph_wf(),
                 sources.spec_avltreesetsteph_wf(),
                 initial_frontier.spec_avltreesetsteph_wf(),
+                initial_frontier@.len() <= i as nat,
                 forall|v: &V| #[trigger] graph.requires((v,)),
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
                 forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),

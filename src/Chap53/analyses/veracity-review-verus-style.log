@@ -97,9 +97,9 @@ Checking 5 files...
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: warning: [17] collection PQMinResult should have an Iterator impl
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: warning: [17] collection PQMinResult should have an IntoIterator impl
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent4/rust_verify_test/tests/Chap53/ProvePQMinStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:121: warning: [19] pq_find_min_priority return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:148: warning: [19] pq_explore return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:26: warning: [22] free spec fn spec_pqminsteph_wf_generic should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:123: warning: [19] pq_find_min_priority return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:150: warning: [19] pq_explore return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:28: warning: [22] free spec fn spec_pqminsteph_wf_generic should be an abstract signature in a trait with body in the impl
 
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStPer.rs:1: info: [1] has mod declarations

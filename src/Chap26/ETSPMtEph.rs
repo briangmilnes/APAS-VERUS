@@ -38,6 +38,10 @@ pub mod ETSPMtEph {
 
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
+    use crate::vstdplus::float::float::{
+        f64_add, f64_add_spec, f64_sub, f64_sub_spec,
+        f64_mul, f64_mul_spec, f64_sqrt, f64_sqrt_spec,
+    };
 
 
     //		3. broadcast use
@@ -75,8 +79,15 @@ pub mod ETSPMtEph {
 
     //		5. spec fns
 
-    /// Uninterpreted Euclidean distance between two points.
-    pub uninterp spec fn spec_point_distance(a: Point, b: Point) -> f64;
+    /// Euclidean distance between two points: sqrt((ax-bx)^2 + (ay-by)^2).
+    pub open spec fn spec_point_distance(a: Point, b: Point) -> f64 {
+        f64_sqrt_spec(
+            f64_add_spec(
+                f64_mul_spec(f64_sub_spec(a.x, b.x), f64_sub_spec(a.x, b.x)),
+                f64_mul_spec(f64_sub_spec(a.y, b.y), f64_sub_spec(a.y, b.y)),
+            ),
+        )
+    }
 
     /// Two points are identical (same coordinates).
     pub open spec fn spec_point_eq(a: Point, b: Point) -> bool {
@@ -609,13 +620,15 @@ pub mod ETSPMtEph {
             ensures d == spec_point_distance(*self, *other);
     }
 
-    #[verifier::external_body]
     fn point_distance(a: &Point, b: &Point) -> (d: f64)
         ensures d == spec_point_distance(*a, *b),
     {
-        let dx = a.x - b.x;
-        let dy = a.y - b.y;
-        (dx * dx + dy * dy).sqrt()
+        let dx = f64_sub(a.x, b.x);
+        let dy = f64_sub(a.y, b.y);
+        let dx2 = f64_mul(dx, dx);
+        let dy2 = f64_mul(dy, dy);
+        let sum = f64_add(dx2, dy2);
+        f64_sqrt(sum)
     }
 
     impl ETSPPointTrait for Point {

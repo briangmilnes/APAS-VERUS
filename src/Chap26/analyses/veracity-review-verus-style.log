@@ -79,27 +79,27 @@ Checking 8 files...
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:1: info: [23] free fn type bounds: N/A
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:62: warning: [14] struct Point should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:62: warning: [14] struct Point should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:68: warning: [14] struct Edge should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:68: warning: [14] struct Edge should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:605: warning: [18] use std::... should come before derive impls in verus! (expected imports before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:607: warning: [18] trait ETSPPointTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:613: warning: [18] fn point_distance should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:621: warning: [18] impl ETSPPointTrait for Point should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:629: warning: [18] fn sort_and_split_impl should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:655: warning: [18] fn find_best_swap_impl should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:671: warning: [18] fn find_best_swap_par should come before derive impls in verus! (expected impls before derive impls in verus!)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:655: warning: [19] find_best_swap_impl return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:671: warning: [19] find_best_swap_par return name 'result' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:79: warning: [22] free spec fn spec_point_distance should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:82: warning: [22] free spec fn spec_point_eq should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:87: warning: [22] free spec fn spec_point_in_seq should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:92: warning: [22] free spec fn spec_sources_valid should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:98: warning: [22] free spec fn spec_targets_valid should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:105: warning: [22] free spec fn spec_etsp should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:113: warning: [22] free spec fn spec_edges_valid should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:120: warning: [22] free spec fn spec_edges_form_cycle should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:66: warning: [14] struct Point should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:66: warning: [14] struct Point should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:72: warning: [14] struct Edge should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:72: warning: [14] struct Edge should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:616: warning: [18] use std::... should come before derive impls in verus! (expected imports before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:618: warning: [18] trait ETSPPointTrait should come before derive impls in verus! (expected traits before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:623: warning: [18] fn point_distance should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:634: warning: [18] impl ETSPPointTrait for Point should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:642: warning: [18] fn sort_and_split_impl should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:668: warning: [18] fn find_best_swap_impl should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:684: warning: [18] fn find_best_swap_par should come before derive impls in verus! (expected impls before derive impls in verus!)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:668: warning: [19] find_best_swap_impl return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:684: warning: [19] find_best_swap_par return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:83: warning: [22] free spec fn spec_point_distance should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:93: warning: [22] free spec fn spec_point_eq should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:98: warning: [22] free spec fn spec_point_in_seq should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:103: warning: [22] free spec fn spec_sources_valid should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:109: warning: [22] free spec fn spec_targets_valid should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:116: warning: [22] free spec fn spec_etsp should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:124: warning: [22] free spec fn spec_edges_valid should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:131: warning: [22] free spec fn spec_edges_form_cycle should be an abstract signature in a trait with body in the impl
 
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPStEph.rs:
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPStEph.rs:1: info: [1] has mod declarations

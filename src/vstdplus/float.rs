@@ -336,7 +336,31 @@ broadcast use {
 
     pub uninterp spec fn f64_add_spec(a: f64, b: f64) -> f64;
     pub uninterp spec fn f64_sub_spec(a: f64, b: f64) -> f64;
+    pub uninterp spec fn f64_mul_spec(a: f64, b: f64) -> f64;
+    pub uninterp spec fn f64_sqrt_spec(a: f64) -> f64;
     pub uninterp spec fn f64_approx_eq_spec(a: f64, b: f64) -> bool;
+
+    // Free-standing f64 arithmetic exec bridges.
+
+    #[verifier::external_body]
+    pub fn f64_add(a: f64, b: f64) -> (r: f64)
+        ensures r == f64_add_spec(a, b),
+    { a + b }
+
+    #[verifier::external_body]
+    pub fn f64_sub(a: f64, b: f64) -> (r: f64)
+        ensures r == f64_sub_spec(a, b),
+    { a - b }
+
+    #[verifier::external_body]
+    pub fn f64_mul(a: f64, b: f64) -> (r: f64)
+        ensures r == f64_mul_spec(a, b),
+    { a * b }
+
+    #[verifier::external_body]
+    pub fn f64_sqrt(a: f64) -> (r: f64)
+        ensures r == f64_sqrt_spec(a),
+    { a.sqrt() }
 
     // f64 arithmetic axioms.
 
