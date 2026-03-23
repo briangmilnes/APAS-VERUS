@@ -11,6 +11,8 @@ pub mod AVLTreeSetStPer {
     // 2. imports
     // 4. type definitions
     // 5. view impls
+    // 6. spec fns
+    // 7. proof fns
     // 8. traits
     // 9. impls
     // 11. derive impls in verus!
@@ -28,6 +30,7 @@ pub mod AVLTreeSetStPer {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, lemma_cloned_view_eq};
     use crate::Types::Types::*;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
 
     verus! {
 
@@ -53,6 +56,113 @@ broadcast use {
     impl<T: StT + Ord> View for AVLTreeSetStPer<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Set<<T as View>::V> { self.elements@.to_set() }
+    }
+
+    // 6. spec fns
+
+    /// In-order traversal returning actual values (Seq<T>), not views, for persistent trees.
+    pub open spec fn spec_inorder_values_per<T: StT>(link: Link<T>) -> Seq<T>
+        decreases link,
+    {
+        match link {
+            None => Seq::empty(),
+            Some(node) => spec_inorder_values_per(node.left) + seq![node.value] + spec_inorder_values_per(node.right),
+        }
+    }
+
+    /// A sequence of T is sorted under TotalOrder::le (persistent variant).
+    pub open spec fn spec_seq_sorted_per<T: TotalOrder>(s: Seq<T>) -> bool {
+        forall|i: int, j: int| 0 <= i < j < s.len()
+            ==> (#[trigger] TotalOrder::le(s[i], s[j]))
+    }
+
+    // 7. proof fns
+
+    /// The values sequence maps to the views sequence element-by-element (persistent variant).
+    pub proof fn lemma_inorder_values_maps_to_views_per<T: StT>(link: &Link<T>)
+        ensures spec_inorder_values_per(*link).map_values(|t: T| t@) =~= spec_inorder(*link),
+        decreases *link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_inorder_values_maps_to_views_per::<T>(&node.left);
+                lemma_inorder_values_maps_to_views_per::<T>(&node.right);
+                assert(
+                    (spec_inorder_values_per(node.left)
+                        + seq![node.value]
+                        + spec_inorder_values_per(node.right))
+                    .map_values(|t: T| t@) =~=
+                        spec_inorder_values_per(node.left).map_values(|t: T| t@)
+                        + seq![node.value].map_values(|t: T| t@)
+                        + spec_inorder_values_per(node.right).map_values(|t: T| t@));
+            }
+        }
+    }
+
+    /// Appending an element >= all existing preserves sortedness (persistent variant).
+    proof fn lemma_push_sorted_per<T: TotalOrder>(s: Seq<T>, v: T)
+        requires
+            spec_seq_sorted_per(s),
+            s.len() > 0 ==> TotalOrder::le(s.last(), v),
+        ensures
+            spec_seq_sorted_per(s.push(v)),
+    {
+        let new_s = s.push(v);
+        assert forall|i: int, j: int| 0 <= i < j < new_s.len()
+            implies #[trigger] TotalOrder::le(new_s[i], new_s[j]) by {
+            if j < s.len() as int {
+                assert(TotalOrder::le(s[i], s[j]));
+            } else {
+                // j == s.len(), new_s[j] == v, new_s[i] == s[i].
+                if i == s.len() as int - 1 {
+                    // s[i] is last element.
+                    assert(s[i] == s[s.len() as int - 1]);
+                } else {
+                    // i < s.len() - 1, use sorted for s[i] <= s[last], then transitivity.
+                    let last_idx = s.len() as int - 1;
+                    assert(TotalOrder::le(s[i], s[last_idx]));
+                    T::transitive(s[i], s[last_idx], v);
+                }
+            }
+        };
+    }
+
+    /// If two sequences have equal mapped views and feq holds, the sequences are equal.
+    proof fn lemma_map_view_feq_implies_ext_eq_per<T: View + Eq + Clone>(a: Seq<T>, b: Seq<T>)
+        requires
+            a.map_values(|t: T| t@) =~= b.map_values(|t: T| t@),
+            obeys_feq_full::<T>(),
+        ensures
+            a =~= b,
+    {
+        assert(a.map_values(|t: T| t@).len() == a.len());
+        assert(b.map_values(|t: T| t@).len() == b.len());
+        assert(a.len() == b.len());
+        assert forall|k: int| 0 <= k < a.len()
+            implies #[trigger] a[k] == b[k] by {
+            assert(0 <= k && k < b.len());
+            assert(a.map_values(|t: T| t@)[k] == a[k]@);
+            assert(b.map_values(|t: T| t@)[k] == b[k]@);
+            assert(a.map_values(|t: T| t@)[k] == b.map_values(|t: T| t@)[k]);
+            assert(a[k]@ == b[k]@);
+        };
+    }
+
+    /// Subsequence of a sorted sequence is sorted (persistent variant).
+    proof fn lemma_subseq_sorted_per<T: TotalOrder>(s: Seq<T>, lo: int, hi: int)
+        requires
+            spec_seq_sorted_per(s),
+            0 <= lo <= hi <= s.len(),
+        ensures
+            spec_seq_sorted_per(s.subrange(lo, hi)),
+    {
+        let sub = s.subrange(lo, hi);
+        assert forall|i: int, j: int| 0 <= i < j < sub.len()
+            implies #[trigger] TotalOrder::le(sub[i], sub[j]) by {
+            assert(sub[i] == s[lo + i]);
+            assert(sub[j] == s[lo + j]);
+        };
     }
 
     // 8. traits
@@ -157,6 +267,24 @@ broadcast use {
             ensures
                 updated@ == self@.insert(x@),
                 updated.spec_avltreesetstper_wf();
+    }
+
+    pub trait AVLTreeSetStPerTotalOrderTrait<T: StT + Ord + TotalOrder>: AVLTreeSetStPerTrait<T> {
+        /// The backing sequence is sorted under TotalOrder::le.
+        spec fn spec_elements_sorted_per(&self) -> bool;
+        /// The value-level backing sequence.
+        spec fn spec_values_seq_per(&self) -> Seq<T>;
+        /// Insert preserving sortedness.
+        fn insert_sorted_per(&self, x: T) -> (updated: Self)
+            requires
+                self.spec_avltreesetstper_wf(),
+                self.spec_elements_sorted_per(),
+                obeys_feq_full::<T>(),
+                self@.len() + 1 < usize::MAX as nat,
+            ensures
+                updated@ == self@.insert(x@),
+                updated.spec_avltreesetstper_wf(),
+                updated.spec_elements_sorted_per();
     }
 
     // 9. impls
@@ -1075,7 +1203,352 @@ broadcast use {
         }
     }
 
-    
+    // 9. impls (TotalOrder-gated trait impl)
+
+    impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTotalOrderTrait<T> for AVLTreeSetStPer<T> {
+        open spec fn spec_elements_sorted_per(&self) -> bool {
+            spec_seq_sorted_per(spec_inorder_values_per(self.elements.root))
+        }
+
+        open spec fn spec_values_seq_per(&self) -> Seq<T> {
+            spec_inorder_values_per(self.elements.root)
+        }
+
+        #[verifier::loop_isolation(false)]
+        fn insert_sorted_per(&self, x: T) -> (updated: Self)
+        {
+            let ghost x_view = x@;
+            let ghost old_seq_len = self.elements@.len();
+            let ghost orig_elems = self.elements@;
+            let ghost orig_set = self@;
+            let ghost orig_vals = spec_inorder_values_per::<T>(self.elements.root);
+            let found = self.find(&x);
+            if found {
+                let updated = Self { elements: self.elements.clone() };
+                proof {
+                    assert(self@.contains(x_view));
+                    assert(updated.elements@ =~= self.elements@);
+                    assert(updated@ =~= self@);
+                    assert(self@.insert(x_view) =~= self@);
+                    vstd::seq_lib::seq_to_set_is_finite(updated.elements@);
+                    // Sorted preserved: clone preserves view, bridge to values under feq.
+                    lemma_inorder_values_maps_to_views_per::<T>(&self.elements.root);
+                    lemma_inorder_values_maps_to_views_per::<T>(&updated.elements.root);
+                    let self_vals = spec_inorder_values_per::<T>(self.elements.root);
+                    let upd_vals = spec_inorder_values_per::<T>(updated.elements.root);
+                    assert(self_vals.map_values(|t: T| t@) =~= self.elements@);
+                    assert(upd_vals.map_values(|t: T| t@) =~= updated.elements@);
+                    assert(self_vals.map_values(|t: T| t@) =~= upd_vals.map_values(|t: T| t@));
+                    lemma_map_view_feq_implies_ext_eq_per(self_vals, upd_vals);
+                    assert(self_vals =~= upd_vals);
+                }
+                return updated;
+            }
+            assert(obeys_feq_full_trigger::<T>());
+            let n = self.elements.length();
+            proof {
+                lemma_inorder_values_maps_to_views_per::<T>(&self.elements.root);
+            }
+            // Binary search using TotalOrder::cmp.
+            let mut lo: usize = 0;
+            let mut hi: usize = n;
+            while lo < hi
+                invariant
+                    self.elements.spec_avltreeseqstper_wf(),
+                    n as int == self.elements.spec_seq().len(),
+                    lo <= hi, hi <= n,
+                    obeys_feq_full::<T>(),
+                    orig_elems == self.elements@,
+                    orig_vals == spec_inorder_values_per::<T>(self.elements.root),
+                    spec_seq_sorted_per(orig_vals),
+                    orig_vals.len() == orig_elems.len(),
+                    forall|k: int| #![trigger orig_vals[k]]
+                        0 <= k < lo ==> (TotalOrder::le(orig_vals[k], x) && orig_vals[k] != x),
+                    forall|k: int| #![trigger orig_vals[k]]
+                        hi <= k < n ==> TotalOrder::le(x, orig_vals[k]),
+                decreases hi - lo,
+            {
+                let mid = lo + (hi - lo) / 2;
+                let elem = self.elements.nth(mid);
+                let c = TotalOrder::cmp(elem, &x);
+                proof {
+                    lemma_inorder_values_maps_to_views_per::<T>(&self.elements.root);
+                    assert(orig_vals[mid as int]@ == elem@);
+                }
+                match c {
+                    core::cmp::Ordering::Less => {
+                        proof {
+                            assert forall|k: int| 0 <= k < mid + 1
+                                implies (#[trigger] TotalOrder::le(orig_vals[k], x) && orig_vals[k] != x) by {
+                                if k < lo as int {
+                                } else if k == mid as int {
+                                    assert(orig_vals[mid as int]@ == elem@);
+                                    assert(orig_vals[mid as int] == *elem);
+                                    if orig_vals[mid as int] == x {
+                                        T::reflexive(x);
+                                    }
+                                } else {
+                                    assert(TotalOrder::le(orig_vals[k], orig_vals[mid as int]));
+                                    T::transitive(orig_vals[k], orig_vals[mid as int], x);
+                                    if orig_vals[k] == x {
+                                        T::reflexive(x);
+                                        T::antisymmetric(orig_vals[mid as int], x);
+                                    }
+                                }
+                            };
+                        }
+                        lo = mid + 1;
+                    },
+                    _ => {
+                        proof {
+                            let elem_val = orig_vals[mid as int];
+                            match c {
+                                core::cmp::Ordering::Equal => {
+                                    T::reflexive(x);
+                                },
+                                core::cmp::Ordering::Greater => {},
+                                _ => {},
+                            }
+                            assert(TotalOrder::le(x, elem_val));
+                            assert forall|k: int| mid as int <= k < n as int
+                                implies #[trigger] TotalOrder::le(x, orig_vals[k]) by {
+                                if k == mid as int {
+                                } else if k >= hi as int {
+                                } else {
+                                    assert(TotalOrder::le(orig_vals[mid as int], orig_vals[k]));
+                                    T::transitive(x, orig_vals[mid as int], orig_vals[k]);
+                                }
+                            };
+                        }
+                        hi = mid;
+                    },
+                }
+            }
+            // lo == hi == insertion point.
+            // Build new_vec: orig[0..lo] ++ [x] ++ orig[lo..n].
+            let mut new_vec: Vec<T> = Vec::new();
+            let ghost mut rv: Seq<<T as View>::V> = Seq::empty();
+            let mut i: usize = 0;
+            while i < lo
+                invariant
+                    self.elements.spec_avltreeseqstper_wf(),
+                    obeys_feq_full::<T>(),
+                    n as int == self.elements.spec_seq().len(),
+                    i <= lo, lo <= n,
+                    new_vec@.len() == i as int,
+                    rv.len() == new_vec@.len(),
+                    orig_elems == self.elements@,
+                    orig_set == self.elements@.to_set(),
+                    forall|k: int| #![trigger rv[k]]
+                        0 <= k < rv.len() ==> rv[k] == new_vec@[k]@,
+                    forall|k: int| #![trigger rv[k]]
+                        0 <= k < rv.len() ==> orig_set.contains(rv[k]),
+                    // Positional: rv[k] == orig_elems[k] for k < i.
+                    forall|k: int| #![trigger rv[k]]
+                        0 <= k < rv.len() ==> rv[k] == orig_elems[k],
+                decreases lo - i,
+            {
+                let elem = self.elements.nth(i);
+                let c = elem.clone();
+                let ghost old_rv = rv;
+                let ghost old_rv_len = rv.len() as int;
+                proof {
+                    lemma_cloned_view_eq(*elem, c);
+                    assert(self.elements@.contains(elem@));
+                    assert(orig_set.contains(elem@));
+                    rv = rv.push(elem@);
+                }
+                new_vec.push(c);
+                i += 1;
+            }
+            // Push x.
+            let ghost pre_x_rv = rv;
+            let ghost pre_x_rv_len = rv.len() as int;
+            proof { rv = rv.push(x_view); }
+            new_vec.push(x);
+            proof {
+                assert(rv[pre_x_rv_len] == x_view);
+            }
+            // Copy elements from insertion point onward.
+            let mut j: usize = lo;
+            while j < n
+                invariant
+                    self.elements.spec_avltreeseqstper_wf(),
+                    obeys_feq_full::<T>(),
+                    n as int == self.elements.spec_seq().len(),
+                    lo <= j, j <= n,
+                    new_vec@.len() == (j + 1) as int,
+                    rv.len() == new_vec@.len(),
+                    orig_elems == self.elements@,
+                    orig_set == self.elements@.to_set(),
+                    forall|k: int| #![trigger rv[k]]
+                        0 <= k < rv.len() ==> rv[k] == new_vec@[k]@,
+                    forall|k: int| #![trigger rv[k]]
+                        0 <= k < rv.len() ==> (
+                            orig_set.contains(rv[k]) || rv[k] == x_view
+                        ),
+                    // Positional tracking.
+                    forall|k: int| #![trigger rv[k]]
+                        0 <= k < lo ==> rv[k] == orig_elems[k],
+                    rv[lo as int] == x_view,
+                    forall|k: int| #![trigger rv[lo as int + 1 + k]]
+                        0 <= k < j - lo ==> rv[lo as int + 1 + k] == orig_elems[lo as int + k],
+                decreases n - j,
+            {
+                let elem = self.elements.nth(j);
+                let c = elem.clone();
+                let ghost old_rv = rv;
+                let ghost old_rv_len = rv.len() as int;
+                proof {
+                    lemma_cloned_view_eq(*elem, c);
+                    assert(self.elements@.contains(elem@));
+                    assert(orig_set.contains(elem@));
+                    rv = rv.push(elem@);
+                }
+                new_vec.push(c);
+                proof {
+                    assert forall|k: int| 0 <= k < lo as int
+                        implies #[trigger] rv[k] == orig_elems[k] by {
+                        assert(old_rv[k] == orig_elems[k]);
+                    };
+                    assert forall|k: int| 0 <= k < (j + 1) - lo
+                        implies #[trigger] rv[lo as int + 1 + k] == orig_elems[lo as int + k] by {
+                        if k < (j as int - lo as int) {
+                            assert(old_rv[lo as int + 1 + k] == orig_elems[lo as int + k]);
+                        } else {
+                            assert(rv[old_rv_len] == elem@);
+                            assert(elem@ == self.elements@[j as int]);
+                        }
+                    };
+                }
+                j += 1;
+            }
+            // Build tree from new_vec.
+            proof {
+                assert forall|k: int| 0 <= k < rv.len()
+                    implies rv[k] == new_vec@.map_values(|t: T| t@)[k] by {
+                    assert(new_vec@.map_values(|t: T| t@)[k] == new_vec@[k]@);
+                };
+                assert(rv =~= new_vec@.map_values(|t: T| t@));
+            }
+            proof {
+                self.elements@.unique_seq_to_set();
+                assert(new_vec@.len() as nat == self.elements@.len() + 1);
+                assert(new_vec@.len() < usize::MAX);
+            }
+            let updated = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::from_vec(new_vec) };
+            proof {
+                assert(updated.elements@ =~= rv);
+                vstd::seq_lib::seq_to_set_is_finite(updated.elements@);
+                // Prove updated@ == self@.insert(x_view).
+                assert forall|v|
+                    updated.elements@.to_set().contains(v)
+                    <==> #[trigger] self@.insert(x_view).contains(v) by {
+                    if updated.elements@.to_set().contains(v) {
+                        assert(rv.to_set().contains(v));
+                        assert(rv.contains(v));
+                        let k = choose|k: int| 0 <= k < rv.len() && rv[k] == v;
+                    }
+                    if self@.insert(x_view).contains(v) {
+                        if v == x_view {
+                            assert(rv[lo as int] == x_view);
+                        } else {
+                            assert(self@.contains(v));
+                            assert(self.elements@.to_set().contains(v));
+                            assert(self.elements@.contains(v));
+                            let k = choose|k: int| 0 <= k < self.elements@.len()
+                                && self.elements@[k] == v;
+                            if k < lo as int {
+                                assert(rv[k] == orig_elems[k]);
+                            } else {
+                                assert(rv[lo as int + 1 + (k - lo as int)] == orig_elems[lo as int + (k - lo as int)]);
+                            }
+                        }
+                    }
+                };
+                assert(updated@ =~= self@.insert(x_view));
+                // Prove no_duplicates via set cardinality.
+                self.elements@.unique_seq_to_set();
+                assert(old_seq_len == self@.len());
+                assert(!self@.contains(x_view));
+                assert(updated.elements@.len() == old_seq_len + 1);
+                assert(updated@.len() == self@.len() + 1);
+                assert(updated.elements@.to_set().len() == updated.elements@.len());
+                updated.elements@.lemma_no_dup_set_cardinality();
+
+                // Prove sorted via positional + feq bridge.
+                lemma_inorder_values_maps_to_views_per::<T>(&updated.elements.root);
+                let new_vals = spec_inorder_values_per::<T>(updated.elements.root);
+                assert(orig_vals.map_values(|t: T| t@) =~= orig_elems);
+
+                assert forall|ii: int, jj: int| 0 <= ii < jj < new_vals.len()
+                    implies #[trigger] TotalOrder::le(new_vals[ii], new_vals[jj]) by {
+                    assert(new_vals[ii]@ == rv[ii]);
+                    assert(new_vals[jj]@ == rv[jj]);
+                    if ii < lo as int && jj < lo as int {
+                        // Both before insertion point.
+                        assert(rv[ii] == orig_elems[ii]);
+                        assert(rv[jj] == orig_elems[jj]);
+                        assert(orig_vals[ii]@ == orig_elems[ii]);
+                        assert(orig_vals[jj]@ == orig_elems[jj]);
+                        assert(new_vals[ii] == orig_vals[ii]);
+                        assert(new_vals[jj] == orig_vals[jj]);
+                        assert(TotalOrder::le(orig_vals[ii], orig_vals[jj]));
+                    } else if ii < lo as int && jj == lo as int {
+                        // ii before, jj is x.
+                        assert(rv[ii] == orig_elems[ii]);
+                        assert(rv[jj] == x_view);
+                        assert(orig_vals[ii]@ == orig_elems[ii]);
+                        assert(new_vals[ii] == orig_vals[ii]);
+                        assert(new_vals[jj] == x);
+                        assert(TotalOrder::le(orig_vals[ii], x));
+                    } else if ii < lo as int && jj > lo as int {
+                        // ii before, jj after.
+                        let mj = jj - 1;
+                        let kj = mj - lo as int;
+                        assert(rv[ii] == orig_elems[ii]);
+                        assert(rv[lo as int + 1 + kj] == orig_elems[lo as int + kj]);
+                        assert(rv[jj] == orig_elems[mj]);
+                        assert(orig_vals[ii]@ == orig_elems[ii]);
+                        assert(orig_vals[mj]@ == orig_elems[mj]);
+                        assert(new_vals[ii] == orig_vals[ii]);
+                        assert(new_vals[jj] == orig_vals[mj]);
+                        assert(ii < mj);
+                        assert(TotalOrder::le(orig_vals[ii], orig_vals[mj]));
+                    } else if ii == lo as int && jj > lo as int {
+                        // ii is x, jj after.
+                        let mj = jj - 1;
+                        let kj = mj - lo as int;
+                        assert(rv[ii] == x_view);
+                        assert(rv[lo as int + 1 + kj] == orig_elems[lo as int + kj]);
+                        assert(rv[jj] == orig_elems[mj]);
+                        assert(orig_vals[mj]@ == orig_elems[mj]);
+                        assert(new_vals[ii] == x);
+                        assert(new_vals[jj] == orig_vals[mj]);
+                        assert(hi as int <= mj);
+                        assert(TotalOrder::le(x, orig_vals[mj]));
+                    } else {
+                        // Both after insertion point.
+                        let mi = ii - 1;
+                        let mj = jj - 1;
+                        let ki = mi - lo as int;
+                        let kj = mj - lo as int;
+                        assert(rv[lo as int + 1 + ki] == orig_elems[lo as int + ki]);
+                        assert(rv[lo as int + 1 + kj] == orig_elems[lo as int + kj]);
+                        assert(rv[ii] == orig_elems[mi]);
+                        assert(rv[jj] == orig_elems[mj]);
+                        assert(orig_vals[mi]@ == orig_elems[mi]);
+                        assert(orig_vals[mj]@ == orig_elems[mj]);
+                        assert(new_vals[ii] == orig_vals[mi]);
+                        assert(new_vals[jj] == orig_vals[mj]);
+                        assert(mi < mj);
+                        assert(TotalOrder::le(orig_vals[mi], orig_vals[mj]));
+                    }
+                };
+            }
+            updated
+        }
+    }
 
     impl<T: StT + Ord> Default for AVLTreeSetStPer<T> {
         fn default() -> Self { Self::empty() }

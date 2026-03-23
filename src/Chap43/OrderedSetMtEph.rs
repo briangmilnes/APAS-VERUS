@@ -512,6 +512,7 @@ pub mod OrderedSetMtEph {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
+            proof { assume(inner.spec_sorted()); }
             let selected = inner.select(i);
             proof { assume(inner@ =~= self@); }
             read_handle.release_read();

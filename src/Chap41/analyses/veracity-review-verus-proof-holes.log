@@ -83,27 +83,27 @@ Table of Contents:
       2156 |             equal
       2157 |         }
 ⚠ AVLTreeSetStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetStPer.rs:1095: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1091 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetStPer.rs:1568: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1564 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1093 |         {
-      1094 |             proof {
-      1096 |                 assume(other.spec_avltreesetstper_wf());
-      1097 |             }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetStPer.rs:1096: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1091 |         fn eq(&self, other: &Self) -> (equal: bool)
+      1566 |         {
+      1567 |             proof {
+      1569 |                 assume(other.spec_avltreesetstper_wf());
+      1570 |             }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetStPer.rs:1569: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1564 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1094 |             proof {
-      1095 |                 assume(self.spec_avltreesetstper_wf());
-      1097 |             }
-      1098 |             let equal = self.size() == other.size() && {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetStPer.rs:1118: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1091 |         fn eq(&self, other: &Self) -> (equal: bool)
+      1567 |             proof {
+      1568 |                 assume(self.spec_avltreesetstper_wf());
+      1570 |             }
+      1571 |             let equal = self.size() == other.size() && {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetStPer.rs:1591: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1564 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1116 |                 all_found
-      1117 |             };
-      1119 |             equal
-      1120 |         }
+      1589 |                 all_found
+      1590 |             };
+      1592 |             equal
+      1593 |         }
 ⚠ ArraySetEnumMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/ArraySetEnumMtEph.rs:950: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        946 |         fn eq(&self, other: &Self) -> (equal: bool)
@@ -188,16 +188,16 @@ Modules:
    7 total
 
 Proof Functions:
-   19 clean (100%)
+   23 clean (100%)
    0 holed (0%)
-   19 total
+   23 total
 
 Function Specs:
-   186 exec fns with complete spec (requires+ensures) (69%)
+   188 exec fns with complete spec (requires+ensures) (67%)
    8 exec fns missing spec (2%)
-   73 proof/spec fns clean (27%)
+   83 proof/spec fns clean (29%)
    0 proof/spec fns with holes (0%)
-   267 total fns
+   279 total fns
 
 
 Holes Found: 0 (actionable)
@@ -220,15 +220,15 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-22 20:33:41 -07:00
-Ended:     2026-03-22 20:33:41 -07:00
-Duration:  66ms
+Started:   2026-03-22 22:40:06 -07:00
+Ended:     2026-03-22 22:40:06 -07:00
+Duration:  95ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
-===================================
+===============================
 
-Started:   2026-03-22 20:33:41 -07:00
-Ended:     2026-03-22 20:33:41 -07:00
-Duration:  66ms
+Started:   2026-03-22 22:40:06 -07:00
+Ended:     2026-03-22 22:40:06 -07:00
+Duration:  95ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
