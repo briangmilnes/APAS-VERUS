@@ -27,6 +27,7 @@ pub mod AugOrderedTableStPer {
     use crate::OrderedTableStPerLit;
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    use crate::vstdplus::clone_plus::clone_plus::clone_fn2;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
@@ -110,18 +111,6 @@ broadcast use {
         t: &AugOrderedTableStPer<K, V, F>,
     )
         ensures t@ =~= t.base_table@
-    {}
-
-    /// Clone bridge for closures: cloning a total reducer preserves totality.
-    /// Analogous to the eq/clone bridge pattern for values.
-    /// Justified because Clone on a Fn captures the same environment, preserving behavior.
-    #[verifier::external_body]
-    proof fn lemma_reducer_clone_total<V: StT + Ord, F: Fn(&V, &V) -> V + Clone>(
-        original: &F,
-        cloned: &F,
-    )
-        requires forall|v1: &V, v2: &V| #[trigger] original.requires((v1, v2)),
-        ensures forall|v1: &V, v2: &V| #[trigger] cloned.requires((v1, v2)),
     {}
 
     // 8. traits
@@ -517,11 +506,10 @@ broadcast use {
             let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
-                reducer: self.reducer.clone(),
+                reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
             };
             proof {
-                lemma_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
                 lemma_aug_view(&r);
             }
             r
@@ -536,11 +524,10 @@ broadcast use {
             let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
-                reducer: self.reducer.clone(),
+                reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
             };
             proof {
-                lemma_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
                 lemma_aug_view(&r);
             }
             r
@@ -575,11 +562,10 @@ broadcast use {
             let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
-                reducer: self.reducer.clone(),
+                reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
             };
             proof {
-                lemma_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
                 lemma_aug_view(&r);
             }
             r
@@ -593,11 +579,10 @@ broadcast use {
             let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
-                reducer: self.reducer.clone(),
+                reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
             };
             proof {
-                lemma_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
                 lemma_aug_view(&r);
             }
             r
@@ -611,11 +596,10 @@ broadcast use {
             let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
-                reducer: self.reducer.clone(),
+                reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
             };
             proof {
-                lemma_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
                 lemma_aug_view(&r);
             }
             r
@@ -629,11 +613,10 @@ broadcast use {
             let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
-                reducer: self.reducer.clone(),
+                reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
             };
             proof {
-                lemma_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
                 lemma_aug_view(&r);
             }
             r
@@ -647,11 +630,10 @@ broadcast use {
             let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
-                reducer: self.reducer.clone(),
+                reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
             };
             proof {
-                lemma_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
                 lemma_aug_view(&r);
             }
             r
@@ -665,11 +647,10 @@ broadcast use {
             let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
-                reducer: self.reducer.clone(),
+                reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
             };
             proof {
-                lemma_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
                 lemma_aug_view(&r);
             }
             r
@@ -683,11 +664,10 @@ broadcast use {
             let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
-                reducer: self.reducer.clone(),
+                reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
             };
             proof {
-                lemma_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
                 lemma_aug_view(&r);
             }
             r
@@ -772,21 +752,19 @@ broadcast use {
             let left = Self {
                 base_table: left_base,
                 cached_reduction: left_reduction,
-                reducer: self.reducer.clone(),
+                reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
             };
 
             let right = Self {
                 base_table: right_base,
                 cached_reduction: right_reduction,
-                reducer: self.reducer.clone(),
+                reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
             };
 
             proof {
                 lemma_aug_view(self);
-                lemma_reducer_clone_total::<V, F>(&self.reducer, &left.reducer);
-                lemma_reducer_clone_total::<V, F>(&self.reducer, &right.reducer);
                 lemma_aug_view(&left);
                 lemma_aug_view(&right);
             }
@@ -807,11 +785,10 @@ broadcast use {
             let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
-                reducer: left.reducer.clone(),
+                reducer: clone_fn2(&left.reducer),
                 identity: left.identity.clone(),
             };
             proof {
-                lemma_reducer_clone_total::<V, F>(&left.reducer, &r.reducer);
                 lemma_aug_view(&r);
             }
             r
@@ -830,12 +807,11 @@ broadcast use {
             let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
-                reducer: self.reducer.clone(),
+                reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
             };
             proof {
                 lemma_aug_view(self);
-                lemma_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
                 lemma_aug_view(&r);
             }
             r
@@ -884,21 +860,19 @@ broadcast use {
             let left = Self {
                 base_table: left_base,
                 cached_reduction: left_reduction,
-                reducer: self.reducer.clone(),
+                reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
             };
 
             let right = Self {
                 base_table: right_base,
                 cached_reduction: right_reduction,
-                reducer: self.reducer.clone(),
+                reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
             };
 
             proof {
                 lemma_aug_view(self);
-                lemma_reducer_clone_total::<V, F>(&self.reducer, &left.reducer);
-                lemma_reducer_clone_total::<V, F>(&self.reducer, &right.reducer);
                 lemma_aug_view(&left);
                 lemma_aug_view(&right);
             }
@@ -986,7 +960,7 @@ broadcast use {
             let r = Self {
                 base_table: self.base_table.clone(),
                 cached_reduction: self.cached_reduction.clone(),
-                reducer: self.reducer.clone(),
+                reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
             };
             r
