@@ -163,7 +163,7 @@
     "id": 21,
     "function": "expand_scan_parallel",
     "file": "Chap27/ScanContractMtEph.rs",
-    "lines": "253-273",
+    "lines": "255-275",
     "spec_strength": "unknown",
     "snippet": "        fn expand_scan_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(\n            a: &ArraySeqMtEphS<T>,\n            b: &ArraySeqMtEphS<T>,\n            c: &ArraySeqMtEphS<T>,\n            f: &Arc<F>,\n            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n            id: &T,\n            n: usize,\n            half: usize,\n        ) -> (prefixes: Vec<T>)\n            requires\n                n == a.spec_len(),\n                n >= 2,\n                half == n / 2,\n                half <= n,\n                b.spec_len() == half as nat,\n                c.spec_len() == half as nat,\n                spec_monoid(spec_f, *id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n                forall|k: int| #![trigger b.spec_index(k)] 0 <= k < half as int ==> {"
   },
@@ -243,7 +243,7 @@
     "id": 31,
     "function": "expand_scan",
     "file": "Chap27/ScanContractStEph.rs",
-    "lines": "246-266",
+    "lines": "248-268",
     "spec_strength": "unknown",
     "snippet": "        fn expand_scan<F: Fn(&T, &T) -> T>(\n            a: &ArraySeqStEphS<T>,\n            b: &ArraySeqStEphS<T>,\n            c: &ArraySeqStEphS<T>,\n            f: &F,\n            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,\n            id: &T,\n            n: usize,\n            half: usize,\n        ) -> (prefixes: Vec<T>)\n            requires\n                n == a.spec_len(),\n                n >= 2,\n                half == n / 2,\n                half <= n,\n                b.spec_len() == half as nat,\n                c.spec_len() == half as nat,\n                spec_monoid(spec_f, *id),\n                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),\n                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n                forall|k: int| #![trigger b.spec_index(k)] 0 <= k < half as int ==> {"
   }

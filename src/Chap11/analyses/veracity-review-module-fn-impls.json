@@ -3,16 +3,16 @@
     "id": 1,
     "function": "fib_2threads",
     "file": "Chap11/FibonacciMtEph2Threads.rs",
-    "lines": "101-103",
-    "spec_strength": "unknown",
+    "lines": "100-102",
+    "spec_strength": "hole",
     "snippet": "pub fn fib_2threads(n: u64) -> (fibonacci: u64)\n    requires n >= 2 && n <= 46\n    ensures fibonacci == spec_fib(n as nat)"
   },
   {
     "id": 2,
     "function": "fib_recomputes",
     "file": "Chap11/FibonacciMtEphRecomputes.rs",
-    "lines": "93-96",
-    "spec_strength": "unknown",
+    "lines": "92-95",
+    "spec_strength": "hole",
     "snippet": "pub fn fib_recomputes(n: u64) -> (fibonacci: u64)\n    requires n <= 46\n    ensures fibonacci == spec_fib(n as nat)\n    decreases n"
   },
   {
@@ -27,8 +27,8 @@
     "id": 4,
     "function": "fib",
     "file": "Chap11/FibonacciMtPerTSM.rs",
-    "lines": "87-90",
-    "spec_strength": "unknown",
+    "lines": "86-89",
+    "spec_strength": "hole",
     "snippet": "pub fn fib(n: u64) -> (fibonacci: u64)\n    requires n <= 46\n    ensures fibonacci == spec_fib(n as nat)\n    decreases n"
   },
   {

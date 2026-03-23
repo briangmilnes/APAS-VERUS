@@ -30,7 +30,7 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `insertion_sort` |  |  |  | Y | Y |  |  | unknown | 38&#8209;43 |
+| 1 | `insertion_sort` |  |  |  | Y | Y |  |  | unknown | 39&#8209;43 |
 
 
 ### Legend

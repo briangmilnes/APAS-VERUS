@@ -3,7 +3,7 @@
     "id": 1,
     "function": "partial_cmp",
     "file": "Chap57/DijkstraStEphF64.rs",
-    "lines": "33-35",
+    "lines": "42-44",
     "spec_strength": "",
     "snippet": "        fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {\n            Some(self.cmp(other))\n        }"
   },
@@ -11,95 +11,127 @@
     "id": 2,
     "function": "cmp",
     "file": "Chap57/DijkstraStEphF64.rs",
-    "lines": "39-42",
+    "lines": "48-51",
     "spec_strength": "",
     "snippet": "        fn cmp(&self, other: &Self) -> std::cmp::Ordering {\n            self.dist.val.partial_cmp(&other.dist.val)\n                .unwrap_or(std::cmp::Ordering::Equal)\n        }"
   },
   {
     "id": 3,
     "function": "dijkstra",
-    "file": "Chap57/DijkstraStEphI64.rs",
-    "lines": "63",
+    "file": "Chap57/DijkstraStEphU64.rs",
+    "lines": "88-97",
     "spec_strength": "unknown",
-    "snippet": "        fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> SSSPResultStEphI64;"
+    "snippet": "        fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize)\n            -> (sssp: SSSPResultStEphI64)\n            requires\n                source < graph@.V.len(),\n                spec_labgraphview_wf(graph@),\n                valid_key_type_WeightedEdge::<usize, i128>(),\n                graph@.A.len() * 2 + 2 <= usize::MAX as int,\n            ensures\n                sssp.spec_distances().len() == graph@.V.len(),\n                sssp.spec_source() == source;"
   },
   {
     "id": 4,
     "function": "pq_entry_new",
-    "file": "Chap57/DijkstraStEphI64.rs",
-    "lines": "68-70",
+    "file": "Chap57/DijkstraStEphU64.rs",
+    "lines": "105-106",
     "spec_strength": "unknown",
-    "snippet": "    fn pq_entry_new(dist: i64, vertex: usize) -> (r: PQEntry)\n        requires true,\n        ensures r.dist == dist, r.vertex == vertex,"
+    "snippet": "    fn pq_entry_new(dist: i64, vertex: usize) -> (r: PQEntry)\n        ensures r.dist == dist, r.vertex == vertex,"
   },
   {
     "id": 5,
-    "function": "cmp",
-    "file": "Chap57/DijkstraStEphI64.rs",
-    "lines": "76",
-    "spec_strength": "",
-    "snippet": "        fn cmp(&self, other: &Self) -> (r: Ordering) {"
+    "function": "cmp`",
+    "file": "Chap57/DijkstraStEphU64.rs",
+    "lines": "113",
+    "spec_strength": "hole",
+    "snippet": "        fn cmp(&self, other: &Self) -> Ordering {"
   },
   {
     "id": 6,
     "function": "partial_cmp",
-    "file": "Chap57/DijkstraStEphI64.rs",
-    "lines": "88",
-    "spec_strength": "",
-    "snippet": "        fn partial_cmp(&self, other: &Self) -> (r: Option<Ordering>) {"
+    "file": "Chap57/DijkstraStEphU64.rs",
+    "lines": "130",
+    "spec_strength": "hole",
+    "snippet": "        fn partial_cmp(&self, other: &Self) -> Option<Ordering> {"
   },
   {
     "id": 7,
+    "function": "reflexive",
+    "file": "Chap57/DijkstraStEphU64.rs",
+    "lines": "140",
+    "spec_strength": "",
+    "snippet": "        proof fn reflexive(x: Self) {}"
+  },
+  {
+    "id": 8,
+    "function": "transitive",
+    "file": "Chap57/DijkstraStEphU64.rs",
+    "lines": "141",
+    "spec_strength": "",
+    "snippet": "        proof fn transitive(x: Self, y: Self, z: Self) {}"
+  },
+  {
+    "id": 9,
+    "function": "antisymmetric",
+    "file": "Chap57/DijkstraStEphU64.rs",
+    "lines": "142",
+    "spec_strength": "",
+    "snippet": "        proof fn antisymmetric(x: Self, y: Self) {}"
+  },
+  {
+    "id": 10,
+    "function": "total",
+    "file": "Chap57/DijkstraStEphU64.rs",
+    "lines": "143",
+    "spec_strength": "",
+    "snippet": "        proof fn total(x: Self, y: Self) {}"
+  },
+  {
+    "id": 11,
     "function": "new",
     "file": "Chap57/StackStEph.rs",
-    "lines": "65-66",
+    "lines": "67-68",
     "spec_strength": "unknown",
     "snippet": "        fn new() -> (empty: Self)\n            ensures empty.spec_stacksteph_wf();"
   },
   {
-    "id": 8,
+    "id": 12,
     "function": "push",
     "file": "Chap57/StackStEph.rs",
-    "lines": "68-72",
+    "lines": "72-76",
     "spec_strength": "unknown",
     "snippet": "        fn push(&mut self, item: T)\n            requires\n                old(self).spec_stacksteph_wf(),\n                old(self)@.len() < usize::MAX as int,\n            ensures self.spec_stacksteph_wf();"
   },
   {
-    "id": 9,
+    "id": 13,
     "function": "pop",
     "file": "Chap57/StackStEph.rs",
-    "lines": "74-76",
+    "lines": "80-82",
     "spec_strength": "unknown",
     "snippet": "        fn pop(&mut self) -> (popped: Option<T>)\n            requires old(self).spec_stacksteph_wf()\n            ensures self.spec_stacksteph_wf();"
   },
   {
-    "id": 10,
+    "id": 14,
     "function": "peek",
     "file": "Chap57/StackStEph.rs",
-    "lines": "78-79",
+    "lines": "86-87",
     "spec_strength": "unknown",
     "snippet": "        fn peek(&self) -> (top: Option<&T>)\n            requires self.spec_stacksteph_wf();"
   },
   {
-    "id": 11,
+    "id": 15,
     "function": "is_empty",
     "file": "Chap57/StackStEph.rs",
-    "lines": "81-82",
+    "lines": "91-92",
     "spec_strength": "unknown",
     "snippet": "        fn is_empty(&self) -> (is_empty: bool)\n            requires self.spec_stacksteph_wf();"
   },
   {
-    "id": 12,
+    "id": 16,
     "function": "size",
     "file": "Chap57/StackStEph.rs",
-    "lines": "84-85",
+    "lines": "96-97",
     "spec_strength": "unknown",
     "snippet": "        fn size(&self) -> (count: N)\n            requires self.spec_stacksteph_wf();"
   },
   {
-    "id": 13,
+    "id": 17,
     "function": "default",
     "file": "Chap57/StackStEph.rs",
-    "lines": "140-141",
+    "lines": "152-153",
     "spec_strength": "unknown",
     "snippet": "        fn default() -> (default_val: Self)\n            ensures default_val@ == Seq::<T>::empty(),"
   }

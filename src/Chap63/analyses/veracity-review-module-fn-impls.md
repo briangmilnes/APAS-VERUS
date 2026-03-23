@@ -22,8 +22,8 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap63 | ConnectivityMtEph | 4 | 0 | 0 | 7 | 4 | 3 | 4 | 0 | 3 |
-| 2 | Chap63 | ConnectivityStEph | 4 | 0 | 0 | 5 | 4 | 1 | 4 | 0 | 1 |
+| 1 | Chap63 | ConnectivityMtEph | 4 | 0 | 0 | 5 | 5 | 0 | 5 | 0 | 0 |
+| 2 | Chap63 | ConnectivityStEph | 4 | 0 | 0 | 5 | 5 | 0 | 5 | 0 | 0 |
 
 ## Function-by-Function Detail
 
@@ -31,23 +31,21 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `count_components_mt` | Y |  |  | Y | Y |  |  | unknown | 49&#8209;50 |
-| 2 | `connected_components_mt` | Y |  |  | Y | Y |  |  | unknown | 54&#8209;58 |
-| 3 | `count_components_hof` | Y |  |  | Y | Y |  |  | unknown | 62&#8209;63 |
-| 4 | `connected_components_hof` | Y |  |  | Y | Y |  |  | unknown | 67&#8209;71 |
-| 5 | `build_quotient_edges_parallel` |  |  |  | Y |  | Y | Y |  | 145&#8209;161 |
-| 6 | `route_edges_parallel` |  |  |  | Y |  | Y | Y |  | 163&#8209;213 |
-| 7 | `compose_maps_parallel` |  |  |  | Y |  | Y | Y |  | 215&#8209;230 |
+| 1 | `count_components_mt` | Y |  |  | Y | Y |  |  | unknown | 42&#8209;43 |
+| 2 | `connected_components_mt` | Y |  |  | Y | Y |  |  | unknown | 47&#8209;51 |
+| 3 | `count_components_hof` | Y |  |  | Y | Y |  |  | unknown | 55&#8209;56 |
+| 4 | `connected_components_hof` | Y |  |  | Y | Y |  |  | unknown | 60&#8209;64 |
+| 5 | `compose_maps_parallel` |  |  |  | Y | Y |  |  | unknown | 123&#8209;129 |
 
 ### Chap63/ConnectivityStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 8 | `count_components` | Y |  |  | Y | Y |  |  | unknown | 44&#8209;45 |
-| 9 | `connected_components` | Y |  |  | Y | Y |  |  | unknown | 49&#8209;50 |
-| 10 | `count_components_hof` | Y |  |  | Y | Y |  |  | unknown | 54&#8209;55 |
-| 11 | `connected_components_hof` | Y |  |  | Y | Y |  |  | unknown | 59&#8209;60 |
-| 12 | `build_quotient_edges` |  |  |  | Y |  | Y | Y |  | 136&#8209;164 |
+| 6 | `count_components` | Y |  |  | Y | Y |  |  | unknown | 43&#8209;44 |
+| 7 | `connected_components` | Y |  |  | Y | Y |  |  | unknown | 48&#8209;49 |
+| 8 | `count_components_hof` | Y |  |  | Y | Y |  |  | unknown | 53&#8209;54 |
+| 9 | `connected_components_hof` | Y |  |  | Y | Y |  |  | unknown | 58&#8209;59 |
+| 10 | `build_quotient_edges` |  |  |  | Y | Y |  |  | unknown | 115&#8209;123 |
 
 
 ### Legend

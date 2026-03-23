@@ -25,8 +25,8 @@
 | 1 | Chap53 | GraphSearchMtPer | 4 | 4 | 0 | 4 | 5 | 0 | 5 | 0 | 0 |
 | 2 | Chap53 | GraphSearchStEph | 4 | 4 | 0 | 4 | 5 | 0 | 5 | 0 | 0 |
 | 3 | Chap53 | GraphSearchStPer | 4 | 4 | 0 | 4 | 5 | 0 | 5 | 0 | 0 |
-| 4 | Chap53 | PQMinStEph | 2 | 2 | 0 | 4 | 4 | 0 | 4 | 0 | 0 |
-| 5 | Chap53 | PQMinStPer | 2 | 2 | 0 | 4 | 4 | 0 | 4 | 0 | 0 |
+| 4 | Chap53 | PQMinStEph | 2 | 2 | 0 | 4 | 4 | 0 | 2 | 2 | 0 |
+| 5 | Chap53 | PQMinStPer | 2 | 2 | 0 | 4 | 4 | 0 | 3 | 1 | 0 |
 
 ## Function-by-Function Detail
 
@@ -34,49 +34,49 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `select` x2 | Y | Y |  |  | Y |  |  | unknown | 36&#8209;38 |
-| 2 | `graph_search` | Y | Y |  | Y | Y |  |  | unknown | 44&#8209;49 |
-| 3 | `graph_search_multi` | Y | Y |  | Y | Y |  |  | unknown | 53&#8209;60 |
-| 4 | `reachable` | Y | Y |  | Y | Y |  |  | unknown | 64&#8209;68 |
-| 5 | `graph_search_explore` |  |  |  | Y | Y |  |  | unknown | 116&#8209;129 |
+| 1 | `select` x2 | Y | Y |  |  | Y |  |  | unknown | 35&#8209;37 |
+| 2 | `graph_search` | Y | Y |  | Y | Y |  |  | unknown | 43&#8209;48 |
+| 3 | `graph_search_multi` | Y | Y |  | Y | Y |  |  | unknown | 52&#8209;59 |
+| 4 | `reachable` | Y | Y |  | Y | Y |  |  | unknown | 63&#8209;67 |
+| 5 | `graph_search_explore` |  |  |  | Y | Y |  |  | unknown | 115&#8209;128 |
 
 ### Chap53/GraphSearchStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
 | 6 | `select` x2 | Y | Y |  |  | Y |  |  | unknown | 28&#8209;32 |
-| 7 | `graph_search` | Y | Y |  | Y | Y |  |  | unknown | 38&#8209;45 |
-| 8 | `graph_search_multi` | Y | Y |  | Y | Y |  |  | unknown | 49&#8209;57 |
-| 9 | `reachable` | Y | Y |  | Y | Y |  |  | unknown | 61&#8209;67 |
-| 10 | `graph_search_explore` |  |  |  | Y | Y |  |  | unknown | 117&#8209;130 |
+| 7 | `graph_search` | Y | Y |  | Y | Y |  |  | unknown | 38&#8209;49 |
+| 8 | `graph_search_multi` | Y | Y |  | Y | Y |  |  | unknown | 53&#8209;65 |
+| 9 | `reachable` | Y | Y |  | Y | Y |  |  | unknown | 69&#8209;79 |
+| 10 | `graph_search_explore` |  |  |  | Y | Y |  |  | unknown | 143&#8209;162 |
 
 ### Chap53/GraphSearchStPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
 | 11 | `select` x2 | Y | Y |  |  | Y |  |  | unknown | 37&#8209;41 |
-| 12 | `graph_search` | Y | Y |  | Y | Y |  |  | unknown | 47&#8209;54 |
-| 13 | `graph_search_multi` | Y | Y |  | Y | Y |  |  | unknown | 58&#8209;66 |
-| 14 | `reachable` | Y | Y |  | Y | Y |  |  | unknown | 70&#8209;76 |
-| 15 | `graph_search_explore` |  |  |  | Y | Y |  |  | unknown | 125&#8209;138 |
+| 12 | `graph_search` | Y | Y |  | Y | Y |  |  | unknown | 47&#8209;58 |
+| 13 | `graph_search_multi` | Y | Y |  | Y | Y |  |  | unknown | 62&#8209;74 |
+| 14 | `reachable` | Y | Y |  | Y | Y |  |  | unknown | 78&#8209;88 |
+| 15 | `graph_search_explore` |  |  |  | Y | Y |  |  | unknown | 151&#8209;170 |
 
 ### Chap53/PQMinStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 16 | `pq_min` | Y | Y |  | Y | Y |  |  | unknown | 39&#8209;49 |
-| 17 | `pq_min_multi` | Y | Y |  | Y | Y |  |  | unknown | 53&#8209;64 |
-| 18 | `pq_find_min_priority` |  |  |  | Y | Y |  |  | unknown | 102&#8209;110 |
-| 19 | `pq_explore` |  |  |  | Y | Y |  |  | unknown | 129&#8209;144 |
+| 16 | `pq_min` | Y | Y |  | Y | Y |  |  | unknown | 38&#8209;52 |
+| 17 | `pq_min_multi` | Y | Y |  | Y | Y |  |  | hole | 56&#8209;71 |
+| 18 | `pq_find_min_priority` |  |  |  | Y | Y |  |  | unknown | 121&#8209;129 |
+| 19 | `pq_explore` |  |  |  | Y | Y |  |  | hole | 148&#8209;164 |
 
 ### Chap53/PQMinStPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 20 | `pq_min` | Y | Y |  | Y | Y |  |  | unknown | 43&#8209;53 |
-| 21 | `pq_min_multi` | Y | Y |  | Y | Y |  |  | unknown | 57&#8209;68 |
-| 22 | `pq_find_min_priority` |  |  |  | Y | Y |  |  | unknown | 104&#8209;112 |
-| 23 | `pq_explore` |  |  |  | Y | Y |  |  | unknown | 125&#8209;140 |
+| 20 | `pq_min` | Y | Y |  | Y | Y |  |  | unknown | 45&#8209;59 |
+| 21 | `pq_min_multi` | Y | Y |  | Y | Y |  |  | unknown | 63&#8209;78 |
+| 22 | `pq_find_min_priority` |  |  |  | Y | Y |  |  | unknown | 126&#8209;134 |
+| 23 | `pq_explore` |  |  |  | Y | Y |  |  | hole | 147&#8209;163 |
 
 
 ### Legend

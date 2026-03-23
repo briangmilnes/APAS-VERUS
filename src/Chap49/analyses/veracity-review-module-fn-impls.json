@@ -203,7 +203,7 @@
     "id": 26,
     "function": "new",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "88-92",
+    "lines": "89-93",
     "spec_strength": "unknown",
     "snippet": "        fn new() -> (result: Self)\n        where\n            T: Default\n            requires obeys_feq_clone::<T>(),\n            ensures result.spec_source_len() == 0, result.spec_target_len() == 0;"
   },
@@ -211,7 +211,7 @@
     "id": 27,
     "function": "from_sequences",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "96-99",
+    "lines": "98-101",
     "spec_strength": "unknown",
     "snippet": "        fn from_sequences(source: ArraySeqStEphS<T>, target: ArraySeqStEphS<T>) -> (result: Self)\n            ensures\n                result.spec_source_len() == source.spec_len(),\n                result.spec_target_len() == target.spec_len();"
   },
@@ -219,7 +219,7 @@
     "id": 28,
     "function": "min_edit_distance",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "103-107",
+    "lines": "106-110",
     "spec_strength": "unknown",
     "snippet": "        fn min_edit_distance(&mut self) -> (dist: usize)\n            requires old(self).spec_source_len() + old(self).spec_target_len() < usize::MAX,\n            ensures\n                self.spec_source_len() == old(self).spec_source_len(),\n                self.spec_target_len() == old(self).spec_target_len();"
   },
@@ -227,7 +227,7 @@
     "id": 29,
     "function": "source",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "111-112",
+    "lines": "115-116",
     "spec_strength": "unknown",
     "snippet": "        fn source(&self) -> (s: &ArraySeqStEphS<T>)\n            ensures s.spec_len() == self.spec_source_len();"
   },
@@ -235,7 +235,7 @@
     "id": 30,
     "function": "target",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "116-117",
+    "lines": "121-122",
     "spec_strength": "unknown",
     "snippet": "        fn target(&self) -> (t: &ArraySeqStEphS<T>)\n            ensures t.spec_len() == self.spec_target_len();"
   },
@@ -243,7 +243,7 @@
     "id": 31,
     "function": "set_source",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "121-125",
+    "lines": "127-131",
     "spec_strength": "unknown",
     "snippet": "        fn set_source(&mut self, index: usize, value: T)\n            requires index < old(self).spec_source_len(),\n            ensures\n                self.spec_source_len() == old(self).spec_source_len(),\n                self.spec_target_len() == old(self).spec_target_len();"
   },
@@ -251,7 +251,7 @@
     "id": 32,
     "function": "set_target",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "129-133",
+    "lines": "136-140",
     "spec_strength": "unknown",
     "snippet": "        fn set_target(&mut self, index: usize, value: T)\n            requires index < old(self).spec_target_len(),\n            ensures\n                self.spec_source_len() == old(self).spec_source_len(),\n                self.spec_target_len() == old(self).spec_target_len();"
   },
@@ -259,7 +259,7 @@
     "id": 33,
     "function": "clear_memo",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "137-140",
+    "lines": "145-148",
     "spec_strength": "unknown",
     "snippet": "        fn clear_memo(&mut self)\n            ensures\n                self.spec_source_len() == old(self).spec_source_len(),\n                self.spec_target_len() == old(self).spec_target_len();"
   },
@@ -267,7 +267,7 @@
     "id": 34,
     "function": "memo_size",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "144",
+    "lines": "153",
     "spec_strength": "",
     "snippet": "        fn memo_size(&self) -> (count: usize);"
   },
@@ -275,7 +275,7 @@
     "id": 35,
     "function": "min_edit_distance_rec",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "151-166",
+    "lines": "161-176",
     "spec_strength": "unknown",
     "snippet": "    fn min_edit_distance_rec<T: StT>(\n        table: &mut MinEditDistStEphS<T>,\n        i: usize,\n        j: usize,\n    ) -> (dist: usize)\n        requires\n            i <= old(table).source.spec_len(),\n            j <= old(table).target.spec_len(),\n            old(table).source.spec_len() + old(table).target.spec_len() < usize::MAX,\n            spec_memo_bounded(old(table).memo@),\n        ensures\n            table.source.spec_len() == old(table).source.spec_len(),\n            table.target.spec_len() == old(table).target.spec_len(),\n            dist <= i + j,\n            spec_memo_bounded(table.memo@),\n        decreases i + j,"
   },
@@ -283,17 +283,17 @@
     "id": 36,
     "function": "source_mut",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "270-272",
+    "lines": "280-283",
     "spec_strength": "",
-    "snippet": "        /// Get mutable source sequence (ephemeral allows mutation).\n        /// - APAS: not specified\n        fn source_mut(&mut self) -> &mut ArraySeqStEphS<T>;"
+    "snippet": "        /// Get mutable source sequence (ephemeral allows mutation).\n        /// - APAS: N/A -- Verus-specific scaffolding.\n        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return mutable reference.\n        fn source_mut(&mut self) -> &mut ArraySeqStEphS<T>;"
   },
   {
     "id": 37,
     "function": "target_mut",
     "file": "Chap49/MinEditDistStEph.rs",
-    "lines": "274-276",
+    "lines": "285-288",
     "spec_strength": "",
-    "snippet": "        /// Get mutable target sequence (ephemeral allows mutation).\n        /// - APAS: not specified\n        fn target_mut(&mut self) -> &mut ArraySeqStEphS<T>;"
+    "snippet": "        /// Get mutable target sequence (ephemeral allows mutation).\n        /// - APAS: N/A -- Verus-specific scaffolding.\n        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return mutable reference.\n        fn target_mut(&mut self) -> &mut ArraySeqStEphS<T>;"
   },
   {
     "id": 38,
@@ -531,7 +531,7 @@
     "id": 67,
     "function": "new",
     "file": "Chap49/SubsetSumStEph.rs",
-    "lines": "78-82",
+    "lines": "79-83",
     "spec_strength": "unknown",
     "snippet": "        fn new() -> (result: Self)\n        where\n            T: Default\n            requires obeys_feq_clone::<T>(),\n            ensures result.spec_multiset_len() == 0;"
   },
@@ -539,7 +539,7 @@
     "id": 68,
     "function": "from_multiset",
     "file": "Chap49/SubsetSumStEph.rs",
-    "lines": "86-87",
+    "lines": "88-89",
     "spec_strength": "unknown",
     "snippet": "        fn from_multiset(multiset: ArraySeqStEphS<T>) -> (result: Self)\n            ensures result.spec_multiset_len() == multiset.spec_len();"
   },
@@ -547,7 +547,7 @@
     "id": 69,
     "function": "subset_sum",
     "file": "Chap49/SubsetSumStEph.rs",
-    "lines": "91-94",
+    "lines": "94-97",
     "spec_strength": "unknown",
     "snippet": "        fn subset_sum(&mut self, target: i32) -> (found: bool)\n        where\n            T: Into<i32> + Copy\n            ensures self.spec_multiset_len() == old(self).spec_multiset_len();"
   },
@@ -555,7 +555,7 @@
     "id": 70,
     "function": "multiset",
     "file": "Chap49/SubsetSumStEph.rs",
-    "lines": "98-99",
+    "lines": "102-103",
     "spec_strength": "unknown",
     "snippet": "        fn multiset(&self) -> (ms: &ArraySeqStEphS<T>)\n            ensures ms.spec_len() == self.spec_multiset_len();"
   },
@@ -563,7 +563,7 @@
     "id": 71,
     "function": "set",
     "file": "Chap49/SubsetSumStEph.rs",
-    "lines": "103-105",
+    "lines": "108-110",
     "spec_strength": "unknown",
     "snippet": "        fn set(&mut self, index: usize, value: T)\n            requires index < old(self).spec_multiset_len(),\n            ensures self.spec_multiset_len() == old(self).spec_multiset_len();"
   },
@@ -571,7 +571,7 @@
     "id": 72,
     "function": "clear_memo",
     "file": "Chap49/SubsetSumStEph.rs",
-    "lines": "109-110",
+    "lines": "115-116",
     "spec_strength": "unknown",
     "snippet": "        fn clear_memo(&mut self)\n            ensures self.spec_multiset_len() == old(self).spec_multiset_len();"
   },
@@ -579,7 +579,7 @@
     "id": 73,
     "function": "memo_size",
     "file": "Chap49/SubsetSumStEph.rs",
-    "lines": "114",
+    "lines": "121",
     "spec_strength": "",
     "snippet": "        fn memo_size(&self) -> (count: usize);"
   },
@@ -587,7 +587,7 @@
     "id": 74,
     "function": "subset_sum_rec",
     "file": "Chap49/SubsetSumStEph.rs",
-    "lines": "121-130",
+    "lines": "129-138",
     "spec_strength": "unknown",
     "snippet": "    fn subset_sum_rec<T: StT + Into<i32> + Copy>(\n        table: &mut SubsetSumStEphS<T>,\n        i: usize,\n        j: i32,\n    ) -> (found: bool)\n        requires\n            i <= old(table).multiset.spec_len(),\n        ensures\n            table.multiset.spec_len() == old(table).multiset.spec_len(),\n        decreases i,"
   },
@@ -595,9 +595,9 @@
     "id": 75,
     "function": "multiset_mut",
     "file": "Chap49/SubsetSumStEph.rs",
-    "lines": "220-222",
+    "lines": "228-231",
     "spec_strength": "",
-    "snippet": "        /// Get mutable multiset (ephemeral allows mutation).\n        /// - APAS: not specified\n        fn multiset_mut(&mut self) -> &mut ArraySeqStEphS<T>;"
+    "snippet": "        /// Get mutable multiset (ephemeral allows mutation).\n        /// - APAS: N/A -- Verus-specific scaffolding.\n        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return mutable reference.\n        fn multiset_mut(&mut self) -> &mut ArraySeqStEphS<T>;"
   },
   {
     "id": 76,

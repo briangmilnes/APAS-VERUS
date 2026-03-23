@@ -63,7 +63,7 @@
 | 18 | `lemma_expand_odd` |  |  |  | Y | Y |  |  | unknown | 189&#8209;195 |
 | 19 | `lemma_expand_odd_tail` |  |  |  | Y | Y |  |  | unknown | 205&#8209;216 |
 | 20 | `scan_contract_parallel` | Y | Y |  |  | Y |  |  | unknown | 234&#8209;250 |
-| 21 | `expand_scan_parallel` | Y | Y |  |  | Y |  |  | unknown | 253&#8209;273 |
+| 21 | `expand_scan_parallel` | Y | Y |  |  | Y |  |  | unknown | 255&#8209;275 |
 
 ### Chap27/ScanContractStEph.rs
 
@@ -78,7 +78,7 @@
 | 28 | `lemma_expand_odd` |  |  |  | Y | Y |  |  | unknown | 183&#8209;189 |
 | 29 | `lemma_expand_odd_tail` |  |  |  | Y | Y |  |  | unknown | 199&#8209;210 |
 | 30 | `scan_contract` | Y | Y |  |  | Y |  |  | unknown | 228&#8209;243 |
-| 31 | `expand_scan` | Y | Y |  |  | Y |  |  | unknown | 246&#8209;266 |
+| 31 | `expand_scan` | Y | Y |  |  | Y |  |  | unknown | 248&#8209;268 |
 
 
 ### Legend

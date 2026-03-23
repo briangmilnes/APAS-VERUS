@@ -43,15 +43,15 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 8 | `set_parallelism` |  |  |  | Y | Y |  |  | hole | 88 |
-| 9 | `join` |  |  |  | Y | Y |  |  | hole | 98&#8209;109 |
-| 10 | `spawn_join` |  |  |  | Y | Y |  |  | hole | 125&#8209;136 |
-| 11 | `spawn` |  |  |  | Y | Y |  |  | hole | 156&#8209;163 |
-| 12 | `wait` |  |  |  | Y | Y |  |  | hole | 178&#8209;180 |
-| 13 | `init_pool` |  |  |  | Y |  | Y | Y |  | 33&#8209;45 |
-| 14 | `try_acquire` |  |  |  | Y |  | Y | Y |  | 49&#8209;57 |
-| 15 | `acquire` |  |  |  | Y |  | Y | Y |  | 59&#8209;65 |
-| 16 | `release` |  |  |  | Y |  | Y | Y |  | 67&#8209;71 |
+| 8 | `set_parallelism` |  |  |  | Y | Y |  |  | hole | 95 |
+| 9 | `join` |  |  |  | Y | Y |  |  | hole | 105&#8209;116 |
+| 10 | `spawn_join` |  |  |  | Y | Y |  |  | hole | 132&#8209;143 |
+| 11 | `spawn` |  |  |  | Y | Y |  |  | hole | 163&#8209;170 |
+| 12 | `wait` |  |  |  | Y | Y |  |  | hole | 185&#8209;187 |
+| 13 | `init_pool` |  |  |  | Y |  | Y | Y |  | 32&#8209;46 |
+| 14 | `try_acquire` |  |  |  | Y |  | Y | Y |  | 50&#8209;60 |
+| 15 | `acquire` |  |  |  | Y |  | Y | Y |  | 62&#8209;70 |
+| 16 | `release` |  |  |  | Y |  | Y | Y |  | 72&#8209;78 |
 
 
 ### Legend

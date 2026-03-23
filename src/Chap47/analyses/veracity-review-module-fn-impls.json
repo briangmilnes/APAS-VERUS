@@ -1,617 +1,785 @@
 [
   {
     "id": 1,
-    "function": "_chained_hash_table_verified",
+    "function": "lemma_seq_pairs_to_map_remove_preserves_other_keys",
     "file": "Chap47/ChainedHashTable.rs",
-    "lines": "42",
-    "spec_strength": "",
-    "snippet": "        proof fn _chained_hash_table_verified() {}"
+    "lines": "23-37",
+    "spec_strength": "unknown",
+    "snippet": "        pub proof fn lemma_seq_pairs_to_map_remove_preserves_other_keys<Key, Value>(\n            pairs: Seq<(Key, Value)>,\n            i: int,\n            k: Key,\n        )\n            requires\n                0 <= i < pairs.len(),\n                pairs[i].0 != k,\n            ensures\n                spec_seq_pairs_to_map(pairs.remove(i)).dom().contains(k)\n                    == spec_seq_pairs_to_map(pairs).dom().contains(k),\n                spec_seq_pairs_to_map(pairs.remove(i)).dom().contains(k) ==>\n                    spec_seq_pairs_to_map(pairs.remove(i))[k]\n                        == spec_seq_pairs_to_map(pairs)[k],\n            decreases pairs.len(),"
   },
   {
     "id": 2,
-    "function": "hash_index",
+    "function": "lemma_seq_pairs_remove_key_then_push",
     "file": "Chap47/ChainedHashTable.rs",
-    "lines": "55-59",
+    "lines": "52-63",
     "spec_strength": "unknown",
-    "snippet": "            fn hash_index(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (index: usize)\n                requires\n                    table.current_size > 0,\n                ensures\n                    index < table.current_size;"
+    "snippet": "        pub proof fn lemma_seq_pairs_remove_key_then_push<Key, Value>(\n            pairs: Seq<(Key, Value)>,\n            i: int,\n            key: Key,\n            value: Value,\n        )\n            requires\n                0 <= i < pairs.len(),\n                pairs[i].0 == key,\n            ensures\n                spec_seq_pairs_to_map(pairs.remove(i).push((key, value)))\n                    =~= spec_seq_pairs_to_map(pairs).insert(key, value),"
   },
   {
     "id": 3,
-    "function": "insert_chained",
+    "function": "lemma_seq_pairs_no_key_not_in_map",
     "file": "Chap47/ChainedHashTable.rs",
-    "lines": "64-70",
+    "lines": "83-91",
     "spec_strength": "unknown",
-    "snippet": "            fn insert_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)\n                requires\n                    old(table).current_size > 0,\n                    old(table).table@.len() == old(table).current_size as int,\n                    old(table).num_elements < usize::MAX,\n                ensures\n                    table.table@.len() == table.current_size as int,"
+    "snippet": "        pub proof fn lemma_seq_pairs_no_key_not_in_map<Key, Value>(\n            pairs: Seq<(Key, Value)>,\n            key: Key,\n        )\n            requires\n                forall |j: int| 0 <= j < pairs.len() ==> (#[trigger] pairs[j]).0 != key,\n            ensures\n                !spec_seq_pairs_to_map(pairs).dom().contains(key),\n            decreases pairs.len(),"
   },
   {
     "id": 4,
-    "function": "lookup_chained",
+    "function": "lemma_seq_pairs_has_key_in_map",
     "file": "Chap47/ChainedHashTable.rs",
-    "lines": "85-89",
+    "lines": "103-113",
     "spec_strength": "unknown",
-    "snippet": "            fn lookup_chained(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (found: Option<Value>)\n                requires\n                    table.current_size > 0,\n                    table.table@.len() == table.current_size as int,\n                ensures true,"
+    "snippet": "        pub proof fn lemma_seq_pairs_has_key_in_map<Key, Value>(\n            pairs: Seq<(Key, Value)>,\n            key: Key,\n            idx: int,\n        )\n            requires\n                0 <= idx < pairs.len(),\n                pairs[idx].0 == key,\n            ensures\n                spec_seq_pairs_to_map(pairs).dom().contains(key),\n            decreases pairs.len(),"
   },
   {
     "id": 5,
-    "function": "delete_chained",
+    "function": "lemma_seq_pairs_last_key_gives_value",
     "file": "Chap47/ChainedHashTable.rs",
-    "lines": "102-107",
+    "lines": "125-137",
     "spec_strength": "unknown",
-    "snippet": "            fn delete_chained(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)\n                requires\n                    old(table).current_size > 0,\n                    old(table).table@.len() == old(table).current_size as int,\n                ensures\n                    table.table@.len() == table.current_size as int,"
+    "snippet": "        pub proof fn lemma_seq_pairs_last_key_gives_value<Key, Value>(\n            pairs: Seq<(Key, Value)>,\n            key: Key,\n            i: int,\n        )\n            requires\n                0 <= i < pairs.len(),\n                pairs[i].0 == key,\n                forall |j: int| i < j < pairs.len() ==> (#[trigger] pairs[j]).0 != key,\n            ensures\n                spec_seq_pairs_to_map(pairs).dom().contains(key),\n                spec_seq_pairs_to_map(pairs)[key] == pairs[i].1,\n            decreases pairs.len(),"
   },
   {
     "id": 6,
-    "function": "eq",
+    "function": "hash_index",
     "file": "Chap47/ChainedHashTable.rs",
-    "lines": "143-144",
+    "lines": "164-169",
     "spec_strength": "unknown",
-    "snippet": "            fn eq(&self, other: &Self) -> (equal: bool)\n                ensures equal == (self.chain == other.chain)"
+    "snippet": "            fn hash_index(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (index: usize)\n                requires\n                    spec_hashtable_wf(table),\n                ensures\n                    index < table.current_size,\n                    index as nat == (table.spec_hash@)(*key) % (table.current_size as nat);"
   },
   {
     "id": 7,
-    "function": "second_hash",
+    "function": "lemma_all_empties_count",
     "file": "Chap47/DoubleHashFlatHashTableStEph.rs",
-    "lines": "40-41",
+    "lines": "92-95",
     "spec_strength": "unknown",
-    "snippet": "        pub fn second_hash<Key: StT + Hash>(key: &Key, table_size: usize) -> (step: usize)\n            requires table_size > 0,"
+    "snippet": "    pub proof fn lemma_all_empties_count<Key, Value>(table: Seq<FlatEntry<Key, Value>>)\n        requires forall |j: int| 0 <= j < table.len() ==> (#[trigger] table[j]) is Empty,\n        ensures spec_count_empties(table) == table.len(),\n        decreases table.len(),"
   },
   {
     "id": 8,
+    "function": "lemma_empties_positive_implies_exists_empty",
+    "file": "Chap47/DoubleHashFlatHashTableStEph.rs",
+    "lines": "108-113",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_empties_positive_implies_exists_empty<Key, Value>(\n        table: Seq<FlatEntry<Key, Value>>,\n    )\n        requires spec_count_empties(table) > 0,\n        ensures exists |j: int| 0 <= j < table.len() && (#[trigger] table[j]) is Empty,\n        decreases table.len(),"
+  },
+  {
+    "id": 9,
+    "function": "lemma_one_slot_change_empties",
+    "file": "Chap47/DoubleHashFlatHashTableStEph.rs",
+    "lines": "126-138",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_one_slot_change_empties<Key, Value>(\n        old_table: Seq<FlatEntry<Key, Value>>,\n        new_table: Seq<FlatEntry<Key, Value>>,\n        s: int,\n    )\n        requires\n            old_table.len() == new_table.len(),\n            0 <= s < old_table.len(),\n            forall |j: int| 0 <= j < old_table.len() && j != s\n                ==> #[trigger] new_table[j] == old_table[j],\n        ensures\n            spec_count_empties(new_table) >= spec_count_empties(old_table) - 1,\n        decreases old_table.len(),"
+  },
+  {
+    "id": 10,
+    "function": "lemma_spec_second_hash_value",
+    "file": "Chap47/DoubleHashFlatHashTableStEph.rs",
+    "lines": "167-168",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_spec_second_hash_value<Key>(key: Key, table_size: nat)\n        ensures spec_second_hash::<Key>(key, table_size) == 1nat,"
+  },
+  {
+    "id": 11,
+    "function": "lemma_probe_mod_identity",
+    "file": "Chap47/DoubleHashFlatHashTableStEph.rs",
+    "lines": "172-174",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_probe_mod_identity(h: int, j: int, m: int)\n        requires 0 <= h < m, 0 <= j < m, m > 0,\n        ensures (h + (j - h + m) % m) % m == j,"
+  },
+  {
+    "id": 12,
+    "function": "second_hash",
+    "file": "Chap47/DoubleHashFlatHashTableStEph.rs",
+    "lines": "197-202",
+    "spec_strength": "hole",
+    "snippet": "        pub fn second_hash<Key: StT + Hash>(key: &Key, table_size: usize) -> (step: usize)\n            requires table_size > 0,\n            ensures\n                step >= 1,\n                table_size > 1 ==> step < table_size,\n                step as nat == spec_second_hash(*key, table_size as nat),"
+  },
+  {
+    "id": 13,
     "function": "insert",
     "file": "Chap47/DoubleHashFlatHashTableStEph.rs",
-    "lines": "53",
+    "lines": "242",
     "spec_strength": "",
     "snippet": "        fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {"
   },
   {
-    "id": 9,
+    "id": 14,
     "function": "lookup",
     "file": "Chap47/DoubleHashFlatHashTableStEph.rs",
-    "lines": "83",
+    "lines": "521",
     "spec_strength": "",
-    "snippet": "        fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> Option<Value> {"
+    "snippet": "        fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {"
   },
   {
-    "id": 10,
+    "id": 15,
     "function": "delete",
     "file": "Chap47/DoubleHashFlatHashTableStEph.rs",
-    "lines": "107",
+    "lines": "647",
     "spec_strength": "",
     "snippet": "        fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {"
   },
   {
-    "id": 11,
+    "id": 16,
     "function": "resize",
     "file": "Chap47/DoubleHashFlatHashTableStEph.rs",
-    "lines": "136-139",
+    "lines": "817-820",
     "spec_strength": "",
     "snippet": "        fn resize(\n            table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,\n            new_size: usize,\n        ) -> (resized: HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) {"
   },
   {
-    "id": 12,
+    "id": 17,
     "function": "probe",
     "file": "Chap47/DoubleHashFlatHashTableStEph.rs",
-    "lines": "202",
+    "lines": "966",
     "spec_strength": "",
     "snippet": "        fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize) {"
   },
   {
-    "id": 13,
+    "id": 18,
     "function": "find_slot",
     "file": "Chap47/DoubleHashFlatHashTableStEph.rs",
-    "lines": "210",
+    "lines": "974",
     "spec_strength": "",
     "snippet": "        fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (slot: usize) {"
   },
   {
-    "id": 14,
+    "id": 19,
     "function": "probe",
     "file": "Chap47/FlatHashTable.rs",
-    "lines": "48-52",
+    "lines": "63-67",
     "spec_strength": "unknown",
     "snippet": "        fn probe(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize)\n            requires\n                table.current_size > 0,\n            ensures\n                slot < table.current_size;"
   },
   {
-    "id": 15,
+    "id": 20,
     "function": "find_slot",
     "file": "Chap47/FlatHashTable.rs",
-    "lines": "57-62",
+    "lines": "72-77",
     "spec_strength": "unknown",
     "snippet": "        fn find_slot(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (slot: usize)\n            requires\n                table.current_size > 0,\n                table.table@.len() == table.current_size as int,\n            ensures\n                slot < table.current_size;"
   },
   {
-    "id": 16,
-    "function": "insert_with_probe",
-    "file": "Chap47/FlatHashTable.rs",
-    "lines": "67-70",
-    "spec_strength": "unknown",
-    "snippet": "        fn insert_with_probe(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)\n            requires\n                old(table).current_size > 0,\n                old(table).table@.len() == old(table).current_size as int,"
-  },
-  {
-    "id": 17,
-    "function": "lookup_with_probe",
-    "file": "Chap47/FlatHashTable.rs",
-    "lines": "81-84",
-    "spec_strength": "unknown",
-    "snippet": "        fn lookup_with_probe(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> Option<Value>\n            requires\n                table.current_size > 0,\n                table.table@.len() == table.current_size as int,"
-  },
-  {
-    "id": 18,
+    "id": 21,
     "function": "new",
     "file": "Chap47/FlatHashTable.rs",
-    "lines": "109-110",
+    "lines": "94-95",
     "spec_strength": "unknown",
     "snippet": "        fn new() -> (entry: Self)\n            ensures entry is Empty,"
   },
   {
-    "id": 19,
+    "id": 22,
     "function": "insert",
     "file": "Chap47/FlatHashTable.rs",
-    "lines": "115-116",
+    "lines": "100-103",
     "spec_strength": "unknown",
-    "snippet": "        fn insert(&mut self, key: Key, value: Value)\n            ensures *self == FlatEntry::<Key, Value>::Occupied(key, value),"
+    "snippet": "        fn insert(&mut self, key: Key, value: Value)\n            ensures\n                *self == FlatEntry::<Key, Value>::Occupied(key, value),\n                self.spec_entry_to_map()[key] == value,"
   },
   {
-    "id": 20,
+    "id": 23,
     "function": "lookup",
     "file": "Chap47/FlatHashTable.rs",
-    "lines": "121-124",
+    "lines": "108-111",
     "spec_strength": "unknown",
     "snippet": "        fn lookup(&self, key: &Key) -> (found: Option<Value>)\n            ensures\n                self is Empty ==> found is None,\n                self is Deleted ==> found is None,"
   },
   {
-    "id": 21,
+    "id": 24,
     "function": "delete",
     "file": "Chap47/FlatHashTable.rs",
-    "lines": "136-139",
+    "lines": "123-127",
     "spec_strength": "unknown",
-    "snippet": "        fn delete(&mut self, key: &Key) -> (deleted: bool)\n            ensures\n                deleted ==> *self is Deleted,\n                !deleted ==> *self == *old(self),"
+    "snippet": "        fn delete(&mut self, key: &Key) -> (deleted: bool)\n            ensures\n                deleted ==> *self is Deleted,\n                deleted ==> self.spec_entry_to_map() == Map::<Key, Value>::empty(),\n                !deleted ==> *self == *old(self),"
   },
   {
-    "id": 22,
+    "id": 25,
     "function": "clone_entry",
     "file": "Chap47/FlatHashTable.rs",
-    "lines": "155",
+    "lines": "143",
     "spec_strength": "",
     "snippet": "        fn clone_entry(&self) -> (cloned: Self) {"
   },
   {
-    "id": 23,
+    "id": 26,
+    "function": "lemma_all_empties_count",
+    "file": "Chap47/LinProbFlatHashTableStEph.rs",
+    "lines": "84-87",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_all_empties_count<Key, Value>(table: Seq<FlatEntry<Key, Value>>)\n        requires forall |j: int| 0 <= j < table.len() ==> (#[trigger] table[j]) is Empty,\n        ensures spec_count_empties(table) == table.len(),\n        decreases table.len(),"
+  },
+  {
+    "id": 27,
+    "function": "lemma_empties_positive_implies_exists_empty",
+    "file": "Chap47/LinProbFlatHashTableStEph.rs",
+    "lines": "100-105",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_empties_positive_implies_exists_empty<Key, Value>(\n        table: Seq<FlatEntry<Key, Value>>,\n    )\n        requires spec_count_empties(table) > 0,\n        ensures exists |j: int| 0 <= j < table.len() && (#[trigger] table[j]) is Empty,\n        decreases table.len(),"
+  },
+  {
+    "id": 28,
+    "function": "lemma_one_slot_change_empties",
+    "file": "Chap47/LinProbFlatHashTableStEph.rs",
+    "lines": "118-130",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_one_slot_change_empties<Key, Value>(\n        old_table: Seq<FlatEntry<Key, Value>>,\n        new_table: Seq<FlatEntry<Key, Value>>,\n        s: int,\n    )\n        requires\n            old_table.len() == new_table.len(),\n            0 <= s < old_table.len(),\n            forall |j: int| 0 <= j < old_table.len() && j != s\n                ==> #[trigger] new_table[j] == old_table[j],\n        ensures\n            spec_count_empties(new_table) >= spec_count_empties(old_table) - 1,\n        decreases old_table.len(),"
+  },
+  {
+    "id": 29,
+    "function": "lemma_probe_mod_identity",
+    "file": "Chap47/LinProbFlatHashTableStEph.rs",
+    "lines": "158-160",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_probe_mod_identity(h: int, j: int, m: int)\n        requires 0 <= h < m, 0 <= j < m, m > 0,\n        ensures (h + (j - h + m) % m) % m == j,"
+  },
+  {
+    "id": 30,
     "function": "insert",
     "file": "Chap47/LinProbFlatHashTableStEph.rs",
-    "lines": "36",
+    "lines": "196",
     "spec_strength": "",
     "snippet": "        fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {"
   },
   {
-    "id": 24,
+    "id": 31,
     "function": "lookup",
     "file": "Chap47/LinProbFlatHashTableStEph.rs",
-    "lines": "66",
+    "lines": "473",
     "spec_strength": "",
-    "snippet": "        fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> Option<Value> {"
+    "snippet": "        fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {"
   },
   {
-    "id": 25,
+    "id": 32,
     "function": "delete",
     "file": "Chap47/LinProbFlatHashTableStEph.rs",
-    "lines": "90",
+    "lines": "578",
     "spec_strength": "",
     "snippet": "        fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {"
   },
   {
-    "id": 26,
+    "id": 33,
     "function": "resize",
     "file": "Chap47/LinProbFlatHashTableStEph.rs",
-    "lines": "119-122",
+    "lines": "728-731",
     "spec_strength": "",
     "snippet": "        fn resize(\n            table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,\n            new_size: usize,\n        ) -> (resized: HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) {"
   },
   {
-    "id": 27,
+    "id": 34,
     "function": "probe",
     "file": "Chap47/LinProbFlatHashTableStEph.rs",
-    "lines": "188",
+    "lines": "881",
     "spec_strength": "",
     "snippet": "        fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize) {"
   },
   {
-    "id": 28,
+    "id": 35,
     "function": "find_slot",
     "file": "Chap47/LinProbFlatHashTableStEph.rs",
-    "lines": "195",
+    "lines": "888",
     "spec_strength": "",
     "snippet": "        fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (slot: usize) {"
   },
   {
-    "id": 29,
+    "id": 36,
     "function": "_linked_list_chained_hash_table_verified",
     "file": "Chap47/LinkedListChainedHashTableStEph.rs",
-    "lines": "32",
+    "lines": "40",
     "spec_strength": "",
     "snippet": "        proof fn _linked_list_chained_hash_table_verified() {}"
   },
   {
-    "id": 30,
+    "id": 37,
+    "function": "clone_linked_list_entry",
+    "file": "Chap47/LinkedListChainedHashTableStEph.rs",
+    "lines": "44-47",
+    "spec_strength": "unknown",
+    "snippet": "        fn clone_linked_list_entry<Key: Clone, Value: Clone>(\n            entry: &LinkedListStEphS<(Key, Value)>,\n        ) -> (cloned: LinkedListStEphS<(Key, Value)>)\n            ensures cloned.seq@ =~= entry.seq@,"
+  },
+  {
+    "id": 38,
     "function": "new",
     "file": "Chap47/LinkedListChainedHashTableStEph.rs",
-    "lines": "39",
+    "lines": "76",
     "spec_strength": "",
     "snippet": "            fn new() -> (entry: Self) { LinkedListStEphS { seq: Vec::new() } }"
   },
   {
-    "id": 31,
+    "id": 39,
     "function": "insert",
     "file": "Chap47/LinkedListChainedHashTableStEph.rs",
-    "lines": "43-47",
+    "lines": "80-86",
     "spec_strength": "unknown",
-    "snippet": "            fn insert(&mut self, key: Key, value: Value)\n                ensures\n                    self.seq@.len() >= 1,\n                    old(self).seq@.len() <= self.seq@.len(),\n                    self.seq@.len() <= old(self).seq@.len() + 1,"
+    "snippet": "            fn insert(&mut self, key: Key, value: Value)\n                ensures\n                    self.seq@.len() >= 1,\n                    old(self).seq@.len() <= self.seq@.len(),\n                    self.seq@.len() <= old(self).seq@.len() + 1,\n                    self.seq@.last() == (key, value),\n                    self.spec_entry_to_map()[key] == value,"
   },
   {
-    "id": 32,
+    "id": 40,
     "function": "lookup",
     "file": "Chap47/LinkedListChainedHashTableStEph.rs",
-    "lines": "68",
+    "lines": "107",
     "spec_strength": "",
     "snippet": "            fn lookup(&self, key: &Key) -> (found: Option<Value>) {"
   },
   {
-    "id": 33,
+    "id": 41,
     "function": "delete",
     "file": "Chap47/LinkedListChainedHashTableStEph.rs",
-    "lines": "83-84",
+    "lines": "122-125",
     "spec_strength": "unknown",
-    "snippet": "            fn delete(&mut self, key: &Key) -> (deleted: bool)\n                ensures !deleted ==> self.seq@ == old(self).seq@,"
+    "snippet": "            fn delete(&mut self, key: &Key) -> (deleted: bool)\n                ensures\n                    !deleted ==> self.seq@ == old(self).seq@,\n                    deleted ==> self.seq@.len() + 1 == old(self).seq@.len(),"
   },
   {
-    "id": 34,
+    "id": 42,
     "function": "clone_entry",
     "file": "Chap47/LinkedListChainedHashTableStEph.rs",
-    "lines": "103",
+    "lines": "144",
     "spec_strength": "",
     "snippet": "            fn clone_entry(&self) -> (cloned: Self) {"
   },
   {
-    "id": 35,
+    "id": 43,
     "function": "resize",
     "file": "Chap47/LinkedListChainedHashTableStEph.rs",
-    "lines": "194-197",
+    "lines": "437-440",
     "spec_strength": "",
     "snippet": "            fn resize(\n                table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>,\n                new_size: usize,\n            ) -> (resized: HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>) {"
   },
   {
-    "id": 36,
+    "id": 44,
     "function": "hash_index",
     "file": "Chap47/LinkedListChainedHashTableStEph.rs",
-    "lines": "273",
+    "lines": "588",
     "spec_strength": "",
     "snippet": "            fn hash_index(table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (index: usize) {"
   },
   {
-    "id": 37,
-    "function": "call_hash_fn",
-    "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "57-59",
-    "spec_strength": "hole",
-    "snippet": "    pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize) -> (index: usize)\n        requires table_size > 0,\n        ensures index < table_size,"
-  },
-  {
-    "id": 38,
-    "function": "linear_probe",
-    "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "65-67",
-    "spec_strength": "unknown",
-    "snippet": "    pub fn linear_probe<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize) -> (slot: usize)\n        requires table_size > 0,\n        ensures slot < table_size,"
-  },
-  {
-    "id": 39,
-    "function": "quadratic_probe",
-    "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "74-76",
-    "spec_strength": "unknown",
-    "snippet": "    pub fn quadratic_probe<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize) -> (slot: usize)\n        requires table_size > 0,\n        ensures slot < table_size,"
-  },
-  {
-    "id": 40,
-    "function": "compute_second_hash",
-    "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "85-86",
-    "spec_strength": "hole",
-    "snippet": "    pub fn compute_second_hash<Key: std::hash::Hash>(key: &Key, table_size: usize) -> (step: usize)\n        requires table_size > 0,"
-  },
-  {
-    "id": 41,
-    "function": "double_hash_probe",
-    "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "105-107",
-    "spec_strength": "unknown",
-    "snippet": "    pub fn double_hash_probe<Key: std::hash::Hash, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, attempt: usize) -> (slot: usize)\n        requires table_size > 0,\n        ensures slot < table_size,"
-  },
-  {
-    "id": 42,
-    "function": "new",
-    "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "121",
-    "spec_strength": "",
-    "snippet": "        fn new() -> (entry: Self);"
-  },
-  {
-    "id": 43,
-    "function": "insert`",
-    "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "174-182",
-    "spec_strength": "unknown",
-    "snippet": "        fn insert(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)\n            requires\n                old(table).current_size > 0,\n                old(table).table@.len() == old(table).current_size as int,\n                old(table).num_elements < usize::MAX,\n            ensures\n                table.table@.len() == table.current_size as int,\n                table.current_size == old(table).current_size,\n                table.num_elements <= old(table).num_elements + 1;"
-  },
-  {
-    "id": 44,
-    "function": "lookup`",
-    "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "187-190",
-    "spec_strength": "unknown",
-    "snippet": "        fn lookup(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> Option<Value>\n            requires\n                table.current_size > 0,\n                table.table@.len() == table.current_size as int;"
-  },
-  {
     "id": 45,
-    "function": "delete`",
+    "function": "clone_elem",
     "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "195-201",
-    "spec_strength": "unknown",
-    "snippet": "        fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)\n            requires\n                old(table).current_size > 0,\n                old(table).table@.len() == old(table).current_size as int,\n            ensures\n                table.table@.len() == table.current_size as int,\n                table.current_size == old(table).current_size;"
+    "lines": "116-117",
+    "spec_strength": "hole",
+    "snippet": "    pub fn clone_elem<T: Clone>(x: &T) -> (c: T)\n        ensures c == *x,"
   },
   {
     "id": 46,
+    "function": "lemma_table_to_map_push_empty",
+    "file": "Chap47/ParaHashTableStEph.rs",
+    "lines": "125-133",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_table_to_map_push_empty<Key, Value, Entry: EntryTrait<Key, Value>>(\n        table: Seq<Entry>,\n        entry: Entry,\n    )\n        requires\n            spec_table_to_map(table) == Map::<Key, Value>::empty(),\n            entry.spec_entry_to_map() == Map::<Key, Value>::empty(),\n        ensures\n            spec_table_to_map(table.push(entry)) == Map::<Key, Value>::empty(),"
+  },
+  {
+    "id": 47,
+    "function": "lemma_table_to_map_update_contains",
+    "file": "Chap47/ParaHashTableStEph.rs",
+    "lines": "145-156",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_table_to_map_update_contains<Key, Value, Entry: EntryTrait<Key, Value>>(\n        table: Seq<Entry>,\n        index: int,\n        new_entry: Entry,\n        key: Key,\n    )\n        requires\n            0 <= index < table.len(),\n            new_entry.spec_entry_to_map().dom().contains(key),\n        ensures\n            spec_table_to_map(table.update(index, new_entry)).dom().contains(key),\n        decreases table.len(),"
+  },
+  {
+    "id": 48,
+    "function": "lemma_table_to_map_not_contains",
+    "file": "Chap47/ParaHashTableStEph.rs",
+    "lines": "184-193",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_table_to_map_not_contains<Key, Value, Entry: EntryTrait<Key, Value>>(\n        table: Seq<Entry>,\n        key: Key,\n    )\n        requires\n            forall |j: int| 0 <= j < table.len()\n                ==> !#[trigger] table[j].spec_entry_to_map().dom().contains(key),\n        ensures\n            !spec_table_to_map(table).dom().contains(key),\n        decreases table.len(),"
+  },
+  {
+    "id": 49,
+    "function": "lemma_table_to_map_update_insert",
+    "file": "Chap47/ParaHashTableStEph.rs",
+    "lines": "209-224",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_table_to_map_update_insert<Key, Value, Entry: EntryTrait<Key, Value>>(\n        table: Seq<Entry>,\n        index: int,\n        new_entry: Entry,\n        key: Key,\n        value: Value,\n    )\n        requires\n            0 <= index < table.len(),\n            new_entry.spec_entry_to_map() == table[index].spec_entry_to_map().insert(key, value),\n            forall |j: int| 0 <= j < table.len() && j != index\n                ==> !#[trigger] table[j].spec_entry_to_map().dom().contains(key),\n        ensures\n            spec_table_to_map(table.update(index, new_entry))\n                == spec_table_to_map(table).insert(key, value),\n        decreases table.len(),"
+  },
+  {
+    "id": 50,
+    "function": "lemma_table_to_map_update_remove",
+    "file": "Chap47/ParaHashTableStEph.rs",
+    "lines": "263-277",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_table_to_map_update_remove<Key, Value, Entry: EntryTrait<Key, Value>>(\n        table: Seq<Entry>,\n        index: int,\n        new_entry: Entry,\n        key: Key,\n    )\n        requires\n            0 <= index < table.len(),\n            new_entry.spec_entry_to_map() == table[index].spec_entry_to_map().remove(key),\n            forall |j: int| 0 <= j < table.len() && j != index\n                ==> !#[trigger] table[j].spec_entry_to_map().dom().contains(key),\n        ensures\n            spec_table_to_map(table.update(index, new_entry))\n                == spec_table_to_map(table).remove(key),\n        decreases table.len(),"
+  },
+  {
+    "id": 51,
+    "function": "lemma_table_to_map_unique_entry_value",
+    "file": "Chap47/ParaHashTableStEph.rs",
+    "lines": "306-319",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_table_to_map_unique_entry_value<Key, Value, Entry: EntryTrait<Key, Value>>(\n        table: Seq<Entry>,\n        index: int,\n        key: Key,\n    )\n        requires\n            0 <= index < table.len(),\n            table[index].spec_entry_to_map().dom().contains(key),\n            forall |j: int| 0 <= j < table.len() && j != index\n                ==> !#[trigger] table[j].spec_entry_to_map().dom().contains(key),\n        ensures\n            spec_table_to_map(table).dom().contains(key),\n            spec_table_to_map(table)[key] == table[index].spec_entry_to_map()[key],\n        decreases table.len(),"
+  },
+  {
+    "id": 52,
+    "function": "call_hash_fn",
+    "file": "Chap47/ParaHashTableStEph.rs",
+    "lines": "343-347",
+    "spec_strength": "hole",
+    "snippet": "    pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (index: usize)\n        requires table_size > 0,\n        ensures\n            index < table_size,\n            index as nat == (spec_hash@)(*key) % (table_size as nat),"
+  },
+  {
+    "id": 53,
+    "function": "new",
+    "file": "Chap47/ParaHashTableStEph.rs",
+    "lines": "361-362",
+    "spec_strength": "unknown",
+    "snippet": "        fn new() -> (entry: Self)\n            ensures entry.spec_entry_to_map() == Map::<Key, Value>::empty();"
+  },
+  {
+    "id": 54,
+    "function": "insert`",
+    "file": "Chap47/ParaHashTableStEph.rs",
+    "lines": "463-475",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)\n            requires\n                Self::spec_impl_wf(old(table)),\n                old(table).num_elements < usize::MAX,\n                Self::spec_has_insert_capacity(old(table)),\n            ensures\n                table@ == old(table)@.insert(key, value),\n                Self::spec_impl_wf(table),\n                table.spec_hash == old(table).spec_hash,\n                table.current_size == old(table).current_size,\n                table.num_elements <= old(table).num_elements + 1,\n                exists |s: int| #[trigger] spec_other_slots_preserved(\n                    old(table).table@, table.table@, s);"
+  },
+  {
+    "id": 55,
+    "function": "lookup`",
+    "file": "Chap47/ParaHashTableStEph.rs",
+    "lines": "480-487",
+    "spec_strength": "unknown",
+    "snippet": "        fn lookup(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (found: Option<Value>)\n            requires\n                Self::spec_impl_wf(table),\n                obeys_feq_clone::<Key>(),\n                obeys_feq_clone::<Value>(),\n            ensures\n                table@.dom().contains(*key) ==> found == Some(table@[*key]),\n                !table@.dom().contains(*key) ==> found is None;"
+  },
+  {
+    "id": 56,
+    "function": "delete`",
+    "file": "Chap47/ParaHashTableStEph.rs",
+    "lines": "492-502",
+    "spec_strength": "unknown",
+    "snippet": "        fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)\n            requires\n                Self::spec_impl_wf(old(table)),\n                obeys_feq_clone::<Key>(),\n                obeys_feq_clone::<Value>(),\n            ensures\n                deleted == old(table)@.dom().contains(*key),\n                table@ == old(table)@.remove(*key),\n                Self::spec_impl_wf(table),\n                table.spec_hash == old(table).spec_hash,\n                table.current_size == old(table).current_size;"
+  },
+  {
+    "id": 57,
     "function": "clone_entry",
     "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "132",
+    "lines": "375",
     "spec_strength": "",
     "snippet": "        fn clone_entry(&self) -> (cloned: Self);"
   },
   {
-    "id": 47,
+    "id": 58,
     "function": "createTable",
     "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "141-147",
+    "lines": "412-422",
     "spec_strength": "unknown",
-    "snippet": "        fn createTable(hash_fn: H, initial_size: usize) -> (table: HashTable<Key, Value, Entry, Metrics, H>)\n            ensures\n                table.initial_size == initial_size,\n                table.current_size == initial_size,\n                table.num_elements == 0,\n                table.table@.len() == initial_size as int,\n                spec_hashtable_wf(&table),"
+    "snippet": "        fn createTable(hash_fn: H, initial_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (table: HashTable<Key, Value, Entry, Metrics, H>)\n            requires\n                initial_size > 0,\n            ensures\n                table.initial_size == initial_size,\n                table.current_size == initial_size,\n                table.num_elements == 0,\n                table.table@.len() == initial_size as int,\n                spec_hashtable_wf(&table),\n                table@ == Map::<Key, Value>::empty(),\n                table.spec_hash == spec_hash,"
   },
   {
-    "id": 48,
+    "id": 59,
     "function": "metrics",
     "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "206-207",
+    "lines": "507-509",
     "spec_strength": "unknown",
-    "snippet": "        fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)\n            ensures m == &table.metrics,"
+    "snippet": "        fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)\n            requires Self::spec_impl_wf(table),\n            ensures m == &table.metrics,"
   },
   {
-    "id": 49,
+    "id": 60,
     "function": "loadAndSize",
     "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "214-217",
+    "lines": "516-520",
     "spec_strength": "unknown",
-    "snippet": "        fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)\n            ensures\n                load_and_size.size == table.current_size,\n                load_and_size.load == table.num_elements,"
+    "snippet": "        fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)\n            requires Self::spec_impl_wf(table),\n            ensures\n                load_and_size.size == table.current_size,\n                load_and_size.load == table.num_elements,"
   },
   {
-    "id": 50,
+    "id": 61,
     "function": "resize",
     "file": "Chap47/ParaHashTableStEph.rs",
-    "lines": "230-236",
+    "lines": "533-545",
     "spec_strength": "unknown",
-    "snippet": "        fn resize(table: &HashTable<Key, Value, Entry, Metrics, H>, new_size: usize) -> (resized: HashTable<Key, Value, Entry, Metrics, H>)\n            requires\n                new_size > 0,\n                spec_hashtable_wf(table),\n            ensures\n                resized.current_size == new_size,\n                resized.table@.len() == new_size as int;"
+    "snippet": "        fn resize(table: &HashTable<Key, Value, Entry, Metrics, H>, new_size: usize) -> (resized: HashTable<Key, Value, Entry, Metrics, H>)\n            requires\n                new_size > 0,\n                Self::spec_impl_wf(table),\n                Self::spec_resize_ok(table, new_size),\n                obeys_feq_clone::<Key>(),\n                obeys_feq_clone::<Value>(),\n            ensures\n                resized@ == table@,\n                resized.current_size == new_size,\n                resized.table@.len() == new_size as int,\n                Self::spec_impl_wf(&resized),\n                resized.spec_hash == table.spec_hash;"
   },
   {
-    "id": 51,
+    "id": 62,
+    "function": "lemma_consecutive_even",
+    "file": "Chap47/QuadProbFlatHashTableStEph.rs",
+    "lines": "95-96",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_consecutive_even(a: int)\n        ensures (a * (a + 1)) % 2 == 0,"
+  },
+  {
+    "id": 63,
+    "function": "lemma_tri_step",
+    "file": "Chap47/QuadProbFlatHashTableStEph.rs",
+    "lines": "115-116",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_tri_step(a: int)\n        ensures a * (a + 1) / 2 + (a + 1) == (a + 1) * (a + 2) / 2,"
+  },
+  {
+    "id": 64,
+    "function": "lemma_odd_factor_pow2",
+    "file": "Chap47/QuadProbFlatHashTableStEph.rs",
+    "lines": "131-138",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_odd_factor_pow2(a: int, b: int, n: nat)\n        requires\n            a % 2 != 0,\n            n >= 1,\n            (a * b) % pow(2, n) == 0,\n        ensures\n            b % pow(2, n) == 0,\n        decreases n,"
+  },
+  {
+    "id": 65,
+    "function": "lemma_triangular_injective",
+    "file": "Chap47/QuadProbFlatHashTableStEph.rs",
+    "lines": "241-246",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_triangular_injective(i: int, j: int, m: int)\n        requires\n            0 <= i < j < m,\n            spec_is_power_of_two(m),\n        ensures\n            (i * (i + 1) / 2) % m != (j * (j + 1) / 2) % m,"
+  },
+  {
+    "id": 66,
+    "function": "lemma_mod_add_cancel",
+    "file": "Chap47/QuadProbFlatHashTableStEph.rs",
+    "lines": "327-335",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_mod_add_cancel(a: int, x: int, y: int, m: int)\n        requires\n            m > 0,\n            0 <= a < m,\n            0 <= x < m,\n            0 <= y < m,\n            x != y,\n            (a + x) % m == (a + y) % m,\n        ensures false,"
+  },
+  {
+    "id": 67,
+    "function": "lemma_empty_slot_reachable",
+    "file": "Chap47/QuadProbFlatHashTableStEph.rs",
+    "lines": "365-384",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_empty_slot_reachable<Key, Value, Metrics, H>(\n        table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,\n        key: &Key,\n        h: usize,\n    )\n        requires\n            spec_quadprobflathashsteph_wf(table),\n            h < table.current_size,\n            h as nat == (table.spec_hash@)(*key) % (table.current_size as nat),\n            exists |s: int| #![trigger table.table@[s]]\n                0 <= s < table.current_size as int && table.table@[s] is Empty,\n            forall |d: int| #![trigger spec_tri_probe(h as int, d, table.current_size as int)]\n                0 <= d < table.current_size as int\n                ==> !spec_flat_has_key(\n                    #[trigger] table.table@[spec_tri_probe(h as int, d, table.current_size as int)],\n                    *key),\n            forall |d: int| 0 <= d < table.current_size as int\n                ==> !(#[trigger] table.table@[\n                    spec_tri_probe(h as int, d, table.current_size as int)] is Empty),\n        ensures false,"
+  },
+  {
+    "id": 68,
+    "function": "lemma_all_empties_count",
+    "file": "Chap47/QuadProbFlatHashTableStEph.rs",
+    "lines": "463-466",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_all_empties_count<Key, Value>(table: Seq<FlatEntry<Key, Value>>)\n        requires forall |j: int| 0 <= j < table.len() ==> (#[trigger] table[j]) is Empty,\n        ensures spec_count_empties(table) == table.len(),\n        decreases table.len(),"
+  },
+  {
+    "id": 69,
+    "function": "lemma_empties_positive_implies_exists_empty",
+    "file": "Chap47/QuadProbFlatHashTableStEph.rs",
+    "lines": "479-484",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_empties_positive_implies_exists_empty<Key, Value>(\n        table: Seq<FlatEntry<Key, Value>>,\n    )\n        requires spec_count_empties(table) > 0,\n        ensures exists |j: int| 0 <= j < table.len() && (#[trigger] table[j]) is Empty,\n        decreases table.len(),"
+  },
+  {
+    "id": 70,
+    "function": "lemma_one_slot_change_empties",
+    "file": "Chap47/QuadProbFlatHashTableStEph.rs",
+    "lines": "497-509",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_one_slot_change_empties<Key, Value>(\n        old_table: Seq<FlatEntry<Key, Value>>,\n        new_table: Seq<FlatEntry<Key, Value>>,\n        s: int,\n    )\n        requires\n            old_table.len() == new_table.len(),\n            0 <= s < old_table.len(),\n            forall |j: int| 0 <= j < old_table.len() && j != s\n                ==> #[trigger] new_table[j] == old_table[j],\n        ensures\n            spec_count_empties(new_table) >= spec_count_empties(old_table) - 1,\n        decreases old_table.len(),"
+  },
+  {
+    "id": 71,
     "function": "insert",
     "file": "Chap47/QuadProbFlatHashTableStEph.rs",
-    "lines": "38",
+    "lines": "560",
     "spec_strength": "",
     "snippet": "        fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {"
   },
   {
-    "id": 52,
+    "id": 72,
     "function": "lookup",
     "file": "Chap47/QuadProbFlatHashTableStEph.rs",
-    "lines": "68",
+    "lines": "851",
     "spec_strength": "",
-    "snippet": "        fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> Option<Value> {"
+    "snippet": "        fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {"
   },
   {
-    "id": 53,
+    "id": 73,
     "function": "delete",
     "file": "Chap47/QuadProbFlatHashTableStEph.rs",
-    "lines": "92",
+    "lines": "965",
     "spec_strength": "",
     "snippet": "        fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {"
   },
   {
-    "id": 54,
+    "id": 74,
     "function": "resize",
     "file": "Chap47/QuadProbFlatHashTableStEph.rs",
-    "lines": "121-124",
+    "lines": "1133-1136",
     "spec_strength": "",
     "snippet": "        fn resize(\n            table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,\n            new_size: usize,\n        ) -> (resized: HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) {"
   },
   {
-    "id": 55,
+    "id": 75,
     "function": "probe",
     "file": "Chap47/QuadProbFlatHashTableStEph.rs",
-    "lines": "187",
+    "lines": "1279",
     "spec_strength": "",
     "snippet": "        fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize) {"
   },
   {
-    "id": 56,
+    "id": 76,
     "function": "find_slot",
     "file": "Chap47/QuadProbFlatHashTableStEph.rs",
-    "lines": "194",
+    "lines": "1287",
     "spec_strength": "",
     "snippet": "        fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (slot: usize) {"
   },
   {
-    "id": 57,
+    "id": 77,
     "function": "_struct_chained_hash_table_verified",
     "file": "Chap47/StructChainedHashTable.rs",
-    "lines": "69",
+    "lines": "89",
     "spec_strength": "",
     "snippet": "        proof fn _struct_chained_hash_table_verified() {}"
   },
   {
-    "id": 58,
+    "id": 78,
     "function": "default",
     "file": "Chap47/StructChainedHashTable.rs",
-    "lines": "99",
+    "lines": "119",
     "spec_strength": "",
     "snippet": "            fn default() -> Self { ChainList { head: None } }"
   },
   {
-    "id": 59,
+    "id": 79,
     "function": "chain_insert",
     "file": "Chap47/StructChainedHashTable.rs",
-    "lines": "103-111",
+    "lines": "125-135",
     "spec_strength": "unknown",
-    "snippet": "        fn chain_insert<Key: PartialEq, Value>(\n            chain: Option<Box<Node<Key, Value>>>,\n            key: Key,\n            value: Value,\n        ) -> (out: Option<Box<Node<Key, Value>>>)\n            ensures\n                out is Some,\n                spec_chain_to_map(out).dom().contains(key),\n            decreases chain,"
+    "snippet": "        fn chain_insert<Key: Eq + View + Clone, Value>(\n            chain: Option<Box<Node<Key, Value>>>,\n            key: Key,\n            value: Value,\n        ) -> (result: (Option<Box<Node<Key, Value>>>, bool))\n            ensures\n                result.0 is Some,\n                spec_chain_to_map(result.0) == spec_chain_to_map(chain).insert(key, value),\n                result.1 == spec_chain_to_map(chain).dom().contains(key),\n                spec_chain_keys_unique(chain) ==> spec_chain_keys_unique(result.0),\n            decreases chain,"
   },
   {
-    "id": 60,
+    "id": 80,
     "function": "chain_lookup",
     "file": "Chap47/StructChainedHashTable.rs",
-    "lines": "136-142",
+    "lines": "179-188",
     "spec_strength": "unknown",
-    "snippet": "        fn chain_lookup<Key: PartialEq, Value: Clone>(\n            chain: &Option<Box<Node<Key, Value>>>,\n            key: &Key,\n        ) -> (found: Option<Value>)\n            ensures\n                chain is None ==> found is None,\n            decreases chain,"
+    "snippet": "        fn chain_lookup<Key: Eq + View + Clone, Value: Clone>(\n            chain: &Option<Box<Node<Key, Value>>>,\n            key: &Key,\n        ) -> (found: Option<Value>)\n            ensures\n                spec_chain_to_map(*chain).dom().contains(*key)\n                    ==> found == Some(spec_chain_to_map(*chain)[*key]),\n                !spec_chain_to_map(*chain).dom().contains(*key)\n                    ==> found is None,\n            decreases chain,"
   },
   {
-    "id": 61,
+    "id": 81,
     "function": "chain_delete",
     "file": "Chap47/StructChainedHashTable.rs",
-    "lines": "157-164",
+    "lines": "219-229",
     "spec_strength": "unknown",
-    "snippet": "        fn chain_delete<Key: PartialEq, Value>(\n            chain: Option<Box<Node<Key, Value>>>,\n            key: &Key,\n        ) -> (remaining_and_deleted: (Option<Box<Node<Key, Value>>>, bool))\n            ensures\n                !remaining_and_deleted.1\n                    ==> spec_chain_to_map(remaining_and_deleted.0) == spec_chain_to_map(chain),\n            decreases chain,"
+    "snippet": "        fn chain_delete<Key: Eq + View + Clone, Value>(\n            chain: Option<Box<Node<Key, Value>>>,\n            key: &Key,\n        ) -> (remaining_and_deleted: (Option<Box<Node<Key, Value>>>, bool))\n            ensures\n                spec_chain_to_map(remaining_and_deleted.0)\n                    == spec_chain_to_map(chain).remove(*key),\n                remaining_and_deleted.1\n                    == spec_chain_to_map(chain).dom().contains(*key),\n                spec_chain_keys_unique(chain) ==> spec_chain_keys_unique(remaining_and_deleted.0),\n            decreases chain,"
   },
   {
-    "id": 62,
+    "id": 82,
     "function": "new",
     "file": "Chap47/StructChainedHashTable.rs",
-    "lines": "186",
+    "lines": "271",
     "spec_strength": "",
     "snippet": "            fn new() -> (entry: Self) { ChainList { head: None } }"
   },
   {
-    "id": 63,
+    "id": 83,
     "function": "insert",
     "file": "Chap47/StructChainedHashTable.rs",
-    "lines": "190-191",
+    "lines": "275-276",
     "spec_strength": "unknown",
     "snippet": "            fn insert(&mut self, key: Key, value: Value)\n                ensures spec_chain_to_map(self.head).dom().contains(key),"
   },
   {
-    "id": 64,
+    "id": 84,
     "function": "lookup",
     "file": "Chap47/StructChainedHashTable.rs",
-    "lines": "198",
+    "lines": "284",
     "spec_strength": "",
     "snippet": "            fn lookup(&self, key: &Key) -> (found: Option<Value>)"
   },
   {
-    "id": 65,
+    "id": 85,
     "function": "delete",
     "file": "Chap47/StructChainedHashTable.rs",
-    "lines": "205-207",
+    "lines": "291-293",
     "spec_strength": "unknown",
     "snippet": "            fn delete(&mut self, key: &Key) -> (deleted: bool)\n                ensures\n                    !deleted ==> spec_chain_to_map(self.head) == spec_chain_to_map(old(self).head),"
   },
   {
-    "id": 66,
+    "id": 86,
     "function": "clone_entry",
     "file": "Chap47/StructChainedHashTable.rs",
-    "lines": "215",
+    "lines": "301",
     "spec_strength": "",
     "snippet": "            fn clone_entry(&self) -> (cloned: Self) {"
   },
   {
-    "id": 67,
+    "id": 87,
     "function": "resize",
     "file": "Chap47/StructChainedHashTable.rs",
-    "lines": "261-264",
+    "lines": "461-464",
     "spec_strength": "",
     "snippet": "            fn resize(\n                table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>,\n                new_size: usize,\n            ) -> (resized: HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>) {"
   },
   {
-    "id": 68,
+    "id": 88,
     "function": "hash_index",
     "file": "Chap47/StructChainedHashTable.rs",
-    "lines": "336",
+    "lines": "823",
     "spec_strength": "",
     "snippet": "            fn hash_index(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> (index: usize) {"
   },
   {
-    "id": 69,
+    "id": 89,
     "function": "eq`",
     "file": "Chap47/StructChainedHashTable.rs",
-    "lines": "362-364",
-    "spec_strength": "unknown",
+    "lines": "849-851",
+    "spec_strength": "hole",
     "snippet": "            fn eq(&self, other: &Self) -> (equal: bool)\n                ensures equal == (*self == *other)\n                decreases self, other"
   },
   {
-    "id": 70,
+    "id": 90,
     "function": "_vec_chained_hash_table_verified",
     "file": "Chap47/VecChainedHashTableStEph.rs",
-    "lines": "32",
+    "lines": "40",
     "spec_strength": "",
     "snippet": "        proof fn _vec_chained_hash_table_verified() {}"
   },
   {
-    "id": 71,
+    "id": 91,
+    "function": "clone_vec_pairs",
+    "file": "Chap47/VecChainedHashTableStEph.rs",
+    "lines": "44-45",
+    "spec_strength": "unknown",
+    "snippet": "        fn clone_vec_pairs<Key: Clone, Value: Clone>(pairs: &Vec<(Key, Value)>) -> (cloned: Vec<(Key, Value)>)\n            ensures cloned@ =~= pairs@,"
+  },
+  {
+    "id": 92,
     "function": "new",
     "file": "Chap47/VecChainedHashTableStEph.rs",
-    "lines": "39-40",
+    "lines": "74-75",
     "spec_strength": "unknown",
     "snippet": "            fn new() -> (entry: Self)\n                ensures entry@.len() == 0,"
   },
   {
-    "id": 72,
+    "id": 93,
     "function": "insert",
     "file": "Chap47/VecChainedHashTableStEph.rs",
-    "lines": "45-49",
+    "lines": "80-86",
     "spec_strength": "unknown",
-    "snippet": "            fn insert(&mut self, key: Key, value: Value)\n                ensures\n                    self@.len() >= 1,\n                    old(self)@.len() <= self@.len(),\n                    self@.len() <= old(self)@.len() + 1,"
+    "snippet": "            fn insert(&mut self, key: Key, value: Value)\n                ensures\n                    self@.len() >= 1,\n                    old(self)@.len() <= self@.len(),\n                    self@.len() <= old(self)@.len() + 1,\n                    self@.last() == (key, value),\n                    self.spec_entry_to_map()[key] == value,"
   },
   {
-    "id": 73,
+    "id": 94,
     "function": "lookup",
     "file": "Chap47/VecChainedHashTableStEph.rs",
-    "lines": "70",
+    "lines": "107",
     "spec_strength": "",
     "snippet": "            fn lookup(&self, key: &Key) -> (found: Option<Value>) {"
   },
   {
-    "id": 74,
+    "id": 95,
     "function": "delete",
     "file": "Chap47/VecChainedHashTableStEph.rs",
-    "lines": "85-86",
+    "lines": "122-125",
     "spec_strength": "unknown",
-    "snippet": "            fn delete(&mut self, key: &Key) -> (deleted: bool)\n                ensures !deleted ==> self@ == old(self)@,"
+    "snippet": "            fn delete(&mut self, key: &Key) -> (deleted: bool)\n                ensures\n                    !deleted ==> self@ == old(self)@,\n                    deleted ==> self@.len() + 1 == old(self)@.len(),"
   },
   {
-    "id": 75,
+    "id": 96,
     "function": "clone_entry",
     "file": "Chap47/VecChainedHashTableStEph.rs",
-    "lines": "105",
+    "lines": "144",
     "spec_strength": "",
     "snippet": "            fn clone_entry(&self) -> (cloned: Self) {"
   },
   {
-    "id": 76,
+    "id": 97,
     "function": "resize",
     "file": "Chap47/VecChainedHashTableStEph.rs",
-    "lines": "198-201",
+    "lines": "440-443",
     "spec_strength": "",
     "snippet": "            fn resize(\n                table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>,\n                new_size: usize,\n            ) -> (resized: HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>) {"
   },
   {
-    "id": 77,
+    "id": 98,
     "function": "hash_index",
     "file": "Chap47/VecChainedHashTableStEph.rs",
-    "lines": "274",
+    "lines": "590",
     "spec_strength": "",
     "snippet": "            fn hash_index(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (index: usize) {"
   }

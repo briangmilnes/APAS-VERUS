@@ -59,7 +59,7 @@
     "id": 8,
     "function": "set_parallelism",
     "file": "Chap02/HFSchedulerMtEph.rs",
-    "lines": "88",
+    "lines": "95",
     "spec_strength": "hole",
     "snippet": "    pub fn set_parallelism(n: usize) {"
   },
@@ -67,7 +67,7 @@
     "id": 9,
     "function": "join",
     "file": "Chap02/HFSchedulerMtEph.rs",
-    "lines": "98-109",
+    "lines": "105-116",
     "spec_strength": "hole",
     "snippet": "    pub fn join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))\n    where\n        FA: FnOnce() -> A + Send + 'static,\n        FB: FnOnce() -> B + Send + 'static,\n        A: Send + 'static,\n        B: Send + 'static,\n        requires\n            fa.requires(()),\n            fb.requires(()),\n        ensures\n            fa.ensures((), joined_pair.0),\n            fb.ensures((), joined_pair.1),"
   },
@@ -75,7 +75,7 @@
     "id": 10,
     "function": "spawn_join",
     "file": "Chap02/HFSchedulerMtEph.rs",
-    "lines": "125-136",
+    "lines": "132-143",
     "spec_strength": "hole",
     "snippet": "    pub fn spawn_join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))\n    where\n        FA: FnOnce() -> A + Send + 'static,\n        FB: FnOnce() -> B + Send + 'static,\n        A: Send + 'static,\n        B: Send + 'static,\n        requires\n            fa.requires(()),\n            fb.requires(()),\n        ensures\n            fa.ensures((), joined_pair.0),\n            fb.ensures((), joined_pair.1),"
   },
@@ -83,7 +83,7 @@
     "id": 11,
     "function": "spawn",
     "file": "Chap02/HFSchedulerMtEph.rs",
-    "lines": "156-163",
+    "lines": "163-170",
     "spec_strength": "hole",
     "snippet": "    pub fn spawn<T, F>(f: F) -> (task: TaskState<T>)\n    where\n        F: FnOnce() -> T + Send + 'static,\n        T: Send + 'static,\n        requires\n            f.requires(()),\n        ensures\n            forall|ret: T| #[trigger] task.predicate(ret) ==> f.ensures((), ret),"
   },
@@ -91,7 +91,7 @@
     "id": 12,
     "function": "wait",
     "file": "Chap02/HFSchedulerMtEph.rs",
-    "lines": "178-180",
+    "lines": "185-187",
     "spec_strength": "hole",
     "snippet": "    pub fn wait<T: Send + 'static>(task: TaskState<T>) -> (task_result: T)\n        ensures\n            task.predicate(task_result),"
   },
@@ -99,32 +99,32 @@
     "id": 13,
     "function": "init_pool",
     "file": "Chap02/HFSchedulerMtEph.rs",
-    "lines": "33-45",
+    "lines": "32-46",
     "spec_strength": "",
-    "snippet": "    fn init_pool() -> PoolState {\n        let n = PARALLELISM.read().unwrap();\n        let threads = n.unwrap_or_else(|| {\n            let cpus = std::thread::available_parallelism()\n                .map(|n| n.get())\n                .unwrap_or(2);\n            (cpus - 1).max(1)\n        });\n        PoolState {\n            available_tasks: Mutex::new(threads),\n            task_freed: Condvar::new(),\n        }\n    }"
+    "snippet": "    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — reads config, creates mutex/condvar.\n    fn init_pool() -> PoolState {\n        let n = PARALLELISM.read().unwrap();\n        let threads = n.unwrap_or_else(|| {\n            let cpus = std::thread::available_parallelism()\n                .map(|n| n.get())\n                .unwrap_or(2);\n            (cpus - 1).max(1)\n        });\n        PoolState {\n            available_tasks: Mutex::new(threads),\n            task_freed: Condvar::new(),\n        }\n    }"
   },
   {
     "id": 14,
     "function": "try_acquire",
     "file": "Chap02/HFSchedulerMtEph.rs",
-    "lines": "49-57",
+    "lines": "50-60",
     "spec_strength": "",
-    "snippet": "    fn try_acquire() -> bool {\n        let mut available = POOL.available_tasks.lock().unwrap();\n        if *available > 0 {\n            *available -= 1;\n            true\n        } else {\n            false\n        }\n    }"
+    "snippet": "    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — lock, check, unlock.\n    fn try_acquire() -> bool {\n        let mut available = POOL.available_tasks.lock().unwrap();\n        if *available > 0 {\n            *available -= 1;\n            true\n        } else {\n            false\n        }\n    }"
   },
   {
     "id": 15,
     "function": "acquire",
     "file": "Chap02/HFSchedulerMtEph.rs",
-    "lines": "59-65",
+    "lines": "62-70",
     "spec_strength": "",
-    "snippet": "    fn acquire() {\n        let mut available = POOL.available_tasks.lock().unwrap();\n        while *available == 0 {\n            available = POOL.task_freed.wait(available).unwrap();\n        }\n        *available -= 1;\n    }"
+    "snippet": "    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work Θ(1) amortized, Span Θ(1) amortized — waits on condvar.\n    fn acquire() {\n        let mut available = POOL.available_tasks.lock().unwrap();\n        while *available == 0 {\n            available = POOL.task_freed.wait(available).unwrap();\n        }\n        *available -= 1;\n    }"
   },
   {
     "id": 16,
     "function": "release",
     "file": "Chap02/HFSchedulerMtEph.rs",
-    "lines": "67-71",
+    "lines": "72-78",
     "spec_strength": "",
-    "snippet": "    fn release() {\n        let mut available = POOL.available_tasks.lock().unwrap();\n        *available += 1;\n        POOL.task_freed.notify_one();\n    }"
+    "snippet": "    /// - APAS: N/A — Verus-specific scaffolding.\n    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — lock, increment, notify, unlock.\n    fn release() {\n        let mut available = POOL.available_tasks.lock().unwrap();\n        *available += 1;\n        POOL.task_freed.notify_one();\n    }"
   }
 ]

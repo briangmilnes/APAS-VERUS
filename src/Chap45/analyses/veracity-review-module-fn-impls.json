@@ -3,7 +3,7 @@
     "id": 1,
     "function": "_balanced_tree_pq_verified",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "55",
+    "lines": "54",
     "spec_strength": "",
     "snippet": "        proof fn _balanced_tree_pq_verified() {}"
   },
@@ -11,7 +11,7 @@
     "id": 2,
     "function": "empty",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "62-63",
+    "lines": "61-62",
     "spec_strength": "unknown",
     "snippet": "            fn empty() -> (pq: Self)\n                ensures pq@.len() == 0, pq.spec_balancedtreepq_wf();"
   },
@@ -19,7 +19,7 @@
     "id": 3,
     "function": "singleton",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "65-66",
+    "lines": "64-65",
     "spec_strength": "unknown",
     "snippet": "            fn singleton(element: T) -> (pq: Self)\n                ensures pq@.len() == 1, pq.spec_balancedtreepq_wf();"
   },
@@ -27,23 +27,23 @@
     "id": 4,
     "function": "find_min",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "68-72",
+    "lines": "67-72",
     "spec_strength": "unknown",
-    "snippet": "            fn find_min(&self) -> (min_elem: Option<&T>)\n                requires self.spec_balancedtreepq_wf(),\n                ensures\n                    self@.len() == 0 ==> min_elem.is_none(),\n                    self@.len() > 0 ==> min_elem.is_some();"
+    "snippet": "            fn find_min(&self) -> (min_elem: Option<&T>)\n                requires self.spec_balancedtreepq_wf(),\n                ensures\n                    self@.len() == 0 ==> min_elem.is_none(),\n                    self@.len() > 0 ==> min_elem.is_some(),\n                    self@.len() > 0 ==> min_elem.unwrap()@ == self@[0];"
   },
   {
     "id": 5,
     "function": "insert",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "74-76",
+    "lines": "74-81",
     "spec_strength": "unknown",
-    "snippet": "            fn insert(&self, element: T) -> (pq: Self)\n                requires self.spec_balancedtreepq_wf(),\n                ensures pq@.len() == self@.len() + 1, pq.spec_balancedtreepq_wf();"
+    "snippet": "            fn insert(&self, element: T) -> (pq: Self)\n                requires\n                    self.spec_balancedtreepq_wf(),\n                    self@.len() + 1 < usize::MAX as nat,\n                ensures\n                    pq@.len() == self@.len() + 1,\n                    pq.spec_balancedtreepq_wf(),\n                    pq@.to_multiset() =~= self@.to_multiset().insert(element@);"
   },
   {
     "id": 6,
     "function": "delete_min",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "78-85",
+    "lines": "83-90",
     "spec_strength": "unknown",
     "snippet": "            fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))\n                requires self.spec_balancedtreepq_wf(),\n                ensures\n                    self@.len() > 0 ==> min_and_rest.1.is_some(),\n                    self@.len() > 0 ==> min_and_rest.0@.len() == self@.len() - 1,\n                    self@.len() == 0 ==> min_and_rest.1.is_none(),\n                    self@.len() == 0 ==> min_and_rest.0@.len() == self@.len(),\n                    min_and_rest.0.spec_balancedtreepq_wf();"
   },
@@ -51,15 +51,15 @@
     "id": 7,
     "function": "meld",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "87-89",
+    "lines": "92-97",
     "spec_strength": "unknown",
-    "snippet": "            fn meld(&self, other: &Self) -> (pq: Self)\n                requires self.spec_balancedtreepq_wf(), other.spec_balancedtreepq_wf(),\n                ensures pq@.len() == self@.len() + other@.len(), pq.spec_balancedtreepq_wf();"
+    "snippet": "            fn meld(&self, other: &Self) -> (pq: Self)\n                requires\n                    self.spec_balancedtreepq_wf(),\n                    other.spec_balancedtreepq_wf(),\n                    self@.len() + other@.len() < usize::MAX as nat,\n                ensures pq@.len() == self@.len() + other@.len(), pq.spec_balancedtreepq_wf();"
   },
   {
     "id": 8,
     "function": "from_seq",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "91-93",
+    "lines": "99-101",
     "spec_strength": "unknown",
     "snippet": "            fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> (pq: Self)\n                requires seq.spec_avltreeseqstper_wf(),\n                ensures pq@.len() == seq@.len(), pq.spec_balancedtreepq_wf();"
   },
@@ -67,7 +67,7 @@
     "id": 9,
     "function": "size",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "95-97",
+    "lines": "103-105",
     "spec_strength": "unknown",
     "snippet": "            fn size(&self) -> (n: usize)\n                requires self.spec_balancedtreepq_wf(),\n                ensures n as int == self@.len();"
   },
@@ -75,7 +75,7 @@
     "id": 10,
     "function": "is_empty",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "99-101",
+    "lines": "107-109",
     "spec_strength": "unknown",
     "snippet": "            fn is_empty(&self) -> (b: bool)\n                requires self.spec_balancedtreepq_wf(),\n                ensures b == (self@.len() == 0);"
   },
@@ -83,7 +83,7 @@
     "id": 11,
     "function": "to_seq",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "103-105",
+    "lines": "111-113",
     "spec_strength": "unknown",
     "snippet": "            fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)\n                requires self.spec_balancedtreepq_wf(),\n                ensures seq@ =~= self@;"
   },
@@ -91,15 +91,15 @@
     "id": 12,
     "function": "find_max",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "107-111",
+    "lines": "115-120",
     "spec_strength": "unknown",
-    "snippet": "            fn find_max(&self) -> (max_elem: Option<&T>)\n                requires self.spec_balancedtreepq_wf(),\n                ensures\n                    self@.len() == 0 ==> max_elem.is_none(),\n                    self@.len() > 0 ==> max_elem.is_some();"
+    "snippet": "            fn find_max(&self) -> (max_elem: Option<&T>)\n                requires self.spec_balancedtreepq_wf(),\n                ensures\n                    self@.len() == 0 ==> max_elem.is_none(),\n                    self@.len() > 0 ==> max_elem.is_some(),\n                    self@.len() > 0 ==> max_elem.unwrap()@ == self@[self@.len() - 1];"
   },
   {
     "id": 13,
     "function": "delete_max",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "113-120",
+    "lines": "122-129",
     "spec_strength": "unknown",
     "snippet": "            fn delete_max(&self) -> (max_and_rest: (Self, Option<T>))\n                requires self.spec_balancedtreepq_wf(),\n                ensures\n                    self@.len() > 0 ==> max_and_rest.1.is_some(),\n                    self@.len() > 0 ==> max_and_rest.0@.len() == self@.len() - 1,\n                    self@.len() == 0 ==> max_and_rest.1.is_none(),\n                    self@.len() == 0 ==> max_and_rest.0@.len() == self@.len(),\n                    max_and_rest.0.spec_balancedtreepq_wf();"
   },
@@ -107,15 +107,15 @@
     "id": 14,
     "function": "insert_all",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "122-124",
+    "lines": "131-136",
     "spec_strength": "unknown",
-    "snippet": "            fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> (pq: Self)\n                requires self.spec_balancedtreepq_wf(), elements.spec_avltreeseqstper_wf(),\n                ensures pq@.len() == self@.len() + elements@.len(), pq.spec_balancedtreepq_wf();"
+    "snippet": "            fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> (pq: Self)\n                requires\n                    self.spec_balancedtreepq_wf(),\n                    elements.spec_avltreeseqstper_wf(),\n                    self@.len() + elements@.len() < usize::MAX as nat,\n                ensures pq@.len() == self@.len() + elements@.len(), pq.spec_balancedtreepq_wf();"
   },
   {
     "id": 15,
     "function": "extract_all_sorted",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "126-128",
+    "lines": "138-140",
     "spec_strength": "unknown",
     "snippet": "            fn extract_all_sorted(&self) -> (sorted: AVLTreeSeqStPerS<T>)\n                requires self.spec_balancedtreepq_wf(),\n                ensures sorted@.len() == self@.len();"
   },
@@ -123,7 +123,7 @@
     "id": 16,
     "function": "contains",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "130-132",
+    "lines": "142-144",
     "spec_strength": "unknown",
     "snippet": "            fn contains(&self, element: &T) -> (found: bool)\n                requires self.spec_balancedtreepq_wf(), obeys_feq_full::<T>(),\n                ensures found == self@.contains(element@);"
   },
@@ -131,7 +131,7 @@
     "id": 17,
     "function": "remove",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "134-139",
+    "lines": "146-151",
     "spec_strength": "unknown",
     "snippet": "            fn remove(&self, element: &T) -> (rest_and_found: (Self, bool))\n                requires self.spec_balancedtreepq_wf(),\n                ensures\n                    rest_and_found.1 ==> rest_and_found.0@.len() == self@.len() - 1,\n                    !rest_and_found.1 ==> rest_and_found.0@.len() == self@.len(),\n                    rest_and_found.0.spec_balancedtreepq_wf();"
   },
@@ -139,7 +139,7 @@
     "id": 18,
     "function": "range",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "141-143",
+    "lines": "153-155",
     "spec_strength": "unknown",
     "snippet": "            fn range(&self, min_val: &T, max_val: &T) -> (sub: AVLTreeSeqStPerS<T>)\n                requires self.spec_balancedtreepq_wf(),\n                ensures sub@.len() <= self@.len();"
   },
@@ -147,15 +147,15 @@
     "id": 19,
     "function": "from_vec",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "145-146",
+    "lines": "157-159",
     "spec_strength": "unknown",
-    "snippet": "            fn from_vec(elements: Vec<T>) -> (pq: Self)\n                ensures pq@.len() == elements@.len(), pq.spec_balancedtreepq_wf();"
+    "snippet": "            fn from_vec(elements: Vec<T>) -> (pq: Self)\n                requires elements@.len() < usize::MAX as nat,\n                ensures pq@.len() == elements@.len(), pq.spec_balancedtreepq_wf();"
   },
   {
     "id": 20,
     "function": "to_vec",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "148-150",
+    "lines": "161-163",
     "spec_strength": "unknown",
     "snippet": "            fn to_vec(&self) -> (vec: Vec<T>)\n                requires self.spec_balancedtreepq_wf(),\n                ensures vec@.len() == self@.len();"
   },
@@ -163,7 +163,7 @@
     "id": 21,
     "function": "to_sorted_vec",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "152-154",
+    "lines": "165-167",
     "spec_strength": "unknown",
     "snippet": "            fn to_sorted_vec(&self) -> (vec: Vec<T>)\n                requires self.spec_balancedtreepq_wf(),\n                ensures vec@.len() == self@.len();"
   },
@@ -171,7 +171,7 @@
     "id": 22,
     "function": "is_sorted",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "156-158",
+    "lines": "169-171",
     "spec_strength": "unknown",
     "snippet": "            fn is_sorted(&self) -> (sorted: bool)\n                requires self.spec_balancedtreepq_wf(),\n                ensures self@.len() <= 1 ==> sorted;"
   },
@@ -179,7 +179,7 @@
     "id": 23,
     "function": "height",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "160-162",
+    "lines": "173-175",
     "spec_strength": "unknown",
     "snippet": "            fn height(&self) -> (h: usize)\n                requires self.spec_balancedtreepq_wf(),\n                ensures self@.len() == 0 ==> h == 0;"
   },
@@ -187,7 +187,7 @@
     "id": 24,
     "function": "split",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "164-169",
+    "lines": "177-182",
     "spec_strength": "unknown",
     "snippet": "            fn split(&self, element: &T) -> (parts: (Self, bool, Self))\n                requires self.spec_balancedtreepq_wf(),\n                ensures\n                    parts.0@.len() + parts.2@.len() == self@.len(),\n                    parts.0.spec_balancedtreepq_wf(),\n                    parts.2.spec_balancedtreepq_wf();"
   },
@@ -195,31 +195,31 @@
     "id": 25,
     "function": "join",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "171-173",
+    "lines": "184-189",
     "spec_strength": "unknown",
-    "snippet": "            fn join(left: &Self, right: &Self) -> (pq: Self)\n                requires left.spec_balancedtreepq_wf(), right.spec_balancedtreepq_wf(),\n                ensures pq@.len() == left@.len() + right@.len(), pq.spec_balancedtreepq_wf();"
+    "snippet": "            fn join(left: &Self, right: &Self) -> (pq: Self)\n                requires\n                    left.spec_balancedtreepq_wf(),\n                    right.spec_balancedtreepq_wf(),\n                    left@.len() + right@.len() < usize::MAX as nat,\n                ensures pq@.len() == left@.len() + right@.len(), pq.spec_balancedtreepq_wf();"
   },
   {
     "id": 26,
     "function": "filter",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "178-179",
+    "lines": "194-198",
     "spec_strength": "unknown",
-    "snippet": "            fn filter<F>(&self, predicate: F) -> (filtered: Self) where F: Fn(&T) -> bool\n                ensures true;"
+    "snippet": "            fn filter<F: Fn(&T) -> bool>(&self, predicate: F) -> (filtered: Self)\n                requires\n                    self.spec_balancedtreepq_wf(),\n                    forall|t: &T| #[trigger] predicate.requires((t,)),\n                ensures filtered.spec_balancedtreepq_wf();"
   },
   {
     "id": 27,
     "function": "map",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "180-181",
+    "lines": "199-203",
     "spec_strength": "unknown",
-    "snippet": "            fn map<U, G>(&self, f: G) -> (mapped: BalancedTreePQ<U>) where U: StT + Ord + TotalOrder, G: Fn(&T) -> U\n                ensures true;"
+    "snippet": "            fn map<U: StT + Ord + TotalOrder, G: Fn(&T) -> U>(&self, f: G) -> (mapped: BalancedTreePQ<U>)\n                requires\n                    self.spec_balancedtreepq_wf(),\n                    forall|t: &T| #[trigger] f.requires((t,)),\n                ensures mapped.spec_balancedtreepq_wf();"
   },
   {
     "id": 28,
     "function": "default",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "552-553",
+    "lines": "673-674",
     "spec_strength": "unknown",
     "snippet": "            fn default() -> (d: Self)\n                ensures d@.len() == 0, d.spec_balancedtreepq_wf()"
   },
@@ -227,268 +227,308 @@
     "id": 29,
     "function": "eq",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "604-605",
-    "spec_strength": "unknown",
+    "lines": "761-762",
+    "spec_strength": "hole",
     "snippet": "            fn eq(&self, other: &Self) -> (equal: bool)\n                ensures equal == (self@ == other@)"
   },
   {
     "id": 30,
     "function": "lemma_log2_bound",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "77-84",
+    "lines": "78-85",
     "spec_strength": "unknown",
     "snippet": "        proof fn lemma_log2_bound(n: int, bits: nat)\n            requires\n                n >= 1,\n                bits >= 1,\n                n < vstd::arithmetic::power::pow(2, bits),\n            ensures\n                log(2, n) < bits as int,\n            decreases n,"
   },
   {
     "id": 31,
+    "function": "lemma_heap_root_le_all",
+    "file": "Chap45/BinaryHeapPQ.rs",
+    "lines": "99-106",
+    "spec_strength": "unknown",
+    "snippet": "        proof fn lemma_heap_root_le_all<T: StT + Ord + TotalOrder>(seq: Seq<T>, i: int)\n            requires\n                seq.len() > 0,\n                0 <= i < seq.len(),\n                BinaryHeapPQ::<T>::spec_is_exec_heap(seq),\n            ensures\n                TotalOrder::le(seq[0], seq[i]),\n            decreases i,"
+  },
+  {
+    "id": 32,
+    "function": "lemma_heap_parent_le",
+    "file": "Chap45/BinaryHeapPQ.rs",
+    "lines": "129-135",
+    "spec_strength": "unknown",
+    "snippet": "        proof fn lemma_heap_parent_le<T: StT + Ord + TotalOrder>(seq: Seq<T>, i: int)\n            requires\n                seq.len() > 0,\n                0 < i < seq.len(),\n                BinaryHeapPQ::<T>::spec_is_exec_heap(seq),\n            ensures\n                TotalOrder::le(seq[(i - 1) / 2], seq[i]),"
+  },
+  {
+    "id": 33,
     "function": "empty",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "113-117",
+    "lines": "174-178",
     "spec_strength": "unknown",
     "snippet": "            fn empty() -> (pq: Self)\n                ensures\n                    pq@.len() == 0,\n                    pq@.to_multiset() =~= Multiset::empty(),\n                    pq.spec_binaryheappq_wf();"
   },
   {
-    "id": 32,
+    "id": 34,
     "function": "singleton",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "119-124",
+    "lines": "180-186",
     "spec_strength": "unknown",
-    "snippet": "            fn singleton(element: T) -> (pq: Self)\n                requires obeys_feq_clone::<T>(),\n                ensures\n                    pq@.len() == 1,\n                    pq@.to_multiset() =~= Multiset::empty().insert(element@),\n                    pq.spec_binaryheappq_wf();"
-  },
-  {
-    "id": 33,
-    "function": "find_min",
-    "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "126-129",
-    "spec_strength": "unknown",
-    "snippet": "            fn find_min(&self) -> (min_elem: Option<&T>)\n                ensures\n                    self@.len() == 0 ==> min_elem.is_none(),\n                    self@.len() > 0 ==> min_elem.is_some();"
-  },
-  {
-    "id": 34,
-    "function": "insert",
-    "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "131-137",
-    "spec_strength": "unknown",
-    "snippet": "            fn insert(&self, element: T) -> (pq: Self)\n                requires\n                    obeys_feq_clone::<T>(),\n                    self@.len() + 1 <= usize::MAX as int,\n                ensures\n                    pq@.len() == self@.len() + 1,\n                    pq@.to_multiset() =~= self@.to_multiset().insert(element@);"
+    "snippet": "            fn singleton(element: T) -> (pq: Self)\n                requires obeys_feq_clone::<T>(),\n                ensures\n                    pq@.len() == 1,\n                    pq@.to_multiset() =~= Multiset::empty().insert(element@),\n                    pq.spec_binaryheappq_wf(),\n                    Self::spec_is_exec_heap(pq.spec_seq());"
   },
   {
     "id": 35,
-    "function": "delete_min",
+    "function": "find_min",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "139-149",
+    "lines": "188-196",
     "spec_strength": "unknown",
-    "snippet": "            fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))\n                requires\n                    obeys_feq_clone::<T>(),\n                    self@.len() * 2 <= usize::MAX as int,\n                ensures\n                    self@.len() > 0 ==> min_and_rest.1.is_some(),\n                    self@.len() > 0 ==> min_and_rest.0@.len() == self@.len() - 1,\n                    self@.len() == 0 ==> min_and_rest.1.is_none(),\n                    self@.len() == 0 ==> min_and_rest.0@.len() == 0,\n                    self@.len() > 0 ==> self@.to_multiset() =~=\n                        min_and_rest.0@.to_multiset().insert(min_and_rest.1.unwrap()@);"
+    "snippet": "            fn find_min(&self) -> (min_elem: Option<&T>)\n                requires\n                    Self::spec_is_exec_heap(self.spec_seq()),\n                ensures\n                    self@.len() == 0 ==> min_elem.is_none(),\n                    self@.len() > 0 ==> min_elem.is_some(),\n                    self@.len() > 0 ==> self@.to_multiset().count(min_elem.unwrap()@) > 0,\n                    self@.len() > 0 ==> forall|i: int| 0 <= i < self.spec_seq().len() ==>\n                        #[trigger] TotalOrder::le(*min_elem.unwrap(), self.spec_seq()[i]);"
   },
   {
     "id": 36,
+    "function": "insert",
+    "file": "Chap45/BinaryHeapPQ.rs",
+    "lines": "198-206",
+    "spec_strength": "unknown",
+    "snippet": "            fn insert(&self, element: T) -> (pq: Self)\n                requires\n                    obeys_feq_clone::<T>(),\n                    self@.len() + 1 <= usize::MAX as int,\n                    Self::spec_is_exec_heap(self.spec_seq()),\n                ensures\n                    pq@.len() == self@.len() + 1,\n                    pq@.to_multiset() =~= self@.to_multiset().insert(element@),\n                    Self::spec_is_exec_heap(pq.spec_seq());"
+  },
+  {
+    "id": 37,
+    "function": "delete_min",
+    "file": "Chap45/BinaryHeapPQ.rs",
+    "lines": "208-225",
+    "spec_strength": "unknown",
+    "snippet": "            fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))\n                requires\n                    obeys_feq_clone::<T>(),\n                    self@.len() * 2 <= usize::MAX as int,\n                    Self::spec_is_exec_heap(self.spec_seq()),\n                ensures\n                    self@.len() > 0 ==> min_and_rest.1.is_some(),\n                    self@.len() > 0 ==> min_and_rest.0@.len() == self@.len() - 1,\n                    self@.len() == 0 ==> min_and_rest.1.is_none(),\n                    self@.len() == 0 ==> min_and_rest.0@.len() == 0,\n                    self@.len() > 0 ==> self@.to_multiset() =~=\n                        min_and_rest.0@.to_multiset().insert(min_and_rest.1.unwrap()@),\n                    self@.len() > 0 ==> Self::spec_is_exec_heap(min_and_rest.0.spec_seq()),\n                    self@.len() > 0 ==> min_and_rest.1.unwrap() == self.spec_seq()[0],\n                    self@.len() > 0 ==> (forall|i: int|\n                        0 <= i < min_and_rest.0.spec_seq().len() ==>\n                        #[trigger] TotalOrder::le(min_and_rest.1.unwrap(),\n                            min_and_rest.0.spec_seq()[i]));"
+  },
+  {
+    "id": 38,
     "function": "meld",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "151-158",
+    "lines": "227-234",
     "spec_strength": "unknown",
     "snippet": "            fn meld(&self, other: &Self) -> (pq: Self)\n                requires\n                    obeys_feq_clone::<T>(),\n                    self@.len() + other@.len() <= usize::MAX as int,\n                    (self@.len() + other@.len()) * 2 <= usize::MAX as int,\n                ensures\n                    pq@.len() == self@.len() + other@.len(),\n                    pq@.to_multiset() =~= self@.to_multiset().add(other@.to_multiset());"
   },
   {
-    "id": 37,
+    "id": 39,
     "function": "from_seq",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "160-165",
+    "lines": "236-241",
     "spec_strength": "unknown",
     "snippet": "            fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)\n                requires\n                    obeys_feq_clone::<T>(),\n                    seq@.len() * 2 <= usize::MAX as int,\n                ensures\n                    pq@.len() == seq@.len();"
   },
   {
-    "id": 38,
+    "id": 40,
     "function": "size",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "167-168",
+    "lines": "243-244",
     "spec_strength": "unknown",
     "snippet": "            fn size(&self) -> (n: usize)\n                ensures n as int == self.spec_size();"
   },
   {
-    "id": 39,
+    "id": 41,
     "function": "is_empty",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "170-171",
+    "lines": "246-247",
     "spec_strength": "unknown",
     "snippet": "            fn is_empty(&self) -> (empty: bool)\n                ensures empty == (self.spec_size() == 0);"
   },
   {
-    "id": 40,
+    "id": 42,
     "function": "to_seq",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "173-175",
+    "lines": "249-251",
     "spec_strength": "unknown",
     "snippet": "            fn to_seq(&self) -> (seq: ArraySeqStPerS<T>)\n                requires obeys_feq_clone::<T>(),\n                ensures seq@ =~= self@;"
   },
   {
-    "id": 41,
+    "id": 43,
     "function": "insert_all",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "177-182",
+    "lines": "253-258",
     "spec_strength": "unknown",
     "snippet": "            fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> (pq: Self)\n                requires\n                    obeys_feq_clone::<T>(),\n                    self@.len() + elements@.len() <= usize::MAX as int,\n                    (self@.len() + elements@.len()) * 2 <= usize::MAX as int,\n                ensures pq@.len() == self@.len() + elements@.len();"
   },
   {
-    "id": 42,
+    "id": 44,
     "function": "extract_all_sorted",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "184-190",
-    "spec_strength": "hole",
-    "snippet": "            fn extract_all_sorted(&self) -> (sorted: ArraySeqStPerS<T>)\n                requires\n                    obeys_feq_clone::<T>(),\n                    self@.len() * 2 <= usize::MAX as int,\n                ensures\n                    sorted@.len() == self@.len(),\n                    Self::spec_sorted(sorted.seq@);"
+    "lines": "260-267",
+    "spec_strength": "unknown",
+    "snippet": "            fn extract_all_sorted(&self) -> (sorted: ArraySeqStPerS<T>)\n                requires\n                    obeys_feq_clone::<T>(),\n                    self@.len() * 2 <= usize::MAX as int,\n                    Self::spec_is_exec_heap(self.spec_seq()),\n                ensures\n                    sorted@.len() == self@.len(),\n                    Self::spec_sorted(sorted.seq@);"
   },
   {
-    "id": 43,
+    "id": 45,
     "function": "is_valid_heap",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "192-193",
+    "lines": "269-270",
     "spec_strength": "unknown",
     "snippet": "            fn is_valid_heap(&self) -> (valid: bool)\n                requires self@.len() * 2 <= usize::MAX as int;"
   },
   {
-    "id": 44,
+    "id": 46,
     "function": "height",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "195-197",
+    "lines": "272-274",
     "spec_strength": "unknown",
     "snippet": "            fn height(&self) -> (levels: usize)\n                requires self@.len() <= usize::MAX as int,\n                ensures self@.len() == 0 ==> levels == 0;"
   },
   {
-    "id": 45,
+    "id": 47,
     "function": "level_elements",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "199-203",
+    "lines": "276-280",
     "spec_strength": "unknown",
     "snippet": "            fn level_elements(&self, level: usize) -> (elts: ArraySeqStPerS<T>)\n                requires\n                    obeys_feq_clone::<T>(),\n                    level < 63,\n                    usize::BITS >= 64;"
   },
   {
-    "id": 46,
+    "id": 48,
     "function": "from_vec",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "205-209",
+    "lines": "282-286",
     "spec_strength": "unknown",
     "snippet": "            fn from_vec(vec: Vec<T>) -> (pq: Self)\n                requires\n                    obeys_feq_clone::<T>(),\n                    vec@.len() * 2 <= usize::MAX as int,\n                ensures pq@.len() == vec@.len();"
   },
   {
-    "id": 47,
+    "id": 49,
     "function": "to_vec",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "211-213",
+    "lines": "288-290",
     "spec_strength": "unknown",
     "snippet": "            fn to_vec(&self) -> (v: Vec<T>)\n                requires obeys_feq_clone::<T>(),\n                ensures v@.len() == self@.len();"
   },
   {
-    "id": 48,
+    "id": 50,
     "function": "to_sorted_vec",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "215-221",
+    "lines": "292-299",
     "spec_strength": "unknown",
-    "snippet": "            fn to_sorted_vec(&self) -> (v: Vec<T>)\n                requires\n                    obeys_feq_clone::<T>(),\n                    self@.len() * 2 <= usize::MAX as int,\n                ensures\n                    v@.len() == self@.len(),\n                    Self::spec_sorted(v@);"
+    "snippet": "            fn to_sorted_vec(&self) -> (v: Vec<T>)\n                requires\n                    obeys_feq_clone::<T>(),\n                    self@.len() * 2 <= usize::MAX as int,\n                    Self::spec_is_exec_heap(self.spec_seq()),\n                ensures\n                    v@.len() == self@.len(),\n                    Self::spec_sorted(v@);"
   },
   {
-    "id": 49,
+    "id": 51,
     "function": "left_child",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "233-235",
+    "lines": "311-313",
     "spec_strength": "unknown",
     "snippet": "        fn left_child(i: usize) -> (child_idx: usize)\n            requires i <= usize::MAX / 2 - 1,\n            ensures child_idx as int == 2 * (i as int) + 1,"
   },
   {
-    "id": 50,
+    "id": 52,
     "function": "right_child",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "240-242",
+    "lines": "318-320",
     "spec_strength": "unknown",
     "snippet": "        fn right_child(i: usize) -> (child_idx: usize)\n            requires i <= usize::MAX / 2 - 1,\n            ensures child_idx as int == 2 * (i as int) + 2,"
   },
   {
-    "id": 51,
+    "id": 53,
     "function": "parent",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "247-249",
+    "lines": "325-327",
     "spec_strength": "unknown",
-    "snippet": "        fn parent(i: usize) -> (parent_idx: usize)\n            requires true,\n            ensures parent_idx as int == (if i == 0 { 0int } else { (i as int - 1) / 2 }),"
+    "snippet": "        fn parent(i: usize) -> (parent_idx: usize)\n            requires i > 0,\n            ensures parent_idx as int == (i as int - 1) / 2,"
   },
   {
-    "id": 52,
+    "id": 54,
     "function": "lemma_swap_preserves_multiset",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "254-256",
+    "lines": "332-334",
     "spec_strength": "unknown",
     "snippet": "        proof fn lemma_swap_preserves_multiset<A>(s: Seq<A>, i: int, j: int)\n            requires 0 <= i < s.len(), 0 <= j < s.len(),\n            ensures s.update(i, s[j]).update(j, s[i]).to_multiset() =~= s.to_multiset(),"
   },
   {
-    "id": 53,
+    "id": 55,
+    "function": "lemma_le_preserved_by_multiset_eq",
+    "file": "Chap45/BinaryHeapPQ.rs",
+    "lines": "361-370",
+    "spec_strength": "unknown",
+    "snippet": "        proof fn lemma_le_preserved_by_multiset_eq<T: TotalOrder>(\n            min_elem: T, a: Seq<T>, b: Seq<T>,\n        )\n            requires\n                a.to_multiset() =~= b.to_multiset(),\n                forall|j: int| 0 <= j < a.len() ==>\n                    #[trigger] TotalOrder::le(min_elem, a[j]),\n            ensures\n                forall|i: int| 0 <= i < b.len() ==>\n                    #[trigger] TotalOrder::le(min_elem, b[i]),"
+  },
+  {
+    "id": 56,
     "function": "swap_elements",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "281-289",
+    "lines": "381-389",
     "spec_strength": "unknown",
     "snippet": "        fn swap_elements<T: StT + Ord + TotalOrder>(seq: &ArraySeqStPerS<T>, i: usize, j: usize) -> (swapped: ArraySeqStPerS<T>)\n            requires\n                obeys_feq_clone::<T>(),\n                (i as int) < seq.view().len(),\n                (j as int) < seq.view().len(),\n                seq@.len() <= usize::MAX as int,\n            ensures\n                swapped@.len() == seq@.len(),\n                swapped@.to_multiset() =~= seq@.to_multiset(),"
   },
   {
-    "id": 54,
+    "id": 57,
     "function": "bubble_up",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "349-356",
+    "lines": "449-456",
     "spec_strength": "unknown",
     "snippet": "        fn bubble_up<T: StT + Ord + TotalOrder>(seq: &ArraySeqStPerS<T>, mut i: usize) -> (heaped: ArraySeqStPerS<T>)\n            requires\n                obeys_feq_clone::<T>(),\n                (i as int) < seq.view().len(),\n                seq@.len() <= usize::MAX as int,\n            ensures\n                heaped@.len() == seq@.len(),\n                heaped@.to_multiset() =~= seq@.to_multiset(),"
   },
   {
-    "id": 55,
+    "id": 58,
     "function": "bubble_down",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "401-409",
+    "lines": "501-509",
     "spec_strength": "unknown",
     "snippet": "        fn bubble_down<T: StT + Ord + TotalOrder>(heap: &ArraySeqStPerS<T>, i: usize) -> (heaped: ArraySeqStPerS<T>)\n            requires\n                obeys_feq_clone::<T>(),\n                (i as int) < heap.view().len(),\n                heap@.len() <= usize::MAX as int,\n                heap@.len() * 2 <= usize::MAX as int,\n            ensures\n                heaped@.len() == heap@.len(),\n                heaped@.to_multiset() =~= heap@.to_multiset(),"
   },
   {
-    "id": 56,
+    "id": 59,
+    "function": "bubble_down_heap",
+    "file": "Chap45/BinaryHeapPQ.rs",
+    "lines": "564-573",
+    "spec_strength": "unknown",
+    "snippet": "        fn bubble_down_heap<T: StT + Ord + TotalOrder>(heap: ArraySeqStPerS<T>) -> (heaped: ArraySeqStPerS<T>)\n            requires\n                heap.seq@.len() > 0,\n                heap.seq@.len() * 2 <= usize::MAX as int,\n                BinaryHeapPQ::<T>::spec_is_exec_heap_except(heap.seq@, 0),\n            ensures\n                heaped.seq@.len() == heap.seq@.len(),\n                BinaryHeapPQ::<T>::spec_is_exec_heap(heaped.seq@),\n                heaped@.to_multiset() =~= heap@.to_multiset(),\n                heaped.seq@.to_multiset() =~= heap.seq@.to_multiset(),"
+  },
+  {
+    "id": 60,
+    "function": "bubble_up_heap",
+    "file": "Chap45/BinaryHeapPQ.rs",
+    "lines": "739-763",
+    "spec_strength": "unknown",
+    "snippet": "        fn bubble_up_heap<T: StT + Ord + TotalOrder>(heap: ArraySeqStPerS<T>, i: usize) -> (heaped: ArraySeqStPerS<T>)\n            requires\n                heap.seq@.len() > 0,\n                (i as int) < heap.seq@.len(),\n                i == 0 ==> BinaryHeapPQ::<T>::spec_is_exec_heap(heap.seq@),\n                i > 0 ==> BinaryHeapPQ::<T>::spec_is_exec_heap_except(heap.seq@, (i as int - 1) / 2),\n                // Parent satisfies heap_inv for all children of parent(i) except child i.\n                i > 0 ==> (\n                    (2 * ((i as int - 1) / 2) + 1 < heap.seq@.len() && 2 * ((i as int - 1) / 2) + 1 != i as int\n                        ==> TotalOrder::le(heap.seq@[(i as int - 1) / 2], heap.seq@[2 * ((i as int - 1) / 2) + 1]))\n                    && (2 * ((i as int - 1) / 2) + 2 < heap.seq@.len() && 2 * ((i as int - 1) / 2) + 2 != i as int\n                        ==> TotalOrder::le(heap.seq@[(i as int - 1) / 2], heap.seq@[2 * ((i as int - 1) / 2) + 2]))\n                ),\n                // Parent of i is <= all children of i.\n                i > 0 ==> (\n                    (2 * (i as int) + 1 < heap.seq@.len()\n                        ==> TotalOrder::le(heap.seq@[(i as int - 1) / 2], heap.seq@[2 * (i as int) + 1]))\n                    && (2 * (i as int) + 2 < heap.seq@.len()\n                        ==> TotalOrder::le(heap.seq@[(i as int - 1) / 2], heap.seq@[2 * (i as int) + 2]))\n                ),\n            ensures\n                heaped.seq@.len() == heap.seq@.len(),\n                BinaryHeapPQ::<T>::spec_is_exec_heap(heaped.seq@),\n                heaped@.to_multiset() =~= heap@.to_multiset(),\n                heaped.seq@.to_multiset() =~= heap.seq@.to_multiset(),"
+  },
+  {
+    "id": 61,
     "function": "heapify",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "462-469",
+    "lines": "923-930",
     "spec_strength": "unknown",
     "snippet": "        fn heapify<T: StT + Ord + TotalOrder>(seq: &ArraySeqStPerS<T>) -> (heap: ArraySeqStPerS<T>)\n            requires\n                obeys_feq_clone::<T>(),\n                seq@.len() <= usize::MAX as int,\n                seq@.len() * 2 <= usize::MAX as int,\n            ensures\n                heap@.len() == seq@.len(),\n                heap@.to_multiset() =~= seq@.to_multiset(),"
   },
   {
-    "id": 57,
+    "id": 62,
     "function": "is_heap",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "512-514",
+    "lines": "973-975",
     "spec_strength": "unknown",
     "snippet": "        fn is_heap<T: StT + Ord + TotalOrder>(elements: &ArraySeqStPerS<T>) -> (valid: bool)\n            requires elements@.len() * 2 <= usize::MAX as int,\n            ensures true,"
   },
   {
-    "id": 58,
+    "id": 63,
     "function": "exec_pow2",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "540-542",
+    "lines": "1001-1003",
     "spec_strength": "unknown",
     "snippet": "        fn exec_pow2(e: usize) -> (power: usize)\n            requires pow2(e as nat) <= usize::MAX as int,\n            ensures power as int == pow2(e as nat),"
   },
   {
-    "id": 59,
+    "id": 64,
     "function": "exec_log2",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "567-570",
+    "lines": "1028-1031",
     "spec_strength": "unknown",
     "snippet": "        fn exec_log2(n: usize) -> (log_val: usize)\n            requires n >= 1,\n            ensures log_val as int == log(2, n as int),\n            decreases n,"
   },
   {
-    "id": 60,
+    "id": 65,
     "function": "default",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "1064",
+    "lines": "1758",
     "spec_strength": "",
     "snippet": "            fn default() -> Self {"
   },
   {
-    "id": 61,
+    "id": 66,
     "function": "eq",
     "file": "Chap45/BinaryHeapPQ.rs",
-    "lines": "1089-1090",
-    "spec_strength": "unknown",
+    "lines": "1793-1794",
+    "spec_strength": "hole",
     "snippet": "            fn eq(&self, other: &Self) -> (equal: bool)\n                ensures equal == (self@ == other@)"
   },
   {
-    "id": 62,
+    "id": 67,
     "function": "_example_45_2_verified",
     "file": "Chap45/Example45_2.rs",
     "lines": "27",
@@ -496,859 +536,859 @@
     "snippet": "        proof fn _example_45_2_verified() {}"
   },
   {
-    "id": 63,
+    "id": 68,
     "function": "example_45_2_textbook_example",
     "file": "Chap45/Example45_2.rs",
     "lines": "32",
-    "spec_strength": "unknown",
-    "snippet": "            fn example_45_2_textbook_example()         -> (comparison: HeapsortComparison<i32>) ensures true;"
-  },
-  {
-    "id": 64,
-    "function": "example_45_2_reverse_sorted",
-    "file": "Chap45/Example45_2.rs",
-    "lines": "33",
-    "spec_strength": "unknown",
-    "snippet": "            fn example_45_2_reverse_sorted()           -> (comparison: HeapsortComparison<i32>) ensures true;"
-  },
-  {
-    "id": 65,
-    "function": "example_45_2_already_sorted",
-    "file": "Chap45/Example45_2.rs",
-    "lines": "34",
-    "spec_strength": "unknown",
-    "snippet": "            fn example_45_2_already_sorted()           -> (comparison: HeapsortComparison<i32>) ensures true;"
-  },
-  {
-    "id": 66,
-    "function": "example_45_2_duplicates",
-    "file": "Chap45/Example45_2.rs",
-    "lines": "35",
-    "spec_strength": "unknown",
-    "snippet": "            fn example_45_2_duplicates()               -> (comparison: HeapsortComparison<i32>) ensures true;"
-  },
-  {
-    "id": 67,
-    "function": "example_45_2_single_element",
-    "file": "Chap45/Example45_2.rs",
-    "lines": "36",
-    "spec_strength": "unknown",
-    "snippet": "            fn example_45_2_single_element()           -> (comparison: HeapsortComparison<i32>) ensures true;"
-  },
-  {
-    "id": 68,
-    "function": "example_45_2_empty",
-    "file": "Chap45/Example45_2.rs",
-    "lines": "37",
-    "spec_strength": "unknown",
-    "snippet": "            fn example_45_2_empty()                    -> (comparison: HeapsortComparison<i32>) ensures true;"
+    "spec_strength": "",
+    "snippet": "            fn example_45_2_textbook_example()         -> (comparison: HeapsortComparison<i32>);"
   },
   {
     "id": 69,
-    "function": "example_45_2_efficiency_demonstration",
+    "function": "example_45_2_reverse_sorted",
     "file": "Chap45/Example45_2.rs",
-    "lines": "38",
-    "spec_strength": "unknown",
-    "snippet": "            fn example_45_2_efficiency_demonstration() -> (results: Vec<(String, Vec<i32>)>) ensures true;"
+    "lines": "33",
+    "spec_strength": "",
+    "snippet": "            fn example_45_2_reverse_sorted()           -> (comparison: HeapsortComparison<i32>);"
   },
   {
     "id": 70,
-    "function": "run_example_45_2",
+    "function": "example_45_2_already_sorted",
     "file": "Chap45/Example45_2.rs",
-    "lines": "39",
-    "spec_strength": "unknown",
-    "snippet": "            fn run_example_45_2()                      -> (output: String) ensures true;"
+    "lines": "34",
+    "spec_strength": "",
+    "snippet": "            fn example_45_2_already_sorted()           -> (comparison: HeapsortComparison<i32>);"
   },
   {
     "id": 71,
-    "function": "eq",
-    "file": "Chap45/HeapsortExample.rs",
-    "lines": "104-105",
-    "spec_strength": "unknown",
-    "snippet": "            fn eq(&self, other: &Self) -> (equal: bool)\n                ensures equal == (self@ == other@)"
+    "function": "example_45_2_duplicates",
+    "file": "Chap45/Example45_2.rs",
+    "lines": "35",
+    "spec_strength": "",
+    "snippet": "            fn example_45_2_duplicates()               -> (comparison: HeapsortComparison<i32>);"
   },
   {
     "id": 72,
+    "function": "example_45_2_single_element",
+    "file": "Chap45/Example45_2.rs",
+    "lines": "36",
+    "spec_strength": "",
+    "snippet": "            fn example_45_2_single_element()           -> (comparison: HeapsortComparison<i32>);"
+  },
+  {
+    "id": 73,
+    "function": "example_45_2_empty",
+    "file": "Chap45/Example45_2.rs",
+    "lines": "37",
+    "spec_strength": "",
+    "snippet": "            fn example_45_2_empty()                    -> (comparison: HeapsortComparison<i32>);"
+  },
+  {
+    "id": 74,
+    "function": "example_45_2_efficiency_demonstration",
+    "file": "Chap45/Example45_2.rs",
+    "lines": "38",
+    "spec_strength": "",
+    "snippet": "            fn example_45_2_efficiency_demonstration() -> (results: Vec<(String, Vec<i32>)>);"
+  },
+  {
+    "id": 75,
+    "function": "run_example_45_2",
+    "file": "Chap45/Example45_2.rs",
+    "lines": "39",
+    "spec_strength": "",
+    "snippet": "            fn run_example_45_2()                      -> (output: String);"
+  },
+  {
+    "id": 76,
+    "function": "eq",
+    "file": "Chap45/HeapsortExample.rs",
+    "lines": "103-104",
+    "spec_strength": "hole",
+    "snippet": "            fn eq(&self, other: &Self) -> (equal: bool)\n                ensures equal == (self@ == other@)"
+  },
+  {
+    "id": 77,
     "function": "_heapsort_example_verified",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "126",
+    "lines": "125",
     "spec_strength": "",
     "snippet": "        proof fn _heapsort_example_verified() {}"
   },
   {
-    "id": 73,
+    "id": 78,
     "function": "is_vec_sorted_exec",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "131-132",
-    "spec_strength": "unknown",
-    "snippet": "        fn is_vec_sorted_exec<T: StT + Ord + TotalOrder>(v: &Vec<T>) -> (sorted: bool)\n            ensures true,"
+    "lines": "130",
+    "spec_strength": "",
+    "snippet": "        fn is_vec_sorted_exec<T: StT + Ord + TotalOrder>(v: &Vec<T>) -> (sorted: bool)"
   },
   {
-    "id": 74,
+    "id": 79,
     "function": "all_results_match",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "153",
+    "lines": "151",
     "spec_strength": "",
     "snippet": "            fn all_results_match(&self) -> (matches: bool);"
   },
   {
-    "id": 75,
+    "id": 80,
     "function": "all_results_sorted",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "155",
+    "lines": "153",
     "spec_strength": "",
     "snippet": "            fn all_results_sorted(&self) -> (sorted: bool);"
   },
   {
-    "id": 76,
+    "id": 81,
     "function": "heapsort_unsorted_list",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "179-195",
+    "lines": "177-193",
     "spec_strength": "",
     "snippet": "    /// - APAS: Work Θ(n²), Span Θ(n²) — n × O(n) deleteMin dominates.\n    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — agrees with APAS.\n    pub fn heapsort_unsorted_list<T: StT + Ord + TotalOrder>(sequence: &[T]) -> Vec<T> {\n        let mut pq = UnsortedListPQ::empty();\n        for element in sequence {\n            pq = pq.insert(element.clone());\n        }\n        let mut result = Vec::new();\n        while !pq.is_empty() {\n            let (new_pq, min_element) = pq.delete_min();\n            if let Some(element) = min_element {\n                result.push(element);\n            }\n            pq = new_pq;\n        }\n        result\n    }"
   },
   {
-    "id": 77,
+    "id": 82,
     "function": "heapsort_sorted_list",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "197-213",
+    "lines": "195-211",
     "spec_strength": "",
     "snippet": "    /// - APAS: Work Θ(n²), Span Θ(n²) — n × O(n) insert dominates.\n    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — agrees with APAS.\n    pub fn heapsort_sorted_list<T: StT + Ord + TotalOrder>(sequence: &[T]) -> Vec<T> {\n        let mut pq = SortedListPQ::empty();\n        for element in sequence {\n            pq = pq.insert(element.clone());\n        }\n        let mut result = Vec::new();\n        while !pq.is_empty() {\n            let (new_pq, min_element) = pq.delete_min();\n            if let Some(element) = min_element {\n                result.push(element);\n            }\n            pq = new_pq;\n        }\n        result\n    }"
   },
   {
-    "id": 78,
+    "id": 83,
     "function": "heapsort_balanced_tree",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "215-231",
+    "lines": "213-229",
     "spec_strength": "",
     "snippet": "    /// - APAS: Work Θ(n log n), Span Θ(n log n)\n    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — insert is O(n) due to Vec conversion, not O(log n).\n    pub fn heapsort_balanced_tree<T: StT + Ord + TotalOrder>(sequence: &[T]) -> Vec<T> {\n        let mut pq = BalancedTreePQ::empty();\n        for element in sequence {\n            pq = pq.insert(element.clone());\n        }\n        let mut result = Vec::new();\n        while !pq.is_empty() {\n            let (new_pq, min_element) = pq.delete_min();\n            if let Some(element) = min_element {\n                result.push(element);\n            }\n            pq = new_pq;\n        }\n        result\n    }"
   },
   {
-    "id": 79,
+    "id": 84,
     "function": "heapsort_binary_heap",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "233-249",
+    "lines": "231-247",
     "spec_strength": "",
     "snippet": "    /// - APAS: Work Θ(n log n), Span Θ(n log n)\n    /// - Claude-Opus-4.6: Work Θ(n² log n), Span Θ(n² log n) — each insert/delete is O(n log n) due to array swaps.\n    pub fn heapsort_binary_heap<T: StT + Ord + TotalOrder>(sequence: &[T]) -> Vec<T> {\n        let mut pq = BinaryHeapPQ::empty();\n        for element in sequence {\n            pq = pq.insert(element.clone());\n        }\n        let mut result = Vec::new();\n        while !pq.is_empty() {\n            let (new_pq, min_element) = pq.delete_min();\n            if let Some(element) = min_element {\n                result.push(element);\n            }\n            pq = new_pq;\n        }\n        result\n    }"
   },
   {
-    "id": 80,
+    "id": 85,
     "function": "heapsort_leftist_heap",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "251-267",
+    "lines": "249-265",
     "spec_strength": "",
     "snippet": "    /// - APAS: Work Θ(n log n), Span Θ(n log n)\n    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — each insert/delete clones tree O(n).\n    pub fn heapsort_leftist_heap<T: StT + Ord + TotalOrder>(sequence: &[T]) -> Vec<T> {\n        let mut pq = LeftistHeapPQ::empty();\n        for element in sequence {\n            pq = pq.insert(element.clone());\n        }\n        let mut result = Vec::new();\n        while !pq.is_empty() {\n            let (new_pq, min_element) = pq.delete_min();\n            if let Some(element) = min_element {\n                result.push(element);\n            }\n            pq = new_pq;\n        }\n        result\n    }"
   },
   {
-    "id": 81,
+    "id": 86,
     "function": "compare_all_heapsorts",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "269-279",
+    "lines": "267-277",
     "spec_strength": "",
     "snippet": "    /// Demonstrate all heapsort variants on the same input\n    pub fn compare_all_heapsorts<T: StT + Ord + TotalOrder>(sequence: &[T]) -> HeapsortComparison<T> {\n        HeapsortComparison {\n            input: sequence.to_vec(),\n            unsorted_list_result: heapsort_unsorted_list(sequence),\n            sorted_list_result: heapsort_sorted_list(sequence),\n            balanced_tree_result: heapsort_balanced_tree(sequence),\n            binary_heap_result: heapsort_binary_heap(sequence),\n            leftist_heap_result: heapsort_leftist_heap(sequence),\n        }\n    }"
   },
   {
-    "id": 82,
+    "id": 87,
     "function": "textbook_example",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "306-310",
+    "lines": "304-308",
     "spec_strength": "",
     "snippet": "    /// Example from textbook - demonstrate heapsort on a small dataset\n    pub fn textbook_example() -> HeapsortComparison<i32> {\n        let input = vec![64, 34, 25, 12, 22, 11, 90];\n        compare_all_heapsorts(&input)\n    }"
   },
   {
-    "id": 83,
+    "id": 88,
     "function": "reverse_sorted_example",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "312-316",
+    "lines": "310-314",
     "spec_strength": "",
     "snippet": "    /// Demonstrate heapsort on reverse-sorted input (worst case for some algorithms)\n    pub fn reverse_sorted_example() -> HeapsortComparison<i32> {\n        let input = vec![10, 9, 8, 7, 6, 5, 4, 3, 2, 1];\n        compare_all_heapsorts(&input)\n    }"
   },
   {
-    "id": 84,
+    "id": 89,
     "function": "already_sorted_example",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "318-322",
+    "lines": "316-320",
     "spec_strength": "",
     "snippet": "    /// Demonstrate heapsort on already-sorted input\n    pub fn already_sorted_example() -> HeapsortComparison<i32> {\n        let input = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];\n        compare_all_heapsorts(&input)\n    }"
   },
   {
-    "id": 85,
+    "id": 90,
     "function": "duplicates_example",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "324-328",
+    "lines": "322-326",
     "spec_strength": "",
     "snippet": "    /// Demonstrate heapsort on input with duplicates\n    pub fn duplicates_example() -> HeapsortComparison<i32> {\n        let input = vec![5, 2, 8, 2, 9, 1, 5, 5];\n        compare_all_heapsorts(&input)\n    }"
   },
   {
-    "id": 86,
+    "id": 91,
     "function": "single_element_example",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "330-334",
+    "lines": "328-332",
     "spec_strength": "",
     "snippet": "    /// Demonstrate heapsort on single element\n    pub fn single_element_example() -> HeapsortComparison<i32> {\n        let input = vec![42];\n        compare_all_heapsorts(&input)\n    }"
   },
   {
-    "id": 87,
+    "id": 92,
     "function": "empty_example",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "336-340",
+    "lines": "334-338",
     "spec_strength": "",
     "snippet": "    /// Demonstrate heapsort on empty input\n    pub fn empty_example() -> HeapsortComparison<i32> {\n        let input = vec![];\n        compare_all_heapsorts(&input)\n    }"
   },
   {
-    "id": 88,
+    "id": 93,
     "function": "large_example",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "342-352",
+    "lines": "340-350",
     "spec_strength": "",
     "snippet": "    /// Generate a large random-like sequence for performance testing\n    pub fn large_example(size: usize) -> Vec<i32> {\n        // Generate pseudo-random sequence for testing\n        let mut result = Vec::with_capacity(size);\n        let mut x: i64 = 1;\n        for _ in 0..size {\n            x = (x * 1103515245 + 12345) % (1i64 << 31); // Linear congruential generator\n            result.push((x % 1000) as i32);\n        }\n        result\n    }"
   },
   {
-    "id": 89,
+    "id": 94,
     "function": "efficiency_demonstration",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "354-363",
+    "lines": "352-361",
     "spec_strength": "",
     "snippet": "    /// Demonstrate the efficiency difference between implementations\n    pub fn efficiency_demonstration() -> Vec<(String, Vec<i32>)> {\n        let inputs = vec![\n            (\"Small (7 elements)\".to_string(), vec![64, 34, 25, 12, 22, 11, 90]),\n            (\"Medium (20 elements)\".to_string(), large_example(20)),\n            (\"Large (100 elements)\".to_string(), large_example(100)),\n        ];\n\n        inputs\n    }"
   },
   {
-    "id": 90,
+    "id": 95,
     "function": "complexity_analysis",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "365-394",
+    "lines": "363-392",
     "spec_strength": "",
     "snippet": "    /// Analyze the theoretical complexity of each heapsort variant\n    pub fn complexity_analysis() -> Vec<(String, String, String)> {\n        vec![\n            (\n                \"UnsortedListPQ\".to_string(),\n                \"Θ(n²)\".to_string(),\n                \"O(n) deleteMin dominates\".to_string(),\n            ),\n            (\n                \"SortedListPQ\".to_string(),\n                \"Θ(n²)\".to_string(),\n                \"O(n) insert dominates\".to_string(),\n            ),\n            (\n                \"BalancedTreePQ\".to_string(),\n                \"Θ(n log n)\".to_string(),\n                \"O(log n) insert and deleteMin\".to_string(),\n            ),\n            (\n                \"BinaryHeapPQ\".to_string(),\n                \"Θ(n log n)\".to_string(),\n                \"O(log n) insert and deleteMin\".to_string(),\n            ),\n            (\n                \"LeftistHeapPQ\".to_string(),\n                \"Θ(n log n)\".to_string(),\n                \"O(log n) insert and deleteMin + superior meld\".to_string(),\n            ),\n        ]\n    }"
   },
   {
-    "id": 91,
+    "id": 96,
     "function": "correctness_verification",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "396-410",
+    "lines": "394-408",
     "spec_strength": "",
     "snippet": "    /// Verify that all heapsort implementations produce correct results\n    pub fn correctness_verification() -> bool {\n        let test_cases = vec![\n            textbook_example(),\n            reverse_sorted_example(),\n            already_sorted_example(),\n            duplicates_example(),\n            single_element_example(),\n            empty_example(),\n        ];\n\n        test_cases\n            .iter()\n            .all(|comparison| comparison.all_results_match() && comparison.all_results_sorted())\n    }"
   },
   {
-    "id": 92,
+    "id": 97,
     "function": "vec_to_array_seq",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "412-420",
+    "lines": "410-418",
     "spec_strength": "",
     "snippet": "    /// Convert Vec to ArraySeqStPerS for use with APAS sequence types\n    pub fn vec_to_array_seq<T: StT>(vec: &[T]) -> ArraySeqStPerS<T> {\n        let mut result = ArraySeqStPerS::empty();\n        for element in vec {\n            let single_seq = ArraySeqStPerS::singleton(element.clone());\n            result = ArraySeqStPerS::append(&result, &single_seq);\n        }\n        result\n    }"
   },
   {
-    "id": 93,
+    "id": 98,
     "function": "vec_to_avl_seq",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "422-423",
+    "lines": "420-421",
     "spec_strength": "",
     "snippet": "    /// Convert Vec to AVLTreeSeqStPerS for use with balanced tree operations\n    pub fn vec_to_avl_seq<T: StT>(vec: &[T]) -> AVLTreeSeqStPerS<T> { AVLTreeSeqStPerS::from_vec(vec.to_vec()) }"
   },
   {
-    "id": 94,
+    "id": 99,
     "function": "is_sorted",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "425-426",
+    "lines": "423-424",
     "spec_strength": "",
     "snippet": "    /// Check if a sequence is sorted\n    pub fn is_sorted<T: Ord>(vec: &[T]) -> bool { vec.windows(2).all(|w| w[0] <= w[1]) }"
   },
   {
-    "id": 95,
+    "id": 100,
     "function": "generate_test_sequences",
     "file": "Chap45/HeapsortExample.rs",
-    "lines": "428-443",
+    "lines": "426-441",
     "spec_strength": "",
     "snippet": "    /// Generate test sequences of various patterns\n    pub fn generate_test_sequences(size: usize) -> Vec<(String, Vec<i32>)> {\n        vec![\n            (\"Random\".to_string(), large_example(size)),\n            (\"Sorted\".to_string(), (1..=size as i32).collect()),\n            (\"Reverse\".to_string(), (1..=size as i32).rev().collect()),\n            (\"AllSame\".to_string(), vec![42; size]),\n            (\"AlmostSorted\".to_string(), {\n                let mut seq: Vec<i32> = (1..=size as i32).collect();\n                if size > 2 {\n                    seq.swap(0, size - 1); // Swap first and last\n                }\n                seq\n            }),\n        ]\n    }"
   },
   {
-    "id": 96,
+    "id": 101,
     "function": "_leftist_heap_pq_verified",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "81",
+    "lines": "80",
     "spec_strength": "",
     "snippet": "        proof fn _leftist_heap_pq_verified() {}"
   },
   {
-    "id": 97,
+    "id": 102,
     "function": "total_order_le",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "84-86",
+    "lines": "84-85",
     "spec_strength": "unknown",
-    "snippet": "        fn total_order_le<T: StT + Ord + TotalOrder>(a: &T, b: &T) -> (le: bool)\n            requires true,\n            ensures le <==> TotalOrder::le(*a, *b)"
+    "snippet": "        fn total_order_le<T: StT + Ord + TotalOrder>(a: &T, b: &T) -> (le: bool)\n            ensures le <==> TotalOrder::le(*a, *b)"
   },
   {
-    "id": 98,
+    "id": 103,
     "function": "lemma_total_size_monotone",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "104-107",
+    "lines": "103-106",
     "spec_strength": "unknown",
     "snippet": "        proof fn lemma_total_size_monotone<T: StT + Ord + TotalOrder>(heaps: Seq<LeftistHeapPQ<T>>, j: int, k: int)\n            requires 0 <= j <= k <= heaps.len(),\n            ensures LeftistHeapPQ::<T>::spec_total_size(heaps, j) <= LeftistHeapPQ::<T>::spec_total_size(heaps, k),\n            decreases k - j,"
   },
   {
-    "id": 99,
+    "id": 104,
     "function": "lemma_heap_root_is_min",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "115-121",
+    "lines": "114-120",
     "spec_strength": "unknown",
     "snippet": "        proof fn lemma_heap_root_is_min<T: StT + Ord + TotalOrder>(node: &LeftistHeapNode<T>)\n            requires node.spec_is_heap(),\n            ensures\n                node.spec_seq().len() > 0 ==>\n                    forall|i: int| 0 <= i < node.spec_seq().len() ==>\n                        #[trigger] TotalOrder::le(node.spec_seq()[0], node.spec_seq()[i]),\n            decreases *node,"
   },
   {
-    "id": 100,
+    "id": 105,
     "function": "lemma_rank_le_size",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "176-178",
+    "lines": "175-177",
     "spec_strength": "unknown",
     "snippet": "        proof fn lemma_rank_le_size<T: StT + Ord + TotalOrder>(node: &LeftistHeapNode<T>)\n            requires node.spec_rank_bounded(),\n            ensures node.spec_rank() <= node.spec_size(),"
   },
   {
-    "id": 101,
+    "id": 106,
     "function": "rank",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "205-206",
+    "lines": "204-205",
     "spec_strength": "unknown",
     "snippet": "            fn rank(&self) -> (rank_val: usize)\n                ensures rank_val as nat == self.spec_rank();"
   },
   {
-    "id": 102,
+    "id": 107,
     "function": "make_node",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "207-222",
+    "lines": "206-221",
     "spec_strength": "unknown",
     "snippet": "            fn make_node(key: T, left: LeftistHeapNode<T>, right: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>)\n                requires\n                    left.spec_size() + right.spec_size() + 1 <= usize::MAX as nat,\n                    left.spec_is_leftist() && left.spec_is_heap(),\n                    right.spec_is_leftist() && right.spec_is_heap(),\n                    left.spec_rank_bounded() && right.spec_rank_bounded(),\n                    left.spec_key_le_root(key),\n                    right.spec_key_le_root(key),\n                ensures\n                    node.spec_size() == left.spec_size() + right.spec_size() + 1,\n                    node.spec_is_leftist(),\n                    node.spec_is_heap(),\n                    node.spec_rank_bounded(),\n                    node@ =~= Multiset::empty().insert(key).add(left@).add(right@),\n                    forall|x: T| TotalOrder::le(x, key) ==>\n                        #[trigger] node.spec_key_le_root(x);"
   },
   {
-    "id": 103,
+    "id": 108,
     "function": "meld_nodes",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "223-236",
+    "lines": "222-235",
     "spec_strength": "unknown",
     "snippet": "            fn meld_nodes(a: LeftistHeapNode<T>, b: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>)\n                requires\n                    a.spec_size() + b.spec_size() <= usize::MAX as nat,\n                    a.spec_is_leftist() && a.spec_is_heap(),\n                    b.spec_is_leftist() && b.spec_is_heap(),\n                    a.spec_rank_bounded() && b.spec_rank_bounded(),\n                ensures\n                    node.spec_size() == a.spec_size() + b.spec_size(),\n                    node.spec_is_leftist(),\n                    node.spec_is_heap(),\n                    node.spec_rank_bounded(),\n                    node@ =~= a@.add(b@),\n                    forall|x: T| a.spec_key_le_root(x) && b.spec_key_le_root(x) ==>\n                        #[trigger] node.spec_key_le_root(x);"
   },
   {
-    "id": 104,
+    "id": 109,
     "function": "size`",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "318-320",
+    "lines": "317-319",
     "spec_strength": "unknown",
     "snippet": "            fn size(&self) -> (n: usize)\n                requires self.spec_size() <= usize::MAX as nat,\n                ensures n as nat == self.spec_size();"
   },
   {
-    "id": 105,
+    "id": 110,
     "function": "height`",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "330-332",
+    "lines": "329-331",
     "spec_strength": "unknown",
     "snippet": "            fn height(&self) -> (levels: usize)\n                requires self.spec_size() <= usize::MAX as nat,\n                ensures self.spec_size() == 0 ==> levels == 0;"
   },
   {
-    "id": 106,
+    "id": 111,
     "function": "is_leftist",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "245-246",
+    "lines": "244-245",
     "spec_strength": "unknown",
     "snippet": "            fn is_leftist(&self) -> (is_leftist: bool)\n                ensures is_leftist <==> self.spec_is_leftist();"
   },
   {
-    "id": 107,
+    "id": 112,
     "function": "is_heap",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "247-248",
+    "lines": "246-247",
     "spec_strength": "unknown",
     "snippet": "            fn is_heap(&self) -> (is_heap: bool)\n                ensures is_heap <==> self.spec_is_heap();"
   },
   {
-    "id": 108,
+    "id": 113,
     "function": "is_rank_bounded",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "249-251",
+    "lines": "248-250",
     "spec_strength": "unknown",
     "snippet": "            fn is_rank_bounded(&self) -> (bounded: bool)\n                requires self.spec_size() <= usize::MAX as nat,\n                ensures bounded <==> self.spec_rank_bounded();"
   },
   {
-    "id": 109,
+    "id": 114,
     "function": "to_vec`",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "343-345",
+    "lines": "342-344",
     "spec_strength": "unknown",
     "snippet": "            fn to_vec(&self) -> (v: Vec<T>)\n                requires self.spec_size() <= usize::MAX as nat,\n                ensures v@.len() as nat == self.spec_size();"
   },
   {
-    "id": 110,
+    "id": 115,
     "function": "empty",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "264-268",
+    "lines": "263-267",
     "spec_strength": "unknown",
     "snippet": "            fn empty() -> (pq: Self)\n                ensures\n                    pq.spec_leftistheappq_wf(),\n                    pq.spec_size() == 0,\n                    pq@ =~= Multiset::empty();"
   },
   {
-    "id": 111,
+    "id": 116,
     "function": "singleton",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "269-273",
+    "lines": "268-272",
     "spec_strength": "unknown",
     "snippet": "            fn singleton(element: T) -> (pq: Self)\n                ensures\n                    pq.spec_leftistheappq_wf(),\n                    pq.spec_size() == 1,\n                    pq@ =~= Multiset::empty().insert(element);"
   },
   {
-    "id": 112,
+    "id": 117,
     "function": "find_min",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "274-281",
+    "lines": "273-280",
     "spec_strength": "unknown",
     "snippet": "            fn find_min(&self) -> (min_elem: Option<&T>)\n                requires self.spec_leftistheappq_wf(),\n                ensures\n                    self.spec_size() == 0 ==> min_elem.is_none(),\n                    self.spec_size() > 0 ==> min_elem.is_some(),\n                    self.spec_size() > 0 ==> self@.count(*min_elem.unwrap()) > 0,\n                    self.spec_size() > 0 ==> forall|e: T| self@.count(e) > 0 ==>\n                        #[trigger] TotalOrder::le(*min_elem.unwrap(), e);"
   },
   {
-    "id": 113,
+    "id": 118,
     "function": "insert",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "282-289",
+    "lines": "281-288",
     "spec_strength": "unknown",
     "snippet": "            fn insert(&self, element: T) -> (pq: Self)\n                requires\n                    self.spec_leftistheappq_wf(),\n                    self.spec_size() + 1 <= usize::MAX as nat,\n                ensures\n                    pq.spec_leftistheappq_wf(),\n                    pq.spec_size() == self.spec_size() + 1,\n                    pq@ =~= self@.insert(element);"
   },
   {
-    "id": 114,
+    "id": 119,
     "function": "delete_min",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "290-303",
+    "lines": "289-302",
     "spec_strength": "unknown",
     "snippet": "            fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))\n                requires\n                    self.spec_leftistheappq_wf(),\n                    self.spec_size() <= usize::MAX as nat,\n                ensures\n                    min_and_rest.0.spec_leftistheappq_wf(),\n                    self.spec_size() > 0 ==> min_and_rest.1.is_some(),\n                    self.spec_size() > 0 ==> min_and_rest.0.spec_size() == self.spec_size() - 1,\n                    self.spec_size() == 0 ==> min_and_rest.1.is_none(),\n                    self.spec_size() == 0 ==> min_and_rest.0.spec_size() == self.spec_size(),\n                    self.spec_size() > 0 ==> self@ =~=\n                        min_and_rest.0@.insert(min_and_rest.1.unwrap()),\n                    self.spec_size() > 0 ==> forall|e: T| self@.count(e) > 0 ==>\n                        #[trigger] TotalOrder::le(min_and_rest.1.unwrap(), e);"
   },
   {
-    "id": 115,
+    "id": 120,
     "function": "meld",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "304-312",
+    "lines": "303-311",
     "spec_strength": "unknown",
     "snippet": "            fn meld(&self, other: &Self) -> (pq: Self)\n                requires\n                    self.spec_leftistheappq_wf(),\n                    other.spec_leftistheappq_wf(),\n                    self.spec_size() + other.spec_size() <= usize::MAX as nat,\n                ensures\n                    pq.spec_leftistheappq_wf(),\n                    pq.spec_size() == self.spec_size() + other.spec_size(),\n                    pq@ =~= self@.add(other@);"
   },
   {
-    "id": 116,
+    "id": 121,
     "function": "from_seq",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "313-317",
+    "lines": "312-316",
     "spec_strength": "unknown",
     "snippet": "            fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)\n                requires obeys_feq_clone::<T>(),\n                ensures\n                    pq.spec_leftistheappq_wf(),\n                    pq.spec_size() == seq@.len();"
   },
   {
-    "id": 117,
+    "id": 122,
     "function": "is_empty",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "321-322",
+    "lines": "320-321",
     "spec_strength": "unknown",
     "snippet": "            fn is_empty(&self) -> (is_empty: bool)\n                ensures is_empty == (self.spec_size() == 0);"
   },
   {
-    "id": 118,
+    "id": 123,
     "function": "extract_all_sorted",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "323-329",
+    "lines": "322-328",
     "spec_strength": "unknown",
     "snippet": "            fn extract_all_sorted(&self) -> (sorted: Vec<T>)\n                requires\n                    self.spec_leftistheappq_wf(),\n                    self.spec_size() <= usize::MAX as nat,\n                ensures\n                    sorted@.len() as nat == self.spec_size(),\n                    Self::spec_sorted(sorted@);"
   },
   {
-    "id": 119,
+    "id": 124,
     "function": "root_rank",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "333-334",
+    "lines": "332-333",
     "spec_strength": "unknown",
     "snippet": "            fn root_rank(&self) -> (rank_val: usize)\n                ensures self.spec_size() == 0 ==> rank_val == 0;"
   },
   {
-    "id": 120,
+    "id": 125,
     "function": "is_valid_leftist_heap",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "335-337",
+    "lines": "334-336",
     "spec_strength": "unknown",
     "snippet": "            fn is_valid_leftist_heap(&self) -> (is_valid: bool)\n                requires self.spec_size() <= usize::MAX as nat,\n                ensures is_valid <==> self.spec_leftistheappq_wf();"
   },
   {
-    "id": 121,
+    "id": 126,
     "function": "from_vec",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "338-342",
+    "lines": "337-341",
     "spec_strength": "unknown",
     "snippet": "            fn from_vec(vec: Vec<T>) -> (pq: Self)\n                requires obeys_feq_clone::<T>(),\n                ensures\n                    pq.spec_leftistheappq_wf(),\n                    pq.spec_size() == vec@.len();"
   },
   {
-    "id": 122,
+    "id": 127,
     "function": "to_sorted_vec",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "346-352",
+    "lines": "345-351",
     "spec_strength": "unknown",
     "snippet": "            fn to_sorted_vec(&self) -> (v: Vec<T>)\n                requires\n                    self.spec_leftistheappq_wf(),\n                    self.spec_size() <= usize::MAX as nat,\n                ensures\n                    v@.len() as nat == self.spec_size(),\n                    Self::spec_sorted(v@);"
   },
   {
-    "id": 123,
+    "id": 128,
     "function": "meld_multiple",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "355-362",
+    "lines": "354-361",
     "spec_strength": "unknown",
     "snippet": "            fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self)\n                requires\n                    forall|i: int| 0 <= i < heaps@.len() ==>\n                        (#[trigger] heaps@[i]).spec_leftistheappq_wf(),\n                    Self::spec_total_size(heaps@, heaps@.len() as int) <= usize::MAX as nat,\n                ensures\n                    pq.spec_leftistheappq_wf(),\n                    pq.spec_size() == Self::spec_total_size(heaps@, heaps@.len() as int);"
   },
   {
-    "id": 124,
+    "id": 129,
     "function": "split",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "363-367",
+    "lines": "362-366",
     "spec_strength": "unknown",
     "snippet": "            fn split(&self, key: &T) -> (parts: (Self, Self))\n                requires self.spec_size() <= usize::MAX as nat,\n                ensures\n                    parts.0.spec_leftistheappq_wf(),\n                    parts.1.spec_leftistheappq_wf();"
   },
   {
-    "id": 125,
+    "id": 130,
     "function": "default",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "1108",
+    "lines": "1114",
     "spec_strength": "",
     "snippet": "            fn default() -> Self { Self::empty() }"
   },
   {
-    "id": 126,
+    "id": 131,
     "function": "eq`",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "1134-1136",
-    "spec_strength": "unknown",
+    "lines": "1140-1142",
+    "spec_strength": "hole",
     "snippet": "            fn eq(&self, other: &Self) -> (equal: bool)\n                ensures equal == (*self == *other)\n                decreases self, other"
   },
   {
-    "id": 127,
+    "id": 132,
     "function": "format_node`",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "1205-1215",
+    "lines": "1211-1221",
     "spec_strength": "",
     "snippet": "            fn format_node<T: StT + Ord + TotalOrder>(node: &LeftistHeapNode<T>, f: &mut Formatter<'_>, depth: usize) -> Result {\n                match node {\n                    LeftistHeapNode::Leaf => Ok(()),\n                    LeftistHeapNode::Node { key, left, right, rank } => {\n                        let indent = \"  \".repeat(depth);\n                        writeln!(f, \"{indent}{key}(rank:{rank})\")?;\n                        format_node(left, f, depth + 1)?;\n                        format_node(right, f, depth + 1)\n                    }\n                }\n            }"
   },
   {
-    "id": 128,
+    "id": 133,
     "function": "efficient_multi_way_merge",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "1246-1253",
+    "lines": "1252-1259",
     "spec_strength": "",
     "snippet": "    /// Efficient multi-way merge using O(log n) meld operations.\n    pub fn efficient_multi_way_merge<T: StT + Ord + TotalOrder>(sequences: Vec<Vec<T>>) -> Vec<T> {\n        let heaps = sequences.into_iter()\n            .map(|seq| LeftistHeapPQ::from_vec(seq))\n            .collect::<Vec<LeftistHeapPQ<T>>>();\n        let merged_heap = LeftistHeapPQ::meld_multiple(&heaps);\n        merged_heap.extract_all_sorted()\n    }"
   },
   {
-    "id": 129,
+    "id": 134,
     "function": "parallel_heap_construction",
     "file": "Chap45/LeftistHeapPQ.rs",
-    "lines": "1255-1258",
+    "lines": "1261-1264",
     "spec_strength": "",
     "snippet": "    /// Parallel heap construction using reduce pattern.\n    pub fn parallel_heap_construction<T: StT + Ord + TotalOrder>(elements: Vec<T>) -> LeftistHeapPQ<T> {\n        LeftistHeapPQ::from_vec(elements)\n    }"
   },
   {
-    "id": 130,
+    "id": 135,
     "function": "_sorted_list_pq_verified",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "57",
+    "lines": "56",
     "spec_strength": "",
     "snippet": "        proof fn _sorted_list_pq_verified() {}"
   },
   {
-    "id": 131,
+    "id": 136,
     "function": "lemma_push_preserves_sorted",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "67-72",
+    "lines": "66-71",
     "spec_strength": "unknown",
     "snippet": "            proof fn lemma_push_preserves_sorted(s: Seq<T>, x: T)\n                requires\n                    Self::spec_sorted(s),\n                    s.len() > 0 ==> TotalOrder::le(s.last(), x),\n                ensures\n                    Self::spec_sorted(s.push(x));"
   },
   {
-    "id": 132,
+    "id": 137,
     "function": "empty",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "74-79",
+    "lines": "73-78",
     "spec_strength": "unknown",
     "snippet": "            fn empty() -> (pq: Self)\n                ensures\n                    pq@.len() == 0,\n                    pq@.to_multiset() =~= Multiset::empty(),\n                    Self::spec_sorted(pq.spec_seq()),\n                    pq.spec_sortedlistpq_wf();"
   },
   {
-    "id": 133,
+    "id": 138,
     "function": "singleton",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "81-87",
+    "lines": "80-86",
     "spec_strength": "unknown",
     "snippet": "            fn singleton(element: T) -> (pq: Self)\n                requires obeys_feq_clone::<T>(),\n                ensures\n                    pq@.len() == 1,\n                    pq@.to_multiset() =~= Multiset::empty().insert(element@),\n                    Self::spec_sorted(pq.spec_seq()),\n                    pq.spec_sortedlistpq_wf();"
   },
   {
-    "id": 134,
+    "id": 139,
     "function": "find_min",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "89-93",
+    "lines": "88-92",
     "spec_strength": "unknown",
     "snippet": "            fn find_min(&self) -> (min_elem: Option<&T>)\n                ensures\n                    self@.len() == 0 ==> min_elem.is_none(),\n                    self@.len() > 0 ==> min_elem.is_some(),\n                    self@.len() > 0 ==> min_elem.unwrap()@ == self@[0];"
   },
   {
-    "id": 135,
+    "id": 140,
     "function": "insert",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "95-103",
+    "lines": "94-102",
     "spec_strength": "unknown",
     "snippet": "            fn insert(&self, element: T) -> (pq: Self)\n                requires\n                    obeys_feq_clone::<T>(),\n                    self@.len() + 1 <= usize::MAX as int,\n                    Self::spec_sorted(self.spec_seq()),\n                ensures\n                    pq@.len() == self@.len() + 1,\n                    pq@.to_multiset() =~= self@.to_multiset().insert(element@),\n                    Self::spec_sorted(pq.spec_seq());"
   },
   {
-    "id": 136,
+    "id": 141,
     "function": "delete_min",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "105-116",
+    "lines": "104-115",
     "spec_strength": "unknown",
     "snippet": "            fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))\n                requires\n                    obeys_feq_clone::<T>(),\n                    Self::spec_sorted(self.spec_seq()),\n                ensures\n                    self@.len() > 0 ==> min_and_rest.1.is_some(),\n                    self@.len() > 0 ==> min_and_rest.0@.len() == self@.len() - 1,\n                    self@.len() == 0 ==> min_and_rest.1.is_none(),\n                    self@.len() == 0 ==> min_and_rest.0@.len() == self@.len(),\n                    self@.len() > 0 ==> self@.to_multiset() =~=\n                        min_and_rest.0@.to_multiset().insert(min_and_rest.1.unwrap()@),\n                    Self::spec_sorted(min_and_rest.0.spec_seq());"
   },
   {
-    "id": 137,
+    "id": 142,
     "function": "meld",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "118-127",
+    "lines": "117-126",
     "spec_strength": "unknown",
     "snippet": "            fn meld(&self, other: &Self) -> (pq: Self)\n                requires\n                    obeys_feq_clone::<T>(),\n                    self@.len() + other@.len() <= usize::MAX as int,\n                    Self::spec_sorted(self.spec_seq()),\n                    Self::spec_sorted(other.spec_seq()),\n                ensures\n                    pq@.len() == self@.len() + other@.len(),\n                    pq@.to_multiset() =~= self@.to_multiset().add(other@.to_multiset()),\n                    Self::spec_sorted(pq.spec_seq());"
   },
   {
-    "id": 138,
+    "id": 143,
     "function": "from_seq",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "129-134",
+    "lines": "128-133",
     "spec_strength": "unknown",
     "snippet": "            fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)\n                requires obeys_feq_clone::<T>(),\n                ensures\n                    pq@.len() == seq@.len(),\n                    pq@.to_multiset() =~= seq@.to_multiset(),\n                    Self::spec_sorted(pq.spec_seq());"
   },
   {
-    "id": 139,
+    "id": 144,
     "function": "size",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "136-137",
+    "lines": "135-136",
     "spec_strength": "unknown",
     "snippet": "            fn size(&self) -> (n: usize)\n                ensures n as int == self.spec_size();"
   },
   {
-    "id": 140,
+    "id": 145,
     "function": "is_empty",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "139-140",
+    "lines": "138-139",
     "spec_strength": "unknown",
     "snippet": "            fn is_empty(&self) -> (b: bool)\n                ensures b == (self.spec_size() == 0);"
   },
   {
-    "id": 141,
+    "id": 146,
     "function": "to_seq",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "142-144",
+    "lines": "141-143",
     "spec_strength": "unknown",
     "snippet": "            fn to_seq(&self) -> (seq: ArraySeqStPerS<T>)\n                requires obeys_feq_clone::<T>(),\n                ensures seq@ =~= self@;"
   },
   {
-    "id": 142,
+    "id": 147,
     "function": "insert_all",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "146-154",
+    "lines": "145-153",
     "spec_strength": "unknown",
     "snippet": "            fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> (pq: Self)\n                requires\n                    obeys_feq_clone::<T>(),\n                    self@.len() + elements@.len() <= usize::MAX as int,\n                    Self::spec_sorted(self.spec_seq()),\n                ensures\n                    pq@.len() == self@.len() + elements@.len(),\n                    pq@.to_multiset() =~= self@.to_multiset().add(elements@.to_multiset()),\n                    Self::spec_sorted(pq.spec_seq());"
   },
   {
-    "id": 143,
+    "id": 148,
     "function": "extract_all_sorted",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "156-162",
+    "lines": "155-161",
     "spec_strength": "unknown",
     "snippet": "            fn extract_all_sorted(&self) -> (sorted: ArraySeqStPerS<T>)\n                requires\n                    obeys_feq_clone::<T>(),\n                    Self::spec_sorted(self.spec_seq()),\n                ensures\n                    sorted@.len() == self@.len(),\n                    Self::spec_sorted(sorted.seq@);"
   },
   {
-    "id": 144,
+    "id": 149,
     "function": "find_max",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "164-168",
+    "lines": "163-167",
     "spec_strength": "unknown",
     "snippet": "            fn find_max(&self) -> (max_elem: Option<&T>)\n                ensures\n                    self@.len() == 0 ==> max_elem.is_none(),\n                    self@.len() > 0 ==> max_elem.is_some(),\n                    self@.len() > 0 ==> max_elem.unwrap()@ == self@[self@.len() - 1];"
   },
   {
-    "id": 145,
+    "id": 150,
     "function": "delete_max",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "170-181",
+    "lines": "169-180",
     "spec_strength": "unknown",
     "snippet": "            fn delete_max(&self) -> (max_and_rest: (Self, Option<T>))\n                requires\n                    obeys_feq_clone::<T>(),\n                    Self::spec_sorted(self.spec_seq()),\n                ensures\n                    self@.len() > 0 ==> max_and_rest.1.is_some(),\n                    self@.len() > 0 ==> max_and_rest.0@.len() == self@.len() - 1,\n                    self@.len() == 0 ==> max_and_rest.1.is_none(),\n                    self@.len() == 0 ==> max_and_rest.0@.len() == self@.len(),\n                    self@.len() > 0 ==> self@.to_multiset() =~=\n                        max_and_rest.0@.to_multiset().insert(max_and_rest.1.unwrap()@),\n                    Self::spec_sorted(max_and_rest.0.spec_seq());"
   },
   {
-    "id": 146,
+    "id": 151,
     "function": "from_vec",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "183-188",
+    "lines": "182-187",
     "spec_strength": "unknown",
     "snippet": "            fn from_vec(vec: Vec<T>) -> (pq: Self)\n                requires obeys_feq_clone::<T>(),\n                ensures\n                    pq@.len() == vec@.len(),\n                    pq@.to_multiset() =~= vec@.map(|_i: int, t: T| t@).to_multiset(),\n                    Self::spec_sorted(pq.spec_seq());"
   },
   {
-    "id": 147,
+    "id": 152,
     "function": "to_vec",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "190-192",
+    "lines": "189-191",
     "spec_strength": "unknown",
     "snippet": "            fn to_vec(&self) -> (v: Vec<T>)\n                requires obeys_feq_clone::<T>(),\n                ensures v@.len() == self@.len();"
   },
   {
-    "id": 148,
+    "id": 153,
     "function": "to_sorted_vec",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "194-200",
+    "lines": "193-199",
     "spec_strength": "unknown",
     "snippet": "            fn to_sorted_vec(&self) -> (v: Vec<T>)\n                requires\n                    obeys_feq_clone::<T>(),\n                    Self::spec_sorted(self.spec_seq()),\n                ensures\n                    v@.len() == self@.len(),\n                    Self::spec_sorted(v@);"
   },
   {
-    "id": 149,
+    "id": 154,
     "function": "is_sorted",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "202-205",
+    "lines": "201-204",
     "spec_strength": "unknown",
     "snippet": "            fn is_sorted(&self) -> (sorted: bool)\n                ensures\n                    sorted == Self::spec_sorted(self.spec_seq()),\n                    self@.len() <= 1 ==> sorted;"
   },
   {
-    "id": 150,
+    "id": 155,
     "function": "default",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "1023",
+    "lines": "1029",
     "spec_strength": "",
     "snippet": "            fn default() -> Self { Self::empty() }"
   },
   {
-    "id": 151,
+    "id": 156,
     "function": "eq",
     "file": "Chap45/SortedListPQ.rs",
-    "lines": "1050-1051",
+    "lines": "1056-1057",
     "spec_strength": "unknown",
     "snippet": "            fn eq(&self, other: &Self) -> (equal: bool)\n                ensures equal == (self@ == other@)"
   },
   {
-    "id": 152,
+    "id": 157,
     "function": "_unsorted_list_pq_verified",
     "file": "Chap45/UnsortedListPQ.rs",
-    "lines": "57",
+    "lines": "56",
     "spec_strength": "",
     "snippet": "        proof fn _unsorted_list_pq_verified() {}"
   },
   {
-    "id": 153,
+    "id": 158,
     "function": "empty",
     "file": "Chap45/UnsortedListPQ.rs",
-    "lines": "67-71",
+    "lines": "66-70",
     "spec_strength": "unknown",
     "snippet": "            fn empty() -> (pq: Self)\n                ensures\n                    pq@.len() == 0,\n                    pq@.to_multiset() =~= Multiset::empty(),\n                    pq.spec_unsortedlistpq_wf();"
   },
   {
-    "id": 154,
+    "id": 159,
     "function": "singleton",
     "file": "Chap45/UnsortedListPQ.rs",
-    "lines": "73-78",
+    "lines": "72-77",
     "spec_strength": "unknown",
     "snippet": "            fn singleton(element: T) -> (pq: Self)\n                requires obeys_feq_clone::<T>(),\n                ensures\n                    pq@.len() == 1,\n                    pq@.to_multiset() =~= Multiset::empty().insert(element@),\n                    pq.spec_unsortedlistpq_wf();"
   },
   {
-    "id": 155,
+    "id": 160,
     "function": "find_min",
     "file": "Chap45/UnsortedListPQ.rs",
-    "lines": "80-86",
+    "lines": "79-85",
     "spec_strength": "unknown",
     "snippet": "            fn find_min(&self) -> (min_elem: Option<&T>)\n                ensures\n                    self@.len() == 0 ==> min_elem.is_none(),\n                    self@.len() > 0 ==> min_elem.is_some(),\n                    self@.len() > 0 ==> forall|j: int|\n                        0 <= j < self.spec_seq().len() ==>\n                            #[trigger] TotalOrder::le(*min_elem.unwrap(), self.spec_seq()[j]);"
   },
   {
-    "id": 156,
+    "id": 161,
     "function": "insert",
     "file": "Chap45/UnsortedListPQ.rs",
-    "lines": "88-94",
+    "lines": "87-93",
     "spec_strength": "unknown",
     "snippet": "            fn insert(&self, element: T) -> (pq: Self)\n                requires\n                    obeys_feq_clone::<T>(),\n                    self@.len() + 1 <= usize::MAX as int,\n                ensures\n                    pq@.len() == self@.len() + 1,\n                    pq@.to_multiset() =~= self@.to_multiset().insert(element@);"
   },
   {
-    "id": 157,
+    "id": 162,
     "function": "delete_min",
     "file": "Chap45/UnsortedListPQ.rs",
-    "lines": "96-114",
+    "lines": "95-113",
     "spec_strength": "unknown",
     "snippet": "            fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))\n                requires obeys_feq_clone::<T>(),\n                ensures\n                    self@.len() > 0 ==> min_and_rest.1.is_some(),\n                    self@.len() > 0 ==> min_and_rest.0@.len() == self@.len() - 1,\n                    self@.len() == 0 ==> min_and_rest.1.is_none(),\n                    self@.len() == 0 ==> min_and_rest.0@.len() == self@.len(),\n                    self@.len() > 0 ==> forall|j: int|\n                        0 <= j < self.spec_seq().len() ==>\n                            #[trigger] TotalOrder::le(min_and_rest.1.unwrap(), self.spec_seq()[j]),\n                    self@.len() > 0 ==> forall|j: int|\n                        0 <= j < min_and_rest.0.spec_seq().len() ==>\n                            #[trigger] TotalOrder::le(min_and_rest.1.unwrap(), min_and_rest.0.spec_seq()[j]),\n                    self@.len() > 0 ==> exists|k: int|\n                        #![trigger self.spec_seq()[k]]\n                        0 <= k < self.spec_seq().len() &&\n                        min_and_rest.1.unwrap() == self.spec_seq()[k],\n                    self@.len() > 0 ==> self@.to_multiset() =~=\n                        min_and_rest.0@.to_multiset().insert(min_and_rest.1.unwrap()@);"
   },
   {
-    "id": 158,
+    "id": 163,
     "function": "meld",
     "file": "Chap45/UnsortedListPQ.rs",
-    "lines": "116-122",
+    "lines": "115-121",
     "spec_strength": "unknown",
     "snippet": "            fn meld(&self, other: &Self) -> (pq: Self)\n                requires\n                    obeys_feq_clone::<T>(),\n                    self@.len() + other@.len() <= usize::MAX as int,\n                ensures\n                    pq@.len() == self@.len() + other@.len(),\n                    pq@.to_multiset() =~= self@.to_multiset().add(other@.to_multiset());"
   },
   {
-    "id": 159,
+    "id": 164,
     "function": "from_seq",
     "file": "Chap45/UnsortedListPQ.rs",
-    "lines": "124-126",
+    "lines": "123-125",
     "spec_strength": "unknown",
     "snippet": "            fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)\n                requires obeys_feq_clone::<T>(),\n                ensures pq@ =~= seq@;"
   },
   {
-    "id": 160,
+    "id": 165,
     "function": "size",
     "file": "Chap45/UnsortedListPQ.rs",
-    "lines": "128-129",
+    "lines": "127-128",
     "spec_strength": "unknown",
     "snippet": "            fn size(&self) -> (n: usize)\n                ensures n as int == self.spec_size();"
   },
   {
-    "id": 161,
+    "id": 166,
     "function": "is_empty",
     "file": "Chap45/UnsortedListPQ.rs",
-    "lines": "131-132",
+    "lines": "130-131",
     "spec_strength": "unknown",
     "snippet": "            fn is_empty(&self) -> (b: bool)\n                ensures b == (self.spec_size() == 0);"
   },
   {
-    "id": 162,
+    "id": 167,
     "function": "to_seq",
     "file": "Chap45/UnsortedListPQ.rs",
-    "lines": "134-136",
+    "lines": "133-135",
     "spec_strength": "unknown",
     "snippet": "            fn to_seq(&self) -> (seq: ArraySeqStPerS<T>)\n                requires obeys_feq_clone::<T>(),\n                ensures seq@ =~= self@;"
   },
   {
-    "id": 163,
+    "id": 168,
     "function": "insert_all",
     "file": "Chap45/UnsortedListPQ.rs",
-    "lines": "138-144",
+    "lines": "137-143",
     "spec_strength": "unknown",
     "snippet": "            fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> (pq: Self)\n                requires\n                    obeys_feq_clone::<T>(),\n                    self@.len() + elements@.len() <= usize::MAX as int,\n                ensures\n                    pq@.len() == self@.len() + elements@.len(),\n                    pq@.to_multiset() =~= self@.to_multiset().add(elements@.to_multiset());"
   },
   {
-    "id": 164,
+    "id": 169,
     "function": "extract_all_sorted",
     "file": "Chap45/UnsortedListPQ.rs",
-    "lines": "146-152",
+    "lines": "145-151",
     "spec_strength": "unknown",
     "snippet": "            fn extract_all_sorted(&self) -> (sorted: ArraySeqStPerS<T>)\n                requires\n                    obeys_feq_clone::<T>(),\n                    self@.len() <= usize::MAX as int,\n                ensures\n                    sorted@.len() == self@.len(),\n                    Self::spec_sorted(sorted.seq@);"
   },
   {
-    "id": 165,
+    "id": 170,
     "function": "from_vec",
     "file": "Chap45/UnsortedListPQ.rs",
-    "lines": "154-156",
+    "lines": "153-155",
     "spec_strength": "unknown",
     "snippet": "            fn from_vec(vec: Vec<T>) -> (pq: Self)\n                requires obeys_feq_clone::<T>(),\n                ensures pq@ =~= vec@.map(|_i: int, t: T| t@);"
   },
   {
-    "id": 166,
+    "id": 171,
     "function": "to_vec",
     "file": "Chap45/UnsortedListPQ.rs",
-    "lines": "158-160",
+    "lines": "157-159",
     "spec_strength": "unknown",
     "snippet": "            fn to_vec(&self) -> (v: Vec<T>)\n                requires obeys_feq_clone::<T>(),\n                ensures v@.len() == self@.len();"
   },
   {
-    "id": 167,
+    "id": 172,
     "function": "to_sorted_vec",
     "file": "Chap45/UnsortedListPQ.rs",
-    "lines": "162-168",
+    "lines": "161-167",
     "spec_strength": "unknown",
     "snippet": "            fn to_sorted_vec(&self) -> (v: Vec<T>)\n                requires\n                    obeys_feq_clone::<T>(),\n                    self@.len() <= usize::MAX as int,\n                ensures\n                    v@.len() == self@.len(),\n                    Self::spec_sorted(v@);"
   },
   {
-    "id": 168,
+    "id": 173,
     "function": "default",
     "file": "Chap45/UnsortedListPQ.rs",
-    "lines": "629",
+    "lines": "635",
     "spec_strength": "",
     "snippet": "            fn default() -> Self { Self::empty() }"
   },
   {
-    "id": 169,
+    "id": 174,
     "function": "eq",
     "file": "Chap45/UnsortedListPQ.rs",
-    "lines": "656-657",
-    "spec_strength": "unknown",
+    "lines": "662-663",
+    "spec_strength": "hole",
     "snippet": "            fn eq(&self, other: &Self) -> (equal: bool)\n                ensures equal == (self@ == other@)"
   }
 ]

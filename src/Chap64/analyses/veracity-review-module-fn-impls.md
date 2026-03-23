@@ -22,9 +22,9 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap64 | SpanTreeMtEph | 2 | 0 | 0 | 3 | 3 | 0 | 3 | 0 | 0 |
+| 1 | Chap64 | SpanTreeMtEph | 2 | 0 | 0 | 2 | 2 | 0 | 2 | 0 | 0 |
 | 2 | Chap64 | SpanTreeStEph | 2 | 0 | 0 | 2 | 2 | 0 | 2 | 0 | 0 |
-| 3 | Chap64 | TSPApproxStEph | 4 | 0 | 0 | 7 | 4 | 3 | 3 | 0 | 4 |
+| 3 | Chap64 | TSPApproxStEph | 4 | 0 | 0 | 7 | 7 | 0 | 7 | 0 | 0 |
 
 ## Function-by-Function Detail
 
@@ -32,28 +32,27 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `new_spanning_edges_arc` |  |  |  | Y | Y |  |  | unknown | 41&#8209;45 |
-| 2 | `spanning_tree_star_contraction_mt` | Y |  |  | Y | Y |  |  | unknown | 60&#8209;63 |
-| 3 | `verify_spanning_tree` | Y |  |  | Y | Y |  |  | unknown | 67&#8209;68 |
+| 1 | `spanning_tree_star_contraction_mt` | Y |  |  | Y | Y |  |  | unknown | 38&#8209;41 |
+| 2 | `verify_spanning_tree` | Y |  |  | Y | Y |  |  | unknown | 45&#8209;46 |
 
 ### Chap64/SpanTreeStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 4 | `spanning_tree_star_contraction` | Y |  |  | Y | Y |  |  | unknown | 40&#8209;41 |
-| 5 | `verify_spanning_tree` | Y |  |  | Y | Y |  |  | unknown | 45&#8209;46 |
+| 3 | `spanning_tree_star_contraction` | Y |  |  | Y | Y |  |  | unknown | 38&#8209;39 |
+| 4 | `verify_spanning_tree` | Y |  |  | Y | Y |  |  | unknown | 43&#8209;44 |
 
 ### Chap64/TSPApproxStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 6 | `euler_tour` | Y |  |  | Y | Y |  |  | unknown | 49&#8209;54 |
-| 7 | `shortcut_tour` | Y |  |  | Y | Y |  | Y |  | 58 |
-| 8 | `tour_weight` | Y |  |  | Y | Y |  |  | unknown | 62&#8209;66 |
-| 9 | `approx_metric_tsp` | Y |  |  | Y | Y |  |  | unknown | 70&#8209;75 |
-| 10 | `euler_tour_dfs` |  |  |  | Y |  | Y | Y |  | 109&#8209;160 |
-| 11 | `get_neighbors` |  |  |  | Y |  | Y | Y |  | 225&#8209;239 |
-| 12 | `get_edge_weight` |  |  |  | Y |  | Y | Y |  | 241&#8209;256 |
+| 5 | `euler_tour` | Y |  |  | Y | Y |  |  | unknown | 45&#8209;50 |
+| 6 | `shortcut_tour` | Y |  |  | Y | Y |  |  | unknown | 54 |
+| 7 | `tour_weight` | Y |  |  | Y | Y |  |  | unknown | 58&#8209;62 |
+| 8 | `approx_metric_tsp` | Y |  |  | Y | Y |  |  | unknown | 66&#8209;71 |
+| 9 | `euler_tour_dfs` |  |  |  | Y | Y |  |  | unknown | 110&#8209;121 |
+| 10 | `get_neighbors` |  |  |  | Y | Y |  |  | unknown | 270&#8209;272 |
+| 11 | `get_edge_weight` |  |  |  | Y | Y |  |  | unknown | 279&#8209;289 |
 
 
 ### Legend

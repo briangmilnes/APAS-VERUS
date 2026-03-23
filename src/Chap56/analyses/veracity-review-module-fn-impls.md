@@ -41,49 +41,49 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `new` | Y | Y |  |  | Y |  |  | unknown | 40&#8209;43 |
-| 2 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 45&#8209;46 |
-| 3 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 48&#8209;52 |
-| 4 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 54&#8209;55 |
-| 5 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 57&#8209;61 |
-| 6 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 63&#8209;64 |
-| 7 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 66&#8209;67 |
+| 1 | `new` | Y | Y |  |  | Y |  |  | unknown | 42&#8209;45 |
+| 2 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 49&#8209;50 |
+| 3 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 54&#8209;58 |
+| 4 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 62&#8209;63 |
+| 5 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 67&#8209;71 |
+| 6 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 75&#8209;76 |
+| 7 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 80&#8209;81 |
 
 ### Chap56/AllPairsResultStEphI64.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 8 | `new` | Y | Y |  |  | Y |  |  | unknown | 49&#8209;63 |
-| 9 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 65&#8209;69 |
-| 10 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 71&#8209;93 |
-| 11 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 95&#8209;100 |
-| 12 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 102&#8209;124 |
-| 13 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 126&#8209;131 |
-| 14 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 133&#8209;147 |
+| 8 | `new` | Y | Y |  |  | Y |  |  | unknown | 51&#8209;65 |
+| 9 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 69&#8209;73 |
+| 10 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 77&#8209;99 |
+| 11 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 103&#8209;108 |
+| 12 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 112&#8209;134 |
+| 13 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 138&#8209;143 |
+| 14 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 147&#8209;161 |
 
 ### Chap56/AllPairsResultStPerF64.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 15 | `new` | Y | Y |  |  | Y |  |  | unknown | 39&#8209;42 |
-| 16 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 44&#8209;45 |
-| 17 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 47&#8209;51 |
-| 18 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 53&#8209;54 |
-| 19 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 56&#8209;60 |
-| 20 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 62&#8209;63 |
-| 21 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 65&#8209;66 |
+| 15 | `new` | Y | Y |  |  | Y |  |  | unknown | 41&#8209;44 |
+| 16 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 48&#8209;49 |
+| 17 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 53&#8209;57 |
+| 18 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 61&#8209;62 |
+| 19 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 66&#8209;70 |
+| 20 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 74&#8209;75 |
+| 21 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 79&#8209;80 |
 
 ### Chap56/AllPairsResultStPerI64.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 22 | `new` | Y | Y |  |  | Y |  |  | unknown | 48&#8209;62 |
-| 23 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 64&#8209;68 |
-| 24 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 70&#8209;92 |
-| 25 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 94&#8209;99 |
-| 26 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 101&#8209;123 |
-| 27 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 125&#8209;130 |
-| 28 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 132&#8209;146 |
+| 22 | `new` | Y | Y |  |  | Y |  |  | unknown | 50&#8209;64 |
+| 23 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 68&#8209;72 |
+| 24 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 76&#8209;98 |
+| 25 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 102&#8209;107 |
+| 26 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 111&#8209;133 |
+| 27 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 137&#8209;142 |
+| 28 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 146&#8209;160 |
 
 ### Chap56/Example56_1.rs
 
@@ -104,67 +104,67 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 34 | `path_weight_int` | Y | Y |  |  | Y |  |  | unknown | 47&#8209;48 |
-| 35 | `path_weight_float` | Y | Y |  |  | Y |  | Y |  | 50&#8209;53 |
-| 36 | `validate_subpath_property_int` | Y | Y |  |  | Y |  |  | unknown | 62&#8209;67 |
-| 37 | `validate_subpath_property_float` | Y | Y |  |  | Y |  | Y |  | 69&#8209;73 |
+| 34 | `path_weight_int` | Y | Y |  |  | Y |  |  | unknown | 49&#8209;50 |
+| 35 | `path_weight_float` | Y | Y |  |  | Y |  | Y |  | 54&#8209;57 |
+| 36 | `validate_subpath_property_int` | Y | Y |  |  | Y |  |  | unknown | 68&#8209;73 |
+| 37 | `validate_subpath_property_float` | Y | Y |  |  | Y |  | Y |  | 77&#8209;81 |
 
 ### Chap56/PathWeightUtilsStPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 38 | `path_weight_int` | Y | Y |  |  | Y |  |  | unknown | 51&#8209;52 |
-| 39 | `path_weight_float` | Y | Y |  |  | Y |  | Y |  | 54&#8209;57 |
-| 40 | `validate_subpath_property_int` | Y | Y |  |  | Y |  |  | unknown | 59&#8209;64 |
-| 41 | `validate_subpath_property_float` | Y | Y |  |  | Y |  | Y |  | 66&#8209;70 |
+| 38 | `path_weight_int` | Y | Y |  |  | Y |  |  | unknown | 53&#8209;54 |
+| 39 | `path_weight_float` | Y | Y |  |  | Y |  | Y |  | 58&#8209;61 |
+| 40 | `validate_subpath_property_int` | Y | Y |  |  | Y |  |  | unknown | 65&#8209;70 |
+| 41 | `validate_subpath_property_float` | Y | Y |  |  | Y |  | Y |  | 74&#8209;78 |
 
 ### Chap56/SSSPResultStEphF64.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 42 | `new` | Y | Y |  |  | Y |  |  | unknown | 50&#8209;56 |
-| 43 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 58&#8209;62 |
-| 44 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 64&#8209;72 |
-| 45 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 74&#8209;79 |
-| 46 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;89 |
-| 47 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 91&#8209;95 |
-| 48 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 97&#8209;98 |
+| 42 | `new` | Y | Y |  |  | Y |  |  | unknown | 52&#8209;58 |
+| 43 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 62&#8209;66 |
+| 44 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 70&#8209;78 |
+| 45 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 82&#8209;87 |
+| 46 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 91&#8209;99 |
+| 47 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 103&#8209;107 |
+| 48 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 111&#8209;112 |
 
 ### Chap56/SSSPResultStEphI64.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 49 | `new` | Y | Y |  |  | Y |  |  | unknown | 41&#8209;50 |
-| 50 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 52&#8209;55 |
-| 51 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 57&#8209;63 |
-| 52 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 65&#8209;69 |
-| 53 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 71&#8209;77 |
-| 54 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 79&#8209;82 |
-| 55 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 84&#8209;95 |
+| 49 | `new` | Y | Y |  |  | Y |  |  | unknown | 43&#8209;52 |
+| 50 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 56&#8209;59 |
+| 51 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 63&#8209;69 |
+| 52 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 73&#8209;77 |
+| 53 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;87 |
+| 54 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 91&#8209;94 |
+| 55 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 98&#8209;109 |
 
 ### Chap56/SSSPResultStPerF64.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 56 | `new` | Y | Y |  |  | Y |  |  | unknown | 62&#8209;68 |
-| 57 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 70&#8209;74 |
-| 58 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 76&#8209;84 |
-| 59 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 86&#8209;91 |
-| 60 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 93&#8209;101 |
-| 61 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 103&#8209;107 |
-| 62 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 109&#8209;110 |
+| 56 | `new` | Y | Y |  |  | Y |  |  | unknown | 64&#8209;70 |
+| 57 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 74&#8209;78 |
+| 58 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 82&#8209;90 |
+| 59 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 94&#8209;99 |
+| 60 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 103&#8209;111 |
+| 61 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 115&#8209;119 |
+| 62 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 123&#8209;124 |
 
 ### Chap56/SSSPResultStPerI64.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 63 | `new` | Y | Y |  |  | Y |  |  | unknown | 40&#8209;49 |
-| 64 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 51&#8209;54 |
-| 65 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 56&#8209;61 |
-| 66 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 63&#8209;67 |
-| 67 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 69&#8209;74 |
-| 68 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 76&#8209;79 |
-| 69 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;92 |
+| 63 | `new` | Y | Y |  |  | Y |  |  | unknown | 42&#8209;51 |
+| 64 | `get_distance` | Y | Y |  |  | Y |  |  | unknown | 55&#8209;58 |
+| 65 | `set_distance` | Y | Y |  |  | Y |  |  | unknown | 62&#8209;67 |
+| 66 | `get_predecessor` | Y | Y |  |  | Y |  |  | unknown | 71&#8209;75 |
+| 67 | `set_predecessor` | Y | Y |  |  | Y |  |  | unknown | 79&#8209;84 |
+| 68 | `is_reachable` | Y | Y |  |  | Y |  |  | unknown | 88&#8209;91 |
+| 69 | `extract_path` | Y | Y |  |  | Y |  |  | unknown | 95&#8209;106 |
 
 
 ### Legend

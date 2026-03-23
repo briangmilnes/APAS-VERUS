@@ -1,105 +1,107 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS/src/Chap61/
-Codebase: /home/milnes/projects/APAS-VERUS
+Path: /home/milnes/projects/APAS-VERUS-agent4/src/Chap61/
+Codebase: /home/milnes/projects/APAS-VERUS-agent4
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS/src/Chap61/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent4/src/Chap61/analyses/veracity-review-verus-style.log
 
 Checking 4 files...
 
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:1: info: [13] no non-derive trait impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:87: warning: [4] use std::... imports should be grouped with trailing blank line
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:33: warning: [14] struct EdgeContractionMtEph should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:33: warning: [14] struct EdgeContractionMtEph should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:37: warning: [20] trait EdgeContractionMtEphTrait is defined but has no impl
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionMtEph.rs:39: warning: [22] spec fn spec_edgecontractionmteph_wf in trait EdgeContractionMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:28: warning: [14] struct EdgeContractionMtEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:28: warning: [14] struct EdgeContractionMtEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:122: warning: [19] build_edges_parallel return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:32: warning: [20] trait EdgeContractionMtEphTrait is defined but has no impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:34: warning: [22] spec fn spec_edgecontractionmteph_wf in trait EdgeContractionMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:1: info: [13] no non-derive trait impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:31: warning: [14] struct EdgeContractionStEph should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:31: warning: [14] struct EdgeContractionStEph should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:35: warning: [20] trait EdgeContractionStEphTrait is defined but has no impl
-/home/milnes/projects/APAS-VERUS/src/Chap61/EdgeContractionStEph.rs:37: warning: [22] spec fn spec_edgecontractionsteph_wf in trait EdgeContractionStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:27: warning: [14] struct EdgeContractionStEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:27: warning: [14] struct EdgeContractionStEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:1: warning: [17] collection T should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:1: warning: [17] collection should have proof test: /home/milnes/projects/APAS-VERUS-agent4/rust_verify_test/tests/Chap61/ProveEdgeContractionStEph.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:51: warning: [18] type T should come before traits (expected type definitions before traits)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:31: warning: [20] trait EdgeContractionStEphTrait is defined but has no impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionStEph.rs:33: warning: [22] spec fn spec_edgecontractionsteph_wf in trait EdgeContractionStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:1: info: [13] no non-derive trait impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:76: warning: [4] use std::... imports should be grouped with trailing blank line
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:31: warning: [14] struct VertexMatchingMtEph should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:31: warning: [14] struct VertexMatchingMtEph should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:35: warning: [20] trait VertexMatchingMtEphTrait is defined but has no impl
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:37: warning: [22] spec fn spec_vertexmatchingmteph_wf in trait VertexMatchingMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:28: warning: [14] struct VertexMatchingMtEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:28: warning: [14] struct VertexMatchingMtEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:64: warning: [19] parallel_matching_mt return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:88: warning: [19] flip_coins_parallel return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:32: warning: [20] trait VertexMatchingMtEphTrait is defined but has no impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:34: warning: [22] spec fn spec_vertexmatchingmteph_wf in trait VertexMatchingMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:1: info: [13] no non-derive trait impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:27: warning: [14] struct VertexMatchingStEph should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:27: warning: [14] struct VertexMatchingStEph should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:31: warning: [20] trait VertexMatchingStEphTrait is defined but has no impl
-/home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingStEph.rs:33: warning: [22] spec fn spec_vertexmatchingsteph_wf in trait VertexMatchingStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:26: warning: [14] struct VertexMatchingStEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:26: warning: [14] struct VertexMatchingStEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:30: warning: [20] trait VertexMatchingStEphTrait is defined but has no impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingStEph.rs:32: warning: [22] spec fn spec_vertexmatchingsteph_wf in trait VertexMatchingStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
 
 ════════════════════════════════════════════════════════════════
-Summary: 66 passed, 18 warnings in 4 files (checked 4 files)
+Summary: 64 passed, 22 warnings in 4 files (checked 4 files)
 ════════════════════════════════════════════════════════════════

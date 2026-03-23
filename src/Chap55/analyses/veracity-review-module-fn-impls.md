@@ -37,8 +37,8 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `has_cycle` | Y | Y |  |  | Y |  |  | unknown | 32&#8209;37 |
-| 2 | `dfs_check_cycle` |  |  |  | Y | Y |  |  | unknown | 44&#8209;62 |
+| 1 | `has_cycle` | Y | Y |  |  | Y |  |  | unknown | 33&#8209;38 |
+| 2 | `dfs_check_cycle` |  |  |  | Y | Y |  |  | unknown | 45&#8209;63 |
 
 ### Chap55/CycleDetectStPer.rs
 
@@ -51,8 +51,8 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 5 | `dfs` | Y | Y |  |  | Y |  |  | unknown | 33&#8209;42 |
-| 6 | `dfs_recursive` |  |  |  | Y | Y |  |  | unknown | 48&#8209;64 |
+| 5 | `dfs` | Y | Y |  |  | Y |  |  | unknown | 34&#8209;43 |
+| 6 | `dfs_recursive` |  |  |  | Y | Y |  |  | unknown | 49&#8209;65 |
 
 ### Chap55/DFSStPer.rs
 
@@ -65,11 +65,11 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 9 | `scc` | Y | Y |  |  | Y |  |  | unknown | 37&#8209;42 |
-| 10 | `compute_finish_order` |  |  |  | Y | Y |  |  | unknown | 48&#8209;54 |
-| 11 | `transpose_graph` |  |  |  | Y | Y |  |  | unknown | 107&#8209;109 |
-| 12 | `check_wf_adj_list_eph` |  |  |  | Y | Y |  |  | unknown | 169&#8209;171 |
-| 13 | `dfs_reach` |  |  |  | Y | Y |  |  | unknown | 251&#8209;267 |
+| 9 | `scc` | Y | Y |  |  | Y |  |  | unknown | 38&#8209;43 |
+| 10 | `compute_finish_order` |  |  |  | Y | Y |  |  | unknown | 49&#8209;55 |
+| 11 | `transpose_graph` |  |  |  | Y | Y |  |  | unknown | 108&#8209;110 |
+| 12 | `check_wf_adj_list_eph` |  |  |  | Y | Y |  |  | unknown | 171&#8209;172 |
+| 13 | `dfs_reach` |  |  |  | Y | Y |  |  | unknown | 252&#8209;268 |
 
 ### Chap55/SCCStPer.rs
 
@@ -79,30 +79,30 @@
 | 15 | `dfs_finish_order` |  |  |  | Y | Y |  |  | unknown | 50&#8209;74 |
 | 16 | `compute_finish_order` |  |  |  | Y | Y |  |  | unknown | 116&#8209;122 |
 | 17 | `transpose_graph` |  |  |  | Y | Y |  |  | unknown | 186&#8209;188 |
-| 18 | `check_wf_adj_list_per` |  |  |  | Y | Y |  |  | unknown | 246&#8209;248 |
+| 18 | `check_wf_adj_list_per` |  |  |  | Y | Y |  |  | unknown | 247&#8209;248 |
 | 19 | `dfs_reach` |  |  |  | Y | Y |  |  | unknown | 291&#8209;307 |
 
 ### Chap55/TopoSortStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 20 | `lemma_set_true_decreases_num_false` |  |  |  | Y | Y |  |  | unknown | 118&#8209;124 |
-| 21 | `lemma_set_true_num_false_eq` |  |  |  | Y | Y |  |  | unknown | 136&#8209;142 |
-| 22 | `lemma_all_true_num_false_zero` |  |  |  | Y | Y |  |  | unknown | 154&#8209;157 |
-| 23 | `lemma_all_false_num_false_eq_len` |  |  |  | Y | Y |  |  | unknown | 165&#8209;168 |
-| 24 | `topo_sort` | Y | Y |  |  | Y |  |  | unknown | 180&#8209;186 |
-| 25 | `dfs_finish_order` |  |  |  | Y | Y |  |  | unknown | 193&#8209;217 |
-| 26 | `dfs_finish_order_cycle_detect` |  |  |  | Y | Y |  |  | unknown | 261&#8209;280 |
-| 27 | `topological_sort_opt` |  |  |  | Y | Y |  |  | unknown | 329&#8209;333 |
+| 20 | `lemma_set_true_decreases_num_false` |  |  |  | Y | Y |  |  | unknown | 119&#8209;125 |
+| 21 | `lemma_set_true_num_false_eq` |  |  |  | Y | Y |  |  | unknown | 137&#8209;143 |
+| 22 | `lemma_all_true_num_false_zero` |  |  |  | Y | Y |  |  | unknown | 155&#8209;158 |
+| 23 | `lemma_all_false_num_false_eq_len` |  |  |  | Y | Y |  |  | unknown | 166&#8209;169 |
+| 24 | `topo_sort` | Y | Y |  |  | Y |  |  | unknown | 182&#8209;188 |
+| 25 | `dfs_finish_order` |  |  |  | Y | Y |  |  | unknown | 195&#8209;219 |
+| 26 | `dfs_finish_order_cycle_detect` |  |  |  | Y | Y |  |  | unknown | 263&#8209;282 |
+| 27 | `topological_sort_opt` |  |  |  | Y | Y |  |  | unknown | 331&#8209;335 |
 
 ### Chap55/TopoSortStPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 28 | `topo_sort` | Y | Y |  |  | Y |  |  | unknown | 103&#8209;109 |
-| 29 | `dfs_finish_order` |  |  |  | Y | Y |  |  | unknown | 115&#8209;131 |
-| 30 | `dfs_finish_order_cycle_detect` |  |  |  | Y | Y |  |  | unknown | 167&#8209;186 |
-| 31 | `topological_sort_opt` |  |  |  | Y | Y |  |  | unknown | 232&#8209;236 |
+| 28 | `topo_sort` | Y | Y |  |  | Y |  |  | unknown | 104&#8209;110 |
+| 29 | `dfs_finish_order` |  |  |  | Y | Y |  |  | unknown | 116&#8209;132 |
+| 30 | `dfs_finish_order_cycle_detect` |  |  |  | Y | Y |  |  | unknown | 168&#8209;187 |
+| 31 | `topological_sort_opt` |  |  |  | Y | Y |  |  | unknown | 233&#8209;237 |
 
 
 ### Legend

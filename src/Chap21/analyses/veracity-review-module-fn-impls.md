@@ -55,7 +55,7 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 6 | `primes_bf` |  |  |  | Y | Y |  |  | unknown | 46&#8209;55 |
+| 6 | `primes_bf` |  |  |  | Y | Y |  |  | unknown | 46&#8209;54 |
 
 ### Chap21/Algorithm21_6.rs
 
@@ -75,8 +75,8 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 11 | `is_even` |  |  |  | Y | Y |  |  | unknown | 47&#8209;49 |
-| 12 | `is_vowel` |  |  |  | Y | Y |  |  | unknown | 61&#8209;63 |
+| 11 | `is_even` |  |  |  | Y | Y |  |  | unknown | 48&#8209;49 |
+| 12 | `is_vowel` |  |  |  | Y | Y |  |  | unknown | 62&#8209;63 |
 | 13 | `pair_even_with_vowels` |  |  |  | Y | Y |  |  | unknown | 77&#8209;86 |
 
 ### Chap21/Exercise21_8.rs
@@ -89,7 +89,7 @@
 | 17 | `lemma_filter_len_eq_divisor_count` |  |  |  | Y | Y |  |  | unknown | 109&#8209;115 |
 | 18 | `lemma_divisor_count_split_last` |  |  |  | Y | Y |  |  | unknown | 135&#8209;140 |
 | 19 | `is_divisible` |  |  |  | Y | Y |  |  | unknown | 164&#8209;166 |
-| 20 | `is_prime` |  |  |  | Y | Y |  |  | unknown | 176&#8209;178 |
+| 20 | `is_prime` |  |  |  | Y | Y |  |  | unknown | 177&#8209;178 |
 
 ### Chap21/Exercise21_9.rs
 

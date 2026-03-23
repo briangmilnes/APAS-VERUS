@@ -72,18 +72,18 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 26 | `new` | Y | Y |  |  | Y |  |  | unknown | 88&#8209;92 |
-| 27 | `from_sequences` | Y | Y |  |  | Y |  |  | unknown | 96&#8209;99 |
-| 28 | `min_edit_distance` | Y | Y |  |  | Y |  |  | unknown | 103&#8209;107 |
-| 29 | `source` | Y | Y |  |  | Y |  |  | unknown | 111&#8209;112 |
-| 30 | `target` | Y | Y |  |  | Y |  |  | unknown | 116&#8209;117 |
-| 31 | `set_source` | Y | Y |  |  | Y |  |  | unknown | 121&#8209;125 |
-| 32 | `set_target` | Y | Y |  |  | Y |  |  | unknown | 129&#8209;133 |
-| 33 | `clear_memo` | Y | Y |  |  | Y |  |  | unknown | 137&#8209;140 |
-| 34 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 144 |
-| 35 | `min_edit_distance_rec` |  |  |  | Y | Y |  |  | unknown | 151&#8209;166 |
-| 36 | `source_mut` | Y | Y |  |  |  | Y | Y |  | 270&#8209;272 |
-| 37 | `target_mut` | Y | Y |  |  |  | Y | Y |  | 274&#8209;276 |
+| 26 | `new` | Y | Y |  |  | Y |  |  | unknown | 89&#8209;93 |
+| 27 | `from_sequences` | Y | Y |  |  | Y |  |  | unknown | 98&#8209;101 |
+| 28 | `min_edit_distance` | Y | Y |  |  | Y |  |  | unknown | 106&#8209;110 |
+| 29 | `source` | Y | Y |  |  | Y |  |  | unknown | 115&#8209;116 |
+| 30 | `target` | Y | Y |  |  | Y |  |  | unknown | 121&#8209;122 |
+| 31 | `set_source` | Y | Y |  |  | Y |  |  | unknown | 127&#8209;131 |
+| 32 | `set_target` | Y | Y |  |  | Y |  |  | unknown | 136&#8209;140 |
+| 33 | `clear_memo` | Y | Y |  |  | Y |  |  | unknown | 145&#8209;148 |
+| 34 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 153 |
+| 35 | `min_edit_distance_rec` |  |  |  | Y | Y |  |  | unknown | 161&#8209;176 |
+| 36 | `source_mut` | Y | Y |  |  |  | Y | Y |  | 280&#8209;283 |
+| 37 | `target_mut` | Y | Y |  |  |  | Y | Y |  | 285&#8209;288 |
 
 ### Chap49/MinEditDistStPer.rs
 
@@ -133,15 +133,15 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 67 | `new` | Y | Y |  |  | Y |  |  | unknown | 78&#8209;82 |
-| 68 | `from_multiset` | Y | Y |  |  | Y |  |  | unknown | 86&#8209;87 |
-| 69 | `subset_sum` | Y | Y |  |  | Y |  |  | unknown | 91&#8209;94 |
-| 70 | `multiset` | Y | Y |  |  | Y |  |  | unknown | 98&#8209;99 |
-| 71 | `set` | Y | Y |  |  | Y |  |  | unknown | 103&#8209;105 |
-| 72 | `clear_memo` | Y | Y |  |  | Y |  |  | unknown | 109&#8209;110 |
-| 73 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 114 |
-| 74 | `subset_sum_rec` |  |  |  | Y | Y |  |  | unknown | 121&#8209;130 |
-| 75 | `multiset_mut` | Y | Y |  |  |  | Y | Y |  | 220&#8209;222 |
+| 67 | `new` | Y | Y |  |  | Y |  |  | unknown | 79&#8209;83 |
+| 68 | `from_multiset` | Y | Y |  |  | Y |  |  | unknown | 88&#8209;89 |
+| 69 | `subset_sum` | Y | Y |  |  | Y |  |  | unknown | 94&#8209;97 |
+| 70 | `multiset` | Y | Y |  |  | Y |  |  | unknown | 102&#8209;103 |
+| 71 | `set` | Y | Y |  |  | Y |  |  | unknown | 108&#8209;110 |
+| 72 | `clear_memo` | Y | Y |  |  | Y |  |  | unknown | 115&#8209;116 |
+| 73 | `memo_size` | Y | Y |  |  | Y |  | Y |  | 121 |
+| 74 | `subset_sum_rec` |  |  |  | Y | Y |  |  | unknown | 129&#8209;138 |
+| 75 | `multiset_mut` | Y | Y |  |  |  | Y | Y |  | 228&#8209;231 |
 
 ### Chap49/SubsetSumStPer.rs
 
