@@ -3,7 +3,7 @@
     "id": 1,
     "function": "_balanced_tree_pq_verified",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "54",
+    "lines": "56",
     "spec_strength": "",
     "snippet": "        proof fn _balanced_tree_pq_verified() {}"
   },
@@ -11,7 +11,7 @@
     "id": 2,
     "function": "empty",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "61-62",
+    "lines": "63-64",
     "spec_strength": "unknown",
     "snippet": "            fn empty() -> (pq: Self)\n                ensures pq@.len() == 0, pq.spec_balancedtreepq_wf();"
   },
@@ -19,7 +19,7 @@
     "id": 3,
     "function": "singleton",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "64-65",
+    "lines": "66-67",
     "spec_strength": "unknown",
     "snippet": "            fn singleton(element: T) -> (pq: Self)\n                ensures pq@.len() == 1, pq.spec_balancedtreepq_wf();"
   },
@@ -27,7 +27,7 @@
     "id": 4,
     "function": "find_min",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "67-72",
+    "lines": "69-74",
     "spec_strength": "unknown",
     "snippet": "            fn find_min(&self) -> (min_elem: Option<&T>)\n                requires self.spec_balancedtreepq_wf(),\n                ensures\n                    self@.len() == 0 ==> min_elem.is_none(),\n                    self@.len() > 0 ==> min_elem.is_some(),\n                    self@.len() > 0 ==> min_elem.unwrap()@ == self@[0];"
   },
@@ -35,7 +35,7 @@
     "id": 5,
     "function": "insert",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "74-81",
+    "lines": "76-83",
     "spec_strength": "unknown",
     "snippet": "            fn insert(&self, element: T) -> (pq: Self)\n                requires\n                    self.spec_balancedtreepq_wf(),\n                    self@.len() + 1 < usize::MAX as nat,\n                ensures\n                    pq@.len() == self@.len() + 1,\n                    pq.spec_balancedtreepq_wf(),\n                    pq@.to_multiset() =~= self@.to_multiset().insert(element@);"
   },
@@ -43,7 +43,7 @@
     "id": 6,
     "function": "delete_min",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "83-90",
+    "lines": "85-92",
     "spec_strength": "unknown",
     "snippet": "            fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))\n                requires self.spec_balancedtreepq_wf(),\n                ensures\n                    self@.len() > 0 ==> min_and_rest.1.is_some(),\n                    self@.len() > 0 ==> min_and_rest.0@.len() == self@.len() - 1,\n                    self@.len() == 0 ==> min_and_rest.1.is_none(),\n                    self@.len() == 0 ==> min_and_rest.0@.len() == self@.len(),\n                    min_and_rest.0.spec_balancedtreepq_wf();"
   },
@@ -51,7 +51,7 @@
     "id": 7,
     "function": "meld",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "92-97",
+    "lines": "94-99",
     "spec_strength": "unknown",
     "snippet": "            fn meld(&self, other: &Self) -> (pq: Self)\n                requires\n                    self.spec_balancedtreepq_wf(),\n                    other.spec_balancedtreepq_wf(),\n                    self@.len() + other@.len() < usize::MAX as nat,\n                ensures pq@.len() == self@.len() + other@.len(), pq.spec_balancedtreepq_wf();"
   },
@@ -59,7 +59,7 @@
     "id": 8,
     "function": "from_seq",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "99-101",
+    "lines": "101-103",
     "spec_strength": "unknown",
     "snippet": "            fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> (pq: Self)\n                requires seq.spec_avltreeseqstper_wf(),\n                ensures pq@.len() == seq@.len(), pq.spec_balancedtreepq_wf();"
   },
@@ -67,7 +67,7 @@
     "id": 9,
     "function": "size",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "103-105",
+    "lines": "105-107",
     "spec_strength": "unknown",
     "snippet": "            fn size(&self) -> (n: usize)\n                requires self.spec_balancedtreepq_wf(),\n                ensures n as int == self@.len();"
   },
@@ -75,7 +75,7 @@
     "id": 10,
     "function": "is_empty",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "107-109",
+    "lines": "109-111",
     "spec_strength": "unknown",
     "snippet": "            fn is_empty(&self) -> (b: bool)\n                requires self.spec_balancedtreepq_wf(),\n                ensures b == (self@.len() == 0);"
   },
@@ -83,7 +83,7 @@
     "id": 11,
     "function": "to_seq",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "111-113",
+    "lines": "113-115",
     "spec_strength": "unknown",
     "snippet": "            fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)\n                requires self.spec_balancedtreepq_wf(),\n                ensures seq@ =~= self@;"
   },
@@ -91,7 +91,7 @@
     "id": 12,
     "function": "find_max",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "115-120",
+    "lines": "117-122",
     "spec_strength": "unknown",
     "snippet": "            fn find_max(&self) -> (max_elem: Option<&T>)\n                requires self.spec_balancedtreepq_wf(),\n                ensures\n                    self@.len() == 0 ==> max_elem.is_none(),\n                    self@.len() > 0 ==> max_elem.is_some(),\n                    self@.len() > 0 ==> max_elem.unwrap()@ == self@[self@.len() - 1];"
   },
@@ -99,7 +99,7 @@
     "id": 13,
     "function": "delete_max",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "122-129",
+    "lines": "124-131",
     "spec_strength": "unknown",
     "snippet": "            fn delete_max(&self) -> (max_and_rest: (Self, Option<T>))\n                requires self.spec_balancedtreepq_wf(),\n                ensures\n                    self@.len() > 0 ==> max_and_rest.1.is_some(),\n                    self@.len() > 0 ==> max_and_rest.0@.len() == self@.len() - 1,\n                    self@.len() == 0 ==> max_and_rest.1.is_none(),\n                    self@.len() == 0 ==> max_and_rest.0@.len() == self@.len(),\n                    max_and_rest.0.spec_balancedtreepq_wf();"
   },
@@ -107,7 +107,7 @@
     "id": 14,
     "function": "insert_all",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "131-136",
+    "lines": "133-138",
     "spec_strength": "unknown",
     "snippet": "            fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> (pq: Self)\n                requires\n                    self.spec_balancedtreepq_wf(),\n                    elements.spec_avltreeseqstper_wf(),\n                    self@.len() + elements@.len() < usize::MAX as nat,\n                ensures pq@.len() == self@.len() + elements@.len(), pq.spec_balancedtreepq_wf();"
   },
@@ -115,7 +115,7 @@
     "id": 15,
     "function": "extract_all_sorted",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "138-140",
+    "lines": "140-142",
     "spec_strength": "unknown",
     "snippet": "            fn extract_all_sorted(&self) -> (sorted: AVLTreeSeqStPerS<T>)\n                requires self.spec_balancedtreepq_wf(),\n                ensures sorted@.len() == self@.len();"
   },
@@ -123,15 +123,15 @@
     "id": 16,
     "function": "contains",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "142-144",
+    "lines": "144-146",
     "spec_strength": "unknown",
-    "snippet": "            fn contains(&self, element: &T) -> (found: bool)\n                requires self.spec_balancedtreepq_wf(), obeys_feq_full::<T>(),\n                ensures found == self@.contains(element@);"
+    "snippet": "            fn contains(&self, element: &T) -> (found: bool)\n                requires self.spec_balancedtreepq_wf(),\n                ensures found == self@.contains(element@);"
   },
   {
     "id": 17,
     "function": "remove",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "146-151",
+    "lines": "148-153",
     "spec_strength": "unknown",
     "snippet": "            fn remove(&self, element: &T) -> (rest_and_found: (Self, bool))\n                requires self.spec_balancedtreepq_wf(),\n                ensures\n                    rest_and_found.1 ==> rest_and_found.0@.len() == self@.len() - 1,\n                    !rest_and_found.1 ==> rest_and_found.0@.len() == self@.len(),\n                    rest_and_found.0.spec_balancedtreepq_wf();"
   },
@@ -139,7 +139,7 @@
     "id": 18,
     "function": "range",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "153-155",
+    "lines": "155-157",
     "spec_strength": "unknown",
     "snippet": "            fn range(&self, min_val: &T, max_val: &T) -> (sub: AVLTreeSeqStPerS<T>)\n                requires self.spec_balancedtreepq_wf(),\n                ensures sub@.len() <= self@.len();"
   },
@@ -147,7 +147,7 @@
     "id": 19,
     "function": "from_vec",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "157-159",
+    "lines": "159-161",
     "spec_strength": "unknown",
     "snippet": "            fn from_vec(elements: Vec<T>) -> (pq: Self)\n                requires elements@.len() < usize::MAX as nat,\n                ensures pq@.len() == elements@.len(), pq.spec_balancedtreepq_wf();"
   },
@@ -155,7 +155,7 @@
     "id": 20,
     "function": "to_vec",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "161-163",
+    "lines": "163-165",
     "spec_strength": "unknown",
     "snippet": "            fn to_vec(&self) -> (vec: Vec<T>)\n                requires self.spec_balancedtreepq_wf(),\n                ensures vec@.len() == self@.len();"
   },
@@ -163,7 +163,7 @@
     "id": 21,
     "function": "to_sorted_vec",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "165-167",
+    "lines": "167-169",
     "spec_strength": "unknown",
     "snippet": "            fn to_sorted_vec(&self) -> (vec: Vec<T>)\n                requires self.spec_balancedtreepq_wf(),\n                ensures vec@.len() == self@.len();"
   },
@@ -171,7 +171,7 @@
     "id": 22,
     "function": "is_sorted",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "169-171",
+    "lines": "171-173",
     "spec_strength": "unknown",
     "snippet": "            fn is_sorted(&self) -> (sorted: bool)\n                requires self.spec_balancedtreepq_wf(),\n                ensures self@.len() <= 1 ==> sorted;"
   },
@@ -179,7 +179,7 @@
     "id": 23,
     "function": "height",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "173-175",
+    "lines": "175-177",
     "spec_strength": "unknown",
     "snippet": "            fn height(&self) -> (h: usize)\n                requires self.spec_balancedtreepq_wf(),\n                ensures self@.len() == 0 ==> h == 0;"
   },
@@ -187,7 +187,7 @@
     "id": 24,
     "function": "split",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "177-182",
+    "lines": "179-184",
     "spec_strength": "unknown",
     "snippet": "            fn split(&self, element: &T) -> (parts: (Self, bool, Self))\n                requires self.spec_balancedtreepq_wf(),\n                ensures\n                    parts.0@.len() + parts.2@.len() == self@.len(),\n                    parts.0.spec_balancedtreepq_wf(),\n                    parts.2.spec_balancedtreepq_wf();"
   },
@@ -195,7 +195,7 @@
     "id": 25,
     "function": "join",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "184-189",
+    "lines": "186-191",
     "spec_strength": "unknown",
     "snippet": "            fn join(left: &Self, right: &Self) -> (pq: Self)\n                requires\n                    left.spec_balancedtreepq_wf(),\n                    right.spec_balancedtreepq_wf(),\n                    left@.len() + right@.len() < usize::MAX as nat,\n                ensures pq@.len() == left@.len() + right@.len(), pq.spec_balancedtreepq_wf();"
   },
@@ -203,7 +203,7 @@
     "id": 26,
     "function": "filter",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "194-198",
+    "lines": "196-200",
     "spec_strength": "unknown",
     "snippet": "            fn filter<F: Fn(&T) -> bool>(&self, predicate: F) -> (filtered: Self)\n                requires\n                    self.spec_balancedtreepq_wf(),\n                    forall|t: &T| #[trigger] predicate.requires((t,)),\n                ensures filtered.spec_balancedtreepq_wf();"
   },
@@ -211,7 +211,7 @@
     "id": 27,
     "function": "map",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "199-203",
+    "lines": "201-205",
     "spec_strength": "unknown",
     "snippet": "            fn map<U: StT + Ord + TotalOrder, G: Fn(&T) -> U>(&self, f: G) -> (mapped: BalancedTreePQ<U>)\n                requires\n                    self.spec_balancedtreepq_wf(),\n                    forall|t: &T| #[trigger] f.requires((t,)),\n                ensures mapped.spec_balancedtreepq_wf();"
   },
@@ -219,7 +219,7 @@
     "id": 28,
     "function": "default",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "673-674",
+    "lines": "680-681",
     "spec_strength": "unknown",
     "snippet": "            fn default() -> (d: Self)\n                ensures d@.len() == 0, d.spec_balancedtreepq_wf()"
   },
@@ -227,7 +227,7 @@
     "id": 29,
     "function": "eq",
     "file": "Chap45/BalancedTreePQ.rs",
-    "lines": "761-762",
+    "lines": "770-771",
     "spec_strength": "hole",
     "snippet": "            fn eq(&self, other: &Self) -> (equal: bool)\n                ensures equal == (self@ == other@)"
   },

@@ -18,6 +18,8 @@ pub mod PQMinStEph {
     broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
     // 4. type definitions
+    #[verifier::reject_recursive_types(V)]
+    #[verifier::reject_recursive_types(P)]
     pub struct PQMinResult<V: StT + Ord, P: StT + Ord> {
         pub visited: AVLTreeSetStEph<V>,
         pub priorities: AVLTreeSetStEph<Pair<V, P>>,

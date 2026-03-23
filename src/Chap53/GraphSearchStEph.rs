@@ -15,6 +15,7 @@ pub mod GraphSearchStEph {
     broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
     // 4. type definitions
+    #[verifier::reject_recursive_types(V)]
     pub struct SearchResult<V: StT + Ord> {
         pub visited: AVLTreeSetStEph<V>,
         pub parent: Option<AVLTreeSetStEph<Pair<V, V>>>,

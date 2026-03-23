@@ -107,7 +107,7 @@
     "id": 14,
     "function": "is_functional_vec",
     "file": "Chap05/MappingStEph.rs",
-    "lines": "142-144",
+    "lines": "136-138",
     "spec_strength": "unknown",
     "snippet": "        fn is_functional_vec(v: &Vec<Pair<X, Y>>) -> (functional: bool)\n            requires Self::spec_valid_key_type()\n            ensures functional == is_functional_seq(v@);"
   },
@@ -115,7 +115,7 @@
     "id": 15,
     "function": "is_functional_vec_at",
     "file": "Chap05/MappingStEph.rs",
-    "lines": "148-150",
+    "lines": "142-144",
     "spec_strength": "unknown",
     "snippet": "        fn is_functional_vec_at(v: &Vec<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool)\n            requires Self::spec_valid_key_type()\n            ensures functional == is_functional_seq_at(v@, p@);"
   },
@@ -123,7 +123,7 @@
     "id": 16,
     "function": "is_functional_SetStEph_at",
     "file": "Chap05/MappingStEph.rs",
-    "lines": "154-156",
+    "lines": "148-150",
     "spec_strength": "unknown",
     "snippet": "        fn is_functional_SetStEph_at(s: &SetStEph<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool)\n            requires Self::spec_valid_key_type()\n            ensures functional == is_functional_set_at(s@, p@);"
   },
@@ -131,7 +131,7 @@
     "id": 17,
     "function": "is_functional_SetStEph",
     "file": "Chap05/MappingStEph.rs",
-    "lines": "160-162",
+    "lines": "154-156",
     "spec_strength": "unknown",
     "snippet": "        fn is_functional_SetStEph(s: &SetStEph<Pair<X, Y>>) -> (functional: bool)\n            requires Self::spec_valid_key_type()\n            ensures functional == is_functional_set(s@);"
   },
@@ -139,7 +139,7 @@
     "id": 18,
     "function": "is_functional_RelationStEph",
     "file": "Chap05/MappingStEph.rs",
-    "lines": "166-168",
+    "lines": "160-162",
     "spec_strength": "unknown",
     "snippet": "        fn is_functional_RelationStEph(r: &RelationStEph<X, Y>) -> (functional: bool)\n            requires Self::spec_valid_key_type()\n            ensures functional == is_functional_relation(*r);"
   },
@@ -147,7 +147,7 @@
     "id": 19,
     "function": "empty",
     "file": "Chap05/MappingStEph.rs",
-    "lines": "172-176",
+    "lines": "166-170",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (empty: Self)\n            requires Self::spec_valid_key_type()\n            ensures\n                empty.spec_mappingsteph_wf(),\n                empty@ == Map::<X::V, Y::V>::empty();"
   },
@@ -155,7 +155,7 @@
     "id": 20,
     "function": "from_vec",
     "file": "Chap05/MappingStEph.rs",
-    "lines": "180-185",
+    "lines": "174-179",
     "spec_strength": "unknown",
     "snippet": "        fn from_vec(v: Vec<Pair<X, Y>>) -> (mapping: Self)\n            requires Self::spec_valid_key_type(), is_functional_seq(v@)\n            ensures\n                mapping.spec_mappingsteph_wf(),\n                forall |i: int| #![trigger v@[i]] 0 <= i < v@.len() ==>\n                    mapping@.dom().contains(v@[i]@.0) && mapping@[v@[i]@.0] == v@[i]@.1;"
   },
@@ -163,7 +163,7 @@
     "id": 21,
     "function": "from_relation",
     "file": "Chap05/MappingStEph.rs",
-    "lines": "189-194",
+    "lines": "183-188",
     "spec_strength": "unknown",
     "snippet": "        fn from_relation(r: &RelationStEph<X, Y>) -> (mapping: Self)\n            requires Self::spec_valid_key_type(), is_functional_relation(*r)\n            ensures\n                mapping.spec_mappingsteph_wf(),\n                forall |x: X::V, y: Y::V| r@.contains((x, y)) ==>\n                    mapping@.dom().contains(x) && mapping@[x] == y;"
   },
@@ -171,7 +171,7 @@
     "id": 22,
     "function": "size",
     "file": "Chap05/MappingStEph.rs",
-    "lines": "198-200",
+    "lines": "192-194",
     "spec_strength": "unknown",
     "snippet": "        fn size(&self) -> (size: N)\n            requires self.spec_mappingsteph_wf()\n            ensures size == self@.dom().len();"
   },
@@ -179,7 +179,7 @@
     "id": 23,
     "function": "domain",
     "file": "Chap05/MappingStEph.rs",
-    "lines": "204-206",
+    "lines": "198-200",
     "spec_strength": "unknown",
     "snippet": "        fn domain(&self) -> (domain: SetStEph<X>)\n            requires self.spec_mappingsteph_wf()\n            ensures domain@.finite(), domain@ == self@.dom();"
   },
@@ -187,7 +187,7 @@
     "id": 24,
     "function": "range",
     "file": "Chap05/MappingStEph.rs",
-    "lines": "211-216",
+    "lines": "205-210",
     "spec_strength": "unknown",
     "snippet": "        fn range(&self) -> (range: SetStEph<Y>)\n            requires self.spec_mappingsteph_wf()\n            ensures\n                range@.finite(),\n                range@ =~= Set::<Y::V>::new(|y: Y::V| exists |x: X::V| #![trigger self@[x]] self@.dom().contains(x) && self@[x] == y),\n                range@ == self@.values();  // vstd equivalence"
   },
@@ -195,7 +195,7 @@
     "id": 25,
     "function": "mem",
     "file": "Chap05/MappingStEph.rs",
-    "lines": "221-225",
+    "lines": "215-219",
     "spec_strength": "unknown",
     "snippet": "        fn mem(&self, p: &Pair<X, Y>) -> (contains: B)\n            requires self.spec_mappingsteph_wf()\n            ensures\n                contains == (self@.dom().contains(p@.0) && self@[p@.0] == p@.1),\n                contains == self@.contains_pair(p@.0, p@.1);  // vstd equivalence"
   },
@@ -203,7 +203,7 @@
     "id": 26,
     "function": "iter",
     "file": "Chap05/MappingStEph.rs",
-    "lines": "229-235",
+    "lines": "223-229",
     "spec_strength": "unknown",
     "snippet": "        fn iter<'a>(&'a self) -> (it: MappingStEphIter<'a, X, Y>)\n            requires self.spec_mappingsteph_wf()\n            ensures\n                it@.0 == 0int,\n                it@.1.map(|i: int, p: Pair<X, Y>| p@).to_set() ==\n                    Set::new(|p: (X::V, Y::V)| self@.dom().contains(p.0) && self@[p.0] == p.1),\n                it@.1.no_duplicates();"
   },
@@ -211,7 +211,7 @@
     "id": 27,
     "function": "next",
     "file": "Chap05/MappingStEph.rs",
-    "lines": "493-509",
+    "lines": "488-504",
     "spec_strength": "unknown",
     "snippet": "        fn next(&mut self) -> (next: Option<&'a Pair<X, Y>>)\n            ensures ({\n                let (old_index, old_seq) = old(self)@;\n                match next {\n                    None => {\n                        &&& self@ == old(self)@\n                        &&& old_index >= old_seq.len()\n                    },\n                    Some(element) => {\n                        let (new_index, new_seq) = self@;\n                        &&& 0 <= old_index < old_seq.len()\n                        &&& new_seq == old_seq\n                        &&& new_index == old_index + 1\n                        &&& element == old_seq[old_index]\n                    },\n                }\n            })"
   },
@@ -219,7 +219,7 @@
     "id": 28,
     "function": "hash",
     "file": "Chap05/MappingStEph.rs",
-    "lines": "604",
+    "lines": "598",
     "spec_strength": "",
     "snippet": "        fn hash<H: std::hash::Hasher>(&self, state: &mut H) { self.mapping.hash(state); }"
   },
@@ -227,7 +227,7 @@
     "id": 29,
     "function": "eq",
     "file": "Chap05/MappingStEph.rs",
-    "lines": "610-611",
+    "lines": "604-605",
     "spec_strength": "hole",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
@@ -331,7 +331,7 @@
     "id": 42,
     "function": "lemma_singleton_choose",
     "file": "Chap05/SetMtEph.rs",
-    "lines": "113-119",
+    "lines": "107-113",
     "spec_strength": "unknown",
     "snippet": "    pub broadcast proof fn lemma_singleton_choose<A>(s: Set<A>, a: A)\n        requires\n            s.finite(),\n            s.len() == 1,\n            #[trigger] s.contains(a),\n        ensures\n            s.choose() == a,"
   },
@@ -339,7 +339,7 @@
     "id": 43,
     "function": "from_vec",
     "file": "Chap05/SetMtEph.rs",
-    "lines": "143-145",
+    "lines": "136-138",
     "spec_strength": "unknown",
     "snippet": "        fn from_vec(v: Vec<T>) -> (s: Self)\n            requires Self::spec_valid_key_type()\n            ensures s.spec_setmteph_wf(), s@ == v@.map(|i: int, x: T| x@).to_set();"
   },
@@ -347,7 +347,7 @@
     "id": 44,
     "function": "iter",
     "file": "Chap05/SetMtEph.rs",
-    "lines": "149-154",
+    "lines": "142-147",
     "spec_strength": "unknown",
     "snippet": "        fn iter<'a>(&'a self) -> (it: SetMtEphIter<'a, T>)\n            requires self.spec_setmteph_wf()\n            ensures\n                it@.0 == 0int,\n                it@.1.map(|i: int, k: T| k@).to_set() == self@,\n                it@.1.no_duplicates();"
   },
@@ -355,7 +355,7 @@
     "id": 45,
     "function": "to_seq",
     "file": "Chap05/SetMtEph.rs",
-    "lines": "158-162",
+    "lines": "151-155",
     "spec_strength": "unknown",
     "snippet": "        fn to_seq(&self) -> (seq: Vec<T>)\n            requires self.spec_setmteph_wf()\n            ensures\n                seq@.no_duplicates(),\n                forall |x: T::V| self@.contains(x) <==> seq@.map(|_i: int, t: T| t@).contains(x);"
   },
@@ -363,7 +363,7 @@
     "id": 46,
     "function": "empty`",
     "file": "Chap05/SetMtEph.rs",
-    "lines": "1010-1012",
+    "lines": "1004-1006",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (s: Self)\n            requires valid_key_type::<T>()\n            ensures s@.finite(), s@ == Set::<<T as View>::V>::empty();"
   },
@@ -371,7 +371,7 @@
     "id": 47,
     "function": "singleton",
     "file": "Chap05/SetMtEph.rs",
-    "lines": "172-174",
+    "lines": "165-167",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(x: T)                   -> (s: Self)\n            requires Self::spec_valid_key_type()\n            ensures s.spec_setmteph_wf(), s@ == Set::empty().insert(x@);"
   },
@@ -379,7 +379,7 @@
     "id": 48,
     "function": "size`",
     "file": "Chap05/SetMtEph.rs",
-    "lines": "1014-1015",
+    "lines": "1008-1009",
     "spec_strength": "hole",
     "snippet": "        fn size(&self) -> (size: N)\n            ensures size == self@.len();"
   },
@@ -387,7 +387,7 @@
     "id": 49,
     "function": "mem`",
     "file": "Chap05/SetMtEph.rs",
-    "lines": "1017-1018",
+    "lines": "1011-1012",
     "spec_strength": "hole",
     "snippet": "        fn mem(&self, x: T) -> (contains: B)\n            ensures contains == self@.contains(x@);"
   },
@@ -395,7 +395,7 @@
     "id": 50,
     "function": "insert`",
     "file": "Chap05/SetMtEph.rs",
-    "lines": "1020-1024",
+    "lines": "1014-1018",
     "spec_strength": "hole",
     "snippet": "        fn insert(&mut self, x: T) -> (r: std::result::Result<bool, ()>)\n            ensures\n                self@.finite(),\n                self@ == old(self)@.insert(x@),\n                r is Ok ==> r.unwrap() == !old(self)@.contains(x@);"
   },
@@ -403,7 +403,7 @@
     "id": 51,
     "function": "union",
     "file": "Chap05/SetMtEph.rs",
-    "lines": "199-203",
+    "lines": "192-196",
     "spec_strength": "unknown",
     "snippet": "        fn union(&self, s2: &Self) -> (union: Self)\n            requires\n               self.spec_setmteph_wf(),\n               s2.spec_setmteph_wf(),\n            ensures union.spec_setmteph_wf(), union@ == self@.union(s2@);"
   },
@@ -411,7 +411,7 @@
     "id": 52,
     "function": "disjoint_union",
     "file": "Chap05/SetMtEph.rs",
-    "lines": "208-216",
+    "lines": "201-209",
     "spec_strength": "unknown",
     "snippet": "        fn disjoint_union(&self, s2: &Self) -> (union: Self)\n            requires\n               self.spec_setmteph_wf(),\n               s2.spec_setmteph_wf(),\n               self@.disjoint(s2@),\n            ensures\n               union.spec_setmteph_wf(),\n               union@ == self@.union(s2@),\n               union@.len() == self@.len() + s2@.len();"
   },
@@ -419,7 +419,7 @@
     "id": 53,
     "function": "intersection",
     "file": "Chap05/SetMtEph.rs",
-    "lines": "220-224",
+    "lines": "213-217",
     "spec_strength": "unknown",
     "snippet": "        fn intersection(&self, s2: &Self) -> (intersection: Self)\n            requires\n                self.spec_setmteph_wf(),\n                s2.spec_setmteph_wf(),\n            ensures intersection.spec_setmteph_wf(), intersection@ == self@.intersect(s2@);"
   },
@@ -427,7 +427,7 @@
     "id": 54,
     "function": "elt_cross_set",
     "file": "Chap05/SetMtEph.rs",
-    "lines": "228-235",
+    "lines": "221-228",
     "spec_strength": "unknown",
     "snippet": "        fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetMtEph<U>) -> (product: SetMtEph<Pair<T, U>>)\n            requires\n              Self::spec_valid_key_type(),\n              spec_setmteph_wf_generic(s2),\n              valid_key_type::<Pair<T, U>>(),\n            ensures\n               spec_setmteph_wf_generic(&product),\n               forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (av == a@ && s2@.contains(bv));"
   },
@@ -435,7 +435,7 @@
     "id": 55,
     "function": "cartesian_product",
     "file": "Chap05/SetMtEph.rs",
-    "lines": "239-247",
+    "lines": "232-240",
     "spec_strength": "unknown",
     "snippet": "        fn cartesian_product<U: StT + Hash + Clone + Send + Sync + 'static>(&self, s2: &SetMtEph<U>) -> (product: SetMtEph<Pair<T, U>>)\n            where T: Send + Sync + 'static, Pair<T, U>: StT + Hash + View<V = (T::V, U::V)>,\n            requires\n                self.spec_setmteph_wf(),\n                spec_setmteph_wf_generic(s2),\n                valid_key_type::<Pair<T, U>>(),\n            ensures\n                spec_setmteph_wf_generic(&product),\n                forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (self@.contains(av) && s2@.contains(bv));"
   },
@@ -443,7 +443,7 @@
     "id": 56,
     "function": "all_nonempty",
     "file": "Chap05/SetMtEph.rs",
-    "lines": "251-256",
+    "lines": "244-249",
     "spec_strength": "unknown",
     "snippet": "        fn all_nonempty(parts: &SetMtEph<SetMtEph<T>>) -> (all_nonempty: bool)\n            requires\n                Self::spec_valid_key_type(),\n                spec_setmteph_wf_generic(parts),\n            ensures\n                all_nonempty <==> forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0;"
   },
@@ -451,7 +451,7 @@
     "id": 57,
     "function": "partition_on_elt",
     "file": "Chap05/SetMtEph.rs",
-    "lines": "260-271",
+    "lines": "253-264",
     "spec_strength": "unknown",
     "snippet": "        fn partition_on_elt(x: &T, parts: &SetMtEph<SetMtEph<T>>) -> (partition_on_elt: bool)\n            requires\n                Self::spec_valid_key_type(),\n                spec_setmteph_wf_generic(parts),\n            ensures\n                partition_on_elt <==> (\n                    (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x@)) &&\n                    (forall |s1: Set<T::V>, s2: Set<T::V>|\n                        #![trigger parts@.contains(s1), parts@.contains(s2)]\n                        parts@.contains(s1) && s1.contains(x@) &&\n                        parts@.contains(s2) && s2.contains(x@) ==> s1 == s2)\n                );"
   },
@@ -459,7 +459,7 @@
     "id": 58,
     "function": "partition",
     "file": "Chap05/SetMtEph.rs",
-    "lines": "275-289",
+    "lines": "268-282",
     "spec_strength": "unknown",
     "snippet": "        fn partition(&self, parts: &SetMtEph<SetMtEph<T>>) -> (partition: bool)\n            requires\n                self.spec_setmteph_wf(),\n                spec_setmteph_wf_generic(parts),\n            ensures\n                partition <==> (\n                    (forall |x: T::V| self@.contains(x) ==> (\n                        (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x)) &&\n                        (forall |s1: Set<T::V>, s2: Set<T::V>|\n                            #![trigger parts@.contains(s1), parts@.contains(s2)]\n                            parts@.contains(s1) && s1.contains(x) &&\n                            parts@.contains(s2) && s2.contains(x) ==> s1 == s2)\n                    )) &&\n                    (forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0)\n                );"
   },
@@ -467,7 +467,7 @@
     "id": 59,
     "function": "choose`",
     "file": "Chap05/SetMtEph.rs",
-    "lines": "1026-1028",
+    "lines": "1020-1022",
     "spec_strength": "hole",
     "snippet": "        fn choose(&self) -> (element: T)\n            requires self@.len() > 0\n            ensures self@.contains(element@);"
   },
@@ -475,7 +475,7 @@
     "id": 60,
     "function": "next",
     "file": "Chap05/SetMtEph.rs",
-    "lines": "873-889",
+    "lines": "868-884",
     "spec_strength": "unknown",
     "snippet": "        fn next(&mut self) -> (next: Option<&'a T>)\n            ensures ({\n                let (old_index, old_seq) = old(self)@;\n                match next {\n                    None => {\n                        &&& self@ == old(self)@\n                        &&& old_index >= old_seq.len()\n                    },\n                    Some(element) => {\n                        let (new_index, new_seq) = self@;\n                        &&& 0 <= old_index < old_seq.len()\n                        &&& new_seq == old_seq\n                        &&& new_index == old_index + 1\n                        &&& element == old_seq[old_index]\n                    },\n                }\n            })"
   },
@@ -483,7 +483,7 @@
     "id": 61,
     "function": "hash",
     "file": "Chap05/SetMtEph.rs",
-    "lines": "1088",
+    "lines": "1083",
     "spec_strength": "",
     "snippet": "        fn hash<H: std::hash::Hasher>(&self, state: &mut H) { self.elements.hash(state); }"
   },
@@ -491,7 +491,7 @@
     "id": 62,
     "function": "eq",
     "file": "Chap05/SetMtEph.rs",
-    "lines": "1094-1095",
+    "lines": "1089-1090",
     "spec_strength": "hole",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
@@ -499,7 +499,7 @@
     "id": 63,
     "function": "lemma_singleton_choose",
     "file": "Chap05/SetStEph.rs",
-    "lines": "105-111",
+    "lines": "99-105",
     "spec_strength": "unknown",
     "snippet": "    pub broadcast proof fn lemma_singleton_choose<A>(s: Set<A>, a: A)\n        requires\n            s.finite(),\n            s.len() == 1,\n            #[trigger] s.contains(a),\n        ensures\n            s.choose() == a,"
   },
@@ -507,7 +507,7 @@
     "id": 64,
     "function": "from_vec",
     "file": "Chap05/SetStEph.rs",
-    "lines": "130-132",
+    "lines": "123-125",
     "spec_strength": "unknown",
     "snippet": "        fn from_vec(v: Vec<T>) -> (s: Self)\n            requires Self::spec_valid_key_type()\n            ensures s.spec_setsteph_wf(), s@ == v@.map(|i: int, x: T| x@).to_set();"
   },
@@ -515,7 +515,7 @@
     "id": 65,
     "function": "iter",
     "file": "Chap05/SetStEph.rs",
-    "lines": "136-142",
+    "lines": "129-135",
     "spec_strength": "unknown",
     "snippet": "        fn iter<'a>(&'a self) -> (it: SetStEphIter<'a, T>)\n            requires self.spec_setsteph_wf()\n            ensures\n                it@.0 == 0int,\n                it@.1.map(|i: int, k: T| k@).to_set() == self@,\n                it@.1.no_duplicates(),\n                forall |j: int| 0 <= j < it@.1.len() ==> self@.contains(#[trigger] it@.1[j]@);"
   },
@@ -523,7 +523,7 @@
     "id": 66,
     "function": "to_seq",
     "file": "Chap05/SetStEph.rs",
-    "lines": "146-150",
+    "lines": "139-143",
     "spec_strength": "unknown",
     "snippet": "        fn to_seq(&self) -> (seq: Vec<T>)\n            requires self.spec_setsteph_wf()\n            ensures\n                seq@.no_duplicates(),\n                forall |x: T::V| self@.contains(x) <==> seq@.map(|_i: int, t: T| t@).contains(x);"
   },
@@ -531,7 +531,7 @@
     "id": 67,
     "function": "empty",
     "file": "Chap05/SetStEph.rs",
-    "lines": "154-156",
+    "lines": "147-149",
     "spec_strength": "unknown",
     "snippet": "        fn empty()                           -> (empty: Self)\n            requires Self::spec_valid_key_type()\n            ensures empty.spec_setsteph_wf(), empty@ == Set::<<T as View>::V>::empty();"
   },
@@ -539,7 +539,7 @@
     "id": 68,
     "function": "singleton",
     "file": "Chap05/SetStEph.rs",
-    "lines": "160-162",
+    "lines": "153-155",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(x: T)                   -> (s: Self)\n            requires Self::spec_valid_key_type()\n            ensures s.spec_setsteph_wf(), s@ == Set::empty().insert(x@);"
   },
@@ -547,7 +547,7 @@
     "id": 69,
     "function": "size",
     "file": "Chap05/SetStEph.rs",
-    "lines": "166-168",
+    "lines": "159-161",
     "spec_strength": "unknown",
     "snippet": "        fn size(&self)                       -> (size: N)\n            requires self.spec_setsteph_wf()\n            ensures size == self@.len();"
   },
@@ -555,7 +555,7 @@
     "id": 70,
     "function": "mem",
     "file": "Chap05/SetStEph.rs",
-    "lines": "172-174",
+    "lines": "165-167",
     "spec_strength": "unknown",
     "snippet": "        fn mem(&self, x: &T)                 -> (contains: B)\n            requires self.spec_setsteph_wf()\n            ensures contains == self@.contains(x@);"
   },
@@ -563,7 +563,7 @@
     "id": 71,
     "function": "insert",
     "file": "Chap05/SetStEph.rs",
-    "lines": "178-183",
+    "lines": "171-176",
     "spec_strength": "unknown",
     "snippet": "        fn insert(&mut self, x: T)           -> (inserted: bool)\n            requires old(self).spec_setsteph_wf()\n            ensures\n                self.spec_setsteph_wf(),\n                self@ == old(self)@.insert(x@),\n                inserted == !old(self)@.contains(x@);"
   },
@@ -571,7 +571,7 @@
     "id": 72,
     "function": "union",
     "file": "Chap05/SetStEph.rs",
-    "lines": "187-191",
+    "lines": "180-184",
     "spec_strength": "unknown",
     "snippet": "        fn union(&self, s2: &Self) -> (union: Self)\n            requires\n               self.spec_setsteph_wf(),\n               s2.spec_setsteph_wf(),\n            ensures union.spec_setsteph_wf(), union@ == self@.union(s2@);"
   },
@@ -579,7 +579,7 @@
     "id": 73,
     "function": "disjoint_union",
     "file": "Chap05/SetStEph.rs",
-    "lines": "196-204",
+    "lines": "189-197",
     "spec_strength": "unknown",
     "snippet": "        fn disjoint_union(&self, s2: &Self) -> (union: Self)\n            requires\n               self.spec_setsteph_wf(),\n               s2.spec_setsteph_wf(),\n               self@.disjoint(s2@),\n            ensures\n               union.spec_setsteph_wf(),\n               union@ == self@.union(s2@),\n               union@.len() == self@.len() + s2@.len();"
   },
@@ -587,7 +587,7 @@
     "id": 74,
     "function": "intersection",
     "file": "Chap05/SetStEph.rs",
-    "lines": "208-212",
+    "lines": "201-205",
     "spec_strength": "unknown",
     "snippet": "        fn intersection(&self, s2: &Self) -> (intersection: Self)\n            requires\n                self.spec_setsteph_wf(),\n                s2.spec_setsteph_wf(),\n            ensures intersection.spec_setsteph_wf(), intersection@ == self@.intersect(s2@);"
   },
@@ -595,7 +595,7 @@
     "id": 75,
     "function": "elt_cross_set",
     "file": "Chap05/SetStEph.rs",
-    "lines": "216-223",
+    "lines": "209-216",
     "spec_strength": "unknown",
     "snippet": "        fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)\n            requires\n              Self::spec_valid_key_type(),\n              spec_setsteph_wf_generic(s2),\n              valid_key_type::<Pair<T, U>>(),\n            ensures\n               spec_setsteph_wf_generic(&product),\n               forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (av == a@ && s2@.contains(bv));"
   },
@@ -603,7 +603,7 @@
     "id": 76,
     "function": "cartesian_product",
     "file": "Chap05/SetStEph.rs",
-    "lines": "227-234",
+    "lines": "220-227",
     "spec_strength": "unknown",
     "snippet": "        fn cartesian_product<U: StT + Hash + Clone>(&self, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)\n            requires\n                self.spec_setsteph_wf(),\n                spec_setsteph_wf_generic(s2),\n                valid_key_type::<Pair<T, U>>(),\n            ensures\n                spec_setsteph_wf_generic(&product),\n                forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (self@.contains(av) && s2@.contains(bv));"
   },
@@ -611,7 +611,7 @@
     "id": 77,
     "function": "all_nonempty",
     "file": "Chap05/SetStEph.rs",
-    "lines": "238-243",
+    "lines": "231-236",
     "spec_strength": "unknown",
     "snippet": "        fn all_nonempty(parts: &SetStEph<SetStEph<T>>) -> (all_nonempty: bool)\n            requires\n                Self::spec_valid_key_type(),\n                spec_setsteph_wf_generic(parts),\n            ensures \n                all_nonempty <==> forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0;"
   },
@@ -619,7 +619,7 @@
     "id": 78,
     "function": "partition_on_elt",
     "file": "Chap05/SetStEph.rs",
-    "lines": "247-258",
+    "lines": "240-251",
     "spec_strength": "unknown",
     "snippet": "        fn partition_on_elt(x: &T, parts: &SetStEph<SetStEph<T>>) -> (partition_on_elt: bool)\n            requires\n                Self::spec_valid_key_type(),\n                spec_setsteph_wf_generic(parts),\n            ensures \n                partition_on_elt <==> (\n                    (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x@)) &&\n                    (forall |s1: Set<T::V>, s2: Set<T::V>|\n                        #![trigger parts@.contains(s1), parts@.contains(s2)]\n                        parts@.contains(s1) && s1.contains(x@) &&\n                        parts@.contains(s2) && s2.contains(x@) ==> s1 == s2)\n                );"
   },
@@ -627,7 +627,7 @@
     "id": 79,
     "function": "partition",
     "file": "Chap05/SetStEph.rs",
-    "lines": "262-276",
+    "lines": "255-269",
     "spec_strength": "unknown",
     "snippet": "        fn partition(&self, parts: &SetStEph<SetStEph<T>>) -> (partition: bool)\n            requires\n                self.spec_setsteph_wf(),\n                spec_setsteph_wf_generic(parts),\n            ensures \n                partition <==> (\n                    (forall |x: T::V| self@.contains(x) ==> (\n                        (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x)) &&\n                        (forall |s1: Set<T::V>, s2: Set<T::V>|\n                            #![trigger parts@.contains(s1), parts@.contains(s2)]\n                            parts@.contains(s1) && s1.contains(x) &&\n                            parts@.contains(s2) && s2.contains(x) ==> s1 == s2)\n                    )) &&\n                    (forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0)\n                );"
   },
@@ -635,7 +635,7 @@
     "id": 80,
     "function": "split",
     "file": "Chap05/SetStEph.rs",
-    "lines": "281-293",
+    "lines": "274-286",
     "spec_strength": "unknown",
     "snippet": "        fn split(&self, n: usize) -> (n_set_rest_set: (Self, Self))\n            requires\n                self.spec_setsteph_wf(),\n                self@.len() >= n,\n            ensures\n               ({let (n_set, rest_set) = n_set_rest_set;\n                  &&& n_set.spec_setsteph_wf()\n                  &&& rest_set.spec_setsteph_wf()\n                  &&& n_set@.disjoint(rest_set@)\n                  &&& n_set@.union(rest_set@) == self@\n                  &&& n_set@.len() == n\n                  &&& rest_set@.len() == self@.len() - n\n               });"
   },
@@ -643,7 +643,7 @@
     "id": 81,
     "function": "choose",
     "file": "Chap05/SetStEph.rs",
-    "lines": "299-304",
+    "lines": "292-297",
     "spec_strength": "unknown",
     "snippet": "        fn choose(&self) -> (element: T)\n            requires\n                self.spec_setsteph_wf(),\n                self@.len() > 0,\n            ensures \n                self@.contains(element@);"
   },
@@ -651,7 +651,7 @@
     "id": 82,
     "function": "next",
     "file": "Chap05/SetStEph.rs",
-    "lines": "798-814",
+    "lines": "793-809",
     "spec_strength": "unknown",
     "snippet": "        fn next(&mut self) -> (next: Option<&'a T>)\n            ensures ({\n                let (old_index, old_seq) = old(self)@;\n                match next {\n                    None => {\n                        &&& self@ == old(self)@\n                        &&& old_index >= old_seq.len()\n                    },\n                    Some(element) => {\n                        let (new_index, new_seq) = self@;\n                        &&& 0 <= old_index < old_seq.len()\n                        &&& new_seq == old_seq\n                        &&& new_index == old_index + 1\n                        &&& element == old_seq[old_index]\n                    },\n                }\n            })"
   },
@@ -659,7 +659,7 @@
     "id": 83,
     "function": "hash",
     "file": "Chap05/SetStEph.rs",
-    "lines": "893",
+    "lines": "887",
     "spec_strength": "",
     "snippet": "        fn hash<H: std::hash::Hasher>(&self, state: &mut H) { self.elements.hash(state); }"
   },
@@ -667,7 +667,7 @@
     "id": 84,
     "function": "eq",
     "file": "Chap05/SetStEph.rs",
-    "lines": "899-900",
+    "lines": "893-894",
     "spec_strength": "hole",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   }

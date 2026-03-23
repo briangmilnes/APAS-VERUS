@@ -59,6 +59,7 @@ broadcast use {
 
     pub struct AVLTreeSetMtEphInv;
 
+    #[verifier::reject_recursive_types(T)]
     pub struct AVLTreeSetMtEph<T: StTInMtT + Ord + 'static> {
         pub inner: Arc<RwLock<AVLTreeSetStEph<T>, AVLTreeSetMtEphInv>>,
         pub ghost_set_view: Ghost<Set<<T as View>::V>>,
@@ -339,7 +340,7 @@ broadcast use {
             proof {
                 // Reader accept: inner views match ghost shadows.
                 assume(common@ == self@.intersect(other@));
-                vstd::seq_lib::seq_to_set_is_finite(common_st.elements@);
+                assert(common_st@.finite());
             }
             common
         }
@@ -359,7 +360,7 @@ broadcast use {
             proof {
                 // Reader accept: inner views match ghost shadows.
                 assume(remaining@ == self@.difference(other@));
-                vstd::seq_lib::seq_to_set_is_finite(remaining_st.elements@);
+                assert(remaining_st@.finite());
             }
             remaining
         }
@@ -385,7 +386,7 @@ broadcast use {
             proof {
                 // Reader accept: inner views match ghost shadows.
                 assume(combined@ == self@.union(other@));
-                vstd::seq_lib::seq_to_set_is_finite(combined_st.elements@);
+                assert(combined_st@.finite());
             }
             combined
         }
@@ -427,7 +428,7 @@ broadcast use {
             let handle = self.inner.acquire_read();
             let inner_ref = handle.borrow();
             proof {
-                vstd::seq_lib::seq_to_set_is_finite(inner_ref.elements@);
+                assert(inner_ref@.finite());
             }
             let seq = inner_ref.to_seq();
             handle.release_read();

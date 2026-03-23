@@ -75,7 +75,7 @@
     "id": 10,
     "function": "new",
     "file": "Chap65/UnionFindStEph.rs",
-    "lines": "71-80",
+    "lines": "73-82",
     "spec_strength": "unknown",
     "snippet": "        fn new() -> (uf: Self)\n            requires\n                obeys_key_model::<V>(),\n                obeys_feq_full::<V>(),\n                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,\n            ensures\n                uf@.parent =~= Map::<<V as View>::V, V>::empty(),\n                uf@.rank =~= Map::<<V as View>::V, usize>::empty(),\n                uf@.elements =~= Seq::<V>::empty(),\n                uf@.roots =~= Map::<<V as View>::V, <V as View>::V>::empty();"
   },
@@ -83,7 +83,7 @@
     "id": 11,
     "function": "insert",
     "file": "Chap65/UnionFindStEph.rs",
-    "lines": "84-90",
+    "lines": "86-92",
     "spec_strength": "unknown",
     "snippet": "        fn insert(&mut self, v: V)\n            requires\n                old(self).spec_unionfindsteph_wf(),\n            ensures\n                self.spec_unionfindsteph_wf(),\n                old(self)@.parent.contains_key(v@) ==> self@ == old(self)@,\n                !old(self)@.parent.contains_key(v@) ==> {"
   },
@@ -91,7 +91,7 @@
     "id": 12,
     "function": "find",
     "file": "Chap65/UnionFindStEph.rs",
-    "lines": "99-112",
+    "lines": "101-114",
     "spec_strength": "unknown",
     "snippet": "        fn find(&mut self, v: &V) -> (root: V)\n            requires\n                old(self).spec_unionfindsteph_wf(),\n                old(self)@.parent.contains_key(v@),\n            ensures\n                self.spec_unionfindsteph_wf(),\n                // Result is the canonical root.\n                root@ == old(self)@.roots[v@],\n                // Path compression preserves the logical partition.\n                self@.roots =~= old(self)@.roots,\n                // Domain unchanged.\n                self@.parent.dom() =~= old(self)@.parent.dom(),\n                self@.rank =~= old(self)@.rank,\n                self@.elements =~= old(self)@.elements;"
   },
@@ -99,7 +99,7 @@
     "id": 13,
     "function": "union",
     "file": "Chap65/UnionFindStEph.rs",
-    "lines": "116-126",
+    "lines": "118-128",
     "spec_strength": "unknown",
     "snippet": "        fn union(&mut self, u: &V, v: &V)\n            requires\n                old(self).spec_unionfindsteph_wf(),\n                old(self)@.parent.contains_key(u@),\n                old(self)@.parent.contains_key(v@),\n            ensures\n                self.spec_unionfindsteph_wf(),\n                self@.parent.dom() =~= old(self)@.parent.dom(),\n                self@.elements =~= old(self)@.elements,\n                // Merged elements share a new root; others unchanged.\n                forall|x: <V as View>::V| #[trigger] self@.roots.contains_key(x) ==> {"
   },
@@ -107,7 +107,7 @@
     "id": 14,
     "function": "equals",
     "file": "Chap65/UnionFindStEph.rs",
-    "lines": "138-147",
+    "lines": "140-149",
     "spec_strength": "unknown",
     "snippet": "        fn equals(&mut self, u: &V, v: &V) -> (same: B)\n            requires\n                old(self).spec_unionfindsteph_wf(),\n                old(self)@.parent.contains_key(u@),\n                old(self)@.parent.contains_key(v@),\n            ensures\n                self.spec_unionfindsteph_wf(),\n                same == (old(self)@.roots[u@] == old(self)@.roots[v@]),\n                self@.roots =~= old(self)@.roots,\n                self@.parent.dom() =~= old(self)@.parent.dom();"
   },
@@ -115,7 +115,7 @@
     "id": 15,
     "function": "num_sets",
     "file": "Chap65/UnionFindStEph.rs",
-    "lines": "151-157",
+    "lines": "153-159",
     "spec_strength": "unknown",
     "snippet": "        fn num_sets(&mut self) -> (count: usize)\n            requires\n                old(self).spec_unionfindsteph_wf(),\n            ensures\n                self.spec_unionfindsteph_wf(),\n                self@.roots =~= old(self)@.roots,\n                self@.parent.dom() =~= old(self)@.parent.dom();"
   }

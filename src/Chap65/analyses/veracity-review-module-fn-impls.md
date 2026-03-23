@@ -51,12 +51,12 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 10 | `new` | Y | Y |  |  | Y |  |  | unknown | 71&#8209;80 |
-| 11 | `insert` | Y | Y |  |  | Y |  |  | unknown | 84&#8209;90 |
-| 12 | `find` | Y | Y |  |  | Y |  |  | unknown | 99&#8209;112 |
-| 13 | `union` | Y | Y |  |  | Y |  |  | unknown | 116&#8209;126 |
-| 14 | `equals` | Y | Y |  |  | Y |  |  | unknown | 138&#8209;147 |
-| 15 | `num_sets` | Y | Y |  |  | Y |  |  | unknown | 151&#8209;157 |
+| 10 | `new` | Y | Y |  |  | Y |  |  | unknown | 73&#8209;82 |
+| 11 | `insert` | Y | Y |  |  | Y |  |  | unknown | 86&#8209;92 |
+| 12 | `find` | Y | Y |  |  | Y |  |  | unknown | 101&#8209;114 |
+| 13 | `union` | Y | Y |  |  | Y |  |  | unknown | 118&#8209;128 |
+| 14 | `equals` | Y | Y |  |  | Y |  |  | unknown | 140&#8209;149 |
+| 15 | `num_sets` | Y | Y |  |  | Y |  |  | unknown | 153&#8209;159 |
 
 
 ### Legend

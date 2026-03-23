@@ -3,7 +3,7 @@
     "id": 1,
     "function": "lemma_size_eq_inorder_len",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "183-186",
+    "lines": "186-189",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_size_eq_inorder_len<T: StT>(link: &Link<T>)\n        requires spec_avltreeseq_wf(*link),\n        ensures spec_avltreeseq_cached_size(link) == spec_avltreeseq_inorder(*link).len(),\n        decreases *link,"
   },
@@ -11,7 +11,7 @@
     "id": 2,
     "function": "lemma_inorder_values_maps_to_inorder",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "197-199",
+    "lines": "200-202",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_inorder_values_maps_to_inorder<T: StT>(link: Link<T>)\n        ensures spec_avltreeseq_inorder_values(link).map_values(|t: T| t@) =~= spec_avltreeseq_inorder(link),\n        decreases link,"
   },
@@ -19,7 +19,7 @@
     "id": 3,
     "function": "lemma_height_le_size",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "210-213",
+    "lines": "213-216",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_height_le_size<T: StT>(link: &Link<T>)\n        requires spec_avltreeseq_wf(*link),\n        ensures spec_avltreeseq_cached_height(link) <= spec_avltreeseq_cached_size(link),\n        decreases *link,"
   },
@@ -27,7 +27,7 @@
     "id": 4,
     "function": "empty",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "231-232",
+    "lines": "233-234",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (tree: Self)\n            ensures tree.spec_avltreeseq_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseq_wf();"
   },
@@ -35,7 +35,7 @@
     "id": 5,
     "function": "new",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "234-235",
+    "lines": "236-237",
     "spec_strength": "unknown",
     "snippet": "        fn new() -> (tree: Self)\n            ensures tree.spec_avltreeseq_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseq_wf();"
   },
@@ -43,7 +43,7 @@
     "id": 6,
     "function": "length",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "237-239",
+    "lines": "239-241",
     "spec_strength": "unknown",
     "snippet": "        fn length(&self) -> (len: N)\n            requires self.spec_avltreeseq_wf(),\n            ensures len as nat == self.spec_avltreeseq_seq().len();"
   },
@@ -51,7 +51,7 @@
     "id": 7,
     "function": "nth",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "241-243",
+    "lines": "243-245",
     "spec_strength": "unknown",
     "snippet": "        fn nth(&self, index: N) -> (elem: &T)\n            requires self.spec_avltreeseq_wf(), (index as int) < self.spec_avltreeseq_seq().len(),\n            ensures elem@ == self.spec_avltreeseq_seq()[index as int];"
   },
@@ -59,7 +59,7 @@
     "id": 8,
     "function": "set",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "245-250",
+    "lines": "247-252",
     "spec_strength": "unknown",
     "snippet": "        fn set(&mut self, index: N, item: T) -> (outcome: Result<(), &'static str>)\n            requires old(self).spec_avltreeseq_wf(), (index as int) < old(self).spec_avltreeseq_seq().len(),\n            ensures\n                self.spec_avltreeseq_wf(),\n                self.spec_avltreeseq_seq() =~= old(self).spec_avltreeseq_seq().update(index as int, item@),\n                outcome is Ok;"
   },
@@ -67,7 +67,7 @@
     "id": 9,
     "function": "singleton",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "252-256",
+    "lines": "254-258",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(item: T) -> (tree: Self)\n            ensures\n                tree.spec_avltreeseq_seq() =~= seq![item@],\n                tree.spec_avltreeseq_seq().len() == 1,\n                tree.spec_avltreeseq_wf();"
   },
@@ -75,7 +75,7 @@
     "id": 10,
     "function": "isEmpty",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "258-260",
+    "lines": "260-262",
     "spec_strength": "unknown",
     "snippet": "        fn isEmpty(&self) -> (empty: B)\n            requires self.spec_avltreeseq_wf(),\n            ensures empty == (self.spec_avltreeseq_seq().len() == 0);"
   },
@@ -83,7 +83,7 @@
     "id": 11,
     "function": "isSingleton",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "262-264",
+    "lines": "264-266",
     "spec_strength": "unknown",
     "snippet": "        fn isSingleton(&self) -> (single: B)\n            requires self.spec_avltreeseq_wf(),\n            ensures single == (self.spec_avltreeseq_seq().len() == 1);"
   },
@@ -91,15 +91,15 @@
     "id": 12,
     "function": "subseq_copy",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "266-269",
+    "lines": "268-271",
     "spec_strength": "unknown",
-    "snippet": "        fn subseq_copy(&self, start: N, length: N) -> (sub: Self)\n            requires self.spec_avltreeseq_wf(), obeys_feq_full::<T>(),\n            ensures sub.spec_avltreeseq_seq() =~=\n                spec_avltreeseq_subseq(self.spec_avltreeseq_seq(), start as nat, length as nat);"
+    "snippet": "        fn subseq_copy(&self, start: N, length: N) -> (sub: Self)\n            requires self.spec_avltreeseq_wf(),\n            ensures sub.spec_avltreeseq_seq() =~=\n                spec_avltreeseq_subseq(self.spec_avltreeseq_seq(), start as nat, length as nat);"
   },
   {
     "id": 13,
     "function": "new_root",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "271-272",
+    "lines": "273-274",
     "spec_strength": "unknown",
     "snippet": "        fn new_root() -> (tree: Self)\n            ensures tree.spec_avltreeseq_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseq_wf();"
   },
@@ -107,7 +107,7 @@
     "id": 14,
     "function": "update",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "274-280",
+    "lines": "276-282",
     "spec_strength": "unknown",
     "snippet": "        fn update(&mut self, index: N, item: T)\n            requires\n                old(self).spec_avltreeseq_wf(),\n                (index as int) < old(self).spec_avltreeseq_seq().len(),\n            ensures\n                self.spec_avltreeseq_wf(),\n                self.spec_avltreeseq_seq() =~= old(self).spec_avltreeseq_seq().update(index as int, item@);"
   },
@@ -115,7 +115,7 @@
     "id": 15,
     "function": "from_vec",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "282-288",
+    "lines": "284-290",
     "spec_strength": "unknown",
     "snippet": "        fn from_vec(values: Vec<T>) -> (tree: AVLTreeS<T>)\n            requires\n                obeys_feq_full::<T>(),\n                values@.len() < usize::MAX,\n            ensures\n                spec_avltreeseq_wf(tree.root),\n                spec_avltreeseq_inorder(tree.root) =~= values@.map_values(|t: T| t@);"
   },
@@ -123,15 +123,15 @@
     "id": 16,
     "function": "to_arrayseq",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "290-295",
+    "lines": "292-297",
     "spec_strength": "unknown",
-    "snippet": "        fn to_arrayseq(&self) -> (seq: ArraySeqStEphS<T>)\n            requires self.spec_avltreeseq_wf(), obeys_feq_full::<T>(),\n            ensures\n                seq.spec_len() == self.spec_avltreeseq_seq().len(),\n                forall|i: int| #![trigger seq.spec_index(i)]\n                    0 <= i < seq.spec_len() ==> seq.spec_index(i)@ == self.spec_avltreeseq_seq()[i];"
+    "snippet": "        fn to_arrayseq(&self) -> (seq: ArraySeqStEphS<T>)\n            requires self.spec_avltreeseq_wf(),\n            ensures\n                seq.spec_len() == self.spec_avltreeseq_seq().len(),\n                forall|i: int| #![trigger seq.spec_index(i)]\n                    0 <= i < seq.spec_len() ==> seq.spec_index(i)@ == self.spec_avltreeseq_seq()[i];"
   },
   {
     "id": 17,
     "function": "iter",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "297-302",
+    "lines": "299-304",
     "spec_strength": "unknown",
     "snippet": "        fn iter<'a>(&'a self) -> (it: AVLTreeSeqIter<'a, T>)\n            requires self.spec_avltreeseq_wf(),\n            ensures\n                it@.0 == 0int,\n                it@.1.map_values(|t: T| t@) =~= self.spec_avltreeseq_seq(),\n                iter_invariant(&it);"
   },
@@ -139,7 +139,7 @@
     "id": 18,
     "function": "push_back",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "304-306",
+    "lines": "306-308",
     "spec_strength": "unknown",
     "snippet": "        fn push_back(&mut self, value: T)\n            requires old(self).spec_avltreeseq_wf(),\n            ensures self.spec_avltreeseq_seq() =~= old(self).spec_avltreeseq_seq().push(value@);"
   },
@@ -147,15 +147,15 @@
     "id": 19,
     "function": "contains_value",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "308-311",
+    "lines": "310-313",
     "spec_strength": "unknown",
-    "snippet": "        fn contains_value(&self, target: &T) -> (found: B)\n            requires self.spec_avltreeseq_wf(), obeys_feq_full::<T>(),\n            ensures found == exists|j: int| 0 <= j < self.spec_avltreeseq_seq().len()\n                && self.spec_avltreeseq_seq()[j] == target@;"
+    "snippet": "        fn contains_value(&self, target: &T) -> (found: B)\n            requires self.spec_avltreeseq_wf(),\n            ensures found == exists|j: int| 0 <= j < self.spec_avltreeseq_seq().len()\n                && self.spec_avltreeseq_seq()[j] == target@;"
   },
   {
     "id": 20,
     "function": "insert_value",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "313-315",
+    "lines": "315-317",
     "spec_strength": "unknown",
     "snippet": "        fn insert_value(&mut self, value: T)\n            requires old(self).spec_avltreeseq_wf(),\n            ensures self.spec_avltreeseq_seq() =~= old(self).spec_avltreeseq_seq().push(value@);"
   },
@@ -163,15 +163,15 @@
     "id": 21,
     "function": "delete_value",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "317-328",
+    "lines": "319-330",
     "spec_strength": "unknown",
-    "snippet": "        fn delete_value(&mut self, target: &T) -> (deleted: bool)\n            requires old(self).spec_avltreeseq_wf(), obeys_feq_full::<T>(),\n            ensures\n                !deleted ==> self.spec_avltreeseq_seq() =~= old(self).spec_avltreeseq_seq(),\n                deleted ==> exists|idx: int|\n                    #![trigger old(self).spec_avltreeseq_seq()[idx]]\n                    0 <= idx < old(self).spec_avltreeseq_seq().len()\n                    && old(self).spec_avltreeseq_seq()[idx] == target@\n                    && self.spec_avltreeseq_seq() =~=\n                        old(self).spec_avltreeseq_seq().subrange(0, idx)\n                        + old(self).spec_avltreeseq_seq().subrange(idx + 1,\n                            old(self).spec_avltreeseq_seq().len() as int);"
+    "snippet": "        fn delete_value(&mut self, target: &T) -> (deleted: bool)\n            requires old(self).spec_avltreeseq_wf(),\n            ensures\n                !deleted ==> self.spec_avltreeseq_seq() =~= old(self).spec_avltreeseq_seq(),\n                deleted ==> exists|idx: int|\n                    #![trigger old(self).spec_avltreeseq_seq()[idx]]\n                    0 <= idx < old(self).spec_avltreeseq_seq().len()\n                    && old(self).spec_avltreeseq_seq()[idx] == target@\n                    && self.spec_avltreeseq_seq() =~=\n                        old(self).spec_avltreeseq_seq().subrange(0, idx)\n                        + old(self).spec_avltreeseq_seq().subrange(idx + 1,\n                            old(self).spec_avltreeseq_seq().len() as int);"
   },
   {
     "id": 22,
     "function": "is_tree_empty",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "330-332",
+    "lines": "332-334",
     "spec_strength": "unknown",
     "snippet": "        fn is_tree_empty(&self) -> (empty: bool)\n            requires self.spec_avltreeseq_wf(),\n            ensures empty == (self.spec_avltreeseq_seq().len() == 0);"
   },
@@ -179,15 +179,15 @@
     "id": 23,
     "function": "values_in_order",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "334-336",
+    "lines": "336-338",
     "spec_strength": "unknown",
-    "snippet": "        fn values_in_order(&self) -> (values: Vec<T>)\n            requires self.spec_avltreeseq_wf(), obeys_feq_full::<T>(),\n            ensures values@.map_values(|t: T| t@) =~= self.spec_avltreeseq_seq();"
+    "snippet": "        fn values_in_order(&self) -> (values: Vec<T>)\n            requires self.spec_avltreeseq_wf(),\n            ensures values@.map_values(|t: T| t@) =~= self.spec_avltreeseq_seq();"
   },
   {
     "id": 24,
     "function": "cached_height",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "344-346",
+    "lines": "345-347",
     "spec_strength": "unknown",
     "snippet": "    fn cached_height<T: StT>(n: &Link<T>) -> (height: N)\n        requires spec_avltreeseq_cached_height(n) <= usize::MAX as nat,\n        ensures height as nat == spec_avltreeseq_cached_height(n),"
   },
@@ -195,7 +195,7 @@
     "id": 25,
     "function": "cached_size",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "354-356",
+    "lines": "355-357",
     "spec_strength": "unknown",
     "snippet": "    fn cached_size<T: StT>(n: &Link<T>) -> (size: N)\n        requires spec_avltreeseq_cached_size(n) < usize::MAX,\n        ensures size as nat == spec_avltreeseq_cached_size(n),"
   },
@@ -203,7 +203,7 @@
     "id": 26,
     "function": "update_size_height",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "366-384",
+    "lines": "367-385",
     "spec_strength": "unknown",
     "snippet": "    fn update_size_height<T: StT>(n: &mut Box<AVLTreeNode<T>>)\n        requires\n            spec_avltreeseq_wf(old(n).left),\n            spec_avltreeseq_wf(old(n).right),\n            1 + spec_avltreeseq_cached_size(&old(n).left)\n              + spec_avltreeseq_cached_size(&old(n).right) < usize::MAX,\n        ensures\n            n.left_size as nat == spec_avltreeseq_cached_size(&n.left),\n            n.right_size as nat == spec_avltreeseq_cached_size(&n.right),\n            n.height as nat == 1 + spec_avltreeseq_nat_max(\n                spec_avltreeseq_cached_height(&n.left),\n                spec_avltreeseq_cached_height(&n.right),\n            ),\n            n.value == old(n).value,\n            n.left == old(n).left,\n            n.right == old(n).right,\n            n.index == old(n).index,\n            spec_avltreeseq_wf(Some(*n)),\n            spec_avltreeseq_inorder(Some(*n)) =~= spec_avltreeseq_inorder(Some(*old(n))),"
   },
@@ -211,7 +211,7 @@
     "id": 27,
     "function": "rotate_right",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "400-407",
+    "lines": "401-408",
     "spec_strength": "unknown",
     "snippet": "    pub fn rotate_right<T: StT>(node: Box<AVLTreeNode<T>>) -> (rotated: Box<AVLTreeNode<T>>)\n        requires\n            spec_avltreeseq_wf(Some(node)),\n            node.left is Some,\n        ensures\n            spec_avltreeseq_wf(Some(rotated)),\n            spec_avltreeseq_inorder(Some(rotated)) =~= spec_avltreeseq_inorder(Some(node)),\n            spec_avltreeseq_cached_size(&Some(rotated)) == spec_avltreeseq_cached_size(&Some(node)),"
   },
@@ -219,7 +219,7 @@
     "id": 28,
     "function": "rotate_left",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "449-456",
+    "lines": "450-457",
     "spec_strength": "unknown",
     "snippet": "    fn rotate_left<T: StT>(node: Box<AVLTreeNode<T>>) -> (rotated: Box<AVLTreeNode<T>>)\n        requires\n            spec_avltreeseq_wf(Some(node)),\n            node.right is Some,\n        ensures\n            spec_avltreeseq_wf(Some(rotated)),\n            spec_avltreeseq_inorder(Some(rotated)) =~= spec_avltreeseq_inorder(Some(node)),\n            spec_avltreeseq_cached_size(&Some(rotated)) == spec_avltreeseq_cached_size(&Some(node)),"
   },
@@ -227,7 +227,7 @@
     "id": 29,
     "function": "rebalance",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "498-509",
+    "lines": "499-510",
     "spec_strength": "unknown",
     "snippet": "    fn rebalance<T: StT>(mut n: Box<AVLTreeNode<T>>) -> (balanced: Box<AVLTreeNode<T>>)\n        requires\n            spec_avltreeseq_wf(n.left),\n            spec_avltreeseq_wf(n.right),\n            1 + spec_avltreeseq_cached_size(&n.left)\n              + spec_avltreeseq_cached_size(&n.right) < usize::MAX,\n        ensures\n            spec_avltreeseq_inorder(Some(balanced)) =~= spec_avltreeseq_inorder(Some(n)),\n            spec_avltreeseq_wf(Some(balanced)),\n            spec_avltreeseq_cached_size(&Some(balanced))\n                == 1 + spec_avltreeseq_cached_size(&n.left)\n                     + spec_avltreeseq_cached_size(&n.right),"
   },
@@ -235,7 +235,7 @@
     "id": 30,
     "function": "insert_at_link",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "553-564",
+    "lines": "554-565",
     "spec_strength": "unknown",
     "snippet": "    pub fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (inserted: Link<T>)\n        requires\n            spec_avltreeseq_wf(node),\n            0 <= index as int <= spec_avltreeseq_inorder(node).len(),\n            *old(next_key) < usize::MAX,\n            spec_avltreeseq_cached_size(&node) + 1 < usize::MAX,\n        ensures\n            spec_avltreeseq_wf(inserted),\n            spec_avltreeseq_inorder(inserted) =~= spec_avltreeseq_inorder(node).insert(index as int, value@),\n            *next_key == *old(next_key) + 1,\n            spec_avltreeseq_cached_size(&inserted) == spec_avltreeseq_cached_size(&node) + 1,\n        decreases node,"
   },
@@ -243,7 +243,7 @@
     "id": 31,
     "function": "nth_link",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "629-632",
+    "lines": "630-633",
     "spec_strength": "unknown",
     "snippet": "    fn nth_link<'a, T: StT>(node: &'a Link<T>, index: N) -> (elem: &'a T)\n        requires spec_avltreeseq_wf(*node), (index as int) < spec_avltreeseq_inorder(*node).len(),\n        ensures elem@ == spec_avltreeseq_inorder(*node)[index as int],\n        decreases *node,"
   },
@@ -251,7 +251,7 @@
     "id": 32,
     "function": "set_link",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "647-657",
+    "lines": "648-658",
     "spec_strength": "unknown",
     "snippet": "    fn set_link<T: StT>(node: &mut Link<T>, index: N, value: T) -> (outcome: Result<(), &'static str>)\n        requires\n            spec_avltreeseq_wf(*old(node)),\n            (index as int) < spec_avltreeseq_inorder(*old(node)).len(),\n        ensures\n            spec_avltreeseq_wf(*node),\n            spec_avltreeseq_inorder(*node) =~= spec_avltreeseq_inorder(*old(node)).update(index as int, value@),\n            spec_avltreeseq_cached_size(node) == spec_avltreeseq_cached_size(old(node)),\n            spec_avltreeseq_cached_height(node) == spec_avltreeseq_cached_height(old(node)),\n            outcome is Ok,\n        decreases *old(node),"
   },
@@ -259,7 +259,7 @@
     "id": 33,
     "function": "push_inorder",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "674-679",
+    "lines": "675-680",
     "spec_strength": "unknown",
     "snippet": "    fn push_inorder<T: StT>(link: &Link<T>, out: &mut Vec<T>)\n        requires spec_avltreeseq_wf(*link), obeys_feq_full::<T>(),\n        ensures\n            out@.map_values(|t: T| t@) =~=\n                old(out)@.map_values(|t: T| t@) + spec_avltreeseq_inorder(*link),\n        decreases *link,"
   },
@@ -267,7 +267,7 @@
     "id": 34,
     "function": "compare_trees",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "709-714",
+    "lines": "710-715",
     "spec_strength": "unknown",
     "snippet": "    fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (equal: bool)\n        requires\n            spec_avltreeseq_wf(*a), spec_avltreeseq_wf(*b), obeys_feq_full::<T>(),\n            spec_avltreeseq_cached_size(a) < usize::MAX,\n            spec_avltreeseq_cached_size(b) < usize::MAX,\n        ensures equal == (spec_avltreeseq_inorder(*a) =~= spec_avltreeseq_inorder(*b)),"
   },
@@ -275,7 +275,7 @@
     "id": 35,
     "function": "next",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "1117-1133",
+    "lines": "1123-1139",
     "spec_strength": "hole",
     "snippet": "        fn next(&mut self) -> (next: Option<&'a T>)\n            ensures ({\n                let (old_index, old_seq) = old(self)@;\n                match next {\n                    None => {\n                        &&& self@ == old(self)@\n                        &&& old_index >= old_seq.len()\n                    },\n                    Some(element) => {\n                        let (new_index, new_seq) = self@;\n                        &&& 0 <= old_index < old_seq.len()\n                        &&& new_seq == old_seq\n                        &&& new_index == old_index + 1\n                        &&& element == old_seq[old_index]\n                    },\n                }\n            })"
   },
@@ -283,7 +283,7 @@
     "id": 36,
     "function": "default",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "1188",
+    "lines": "1194",
     "spec_strength": "",
     "snippet": "        fn default() -> Self { Self::new() }"
   },
@@ -291,7 +291,7 @@
     "id": 37,
     "function": "eq",
     "file": "Chap37/AVLTreeSeq.rs",
-    "lines": "1221-1222",
+    "lines": "1227-1228",
     "spec_strength": "hole",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
@@ -299,7 +299,7 @@
     "id": 38,
     "function": "lemma_size_eq_inorder_len",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "172-175",
+    "lines": "166-169",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_size_eq_inorder_len<T: StTInMtT>(link: &Link<T>)\n        requires spec_avltreeseqmtper_wf(*link),\n        ensures spec_cached_size(link) == spec_inorder(*link).len(),\n        decreases *link,"
   },
@@ -307,7 +307,7 @@
     "id": 39,
     "function": "lemma_height_le_size",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "187-190",
+    "lines": "181-184",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_height_le_size<T: StTInMtT>(link: &Link<T>)\n        requires spec_avltreeseqmtper_wf(*link),\n        ensures spec_cached_height(link) <= spec_cached_size(link),\n        decreases *link,"
   },
@@ -315,7 +315,7 @@
     "id": 40,
     "function": "empty",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "210-211",
+    "lines": "203-204",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (tree: Self)\n            ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseqmtper_wf();"
   },
@@ -323,7 +323,7 @@
     "id": 41,
     "function": "new",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "213-214",
+    "lines": "206-207",
     "spec_strength": "unknown",
     "snippet": "        fn new() -> (tree: Self)\n            ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseqmtper_wf();"
   },
@@ -331,7 +331,7 @@
     "id": 42,
     "function": "singleton",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "216-217",
+    "lines": "209-210",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(item: T) -> (tree: Self)\n            ensures tree.spec_seq() =~= seq![item@], tree.spec_avltreeseqmtper_wf();"
   },
@@ -339,7 +339,7 @@
     "id": 43,
     "function": "length",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "219-221",
+    "lines": "212-214",
     "spec_strength": "unknown",
     "snippet": "        fn length(&self) -> (len: N)\n            requires self.spec_avltreeseqmtper_wf(),\n            ensures len as nat == self.spec_seq().len();"
   },
@@ -347,7 +347,7 @@
     "id": 44,
     "function": "nth",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "223-225",
+    "lines": "216-218",
     "spec_strength": "unknown",
     "snippet": "        fn nth(&self, index: N) -> (elem: &T)\n            requires self.spec_avltreeseqmtper_wf(), (index as int) < self.spec_seq().len(),\n            ensures elem@ == self.spec_seq()[index as int];"
   },
@@ -355,7 +355,7 @@
     "id": 45,
     "function": "isEmpty",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "227-229",
+    "lines": "220-222",
     "spec_strength": "unknown",
     "snippet": "        fn isEmpty(&self) -> (empty: B)\n            requires self.spec_avltreeseqmtper_wf(),\n            ensures empty == (self.spec_seq().len() == 0);"
   },
@@ -363,7 +363,7 @@
     "id": 46,
     "function": "isSingleton",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "231-233",
+    "lines": "224-226",
     "spec_strength": "unknown",
     "snippet": "        fn isSingleton(&self) -> (single: B)\n            requires self.spec_avltreeseqmtper_wf(),\n            ensures single == (self.spec_seq().len() == 1);"
   },
@@ -371,7 +371,7 @@
     "id": 47,
     "function": "set",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "235-240",
+    "lines": "228-233",
     "spec_strength": "unknown",
     "snippet": "        fn set(&self, index: N, item: T) -> (outcome: Result<Self, &'static str>)\n            requires\n                self.spec_avltreeseqmtper_wf(),\n                (index as int) < self.spec_seq().len(),\n                obeys_feq_clone::<T>(),\n            ;"
   },
@@ -379,7 +379,7 @@
     "id": 48,
     "function": "subseq_copy",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "242-243",
+    "lines": "235-236",
     "spec_strength": "hole",
     "snippet": "        fn subseq_copy(&self, start: N, length: N) -> (sub: Self)\n            requires self.spec_avltreeseqmtper_wf();"
   },
@@ -387,7 +387,7 @@
     "id": 49,
     "function": "from_vec",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "245-248",
+    "lines": "238-241",
     "spec_strength": "unknown",
     "snippet": "        fn from_vec(values: Vec<T>) -> (tree: Self)\n            ensures\n                tree.spec_avltreeseqmtper_wf(),\n                tree.spec_seq() =~= values@.map_values(|t: T| t@);"
   },
@@ -395,7 +395,7 @@
     "id": 50,
     "function": "values_in_order",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "250-251",
+    "lines": "243-244",
     "spec_strength": "unknown",
     "snippet": "        fn values_in_order(&self) -> (values: Vec<T>)\n            ensures true;"
   },
@@ -403,7 +403,7 @@
     "id": 51,
     "function": "height_fn",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "259-261",
+    "lines": "251-253",
     "spec_strength": "unknown",
     "snippet": "    fn height_fn<T: StTInMtT>(n: &Link<T>) -> (h: N)\n        requires spec_cached_height(n) <= usize::MAX as nat,\n        ensures h as nat == spec_cached_height(n),"
   },
@@ -411,7 +411,7 @@
     "id": 52,
     "function": "size_fn",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "269-271",
+    "lines": "261-263",
     "spec_strength": "unknown",
     "snippet": "    fn size_fn<T: StTInMtT>(n: &Link<T>) -> (sz: N)\n        requires spec_cached_size(n) <= usize::MAX as nat,\n        ensures sz as nat == spec_cached_size(n),"
   },
@@ -419,7 +419,7 @@
     "id": 53,
     "function": "mk",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "279-290",
+    "lines": "271-282",
     "spec_strength": "unknown",
     "snippet": "    fn mk<T: StTInMtT>(value: T, left: Link<T>, right: Link<T>) -> (node: Arc<Node<T>>)\n        requires\n            1 + spec_cached_size(&left) + spec_cached_size(&right) <= N::MAX as nat,\n            1 + spec_nat_max(spec_cached_height(&left), spec_cached_height(&right)) <= N::MAX as nat,\n        ensures\n            spec_inorder(Some(node)) =~= spec_inorder(left) + seq![value@] + spec_inorder(right),\n            node.size as nat == 1 + spec_cached_size(&left) + spec_cached_size(&right),\n            node.height as nat == 1 + spec_nat_max(\n                spec_cached_height(&left), spec_cached_height(&right)),\n            spec_avltreeseqmtper_wf(left) && spec_avltreeseqmtper_wf(right) ==> spec_avltreeseqmtper_wf(Some(node)),\n            node.left == left,\n            node.right == right,"
   },
@@ -427,7 +427,7 @@
     "id": 54,
     "function": "rotate_right",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "299-304",
+    "lines": "292-297",
     "spec_strength": "unknown",
     "snippet": "    fn rotate_right<T: StTInMtT>(y: Arc<Node<T>>) -> (rotated: Arc<Node<T>>)\n        requires y.left.is_some(), spec_avltreeseqmtper_wf(Some(y)), obeys_feq_clone::<T>(),\n        ensures\n            spec_inorder(Some(rotated)) =~= spec_inorder(Some(y)),\n            spec_avltreeseqmtper_wf(Some(rotated)),\n            spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(y)),"
   },
@@ -435,7 +435,7 @@
     "id": 55,
     "function": "rotate_left",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "333-338",
+    "lines": "326-331",
     "spec_strength": "unknown",
     "snippet": "    fn rotate_left<T: StTInMtT>(x: Arc<Node<T>>) -> (rotated: Arc<Node<T>>)\n        requires x.right.is_some(), spec_avltreeseqmtper_wf(Some(x)), obeys_feq_clone::<T>(),\n        ensures\n            spec_inorder(Some(rotated)) =~= spec_inorder(Some(x)),\n            spec_avltreeseqmtper_wf(Some(rotated)),\n            spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(x)),"
   },
@@ -443,7 +443,7 @@
     "id": 56,
     "function": "rebalance",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "367-372",
+    "lines": "360-365",
     "spec_strength": "unknown",
     "snippet": "    fn rebalance<T: StTInMtT>(n: Arc<Node<T>>) -> (balanced: Arc<Node<T>>)\n        requires spec_avltreeseqmtper_wf(Some(n)), obeys_feq_clone::<T>(),\n        ensures\n            spec_inorder(Some(balanced)) =~= spec_inorder(Some(n)),\n            spec_avltreeseqmtper_wf(Some(balanced)),\n            spec_cached_size(&Some(balanced)) == spec_cached_size(&Some(n)),"
   },
@@ -451,7 +451,7 @@
     "id": 57,
     "function": "nth_ref",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "433-436",
+    "lines": "426-429",
     "spec_strength": "unknown",
     "snippet": "    fn nth_ref<'a, T: StTInMtT>(cur: &'a Link<T>, index: N) -> (elem: &'a T)\n        requires spec_avltreeseqmtper_wf(*cur), (index as int) < spec_inorder(*cur).len(),\n        ensures elem@ == spec_inorder(*cur)[index as int],\n        decreases *cur,"
   },
@@ -459,7 +459,7 @@
     "id": 58,
     "function": "set_rec",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "451-460",
+    "lines": "444-453",
     "spec_strength": "unknown",
     "snippet": "    fn set_rec<T: StTInMtT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)\n        requires\n            spec_avltreeseqmtper_wf(*cur),\n            (index as int) < spec_inorder(*cur).len(),\n            obeys_feq_clone::<T>(),\n        ensures\n            outcome is Ok,\n            spec_avltreeseqmtper_wf(outcome.unwrap()),\n            spec_cached_size(&outcome.unwrap()) == spec_cached_size(cur),\n        decreases *cur,"
   },
@@ -467,7 +467,7 @@
     "id": 59,
     "function": "inorder_collect",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "497-500",
+    "lines": "490-493",
     "spec_strength": "unknown",
     "snippet": "    fn inorder_collect<T: StTInMtT>(cur: &Link<T>, out: &mut Vec<T>)\n        requires spec_cached_size(cur) <= usize::MAX as nat,\n        ensures true,\n        decreases *cur,"
   },
@@ -475,7 +475,7 @@
     "id": 60,
     "function": "build_balanced_from_slice",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "509-514",
+    "lines": "502-507",
     "spec_strength": "unknown",
     "snippet": "    fn build_balanced_from_slice<T: StTInMtT>(a: &[T]) -> (link: Link<T>)\n        requires 0nat < usize::MAX as nat,\n        ensures\n            spec_avltreeseqmtper_wf(link),\n            spec_inorder(link) =~= a@.map_values(|t: T| t@),\n        decreases a.len(),"
   },
@@ -483,7 +483,7 @@
     "id": 61,
     "function": "compare_trees",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "546-551",
+    "lines": "539-544",
     "spec_strength": "unknown",
     "snippet": "    fn compare_trees<T: StTInMtT>(a: &Link<T>, b: &Link<T>) -> (equal: bool)\n        requires\n            spec_avltreeseqmtper_wf(*a),\n            spec_avltreeseqmtper_wf(*b),\n            obeys_feq_full::<T>(),\n        ensures equal == (spec_inorder(*a) =~= spec_inorder(*b)),"
   },
@@ -491,7 +491,7 @@
     "id": 62,
     "function": "default",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "685",
+    "lines": "683",
     "spec_strength": "",
     "snippet": "        fn default() -> Self { Self::empty() }"
   },
@@ -499,7 +499,7 @@
     "id": 63,
     "function": "next",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "692-693",
+    "lines": "690-691",
     "spec_strength": "unknown",
     "snippet": "        fn next(&mut self) -> (next: Option<Self::Item>)\n            ensures true,"
   },
@@ -507,7 +507,7 @@
     "id": 64,
     "function": "eq",
     "file": "Chap37/AVLTreeSeqMtPer.rs",
-    "lines": "729-730",
+    "lines": "727-728",
     "spec_strength": "hole",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
@@ -515,39 +515,39 @@
     "id": 65,
     "function": "lemma_size_eq_inorder_len",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "179-182",
+    "lines": "175-178",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_size_eq_inorder_len<T: StT>(link: &Link<T>)\n        requires spec_avltreeseqsteph_wf(*link),\n        ensures spec_cached_size(link) == spec_inorder(*link).len(),\n        decreases *link,"
+    "snippet": "    pub proof fn lemma_size_eq_inorder_len<T: StT>(link: &Link<T>)\n        requires spec_avltreeseqsteph_wf(*link),\n        ensures spec_cached_size(link) == spec_inorder(*link).len(),\n        decreases *link,"
   },
   {
     "id": 66,
-    "function": "lemma_size_lt_usize_max",
+    "function": "lemma_height_le_size",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "194-197",
+    "lines": "190-193",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_size_lt_usize_max<T: StT>(link: &Link<T>)\n        requires spec_avltreeseqsteph_wf(*link),\n        ensures spec_cached_size(link) < usize::MAX as nat,\n        decreases *link,"
+    "snippet": "    proof fn lemma_height_le_size<T: StT>(link: &Link<T>)\n        requires spec_avltreeseqsteph_wf(*link),\n        ensures spec_cached_height(link) <= spec_cached_size(link),\n        decreases *link,"
   },
   {
     "id": 67,
-    "function": "lemma_wf_implies_len_bound_steph",
+    "function": "lemma_size_lt_usize_max",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "209-211",
+    "lines": "205-208",
     "spec_strength": "unknown",
-    "snippet": "    pub proof fn lemma_wf_implies_len_bound_steph<T: StT>(s: &AVLTreeSeqStEphS<T>)\n        requires s.spec_avltreeseqsteph_wf(),\n        ensures s@.len() < usize::MAX as nat,"
+    "snippet": "    pub proof fn lemma_size_lt_usize_max<T: StT>(link: &Link<T>)\n        requires spec_avltreeseqsteph_wf(*link),\n        ensures spec_cached_size(link) < usize::MAX,\n        decreases *link,"
   },
   {
     "id": 68,
-    "function": "lemma_height_le_size",
+    "function": "lemma_wf_implies_len_bound_steph",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "218-221",
+    "lines": "220-222",
     "spec_strength": "unknown",
-    "snippet": "    proof fn lemma_height_le_size<T: StT>(link: &Link<T>)\n        requires spec_avltreeseqsteph_wf(*link),\n        ensures spec_cached_height(link) <= spec_cached_size(link),\n        decreases *link,"
+    "snippet": "    pub broadcast proof fn lemma_wf_implies_len_bound_steph<T: StT>(s: AVLTreeSeqStEphS<T>)\n        requires #[trigger] s.spec_avltreeseqsteph_wf(),\n        ensures s@.len() < usize::MAX,"
   },
   {
     "id": 69,
     "function": "empty",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "241-242",
+    "lines": "240-241",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (tree: Self)\n            ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseqsteph_wf();"
   },
@@ -555,7 +555,7 @@
     "id": 70,
     "function": "new",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "244-245",
+    "lines": "243-244",
     "spec_strength": "unknown",
     "snippet": "        fn new() -> (tree: Self)\n            ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseqsteph_wf();"
   },
@@ -563,7 +563,7 @@
     "id": 71,
     "function": "length",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "247-249",
+    "lines": "246-248",
     "spec_strength": "unknown",
     "snippet": "        fn length(&self) -> (len: N)\n            requires self.spec_avltreeseqsteph_wf(),\n            ensures len as nat == self.spec_seq().len();"
   },
@@ -571,7 +571,7 @@
     "id": 72,
     "function": "nth",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "251-253",
+    "lines": "250-252",
     "spec_strength": "unknown",
     "snippet": "        fn nth(&self, index: N) -> (elem: &T)\n            requires self.spec_avltreeseqsteph_wf(), (index as int) < self.spec_seq().len(),\n            ensures elem@ == self.spec_seq()[index as int];"
   },
@@ -579,7 +579,7 @@
     "id": 73,
     "function": "set",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "255-260",
+    "lines": "254-259",
     "spec_strength": "unknown",
     "snippet": "        fn set(&mut self, index: N, item: T) -> (outcome: Result<(), &'static str>)\n            requires old(self).spec_avltreeseqsteph_wf(), (index as int) < old(self).spec_seq().len(),\n            ensures\n                outcome is Ok,\n                self.spec_avltreeseqsteph_wf(),\n                self.spec_seq() =~= old(self).spec_seq().update(index as int, item@);"
   },
@@ -587,7 +587,7 @@
     "id": 74,
     "function": "singleton",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "262-266",
+    "lines": "261-265",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(item: T) -> (tree: Self)\n            ensures\n                tree.spec_seq().len() == 1,\n                tree.spec_seq()[0] == item@,\n                tree.spec_avltreeseqsteph_wf();"
   },
@@ -595,7 +595,7 @@
     "id": 75,
     "function": "isEmpty",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "268-270",
+    "lines": "267-269",
     "spec_strength": "unknown",
     "snippet": "        fn isEmpty(&self) -> (empty: B)\n            requires self.spec_avltreeseqsteph_wf(),\n            ensures empty == (self.spec_seq().len() == 0);"
   },
@@ -603,7 +603,7 @@
     "id": 76,
     "function": "isSingleton",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "272-274",
+    "lines": "271-273",
     "spec_strength": "unknown",
     "snippet": "        fn isSingleton(&self) -> (single: B)\n            requires self.spec_avltreeseqsteph_wf(),\n            ensures single == (self.spec_seq().len() == 1);"
   },
@@ -611,15 +611,15 @@
     "id": 77,
     "function": "subseq_copy",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "276-278",
+    "lines": "275-277",
     "spec_strength": "unknown",
-    "snippet": "        fn subseq_copy(&self, start: N, length: N) -> (sub: Self)\n            requires self.spec_avltreeseqsteph_wf(), obeys_feq_full::<T>(), self.spec_seq().len() < usize::MAX,\n            ensures sub.spec_seq() =~= spec_subseq(self.spec_seq(), start as nat, length as nat);"
+    "snippet": "        fn subseq_copy(&self, start: N, length: N) -> (sub: Self)\n            requires self.spec_avltreeseqsteph_wf(),self.spec_seq().len() < usize::MAX,\n            ensures sub.spec_seq() =~= spec_subseq(self.spec_seq(), start as nat, length as nat);"
   },
   {
     "id": 78,
     "function": "new_root",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "280-281",
+    "lines": "279-280",
     "spec_strength": "unknown",
     "snippet": "        fn new_root() -> (tree: Self)\n            ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseqsteph_wf();"
   },
@@ -627,7 +627,7 @@
     "id": 79,
     "function": "update",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "283-289",
+    "lines": "282-288",
     "spec_strength": "unknown",
     "snippet": "        fn update(&mut self, index: N, item: T)\n            requires\n                old(self).spec_avltreeseqsteph_wf(),\n                (index as int) < old(self).spec_seq().len(),\n            ensures\n                self.spec_avltreeseqsteph_wf(),\n                self.spec_seq() =~= old(self).spec_seq().update(index as int, item@);"
   },
@@ -635,7 +635,7 @@
     "id": 80,
     "function": "from_vec",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "291-298",
+    "lines": "290-297",
     "spec_strength": "unknown",
     "snippet": "        fn from_vec(values: Vec<T>) -> (tree: AVLTreeSeqStEphS<T>)\n            requires\n                obeys_feq_full::<T>(),\n                values@.len() < usize::MAX,\n            ensures\n                spec_avltreeseqsteph_wf(tree.root),\n                tree.next_key as nat == spec_cached_size(&tree.root),\n                spec_inorder(tree.root) =~= values@.map_values(|t: T| t@);"
   },
@@ -643,15 +643,15 @@
     "id": 81,
     "function": "to_arrayseq",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "300-305",
+    "lines": "299-304",
     "spec_strength": "unknown",
-    "snippet": "        fn to_arrayseq(&self) -> (seq: ArraySeqStEphS<T>)\n            requires self.spec_avltreeseqsteph_wf(), obeys_feq_full::<T>(),\n            ensures\n                seq.spec_len() == self.spec_seq().len(),\n                forall|i: int| #![trigger seq.spec_index(i)]\n                    0 <= i < seq.spec_len() ==> seq.spec_index(i)@ == self.spec_seq()[i];"
+    "snippet": "        fn to_arrayseq(&self) -> (seq: ArraySeqStEphS<T>)\n            requires self.spec_avltreeseqsteph_wf(),\n            ensures\n                seq.spec_len() == self.spec_seq().len(),\n                forall|i: int| #![trigger seq.spec_index(i)]\n                    0 <= i < seq.spec_len() ==> seq.spec_index(i)@ == self.spec_seq()[i];"
   },
   {
     "id": 82,
     "function": "iter",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "307-308",
+    "lines": "306-307",
     "spec_strength": "unknown",
     "snippet": "        fn iter<'a>(&'a self) -> (it: AVLTreeSeqIterStEph<'a, T>)\n            ensures true;"
   },
@@ -659,7 +659,7 @@
     "id": 83,
     "function": "push_back",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "310-316",
+    "lines": "309-315",
     "spec_strength": "unknown",
     "snippet": "        fn push_back(&mut self, value: T)\n            requires\n                old(self).spec_avltreeseqsteph_wf(),\n                old(self).spec_seq().len() + 1 < usize::MAX,\n            ensures\n                self.spec_seq() =~= old(self).spec_seq().push(value@),\n                self.spec_avltreeseqsteph_wf();"
   },
@@ -667,15 +667,15 @@
     "id": 84,
     "function": "contains_value",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "318-321",
+    "lines": "317-320",
     "spec_strength": "unknown",
-    "snippet": "        fn contains_value(&self, target: &T) -> (found: B)\n            requires self.spec_avltreeseqsteph_wf(), obeys_feq_full::<T>(),\n            ensures found == exists|j: int| 0 <= j < self.spec_seq().len()\n                && self.spec_seq()[j] == target@;"
+    "snippet": "        fn contains_value(&self, target: &T) -> (found: B)\n            requires self.spec_avltreeseqsteph_wf(),\n            ensures found == exists|j: int| 0 <= j < self.spec_seq().len()\n                && self.spec_seq()[j] == target@;"
   },
   {
     "id": 85,
     "function": "insert_value",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "323-329",
+    "lines": "322-328",
     "spec_strength": "unknown",
     "snippet": "        fn insert_value(&mut self, value: T)\n            requires\n                old(self).spec_avltreeseqsteph_wf(),\n                old(self).spec_seq().len() + 1 < usize::MAX,\n            ensures\n                self.spec_seq() =~= old(self).spec_seq().push(value@),\n                self.spec_avltreeseqsteph_wf();"
   },
@@ -683,15 +683,15 @@
     "id": 86,
     "function": "delete_value",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "331-342",
+    "lines": "330-341",
     "spec_strength": "unknown",
-    "snippet": "        fn delete_value(&mut self, target: &T) -> (deleted: bool)\n            requires old(self).spec_avltreeseqsteph_wf(), obeys_feq_full::<T>(),\n            ensures\n                !deleted ==> self.spec_seq() =~= old(self).spec_seq(),\n                deleted ==> exists|idx: int|\n                    #![trigger old(self).spec_seq()[idx]]\n                    0 <= idx < old(self).spec_seq().len()\n                    && old(self).spec_seq()[idx] == target@\n                    && self.spec_seq() =~=\n                        old(self).spec_seq().subrange(0, idx)\n                        + old(self).spec_seq().subrange(idx + 1,\n                            old(self).spec_seq().len() as int);"
+    "snippet": "        fn delete_value(&mut self, target: &T) -> (deleted: bool)\n            requires old(self).spec_avltreeseqsteph_wf(),\n            ensures\n                !deleted ==> self.spec_seq() =~= old(self).spec_seq(),\n                deleted ==> exists|idx: int|\n                    #![trigger old(self).spec_seq()[idx]]\n                    0 <= idx < old(self).spec_seq().len()\n                    && old(self).spec_seq()[idx] == target@\n                    && self.spec_seq() =~=\n                        old(self).spec_seq().subrange(0, idx)\n                        + old(self).spec_seq().subrange(idx + 1,\n                            old(self).spec_seq().len() as int);"
   },
   {
     "id": 87,
     "function": "h_fn",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "350-352",
+    "lines": "348-350",
     "spec_strength": "unknown",
     "snippet": "    fn h_fn<T: StT>(n: &Link<T>) -> (height: N)\n        requires spec_cached_height(n) <= usize::MAX as nat,\n        ensures height as nat == spec_cached_height(n),"
   },
@@ -699,7 +699,7 @@
     "id": 88,
     "function": "size_link_fn",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "360-362",
+    "lines": "358-360",
     "spec_strength": "unknown",
     "snippet": "    fn size_link_fn<T: StT>(n: &Link<T>) -> (size: N)\n        requires spec_avltreeseqsteph_wf(*n),\n        ensures size as nat == spec_cached_size(n),"
   },
@@ -707,7 +707,7 @@
     "id": 89,
     "function": "update_meta",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "372-386",
+    "lines": "370-384",
     "spec_strength": "unknown",
     "snippet": "    fn update_meta<T: StT>(n: &mut Box<AVLTreeNode<T>>)\n        requires\n            spec_avltreeseqsteph_wf(old(n).left),\n            spec_avltreeseqsteph_wf(old(n).right),\n            spec_cached_size(&old(n).left) + spec_cached_size(&old(n).right) + 1 < usize::MAX,\n        ensures\n            n.left_size as nat == spec_cached_size(&n.left),\n            n.right_size as nat == spec_cached_size(&n.right),\n            n.height as nat == 1 + spec_nat_max(\n                spec_cached_height(&n.left), spec_cached_height(&n.right)),\n            n.value == old(n).value,\n            n.left == old(n).left,\n            n.right == old(n).right,\n            n.index == old(n).index,\n            spec_avltreeseqsteph_wf(Some(*n)),"
   },
@@ -715,7 +715,7 @@
     "id": 90,
     "function": "rotate_right_fn",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "403-410",
+    "lines": "401-408",
     "spec_strength": "unknown",
     "snippet": "    fn rotate_right_fn<T: StT>(mut y: Box<AVLTreeNode<T>>) -> (rotated: Box<AVLTreeNode<T>>)\n        requires\n            spec_avltreeseqsteph_wf(Some(y)),\n            y.left is Some,\n        ensures\n            spec_inorder(Some(rotated)) =~= spec_inorder(Some(y)),\n            spec_avltreeseqsteph_wf(Some(rotated)),\n            spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(y)),"
   },
@@ -723,7 +723,7 @@
     "id": 91,
     "function": "rotate_left_fn",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "441-448",
+    "lines": "439-446",
     "spec_strength": "unknown",
     "snippet": "    fn rotate_left_fn<T: StT>(mut x: Box<AVLTreeNode<T>>) -> (rotated: Box<AVLTreeNode<T>>)\n        requires\n            spec_avltreeseqsteph_wf(Some(x)),\n            x.right is Some,\n        ensures\n            spec_inorder(Some(rotated)) =~= spec_inorder(Some(x)),\n            spec_avltreeseqsteph_wf(Some(rotated)),\n            spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(x)),"
   },
@@ -731,7 +731,7 @@
     "id": 92,
     "function": "rebalance_fn",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "479-488",
+    "lines": "477-486",
     "spec_strength": "unknown",
     "snippet": "    fn rebalance_fn<T: StT>(mut n: Box<AVLTreeNode<T>>) -> (balanced: Box<AVLTreeNode<T>>)\n        requires\n            spec_avltreeseqsteph_wf(n.left),\n            spec_avltreeseqsteph_wf(n.right),\n            spec_cached_size(&n.left) + spec_cached_size(&n.right) + 1 < usize::MAX,\n        ensures\n            spec_inorder(Some(balanced)) =~= spec_inorder(Some(n)),\n            spec_avltreeseqsteph_wf(Some(balanced)),\n            spec_cached_size(&Some(balanced))\n                == 1 + spec_cached_size(&n.left) + spec_cached_size(&n.right),"
   },
@@ -739,7 +739,7 @@
     "id": 93,
     "function": "insert_at_link",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "537-548",
+    "lines": "535-546",
     "spec_strength": "unknown",
     "snippet": "    pub fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (inserted: Link<T>)\n        requires\n            spec_avltreeseqsteph_wf(node),\n            0 <= index as int <= spec_inorder(node).len(),\n            *old(next_key) < usize::MAX,\n            spec_cached_size(&node) + 1 < usize::MAX,\n        ensures\n            spec_avltreeseqsteph_wf(inserted),\n            spec_inorder(inserted) =~= spec_inorder(node).insert(index as int, value@),\n            spec_cached_size(&inserted) == spec_cached_size(&node) + 1,\n            *next_key == *old(next_key) + 1,\n        decreases node,"
   },
@@ -747,7 +747,7 @@
     "id": 94,
     "function": "nth_link",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "601-604",
+    "lines": "599-602",
     "spec_strength": "unknown",
     "snippet": "    fn nth_link<'a, T: StT>(node: &'a Link<T>, index: N) -> (elem: &'a T)\n        requires spec_avltreeseqsteph_wf(*node), (index as int) < spec_inorder(*node).len(),\n        ensures elem@ == spec_inorder(*node)[index as int],\n        decreases *node,"
   },
@@ -755,7 +755,7 @@
     "id": 95,
     "function": "set_link",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "619-629",
+    "lines": "617-627",
     "spec_strength": "unknown",
     "snippet": "    fn set_link<T: StT>(node: &mut Link<T>, index: N, value: T) -> (outcome: Result<(), &'static str>)\n        requires\n            spec_avltreeseqsteph_wf(*old(node)),\n            (index as int) < spec_inorder(*old(node)).len(),\n        ensures\n            spec_avltreeseqsteph_wf(*node),\n            spec_cached_size(node) == spec_cached_size(old(node)),\n            spec_cached_height(node) == spec_cached_height(old(node)),\n            outcome is Ok,\n            spec_inorder(*node) =~= spec_inorder(*old(node)).update(index as int, value@),\n        decreases *old(node),"
   },
@@ -763,7 +763,7 @@
     "id": 96,
     "function": "compare_trees",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "656-661",
+    "lines": "654-659",
     "spec_strength": "unknown",
     "snippet": "    fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (equal: bool)\n        requires\n            spec_avltreeseqsteph_wf(*a),\n            spec_avltreeseqsteph_wf(*b),\n            obeys_feq_full::<T>(),\n        ensures equal == (spec_inorder(*a) =~= spec_inorder(*b)),"
   },
@@ -771,7 +771,7 @@
     "id": 97,
     "function": "clone_link",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "699-705",
+    "lines": "697-703",
     "spec_strength": "hole",
     "snippet": "    fn clone_link<T: StT>(link: &Link<T>) -> (copy: Link<T>)\n        ensures\n            spec_inorder(copy) =~= spec_inorder(*link),\n            spec_avltreeseqsteph_wf(*link) ==> spec_avltreeseqsteph_wf(copy),\n            spec_cached_size(&copy) == spec_cached_size(link),\n            spec_cached_height(&copy) == spec_cached_height(link),\n        decreases *link,"
   },
@@ -779,7 +779,7 @@
     "id": 98,
     "function": "default",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "1059",
+    "lines": "1063",
     "spec_strength": "",
     "snippet": "        fn default() -> Self { Self::new() }"
   },
@@ -787,7 +787,7 @@
     "id": 99,
     "function": "push_left_iter",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "1065-1067",
+    "lines": "1069-1071",
     "spec_strength": "unknown",
     "snippet": "    fn push_left_iter<'a, T: StT>(it: &mut AVLTreeSeqIterStEph<'a, T>, link: &'a Link<T>)\n        ensures true,\n        decreases *link,"
   },
@@ -795,7 +795,7 @@
     "id": 100,
     "function": "next",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "1087-1088",
+    "lines": "1091-1092",
     "spec_strength": "unknown",
     "snippet": "        fn next(&mut self) -> (next: Option<Self::Item>)\n            ensures true,"
   },
@@ -803,7 +803,7 @@
     "id": 101,
     "function": "eq",
     "file": "Chap37/AVLTreeSeqStEph.rs",
-    "lines": "1127-1128",
+    "lines": "1131-1132",
     "spec_strength": "hole",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
@@ -971,7 +971,7 @@
     "id": 122,
     "function": "rotate_right",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "305-310",
+    "lines": "306-311",
     "spec_strength": "unknown",
     "snippet": "    fn rotate_right<T: StT>(y: Arc<Node<T>>) -> (rotated: Arc<Node<T>>)\n        requires y.left.is_some(), spec_avltreeseqstper_wf(Some(y)), obeys_feq_clone::<T>(),\n        ensures\n            spec_inorder(Some(rotated)) =~= spec_inorder(Some(y)),\n            spec_avltreeseqstper_wf(Some(rotated)),\n            spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(y)),"
   },
@@ -979,7 +979,7 @@
     "id": 123,
     "function": "rotate_left",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "350-355",
+    "lines": "351-356",
     "spec_strength": "unknown",
     "snippet": "    fn rotate_left<T: StT>(x: Arc<Node<T>>) -> (rotated: Arc<Node<T>>)\n        requires x.right.is_some(), spec_avltreeseqstper_wf(Some(x)), obeys_feq_clone::<T>(),\n        ensures\n            spec_inorder(Some(rotated)) =~= spec_inorder(Some(x)),\n            spec_avltreeseqstper_wf(Some(rotated)),\n            spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(x)),"
   },
@@ -987,7 +987,7 @@
     "id": 124,
     "function": "rebalance",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "392-397",
+    "lines": "393-398",
     "spec_strength": "unknown",
     "snippet": "    fn rebalance<T: StT>(n: Arc<Node<T>>) -> (balanced: Arc<Node<T>>)\n        requires spec_avltreeseqstper_wf(Some(n)), obeys_feq_clone::<T>(),\n        ensures\n            spec_inorder(Some(balanced)) =~= spec_inorder(Some(n)),\n            spec_avltreeseqstper_wf(Some(balanced)),\n            spec_cached_size(&Some(balanced)) == spec_cached_size(&Some(n)),"
   },
@@ -995,7 +995,7 @@
     "id": 125,
     "function": "nth_ref",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "463-466",
+    "lines": "464-467",
     "spec_strength": "unknown",
     "snippet": "    fn nth_ref<'a, T: StT>(cur: &'a Link<T>, index: N) -> (elem: &'a T)\n        requires spec_avltreeseqstper_wf(*cur), (index as int) < spec_inorder(*cur).len(),\n        ensures elem@ == spec_inorder(*cur)[index as int],\n        decreases *cur,"
   },
@@ -1003,7 +1003,7 @@
     "id": 126,
     "function": "set_rec",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "481-491",
+    "lines": "482-492",
     "spec_strength": "unknown",
     "snippet": "    fn set_rec<T: StT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)\n        requires\n            spec_avltreeseqstper_wf(*cur),\n            (index as int) < spec_inorder(*cur).len(),\n            obeys_feq_clone::<T>(),\n        ensures\n            outcome is Ok,\n            spec_avltreeseqstper_wf(outcome.unwrap()),\n            spec_cached_size(&outcome.unwrap()) == spec_cached_size(cur),\n            spec_inorder(outcome.unwrap()) =~= spec_inorder(*cur).update(index as int, value@),\n        decreases *cur,"
   },
@@ -1011,7 +1011,7 @@
     "id": 127,
     "function": "inorder_collect",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "532-535",
+    "lines": "533-536",
     "spec_strength": "unknown",
     "snippet": "    fn inorder_collect<T: StT>(cur: &Link<T>, out: &mut Vec<T>)\n        requires spec_avltreeseqstper_wf(*cur),\n        ensures true,\n        decreases *cur,"
   },
@@ -1019,7 +1019,7 @@
     "id": 128,
     "function": "build_balanced_from_slice",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "544-549",
+    "lines": "545-550",
     "spec_strength": "unknown",
     "snippet": "    fn build_balanced_from_slice<T: StT>(a: &[T]) -> (link: Link<T>)\n        requires a.len() < usize::MAX,\n        ensures\n            spec_avltreeseqstper_wf(link),\n            spec_inorder(link) =~= a@.map_values(|t: T| t@),\n        decreases a.len(),"
   },
@@ -1027,7 +1027,7 @@
     "id": 129,
     "function": "compare_trees",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "591-596",
+    "lines": "592-597",
     "spec_strength": "unknown",
     "snippet": "    fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (equal: bool)\n        requires\n            spec_avltreeseqstper_wf(*a),\n            spec_avltreeseqstper_wf(*b),\n            obeys_feq_full::<T>(),\n        ensures equal == (spec_inorder(*a) =~= spec_inorder(*b)),"
   },
@@ -1035,7 +1035,7 @@
     "id": 130,
     "function": "default",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "780",
+    "lines": "786",
     "spec_strength": "",
     "snippet": "        fn default() -> Self { Self::empty() }"
   },
@@ -1043,7 +1043,7 @@
     "id": 131,
     "function": "push_left_iter_stper",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "794-796",
+    "lines": "800-802",
     "spec_strength": "unknown",
     "snippet": "    fn push_left_iter_stper<'a, T: StT>(it: &mut AVLTreeSeqStPerIter<'a, T>, cur: Option<&'a Node<T>>)\n        ensures true,\n        decreases cur,"
   },
@@ -1051,7 +1051,7 @@
     "id": 132,
     "function": "next",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "820-821",
+    "lines": "826-827",
     "spec_strength": "unknown",
     "snippet": "        fn next(&mut self) -> (next: Option<Self::Item>)\n            ensures true,"
   },
@@ -1059,7 +1059,7 @@
     "id": 133,
     "function": "eq",
     "file": "Chap37/AVLTreeSeqStPer.rs",
-    "lines": "843-844",
+    "lines": "849-850",
     "spec_strength": "hole",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },

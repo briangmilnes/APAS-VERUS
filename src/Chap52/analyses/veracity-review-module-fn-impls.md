@@ -170,17 +170,17 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 88 | `empty` | Y | Y |  |  | Y |  |  | unknown | 78&#8209;79 |
-| 89 | `num_vertices` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;82 |
-| 90 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 84&#8209;86 |
-| 91 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 88&#8209;90 |
-| 92 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 92&#8209;96 |
-| 93 | `out_degree` | Y | Y |  |  | Y |  |  | unknown | 98&#8209;99 |
-| 94 | `insert_vertex` | Y | Y |  |  | Y |  |  | unknown | 101&#8209;103 |
-| 95 | `delete_vertex` | Y | Y |  |  | Y |  |  | unknown | 105&#8209;107 |
-| 96 | `insert_edge` | Y | Y |  |  | Y |  |  | unknown | 109&#8209;115 |
-| 97 | `delete_edge` | Y | Y |  |  | Y |  |  | unknown | 117&#8209;122 |
-| 98 | `default` |  | Y |  |  | Y |  | Y |  | 262 |
+| 88 | `empty` | Y | Y |  |  | Y |  |  | unknown | 79&#8209;80 |
+| 89 | `num_vertices` | Y | Y |  |  | Y |  |  | unknown | 82&#8209;83 |
+| 90 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 85&#8209;87 |
+| 91 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 89&#8209;91 |
+| 92 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 93&#8209;97 |
+| 93 | `out_degree` | Y | Y |  |  | Y |  |  | unknown | 99&#8209;100 |
+| 94 | `insert_vertex` | Y | Y |  |  | Y |  |  | unknown | 102&#8209;104 |
+| 95 | `delete_vertex` | Y | Y |  |  | Y |  |  | unknown | 106&#8209;108 |
+| 96 | `insert_edge` | Y | Y |  |  | Y |  |  | unknown | 110&#8209;116 |
+| 97 | `delete_edge` | Y | Y |  |  | Y |  |  | unknown | 118&#8209;123 |
+| 98 | `default` |  | Y |  |  | Y |  | Y |  | 263 |
 
 ### Chap52/AdjTableGraphStEph.rs
 

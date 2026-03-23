@@ -20,12 +20,6 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-✓ Algorithm21_1.rs
-   2 clean proof functions
-✓ Algorithm21_2.rs
-✓ Algorithm21_5.rs
-✓ Algorithm21_6.rs
-   1 clean proof function
 ✓ Exercise21_5.rs
    1 clean proof function
 ✓ Exercise21_6.rs
@@ -34,9 +28,6 @@ Table of Contents:
    5 clean proof functions
 ✓ Exercise21_9.rs
    3 clean proof functions
-✓ Problem21_1.rs
-✓ Problem21_3.rs
-✓ Problem21_4.rs
 
 =================================================================
 2. Depends Upon
@@ -46,56 +37,42 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
-Algorithm21_1  depends upon only clean modules
-Algorithm21_2  depends upon only clean modules
-Algorithm21_5  depends upon only clean modules
-Algorithm21_6  depends upon only clean modules
 Exercise21_5  depends upon only clean modules
 Exercise21_6  depends upon only clean modules
 Exercise21_7  depends upon only clean modules
 Exercise21_8  depends upon only clean modules
 Exercise21_9  depends upon only clean modules
-Problem21_1  depends upon only clean modules
-Problem21_3  depends upon only clean modules
-Problem21_4  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
-Algorithm21_1.rs  depends upon only clean modules
-Algorithm21_2.rs  depends upon only clean modules
-Algorithm21_5.rs  depends upon only clean modules
-Algorithm21_6.rs  depends upon only clean modules
 Exercise21_5.rs  depends upon only clean modules
 Exercise21_6.rs  depends upon only clean modules
 Exercise21_7.rs  depends upon only clean modules
 Exercise21_8.rs  depends upon only clean modules
 Exercise21_9.rs  depends upon only clean modules
-Problem21_1.rs  depends upon only clean modules
-Problem21_3.rs  depends upon only clean modules
-Problem21_4.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   12 clean (no holes, no errors; 100%)
+   5 clean (no holes, no errors; 100%)
    0 holed (holes or errors, 0%)
-   12 total
+   5 total
 
 Proof Functions:
-   12 clean (100%)
+   9 clean (100%)
    0 holed (0%)
-   12 total
+   9 total
 
 Function Specs:
-   11 exec fns with complete spec (requires+ensures) (33%)
-   4 exec fns missing spec (12%)
-   18 proof/spec fns clean (54%)
+   3 exec fns with complete spec (requires+ensures) (15%)
+   3 exec fns missing spec (15%)
+   14 proof/spec fns clean (70%)
    0 proof/spec fns with holes (0%)
-   33 total fns
+   20 total fns
 
 
 Holes Found: 0 (actionable)
@@ -107,9 +84,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-23 09:18:33 -07:00
-Ended:     2026-03-23 09:18:33 -07:00
-Duration:  15ms
+Started:   2026-03-23 16:38:28 -07:00
+Ended:     2026-03-23 16:38:28 -07:00
+Duration:  7ms
 
 Full output: src/Chap21/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap21/analyses/veracity-review-verus-proof-holes.log
