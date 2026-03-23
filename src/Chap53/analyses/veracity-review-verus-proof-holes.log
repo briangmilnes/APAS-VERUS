@@ -24,7 +24,7 @@ Table of Contents:
 ✓ GraphSearchStEph.rs
 ✓ GraphSearchStPer.rs
 ❌ PQMinStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/PQMinStEph.rs:269: error: assume() [algorithmic] - proof { assume(frontier_updated@.len() + 1 < usize::MAX as n
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:269: error: assume() [algorithmic] - proof { assume(frontier_updated@.len() + 1 < usize::MAX as n
        151 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(
             ...
        267 |                     // generic Fn interface does not guarantee.
@@ -34,7 +34,7 @@ Table of Contents:
    Holes: 1 total
       1 × assume()
 ❌ PQMinStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/PQMinStPer.rs:255: error: assume() [algorithmic] - proof { assume(frontier_updated@.len() + 1 < usize::MAX as n
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:255: error: assume() [algorithmic] - proof { assume(frontier_updated@.len() + 1 < usize::MAX as n
        148 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P>(
             ...
        253 |                     // generic Fn interface does not guarantee.
@@ -98,9 +98,9 @@ Real Proof Targets: 2 (all actionable)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-22 22:47:58 -07:00
-Ended:     2026-03-22 22:47:58 -07:00
-Duration:  21ms
+Started:   2026-03-23 07:02:03 -07:00
+Ended:     2026-03-23 07:02:03 -07:00
+Duration:  22ms
 
 Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap53/analyses/veracity-review-verus-proof-holes.log

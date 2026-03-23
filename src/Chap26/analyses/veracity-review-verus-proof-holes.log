@@ -23,15 +23,15 @@ Table of Contents:
 ✓ DivConReduceMtPer.rs
    3 clean proof functions
 ✓ DivConReduceStPer.rs
-❌ ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:612: error: external_body - #[verifier::external_body]
-       613 |     fn point_distance(a: &Point, b: &Point) -> (d: f64)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap26/ETSPMtEph.rs:628: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
-   Holes: 1 total
-      1 × external_body
-   Info: 1 × structural_false_positive
-      1 × OPAQUE_EXTERNAL
-   Proof functions: 4 total (4 clean, 0 holed)
+⚠ ETSPMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:623: error: fn_missing_requires - fn point_distance — exec fn should have requires
+       619 |         fn distance(&self, other: &Point) -> (d: f64)
+            ...
+       621 |     }
+       622 | 
+       624 |         ensures d == spec_point_distance(*a, *b),
+       625 |     {
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:641: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
 ✓ ETSPStEph.rs
    3 clean proof functions
 ✓ MergeSortMtPer.rs
@@ -88,27 +88,31 @@ Proof Functions:
    17 total
 
 Function Specs:
-   57 exec fns with complete spec (requires+ensures) (48%)
-   0 exec fns missing spec (0%)
+   56 exec fns with complete spec (requires+ensures) (47%)
+   1 exec fns missing spec (0%)
    60 proof/spec fns clean (51%)
    0 proof/spec fns with holes (0%)
    117 total fns
 
 
-Holes Found: 1 (actionable)
-   1 × external_body (100%)
-Real Proof Targets: 1 (all actionable)
+Holes Found: 0 (actionable)
+Real Proof Targets: 0 (all actionable)
+
+Warnings: 1 total
+   1 × fn_missing_requires
 
 Structural (info only): 1
    1 × OPAQUE_EXTERNAL
+
+No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-22 22:47:57 -07:00
-Ended:     2026-03-22 22:47:57 -07:00
-Duration:  32ms
+Started:   2026-03-23 07:02:02 -07:00
+Ended:     2026-03-23 07:02:02 -07:00
+Duration:  33ms
 
 Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
+analyses/veracity-review-verus-proof-holes.log
