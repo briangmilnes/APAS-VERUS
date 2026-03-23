@@ -190,6 +190,30 @@ pub mod AVLTreeSeqStEph {
         }
     }
 
+    /// Under well-formedness, cached size is strictly less than usize::MAX.
+    proof fn lemma_size_lt_usize_max<T: StT>(link: &Link<T>)
+        requires spec_avltreeseqsteph_wf(*link),
+        ensures spec_cached_size(link) < usize::MAX as nat,
+        decreases *link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_size_lt_usize_max::<T>(&node.left);
+                lemma_size_lt_usize_max::<T>(&node.right);
+            },
+        }
+    }
+
+    /// Under struct-level well-formedness, the sequence length is bounded by usize::MAX.
+    pub proof fn lemma_wf_implies_len_bound_steph<T: StT>(s: &AVLTreeSeqStEphS<T>)
+        requires s.spec_avltreeseqsteph_wf(),
+        ensures s@.len() < usize::MAX as nat,
+    {
+        lemma_size_lt_usize_max::<T>(&s.root);
+        lemma_size_eq_inorder_len::<T>(&s.root);
+    }
+
     /// Under well-formedness, cached height is at most cached size.
     proof fn lemma_height_le_size<T: StT>(link: &Link<T>)
         requires spec_avltreeseqsteph_wf(*link),
