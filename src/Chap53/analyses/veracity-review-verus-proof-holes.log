@@ -23,16 +23,7 @@ Table of Contents:
 ✓ GraphSearchMtPer.rs
 ✓ GraphSearchStEph.rs
 ✓ GraphSearchStPer.rs
-❌ PQMinStEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap53/PQMinStEph.rs:269: error: assume() [algorithmic] - proof { assume(frontier_updated@.len() + 1 < usize::MAX as n
-       151 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(
-            ...
-       267 |                     // generic Fn interface does not guarantee.
-       268 |                     let ghost old_fu = frontier_updated@;
-       270 |                     frontier_updated = frontier_updated.union(&AVLTreeSetStEph::singleton(neighbor_entry));
-       271 |                     // Maintain frontier vertex invariant after union.
-   Holes: 1 total
-      1 × assume()
+✓ PQMinStEph.rs
 ✓ PQMinStPer.rs
 
 =================================================================
@@ -64,8 +55,8 @@ PQMinStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   4 clean (no holes, no errors; 80%)
-   1 holed (holes or errors, 20%)
+   5 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    5 total
 
 Proof Functions:
@@ -81,17 +72,18 @@ Function Specs:
    65 total fns
 
 
-Holes Found: 1 (actionable)
-   1 × assume() [algorithmic] (100%)
-Real Proof Targets: 1 (all actionable)
+Holes Found: 0 (actionable)
+Real Proof Targets: 0 (all actionable)
+
+No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-23 08:34:39 -07:00
-Ended:     2026-03-23 08:34:39 -07:00
-Duration:  22ms
+Started:   2026-03-23 08:44:25 -07:00
+Ended:     2026-03-23 08:44:25 -07:00
+Duration:  19ms
 
 Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
 Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
