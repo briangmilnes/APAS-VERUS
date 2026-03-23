@@ -682,6 +682,121 @@ pub mod OrderedTableStPer {
                 forall|key| #[trigger] self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.1@.dom().contains(key),
                 parts.0.spec_orderedtablestper_wf(),
                 parts.1.spec_orderedtablestper_wf();
+        /// Iterative alternative to `find`.
+        fn find_iter(&self, k: &K) -> (found: Option<V>)
+            requires self.spec_orderedtablestper_find_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+            ensures
+                match found {
+                    Some(v) => self@.contains_key(k@) && self@[k@] == v@,
+                    None => !self@.contains_key(k@),
+                };
+        /// Iterative alternative to `insert`.
+        fn insert_iter(&self, k: K, v: V) -> (table: Self)
+            requires
+                self.spec_orderedtablestper_wf(),
+                obeys_view_eq::<K>(),
+                self@.dom().len() + 1 < usize::MAX as nat,
+            ensures
+                table@.dom() =~= self@.dom().insert(k@),
+                table@.dom().finite(),
+                table.spec_orderedtablestper_wf();
+        /// Iterative alternative to `delete`.
+        fn delete_iter(&self, k: &K) -> (table: Self)
+            requires
+                self.spec_orderedtablestper_wf(),
+                obeys_feq_clone::<Pair<K, V>>(),
+                obeys_view_eq::<K>(),
+            ensures table@ == self@.remove(k@), table@.dom().finite(), table.spec_orderedtablestper_wf();
+        /// Iterative alternative to `first_key`.
+        fn first_key_iter(&self) -> (key: Option<K>)
+            where K: TotalOrder
+            requires self.spec_orderedtablestper_wf(),
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> key matches None,
+                key matches Some(k) ==> self@.dom().contains(k@),
+                key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
+        /// Iterative alternative to `last_key`.
+        fn last_key_iter(&self) -> (key: Option<K>)
+            where K: TotalOrder
+            requires self.spec_orderedtablestper_wf(),
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> key matches None,
+                key matches Some(k) ==> self@.dom().contains(k@),
+                key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
+        /// Iterative alternative to `previous_key`.
+        fn previous_key_iter(&self, k: &K) -> (key: Option<K>)
+            where K: TotalOrder
+            requires self.spec_orderedtablestper_wf(),
+            ensures
+                self@.dom().finite(),
+                key matches Some(pk) ==> self@.dom().contains(pk@),
+                key matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
+                key matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
+        /// Iterative alternative to `next_key`.
+        fn next_key_iter(&self, k: &K) -> (key: Option<K>)
+            where K: TotalOrder
+            requires self.spec_orderedtablestper_wf(),
+            ensures
+                self@.dom().finite(),
+                key matches Some(nk) ==> self@.dom().contains(nk@),
+                key matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
+                key matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
+        /// Iterative alternative to `split_key`.
+        fn split_key_iter(&self, k: &K) -> (parts: (Self, Option<V>, Self))
+            where Self: Sized
+            requires
+                self.spec_orderedtablestper_wf(),
+                obeys_view_eq::<K>(),
+            ensures
+                self@.dom().finite(),
+                parts.0@.dom().finite(),
+                parts.2@.dom().finite(),
+                parts.1 matches Some(v) ==> self@.contains_key(k@) && v@ == self@[k@],
+                parts.1 matches None ==> !self@.contains_key(k@),
+                !parts.0@.dom().contains(k@),
+                !parts.2@.dom().contains(k@),
+                parts.0@.dom().subset_of(self@.dom()),
+                parts.2@.dom().subset_of(self@.dom()),
+                parts.0@.dom().disjoint(parts.2@.dom()),
+                forall|key| #[trigger] self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.2@.dom().contains(key) || key == k@,
+                parts.0.spec_orderedtablestper_wf(),
+                parts.2.spec_orderedtablestper_wf();
+        /// Iterative alternative to `get_key_range`.
+        fn get_key_range_iter(&self, k1: &K, k2: &K) -> (table: Self)
+            requires
+                self.spec_orderedtablestper_wf(),
+            ensures
+                table@.dom().finite(),
+                table@.dom().subset_of(self@.dom()),
+                forall|key| #[trigger] table@.dom().contains(key) ==> table@[key] == self@[key],
+                table.spec_orderedtablestper_wf();
+        /// Iterative alternative to `rank_key`.
+        fn rank_key_iter(&self, k: &K) -> (rank: usize)
+            where K: TotalOrder
+            requires
+                self.spec_orderedtablestper_wf(),
+                obeys_view_eq::<K>(),
+            ensures
+                self@.dom().finite(),
+                rank <= self@.dom().len(),
+                rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
+        /// Iterative alternative to `split_rank_key`.
+        fn split_rank_key_iter(&self, i: usize) -> (parts: (Self, Self))
+            where Self: Sized
+            requires
+                self.spec_orderedtablestper_wf(),
+            ensures
+                self@.dom().finite(),
+                parts.0@.dom().finite(),
+                parts.1@.dom().finite(),
+                parts.0@.dom().subset_of(self@.dom()),
+                parts.1@.dom().subset_of(self@.dom()),
+                parts.0@.dom().disjoint(parts.1@.dom()),
+                forall|key| #[trigger] self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.1@.dom().contains(key),
+                parts.0.spec_orderedtablestper_wf(),
+                parts.1.spec_orderedtablestper_wf();
     }
 
     // 9. impls
@@ -782,7 +897,7 @@ pub mod OrderedTableStPer {
         }
 
         #[verifier::loop_isolation(false)]
-        fn find(&self, k: &K) -> (found: Option<V>)
+        fn find_iter(&self, k: &K) -> (found: Option<V>)
         {
             let len = self.base_set.elements.length();
             let mut i: usize = 0;
@@ -816,8 +931,13 @@ pub mod OrderedTableStPer {
             None
         }
 
+        fn find(&self, k: &K) -> (found: Option<V>)
+        {
+            self.find_iter(k)
+        }
+
         #[verifier::loop_isolation(false)]
-        fn insert(&self, k: K, v: V) -> (table: Self)
+        fn insert_iter(&self, k: K, v: V) -> (table: Self)
         {
             proof {
                 lemma_entries_to_map_len::<K::V, V::V>(self.base_set.elements@);
@@ -901,8 +1021,13 @@ pub mod OrderedTableStPer {
             OrderedTableStPer { base_set: inserted }
         }
 
+        fn insert(&self, k: K, v: V) -> (table: Self)
+        {
+            self.insert_iter(k, v)
+        }
+
         #[verifier::loop_isolation(false)]
-        fn delete(&self, k: &K) -> (table: Self)
+        fn delete_iter(&self, k: &K) -> (table: Self)
         {
             let len = self.base_set.elements.length();
             let mut i: usize = 0;
@@ -956,6 +1081,11 @@ pub mod OrderedTableStPer {
             OrderedTableStPer {
                 base_set: AVLTreeSetStPer { elements: copy_elements },
             }
+        }
+
+        fn delete(&self, k: &K) -> (table: Self)
+        {
+            self.delete_iter(k)
         }
 
         fn domain(&self) -> (keys: ArraySetStEph<K>)
@@ -2224,7 +2354,7 @@ pub mod OrderedTableStPer {
         }
 
         #[verifier::loop_isolation(false)]
-        fn first_key(&self) -> (first: Option<K>)
+        fn first_key_iter(&self) -> (first: Option<K>)
             where K: TotalOrder
         {
             let len = self.base_set.elements.length();
@@ -2307,8 +2437,14 @@ pub mod OrderedTableStPer {
             }
         }
 
+        fn first_key(&self) -> (key: Option<K>)
+            where K: TotalOrder
+        {
+            self.first_key_iter()
+        }
+
         #[verifier::loop_isolation(false)]
-        fn last_key(&self) -> (last: Option<K>)
+        fn last_key_iter(&self) -> (last: Option<K>)
             where K: TotalOrder
         {
             let len = self.base_set.elements.length();
@@ -2391,8 +2527,14 @@ pub mod OrderedTableStPer {
             }
         }
 
+        fn last_key(&self) -> (key: Option<K>)
+            where K: TotalOrder
+        {
+            self.last_key_iter()
+        }
+
         #[verifier::loop_isolation(false)]
-        fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
+        fn previous_key_iter(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
         {
             let len = self.base_set.elements.length();
@@ -2503,8 +2645,14 @@ pub mod OrderedTableStPer {
             }
         }
 
+        fn previous_key(&self, k: &K) -> (key: Option<K>)
+            where K: TotalOrder
+        {
+            self.previous_key_iter(k)
+        }
+
         #[verifier::loop_isolation(false)]
-        fn next_key(&self, k: &K) -> (successor: Option<K>)
+        fn next_key_iter(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
         {
             let len = self.base_set.elements.length();
@@ -2615,7 +2763,13 @@ pub mod OrderedTableStPer {
             }
         }
 
-        fn split_key(&self, k: &K) -> (parts: (Self, Option<V>, Self))
+        fn next_key(&self, k: &K) -> (key: Option<K>)
+            where K: TotalOrder
+        {
+            self.next_key_iter(k)
+        }
+
+        fn split_key_iter(&self, k: &K) -> (parts: (Self, Option<V>, Self))
             where Self: Sized
         {
             let len = self.base_set.elements.length();
@@ -2770,12 +2924,18 @@ pub mod OrderedTableStPer {
             (left_table, found_value, right_table)
         }
 
+        fn split_key(&self, k: &K) -> (parts: (Self, Option<V>, Self))
+            where Self: Sized
+        {
+            self.split_key_iter(k)
+        }
+
         fn join_key(left: &Self, right: &Self) -> (table: Self)
         {
             left.union(right, |v1: &V, _v2: &V| -> (r: V) { v1.clone() })
         }
 
-        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
+        fn get_key_range_iter(&self, k1: &K, k2: &K) -> (range: Self)
         {
             let len = self.base_set.elements.length();
             let mut result_vec: Vec<Pair<K, V>> = Vec::new();
@@ -2855,7 +3015,12 @@ pub mod OrderedTableStPer {
             table
         }
 
-        fn rank_key(&self, k: &K) -> (rank: usize)
+        fn get_key_range(&self, k1: &K, k2: &K) -> (table: Self)
+        {
+            self.get_key_range_iter(k1, k2)
+        }
+
+        fn rank_key_iter(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
         {
             proof {
@@ -2959,6 +3124,12 @@ pub mod OrderedTableStPer {
             count
         }
 
+        fn rank_key(&self, k: &K) -> (rank: usize)
+            where K: TotalOrder
+        {
+            self.rank_key_iter(k)
+        }
+
         fn select_key(&self, i: usize) -> (key: Option<K>)
             where K: TotalOrder
         {
@@ -3011,7 +3182,7 @@ pub mod OrderedTableStPer {
         }
 
         #[verifier::loop_isolation(false)]
-        fn split_rank_key(&self, i: usize) -> (parts: (Self, Self))
+        fn split_rank_key_iter(&self, i: usize) -> (parts: (Self, Self))
         {
             let len = self.base_set.elements.length();
             let split_at = if i >= len { len } else { i };
@@ -3201,6 +3372,12 @@ pub mod OrderedTableStPer {
                 };
             }
             (left_table, right_table)
+        }
+
+        fn split_rank_key(&self, i: usize) -> (parts: (Self, Self))
+            where Self: Sized
+        {
+            self.split_rank_key_iter(i)
         }
     }
 

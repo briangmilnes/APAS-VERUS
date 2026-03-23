@@ -378,6 +378,128 @@ broadcast use {
                 forall|key| #[trigger] old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key),
                 split.0.spec_orderedtablesteph_wf(),
                 split.1.spec_orderedtablesteph_wf();
+        /// Iterative alternative to `find`.
+        fn find_iter(&self, k: &K) -> (found: Option<V>)
+            requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>()
+            ensures
+                match found {
+                    Some(v) => self@.contains_key(k@) && v@ == self@[k@],
+                    None => !self@.contains_key(k@),
+                };
+        /// Iterative alternative to `insert`.
+        fn insert_iter<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
+            requires
+                old(self).spec_orderedtablesteph_wf(),
+                forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                obeys_view_eq::<K>(),
+                !old(self)@.contains_key(k@) ==> old(self)@.dom().len() + 1 < usize::MAX as nat,
+            ensures
+                self@.contains_key(k@),
+                self@.dom() =~= old(self)@.dom().insert(k@),
+                forall|key: K::V| key != k@ && #[trigger] old(self)@.contains_key(key) ==> self@[key] == old(self)@[key],
+                !old(self)@.contains_key(k@) ==> self@[k@] == v@,
+                old(self)@.contains_key(k@) ==> (exists|old_v: V, r: V|
+                    old_v@ == old(self)@[k@] && combine.ensures((&old_v, &v), r) && self@[k@] == r@),
+                self@.dom().finite(),
+                self.spec_orderedtablesteph_wf();
+        /// Iterative alternative to `delete`.
+        fn delete_iter(&mut self, k: &K) -> (updated: Option<V>)
+            requires
+                old(self).spec_orderedtablesteph_wf(),
+                obeys_view_eq::<K>(),
+            ensures self@ == old(self)@.remove(k@), self@.dom().finite(), self.spec_orderedtablesteph_wf();
+        /// Iterative alternative to `first_key`.
+        fn first_key_iter(&self) -> (first: Option<K>)
+            where K: TotalOrder
+            requires self.spec_orderedtablesteph_wf()
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> first matches None,
+                first matches Some(k) ==> self@.dom().contains(k@),
+                first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
+        /// Iterative alternative to `last_key`.
+        fn last_key_iter(&self) -> (last: Option<K>)
+            where K: TotalOrder
+            requires self.spec_orderedtablesteph_wf()
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> last matches None,
+                last matches Some(k) ==> self@.dom().contains(k@),
+                last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
+        /// Iterative alternative to `previous_key`.
+        fn previous_key_iter(&self, k: &K) -> (predecessor: Option<K>)
+            where K: TotalOrder
+            requires self.spec_orderedtablesteph_wf()
+            ensures
+                self@.dom().finite(),
+                predecessor matches Some(pk) ==> self@.dom().contains(pk@),
+                predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
+                predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
+        /// Iterative alternative to `next_key`.
+        fn next_key_iter(&self, k: &K) -> (successor: Option<K>)
+            where K: TotalOrder
+            requires self.spec_orderedtablesteph_wf()
+            ensures
+                self@.dom().finite(),
+                successor matches Some(nk) ==> self@.dom().contains(nk@),
+                successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
+                successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
+        /// Iterative alternative to `split_key`.
+        fn split_key_iter(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
+            where Self: Sized
+            requires
+                old(self).spec_orderedtablesteph_wf(),
+                obeys_view_eq::<K>(),
+            ensures
+                self@.dom().finite(),
+                old(self)@.dom().finite(),
+                split.0@.dom().finite(),
+                split.2@.dom().finite(),
+                split.1 matches Some(v) ==> old(self)@.contains_key(k@) && v@ == old(self)@[k@],
+                split.1 matches None ==> !old(self)@.contains_key(k@),
+                !split.0@.dom().contains(k@),
+                !split.2@.dom().contains(k@),
+                split.0@.dom().subset_of(old(self)@.dom()),
+                split.2@.dom().subset_of(old(self)@.dom()),
+                split.0@.dom().disjoint(split.2@.dom()),
+                forall|key| #[trigger] old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.2@.dom().contains(key) || key == k@,
+                split.0.spec_orderedtablesteph_wf(),
+                split.2.spec_orderedtablesteph_wf();
+        /// Iterative alternative to `get_key_range`.
+        fn get_key_range_iter(&self, k1: &K, k2: &K) -> (range: Self)
+            requires
+                self.spec_orderedtablesteph_wf(),
+            ensures
+                range@.dom().finite(),
+                range@.dom().subset_of(self@.dom()),
+                forall|key| #[trigger] range@.dom().contains(key) ==> range@[key] == self@[key],
+                range.spec_orderedtablesteph_wf();
+        /// Iterative alternative to `rank_key`.
+        fn rank_key_iter(&self, k: &K) -> (rank: usize)
+            where K: TotalOrder
+            requires
+                self.spec_orderedtablesteph_wf(),
+                obeys_view_eq::<K>(),
+            ensures
+                self@.dom().finite(),
+                rank <= self@.dom().len(),
+                rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
+        /// Iterative alternative to `split_rank_key`.
+        fn split_rank_key_iter(&mut self, i: usize) -> (split: (Self, Self))
+            where Self: Sized
+            requires
+                old(self).spec_orderedtablesteph_wf(),
+            ensures
+                self@.dom().finite(),
+                old(self)@.dom().finite(),
+                split.0@.dom().finite(),
+                split.1@.dom().finite(),
+                split.0@.dom().subset_of(old(self)@.dom()),
+                split.1@.dom().subset_of(old(self)@.dom()),
+                split.0@.dom().disjoint(split.1@.dom()),
+                forall|key| #[trigger] old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key),
+                split.0.spec_orderedtablesteph_wf(),
+                split.1.spec_orderedtablesteph_wf();
     }
 
     // 6. spec fns
@@ -502,7 +624,7 @@ broadcast use {
             OrderedTableStEph { base_seq: base }
         }
 
-        fn find(&self, k: &K) -> (found: Option<V>)
+        fn find_iter(&self, k: &K) -> (found: Option<V>)
         {
             let len = self.base_seq.length();
             let mut i: usize = 0;
@@ -535,6 +657,11 @@ broadcast use {
             None
         }
 
+        fn find(&self, k: &K) -> (found: Option<V>)
+        {
+            self.find_iter(k)
+        }
+
         fn lookup(&self, k: &K) -> (value: Option<V>) {
             self.find(k)
         }
@@ -545,7 +672,7 @@ broadcast use {
             self.size() == 0
         }
 
-        fn insert<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
+        fn insert_iter<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
         {
             let ghost old_seq = self.base_seq@;
             let ghost old_map = self@;
@@ -756,7 +883,12 @@ broadcast use {
             }
         }
 
-        fn delete(&mut self, k: &K) -> (updated: Option<V>)
+        fn insert<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
+        {
+            self.insert_iter(k, v, combine)
+        }
+
+        fn delete_iter(&mut self, k: &K) -> (updated: Option<V>)
         {
             let ghost old_seq = self.base_seq@;
             let len = self.base_seq.length();
@@ -858,6 +990,11 @@ broadcast use {
                 assert(tree_map =~= old_map.remove(k@));
             }
             found_value
+        }
+
+        fn delete(&mut self, k: &K) -> (updated: Option<V>)
+        {
+            self.delete_iter(k)
         }
 
         fn domain(&self) -> (domain: ArraySetStEph<K>)
@@ -2069,7 +2206,7 @@ broadcast use {
         }
 
         #[verifier::loop_isolation(false)]
-        fn first_key(&self) -> (first: Option<K>)
+        fn first_key_iter(&self) -> (first: Option<K>)
             where K: TotalOrder
             ensures
                 self@.dom().finite(),
@@ -2158,8 +2295,14 @@ broadcast use {
             }
         }
 
+        fn first_key(&self) -> (first: Option<K>)
+            where K: TotalOrder
+        {
+            self.first_key_iter()
+        }
+
         #[verifier::loop_isolation(false)]
-        fn last_key(&self) -> (last: Option<K>)
+        fn last_key_iter(&self) -> (last: Option<K>)
             where K: TotalOrder
             ensures
                 self@.dom().finite(),
@@ -2248,8 +2391,14 @@ broadcast use {
             }
         }
 
+        fn last_key(&self) -> (last: Option<K>)
+            where K: TotalOrder
+        {
+            self.last_key_iter()
+        }
+
         #[verifier::loop_isolation(false)]
-        fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
+        fn previous_key_iter(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
             ensures
                 self@.dom().finite(),
@@ -2361,8 +2510,14 @@ broadcast use {
             }
         }
 
+        fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
+            where K: TotalOrder
+        {
+            self.previous_key_iter(k)
+        }
+
         #[verifier::loop_isolation(false)]
-        fn next_key(&self, k: &K) -> (successor: Option<K>)
+        fn next_key_iter(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
             ensures
                 self@.dom().finite(),
@@ -2474,7 +2629,13 @@ broadcast use {
             }
         }
 
-        fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
+        fn next_key(&self, k: &K) -> (successor: Option<K>)
+            where K: TotalOrder
+        {
+            self.next_key_iter(k)
+        }
+
+        fn split_key_iter(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
         {
             let ghost old_seq = self.base_seq@;
             let ghost old_map = self@;
@@ -2634,12 +2795,18 @@ broadcast use {
             (left_table, found_value, right_table)
         }
 
+        fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
+            where Self: Sized
+        {
+            self.split_key_iter(k)
+        }
+
         fn join_key(&mut self, other: Self)
         {
             self.union(&other, |v1, _v2| v1.clone());
         }
 
-        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
+        fn get_key_range_iter(&self, k1: &K, k2: &K) -> (range: Self)
         {
             let len = avl_seq_length(&self.base_seq);
             let mut range_entries: Vec<Pair<K, V>> = Vec::new();
@@ -2730,7 +2897,12 @@ broadcast use {
             OrderedTableStEph { base_seq: tree }
         }
 
-        fn rank_key(&self, k: &K) -> (rank: usize)
+        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
+        {
+            self.get_key_range_iter(k1, k2)
+        }
+
+        fn rank_key_iter(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
         {
             proof {
@@ -2845,6 +3017,12 @@ broadcast use {
             count
         }
 
+        fn rank_key(&self, k: &K) -> (rank: usize)
+            where K: TotalOrder
+        {
+            self.rank_key_iter(k)
+        }
+
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
         {
@@ -2898,7 +3076,7 @@ broadcast use {
             }
         }
 
-        fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
+        fn split_rank_key_iter(&mut self, i: usize) -> (split: (Self, Self))
         {
             let entries = self.collect();
             let size = entries.length();
@@ -3057,6 +3235,12 @@ broadcast use {
             *self = Self::empty();
 
             (left_table, right_table)
+        }
+
+        fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
+            where Self: Sized
+        {
+            self.split_rank_key_iter(i)
         }
     }
 

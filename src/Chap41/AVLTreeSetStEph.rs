@@ -291,6 +291,63 @@ broadcast use {
             ensures
                 self@ == old(self)@.insert(x@),
                 self.spec_avltreesetsteph_wf();
+        /// Iterative alternative to `find`.
+        fn find_iter(&self, x: &T) -> (found: B)
+            requires self.spec_avltreesetsteph_wf(),
+            ensures found == self@.contains(x@);
+        /// Iterative alternative to `insert`.
+        fn insert_iter(&mut self, x: T)
+            requires
+                old(self).spec_avltreesetsteph_wf(),
+                old(self)@.len() + 1 < usize::MAX as nat,
+            ensures
+                self@ == old(self)@.insert(x@),
+                self.spec_avltreesetsteph_wf();
+        /// Iterative alternative to `delete`.
+        fn delete_iter(&mut self, x: &T)
+            requires old(self).spec_avltreesetsteph_wf(),
+            ensures
+                self@ == old(self)@.remove(x@),
+                self.spec_avltreesetsteph_wf();
+        /// Iterative alternative to `filter`.
+        fn filter_iter<F: PredSt<T>>(
+            &self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self)
+            requires
+                self.spec_avltreesetsteph_wf(),
+                forall|t: &T| #[trigger] f.requires((t,)),
+                forall|x: T, keep: bool|
+                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),
+            ensures
+                filtered@.subset_of(self@),
+                filtered.spec_avltreesetsteph_wf(),
+                forall|v: T::V| #[trigger] filtered@.contains(v)
+                    ==> self@.contains(v) && spec_pred(v),
+                forall|v: T::V| self@.contains(v) && spec_pred(v)
+                    ==> #[trigger] filtered@.contains(v);
+        /// Iterative alternative to `intersection`.
+        fn intersection_iter(&self, other: &Self) -> (common: Self)
+            requires self.spec_avltreesetsteph_wf(), other.spec_avltreesetsteph_wf(),
+            ensures
+                common@ == self@.intersect(other@),
+                common.spec_avltreesetsteph_wf();
+        /// Iterative alternative to `union`.
+        fn union_iter(&self, other: &Self) -> (combined: Self)
+            requires
+                self.spec_avltreesetsteph_wf(),
+                other.spec_avltreesetsteph_wf(),
+                self@.len() + other@.len() < usize::MAX as nat,
+            ensures
+                combined@ == self@.union(other@),
+                combined.spec_avltreesetsteph_wf();
+        /// Iterative alternative to `difference`.
+        fn difference_iter(&self, other: &Self) -> (remaining: Self)
+            requires self.spec_avltreesetsteph_wf(), other.spec_avltreesetsteph_wf(),
+            ensures
+                remaining@ == self@.difference(other@),
+                remaining.spec_avltreesetsteph_wf();
     }
 
     pub trait AVLTreeSetStEphTotalOrderTrait<T: StT + Ord + TotalOrder>: AVLTreeSetStEphTrait<T> {
@@ -505,7 +562,8 @@ broadcast use {
             constructed
         }
 
-        fn filter<F: PredSt<T>>(
+        /// Iterative alternative to `filter`.
+        fn filter_iter<F: PredSt<T>>(
             &self,
             f: F,
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
@@ -591,7 +649,17 @@ broadcast use {
             filtered
         }
 
-        fn intersection(&self, other: &Self) -> (common: Self)
+        fn filter<F: PredSt<T>>(
+            &self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self)
+        {
+            self.filter_iter(f, Ghost(spec_pred))
+        }
+
+        /// Iterative alternative to `intersection`.
+        fn intersection_iter(&self, other: &Self) -> (common: Self)
         {
             let mut common = Self::empty();
             let n = self.elements.length();
@@ -652,7 +720,13 @@ broadcast use {
             common
         }
 
-        fn difference(&self, other: &Self) -> (remaining: Self)
+        fn intersection(&self, other: &Self) -> (common: Self)
+        {
+            self.intersection_iter(other)
+        }
+
+        /// Iterative alternative to `difference`.
+        fn difference_iter(&self, other: &Self) -> (remaining: Self)
         {
             let mut remaining = Self::empty();
             let n = self.elements.length();
@@ -713,7 +787,13 @@ broadcast use {
             remaining
         }
 
-        fn union(&self, other: &Self) -> (combined: Self)
+        fn difference(&self, other: &Self) -> (remaining: Self)
+        {
+            self.difference_iter(other)
+        }
+
+        /// Iterative alternative to `union`.
+        fn union_iter(&self, other: &Self) -> (combined: Self)
         {
             let mut combined = Self::empty();
             let self_len = self.elements.length();
@@ -828,8 +908,14 @@ broadcast use {
             combined
         }
 
+        fn union(&self, other: &Self) -> (combined: Self)
+        {
+            self.union_iter(other)
+        }
+
+        /// Iterative alternative to `find`.
         #[verifier::loop_isolation(false)]
-        fn find(&self, x: &T) -> (found: B)
+        fn find_iter(&self, x: &T) -> (found: B)
         {
             let n = self.elements.length();
             let mut i: usize = 0;
@@ -862,8 +948,14 @@ broadcast use {
             false
         }
 
+        fn find(&self, x: &T) -> (found: B)
+        {
+            self.find_iter(x)
+        }
+
+        /// Iterative alternative to `delete`.
         #[verifier::loop_isolation(false)]
-        fn delete(&mut self, x: &T)
+        fn delete_iter(&mut self, x: &T)
         {
             let n = self.elements.length();
             let ghost orig_elems = self.elements@;
@@ -999,8 +1091,14 @@ broadcast use {
             }
         }
 
+        fn delete(&mut self, x: &T)
+        {
+            self.delete_iter(x)
+        }
+
+        /// Iterative alternative to `insert`.
         #[verifier::loop_isolation(false)]
-        fn insert(&mut self, x: T)
+        fn insert_iter(&mut self, x: T)
         {
             let ghost x_view = x@;
             let ghost old_seq_len = self.elements@.len();
@@ -1222,6 +1320,10 @@ broadcast use {
                 }
                 self.elements@.lemma_no_dup_set_cardinality();
             }
+        }
+        fn insert(&mut self, x: T)
+        {
+            self.insert_iter(x)
         }
     }
 

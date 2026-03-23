@@ -264,6 +264,81 @@ broadcast use {
                 split.1@.subset_of(old(self)@),
                 split.0@.disjoint(split.1@),
                 forall|x| #[trigger] old(self)@.contains(x) ==> split.0@.contains(x) || split.1@.contains(x);
+        /// Iterative alternative to `first`.
+        fn first_iter(&self) -> (first: Option<T>)
+            requires self.spec_orderedsetsteph_wf(),
+            ensures
+                self@.finite(),
+                self@.len() == 0 <==> first matches None,
+                first matches Some(v) ==> self@.contains(v@),
+                first matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==> TotalOrder::le(v, t);
+        /// Iterative alternative to `last`.
+        fn last_iter(&self) -> (last: Option<T>)
+            requires self.spec_orderedsetsteph_wf(),
+            ensures
+                self@.finite(),
+                self@.len() == 0 <==> last matches None,
+                last matches Some(v) ==> self@.contains(v@),
+                last matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==> TotalOrder::le(t, v);
+        /// Iterative alternative to `previous`.
+        fn previous_iter(&self, k: &T) -> (predecessor: Option<T>)
+            requires self.spec_orderedsetsteph_wf(),
+            ensures
+                self@.finite(),
+                predecessor matches Some(v) ==> self@.contains(v@),
+                predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
+                predecessor matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
+        /// Iterative alternative to `next`.
+        fn next_iter(&self, k: &T) -> (successor: Option<T>)
+            requires self.spec_orderedsetsteph_wf(),
+            ensures
+                self@.finite(),
+                successor matches Some(v) ==> self@.contains(v@),
+                successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
+                successor matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
+        /// Iterative alternative to `split`.
+        fn split_iter(&mut self, k: &T) -> (split: (Self, B, Self))
+            where Self: Sized
+            requires old(self).spec_orderedsetsteph_wf(),
+            ensures
+                self@.finite(),
+                old(self)@.finite(),
+                split.1 == old(self)@.contains(k@),
+                split.0@.finite(),
+                split.2@.finite(),
+                split.0@.subset_of(old(self)@),
+                split.2@.subset_of(old(self)@),
+                split.0@.disjoint(split.2@),
+                !split.0@.contains(k@),
+                !split.2@.contains(k@),
+                forall|x| #[trigger] old(self)@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@;
+        /// Iterative alternative to `get_range`.
+        fn get_range_iter(&self, k1: &T, k2: &T) -> (range: Self)
+            requires self.spec_orderedsetsteph_wf(),
+            ensures
+                self@.finite(),
+                range@.finite(),
+                range@.subset_of(self@);
+        /// Iterative alternative to `rank`.
+        fn rank_iter(&self, k: &T) -> (rank: usize)
+            requires self.spec_orderedsetsteph_wf(),
+            ensures
+                self@.finite(),
+                rank <= self@.len(),
+                rank as int == self@.filter(|x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, *k) && t@ == x && t@ != k@).len();
+        /// Iterative alternative to `split_rank`.
+        fn split_rank_iter(&mut self, i: usize) -> (split: (Self, Self))
+            where Self: Sized
+            requires old(self).spec_orderedsetsteph_wf(),
+            ensures
+                self@.finite(),
+                old(self)@.finite(),
+                split.0@.finite(),
+                split.1@.finite(),
+                split.0@.subset_of(old(self)@),
+                split.1@.subset_of(old(self)@),
+                split.0@.disjoint(split.1@),
+                forall|x| #[trigger] old(self)@.contains(x) ==> split.0@.contains(x) || split.1@.contains(x);
     }
 
     // 9. impls
@@ -409,8 +484,9 @@ broadcast use {
             constructed
         }
 
+        /// Iterative alternative to `first`.
         #[verifier::loop_isolation(false)]
-        fn first(&self) -> (first: Option<T>)
+        fn first_iter(&self) -> (first: Option<T>)
             ensures
                 self@.finite(),
                 self@.len() == 0 <==> first matches None,
@@ -498,8 +574,14 @@ broadcast use {
             }
         }
 
+        fn first(&self) -> (first: Option<T>)
+        {
+            self.first_iter()
+        }
+
+        /// Iterative alternative to `last`.
         #[verifier::loop_isolation(false)]
-        fn last(&self) -> (last: Option<T>)
+        fn last_iter(&self) -> (last: Option<T>)
             ensures
                 self@.finite(),
                 self@.len() == 0 <==> last matches None,
@@ -587,8 +669,14 @@ broadcast use {
             }
         }
 
+        fn last(&self) -> (last: Option<T>)
+        {
+            self.last_iter()
+        }
+
+        /// Iterative alternative to `previous`.
         #[verifier::loop_isolation(false)]
-        fn previous(&self, k: &T) -> (predecessor: Option<T>)
+        fn previous_iter(&self, k: &T) -> (predecessor: Option<T>)
         {
             let len = self.base_set.elements.length();
             proof { self.base_set.elements@.unique_seq_to_set(); }
@@ -708,8 +796,14 @@ broadcast use {
             }
         }
 
+        fn previous(&self, k: &T) -> (predecessor: Option<T>)
+        {
+            self.previous_iter(k)
+        }
+
+        /// Iterative alternative to `next`.
         #[verifier::loop_isolation(false)]
-        fn next(&self, k: &T) -> (successor: Option<T>)
+        fn next_iter(&self, k: &T) -> (successor: Option<T>)
         {
             let len = self.base_set.elements.length();
             proof { self.base_set.elements@.unique_seq_to_set(); }
@@ -828,7 +922,13 @@ broadcast use {
             }
         }
 
-        fn split(&mut self, k: &T) -> (split: (Self, B, Self))
+        fn next(&self, k: &T) -> (successor: Option<T>)
+        {
+            self.next_iter(k)
+        }
+
+        /// Iterative alternative to `split`.
+        fn split_iter(&mut self, k: &T) -> (split: (Self, B, Self))
             where Self: Sized
         {
             let n = self.base_set.elements.length();
@@ -996,11 +1096,18 @@ broadcast use {
             (left, found, right)
         }
 
+        fn split(&mut self, k: &T) -> (split: (Self, B, Self))
+            where Self: Sized
+        {
+            self.split_iter(k)
+        }
+
         fn join(&mut self, other: Self)
             ensures self@ == old(self)@.union(other@), self@.finite(), self.spec_orderedsetsteph_wf()
         { self.union(&other); }
 
-        fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
+        /// Iterative alternative to `get_range`.
+        fn get_range_iter(&self, k1: &T, k2: &T) -> (range: Self)
         {
             let mut range = Self::empty();
             let n = self.base_set.elements.length();
@@ -1047,8 +1154,14 @@ broadcast use {
             range
         }
 
+        fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
+        {
+            self.get_range_iter(k1, k2)
+        }
+
+        /// Iterative alternative to `rank`.
         #[verifier::loop_isolation(false)]
-        fn rank(&self, k: &T) -> (rank: usize)
+        fn rank_iter(&self, k: &T) -> (rank: usize)
         {
             let n = self.base_set.elements.length();
             proof { self.base_set.elements@.unique_seq_to_set(); }
@@ -1130,6 +1243,11 @@ broadcast use {
                     |x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, *k) && t@ == x && t@ != k@));
             }
             count
+        }
+
+        fn rank(&self, k: &T) -> (rank: usize)
+        {
+            self.rank_iter(k)
         }
 
         fn select(&self, i: usize) -> (selected: Option<T>)
@@ -1235,7 +1353,8 @@ broadcast use {
             }
         }
 
-        fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
+        /// Iterative alternative to `split_rank`.
+        fn split_rank_iter(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
         {
             let n = self.base_set.elements.length();
@@ -1350,6 +1469,11 @@ broadcast use {
             }
             *self = Self::empty();
             (left, right)
+        }
+        fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
+            where Self: Sized
+        {
+            self.split_rank_iter(i)
         }
     }
 
