@@ -4,57 +4,41 @@ You are Agent 3 working in `~/projects/APAS-VERUS-agent3`.
 
 ## Baseline
 
-- Main: 4496 verified, 0 errors, 18 holes, 2610 RTT, 147 PTT.
-- Warnings: 159 (8 real fn_missing_wf in Chap47, all others are
-  eq_clone_workaround structural warnings).
+- Main: 4496 verified, 0 errors, 12 holes, 2610 RTT, 147 PTT.
 - Your worktree: rebase onto main before starting (`git fetch origin && git rebase origin/main`).
-
-## Context
-
-Most remaining holes are in Chap53 (Agent 2's territory) or structural
-(Chap26 float, Chap45 Example). The proof frontier has narrowed.
 
 ## Targets
 
-### Target 1: Chap43 OrderedSetStEph.rs `select` — 1 hole
+### Target 1: Chap43 OrderedSetStPer.rs `select` — 1 hole (line 1067)
 
-This is the `select` rank hole at line 1146:
-```
-assume(self@.filter(|x| exists|t| le(t, result) && t@ == x && t@ != result@).len() == i)
-```
+Same BST rank hole you identified in R59. The blocker: BST ordering
+invariant → sorted inorder traversal bridge.
 
-The blocker is: the BST ordering invariant implies sorted inorder
-traversal, but no lemma bridges the two. Agent 1 is also assigned this
-(Target 2) — you may both attempt it independently (standalone rule means
-each file gets its own proof).
+Your R59 report said: need `lemma_bst_wf_implies_inorder_sorted` deriving
+`spec_seq_sorted(spec_inorder_values(root))` from the BST invariant.
 
-Your approach for `OrderedSetStEph.rs` specifically:
-1. Read `src/Chap41/AVLTreeSetStEph.rs` for the BST wf predicate and
-   `spec_inorder_values`.
-2. Read `src/Chap43/OrderedSetStEph.rs` `select` to understand exactly
-   what the assume asserts.
-3. The key insight: `select(i)` returns the i-th element in sorted order.
-   The filter counts elements ≤ result, which equals i by the BST
-   rank property. You need to connect the AVL tree's structural BST
-   invariant to this counting property.
-4. Write whatever helper lemmas you need locally in OrderedSetStEph.rs.
+Approach:
+1. Read `src/Chap41/AVLTreeSetStEph.rs` — BST wf predicate.
+2. Read `src/Chap37/AVLTreeSeqStPer.rs` — the StPer variant may have
+   different helper lemmas available.
+3. Write the recursive proof locally in OrderedSetStPer.rs (standalone).
+4. Leaf: trivial. Interior: left sorted (IH) + right sorted (IH) +
+   max(left) < key < min(right) from BST → concatenation is sorted.
+5. Use to close the assume.
 
-### Target 2: Chap43 OrderedSetStPer.rs `select` — 1 hole
+Agent 1 is working on the StEph version independently. You own StPer.
 
-Same hole, different file (StPer variant). Line 1067. Same approach.
+### Target 2: Chap43 OrderedSetStEph.rs `select` — 1 hole (line 1146)
 
-### Target 3: Audit `assume_eq_clone_workaround` warnings
+If you finish StPer's select, attempt StEph too. The proof structure
+should be nearly identical but using StEph-specific helper functions.
 
-The 151 remaining warnings are all `assume_eq_clone_workaround`. Run:
-```bash
-scripts/holes.sh src/ 2>&1 | grep assume_eq_clone_workaround | wc -l
-```
+### Target 3: Audit eq_clone_workaround warnings
 
-These should all be inside `PartialEq::eq` or `Clone::clone` bodies. Spot
-check 5-10 of them to confirm they follow the standard pattern from
-`src/standards/partial_eq_eq_clone_standard.rs`. If any are NOT in eq/clone
-bodies (i.e., they're in algorithmic code), report them — those would be
-real bugs.
+151 `assume_eq_clone_workaround` warnings remain. Spot-check 5-10:
+confirm they're all inside `PartialEq::eq` or `Clone::clone` bodies per
+`src/standards/partial_eq_eq_clone_standard.rs`. Report any that are NOT
+in eq/clone bodies — those would be bugs.
 
 ## Validation
 
