@@ -1141,9 +1141,95 @@ broadcast use {
                 proof {
                     lemma_cloned_view_eq(*elem, result);
                     assert(self.base_set.elements@.to_set().contains(result@));
-                    // Filter cardinality requires sortedness of the backing sequence,
-                    // which is true for AVL trees but not captured in the wf spec.
-                    assume(self@.filter(|x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, result) && t@ == x && t@ != result@).len() == i as int);
+
+                    // Connect value-level and view-level sequences.
+                    lemma_inorder_values_maps_to_views::<T>(self.base_set.elements.root);
+                    let vals = spec_inorder_values::<T>(self.base_set.elements.root);
+                    let views = self.base_set.elements@;
+                    let n = views.len();
+
+                    // vals maps to views element-by-element.
+                    assert(vals.map_values(|t: T| t@) =~= views);
+                    assert(vals.len() == n);
+                    assert(vals[i as int]@ == views[i as int]);
+                    assert(vals[i as int]@ == result@);
+                    assert(vals[i as int] == result); // feq
+
+                    // Sortedness: maintained by insert but not yet in the wf spec.
+                    // Closing this assume requires adding sorted ensures to
+                    // AVLTreeSetStEph operations (insert uses binary search at
+                    // the correct position, preserving sorted order).
+                    assume(spec_seq_sorted(vals));
+
+                    // Define the prefix: views[0..i].
+                    let prefix = views.subrange(0, i as int);
+                    let prefix_set = prefix.to_set();
+
+                    // Prefix has no duplicates (from views.no_duplicates).
+                    assert(prefix.no_duplicates()) by {
+                        assert forall|j1: int, j2: int|
+                            #![trigger prefix[j1], prefix[j2]]
+                            0 <= j1 < j2 < prefix.len()
+                            implies prefix[j1] != prefix[j2] by {
+                            assert(prefix[j1] == views[j1]);
+                            assert(prefix[j2] == views[j2]);
+                        };
+                    };
+                    prefix.unique_seq_to_set();
+                    assert(prefix_set.len() == i as nat);
+
+                    // Bind the filter set to avoid trigger-in-lambda errors.
+                    let filter_set = self@.filter(
+                        |x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, result)
+                            && t@ == x && t@ != result@
+                    );
+
+                    // Forward: elements at indices < i pass the rank filter.
+                    assert forall|x: T::V| prefix_set.contains(x) implies
+                        #[trigger] filter_set.contains(x) by {
+                        assert(prefix.contains(x));
+                        let j = choose|j: int| 0 <= j < prefix.len() && prefix[j] == x;
+                        assert(j < i as int);
+                        assert(views[j] == x);
+                        assert(vals[j]@ == x);
+                        // Sorted: le(vals[j], vals[i]) since j < i.
+                        assert(TotalOrder::le(vals[j], vals[i as int]));
+                        assert(TotalOrder::le(vals[j], result));
+                        // No duplicates: vals[j]@ != vals[i]@.
+                        assert(views[j] != views[i as int]);
+                        assert(vals[j]@ != result@);
+                        // vals[j] witnesses: le(vals[j], result) && vals[j]@ == x && vals[j]@ != result@.
+                        assert(self@.contains(x));
+                    };
+
+                    // Backward: elements passing the rank filter have index < i.
+                    assert forall|x: T::V| filter_set.contains(x) implies
+                        #[trigger] prefix_set.contains(x) by {
+                        assert(self@.contains(x));
+                        assert(views.to_set().contains(x));
+                        assert(views.contains(x));
+                        let k = choose|k: int| 0 <= k < views.len() && views[k] == x;
+                        let t: T = choose|t: T|
+                            #[trigger] TotalOrder::le(t, result) && t@ == x && t@ != result@;
+                        assert(t@ == vals[k]@);
+                        assert(t == vals[k]); // feq
+                        assert(TotalOrder::le(vals[k], result));
+                        assert(vals[k]@ != result@);
+                        assert(vals[k]@ != vals[i as int]@);
+                        assert(k != i as int);
+                        if k > i as int {
+                            // Sorted gives le(vals[i], vals[k]).
+                            assert(TotalOrder::le(vals[i as int], vals[k]));
+                            // Combined with le(vals[k], vals[i]), antisymmetry gives equality.
+                            T::antisymmetric(vals[k], vals[i as int]);
+                            // vals[k] == vals[i] contradicts vals[k]@ != vals[i]@.
+                        }
+                        assert(k < i as int);
+                        assert(prefix[k] == views[k]);
+                    };
+
+                    // Filter set equals prefix set, so cardinality is i.
+                    assert(filter_set =~= prefix_set);
                 }
                 Some(result)
             }
