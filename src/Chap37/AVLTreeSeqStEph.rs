@@ -176,7 +176,7 @@ pub mod AVLTreeSeqStEph {
     // 7. proof fns
 
     /// Under well-formedness, cached size equals in-order sequence length.
-    proof fn lemma_size_eq_inorder_len<T: StT>(link: &Link<T>)
+    pub proof fn lemma_size_eq_inorder_len<T: StT>(link: &Link<T>)
         requires spec_avltreeseqsteph_wf(*link),
         ensures spec_cached_size(link) == spec_inorder(*link).len(),
         decreases *link,
@@ -203,6 +203,34 @@ pub mod AVLTreeSeqStEph {
                 lemma_height_le_size::<T>(&node.right);
             }
         }
+    }
+
+    /// Under well-formedness, the cached size is strictly less than usize::MAX.
+    pub proof fn lemma_size_lt_usize_max<T: StT>(link: &Link<T>)
+        requires spec_avltreeseqsteph_wf(*link),
+        ensures spec_cached_size(link) < usize::MAX,
+        decreases *link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_size_lt_usize_max::<T>(&node.left);
+                lemma_size_lt_usize_max::<T>(&node.right);
+            }
+        }
+    }
+
+    /// Under struct-level well-formedness, the sequence length is bounded by usize::MAX.
+    pub broadcast proof fn lemma_wf_implies_len_bound_steph<T: StT>(s: AVLTreeSeqStEphS<T>)
+        requires #[trigger] s.spec_avltreeseqsteph_wf(),
+        ensures s@.len() < usize::MAX,
+    {
+        lemma_size_lt_usize_max::<T>(&s.root);
+        lemma_size_eq_inorder_len::<T>(&s.root);
+    }
+
+    pub broadcast group group_avltreeseqsteph_len_bound {
+        lemma_wf_implies_len_bound_steph,
     }
 
 

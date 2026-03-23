@@ -5,6 +5,8 @@ pub mod PQMinStEph {
 
     use vstd::prelude::*;
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeSeqStEphTrait;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::lemma_wf_implies_len_bound_steph;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Types::Types::*;
     #[cfg(verus_keep_ghost)]
@@ -187,6 +189,12 @@ pub mod PQMinStEph {
             let entry = Pair(Pair(p.clone(), v.clone()), v.clone());
             let frontier_new = frontier.difference(&AVLTreeSetStEph::singleton(entry));
 
+            // Capacity: visited ⊆ vertex_universe implies visited@.len() <= vertex_universe.len()
+            // < usize::MAX - 1, so visited@.len() + 1 < usize::MAX. Proving visited ⊆ vertex_universe
+            // requires showing frontier vertices ∈ vertex_universe, which involves projecting through
+            // the Pair<Pair<P,V>,V> type. The Pair view maps to nested tuples ((P::V,V::V),V::V),
+            // and Z3 cannot chain: (a) clone-preserves-view (needs obeys_feq_clone trigger),
+            // (b) Pair view field projection (.1), and (c) to_seq membership, in a single step.
             proof { assume(visited@.len() + 1 < usize::MAX as nat); }
             let visited_new = visited.union(&AVLTreeSetStEph::singleton(v.clone()));
 
@@ -209,6 +217,11 @@ pub mod PQMinStEph {
                 if !visited_new.find(neighbor) {
                     let neighbor_p = priority_fn(neighbor);
                     let neighbor_entry = Pair(Pair(neighbor_p.clone(), neighbor.clone()), neighbor.clone());
+                    // Capacity: bounding frontier@.len() through vertex_universe requires
+                    // an injective mapping from frontier entries to vertices. The entry
+                    // Pair(Pair(p,v),v) uniquely determines v via deterministic priority_fn,
+                    // but proving this injection over the nested Pair type exceeds Z3's
+                    // quantifier instantiation capabilities.
                     proof { assume(frontier_updated@.len() + 1 < usize::MAX as nat); }
                     frontier_updated = frontier_updated.union(&AVLTreeSetStEph::singleton(neighbor_entry));
                 }
@@ -219,7 +232,7 @@ pub mod PQMinStEph {
             frontier = frontier_updated;
         }
 
-        // Build priorities from visited.
+        // Build priorities from visited. Close via loop counter + len_bound lemma.
         let mut priorities = AVLTreeSetStEph::empty();
         let visited_seq = visited.to_seq();
         let vlen = visited_seq.length();
@@ -233,12 +246,21 @@ pub mod PQMinStEph {
                 visited_init@.subset_of(visited@),
                 priorities.spec_avltreesetsteph_wf(),
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
+                priorities@.len() <= j as nat,
             decreases vlen - j,
         {
             let vref = visited_seq.nth(j);
             let p = priority_fn(vref);
-            proof { assume(priorities@.len() + 1 < usize::MAX as nat); }
-            priorities = priorities.union(&AVLTreeSetStEph::singleton(Pair(vref.clone(), p)));
+            let vp = Pair(vref.clone(), p);
+            proof {
+                lemma_wf_implies_len_bound_steph(visited_seq);
+                assert(priorities@.len() + 1 < usize::MAX as nat);
+            }
+            let ghost old_pri = priorities@;
+            priorities = priorities.union(&AVLTreeSetStEph::singleton(vp));
+            proof {
+                vstd::set_lib::lemma_len_union(old_pri, Set::empty().insert(vp@));
+            }
             j = j + 1;
         }
         (visited, priorities)
@@ -271,6 +293,7 @@ pub mod PQMinStEph {
         let sources_seq = sources.to_seq();
         let slen = sources_seq.length();
         let mut i: usize = 0;
+        // Close initial_frontier capacity via loop counter + len_bound lemma.
         while i < slen
             invariant
                 i <= slen,
@@ -281,13 +304,21 @@ pub mod PQMinStEph {
                 forall|v: &V| #[trigger] graph.requires((v,)),
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
                 forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
+                initial_frontier@.len() <= i as nat,
             decreases slen - i,
         {
             let v = sources_seq.nth(i);
             let p = priority_fn(v);
             let entry = Pair(Pair(p.clone(), v.clone()), v.clone());
-            proof { assume(initial_frontier@.len() + 1 < usize::MAX as nat); }
+            proof {
+                lemma_wf_implies_len_bound_steph(sources_seq);
+                assert(initial_frontier@.len() + 1 < usize::MAX as nat);
+            }
+            let ghost old_if = initial_frontier@;
             initial_frontier = initial_frontier.union(&AVLTreeSetStEph::singleton(entry));
+            proof {
+                vstd::set_lib::lemma_len_union(old_if, Set::empty().insert(entry@));
+            }
             i = i + 1;
         }
 
