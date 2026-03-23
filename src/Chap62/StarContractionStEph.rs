@@ -79,7 +79,7 @@ pub mod StarContractionStEph {
             #[trigger] expand.requires((v, e, c, p, r)),
     ensures
         (graph@.A.is_empty() || fuel == 0) ==>
-            exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+            exists|s: &SetStEph<V>| s@ == graph@.V && #[trigger] s.spec_setsteph_wf() && base.ensures((s,), result),
     decreases fuel,
     {
         if graph.sizeE() == 0 || fuel == 0 {
@@ -139,7 +139,7 @@ pub mod StarContractionStEph {
             #[trigger] expand.requires((v, e, c, p, r)),
     ensures
         graph@.A.is_empty() ==>
-            exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+            exists|s: &SetStEph<V>| s@ == graph@.V && #[trigger] s.spec_setsteph_wf() && base.ensures((s,), result),
     {
         let fuel = graph.sizeV();
         let result = star_contract_fuel(graph, base, expand, fuel);

@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap26/ETSPMtEph.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap26/
 Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,67 +20,13 @@ Table of Contents:
 1. File Holes
 =================================================================
 
+✓ DivConReduceMtPer.rs
+   3 clean proof functions
+✓ DivConReduceStPer.rs
 ❌ ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:612: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:612: error: external_body - #[verifier::external_body]
        613 |     fn point_distance(a: &Point, b: &Point) -> (d: f64)
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:628: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap26/ETSPMtEph.rs:628: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
    Holes: 1 total
       1 × external_body
    Info: 1 × structural_false_positive
-      1 × OPAQUE_EXTERNAL
-   Proof functions: 4 total (4 clean, 0 holed)
-
-=================================================================
-2. Depends Upon
-=================================================================
-
-=================================================================
-2.1. By Module
-=================================================================
-
-ETSPMtEph  depends upon only clean modules
-
-=================================================================
-2.2. By File
-=================================================================
-
-ETSPMtEph.rs  depends upon only clean modules
-
-=================================================================
-3. Summary of Holes
-=================================================================
-
-Modules:
-   0 clean (no holes, no errors; 0%)
-   1 holed (holes or errors, 100%)
-   1 total
-
-Proof Functions:
-   4 clean (100%)
-   0 holed (0%)
-   4 total
-
-Function Specs:
-   13 exec fns with complete spec (requires+ensures) (52%)
-   0 exec fns missing spec (0%)
-   12 proof/spec fns clean (48%)
-   0 proof/spec fns with holes (0%)
-   25 total fns
-
-
-Holes Found: 1 (actionable)
-   1 × external_body (100%)
-Real Proof Targets: 1 (all actionable)
-
-Structural (info only): 1
-   1 × OPAQUE_EXTERNAL
-
-=================================================================
-5. Started/Ended/Duration
-=================================================================
-
-Started:   2026-03-22 19:13:32 -07:00
-Ended:     2026-03-22 19:13:32 -07:00
-Duration:  15ms
-
-Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
