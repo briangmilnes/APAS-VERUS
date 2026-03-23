@@ -123,8 +123,8 @@
 //!    ```
 //!
 //!    When to use which pattern:
-//!    - **Pattern 5 (feq requires)**: Single module, single entry point, tree/recursive
-//!      algorithms. The assume lives at the top-level insert/delete/find.
+//!    - **Pattern 5 (feq requires)**: SUPERSEDED by pattern 7. Only use when a function
+//!      genuinely has no wf predicate to fold into.
 //!    - **Pattern 6 (ClonePreservesView bound)**: Cross-module generic code where the
 //!      type parameter must carry the clone-view guarantee. Graph algorithms, hash
 //!      tables, any algorithm generic over vertex/key types.
@@ -132,6 +132,44 @@
 //!    Import pattern:
 //!    ```
 //!    use crate::vstdplus::clone_view::clone_view::*;
+//!    ```
+//!
+//! 7. Folding feq into spec_*_wf (preferred pattern).
+//!
+//!    Instead of adding `obeys_feq_full::<T>()` to every function's `requires` and
+//!    every loop's `invariant`, fold it into the module's well-formedness predicate.
+//!    Every function that already requires wf gets feq for free.
+//!
+//!    Single type parameter (sets, sequences, priority queues):
+//!    ```
+//!    open spec fn spec_orderedsetsteph_wf(&self) -> bool {
+//!        self.base_set.spec_avltreesetsteph_wf()
+//!        && self.base_set.spec_elements_sorted()
+//!        && obeys_feq_full::<T>()
+//!    }
+//!    ```
+//!
+//!    Two type parameters (tables, key-value structures):
+//!    ```
+//!    open spec fn spec_tablesteph_wf(&self) -> bool {
+//!        spec_keys_no_dups(self.entries@)
+//!        && obeys_feq_fulls::<K, V>()
+//!    }
+//!    ```
+//!    `obeys_feq_fulls::<K, V>()` expands to `obeys_feq_full::<K>() && obeys_feq_full::<V>()`.
+//!    No separate `obeys_feq_full::<Pair<K, V>>()` is needed.
+//!
+//!    This eliminates per-function requires and per-loop invariants for feq. The
+//!    `veracity-full-generic-feq` transformer applies this pattern automatically.
+//!
+//!    Import pattern:
+//!    ```
+//!    #[cfg(verus_keep_ghost)]
+//!    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_fulls};
+//!    ```
+//!    And in broadcast use (section 3):
+//!    ```
+//!    broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 //!    ```
 //!
 //! Section ordering within section 12:

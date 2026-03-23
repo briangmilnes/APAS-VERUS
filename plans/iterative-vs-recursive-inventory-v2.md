@@ -197,6 +197,40 @@ To get textbook-matching recursive implementations, we need either:
 | - | 43 | OrderedSetStEph.rs | select | MISMATCH | MATCH-DIFF-ALG | O(log n) via nth, matches textbook complexity |
 | - | 43 | OrderedTableStEph.rs | select_key | MISMATCH | MATCH-DIFF-ALG | O(log n) via nth, matches textbook complexity |
 
+## Matches (recursive, matching textbook)
+
+These chapters correctly implement the textbook's recursive algorithms.
+
+| # | Chap | File | Function | Style | Notes |
+|---|------|------|----------|-------|-------|
+| 1 | 26 | MergeSortStPer.rs | merge_sort | recursive | decreases a.spec_len() |
+| 2 | 26 | MergeSortStPer.rs | merge | iterative | OK — merge is iterative in textbook too |
+| 3 | 36 | QuickSortStEph.rs | quick_sort_first | recursive | partition + recurse left/right |
+| 4 | 36 | QuickSortStEph.rs | quick_sort_median3 | recursive | same with median-of-three pivot |
+| 5 | 36 | QuickSortStEph.rs | quick_sort_random | recursive | same with random pivot |
+| 6 | 38 | BSTParaStEph.rs | expose | recursive | pattern match on tree, decreases self@.len() |
+| 7 | 38 | BSTParaStEph.rs | split | recursive | recursive descent via expose() |
+| 8 | 38 | BSTParaStEph.rs | join | recursive | split both, rejoin subtrees |
+| 9 | 38 | BSTParaStEph.rs | union | recursive | expose, split other, recurse subtrees |
+| 10 | 38 | BSTParaStEph.rs | intersect | recursive | same pattern as union |
+| 11 | 38 | BSTParaStEph.rs | difference | recursive | same pattern as union |
+| 12 | 38 | BSTParaStEph.rs | filter | recursive | filter_inner() recursive descent |
+| 13 | 39 | BSTTreapStEph.rs | insert | recursive | insert_link() recursive descent + rotations |
+| 14 | 39 | BSTTreapStEph.rs | delete | recursive | delete_link() recursive descent + rotations |
+| 15 | 39 | BSTTreapStEph.rs | find | recursive | find_link() recursive descent |
+
+## Matches (iterative, matching textbook)
+
+These chapters are correctly iterative — the textbook presents them iteratively.
+
+| # | Chap | File | Function | Style | Notes |
+|---|------|------|----------|-------|-------|
+| 1 | 47 | LinProbFlatHashTableStEph.rs | lookup | iterative | linear probe loop — correct |
+| 2 | 47 | LinProbFlatHashTableStEph.rs | insert | iterative | linear probe loop — correct |
+| 3 | 47 | LinProbFlatHashTableStEph.rs | delete | iterative | linear probe loop — correct |
+| 4 | 47 | DoubleHashFlatHashTableStEph.rs | all ops | iterative | double hash probe — correct |
+| 5 | 47 | QuadProbFlatHashTableStEph.rs | all ops | iterative | quadratic probe — correct |
+
 ## Delegation Analysis (MISMATCH-DELEGATION)
 
 These files delegate to backing stores whose operations are themselves

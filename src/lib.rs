@@ -257,6 +257,7 @@ pub mod standards {
     pub mod arc_usage_standard;
     pub mod finite_sets_standard;
     pub mod capacity_bounds_standard;
+    pub mod iterative_vs_recursive_standard;
 }
 
 pub mod vstdplus {
