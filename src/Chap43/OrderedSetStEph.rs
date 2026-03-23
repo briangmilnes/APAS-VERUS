@@ -247,9 +247,14 @@ broadcast use {
                 rank as int == self@.filter(|x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, *k) && t@ == x && t@ != k@).len();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then indexes
+        /// The backing sequence is sorted under TotalOrder::le.
+        spec fn spec_sorted(&self) -> bool where T: TotalOrder;
+
         fn select(&self, i: usize) -> (selected: Option<T>)
             where T: TotalOrder
-            requires self.spec_orderedsetsteph_wf(),
+            requires
+                self.spec_orderedsetsteph_wf(),
+                self.spec_sorted(),
             ensures
                 self@.finite(),
                 i >= self@.len() ==> selected matches None,
@@ -276,6 +281,10 @@ broadcast use {
     impl<T: StT + Ord> OrderedSetStEphTrait<T> for OrderedSetStEph<T> {
         open spec fn spec_orderedsetsteph_wf(&self) -> bool {
             self.base_set.spec_avltreesetsteph_wf()
+        }
+
+        open spec fn spec_sorted(&self) -> bool where T: TotalOrder {
+            spec_seq_sorted(spec_inorder_values(self.base_set.elements.root))
         }
 
         fn size(&self) -> (count: usize)
@@ -1155,11 +1164,8 @@ broadcast use {
                     assert(vals[i as int]@ == result@);
                     assert(vals[i as int] == result); // feq
 
-                    // Sortedness: maintained by insert but not yet in the wf spec.
-                    // Closing this assume requires adding sorted ensures to
-                    // AVLTreeSetStEph operations (insert uses binary search at
-                    // the correct position, preserving sorted order).
-                    assume(spec_seq_sorted(vals));
+                    // Sorted from requires: self.spec_sorted().
+                    assert(spec_seq_sorted(vals));
 
                     // Define the prefix: views[0..i].
                     let prefix = views.subrange(0, i as int);

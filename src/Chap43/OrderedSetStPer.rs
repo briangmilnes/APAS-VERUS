@@ -58,54 +58,16 @@ broadcast use {
         open spec fn view(&self) -> Set<<T as View>::V> { self.base_set@ }
     }
 
-    // 6. spec fns
-
-    /// In-order traversal returning actual values (Seq<T>), not views, for persistent trees.
-    pub open spec fn spec_inorder_values_per<T: StT>(link: Link<T>) -> Seq<T>
-        decreases link,
-    {
-        match link {
-            None => Seq::empty(),
-            Some(node) => spec_inorder_values_per(node.left) + seq![node.value] + spec_inorder_values_per(node.right),
-        }
-    }
-
-    /// A sequence of T is sorted under TotalOrder::le.
-    pub open spec fn spec_seq_sorted_per<T: TotalOrder>(s: Seq<T>) -> bool {
-        forall|i: int, j: int| 0 <= i < j < s.len()
-            ==> (#[trigger] TotalOrder::le(s[i], s[j]))
-    }
-
-    // 7. proof fns
-
-    /// The values sequence maps to the views sequence element-by-element (persistent variant).
-    pub proof fn lemma_inorder_values_maps_to_views_per<T: StT>(link: &Link<T>)
-        ensures spec_inorder_values_per(*link).map_values(|t: T| t@) =~= spec_inorder(*link),
-        decreases *link,
-    {
-        match link {
-            None => {},
-            Some(node) => {
-                lemma_inorder_values_maps_to_views_per::<T>(&node.left);
-                lemma_inorder_values_maps_to_views_per::<T>(&node.right);
-                // map_values distributes over sequence concatenation.
-                assert(
-                    (spec_inorder_values_per(node.left)
-                        + seq![node.value]
-                        + spec_inorder_values_per(node.right))
-                    .map_values(|t: T| t@) =~=
-                        spec_inorder_values_per(node.left).map_values(|t: T| t@)
-                        + seq![node.value].map_values(|t: T| t@)
-                        + spec_inorder_values_per(node.right).map_values(|t: T| t@));
-            }
-        }
-    }
+    // 6. spec fns — spec_inorder_values_per, spec_seq_sorted_per imported from Chap41::AVLTreeSetStPer
+    // 7. proof fns — lemma_inorder_values_maps_to_views_per imported from Chap41::AVLTreeSetStPer
 
     // 8. traits
 
     /// Trait defining all ordered set operations (ADT 41.1 + ADT 43.1)
     pub trait OrderedSetStPerTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
         spec fn spec_orderedsetstper_wf(&self) -> bool;
+        /// Backing sequence sorted under TotalOrder; requires T: TotalOrder.
+        spec fn spec_sorted_per(&self) -> bool where T: TotalOrder;
 
         // Base set operations (ADT 41.1) - delegated
         /// - APAS: Work Θ(1), Span Θ(1)
@@ -272,7 +234,10 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then indexes
         fn select(&self, i: usize) -> (selected: Option<T>)
             where T: TotalOrder
-            requires self.spec_orderedsetstper_wf(), obeys_feq_clone::<T>(),
+            requires
+                self.spec_orderedsetstper_wf(),
+                self.spec_sorted_per(),
+                obeys_feq_clone::<T>(),
             ensures
                 self@.finite(),
                 i >= self@.len() ==> selected matches None,
@@ -300,6 +265,10 @@ broadcast use {
     impl<T: StT + Ord> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
         open spec fn spec_orderedsetstper_wf(&self) -> bool {
             self.base_set.spec_avltreesetstper_wf()
+        }
+
+        open spec fn spec_sorted_per(&self) -> bool where T: TotalOrder {
+            spec_seq_sorted_per(spec_inorder_values_per(self.base_set.elements.root))
         }
 
         fn size(&self) -> (count: usize)
@@ -1121,11 +1090,8 @@ broadcast use {
                     assert(vals[i as int]@ == result@);
                     assert(vals[i as int] == result); // feq
 
-                    // Sortedness: maintained by insert but not yet in the wf spec.
-                    // Closing this assume requires adding sorted ensures to
-                    // AVLTreeSetStPer operations (insert uses binary search at
-                    // the correct position, preserving sorted order).
-                    assume(spec_seq_sorted_per(vals));
+                    // Sortedness: given by requires (spec_seq_sorted_per on inorder values).
+                    assert(spec_seq_sorted_per(vals));
 
                     // Define the prefix: views[0..i].
                     let prefix = views.subrange(0, i as int);
