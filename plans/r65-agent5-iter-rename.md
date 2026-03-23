@@ -9,11 +9,15 @@ Read these files first:
 
 Rename 52 MISMATCH-RENAME functions to `_iter` across 6 files. Mechanical, no new proofs.
 
+**The specs do not change.** `fn foo(...)` and `fn foo_iter(...)` have identical
+requires and ensures — the same spec, word for word. Do not weaken, strengthen,
+or omit any requires/ensures clause. Copy the full spec from `fn foo` to `fn foo_iter`.
+
 For each function:
-1. Add `fn foo_iter(...)` to the **trait** with the same requires/ensures as `fn foo(...)`.
-2. Rename the impl body to `fn foo_iter(...)` (same body, same ensures).
+1. Add `fn foo_iter(...)` to the **trait** with the identical requires/ensures as `fn foo(...)`.
+2. Rename the impl body to `fn foo_iter(...)` (same body, same requires/ensures).
 3. The impl's `fn foo(...)` becomes a one-line delegation: `self.foo_iter(x)`.
-4. Callers are unaffected.
+4. Callers are unaffected — the delegation proves trivially because the specs are identical.
 
 Doc comments: the `_iter` variant gets `/// Iterative alternative to \`foo\`.`
 The default keeps its existing APAS cost spec comment.
