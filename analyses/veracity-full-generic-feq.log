@@ -1,3 +1,234 @@
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap05/SetMtEph.rs:
+  wf predicate: spec_setmteph_wf
+  type params: T (single-type)
+  wf modification: +1 line(s)
+  loop invariant removals: 0
+  trigger assert removals: 0
+  requires removals: 0
+  loop_isolation(false) added: 0
+  constructor triggers kept: 4
+  net lines: 1
+
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap05/SetStEph.rs:
+  wf predicate: spec_setsteph_wf
+  type params: T (single-type)
+  wf modification: +1 line(s)
+  loop invariant removals: 0
+  trigger assert removals: 0
+  requires removals: 0
+  loop_isolation(false) added: 0
+  constructor triggers kept: 3
+  net lines: 1
+
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap37/AVLTreeSeq.rs:
+  wf predicate: spec_avltreeseq_wf
+  type params: T (single-type)
+  wf modification: +1 line(s)
+  loop invariant removals: 5
+  trigger assert removals: 0
+  requires removals: 7
+  loop_isolation(false) added: 3
+  constructor triggers kept: 5
+  net lines: -8
+
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap37/AVLTreeSeqMtPer.rs:
+  wf predicate: spec_avltreeseqmtper_wf
+  type params: T (single-type)
+  wf modification: +1 line(s)
+  loop invariant removals: 1
+  trigger assert removals: 0
+  requires removals: 1
+  loop_isolation(false) added: 1
+  constructor triggers kept: 6
+  net lines: 0
+
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap37/AVLTreeSeqStEph.rs:
+  wf predicate: spec_avltreeseqsteph_wf
+  type params: T (single-type)
+  wf modification: +1 line(s)
+  loop invariant removals: 7
+  trigger assert removals: 0
+  requires removals: 5
+  loop_isolation(false) added: 5
+  constructor triggers kept: 7
+  net lines: -6
+
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap37/AVLTreeSeqStPer.rs:
+  wf predicate: spec_avltreeseqstper_wf
+  type params: T (single-type)
+  wf modification: +1 line(s)
+  loop invariant removals: 1
+  trigger assert removals: 0
+  requires removals: 1
+  loop_isolation(false) added: 1
+  constructor triggers kept: 7
+  net lines: 0
+
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap41/AVLTreeSetStEph.rs:
+  wf predicate: spec_avltreesetsteph_wf
+  type params: T (single-type)
+  wf modification: +1 line(s)
+  loop invariant removals: 19
+  trigger assert removals: 13
+  requires removals: 3
+  loop_isolation(false) added: 14
+  constructor triggers kept: 3
+  net lines: -20
+
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap41/AVLTreeSetStPer.rs:
+  wf predicate: spec_avltreesetstper_wf
+  type params: T (single-type)
+  wf modification: +0 line(s)
+  loop invariant removals: 3
+  trigger assert removals: 1
+  requires removals: 1
+  loop_isolation(false) added: 0
+  constructor triggers kept: 3
+  net lines: -5
+
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap41/ArraySetStEph.rs:
+  wf predicate: spec_arraysetsteph_wf
+  type params: T (single-type)
+  wf modification: +0 line(s)
+  loop invariant removals: 8
+  trigger assert removals: 0
+  requires removals: 0
+  loop_isolation(false) added: 7
+  constructor triggers kept: 3
+  net lines: -1
+
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap42/TableMtEph.rs:
+  wf predicate: spec_tablemteph_wf
+  type params: K,V,Pair<K,V> (two-type+pair)
+  wf modification: +2 line(s)
+  loop invariant removals: 11
+  trigger assert removals: 0
+  requires removals: 3
+  loop_isolation(false) added: 9
+  constructor triggers kept: 3
+  net lines: -3
+
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap42/TableStEph.rs:
+  wf predicate: spec_tablesteph_wf
+  type params: K,V,Pair<K,V> (two-type+pair)
+  wf modification: +2 line(s)
+  loop invariant removals: 10
+  trigger assert removals: 0
+  requires removals: 8
+  loop_isolation(false) added: 9
+  constructor triggers kept: 1
+  net lines: -7
+
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap43/AugOrderedTableMtEph.rs:
+  wf predicate: spec_augorderedtablemteph_wf
+  type params: K,V,Pair<K,V> (two-type+pair)
+  wf modification: +2 line(s)
+  loop invariant removals: 0
+  trigger assert removals: 0
+  requires removals: 5
+  loop_isolation(false) added: 0
+  constructor triggers kept: 2
+  net lines: -3
+
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap43/AugOrderedTableStEph.rs:
+  wf predicate: spec_augorderedtablesteph_wf
+  type params: K,V,Pair<K,V> (two-type+pair)
+  wf modification: +2 line(s)
+  loop invariant removals: 0
+  trigger assert removals: 0
+  requires removals: 10
+  loop_isolation(false) added: 0
+  constructor triggers kept: 1
+  net lines: -8
+
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap43/AugOrderedTableStPer.rs:
+  wf predicate: spec_augorderedtablestper_wf
+  type params: K,V,Pair<K,V> (two-type+pair)
+  wf modification: +2 line(s)
+  loop invariant removals: 0
+  trigger assert removals: 0
+  requires removals: 11
+  loop_isolation(false) added: 0
+  constructor triggers kept: 3
+  net lines: -9
+
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap43/OrderedSetMtEph.rs:
+  wf predicate: spec_orderedsetmteph_wf
+  type params: T (single-type)
+  wf modification: +1 line(s)
+  loop invariant removals: 1
+  trigger assert removals: 0
+  requires removals: 0
+  loop_isolation(false) added: 1
+  constructor triggers kept: 3
+  net lines: 1
+
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap43/OrderedSetStEph.rs:
+  wf predicate: spec_orderedsetsteph_wf
+  type params: T (single-type)
+  wf modification: +1 line(s)
+  loop invariant removals: 9
+  trigger assert removals: 9
+  requires removals: 0
+  loop_isolation(false) added: 9
+  constructor triggers kept: 4
+  net lines: -8
+
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap43/OrderedSetStPer.rs:
+  wf predicate: spec_orderedsetstper_wf
+  type params: T (single-type)
+  wf modification: +1 line(s)
+  loop invariant removals: 8
+  trigger assert removals: 9
+  requires removals: 0
+  loop_isolation(false) added: 8
+  constructor triggers kept: 4
+  net lines: -8
+
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap43/OrderedTableMtEph.rs:
+  wf predicate: spec_orderedtablemteph_wf
+  type params: K,V,Pair<K,V> (two-type+pair)
+  wf modification: +2 line(s)
+  loop invariant removals: 0
+  trigger assert removals: 0
+  requires removals: 4
+  loop_isolation(false) added: 0
+  constructor triggers kept: 5
+  net lines: -2
+
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap43/OrderedTableStEph.rs:
+  wf predicate: spec_orderedtablesteph_wf
+  type params: K,V,Pair<K,V> (two-type+pair)
+  wf modification: +2 line(s)
+  loop invariant removals: 28
+  trigger assert removals: 15
+  requires removals: 10
+  loop_isolation(false) added: 21
+  constructor triggers kept: 2
+  net lines: -30
+
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap43/OrderedTableStPer.rs:
+  wf predicate: spec_orderedtablestper_wf
+  type params: K,V,Pair<K,V> (two-type+pair)
+  wf modification: +2 line(s)
+  loop invariant removals: 22
+  trigger assert removals: 4
+  requires removals: 10
+  loop_isolation(false) added: 16
+  constructor triggers kept: 4
+  net lines: -18
+
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap45/BalancedTreePQ.rs:
+  wf predicate: spec_balancedtreepq_wf
+  type params: T (single-type)
+  wf modification: +1 line(s)
+  loop invariant removals: 1
+  trigger assert removals: 0
+  requires removals: 1
+  loop_isolation(false) added: 1
+  constructor triggers kept: 5
+  net lines: 0
+
 
 |   # |   Chap | File                           | Type |  WF + |  Inv - |  Trig - |  Req - |   Iso + |   Net |
 |-----|--------|--------------------------------|------|-------|--------|---------|--------|---------|-------|
@@ -8,7 +239,7 @@
 |   5 | Chap37 | AVLTreeSeqStEph.rs             |    T |    +1 |     -7 |      +0 |     -5 |      +5 |    -6 |
 |   6 | Chap37 | AVLTreeSeqStPer.rs             |    T |    +1 |     -1 |      +0 |     -1 |      +1 |    +0 |
 |   7 | Chap41 | AVLTreeSetStEph.rs             |    T |    +1 |    -19 |     -13 |     -3 |     +14 |   -20 |
-|   8 | Chap41 | AVLTreeSetStPer.rs             |    T |    +0 |     +0 |      +0 |     +0 |      +0 |    +0 |
+|   8 | Chap41 | AVLTreeSetStPer.rs             |    T |    +0 |     -3 |      -1 |     -1 |      +0 |    -5 |
 |   9 | Chap41 | ArraySetStEph.rs               |    T |    +0 |     -8 |      +0 |     +0 |      +7 |    -1 |
 |  10 | Chap42 | TableMtEph.rs                  |  K,V |    +2 |    -11 |      +0 |     -3 |      +9 |    -3 |
 |  11 | Chap42 | TableStEph.rs                  |  K,V |    +2 |    -10 |      +0 |     -8 |      +9 |    -7 |
@@ -23,7 +254,7 @@
 |  20 | Chap43 | OrderedTableStPer.rs           |  K,V |    +2 |    -22 |      -4 |    -10 |     +16 |   -18 |
 |  21 | Chap45 | BalancedTreePQ.rs              |    T |    +1 |     -1 |      +0 |     -1 |      +1 |    +0 |
 |  22 | Chap65 | UnionFindStEph.rs              |    V |    +0 |     +0 |      +0 |     +0 |      +0 |    +0 |
-|     |  TOTAL |                                |      |   +27 |   -131 |     -50 |    -79 |    +105 |  -128 |
+|     |  TOTAL |                                |      |   +27 |   -134 |     -51 |    -80 |    +105 |  -133 |
 
 Skipped files:
   SKIP /home/milnes/projects/APAS-VERUS-agent5/benches/Chap03/BenchInsertionSortStEph.rs: no obeys_feq_full usage
@@ -76,8 +307,6 @@ Skipped files:
   SKIP /home/milnes/projects/APAS-VERUS-agent5/rust_verify_test/tests/Chap54/ProveBFSMtEph.rs: no obeys_feq_full usage
   SKIP /home/milnes/projects/APAS-VERUS-agent5/rust_verify_test/tests/Chap54/ProveBFSStEph.rs: no obeys_feq_full usage
   SKIP /home/milnes/projects/APAS-VERUS-agent5/rust_verify_test/tests/common/mod.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/rust_verify_test/tests/vstdplus/HashMapWithViewPlus.rs: no verus! block
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/rust_verify_test/tests/vstdplus/HashSetWithViewPlus.rs: no verus! block
   SKIP /home/milnes/projects/APAS-VERUS-agent5/src/Chap02/FibonacciHFScheduler.rs: no obeys_feq_full usage
   SKIP /home/milnes/projects/APAS-VERUS-agent5/src/Chap02/HFSchedulerMtEph.rs: no obeys_feq_full usage
   SKIP /home/milnes/projects/APAS-VERUS-agent5/src/Chap03/InsertionSortStEph.rs: no obeys_feq_full usage
@@ -260,8 +489,8 @@ Skipped files:
   SKIP /home/milnes/projects/APAS-VERUS-agent5/src/Chap53/GraphSearchMtPer.rs: no obeys_feq_full usage
   SKIP /home/milnes/projects/APAS-VERUS-agent5/src/Chap53/GraphSearchStEph.rs: no obeys_feq_full usage
   SKIP /home/milnes/projects/APAS-VERUS-agent5/src/Chap53/GraphSearchStPer.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/Chap53/PQMinStEph.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/Chap53/PQMinStPer.rs: no obeys_feq_full usage
+  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/Chap53/PQMinStEph.rs: no obeys_feq_full calls in AST
+  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/Chap53/PQMinStPer.rs: no obeys_feq_full calls in AST
   SKIP /home/milnes/projects/APAS-VERUS-agent5/src/Chap54/BFSMtEph.rs: no obeys_feq_full usage
   SKIP /home/milnes/projects/APAS-VERUS-agent5/src/Chap54/BFSMtPer.rs: no obeys_feq_full usage
   SKIP /home/milnes/projects/APAS-VERUS-agent5/src/Chap54/BFSStEph.rs: no obeys_feq_full usage
@@ -314,31 +543,6 @@ Skipped files:
   SKIP /home/milnes/projects/APAS-VERUS-agent5/src/Chap66/BoruvkaStEph.rs: no spec_*_wf predicate found
   SKIP /home/milnes/projects/APAS-VERUS-agent5/src/Concurrency.rs: no obeys_feq_full usage
   SKIP /home/milnes/projects/APAS-VERUS-agent5/src/ParaPairs.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/VecQueue.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/accept.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/arc_rwlock.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/arithmetic/power2_plus.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/checked_int.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/checked_nat.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/checked_nat_with_checked_view.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/clone_plus.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/clone_view.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/float.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/hash_map_with_view_plus.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/hash_set_specs.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/hash_set_with_view_plus.rs: no spec_*_wf predicate found
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/hashed_checked_u32.rs: no spec_*_wf predicate found
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/monoid.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/multiset.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/partial_order.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/pervasives_plus.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/rand.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/seq.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/seq_set.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/smart_ptrs.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/sqrt.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/threads_plus.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus/total_order.rs: no obeys_feq_full usage
   SKIP /home/milnes/projects/APAS-VERUS-agent5/tests/Chap02/test_fibonacci_scheduler.rs: no obeys_feq_full usage
   SKIP /home/milnes/projects/APAS-VERUS-agent5/tests/Chap02/test_hf_scheduler.rs: no obeys_feq_full usage
   SKIP /home/milnes/projects/APAS-VERUS-agent5/tests/Chap02/test_threads_plus.rs: no obeys_feq_full usage
@@ -590,7 +794,3 @@ Skipped files:
   SKIP /home/milnes/projects/APAS-VERUS-agent5/tests/Chap65/TestUnionFindStEph.rs: no obeys_feq_full usage
   SKIP /home/milnes/projects/APAS-VERUS-agent5/tests/Chap66/TestBoruvkaMtEph.rs: no obeys_feq_full usage
   SKIP /home/milnes/projects/APAS-VERUS-agent5/tests/Chap66/TestBoruvkaStEph.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/tests/vstdplus/test_checked_nat_with_checked_view.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/tests/vstdplus/test_feq.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/tests/vstdplus/test_partial_order.rs: no obeys_feq_full usage
-  SKIP /home/milnes/projects/APAS-VERUS-agent5/tests/vstdplus/test_total_order.rs: no obeys_feq_full usage
