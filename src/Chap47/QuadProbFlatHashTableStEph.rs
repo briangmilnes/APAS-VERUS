@@ -373,7 +373,8 @@ pub mod QuadProbFlatHashTableStEph {
             h as nat == (table.spec_hash@)(*key) % (table.current_size as nat),
             exists |s: int| #![trigger table.table@[s]]
                 0 <= s < table.current_size as int && table.table@[s] is Empty,
-            forall |d: int| 0 <= d < table.current_size as int
+            forall |d: int| #![trigger spec_tri_probe(h as int, d, table.current_size as int)]
+                0 <= d < table.current_size as int
                 ==> !spec_flat_has_key(
                     table.table@[spec_tri_probe(h as int, d, table.current_size as int)],
                     *key),
@@ -420,7 +421,7 @@ pub mod QuadProbFlatHashTableStEph {
 
         // probes.to_set() ⊆ set_int_range(0, m) — all probe values in [0, m).
         assert(probes.to_set().subset_of(set_int_range(0, m))) by {
-            assert forall |x: int| probes.to_set().contains(x)
+            assert forall |x: int| #[trigger] probes.to_set().contains(x)
                 implies set_int_range(0, m).contains(x) by {
                 let d = choose |d: int| 0 <= d < m && probes[d] == x;
                 vstd::arithmetic::div_mod::lemma_mod_bound(hi + d * (d + 1) / 2, m);
@@ -825,7 +826,8 @@ pub mod QuadProbFlatHashTableStEph {
             proof {
                 // Bridge: loop invariant uses `m`, lemma requires `table.current_size`.
                 assert(m == table.current_size);
-                assert forall |d: int| 0 <= d < table.current_size as int
+                assert forall |d: int| #![trigger spec_tri_probe(h as int, d, table.current_size as int)]
+                    0 <= d < table.current_size as int
                     implies !spec_flat_has_key(
                         table.table@[spec_tri_probe(h as int, d, table.current_size as int)], key) by {
                     assert(spec_tri_probe(h as int, d, m as int) == spec_tri_probe(h as int, d, table.current_size as int));
