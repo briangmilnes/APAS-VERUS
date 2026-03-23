@@ -224,6 +224,7 @@ pub mod DoubleHashFlatHashTableStEph {
     {
         open spec fn spec_impl_wf(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) -> bool {
             spec_doublehashflathashsteph_wf(table)
+            && spec_hash_fn_valid::<Key, H>(table.spec_hash@)
         }
 
         /// Flat tables require at least one Empty slot for insertion.
@@ -264,6 +265,7 @@ pub mod DoubleHashFlatHashTableStEph {
                     slot as int == (h as int + attempt as int * step as int) % (m as int),
                     h as nat == (table.spec_hash@)(key) % (m as nat),
                     spec_doublehashflathashsteph_wf(table),
+                    spec_hash_fn_valid::<Key, H>(table.spec_hash@),
                     table.table@ == old(table).table@,
                     table.spec_hash == old(table).spec_hash,
                     table.num_elements == old(table).num_elements,
@@ -669,6 +671,7 @@ pub mod DoubleHashFlatHashTableStEph {
                     slot as int == (h as int + attempt as int * step as int) % (m as int),
                     h as nat == (table.spec_hash@)(*key) % (m as nat),
                     spec_doublehashflathashsteph_wf(table),
+                    spec_hash_fn_valid::<Key, H>(table.spec_hash@),
                     table.table@ == old(table).table@,
                     table.spec_hash == old(table).spec_hash,
                     table.num_elements == old(table).num_elements,
@@ -980,6 +983,7 @@ pub mod DoubleHashFlatHashTableStEph {
                     attempt <= table.current_size,
                     table.current_size > 0,
                     table.table@.len() == table.current_size as int,
+                    spec_hash_fn_valid::<Key, H>(table.spec_hash@),
                 decreases table.current_size - attempt,
             {
                 let slot = Self::probe(table, key, attempt);

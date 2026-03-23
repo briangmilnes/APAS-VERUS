@@ -61,12 +61,13 @@ pub mod ParaHashTableStEph {
 
     // 6. spec fns
 
-    pub open spec fn spec_hashtable_wf<Key, Value, Entry: EntryTrait<Key, Value>, Metrics, H>(table: &HashTable<Key, Value, Entry, Metrics, H>) -> bool {
+    pub open spec fn spec_hashtable_wf<Key, Value, Entry: EntryTrait<Key, Value>, Metrics, H: Fn(&Key, usize) -> usize>(table: &HashTable<Key, Value, Entry, Metrics, H>) -> bool {
         table.table@.len() == table.current_size as int
         && table.current_size > 0
-        && forall |k: Key, j: int| 0 <= j < table.table@.len()
+        && (forall |k: Key, j: int| 0 <= j < table.table@.len()
             && j != (table.spec_hash@)(k) as int % table.current_size as int
-            ==> !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k)
+            ==> !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k))
+        && spec_hash_fn_valid::<Key, H>(table.spec_hash@)
     }
 
     /// Maps a sequence of key-value pairs to its abstract Map representation.
@@ -106,6 +107,17 @@ pub mod ParaHashTableStEph {
         &&& old_seq.len() == new_seq.len()
         &&& forall |j: int| 0 <= j < new_seq.len() && j != s
             ==> #[trigger] new_seq[j] == old_seq[j]
+    }
+
+    /// Whether all values of hash function type H produce valid indices matching spec_hash.
+    /// Quantified over all H values (not a specific instance) so the property survives Clone.
+    pub open spec fn spec_hash_fn_valid<Key, H: Fn(&Key, usize) -> usize>(
+        spec_hash: spec_fn(Key) -> nat,
+    ) -> bool {
+        (forall|h: H, k: &Key, ts: usize| ts > 0 ==> #[trigger] h.requires((k, ts)))
+        && (forall|h: H, k: &Key, ts: usize, idx: usize|
+            ts > 0 && #[trigger] h.ensures((k, ts), idx)
+                ==> idx < ts && idx as nat == spec_hash(*k) % (ts as nat))
     }
 
     // 7. proof fns
@@ -337,10 +349,11 @@ pub mod ParaHashTableStEph {
     // 7a. helpers
 
     /// Calls the hash function and returns a bucket index.
-    /// External_body because Verus cannot reason about opaque Fn closures.
-    #[verifier::external_body]
+    /// Closure specs bridge the exec hash_fn to the ghost spec_hash via spec_hash_fn_valid.
     pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (index: usize)
-        requires table_size > 0,
+        requires
+            table_size > 0,
+            spec_hash_fn_valid::<Key, H>(spec_hash@),
         ensures
             index < table_size,
             index as nat == (spec_hash@)(*key) % (table_size as nat),
@@ -411,6 +424,7 @@ pub mod ParaHashTableStEph {
         fn createTable(hash_fn: H, initial_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (table: HashTable<Key, Value, Entry, Metrics, H>)
             requires
                 initial_size > 0,
+                spec_hash_fn_valid::<Key, H>(spec_hash@),
             ensures
                 table.initial_size == initial_size,
                 table.current_size == initial_size,
