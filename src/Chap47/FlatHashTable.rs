@@ -63,6 +63,7 @@ pub mod FlatHashTable {
         fn probe(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize)
             requires
                 table.current_size > 0,
+                spec_hash_fn_valid::<Key, H>(table.spec_hash@),
             ensures
                 slot < table.current_size;
 
@@ -73,6 +74,7 @@ pub mod FlatHashTable {
             requires
                 table.current_size > 0,
                 table.table@.len() == table.current_size as int,
+                spec_hash_fn_valid::<Key, H>(table.spec_hash@),
             ensures
                 slot < table.current_size;
 

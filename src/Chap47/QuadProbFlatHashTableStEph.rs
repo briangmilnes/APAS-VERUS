@@ -541,6 +541,7 @@ pub mod QuadProbFlatHashTableStEph {
     {
         open spec fn spec_impl_wf(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) -> bool {
             spec_quadprobflathashsteph_wf(table)
+            && spec_hash_fn_valid::<Key, H>(table.spec_hash@)
         }
 
         /// Flat tables require at least one Empty slot for insertion.
@@ -579,6 +580,7 @@ pub mod QuadProbFlatHashTableStEph {
                     h as nat == (table.spec_hash@)(key) % (m as nat),
                     slot as int == spec_tri_probe(h as int, attempt as int, m as int),
                     spec_quadprobflathashsteph_wf(table),
+                    spec_hash_fn_valid::<Key, H>(table.spec_hash@),
                     table.table@ == old(table).table@,
                     table.spec_hash == old(table).spec_hash,
                     table.num_elements == old(table).num_elements,
@@ -984,6 +986,7 @@ pub mod QuadProbFlatHashTableStEph {
                     h as nat == (table.spec_hash@)(*key) % (m as nat),
                     slot as int == spec_tri_probe(h as int, attempt as int, m as int),
                     spec_quadprobflathashsteph_wf(table),
+                    spec_hash_fn_valid::<Key, H>(table.spec_hash@),
                     table.table@ == old(table).table@,
                     table.spec_hash == old(table).spec_hash,
                     table.num_elements == old(table).num_elements,
@@ -1293,6 +1296,7 @@ pub mod QuadProbFlatHashTableStEph {
                     attempt <= table.current_size,
                     table.current_size > 0,
                     table.table@.len() == table.current_size as int,
+                    spec_hash_fn_valid::<Key, H>(table.spec_hash@),
                 decreases table.current_size - attempt,
             {
                 let slot = Self::probe(table, key, attempt);

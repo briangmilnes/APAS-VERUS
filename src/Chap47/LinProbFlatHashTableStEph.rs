@@ -178,6 +178,7 @@ pub mod LinProbFlatHashTableStEph {
     {
         open spec fn spec_impl_wf(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) -> bool {
             spec_linprobflathashsteph_wf(table)
+            && spec_hash_fn_valid::<Key, H>(table.spec_hash@)
         }
 
         /// Flat tables require at least one Empty slot for insertion.
@@ -207,6 +208,7 @@ pub mod LinProbFlatHashTableStEph {
                     table.table@.len() == m as int,
                     h as nat == (table.spec_hash@)(key) % (m as nat),
                     spec_linprobflathashsteph_wf(table),
+                    spec_hash_fn_valid::<Key, H>(table.spec_hash@),
                     table.table@ == old(table).table@,
                     table.spec_hash == old(table).spec_hash,
                     table.num_elements == old(table).num_elements,
@@ -589,6 +591,7 @@ pub mod LinProbFlatHashTableStEph {
                     table.table@.len() == m as int,
                     h as nat == (table.spec_hash@)(*key) % (m as nat),
                     spec_linprobflathashsteph_wf(table),
+                    spec_hash_fn_valid::<Key, H>(table.spec_hash@),
                     table.table@ == old(table).table@,
                     table.spec_hash == old(table).spec_hash,
                     table.num_elements == old(table).num_elements,
@@ -894,6 +897,7 @@ pub mod LinProbFlatHashTableStEph {
                     attempt <= table.current_size,
                     table.current_size > 0,
                     table.table@.len() == table.current_size as int,
+                    spec_hash_fn_valid::<Key, H>(table.spec_hash@),
                 decreases table.current_size - attempt,
             {
                 let slot = Self::probe(table, key, attempt);
