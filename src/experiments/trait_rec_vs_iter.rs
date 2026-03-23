@@ -1,12 +1,14 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
-//! Experiment: One trait, two impl types (recursive vs iterative).
+//! Experiment: One type, one trait, recursive + iterative implementations.
 //!
-//! The trait defines the abstract interface once. Separate types (RecStack and
-//! IterStack) each implement it. A caller picks the implementation by importing
-//! the concrete type — the generic code is identical either way.
+//! The textbook presents sum recursively, so `sum` is recursive (the default)
+//! and `sum_iter` is the iterative alternative. Both verified against `spec_sum`.
 //!
-//! Layout: trait + spec, then all RecStack code, then all IterStack code.
+//! Naming convention:
+//! - Textbook says recursive → `fn_name` is recursive, `fn_name_iter` is alternative.
+//! - Textbook says iterative → `fn_name` is iterative, `fn_name_rec` is alternative.
+//!
 //! Caller files: trait_rec_caller.rs and trait_iter_caller.rs.
 //!
 //! RESULT: VERIFIES
@@ -33,7 +35,33 @@ pub mod trait_rec_vs_iter {
         if i < j { lemma_spec_sum_monotone(s, i, j - 1); }
     }
 
-    // The abstract interface — one trait, one set of function names.
+    // One type.
+    pub struct Stack {
+        pub elements: Vec<u64>,
+    }
+
+    impl View for Stack {
+        type V = Seq<u64>;
+        open spec fn view(&self) -> Seq<u64> { self.elements@ }
+    }
+
+    // Recursive sum over a prefix.
+    fn rec_sum_prefix(elements: &Vec<u64>, idx: usize) -> (total: u64)
+        requires
+            idx <= elements@.len(),
+            elements@.len() <= u64::MAX,
+            spec_sum(elements@, idx as int) <= u64::MAX,
+        ensures total == spec_sum(elements@, idx as int),
+        decreases idx,
+    {
+        if idx == 0 {
+            0
+        } else {
+            let rest = rec_sum_prefix(elements, idx - 1);
+            rest + elements[idx - 1]
+        }
+    }
+
     pub trait StackTrait: Sized + View<V = Seq<u64>> {
         spec fn spec_stack_wf(&self) -> bool;
 
@@ -48,7 +76,16 @@ pub mod trait_rec_vs_iter {
             requires self.spec_stack_wf(),
             ensures n == self@.len();
 
+        /// Recursive sum — the textbook default.
         fn sum(&self) -> (total: u64)
+            requires
+                self.spec_stack_wf(),
+                self@.len() <= u64::MAX,
+                spec_sum(self@, self@.len() as int) <= u64::MAX,
+            ensures total == spec_sum(self@, self@.len() as int);
+
+        /// Iterative sum — alternative implementation, same spec.
+        fn sum_iter(&self) -> (total: u64)
             requires
                 self.spec_stack_wf(),
                 self@.len() <= u64::MAX,
@@ -56,38 +93,11 @@ pub mod trait_rec_vs_iter {
             ensures total == spec_sum(self@, self@.len() as int);
     }
 
-    // Recursive implementation
-
-    pub struct RecStack {
-        pub elements: Vec<u64>,
-    }
-
-    impl View for RecStack {
-        type V = Seq<u64>;
-        open spec fn view(&self) -> Seq<u64> { self.elements@ }
-    }
-
-    fn rec_sum_helper(elements: &Vec<u64>, idx: usize) -> (total: u64)
-        requires
-            idx <= elements@.len(),
-            elements@.len() <= u64::MAX,
-            spec_sum(elements@, idx as int) <= u64::MAX,
-        ensures total == spec_sum(elements@, idx as int),
-        decreases idx,
-    {
-        if idx == 0 {
-            0
-        } else {
-            let rest = rec_sum_helper(elements, idx - 1);
-            rest + elements[idx - 1]
-        }
-    }
-
-    impl StackTrait for RecStack {
+    impl StackTrait for Stack {
         open spec fn spec_stack_wf(&self) -> bool { true }
 
         fn new() -> (s: Self) {
-            RecStack { elements: Vec::new() }
+            Stack { elements: Vec::new() }
         }
 
         fn push(&mut self, val: u64) {
@@ -99,37 +109,10 @@ pub mod trait_rec_vs_iter {
         }
 
         fn sum(&self) -> (total: u64) {
-            rec_sum_helper(&self.elements, self.elements.len())
-        }
-    }
-
-    // Iterative implementation
-
-    pub struct IterStack {
-        pub elements: Vec<u64>,
-    }
-
-    impl View for IterStack {
-        type V = Seq<u64>;
-        open spec fn view(&self) -> Seq<u64> { self.elements@ }
-    }
-
-    impl StackTrait for IterStack {
-        open spec fn spec_stack_wf(&self) -> bool { true }
-
-        fn new() -> (s: Self) {
-            IterStack { elements: Vec::new() }
+            rec_sum_prefix(&self.elements, self.elements.len())
         }
 
-        fn push(&mut self, val: u64) {
-            self.elements.push(val);
-        }
-
-        fn size(&self) -> (n: usize) {
-            self.elements.len()
-        }
-
-        fn sum(&self) -> (total: u64) {
+        fn sum_iter(&self) -> (total: u64) {
             let mut total: u64 = 0;
             let mut i: usize = 0;
             while i < self.elements.len()
