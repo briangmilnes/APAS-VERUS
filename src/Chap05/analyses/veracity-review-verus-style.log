@@ -1,179 +1,179 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent1/src/Chap05/
-Codebase: /home/milnes/projects/APAS-VERUS-agent1
+Path: /home/milnes/projects/APAS-VERUS-agent4/src/Chap05/
+Codebase: /home/milnes/projects/APAS-VERUS-agent4
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS-agent1/src/Chap05/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent4/src/Chap05/analyses/veracity-review-verus-style.log
 
 Checking 5 files...
 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:48: warning: [14] struct KleeneStPer should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:48: warning: [14] struct KleeneStPer should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:1: warning: [17] collection KleeneStPer should have an IntoIterator impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:65: warning: [22] free spec fn in_star should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:70: warning: [22] free spec fn in_plus should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:75: warning: [22] free spec fn viewed should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:75: warning: [23] free fn viewed param T has bounds `View` but trait KleeneStPerTrait has `StT + Hash`
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/KleeneStPer.rs:1: warning: [24] copyright text present but wrong format; got `// Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:48: warning: [14] struct KleeneStPer should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:48: warning: [14] struct KleeneStPer should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:1: warning: [17] collection KleeneStPer should have an IntoIterator impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:65: warning: [22] free spec fn in_star should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:70: warning: [22] free spec fn in_plus should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:75: warning: [22] free spec fn viewed should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:75: warning: [23] free fn viewed param T has bounds `View` but trait KleeneStPerTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/KleeneStPer.rs:1: warning: [24] copyright text present but wrong format; got `// Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:1: info: [15] Clone, Hash, Eq, PartialEq inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:1: info: [17] Iterator<MappingStEph>, IntoIterator<MappingStEph>, runtime test exists, proof test exists
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:481: warning: [14] struct MappingStEphIter should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:481: warning: [14] struct MappingStEphIter should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:518: warning: [14] struct MappingStEphGhostIterator should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:518: warning: [14] struct MappingStEphGhostIterator should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:481: warning: [18] struct MappingStEphIter should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:485: warning: [18] impl View for MappingStEphIter < 'a , X , Y > should come before impls (expected view impls before impls)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:518: warning: [18] struct MappingStEphGhostIterator should come before iterators (expected type definitions before iterators)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:571: warning: [18] impl View for MappingStEphGhostIterator < 'a , X , Y > should come before iterators (expected view impls before iterators)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:101: warning: [22] free spec fn is_functional_set should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:107: warning: [22] free spec fn is_functional_seq should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:111: warning: [22] free spec fn is_functional_seq_at should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:116: warning: [22] free spec fn is_functional_relation should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:120: warning: [22] free spec fn is_functional_set_at should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:134: warning: [22] spec fn spec_finite in trait MappingStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:101: warning: [23] free fn is_functional_set param X has bounds `(none)` but trait MappingStEphTrait has `StT + Hash`
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:101: warning: [23] free fn is_functional_set param Y has bounds `(none)` but trait MappingStEphTrait has `StT + Hash`
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:107: warning: [23] free fn is_functional_seq param X has bounds `View` but trait MappingStEphTrait has `StT + Hash`
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:107: warning: [23] free fn is_functional_seq param Y has bounds `View` but trait MappingStEphTrait has `StT + Hash`
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:111: warning: [23] free fn is_functional_seq_at param X has bounds `View` but trait MappingStEphTrait has `StT + Hash`
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:111: warning: [23] free fn is_functional_seq_at param Y has bounds `View` but trait MappingStEphTrait has `StT + Hash`
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:120: warning: [23] free fn is_functional_set_at param X has bounds `(none)` but trait MappingStEphTrait has `StT + Hash`
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:120: warning: [23] free fn is_functional_set_at param Y has bounds `(none)` but trait MappingStEphTrait has `StT + Hash`
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:1: info: [15] Clone, Hash, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:1: info: [17] Iterator<MappingStEph>, IntoIterator<MappingStEph>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:481: warning: [14] struct MappingStEphIter should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:481: warning: [14] struct MappingStEphIter should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:518: warning: [14] struct MappingStEphGhostIterator should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:518: warning: [14] struct MappingStEphGhostIterator should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:481: warning: [18] struct MappingStEphIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:485: warning: [18] impl View for MappingStEphIter < 'a , X , Y > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:518: warning: [18] struct MappingStEphGhostIterator should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:571: warning: [18] impl View for MappingStEphGhostIterator < 'a , X , Y > should come before iterators (expected view impls before iterators)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:101: warning: [22] free spec fn is_functional_set should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:107: warning: [22] free spec fn is_functional_seq should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:111: warning: [22] free spec fn is_functional_seq_at should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:116: warning: [22] free spec fn is_functional_relation should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:120: warning: [22] free spec fn is_functional_set_at should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:134: warning: [22] spec fn spec_finite in trait MappingStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:101: warning: [23] free fn is_functional_set param X has bounds `(none)` but trait MappingStEphTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:101: warning: [23] free fn is_functional_set param Y has bounds `(none)` but trait MappingStEphTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:107: warning: [23] free fn is_functional_seq param X has bounds `View` but trait MappingStEphTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:107: warning: [23] free fn is_functional_seq param Y has bounds `View` but trait MappingStEphTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:111: warning: [23] free fn is_functional_seq_at param X has bounds `View` but trait MappingStEphTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:111: warning: [23] free fn is_functional_seq_at param Y has bounds `View` but trait MappingStEphTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:120: warning: [23] free fn is_functional_set_at param X has bounds `(none)` but trait MappingStEphTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:120: warning: [23] free fn is_functional_set_at param Y has bounds `(none)` but trait MappingStEphTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/MappingStEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:1: info: [15] Clone, Hash, Eq, PartialEq inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:1: info: [17] Iterator<RelationStEph>, IntoIterator<RelationStEph>, runtime test exists, proof test exists
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:288: warning: [14] struct RelationStEphIter should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:288: warning: [14] struct RelationStEphIter should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:325: warning: [14] struct RelationStEphGhostIterator should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:325: warning: [14] struct RelationStEphGhostIterator should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:288: warning: [18] struct RelationStEphIter should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:292: warning: [18] impl View for RelationStEphIter < 'a , X , Y > should come before impls (expected view impls before impls)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:325: warning: [18] struct RelationStEphGhostIterator should come before iterators (expected type definitions before iterators)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:378: warning: [18] impl View for RelationStEphGhostIterator < 'a , X , Y > should come before iterators (expected view impls before iterators)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:96: warning: [22] spec fn spec_finite in trait RelationStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/RelationStEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:1: info: [15] Clone, Hash, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:1: info: [17] Iterator<RelationStEph>, IntoIterator<RelationStEph>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:288: warning: [14] struct RelationStEphIter should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:288: warning: [14] struct RelationStEphIter should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:325: warning: [14] struct RelationStEphGhostIterator should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:325: warning: [14] struct RelationStEphGhostIterator should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:288: warning: [18] struct RelationStEphIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:292: warning: [18] impl View for RelationStEphIter < 'a , X , Y > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:325: warning: [18] struct RelationStEphGhostIterator should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:378: warning: [18] impl View for RelationStEphGhostIterator < 'a , X , Y > should come before iterators (expected view impls before iterators)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:96: warning: [22] spec fn spec_finite in trait RelationStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/RelationStEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1: info: [14] Display, Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1: info: [15] Clone, Hash, Eq, PartialEq inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1: info: [17] Iterator<SetMtEph>, IntoIterator<SetMtEph>, Iterator<SetMtEphIter>, IntoIterator<SetMtEphIter>, runtime test exists, proof test exists
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:857: warning: [14] struct SetMtEphIter should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:857: warning: [14] struct SetMtEphIter should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:897: warning: [14] struct SetMtEphGhostIterator should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:897: warning: [14] struct SetMtEphGhostIterator should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:975: warning: [14] struct SetMtEphInv should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:975: warning: [14] struct SetMtEphInv should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:984: warning: [14] struct LockedSetMtEph should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:984: warning: [14] struct LockedSetMtEph should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:857: warning: [18] struct SetMtEphIter should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:861: warning: [18] impl View for SetMtEphIter < 'a , T > should come before impls (expected view impls before impls)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:866: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:897: warning: [18] struct SetMtEphGhostIterator should come before iterators (expected type definitions before iterators)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:950: warning: [18] impl View for SetMtEphGhostIterator < 'a , T > should come before iterators (expected view impls before iterators)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:975: warning: [18] struct SetMtEphInv should come before iterators (expected type definitions before iterators)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:984: warning: [18] struct LockedSetMtEph should come before top level coarse locking (expected type definitions before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:989: warning: [18] impl LockedSetMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1000: warning: [18] impl View for LockedSetMtEph < T > should come before top level coarse locking (expected view impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1007: warning: [18] trait LockedSetMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1031: warning: [18] impl LockedSetMtEphTrait for LockedSetMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1020: warning: [19] insert return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1059: warning: [19] insert return name 'r' could be more descriptive
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:98: warning: [22] free spec fn valid_key_type should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:105: warning: [22] free spec fn spec_setmteph_wf_generic should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:137: warning: [22] spec fn spec_finite in trait SetMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:866: warning: [22] free spec fn iter_invariant should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:98: warning: [23] free fn valid_key_type param T has bounds `View + Clone + Eq` but trait SetMtEphTrait has `StT + Hash`
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1: info: [14] Display, Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1: info: [15] Clone, Hash, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1: info: [17] Iterator<SetMtEph>, IntoIterator<SetMtEph>, Iterator<SetMtEphIter>, IntoIterator<SetMtEphIter>, runtime test exists, proof test exists
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:857: warning: [14] struct SetMtEphIter should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:857: warning: [14] struct SetMtEphIter should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:897: warning: [14] struct SetMtEphGhostIterator should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:897: warning: [14] struct SetMtEphGhostIterator should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:975: warning: [14] struct SetMtEphInv should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:975: warning: [14] struct SetMtEphInv should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:984: warning: [14] struct LockedSetMtEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:984: warning: [14] struct LockedSetMtEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:857: warning: [18] struct SetMtEphIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:861: warning: [18] impl View for SetMtEphIter < 'a , T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:866: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:897: warning: [18] struct SetMtEphGhostIterator should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:950: warning: [18] impl View for SetMtEphGhostIterator < 'a , T > should come before iterators (expected view impls before iterators)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:975: warning: [18] struct SetMtEphInv should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:984: warning: [18] struct LockedSetMtEph should come before top level coarse locking (expected type definitions before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:989: warning: [18] impl LockedSetMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1000: warning: [18] impl View for LockedSetMtEph < T > should come before top level coarse locking (expected view impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1007: warning: [18] trait LockedSetMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1031: warning: [18] impl LockedSetMtEphTrait for LockedSetMtEph < T > should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1020: warning: [19] insert return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1059: warning: [19] insert return name 'r' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:98: warning: [22] free spec fn valid_key_type should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:105: warning: [22] free spec fn spec_setmteph_wf_generic should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:137: warning: [22] spec fn spec_finite in trait SetMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:866: warning: [22] free spec fn iter_invariant should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:98: warning: [23] free fn valid_key_type param T has bounds `View + Clone + Eq` but trait SetMtEphTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetMtEph.rs:1: warning: [24] copyright text present but wrong format; got `//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:1: info: [4] no std imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:1: info: [14] Display, Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:1: info: [15] Clone, Hash, Eq, PartialEq inside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:1: info: [16] Lit macro definitions at end of file
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:769: warning: [14] struct SetStEphIter should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:769: warning: [14] struct SetStEphIter should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:813: warning: [14] struct SetStEphGhostIterator should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:813: warning: [14] struct SetStEphGhostIterator should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:769: warning: [18] struct SetStEphIter should come before impls (expected type definitions before impls)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:773: warning: [18] impl View for SetStEphIter < 'a , T > should come before impls (expected view impls before impls)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:780: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:813: warning: [18] struct SetStEphGhostIterator should come before iterators (expected type definitions before iterators)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:866: warning: [18] impl View for SetStEphGhostIterator < 'a , T > should come before iterators (expected view impls before iterators)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:90: warning: [22] free spec fn valid_key_type should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:97: warning: [22] free spec fn spec_setsteph_wf_generic should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:780: warning: [22] free spec fn iter_invariant should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:90: warning: [23] free fn valid_key_type param T has bounds `View + Clone + Eq` but trait SetStEphTrait has `StT + Hash`
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:1: warning: [24] copyright text present but wrong format; got `// Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:1: info: [4] no std imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:1: info: [14] Display, Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:1: info: [15] Clone, Hash, Eq, PartialEq inside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:1: info: [16] Lit macro definitions at end of file
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:778: warning: [14] struct SetStEphIter should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:778: warning: [14] struct SetStEphIter should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:822: warning: [14] struct SetStEphGhostIterator should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:822: warning: [14] struct SetStEphGhostIterator should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:778: warning: [18] struct SetStEphIter should come before impls (expected type definitions before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:782: warning: [18] impl View for SetStEphIter < 'a , T > should come before impls (expected view impls before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:789: warning: [18] spec fn iter_invariant should come before impls (expected spec fns before impls)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:822: warning: [18] struct SetStEphGhostIterator should come before iterators (expected type definitions before iterators)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:875: warning: [18] impl View for SetStEphGhostIterator < 'a , T > should come before iterators (expected view impls before iterators)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:90: warning: [22] free spec fn valid_key_type should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:97: warning: [22] free spec fn spec_setsteph_wf_generic should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:789: warning: [22] free spec fn iter_invariant should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:90: warning: [23] free fn valid_key_type param T has bounds `View + Clone + Eq` but trait SetStEphTrait has `StT + Hash`
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap05/SetStEph.rs:1: warning: [24] copyright text present but wrong format; got `// Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.`
 
 ════════════════════════════════════════════════════════════════
 Summary: 75 passed, 82 warnings in 5 files (checked 5 files)

@@ -22,7 +22,7 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap58 | BellmanFordStEphI64 | 1 | 0 | 0 | 2 | 1 | 1 | 0 | 0 | 2 |
+| 1 | Chap58 | BellmanFordStEphI64 | 1 | 0 | 0 | 4 | 4 | 0 | 4 | 0 | 0 |
 
 ## Function-by-Function Detail
 
@@ -30,8 +30,10 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `bellman_ford` | Y |  |  | Y | Y |  | Y |  | 26&#8209;27 |
-| 2 | `reconstruct_predecessors` |  |  |  | Y |  | Y | Y |  | 71&#8209;92 |
+| 1 | `bellman_ford` | Y |  |  | Y | Y |  |  | unknown | 47&#8209;55 |
+| 2 | `clamp_weight` |  |  |  | Y | Y |  |  | unknown | 64&#8209;68 |
+| 3 | `add_distance` |  |  |  | Y | Y |  |  | unknown | 79&#8209;85 |
+| 4 | `reconstruct_predecessors` |  |  |  | Y | Y |  |  | unknown | 96&#8209;116 |
 
 
 ### Legend

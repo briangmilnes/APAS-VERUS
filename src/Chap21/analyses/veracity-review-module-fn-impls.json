@@ -43,9 +43,9 @@
     "id": 6,
     "function": "primes_bf",
     "file": "Chap21/Algorithm21_5.rs",
-    "lines": "46-55",
+    "lines": "46-54",
     "spec_strength": "unknown",
-    "snippet": "    pub fn primes_bf(n: N) -> (primes: ArraySeqStPerS<N>)\n        requires true,\n        ensures\n            n <= 2 ==> primes.spec_len() == 0,\n            n > 2  ==> primes.spec_len() <= n - 2,\n            forall|i: int| 0 <= i < primes.spec_len()\n                ==> spec_is_prime(#[trigger] primes.spec_index(i) as int),\n            forall|p: int| 2 <= p < n as int && spec_is_prime(p) ==>\n                Seq::new(primes.spec_len(), |i: int| primes.spec_index(i))\n                    .contains(#[trigger] (p as N)),"
+    "snippet": "    pub fn primes_bf(n: N) -> (primes: ArraySeqStPerS<N>)\n        ensures\n            n <= 2 ==> primes.spec_len() == 0,\n            n > 2  ==> primes.spec_len() <= n - 2,\n            forall|i: int| 0 <= i < primes.spec_len()\n                ==> spec_is_prime(#[trigger] primes.spec_index(i) as int),\n            forall|p: int| 2 <= p < n as int && spec_is_prime(p) ==>\n                Seq::new(primes.spec_len(), |i: int| primes.spec_index(i))\n                    .contains(#[trigger] (p as N)),"
   },
   {
     "id": 7,
@@ -83,17 +83,17 @@
     "id": 11,
     "function": "is_even",
     "file": "Chap21/Exercise21_7.rs",
-    "lines": "47-49",
+    "lines": "48-49",
     "spec_strength": "unknown",
-    "snippet": "    pub fn is_even(x: &N) -> (r: B)\n        requires true,\n        ensures r == spec_is_even(*x as int)"
+    "snippet": "    pub fn is_even(x: &N) -> (r: B)\n        ensures r == spec_is_even(*x as int)"
   },
   {
     "id": 12,
     "function": "is_vowel",
     "file": "Chap21/Exercise21_7.rs",
-    "lines": "61-63",
+    "lines": "62-63",
     "spec_strength": "unknown",
-    "snippet": "    pub fn is_vowel(c: &char) -> (r: B)\n        requires true,\n        ensures r == spec_is_vowel(*c)"
+    "snippet": "    pub fn is_vowel(c: &char) -> (r: B)\n        ensures r == spec_is_vowel(*c)"
   },
   {
     "id": 13,
@@ -155,9 +155,9 @@
     "id": 20,
     "function": "is_prime",
     "file": "Chap21/Exercise21_8.rs",
-    "lines": "176-178",
+    "lines": "177-178",
     "spec_strength": "unknown",
-    "snippet": "    pub fn is_prime(n: N) -> (prime: B)\n        requires true,\n        ensures prime == spec_is_prime(n as int)"
+    "snippet": "    pub fn is_prime(n: N) -> (prime: B)\n        ensures prime == spec_is_prime(n as int)"
   },
   {
     "id": 21,

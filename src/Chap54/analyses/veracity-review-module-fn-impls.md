@@ -91,9 +91,9 @@
 | 41 | `lemma_tabulate_all_unreachable` |  |  |  | Y | Y |  |  | unknown | 98&#8209;104 |
 | 42 | `lemma_update_preserves_bounded` |  |  |  | Y | Y |  |  | unknown | 108&#8209;125 |
 | 43 | `bfs` | Y | Y |  |  | Y |  |  | unknown | 143&#8209;156 |
-| 44 | `bfs_tree` | Y | Y |  |  | Y |  |  | unknown | 160&#8209;178 |
-| 45 | `top_down_order` | Y | Y |  |  | Y |  |  | unknown | 184&#8209;188 |
-| 46 | `bottom_up_order` | Y | Y |  |  | Y |  |  | unknown | 190&#8209;195 |
+| 44 | `bfs_tree` | Y | Y |  |  | Y |  |  | unknown | 160&#8209;179 |
+| 45 | `top_down_order` | Y | Y |  |  | Y |  |  | unknown | 185&#8209;189 |
+| 46 | `bottom_up_order` | Y | Y |  |  | Y |  |  | unknown | 191&#8209;196 |
 
 
 ### Legend

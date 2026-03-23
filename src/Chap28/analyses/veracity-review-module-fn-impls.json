@@ -91,9 +91,9 @@
     "id": 12,
     "function": "max_with_neginf",
     "file": "Chap28/MaxContigSubSumBruteStEph.rs",
-    "lines": "69-72",
+    "lines": "70-72",
     "spec_strength": "unknown",
-    "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        requires true,\n        ensures\n            max == spec_max_opt_i32(a, b),"
+    "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        ensures\n            max == spec_max_opt_i32(a, b),"
   },
   {
     "id": 13,
@@ -107,15 +107,15 @@
     "id": 14,
     "function": "max_with_neginf",
     "file": "Chap28/MaxContigSubSumDivConMtEph.rs",
-    "lines": "61-63",
+    "lines": "64-65",
     "spec_strength": "unknown",
-    "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        requires true,\n        ensures max == spec_max_opt_i32(a, b),"
+    "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        ensures max == spec_max_opt_i32(a, b),"
   },
   {
     "id": 15,
     "function": "max_suffix_sum",
     "file": "Chap28/MaxContigSubSumDivConMtEph.rs",
-    "lines": "73-75",
+    "lines": "78-80",
     "spec_strength": "unknown",
     "snippet": "    fn max_suffix_sum(a: &ArraySeqMtEphS<i32>) -> (mss: i32)\n        requires a.seq@.len() > 0, sums_fit_i32(a.seq@),\n        ensures is_max_suffix_sum(a.seq@, mss as int),"
   },
@@ -123,7 +123,7 @@
     "id": 16,
     "function": "max_prefix_sum",
     "file": "Chap28/MaxContigSubSumDivConMtEph.rs",
-    "lines": "123-125",
+    "lines": "131-133",
     "spec_strength": "unknown",
     "snippet": "    fn max_prefix_sum(a: &ArraySeqMtEphS<i32>) -> (mps: i32)\n        requires a.seq@.len() > 0, sums_fit_i32(a.seq@),\n        ensures is_max_prefix_sum(a.seq@, mps as int),"
   },
@@ -139,15 +139,15 @@
     "id": 18,
     "function": "max_with_neginf",
     "file": "Chap28/MaxContigSubSumDivConOptMtEph.rs",
-    "lines": "67-69",
+    "lines": "70-71",
     "spec_strength": "unknown",
-    "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        requires true,\n        ensures max == spec_max_opt_i32(a, b),"
+    "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        ensures max == spec_max_opt_i32(a, b),"
   },
   {
     "id": 19,
     "function": "max_contig_sub_sum_aux",
     "file": "Chap28/MaxContigSubSumDivConOptMtEph.rs",
-    "lines": "79-87",
+    "lines": "84-92",
     "spec_strength": "unknown",
     "snippet": "    fn max_contig_sub_sum_aux(a: &ArraySeqMtEphS<i32>) -> (mcss: StrengthResult)\n        requires a.seq@.len() > 0, sums_fit_i32(a.seq@), obeys_feq_clone::<i32>(),\n        ensures\n            mcss.0.is_some(),\n            is_mcss_of(a.seq@, mcss.0.unwrap() as int),\n            is_max_prefix_sum(a.seq@, mcss.1 as int),\n            is_max_suffix_sum(a.seq@, mcss.2 as int),\n            mcss.3 as int == spec_range_sum(a.seq@, 0, a.seq@.len() as int),\n        decreases a.seq@.len(),"
   },
@@ -171,15 +171,15 @@
     "id": 22,
     "function": "max_with_neginf",
     "file": "Chap28/MaxContigSubSumDivConOptStEph.rs",
-    "lines": "277-279",
+    "lines": "280-281",
     "spec_strength": "unknown",
-    "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        requires true,\n        ensures max == spec_max_opt_i32(a, b),"
+    "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        ensures max == spec_max_opt_i32(a, b),"
   },
   {
     "id": 23,
     "function": "max_contig_sub_sum_aux",
     "file": "Chap28/MaxContigSubSumDivConOptStEph.rs",
-    "lines": "292-302",
+    "lines": "294-304",
     "spec_strength": "unknown",
     "snippet": "    fn max_contig_sub_sum_aux(a: &ArraySeqStEphS<i32>) -> (mcss: StrengthResult)\n        requires\n            a.seq@.len() > 0,\n            sums_fit_i32(a.seq@),\n        ensures\n            mcss.0.is_some(),\n            is_mcss_of(a.seq@, mcss.0.unwrap() as int),\n            is_max_prefix_sum(a.seq@, mcss.1 as int),\n            is_max_suffix_sum(a.seq@, mcss.2 as int),\n            mcss.3 as int == spec_range_sum(a.seq@, 0, a.seq@.len() as int),\n        decreases a.seq@.len(),"
   },
@@ -203,15 +203,15 @@
     "id": 26,
     "function": "max_with_neginf",
     "file": "Chap28/MaxContigSubSumDivConStEph.rs",
-    "lines": "168-170",
+    "lines": "171-172",
     "spec_strength": "unknown",
-    "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        requires true,\n        ensures max == spec_max_opt_i32(a, b),"
+    "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        ensures max == spec_max_opt_i32(a, b),"
   },
   {
     "id": 27,
     "function": "max_suffix_sum",
     "file": "Chap28/MaxContigSubSumDivConStEph.rs",
-    "lines": "185-190",
+    "lines": "187-192",
     "spec_strength": "unknown",
     "snippet": "    fn max_suffix_sum(a: &ArraySeqStEphS<i32>) -> (mss: i32)\n        requires\n            a.seq@.len() > 0,\n            sums_fit_i32(a.seq@),\n        ensures\n            is_max_suffix_sum(a.seq@, mss as int),"
   },
@@ -219,7 +219,7 @@
     "id": 28,
     "function": "max_prefix_sum",
     "file": "Chap28/MaxContigSubSumDivConStEph.rs",
-    "lines": "261-266",
+    "lines": "263-268",
     "spec_strength": "unknown",
     "snippet": "    fn max_prefix_sum(a: &ArraySeqStEphS<i32>) -> (mps: i32)\n        requires\n            a.seq@.len() > 0,\n            sums_fit_i32(a.seq@),\n        ensures\n            is_max_prefix_sum(a.seq@, mps as int),"
   },
@@ -251,9 +251,9 @@
     "id": 32,
     "function": "max_with_neginf",
     "file": "Chap28/MaxContigSubSumIterStEph.rs",
-    "lines": "147-149",
+    "lines": "148-149",
     "spec_strength": "unknown",
-    "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        requires true,\n        ensures max == spec_max_opt_i32(a, b),"
+    "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        ensures max == spec_max_opt_i32(a, b),"
   },
   {
     "id": 33,
@@ -291,9 +291,9 @@
     "id": 37,
     "function": "max_with_neginf",
     "file": "Chap28/MaxContigSubSumReducedMcsseStEph.rs",
-    "lines": "68-70",
+    "lines": "69-70",
     "spec_strength": "unknown",
-    "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        requires true,\n        ensures max == spec_max_opt_i32(a, b),"
+    "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        ensures max == spec_max_opt_i32(a, b),"
   },
   {
     "id": 38,
@@ -307,8 +307,8 @@
     "id": 39,
     "function": "max_with_neginf",
     "file": "Chap28/MaxContigSubSumReducedStEph.rs",
-    "lines": "65-67",
+    "lines": "66-67",
     "spec_strength": "unknown",
-    "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        requires true,\n        ensures max == spec_max_opt_i32(a, b),"
+    "snippet": "    fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)\n        ensures max == spec_max_opt_i32(a, b),"
   }
 ]

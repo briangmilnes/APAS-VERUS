@@ -23,10 +23,10 @@
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
 | 1 | Chap05 | KleeneStPer | 4 | 4 | 0 | 9 | 13 | 0 | 13 | 0 | 0 |
-| 2 | Chap05 | MappingStEph | 13 | 16 | 0 | 0 | 16 | 0 | 15 | 0 | 1 |
+| 2 | Chap05 | MappingStEph | 13 | 16 | 0 | 0 | 16 | 0 | 14 | 1 | 1 |
 | 3 | Chap05 | RelationStEph | 9 | 12 | 0 | 0 | 12 | 0 | 11 | 0 | 1 |
-| 4 | Chap05 | SetMtEph | 17 | 20 | 0 | 1 | 21 | 0 | 20 | 0 | 1 |
-| 5 | Chap05 | SetStEph | 18 | 21 | 0 | 1 | 22 | 0 | 21 | 0 | 1 |
+| 4 | Chap05 | SetMtEph | 17 | 20 | 0 | 1 | 21 | 0 | 15 | 5 | 1 |
+| 5 | Chap05 | SetStEph | 18 | 21 | 0 | 1 | 22 | 0 | 20 | 1 | 1 |
 
 ## Function-by-Function Detail
 
@@ -52,22 +52,22 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 14 | `is_functional_vec` | Y | Y |  |  | Y |  |  | unknown | 143&#8209;145 |
-| 15 | `is_functional_vec_at` | Y | Y |  |  | Y |  |  | unknown | 149&#8209;151 |
-| 16 | `is_functional_SetStEph_at` | Y | Y |  |  | Y |  |  | unknown | 155&#8209;157 |
-| 17 | `is_functional_SetStEph` | Y | Y |  |  | Y |  |  | unknown | 161&#8209;163 |
-| 18 | `is_functional_RelationStEph` | Y | Y |  |  | Y |  |  | unknown | 167&#8209;169 |
-| 19 | `empty` | Y | Y |  |  | Y |  |  | unknown | 173&#8209;177 |
-| 20 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 181&#8209;183 |
-| 21 | `from_relation` | Y | Y |  |  | Y |  |  | unknown | 187&#8209;189 |
-| 22 | `size` | Y | Y |  |  | Y |  |  | unknown | 193&#8209;194 |
-| 23 | `domain` | Y | Y |  |  | Y |  |  | unknown | 198&#8209;200 |
-| 24 | `range` | Y | Y |  |  | Y |  |  | unknown | 205&#8209;210 |
-| 25 | `mem` | Y | Y |  |  | Y |  |  | unknown | 215&#8209;219 |
-| 26 | `iter` | Y | Y |  |  | Y |  |  | unknown | 223&#8209;229 |
-| 27 | `next` |  | Y |  |  | Y |  |  | unknown | 464&#8209;480 |
-| 28 | `hash` |  | Y |  |  | Y |  | Y |  | 575 |
-| 29 | `eq` |  | Y |  |  | Y |  |  | unknown | 581&#8209;582 |
+| 14 | `is_functional_vec` | Y | Y |  |  | Y |  |  | unknown | 142&#8209;144 |
+| 15 | `is_functional_vec_at` | Y | Y |  |  | Y |  |  | unknown | 148&#8209;150 |
+| 16 | `is_functional_SetStEph_at` | Y | Y |  |  | Y |  |  | unknown | 154&#8209;156 |
+| 17 | `is_functional_SetStEph` | Y | Y |  |  | Y |  |  | unknown | 160&#8209;162 |
+| 18 | `is_functional_RelationStEph` | Y | Y |  |  | Y |  |  | unknown | 166&#8209;168 |
+| 19 | `empty` | Y | Y |  |  | Y |  |  | unknown | 172&#8209;176 |
+| 20 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 180&#8209;185 |
+| 21 | `from_relation` | Y | Y |  |  | Y |  |  | unknown | 189&#8209;194 |
+| 22 | `size` | Y | Y |  |  | Y |  |  | unknown | 198&#8209;200 |
+| 23 | `domain` | Y | Y |  |  | Y |  |  | unknown | 204&#8209;206 |
+| 24 | `range` | Y | Y |  |  | Y |  |  | unknown | 211&#8209;216 |
+| 25 | `mem` | Y | Y |  |  | Y |  |  | unknown | 221&#8209;225 |
+| 26 | `iter` | Y | Y |  |  | Y |  |  | unknown | 229&#8209;235 |
+| 27 | `next` |  | Y |  |  | Y |  |  | unknown | 493&#8209;509 |
+| 28 | `hash` |  | Y |  |  | Y |  | Y |  | 604 |
+| 29 | `eq` |  | Y |  |  | Y |  |  | hole | 610&#8209;611 |
 
 ### Chap05/RelationStEph.rs
 
@@ -90,35 +90,35 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 42 | `lemma_singleton_choose` |  |  |  | Y | Y |  |  | unknown | 114&#8209;120 |
-| 43 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 144&#8209;146 |
-| 44 | `iter` | Y | Y |  |  | Y |  |  | unknown | 150&#8209;155 |
-| 45 | `to_seq` | Y | Y |  |  | Y |  |  | unknown | 159&#8209;163 |
-| 46 | `empty` x3 | Y | Y |  |  | Y |  |  | unknown | 1011&#8209;1013 |
-| 47 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 173&#8209;175 |
-| 48 | `size` x3 | Y | Y |  |  | Y |  |  | unknown | 1015&#8209;1016 |
-| 49 | `mem` x3 | Y | Y |  |  | Y |  |  | unknown | 1018&#8209;1019 |
-| 50 | `insert` x3 | Y | Y |  |  | Y |  |  | unknown | 1021&#8209;1025 |
-| 51 | `union` | Y | Y |  |  | Y |  |  | unknown | 200&#8209;204 |
-| 52 | `disjoint_union` | Y | Y |  |  | Y |  |  | unknown | 209&#8209;217 |
-| 53 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 221&#8209;225 |
-| 54 | `elt_cross_set` | Y | Y |  |  | Y |  |  | unknown | 229&#8209;236 |
-| 55 | `cartesian_product` | Y | Y |  |  | Y |  |  | unknown | 240&#8209;248 |
-| 56 | `all_nonempty` | Y | Y |  |  | Y |  |  | unknown | 252&#8209;257 |
-| 57 | `partition_on_elt` | Y | Y |  |  | Y |  |  | unknown | 261&#8209;272 |
-| 58 | `partition` | Y | Y |  |  | Y |  |  | unknown | 276&#8209;290 |
-| 59 | `choose` x3 | Y | Y |  |  | Y |  |  | unknown | 1027&#8209;1029 |
-| 60 | `next` |  | Y |  |  | Y |  |  | unknown | 874&#8209;890 |
-| 61 | `hash` |  | Y |  |  | Y |  | Y |  | 1089 |
-| 62 | `eq` |  | Y |  |  | Y |  |  | unknown | 1095&#8209;1096 |
+| 42 | `lemma_singleton_choose` |  |  |  | Y | Y |  |  | unknown | 113&#8209;119 |
+| 43 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 143&#8209;145 |
+| 44 | `iter` | Y | Y |  |  | Y |  |  | unknown | 149&#8209;154 |
+| 45 | `to_seq` | Y | Y |  |  | Y |  |  | unknown | 158&#8209;162 |
+| 46 | `empty` x3 | Y | Y |  |  | Y |  |  | unknown | 1010&#8209;1012 |
+| 47 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 172&#8209;174 |
+| 48 | `size` x3 | Y | Y |  |  | Y |  |  | hole | 1014&#8209;1015 |
+| 49 | `mem` x3 | Y | Y |  |  | Y |  |  | hole | 1017&#8209;1018 |
+| 50 | `insert` x3 | Y | Y |  |  | Y |  |  | hole | 1020&#8209;1024 |
+| 51 | `union` | Y | Y |  |  | Y |  |  | unknown | 199&#8209;203 |
+| 52 | `disjoint_union` | Y | Y |  |  | Y |  |  | unknown | 208&#8209;216 |
+| 53 | `intersection` | Y | Y |  |  | Y |  |  | unknown | 220&#8209;224 |
+| 54 | `elt_cross_set` | Y | Y |  |  | Y |  |  | unknown | 228&#8209;235 |
+| 55 | `cartesian_product` | Y | Y |  |  | Y |  |  | unknown | 239&#8209;247 |
+| 56 | `all_nonempty` | Y | Y |  |  | Y |  |  | unknown | 251&#8209;256 |
+| 57 | `partition_on_elt` | Y | Y |  |  | Y |  |  | unknown | 260&#8209;271 |
+| 58 | `partition` | Y | Y |  |  | Y |  |  | unknown | 275&#8209;289 |
+| 59 | `choose` x3 | Y | Y |  |  | Y |  |  | hole | 1026&#8209;1028 |
+| 60 | `next` |  | Y |  |  | Y |  |  | unknown | 873&#8209;889 |
+| 61 | `hash` |  | Y |  |  | Y |  | Y |  | 1088 |
+| 62 | `eq` |  | Y |  |  | Y |  |  | hole | 1094&#8209;1095 |
 
 ### Chap05/SetStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 63 | `lemma_singleton_choose` |  |  |  | Y | Y |  |  | unknown | 106&#8209;112 |
-| 64 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 131&#8209;133 |
-| 65 | `iter` | Y | Y |  |  | Y |  |  | unknown | 137&#8209;142 |
+| 63 | `lemma_singleton_choose` |  |  |  | Y | Y |  |  | unknown | 105&#8209;111 |
+| 64 | `from_vec` | Y | Y |  |  | Y |  |  | unknown | 130&#8209;132 |
+| 65 | `iter` | Y | Y |  |  | Y |  |  | unknown | 136&#8209;142 |
 | 66 | `to_seq` | Y | Y |  |  | Y |  |  | unknown | 146&#8209;150 |
 | 67 | `empty` | Y | Y |  |  | Y |  |  | unknown | 154&#8209;156 |
 | 68 | `singleton` | Y | Y |  |  | Y |  |  | unknown | 160&#8209;162 |
@@ -135,9 +135,9 @@
 | 79 | `partition` | Y | Y |  |  | Y |  |  | unknown | 262&#8209;276 |
 | 80 | `split` | Y | Y |  |  | Y |  |  | unknown | 281&#8209;293 |
 | 81 | `choose` | Y | Y |  |  | Y |  |  | unknown | 299&#8209;304 |
-| 82 | `next` |  | Y |  |  | Y |  |  | unknown | 790&#8209;806 |
-| 83 | `hash` |  | Y |  |  | Y |  | Y |  | 885 |
-| 84 | `eq` |  | Y |  |  | Y |  |  | unknown | 891&#8209;892 |
+| 82 | `next` |  | Y |  |  | Y |  |  | unknown | 798&#8209;814 |
+| 83 | `hash` |  | Y |  |  | Y |  | Y |  | 893 |
+| 84 | `eq` |  | Y |  |  | Y |  |  | hole | 899&#8209;900 |
 
 
 ### Legend

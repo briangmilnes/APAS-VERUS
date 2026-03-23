@@ -25,11 +25,11 @@
 | 1 | Chap52 | AdjMatrixGraphMtEph | 9 | 9 | 0 | 3 | 12 | 0 | 12 | 0 | 0 |
 | 2 | Chap52 | AdjMatrixGraphMtPer | 7 | 7 | 0 | 3 | 10 | 0 | 10 | 0 | 0 |
 | 3 | Chap52 | AdjMatrixGraphStEph | 9 | 9 | 0 | 3 | 12 | 0 | 12 | 0 | 0 |
-| 4 | Chap52 | AdjMatrixGraphStPer | 9 | 10 | 0 | 3 | 13 | 0 | 13 | 0 | 0 |
+| 4 | Chap52 | AdjMatrixGraphStPer | 9 | 10 | 0 | 3 | 13 | 0 | 12 | 1 | 0 |
 | 5 | Chap52 | AdjSeqGraphMtEph | 7 | 7 | 0 | 2 | 9 | 0 | 9 | 0 | 0 |
 | 6 | Chap52 | AdjSeqGraphMtPer | 6 | 6 | 0 | 2 | 8 | 0 | 8 | 0 | 0 |
 | 7 | Chap52 | AdjSeqGraphStEph | 9 | 9 | 0 | 2 | 11 | 0 | 11 | 0 | 0 |
-| 8 | Chap52 | AdjSeqGraphStPer | 9 | 10 | 0 | 2 | 12 | 0 | 12 | 0 | 0 |
+| 8 | Chap52 | AdjSeqGraphStPer | 9 | 10 | 0 | 2 | 12 | 0 | 11 | 1 | 0 |
 | 9 | Chap52 | AdjTableGraphMtPer | 10 | 11 | 0 | 0 | 11 | 0 | 10 | 0 | 1 |
 | 10 | Chap52 | AdjTableGraphStEph | 12 | 12 | 0 | 1 | 13 | 0 | 13 | 0 | 0 |
 | 11 | Chap52 | AdjTableGraphStPer | 12 | 12 | 0 | 0 | 12 | 0 | 12 | 0 | 0 |
@@ -78,33 +78,33 @@
 | 23 | `lemma_count_true_monotone` |  |  |  | Y | Y |  |  | unknown | 72&#8209;75 |
 | 24 | `lemma_sum_of_monotone` |  |  |  | Y | Y |  |  | unknown | 82&#8209;85 |
 | 25 | `lemma_count_true_bound` |  |  |  | Y | Y |  |  | unknown | 92&#8209;95 |
-| 26 | `new` | Y | Y |  |  | Y |  |  | unknown | 111&#8209;116 |
-| 27 | `from_matrix` | Y | Y |  |  | Y |  |  | unknown | 119&#8209;128 |
-| 28 | `num_vertices` | Y | Y |  |  | Y |  |  | unknown | 131&#8209;133 |
-| 29 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 136&#8209;147 |
-| 30 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 150&#8209;152 |
-| 31 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 155&#8209;163 |
-| 32 | `out_degree` | Y | Y |  |  | Y |  |  | unknown | 166&#8209;171 |
-| 33 | `set_edge` | Y | Y |  |  | Y |  |  | unknown | 174&#8209;186 |
-| 34 | `complement` | Y | Y |  |  | Y |  |  | unknown | 189&#8209;196 |
+| 26 | `new` | Y | Y |  |  | Y |  |  | unknown | 112&#8209;117 |
+| 27 | `from_matrix` | Y | Y |  |  | Y |  |  | unknown | 121&#8209;130 |
+| 28 | `num_vertices` | Y | Y |  |  | Y |  |  | unknown | 134&#8209;136 |
+| 29 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 140&#8209;151 |
+| 30 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 155&#8209;157 |
+| 31 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 161&#8209;169 |
+| 32 | `out_degree` | Y | Y |  |  | Y |  |  | unknown | 173&#8209;178 |
+| 33 | `set_edge` | Y | Y |  |  | Y |  |  | unknown | 182&#8209;194 |
+| 34 | `complement` | Y | Y |  |  | Y |  |  | unknown | 198&#8209;205 |
 
 ### Chap52/AdjMatrixGraphStPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 35 | `lemma_count_true_monotone` |  |  |  | Y | Y |  |  | unknown | 78&#8209;81 |
-| 36 | `lemma_sum_of_monotone` |  |  |  | Y | Y |  |  | unknown | 88&#8209;91 |
-| 37 | `lemma_count_true_bound` |  |  |  | Y | Y |  |  | unknown | 98&#8209;101 |
-| 38 | `new` | Y | Y |  |  | Y |  |  | unknown | 117&#8209;122 |
-| 39 | `from_matrix` | Y | Y |  |  | Y |  |  | unknown | 125&#8209;134 |
-| 40 | `num_vertices` | Y | Y |  |  | Y |  |  | unknown | 137&#8209;139 |
-| 41 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 142&#8209;153 |
-| 42 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 156&#8209;158 |
-| 43 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 161&#8209;169 |
-| 44 | `out_degree` | Y | Y |  |  | Y |  |  | unknown | 172&#8209;177 |
-| 45 | `set_edge` | Y | Y |  |  | Y |  |  | unknown | 180&#8209;192 |
-| 46 | `complement` | Y | Y |  |  | Y |  |  | unknown | 195&#8209;202 |
-| 47 | `eq` |  | Y |  |  | Y |  |  | unknown | 474&#8209;475 |
+| 35 | `lemma_count_true_monotone` |  |  |  | Y | Y |  |  | unknown | 77&#8209;80 |
+| 36 | `lemma_sum_of_monotone` |  |  |  | Y | Y |  |  | unknown | 87&#8209;90 |
+| 37 | `lemma_count_true_bound` |  |  |  | Y | Y |  |  | unknown | 97&#8209;100 |
+| 38 | `new` | Y | Y |  |  | Y |  |  | unknown | 116&#8209;121 |
+| 39 | `from_matrix` | Y | Y |  |  | Y |  |  | unknown | 124&#8209;133 |
+| 40 | `num_vertices` | Y | Y |  |  | Y |  |  | unknown | 136&#8209;138 |
+| 41 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 141&#8209;152 |
+| 42 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 155&#8209;157 |
+| 43 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 160&#8209;168 |
+| 44 | `out_degree` | Y | Y |  |  | Y |  |  | unknown | 171&#8209;176 |
+| 45 | `set_edge` | Y | Y |  |  | Y |  |  | unknown | 179&#8209;191 |
+| 46 | `complement` | Y | Y |  |  | Y |  |  | unknown | 194&#8209;201 |
+| 47 | `eq` |  | Y |  |  | Y |  |  | hole | 473&#8209;474 |
 
 ### Chap52/AdjSeqGraphMtEph.rs
 
@@ -139,32 +139,32 @@
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
 | 65 | `lemma_sum_of_monotone` |  |  |  | Y | Y |  |  | unknown | 60&#8209;63 |
 | 66 | `lemma_sum_of_unfold` |  |  |  | Y | Y |  |  | unknown | 71&#8209;73 |
-| 67 | `new` | Y | Y |  |  | Y |  |  | unknown | 88&#8209;92 |
-| 68 | `from_seq` | Y | Y |  |  | Y |  |  | unknown | 95&#8209;108 |
-| 69 | `num_vertices` | Y | Y |  |  | Y |  |  | unknown | 111&#8209;113 |
-| 70 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 116&#8209;127 |
-| 71 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 130&#8209;134 |
-| 72 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 137&#8209;142 |
-| 73 | `out_degree` | Y | Y |  |  | Y |  |  | unknown | 145&#8209;147 |
-| 74 | `set_neighbors` | Y | Y |  |  | Y |  |  | unknown | 150&#8209;167 |
-| 75 | `set_edge` | Y | Y |  |  | Y |  |  | unknown | 170&#8209;189 |
+| 67 | `new` | Y | Y |  |  | Y |  |  | unknown | 89&#8209;93 |
+| 68 | `from_seq` | Y | Y |  |  | Y |  |  | unknown | 97&#8209;110 |
+| 69 | `num_vertices` | Y | Y |  |  | Y |  |  | unknown | 114&#8209;116 |
+| 70 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 120&#8209;131 |
+| 71 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 135&#8209;139 |
+| 72 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 143&#8209;148 |
+| 73 | `out_degree` | Y | Y |  |  | Y |  |  | unknown | 152&#8209;154 |
+| 74 | `set_neighbors` | Y | Y |  |  | Y |  |  | unknown | 158&#8209;175 |
+| 75 | `set_edge` | Y | Y |  |  | Y |  |  | unknown | 179&#8209;198 |
 
 ### Chap52/AdjSeqGraphStPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 76 | `lemma_sum_of_monotone` |  |  |  | Y | Y |  |  | unknown | 64&#8209;67 |
-| 77 | `lemma_sum_of_unfold` |  |  |  | Y | Y |  |  | unknown | 75&#8209;77 |
-| 78 | `new` | Y | Y |  |  | Y |  |  | unknown | 92&#8209;96 |
-| 79 | `from_seq` | Y | Y |  |  | Y |  |  | unknown | 99&#8209;112 |
-| 80 | `num_vertices` | Y | Y |  |  | Y |  |  | unknown | 115&#8209;117 |
-| 81 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 120&#8209;131 |
-| 82 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 134&#8209;138 |
-| 83 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 141&#8209;146 |
-| 84 | `out_degree` | Y | Y |  |  | Y |  |  | unknown | 149&#8209;151 |
-| 85 | `insert_edge` | Y | Y |  |  | Y |  |  | unknown | 154&#8209;170 |
-| 86 | `delete_edge` | Y | Y |  |  | Y |  |  | unknown | 173&#8209;186 |
-| 87 | `eq` |  | Y |  |  | Y |  |  | unknown | 510&#8209;511 |
+| 76 | `lemma_sum_of_monotone` |  |  |  | Y | Y |  |  | unknown | 63&#8209;66 |
+| 77 | `lemma_sum_of_unfold` |  |  |  | Y | Y |  |  | unknown | 74&#8209;76 |
+| 78 | `new` | Y | Y |  |  | Y |  |  | unknown | 91&#8209;95 |
+| 79 | `from_seq` | Y | Y |  |  | Y |  |  | unknown | 98&#8209;111 |
+| 80 | `num_vertices` | Y | Y |  |  | Y |  |  | unknown | 114&#8209;116 |
+| 81 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 119&#8209;130 |
+| 82 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 133&#8209;137 |
+| 83 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 140&#8209;145 |
+| 84 | `out_degree` | Y | Y |  |  | Y |  |  | unknown | 148&#8209;150 |
+| 85 | `insert_edge` | Y | Y |  |  | Y |  |  | unknown | 153&#8209;169 |
+| 86 | `delete_edge` | Y | Y |  |  | Y |  |  | unknown | 172&#8209;185 |
+| 87 | `eq` |  | Y |  |  | Y |  |  | hole | 509&#8209;510 |
 
 ### Chap52/AdjTableGraphMtPer.rs
 
@@ -187,18 +187,18 @@
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
 | 99 | `lemma_sum_adj_sizes_monotone` |  |  |  | Y | Y |  |  | unknown | 76&#8209;78 |
-| 100 | `empty` | Y | Y |  |  | Y |  |  | unknown | 90&#8209;91 |
-| 101 | `from_table` | Y | Y |  |  | Y |  |  | unknown | 93&#8209;99 |
-| 102 | `num_vertices` | Y | Y |  |  | Y |  |  | unknown | 101&#8209;102 |
-| 103 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 104&#8209;106 |
-| 104 | `vertices` | Y | Y |  |  | Y |  |  | unknown | 108&#8209;109 |
-| 105 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 111&#8209;112 |
-| 106 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 114&#8209;115 |
-| 107 | `out_degree` | Y | Y |  |  | Y |  |  | unknown | 117&#8209;118 |
-| 108 | `insert_vertex` | Y | Y |  |  | Y |  |  | unknown | 120&#8209;122 |
-| 109 | `delete_vertex` | Y | Y |  |  | Y |  |  | unknown | 124&#8209;126 |
-| 110 | `insert_edge` | Y | Y |  |  | Y |  |  | unknown | 128&#8209;134 |
-| 111 | `delete_edge` | Y | Y |  |  | Y |  |  | unknown | 136&#8209;141 |
+| 100 | `empty` | Y | Y |  |  | Y |  |  | unknown | 91&#8209;92 |
+| 101 | `from_table` | Y | Y |  |  | Y |  |  | unknown | 95&#8209;101 |
+| 102 | `num_vertices` | Y | Y |  |  | Y |  |  | unknown | 104&#8209;105 |
+| 103 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 108&#8209;110 |
+| 104 | `vertices` | Y | Y |  |  | Y |  |  | unknown | 113&#8209;114 |
+| 105 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 117&#8209;118 |
+| 106 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 121&#8209;122 |
+| 107 | `out_degree` | Y | Y |  |  | Y |  |  | unknown | 125&#8209;126 |
+| 108 | `insert_vertex` | Y | Y |  |  | Y |  |  | unknown | 129&#8209;131 |
+| 109 | `delete_vertex` | Y | Y |  |  | Y |  |  | unknown | 134&#8209;136 |
+| 110 | `insert_edge` | Y | Y |  |  | Y |  |  | unknown | 139&#8209;145 |
+| 111 | `delete_edge` | Y | Y |  |  | Y |  |  | unknown | 148&#8209;153 |
 
 ### Chap52/AdjTableGraphStPer.rs
 
@@ -222,55 +222,55 @@
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
 | 124 | `empty` | Y | Y |  |  | Y |  |  | unknown | 54&#8209;55 |
-| 125 | `from_vertices_and_edges` | Y | Y |  |  | Y |  |  | unknown | 57&#8209;62 |
-| 126 | `num_vertices` | Y | Y |  |  | Y |  |  | unknown | 64&#8209;65 |
-| 127 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 67&#8209;68 |
-| 128 | `vertices` | Y | Y |  |  | Y |  |  | unknown | 70&#8209;71 |
-| 129 | `edges` | Y | Y |  |  | Y |  |  | unknown | 73&#8209;74 |
-| 130 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 76&#8209;77 |
-| 131 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 79&#8209;81 |
-| 132 | `out_degree` | Y | Y |  |  | Y |  |  | unknown | 83&#8209;84 |
-| 133 | `insert_vertex` | Y | Y |  |  | Y |  |  | unknown | 86&#8209;88 |
-| 134 | `delete_vertex` | Y | Y |  |  | Y |  |  | unknown | 90&#8209;92 |
-| 135 | `insert_edge` | Y | Y |  |  | Y |  |  | unknown | 94&#8209;96 |
-| 136 | `delete_edge` | Y | Y |  |  | Y |  |  | unknown | 98&#8209;100 |
-| 137 | `default` |  | Y |  |  | Y |  | Y |  | 207 |
+| 125 | `from_vertices_and_edges` | Y | Y |  |  | Y |  |  | unknown | 57&#8209;64 |
+| 126 | `num_vertices` | Y | Y |  |  | Y |  |  | unknown | 66&#8209;67 |
+| 127 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 69&#8209;70 |
+| 128 | `vertices` | Y | Y |  |  | Y |  |  | unknown | 72&#8209;73 |
+| 129 | `edges` | Y | Y |  |  | Y |  |  | unknown | 75&#8209;76 |
+| 130 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 78&#8209;79 |
+| 131 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;83 |
+| 132 | `out_degree` | Y | Y |  |  | Y |  |  | unknown | 85&#8209;86 |
+| 133 | `insert_vertex` | Y | Y |  |  | Y |  |  | unknown | 88&#8209;90 |
+| 134 | `delete_vertex` | Y | Y |  |  | Y |  |  | unknown | 92&#8209;94 |
+| 135 | `insert_edge` | Y | Y |  |  | Y |  |  | unknown | 96&#8209;98 |
+| 136 | `delete_edge` | Y | Y |  |  | Y |  |  | unknown | 100&#8209;102 |
+| 137 | `default` |  | Y |  |  | Y |  | Y |  | 265 |
 
 ### Chap52/EdgeSetGraphStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 138 | `empty` | Y | Y |  |  | Y |  |  | unknown | 55&#8209;56 |
-| 139 | `from_vertices_and_edges` | Y | Y |  |  | Y |  |  | unknown | 58&#8209;63 |
-| 140 | `num_vertices` | Y | Y |  |  | Y |  |  | unknown | 65&#8209;66 |
-| 141 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 68&#8209;69 |
-| 142 | `vertices` | Y | Y |  |  | Y |  |  | unknown | 71&#8209;72 |
-| 143 | `edges` | Y | Y |  |  | Y |  |  | unknown | 74&#8209;75 |
-| 144 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 77&#8209;78 |
-| 145 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 80&#8209;82 |
-| 146 | `out_degree` | Y | Y |  |  | Y |  |  | unknown | 84&#8209;85 |
-| 147 | `insert_vertex` | Y | Y |  |  | Y |  |  | unknown | 87&#8209;89 |
-| 148 | `delete_vertex` | Y | Y |  |  | Y |  |  | unknown | 91&#8209;93 |
-| 149 | `insert_edge` | Y | Y |  |  | Y |  |  | unknown | 95&#8209;97 |
-| 150 | `delete_edge` | Y | Y |  |  | Y |  |  | unknown | 99&#8209;101 |
+| 138 | `empty` | Y | Y |  |  | Y |  |  | unknown | 56&#8209;57 |
+| 139 | `from_vertices_and_edges` | Y | Y |  |  | Y |  |  | unknown | 60&#8209;67 |
+| 140 | `num_vertices` | Y | Y |  |  | Y |  |  | unknown | 70&#8209;71 |
+| 141 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 74&#8209;75 |
+| 142 | `vertices` | Y | Y |  |  | Y |  |  | unknown | 78&#8209;79 |
+| 143 | `edges` | Y | Y |  |  | Y |  |  | unknown | 82&#8209;83 |
+| 144 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 86&#8209;87 |
+| 145 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 90&#8209;92 |
+| 146 | `out_degree` | Y | Y |  |  | Y |  |  | unknown | 95&#8209;96 |
+| 147 | `insert_vertex` | Y | Y |  |  | Y |  |  | unknown | 99&#8209;101 |
+| 148 | `delete_vertex` | Y | Y |  |  | Y |  |  | unknown | 104&#8209;106 |
+| 149 | `insert_edge` | Y | Y |  |  | Y |  |  | unknown | 109&#8209;111 |
+| 150 | `delete_edge` | Y | Y |  |  | Y |  |  | unknown | 114&#8209;116 |
 
 ### Chap52/EdgeSetGraphStPer.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
 | 151 | `empty` | Y | Y |  |  | Y |  |  | unknown | 57&#8209;58 |
-| 152 | `from_vertices_and_edges` | Y | Y |  |  | Y |  |  | unknown | 60&#8209;65 |
-| 153 | `num_vertices` | Y | Y |  |  | Y |  |  | unknown | 67&#8209;68 |
-| 154 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 70&#8209;71 |
-| 155 | `vertices` | Y | Y |  |  | Y |  |  | unknown | 73&#8209;74 |
-| 156 | `edges` | Y | Y |  |  | Y |  |  | unknown | 76&#8209;77 |
-| 157 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 79&#8209;80 |
-| 158 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 82&#8209;84 |
-| 159 | `out_degree` | Y | Y |  |  | Y |  |  | unknown | 86&#8209;87 |
-| 160 | `insert_vertex` | Y | Y |  |  | Y |  |  | unknown | 89&#8209;91 |
-| 161 | `delete_vertex` | Y | Y |  |  | Y |  |  | unknown | 93&#8209;95 |
-| 162 | `insert_edge` | Y | Y |  |  | Y |  |  | unknown | 97&#8209;99 |
-| 163 | `delete_edge` | Y | Y |  |  | Y |  |  | unknown | 101&#8209;103 |
+| 152 | `from_vertices_and_edges` | Y | Y |  |  | Y |  |  | unknown | 60&#8209;67 |
+| 153 | `num_vertices` | Y | Y |  |  | Y |  |  | unknown | 69&#8209;70 |
+| 154 | `num_edges` | Y | Y |  |  | Y |  |  | unknown | 72&#8209;73 |
+| 155 | `vertices` | Y | Y |  |  | Y |  |  | unknown | 75&#8209;76 |
+| 156 | `edges` | Y | Y |  |  | Y |  |  | unknown | 78&#8209;79 |
+| 157 | `has_edge` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;82 |
+| 158 | `out_neighbors` | Y | Y |  |  | Y |  |  | unknown | 84&#8209;86 |
+| 159 | `out_degree` | Y | Y |  |  | Y |  |  | unknown | 88&#8209;89 |
+| 160 | `insert_vertex` | Y | Y |  |  | Y |  |  | unknown | 91&#8209;93 |
+| 161 | `delete_vertex` | Y | Y |  |  | Y |  |  | unknown | 95&#8209;97 |
+| 162 | `insert_edge` | Y | Y |  |  | Y |  |  | unknown | 99&#8209;101 |
+| 163 | `delete_edge` | Y | Y |  |  | Y |  |  | unknown | 103&#8209;105 |
 
 
 ### Legend

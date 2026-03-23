@@ -22,15 +22,15 @@
 
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
-| 1 | Chap47 | ChainedHashTable | 4 | 1 | 0 | 1 | 6 | 0 | 5 | 0 | 1 |
-| 2 | Chap47 | DoubleHashFlatHashTableStEph | 0 | 0 | 7 | 0 | 7 | 0 | 1 | 0 | 6 |
-| 3 | Chap47 | FlatHashTable | 4 | 5 | 0 | 0 | 9 | 0 | 8 | 0 | 1 |
-| 4 | Chap47 | LinProbFlatHashTableStEph | 0 | 0 | 6 | 0 | 6 | 0 | 0 | 0 | 6 |
-| 5 | Chap47 | LinkedListChainedHashTableStEph | 0 | 5 | 5 | 1 | 8 | 0 | 2 | 0 | 6 |
-| 6 | Chap47 | ParaHashTableStEph | 9 | 0 | 0 | 5 | 14 | 0 | 10 | 2 | 2 |
-| 7 | Chap47 | QuadProbFlatHashTableStEph | 0 | 0 | 6 | 0 | 6 | 0 | 0 | 0 | 6 |
-| 8 | Chap47 | StructChainedHashTable | 0 | 7 | 5 | 4 | 13 | 0 | 6 | 0 | 7 |
-| 9 | Chap47 | VecChainedHashTableStEph | 0 | 5 | 5 | 1 | 8 | 0 | 3 | 0 | 5 |
+| 1 | Chap47 | ChainedHashTable | 1 | 0 | 0 | 5 | 6 | 0 | 6 | 0 | 0 |
+| 2 | Chap47 | DoubleHashFlatHashTableStEph | 0 | 0 | 7 | 5 | 12 | 0 | 5 | 1 | 6 |
+| 3 | Chap47 | FlatHashTable | 2 | 5 | 0 | 0 | 7 | 0 | 6 | 0 | 1 |
+| 4 | Chap47 | LinProbFlatHashTableStEph | 0 | 0 | 6 | 4 | 10 | 0 | 4 | 0 | 6 |
+| 5 | Chap47 | LinkedListChainedHashTableStEph | 0 | 5 | 5 | 2 | 9 | 0 | 3 | 0 | 6 |
+| 6 | Chap47 | ParaHashTableStEph | 9 | 0 | 0 | 8 | 17 | 0 | 14 | 2 | 1 |
+| 7 | Chap47 | QuadProbFlatHashTableStEph | 0 | 0 | 6 | 9 | 15 | 0 | 9 | 0 | 6 |
+| 8 | Chap47 | StructChainedHashTable | 0 | 7 | 5 | 4 | 13 | 0 | 5 | 1 | 7 |
+| 9 | Chap47 | VecChainedHashTableStEph | 0 | 5 | 5 | 2 | 9 | 0 | 4 | 0 | 5 |
 
 ## Function-by-Function Detail
 
@@ -38,123 +38,144 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `_chained_hash_table_verified` |  |  |  | Y | Y |  | Y |  | 42 |
-| 2 | `hash_index` | Y |  |  |  | Y |  |  | unknown | 55&#8209;59 |
-| 3 | `insert_chained` | Y |  |  |  | Y |  |  | unknown | 64&#8209;70 |
-| 4 | `lookup_chained` | Y |  |  |  | Y |  |  | unknown | 85&#8209;89 |
-| 5 | `delete_chained` | Y |  |  |  | Y |  |  | unknown | 102&#8209;107 |
-| 6 | `eq` |  | Y |  |  | Y |  |  | unknown | 143&#8209;144 |
+| 1 | `lemma_seq_pairs_to_map_remove_preserves_other_keys` |  |  |  | Y | Y |  |  | unknown | 23&#8209;37 |
+| 2 | `lemma_seq_pairs_remove_key_then_push` |  |  |  | Y | Y |  |  | unknown | 52&#8209;63 |
+| 3 | `lemma_seq_pairs_no_key_not_in_map` |  |  |  | Y | Y |  |  | unknown | 83&#8209;91 |
+| 4 | `lemma_seq_pairs_has_key_in_map` |  |  |  | Y | Y |  |  | unknown | 103&#8209;113 |
+| 5 | `lemma_seq_pairs_last_key_gives_value` |  |  |  | Y | Y |  |  | unknown | 125&#8209;137 |
+| 6 | `hash_index` | Y |  |  |  | Y |  |  | unknown | 164&#8209;169 |
 
 ### Chap47/DoubleHashFlatHashTableStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 7 | `second_hash` |  |  | Y |  | Y |  |  | unknown | 40&#8209;41 |
-| 8 | `insert` |  |  | Y |  | Y |  | Y |  | 53 |
-| 9 | `lookup` |  |  | Y |  | Y |  | Y |  | 83 |
-| 10 | `delete` |  |  | Y |  | Y |  | Y |  | 107 |
-| 11 | `resize` |  |  | Y |  | Y |  | Y |  | 136&#8209;139 |
-| 12 | `probe` |  |  | Y |  | Y |  | Y |  | 202 |
-| 13 | `find_slot` |  |  | Y |  | Y |  | Y |  | 210 |
+| 7 | `lemma_all_empties_count` |  |  |  | Y | Y |  |  | unknown | 92&#8209;95 |
+| 8 | `lemma_empties_positive_implies_exists_empty` |  |  |  | Y | Y |  |  | unknown | 108&#8209;113 |
+| 9 | `lemma_one_slot_change_empties` |  |  |  | Y | Y |  |  | unknown | 126&#8209;138 |
+| 10 | `lemma_spec_second_hash_value` |  |  |  | Y | Y |  |  | unknown | 167&#8209;168 |
+| 11 | `lemma_probe_mod_identity` |  |  |  | Y | Y |  |  | unknown | 172&#8209;174 |
+| 12 | `second_hash` |  |  | Y |  | Y |  |  | hole | 197&#8209;202 |
+| 13 | `insert` |  |  | Y |  | Y |  | Y |  | 242 |
+| 14 | `lookup` |  |  | Y |  | Y |  | Y |  | 521 |
+| 15 | `delete` |  |  | Y |  | Y |  | Y |  | 647 |
+| 16 | `resize` |  |  | Y |  | Y |  | Y |  | 817&#8209;820 |
+| 17 | `probe` |  |  | Y |  | Y |  | Y |  | 966 |
+| 18 | `find_slot` |  |  | Y |  | Y |  | Y |  | 974 |
 
 ### Chap47/FlatHashTable.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 14 | `probe` | Y |  |  |  | Y |  |  | unknown | 48&#8209;52 |
-| 15 | `find_slot` | Y |  |  |  | Y |  |  | unknown | 57&#8209;62 |
-| 16 | `insert_with_probe` | Y |  |  |  | Y |  |  | unknown | 67&#8209;70 |
-| 17 | `lookup_with_probe` | Y |  |  |  | Y |  |  | unknown | 81&#8209;84 |
-| 18 | `new` |  | Y |  |  | Y |  |  | unknown | 109&#8209;110 |
-| 19 | `insert` |  | Y |  |  | Y |  |  | unknown | 115&#8209;116 |
-| 20 | `lookup` |  | Y |  |  | Y |  |  | unknown | 121&#8209;124 |
-| 21 | `delete` |  | Y |  |  | Y |  |  | unknown | 136&#8209;139 |
-| 22 | `clone_entry` |  | Y |  |  | Y |  | Y |  | 155 |
+| 19 | `probe` | Y |  |  |  | Y |  |  | unknown | 63&#8209;67 |
+| 20 | `find_slot` | Y |  |  |  | Y |  |  | unknown | 72&#8209;77 |
+| 21 | `new` |  | Y |  |  | Y |  |  | unknown | 94&#8209;95 |
+| 22 | `insert` |  | Y |  |  | Y |  |  | unknown | 100&#8209;103 |
+| 23 | `lookup` |  | Y |  |  | Y |  |  | unknown | 108&#8209;111 |
+| 24 | `delete` |  | Y |  |  | Y |  |  | unknown | 123&#8209;127 |
+| 25 | `clone_entry` |  | Y |  |  | Y |  | Y |  | 143 |
 
 ### Chap47/LinProbFlatHashTableStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 23 | `insert` |  |  | Y |  | Y |  | Y |  | 36 |
-| 24 | `lookup` |  |  | Y |  | Y |  | Y |  | 66 |
-| 25 | `delete` |  |  | Y |  | Y |  | Y |  | 90 |
-| 26 | `resize` |  |  | Y |  | Y |  | Y |  | 119&#8209;122 |
-| 27 | `probe` |  |  | Y |  | Y |  | Y |  | 188 |
-| 28 | `find_slot` |  |  | Y |  | Y |  | Y |  | 195 |
+| 26 | `lemma_all_empties_count` |  |  |  | Y | Y |  |  | unknown | 84&#8209;87 |
+| 27 | `lemma_empties_positive_implies_exists_empty` |  |  |  | Y | Y |  |  | unknown | 100&#8209;105 |
+| 28 | `lemma_one_slot_change_empties` |  |  |  | Y | Y |  |  | unknown | 118&#8209;130 |
+| 29 | `lemma_probe_mod_identity` |  |  |  | Y | Y |  |  | unknown | 158&#8209;160 |
+| 30 | `insert` |  |  | Y |  | Y |  | Y |  | 196 |
+| 31 | `lookup` |  |  | Y |  | Y |  | Y |  | 473 |
+| 32 | `delete` |  |  | Y |  | Y |  | Y |  | 578 |
+| 33 | `resize` |  |  | Y |  | Y |  | Y |  | 728&#8209;731 |
+| 34 | `probe` |  |  | Y |  | Y |  | Y |  | 881 |
+| 35 | `find_slot` |  |  | Y |  | Y |  | Y |  | 888 |
 
 ### Chap47/LinkedListChainedHashTableStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 29 | `_linked_list_chained_hash_table_verified` |  |  |  | Y | Y |  | Y |  | 32 |
-| 30 | `new` |  | Y |  |  | Y |  | Y |  | 39 |
-| 31 | `insert` |  | Y | Y |  | Y |  |  | unknown | 43&#8209;47 |
-| 32 | `lookup` |  | Y | Y |  | Y |  | Y |  | 68 |
-| 33 | `delete` |  | Y | Y |  | Y |  |  | unknown | 83&#8209;84 |
-| 34 | `clone_entry` |  | Y |  |  | Y |  | Y |  | 103 |
-| 35 | `resize` |  |  | Y |  | Y |  | Y |  | 194&#8209;197 |
-| 36 | `hash_index` |  |  | Y |  | Y |  | Y |  | 273 |
+| 36 | `_linked_list_chained_hash_table_verified` |  |  |  | Y | Y |  | Y |  | 40 |
+| 37 | `clone_linked_list_entry` |  |  |  | Y | Y |  |  | unknown | 44&#8209;47 |
+| 38 | `new` |  | Y |  |  | Y |  | Y |  | 76 |
+| 39 | `insert` |  | Y | Y |  | Y |  |  | unknown | 80&#8209;86 |
+| 40 | `lookup` |  | Y | Y |  | Y |  | Y |  | 107 |
+| 41 | `delete` |  | Y | Y |  | Y |  |  | unknown | 122&#8209;125 |
+| 42 | `clone_entry` |  | Y |  |  | Y |  | Y |  | 144 |
+| 43 | `resize` |  |  | Y |  | Y |  | Y |  | 437&#8209;440 |
+| 44 | `hash_index` |  |  | Y |  | Y |  | Y |  | 588 |
 
 ### Chap47/ParaHashTableStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 37 | `call_hash_fn` |  |  |  | Y | Y |  |  | hole | 57&#8209;59 |
-| 38 | `linear_probe` |  |  |  | Y | Y |  |  | unknown | 65&#8209;67 |
-| 39 | `quadratic_probe` |  |  |  | Y | Y |  |  | unknown | 74&#8209;76 |
-| 40 | `compute_second_hash` |  |  |  | Y | Y |  |  | hole | 85&#8209;86 |
-| 41 | `double_hash_probe` |  |  |  | Y | Y |  |  | unknown | 105&#8209;107 |
-| 42 | `new` | Y |  |  |  | Y |  | Y |  | 121 |
-| 43 | `insert` x2 | Y |  |  |  | Y |  |  | unknown | 174&#8209;182 |
-| 44 | `lookup` x2 | Y |  |  |  | Y |  |  | unknown | 187&#8209;190 |
-| 45 | `delete` x2 | Y |  |  |  | Y |  |  | unknown | 195&#8209;201 |
-| 46 | `clone_entry` | Y |  |  |  | Y |  | Y |  | 132 |
-| 47 | `createTable` | Y |  |  |  | Y |  |  | unknown | 141&#8209;147 |
-| 48 | `metrics` | Y |  |  |  | Y |  |  | unknown | 206&#8209;207 |
-| 49 | `loadAndSize` | Y |  |  |  | Y |  |  | unknown | 214&#8209;217 |
-| 50 | `resize` | Y |  |  |  | Y |  |  | unknown | 230&#8209;236 |
+| 45 | `clone_elem` |  |  |  | Y | Y |  |  | hole | 116&#8209;117 |
+| 46 | `lemma_table_to_map_push_empty` |  |  |  | Y | Y |  |  | unknown | 125&#8209;133 |
+| 47 | `lemma_table_to_map_update_contains` |  |  |  | Y | Y |  |  | unknown | 145&#8209;156 |
+| 48 | `lemma_table_to_map_not_contains` |  |  |  | Y | Y |  |  | unknown | 184&#8209;193 |
+| 49 | `lemma_table_to_map_update_insert` |  |  |  | Y | Y |  |  | unknown | 209&#8209;224 |
+| 50 | `lemma_table_to_map_update_remove` |  |  |  | Y | Y |  |  | unknown | 263&#8209;277 |
+| 51 | `lemma_table_to_map_unique_entry_value` |  |  |  | Y | Y |  |  | unknown | 306&#8209;319 |
+| 52 | `call_hash_fn` |  |  |  | Y | Y |  |  | hole | 343&#8209;347 |
+| 53 | `new` | Y |  |  |  | Y |  |  | unknown | 361&#8209;362 |
+| 54 | `insert` x2 | Y |  |  |  | Y |  |  | unknown | 463&#8209;475 |
+| 55 | `lookup` x2 | Y |  |  |  | Y |  |  | unknown | 480&#8209;487 |
+| 56 | `delete` x2 | Y |  |  |  | Y |  |  | unknown | 492&#8209;502 |
+| 57 | `clone_entry` | Y |  |  |  | Y |  | Y |  | 375 |
+| 58 | `createTable` | Y |  |  |  | Y |  |  | unknown | 412&#8209;422 |
+| 59 | `metrics` | Y |  |  |  | Y |  |  | unknown | 507&#8209;509 |
+| 60 | `loadAndSize` | Y |  |  |  | Y |  |  | unknown | 516&#8209;520 |
+| 61 | `resize` | Y |  |  |  | Y |  |  | unknown | 533&#8209;545 |
 
 ### Chap47/QuadProbFlatHashTableStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 51 | `insert` |  |  | Y |  | Y |  | Y |  | 38 |
-| 52 | `lookup` |  |  | Y |  | Y |  | Y |  | 68 |
-| 53 | `delete` |  |  | Y |  | Y |  | Y |  | 92 |
-| 54 | `resize` |  |  | Y |  | Y |  | Y |  | 121&#8209;124 |
-| 55 | `probe` |  |  | Y |  | Y |  | Y |  | 187 |
-| 56 | `find_slot` |  |  | Y |  | Y |  | Y |  | 194 |
+| 62 | `lemma_consecutive_even` |  |  |  | Y | Y |  |  | unknown | 95&#8209;96 |
+| 63 | `lemma_tri_step` |  |  |  | Y | Y |  |  | unknown | 115&#8209;116 |
+| 64 | `lemma_odd_factor_pow2` |  |  |  | Y | Y |  |  | unknown | 131&#8209;138 |
+| 65 | `lemma_triangular_injective` |  |  |  | Y | Y |  |  | unknown | 241&#8209;246 |
+| 66 | `lemma_mod_add_cancel` |  |  |  | Y | Y |  |  | unknown | 327&#8209;335 |
+| 67 | `lemma_empty_slot_reachable` |  |  |  | Y | Y |  |  | unknown | 365&#8209;384 |
+| 68 | `lemma_all_empties_count` |  |  |  | Y | Y |  |  | unknown | 463&#8209;466 |
+| 69 | `lemma_empties_positive_implies_exists_empty` |  |  |  | Y | Y |  |  | unknown | 479&#8209;484 |
+| 70 | `lemma_one_slot_change_empties` |  |  |  | Y | Y |  |  | unknown | 497&#8209;509 |
+| 71 | `insert` |  |  | Y |  | Y |  | Y |  | 560 |
+| 72 | `lookup` |  |  | Y |  | Y |  | Y |  | 851 |
+| 73 | `delete` |  |  | Y |  | Y |  | Y |  | 965 |
+| 74 | `resize` |  |  | Y |  | Y |  | Y |  | 1133&#8209;1136 |
+| 75 | `probe` |  |  | Y |  | Y |  | Y |  | 1279 |
+| 76 | `find_slot` |  |  | Y |  | Y |  | Y |  | 1287 |
 
 ### Chap47/StructChainedHashTable.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 57 | `_struct_chained_hash_table_verified` |  |  |  | Y | Y |  | Y |  | 69 |
-| 58 | `default` |  | Y |  |  | Y |  | Y |  | 99 |
-| 59 | `chain_insert` |  |  |  | Y | Y |  |  | unknown | 103&#8209;111 |
-| 60 | `chain_lookup` |  |  |  | Y | Y |  |  | unknown | 136&#8209;142 |
-| 61 | `chain_delete` |  |  |  | Y | Y |  |  | unknown | 157&#8209;164 |
-| 62 | `new` |  | Y |  |  | Y |  | Y |  | 186 |
-| 63 | `insert` |  | Y | Y |  | Y |  |  | unknown | 190&#8209;191 |
-| 64 | `lookup` |  | Y | Y |  | Y |  | Y |  | 198 |
-| 65 | `delete` |  | Y | Y |  | Y |  |  | unknown | 205&#8209;207 |
-| 66 | `clone_entry` |  | Y |  |  | Y |  | Y |  | 215 |
-| 67 | `resize` |  |  | Y |  | Y |  | Y |  | 261&#8209;264 |
-| 68 | `hash_index` |  |  | Y |  | Y |  | Y |  | 336 |
-| 69 | `eq` x2 |  | Y |  |  | Y |  |  | unknown | 362&#8209;364 |
+| 77 | `_struct_chained_hash_table_verified` |  |  |  | Y | Y |  | Y |  | 89 |
+| 78 | `default` |  | Y |  |  | Y |  | Y |  | 119 |
+| 79 | `chain_insert` |  |  |  | Y | Y |  |  | unknown | 125&#8209;135 |
+| 80 | `chain_lookup` |  |  |  | Y | Y |  |  | unknown | 179&#8209;188 |
+| 81 | `chain_delete` |  |  |  | Y | Y |  |  | unknown | 219&#8209;229 |
+| 82 | `new` |  | Y |  |  | Y |  | Y |  | 271 |
+| 83 | `insert` |  | Y | Y |  | Y |  |  | unknown | 275&#8209;276 |
+| 84 | `lookup` |  | Y | Y |  | Y |  | Y |  | 284 |
+| 85 | `delete` |  | Y | Y |  | Y |  |  | unknown | 291&#8209;293 |
+| 86 | `clone_entry` |  | Y |  |  | Y |  | Y |  | 301 |
+| 87 | `resize` |  |  | Y |  | Y |  | Y |  | 461&#8209;464 |
+| 88 | `hash_index` |  |  | Y |  | Y |  | Y |  | 823 |
+| 89 | `eq` x2 |  | Y |  |  | Y |  |  | hole | 849&#8209;851 |
 
 ### Chap47/VecChainedHashTableStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 70 | `_vec_chained_hash_table_verified` |  |  |  | Y | Y |  | Y |  | 32 |
-| 71 | `new` |  | Y |  |  | Y |  |  | unknown | 39&#8209;40 |
-| 72 | `insert` |  | Y | Y |  | Y |  |  | unknown | 45&#8209;49 |
-| 73 | `lookup` |  | Y | Y |  | Y |  | Y |  | 70 |
-| 74 | `delete` |  | Y | Y |  | Y |  |  | unknown | 85&#8209;86 |
-| 75 | `clone_entry` |  | Y |  |  | Y |  | Y |  | 105 |
-| 76 | `resize` |  |  | Y |  | Y |  | Y |  | 198&#8209;201 |
-| 77 | `hash_index` |  |  | Y |  | Y |  | Y |  | 274 |
+| 90 | `_vec_chained_hash_table_verified` |  |  |  | Y | Y |  | Y |  | 40 |
+| 91 | `clone_vec_pairs` |  |  |  | Y | Y |  |  | unknown | 44&#8209;45 |
+| 92 | `new` |  | Y |  |  | Y |  |  | unknown | 74&#8209;75 |
+| 93 | `insert` |  | Y | Y |  | Y |  |  | unknown | 80&#8209;86 |
+| 94 | `lookup` |  | Y | Y |  | Y |  | Y |  | 107 |
+| 95 | `delete` |  | Y | Y |  | Y |  |  | unknown | 122&#8209;125 |
+| 96 | `clone_entry` |  | Y |  |  | Y |  | Y |  | 144 |
+| 97 | `resize` |  |  | Y |  | Y |  | Y |  | 440&#8209;443 |
+| 98 | `hash_index` |  |  | Y |  | Y |  | Y |  | 590 |
 
 
 ### Legend

@@ -23,7 +23,7 @@
 | # | Dir | Module | Tr | IT | IBI | ML | V! | -V! | Unk | Hole | NoSpec |
 |---|-----|--------|:--:|:--:|:---:|:--:|:--:|:---:|:---:|:----:|:------:|
 | 1 | Chap57 | DijkstraStEphF64 | 0 | 2 | 0 | 0 | 0 | 2 | 0 | 0 | 2 |
-| 2 | Chap57 | DijkstraStEphI64 | 1 | 2 | 0 | 2 | 4 | 0 | 2 | 0 | 2 |
+| 2 | Chap57 | DijkstraStEphU64 | 1 | 6 | 0 | 2 | 8 | 0 | 2 | 2 | 4 |
 | 3 | Chap57 | StackStEph | 6 | 7 | 0 | 0 | 7 | 0 | 7 | 0 | 0 |
 
 ## Function-by-Function Detail
@@ -32,29 +32,33 @@
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 1 | `partial_cmp` |  | Y |  |  |  | Y | Y |  | 33&#8209;35 |
-| 2 | `cmp` |  | Y |  |  |  | Y | Y |  | 39&#8209;42 |
+| 1 | `partial_cmp` |  | Y |  |  |  | Y | Y |  | 42&#8209;44 |
+| 2 | `cmp` |  | Y |  |  |  | Y | Y |  | 48&#8209;51 |
 
-### Chap57/DijkstraStEphI64.rs
+### Chap57/DijkstraStEphU64.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 3 | `dijkstra` | Y |  |  | Y | Y |  |  | unknown | 63 |
-| 4 | `pq_entry_new` |  |  |  | Y | Y |  |  | unknown | 68&#8209;70 |
-| 5 | `cmp` |  | Y |  |  | Y |  | Y |  | 76 |
-| 6 | `partial_cmp` |  | Y |  |  | Y |  | Y |  | 88 |
+| 3 | `dijkstra` | Y |  |  | Y | Y |  |  | unknown | 88&#8209;97 |
+| 4 | `pq_entry_new` |  |  |  | Y | Y |  |  | unknown | 105&#8209;106 |
+| 5 | `cmp` x2 |  | Y |  |  | Y |  |  | hole | 113 |
+| 6 | `partial_cmp` |  | Y |  |  | Y |  |  | hole | 130 |
+| 7 | `reflexive` |  | Y |  |  | Y |  | Y |  | 140 |
+| 8 | `transitive` |  | Y |  |  | Y |  | Y |  | 141 |
+| 9 | `antisymmetric` |  | Y |  |  | Y |  | Y |  | 142 |
+| 10 | `total` |  | Y |  |  | Y |  | Y |  | 143 |
 
 ### Chap57/StackStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
-| 7 | `new` | Y | Y |  |  | Y |  |  | unknown | 65&#8209;66 |
-| 8 | `push` | Y | Y |  |  | Y |  |  | unknown | 68&#8209;72 |
-| 9 | `pop` | Y | Y |  |  | Y |  |  | unknown | 74&#8209;76 |
-| 10 | `peek` | Y | Y |  |  | Y |  |  | unknown | 78&#8209;79 |
-| 11 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 81&#8209;82 |
-| 12 | `size` | Y | Y |  |  | Y |  |  | unknown | 84&#8209;85 |
-| 13 | `default` |  | Y |  |  | Y |  |  | unknown | 140&#8209;141 |
+| 11 | `new` | Y | Y |  |  | Y |  |  | unknown | 67&#8209;68 |
+| 12 | `push` | Y | Y |  |  | Y |  |  | unknown | 72&#8209;76 |
+| 13 | `pop` | Y | Y |  |  | Y |  |  | unknown | 80&#8209;82 |
+| 14 | `peek` | Y | Y |  |  | Y |  |  | unknown | 86&#8209;87 |
+| 15 | `is_empty` | Y | Y |  |  | Y |  |  | unknown | 91&#8209;92 |
+| 16 | `size` | Y | Y |  |  | Y |  |  | unknown | 96&#8209;97 |
+| 17 | `default` |  | Y |  |  | Y |  |  | unknown | 152&#8209;153 |
 
 
 ### Legend

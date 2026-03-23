@@ -107,7 +107,7 @@
     "id": 14,
     "function": "lemma_point_in_seq_transitive",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "128-134",
+    "lines": "132-138",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_point_in_seq_transitive(p: Point, sub: Seq<Point>, sup: Seq<Point>)\n        requires\n            spec_point_in_seq(p, sub),\n            forall|i: int| #![trigger sub[i]] 0 <= i < sub.len() ==>\n                spec_point_in_seq(sub[i], sup),\n        ensures\n            spec_point_in_seq(p, sup),"
   },
@@ -115,7 +115,7 @@
     "id": 15,
     "function": "lemma_edge_valid_transitive",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "144-156",
+    "lines": "148-160",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_edge_valid_transitive(\n        edge: Edge,\n        sub_points: Seq<Point>,\n        points: Seq<Point>,\n    )\n        requires\n            spec_point_in_seq(edge.from, sub_points),\n            spec_point_in_seq(edge.to, sub_points),\n            forall|i: int| #![trigger sub_points[i]] 0 <= i < sub_points.len() ==>\n                spec_point_in_seq(sub_points[i], points),\n        ensures\n            spec_point_in_seq(edge.from, points),\n            spec_point_in_seq(edge.to, points),"
   },
@@ -123,7 +123,7 @@
     "id": 16,
     "function": "lemma_mod_successor",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "163-165",
+    "lines": "167-169",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_mod_successor(a: int, n: int)\n        requires n > 0,\n        ensures ((a % n) + 1) % n == (a + 1) % n,"
   },
@@ -131,7 +131,7 @@
     "id": 17,
     "function": "lemma_combined_cycle",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "173-197",
+    "lines": "177-201",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_combined_cycle(\n        combined: Seq<Edge>, lt: Seq<Edge>, rt: Seq<Edge>,\n        ln_i: int, rn_i: int, best_li: int, best_ri: int,\n        el_from: Point, el_to: Point, er_from: Point, er_to: Point,\n    )\n        requires\n            combined.len() == ln_i + rn_i,\n            ln_i >= 2, rn_i >= 2,\n            0 <= best_li < ln_i,\n            0 <= best_ri < rn_i,\n            lt.len() == ln_i, rt.len() == rn_i,\n            spec_edges_form_cycle(lt),\n            spec_edges_form_cycle(rt),\n            el_from == lt[best_li].from,\n            el_to == lt[best_li].to,\n            er_from == rt[best_ri].from,\n            er_to == rt[best_ri].to,\n            forall|k: int| #![trigger combined[k]] 0 <= k < ln_i - 1 ==>\n                combined[k] == lt[((best_li + 1 + k) % ln_i)],\n            combined[ln_i - 1] == (Edge { from: el_from, to: er_to }),\n            forall|m: int| #![trigger combined[(ln_i + m)]] 0 <= m < rn_i - 1 ==>\n                combined[(ln_i + m)] == rt[((best_ri + 1 + m) % rn_i)],\n            combined[ln_i + rn_i - 1] == (Edge { from: er_from, to: el_to }),\n        ensures\n            spec_edges_form_cycle(combined),"
   },
@@ -139,7 +139,7 @@
     "id": 18,
     "function": "etsp_parallel",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "307-311",
+    "lines": "311-315",
     "spec_strength": "unknown",
     "snippet": "        fn etsp_parallel(points: &Vec<Point>) -> (tour: Vec<Edge>)\n            requires\n                points@.len() >= 2,\n                points@.len() < usize::MAX / 2,\n            ensures spec_etsp(tour@, points@);"
   },
@@ -147,7 +147,7 @@
     "id": 19,
     "function": "etsp_parallel_inner",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "323-328",
+    "lines": "330-335",
     "spec_strength": "unknown",
     "snippet": "    fn etsp_parallel_inner(points: &Vec<Point>) -> (tour: Vec<Edge>)\n        requires\n            points@.len() >= 2,\n            points@.len() < usize::MAX / 2,\n        ensures spec_etsp(tour@, points@),\n        decreases points@.len(),"
   },
@@ -155,7 +155,7 @@
     "id": 20,
     "function": "sort_and_split",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "507-518",
+    "lines": "516-527",
     "spec_strength": "unknown",
     "snippet": "    pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))\n        requires points@.len() >= 4,\n        ensures\n            halves.0@.len() >= 2,\n            halves.1@.len() >= 2,\n            halves.0@.len() + halves.1@.len() == points@.len(),\n            halves.0@.len() < points@.len(),\n            halves.1@.len() < points@.len(),\n            forall|i: int| #![trigger halves.0@[i]] 0 <= i < halves.0@.len() ==>\n                spec_point_in_seq(halves.0@[i], points@),\n            forall|i: int| #![trigger halves.1@[i]] 0 <= i < halves.1@.len() ==>\n                spec_point_in_seq(halves.1@[i], points@),"
   },
@@ -163,7 +163,7 @@
     "id": 21,
     "function": "find_best_swap",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "568-574",
+    "lines": "579-585",
     "spec_strength": "unknown",
     "snippet": "    pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))\n        requires\n            left_tour@.len() >= 2,\n            right_tour@.len() >= 2,\n        ensures\n            (swap_indices.0 as int) < left_tour@.len(),\n            (swap_indices.1 as int) < right_tour@.len(),"
   },
@@ -171,36 +171,44 @@
     "id": 22,
     "function": "distance",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "599",
-    "spec_strength": "",
-    "snippet": "        fn distance(&self, other: &Point) -> f64;"
+    "lines": "608-609",
+    "spec_strength": "unknown",
+    "snippet": "        fn distance(&self, other: &Point) -> (d: f64)\n            ensures d == spec_point_distance(*self, *other);"
   },
   {
     "id": 23,
-    "function": "sort_and_split_impl",
+    "function": "point_distance",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "610-632",
-    "spec_strength": "",
-    "snippet": "    /// Sort points by longest-spread dimension and split at median. (f64 arithmetic.)\n    pub fn sort_and_split_impl(points: &Vec<Point>) -> (Vec<Point>, Vec<Point>) {\n        let n = points.len();\n        let (mut min_x, mut max_x, mut min_y, mut max_y) =\n            (points[0].x, points[0].x, points[0].y, points[0].y);\n        for i in 1..n {\n            if points[i].x < min_x { min_x = points[i].x; }\n            if points[i].x > max_x { max_x = points[i].x; }\n            if points[i].y < min_y { min_y = points[i].y; }\n            if points[i].y > max_y { max_y = points[i].y; }\n        }\n        let split_on_x = (max_x - min_x) >= (max_y - min_y);\n        let mut sorted_points = points.clone();\n        if split_on_x {\n            sorted_points.sort_by(|a, b| a.x.partial_cmp(&b.x).unwrap_or(std::cmp::Ordering::Equal));\n        } else {\n            sorted_points.sort_by(|a, b| a.y.partial_cmp(&b.y).unwrap_or(std::cmp::Ordering::Equal));\n        }\n        let mid = (n / 2).max(2);\n        let left: Vec<Point> = sorted_points[..mid].to_vec();\n        let right: Vec<Point> = sorted_points[mid..].to_vec();\n        (left, right)\n    }"
+    "lines": "613-614",
+    "spec_strength": "hole",
+    "snippet": "    fn point_distance(a: &Point, b: &Point) -> (d: f64)\n        ensures d == spec_point_distance(*a, *b),"
   },
   {
     "id": 24,
-    "function": "find_best_swap_impl",
+    "function": "sort_and_split_impl",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "634-642",
-    "spec_strength": "",
-    "snippet": "    /// Parallel find-best-swap: recursively splits the outer loop over left_tour\n    /// and runs both halves in parallel via HFScheduler join().\n    /// Work Θ(n·m), Span Θ(m·lg n) where n = left_tour.len(), m = right_tour.len().\n    pub fn find_best_swap_impl(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (usize, usize) {\n        let lt = Arc::new(left_tour.clone());\n        let rt = Arc::new(right_tour.clone());\n        let (li, ri, _) = find_best_swap_par(lt, rt, 0, left_tour.len());\n        (li, ri)\n    }"
+    "lines": "629",
+    "spec_strength": "hole",
+    "snippet": "    pub fn sort_and_split_impl(points: &Vec<Point>) -> (Vec<Point>, Vec<Point>) {"
   },
   {
     "id": 25,
-    "function": "find_best_swap_par",
+    "function": "find_best_swap_impl",
     "file": "Chap26/ETSPMtEph.rs",
-    "lines": "644-678",
-    "spec_strength": "",
-    "snippet": "    fn find_best_swap_par(\n        left_tour: Arc<Vec<Edge>>, right_tour: Arc<Vec<Edge>>, lo: usize, hi: usize,\n    ) -> (usize, usize, f64) {\n        const THRESHOLD: usize = 16;\n        if hi <= lo {\n            return (0, 0, f64::MAX);\n        }\n        if hi - lo <= THRESHOLD {\n            let mut best_cost = f64::MAX;\n            let mut best_li = 0usize;\n            let mut best_ri = 0usize;\n            for li in lo..hi {\n                for ri in 0..right_tour.len() {\n                    let el = &left_tour[li];\n                    let er = &right_tour[ri];\n                    let cost = el.from.distance(&er.to) + er.from.distance(&el.to)\n                             - el.from.distance(&el.to) - er.from.distance(&er.to);\n                    if cost < best_cost {\n                        best_cost = cost;\n                        best_li = li;\n                        best_ri = ri;\n                    }\n                }\n            }\n            (best_li, best_ri, best_cost)\n        } else {\n            let mid = lo + (hi - lo) / 2;\n            let lt1 = Arc::clone(&left_tour);\n            let rt1 = Arc::clone(&right_tour);\n            let f1 = move || find_best_swap_par(lt1, rt1, lo, mid);\n            let f2 = move || find_best_swap_par(left_tour, right_tour, mid, hi);\n            let (left_res, right_res) = join(f1, f2);\n            if left_res.2 <= right_res.2 { left_res } else { right_res }\n        }\n    }"
+    "lines": "655-661",
+    "spec_strength": "unknown",
+    "snippet": "    pub fn find_best_swap_impl(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (result: (usize, usize))\n        requires\n            left_tour@.len() >= 1,\n            right_tour@.len() >= 1,\n        ensures\n            result.0 < left_tour@.len(),\n            result.1 < right_tour@.len(),"
   },
   {
     "id": 26,
+    "function": "find_best_swap_par",
+    "file": "Chap26/ETSPMtEph.rs",
+    "lines": "671-681",
+    "spec_strength": "unknown",
+    "snippet": "    fn find_best_swap_par(\n        left_tour: Arc<Vec<Edge>>, right_tour: Arc<Vec<Edge>>, lo: usize, hi: usize,\n    ) -> (result: (usize, usize, f64))\n        requires\n            (*left_tour)@.len() >= 1,\n            (*right_tour)@.len() >= 1,\n            hi <= (*left_tour)@.len(),\n        ensures\n            result.0 < (*left_tour)@.len(),\n            result.1 < (*right_tour)@.len(),\n        decreases hi - lo,"
+  },
+  {
+    "id": 27,
     "function": "lemma_point_in_seq_transitive",
     "file": "Chap26/ETSPStEph.rs",
     "lines": "121-127",
@@ -208,7 +216,7 @@
     "snippet": "    pub proof fn lemma_point_in_seq_transitive(p: Point, sub: Seq<Point>, sup: Seq<Point>)\n        requires\n            spec_point_in_seq(p, sub),\n            forall|i: int| #![trigger sub[i]] 0 <= i < sub.len() ==>\n                spec_point_in_seq(sub[i], sup),\n        ensures\n            spec_point_in_seq(p, sup),"
   },
   {
-    "id": 27,
+    "id": 28,
     "function": "lemma_edge_valid_transitive",
     "file": "Chap26/ETSPStEph.rs",
     "lines": "137-149",
@@ -216,7 +224,7 @@
     "snippet": "    pub proof fn lemma_edge_valid_transitive(\n        edge: Edge,\n        sub_points: Seq<Point>,\n        points: Seq<Point>,\n    )\n        requires\n            spec_point_in_seq(edge.from, sub_points),\n            spec_point_in_seq(edge.to, sub_points),\n            forall|i: int| #![trigger sub_points[i]] 0 <= i < sub_points.len() ==>\n                spec_point_in_seq(sub_points[i], points),\n        ensures\n            spec_point_in_seq(edge.from, points),\n            spec_point_in_seq(edge.to, points),"
   },
   {
-    "id": 28,
+    "id": 29,
     "function": "lemma_combined_cycle",
     "file": "Chap26/ETSPStEph.rs",
     "lines": "156-180",
@@ -224,7 +232,7 @@
     "snippet": "    proof fn lemma_combined_cycle(\n        combined: Seq<Edge>, lt: Seq<Edge>, rt: Seq<Edge>,\n        ln_i: int, rn_i: int, best_li: int, best_ri: int,\n        el_from: Point, el_to: Point, er_from: Point, er_to: Point,\n    )\n        requires\n            combined.len() == ln_i + rn_i,\n            ln_i >= 2, rn_i >= 2,\n            0 <= best_li < ln_i,\n            0 <= best_ri < rn_i,\n            lt.len() == ln_i, rt.len() == rn_i,\n            spec_edges_form_cycle(lt),\n            spec_edges_form_cycle(rt),\n            el_from == lt[best_li].from,\n            el_to == lt[best_li].to,\n            er_from == rt[best_ri].from,\n            er_to == rt[best_ri].to,\n            forall|k: int| #![trigger combined[k]] 0 <= k < ln_i - 1 ==>\n                combined[k] == lt[((best_li + 1 + k) % ln_i)],\n            combined[ln_i - 1] == (Edge { from: el_from, to: er_to }),\n            forall|m: int| #![trigger combined[(ln_i + m)]] 0 <= m < rn_i - 1 ==>\n                combined[(ln_i + m)] == rt[((best_ri + 1 + m) % rn_i)],\n            combined[ln_i + rn_i - 1] == (Edge { from: er_from, to: el_to }),\n        ensures\n            spec_edges_form_cycle(combined),"
   },
   {
-    "id": 29,
+    "id": 30,
     "function": "etsp",
     "file": "Chap26/ETSPStEph.rs",
     "lines": "295-299",
@@ -232,55 +240,55 @@
     "snippet": "        fn etsp(points: &Vec<Point>) -> (tour: Vec<Edge>)\n            requires\n                points@.len() >= 2,\n                points@.len() < usize::MAX / 2,\n            ensures spec_etsp(tour@, points@);"
   },
   {
-    "id": 30,
+    "id": 31,
     "function": "etsp_inner",
     "file": "Chap26/ETSPStEph.rs",
-    "lines": "312-317",
+    "lines": "314-319",
     "spec_strength": "unknown",
     "snippet": "    fn etsp_inner(points: &Vec<Point>) -> (tour: Vec<Edge>)\n        requires\n            points@.len() >= 2,\n            points@.len() < usize::MAX / 2,\n        ensures spec_etsp(tour@, points@),\n        decreases points@.len(),"
   },
   {
-    "id": 31,
+    "id": 32,
     "function": "sort_and_split",
     "file": "Chap26/ETSPStEph.rs",
-    "lines": "482-493",
+    "lines": "486-497",
     "spec_strength": "unknown",
     "snippet": "    pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))\n        requires points@.len() >= 4,\n        ensures\n            halves.0@.len() >= 2,\n            halves.1@.len() >= 2,\n            halves.0@.len() + halves.1@.len() == points@.len(),\n            halves.0@.len() < points@.len(),\n            halves.1@.len() < points@.len(),\n            forall|i: int| #![trigger halves.0@[i]] 0 <= i < halves.0@.len() ==>\n                spec_point_in_seq(halves.0@[i], points@),\n            forall|i: int| #![trigger halves.1@[i]] 0 <= i < halves.1@.len() ==>\n                spec_point_in_seq(halves.1@[i], points@),"
   },
   {
-    "id": 32,
+    "id": 33,
     "function": "find_best_swap",
     "file": "Chap26/ETSPStEph.rs",
-    "lines": "543-549",
+    "lines": "549-555",
     "spec_strength": "unknown",
     "snippet": "    pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))\n        requires\n            left_tour@.len() >= 2,\n            right_tour@.len() >= 2,\n        ensures\n            (swap_indices.0 as int) < left_tour@.len(),\n            (swap_indices.1 as int) < right_tour@.len(),"
   },
   {
-    "id": 33,
+    "id": 34,
     "function": "distance",
     "file": "Chap26/ETSPStEph.rs",
-    "lines": "572",
+    "lines": "578",
     "spec_strength": "",
     "snippet": "        fn distance(&self, other: &Point) -> f64;"
   },
   {
-    "id": 34,
+    "id": 35,
     "function": "sort_and_split_impl",
     "file": "Chap26/ETSPStEph.rs",
-    "lines": "583-605",
+    "lines": "589-611",
     "spec_strength": "",
     "snippet": "    /// Sort points by longest-spread dimension and split at median. (f64 arithmetic.)\n    pub fn sort_and_split_impl(points: &Vec<Point>) -> (Vec<Point>, Vec<Point>) {\n        let n = points.len();\n        let (mut min_x, mut max_x, mut min_y, mut max_y) =\n            (points[0].x, points[0].x, points[0].y, points[0].y);\n        for i in 1..n {\n            if points[i].x < min_x { min_x = points[i].x; }\n            if points[i].x > max_x { max_x = points[i].x; }\n            if points[i].y < min_y { min_y = points[i].y; }\n            if points[i].y > max_y { max_y = points[i].y; }\n        }\n        let split_on_x = (max_x - min_x) >= (max_y - min_y);\n        let mut sorted_points = points.clone();\n        if split_on_x {\n            sorted_points.sort_by(|a, b| a.x.partial_cmp(&b.x).unwrap_or(std::cmp::Ordering::Equal));\n        } else {\n            sorted_points.sort_by(|a, b| a.y.partial_cmp(&b.y).unwrap_or(std::cmp::Ordering::Equal));\n        }\n        let mid = (n / 2).max(2);\n        let left: Vec<Point> = sorted_points[..mid].to_vec();\n        let right: Vec<Point> = sorted_points[mid..].to_vec();\n        (left, right)\n    }"
   },
   {
-    "id": 35,
+    "id": 36,
     "function": "find_best_swap_impl",
     "file": "Chap26/ETSPStEph.rs",
-    "lines": "607-626",
+    "lines": "613-632",
     "spec_strength": "",
     "snippet": "    /// Find best swap indices by exhaustive O(n²) search. (f64 arithmetic.)\n    pub fn find_best_swap_impl(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (usize, usize) {\n        let mut best_cost = f64::MAX;\n        let mut best_li = 0usize;\n        let mut best_ri = 0usize;\n        for li in 0..left_tour.len() {\n            for ri in 0..right_tour.len() {\n                let el = &left_tour[li];\n                let er = &right_tour[ri];\n                let cost = el.from.distance(&er.to) + er.from.distance(&el.to)\n                         - el.from.distance(&el.to) - er.from.distance(&er.to);\n                if cost < best_cost {\n                    best_cost = cost;\n                    best_li = li;\n                    best_ri = ri;\n                }\n            }\n        }\n        (best_li, best_ri)\n    }"
   },
   {
-    "id": 36,
+    "id": 37,
     "function": "lemma_multiset_count_positive_implies_exists",
     "file": "Chap26/MergeSortMtPer.rs",
     "lines": "89-92",
@@ -288,7 +296,7 @@
     "snippet": "    proof fn lemma_multiset_count_positive_implies_exists(s: Seq<N>, x: N)\n        requires s.to_multiset().count(x) > 0,\n        ensures exists|j: int| #![trigger s[j]] 0 <= j < s.len() && s[j] == x,\n        decreases s.len(),"
   },
   {
-    "id": 37,
+    "id": 38,
     "function": "lemma_all_le_preserved_by_permutation",
     "file": "Chap26/MergeSortMtPer.rs",
     "lines": "108-113",
@@ -296,7 +304,7 @@
     "snippet": "    proof fn lemma_all_le_preserved_by_permutation(a: Seq<N>, b: Seq<N>, bound: N)\n        requires\n            a.to_multiset() =~= b.to_multiset(),\n            forall|i: int| #![trigger b[i]] 0 <= i < b.len() ==> b[i] <= bound,\n        ensures\n            forall|i: int| #![trigger a[i]] 0 <= i < a.len() ==> a[i] <= bound,"
   },
   {
-    "id": 38,
+    "id": 39,
     "function": "lemma_all_ge_preserved_by_permutation",
     "file": "Chap26/MergeSortMtPer.rs",
     "lines": "125-130",
@@ -304,7 +312,7 @@
     "snippet": "    proof fn lemma_all_ge_preserved_by_permutation(a: Seq<N>, b: Seq<N>, bound: N)\n        requires\n            a.to_multiset() =~= b.to_multiset(),\n            forall|i: int| #![trigger b[i]] 0 <= i < b.len() ==> b[i] >= bound,\n        ensures\n            forall|i: int| #![trigger a[i]] 0 <= i < a.len() ==> a[i] >= bound,"
   },
   {
-    "id": 39,
+    "id": 40,
     "function": "lemma_sorted_concat_pivot",
     "file": "Chap26/MergeSortMtPer.rs",
     "lines": "143-150",
@@ -312,7 +320,7 @@
     "snippet": "    proof fn lemma_sorted_concat_pivot(a: Seq<N>, pivot: N, c: Seq<N>)\n        requires\n            spec_sorted(a),\n            spec_sorted(c),\n            forall|i: int| #![trigger a[i]] 0 <= i < a.len() ==> a[i] <= pivot,\n            forall|i: int| #![trigger c[i]] 0 <= i < c.len() ==> c[i] >= pivot,\n        ensures\n            spec_sorted(a.push(pivot) + c),"
   },
   {
-    "id": 40,
+    "id": 41,
     "function": "merge_parallel",
     "file": "Chap26/MergeSortMtPer.rs",
     "lines": "179-188",
@@ -320,7 +328,7 @@
     "snippet": "        fn merge_parallel(left: &ArraySeqMtPerS<N>, right: &ArraySeqMtPerS<N>) -> (merged: ArraySeqMtPerS<N>)\n            requires\n                spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),\n                spec_sorted(Seq::new(right.spec_len(), |i: int| right.spec_index(i))),\n                left.spec_len() + right.spec_len() <= usize::MAX,\n            ensures\n                spec_merge_post(\n                    Seq::new(left.spec_len(), |i: int| left.spec_index(i)),\n                    Seq::new(right.spec_len(), |i: int| right.spec_index(i)),\n                    Seq::new(merged.spec_len(), |i: int| merged.spec_index(i)));"
   },
   {
-    "id": 41,
+    "id": 42,
     "function": "merge_sort_parallel",
     "file": "Chap26/MergeSortMtPer.rs",
     "lines": "193-198",
@@ -328,23 +336,23 @@
     "snippet": "        fn merge_sort_parallel(a: &ArraySeqMtPerS<N>) -> (sorted: ArraySeqMtPerS<N>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                spec_sort_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    Seq::new(sorted.spec_len(), |i: int| sorted.spec_index(i)));"
   },
   {
-    "id": 42,
+    "id": 43,
     "function": "binary_search_upper_bound",
     "file": "Chap26/MergeSortMtPer.rs",
-    "lines": "207-214",
+    "lines": "209-216",
     "spec_strength": "unknown",
     "snippet": "    fn binary_search_upper_bound(arr: &ArraySeqMtPerS<N>, pivot: N) -> (pos: usize)\n        requires spec_sorted(Seq::new(arr.spec_len(), |i: int| arr.spec_index(i))),\n        ensures\n            pos as int <= arr.spec_len(),\n            forall|j: int| #![trigger arr.spec_index(j)]\n                0 <= j < pos as int ==> arr.spec_index(j) <= pivot,\n            forall|j: int| #![trigger arr.spec_index(j)]\n                pos as int <= j < arr.spec_len() ==> arr.spec_index(j) > pivot,"
   },
   {
-    "id": 43,
+    "id": 44,
     "function": "merge_dc",
     "file": "Chap26/MergeSortMtPer.rs",
-    "lines": "264-274",
+    "lines": "268-278",
     "spec_strength": "unknown",
     "snippet": "    fn merge_dc(left: &ArraySeqMtPerS<N>, right: &ArraySeqMtPerS<N>) -> (merged: ArraySeqMtPerS<N>)\n        requires\n            spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),\n            spec_sorted(Seq::new(right.spec_len(), |i: int| right.spec_index(i))),\n            left.spec_len() + right.spec_len() <= usize::MAX,\n        ensures\n            spec_merge_post(\n                Seq::new(left.spec_len(), |i: int| left.spec_index(i)),\n                Seq::new(right.spec_len(), |i: int| right.spec_index(i)),\n                Seq::new(merged.spec_len(), |i: int| merged.spec_index(i))),\n        decreases left.spec_len() + right.spec_len(),"
   },
   {
-    "id": 44,
+    "id": 45,
     "function": "lemma_push_sorted",
     "file": "Chap26/MergeSortStPer.rs",
     "lines": "85-90",
@@ -352,7 +360,7 @@
     "snippet": "    pub proof fn lemma_push_sorted(s: Seq<N>, v: N)\n        requires\n            spec_sorted(s),\n            s.len() > 0 ==> s.last() <= v,\n        ensures\n            spec_sorted(s.push(v)),"
   },
   {
-    "id": 45,
+    "id": 46,
     "function": "merge",
     "file": "Chap26/MergeSortStPer.rs",
     "lines": "116-125",
@@ -360,7 +368,7 @@
     "snippet": "        fn merge(left: &ArraySeqStPerS<N>, right: &ArraySeqStPerS<N>) -> (merged: ArraySeqStPerS<N>)\n            requires\n                spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),\n                spec_sorted(Seq::new(right.spec_len(), |i: int| right.spec_index(i))),\n                left.spec_len() + right.spec_len() <= usize::MAX,\n            ensures\n                spec_merge_post(\n                    Seq::new(left.spec_len(), |i: int| left.spec_index(i)),\n                    Seq::new(right.spec_len(), |i: int| right.spec_index(i)),\n                    Seq::new(merged.spec_len(), |i: int| merged.spec_index(i)));"
   },
   {
-    "id": 46,
+    "id": 47,
     "function": "merge_sort",
     "file": "Chap26/MergeSortStPer.rs",
     "lines": "130-135",
@@ -368,7 +376,7 @@
     "snippet": "        fn merge_sort(a: &ArraySeqStPerS<N>) -> (sorted: ArraySeqStPerS<N>)\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                spec_sort_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    Seq::new(sorted.spec_len(), |i: int| sorted.spec_index(i)));"
   },
   {
-    "id": 47,
+    "id": 48,
     "function": "lemma_fold_left_monoid",
     "file": "Chap26/ScanDCMtPer.rs",
     "lines": "75-78",
@@ -376,7 +384,7 @@
     "snippet": "    proof fn lemma_fold_left_monoid(s: Seq<N>, x: N, f: spec_fn(N, N) -> N, id: N)\n        requires spec_monoid(f, id),\n        ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),\n        decreases s.len(),"
   },
   {
-    "id": 48,
+    "id": 49,
     "function": "prefix_sums_dc_parallel",
     "file": "Chap26/ScanDCMtPer.rs",
     "lines": "95-102",
@@ -384,15 +392,15 @@
     "snippet": "        fn prefix_sums_dc_parallel(a: &ArraySeqMtPerS<N>) -> (sums: (ArraySeqMtPerS<N>, N))\n            requires a.spec_len() <= usize::MAX,\n            ensures\n                spec_scan_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    spec_sum_fn(), 0,\n                    Seq::new(sums.0.spec_len(), |i: int| sums.0.spec_index(i)),\n                    sums.1);"
   },
   {
-    "id": 49,
+    "id": 50,
     "function": "prefix_sums_dc_inner",
     "file": "Chap26/ScanDCMtPer.rs",
-    "lines": "108-116",
+    "lines": "110-118",
     "spec_strength": "unknown",
     "snippet": "    fn prefix_sums_dc_inner(a: &ArraySeqMtPerS<N>) -> (sums: (ArraySeqMtPerS<N>, N))\n        requires a.spec_len() <= usize::MAX,\n        ensures\n            spec_scan_post(\n                Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                spec_sum_fn(), 0,\n                Seq::new(sums.0.spec_len(), |i: int| sums.0.spec_index(i)),\n                sums.1),\n        decreases a.spec_len(),"
   },
   {
-    "id": 50,
+    "id": 51,
     "function": "lemma_fold_left_monoid",
     "file": "Chap26/ScanDCStPer.rs",
     "lines": "80-83",
@@ -400,7 +408,7 @@
     "snippet": "    pub proof fn lemma_fold_left_monoid(s: Seq<N>, x: N, f: spec_fn(N, N) -> N, id: N)\n        requires spec_monoid(f, id),\n        ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),\n        decreases s.len(),"
   },
   {
-    "id": 51,
+    "id": 52,
     "function": "scan_dc",
     "file": "Chap26/ScanDCStPer.rs",
     "lines": "103-114",
@@ -408,7 +416,7 @@
     "snippet": "        fn scan_dc<F: Fn(&N, &N) -> N>(a: &ArraySeqStPerS<N>, f: &F, Ghost(spec_f): Ghost<spec_fn(N, N) -> N>, id: N) -> (scanned: (ArraySeqStPerS<N>, N))\n            requires\n                a.spec_len() <= usize::MAX,\n                spec_monoid(spec_f, id),\n                forall|x: &N, y: &N| #[trigger] f.requires((x, y)),\n                forall|x: N, y: N, ret: N| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),\n            ensures\n                spec_scan_post(\n                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),\n                    spec_f, id,\n                    Seq::new(scanned.0.spec_len(), |i: int| scanned.0.spec_index(i)),\n                    scanned.1);"
   },
   {
-    "id": 52,
+    "id": 53,
     "function": "prefix_sums_dc",
     "file": "Chap26/ScanDCStPer.rs",
     "lines": "120-127",

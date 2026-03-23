@@ -3,183 +3,183 @@
     "id": 1,
     "function": "eq",
     "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "48-49",
-    "spec_strength": "unknown",
+    "lines": "47-48",
+    "spec_strength": "hole",
     "snippet": "        fn eq(&self, other: &Self) -> (r: bool)\n            ensures r == (self@ == other@)"
   },
   {
     "id": 2,
     "function": "vertex_bridges_mt",
     "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "85-89",
-    "spec_strength": "",
-    "snippet": "        fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + 'static>(\n            edges: Arc<Vec<LabeledEdge<V>>>,\n            start: usize,\n            end: usize,\n        ) -> HashMap<V, (V, WrappedF64, usize)>;"
+    "lines": "84-92",
+    "spec_strength": "unknown",
+    "snippet": "        fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + 'static>(\n            edges: Arc<Vec<LabeledEdge<V>>>,\n            start: usize,\n            end: usize,\n        ) -> HashMapWithViewPlus<V, (V, WrappedF64, usize)>\n            requires\n                start <= end, end <= edges@.len(),\n                obeys_key_model::<V>(),\n                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2;"
   },
   {
     "id": 3,
     "function": "bridge_star_partition_mt",
     "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "93-98",
-    "spec_strength": "",
-    "snippet": "        fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(\n            vertices_vec: Vec<V>,\n            bridges: HashMap<V, (V, WrappedF64, usize)>,\n            seed: u64,\n            round: usize,\n        ) -> (SetStEph<V>, HashMap<V, (V, WrappedF64, usize)>);"
+    "lines": "96-105",
+    "spec_strength": "unknown",
+    "snippet": "        fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(\n            vertices_vec: Vec<V>,\n            bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>,\n            seed: u64,\n            round: usize,\n        ) -> (result: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>))\n            requires\n                obeys_key_model::<V>(),\n                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,\n            ensures result.0.spec_setsteph_wf();"
   },
   {
     "id": 4,
     "function": "boruvka_mst_mt",
     "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "102-108",
-    "spec_strength": "",
-    "snippet": "        fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + 'static>(\n            vertices_vec: Vec<V>,\n            edges_vec: Vec<LabeledEdge<V>>,\n            mst_labels: SetStEph<usize>,\n            seed: u64,\n            round: usize,\n        ) -> SetStEph<usize>;"
+    "lines": "109-120",
+    "spec_strength": "unknown",
+    "snippet": "        fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + 'static>(\n            vertices_vec: Vec<V>,\n            edges_vec: Vec<LabeledEdge<V>>,\n            mst_labels: SetStEph<usize>,\n            seed: u64,\n            round: usize,\n        ) -> (mst: SetStEph<usize>)\n            requires\n                obeys_key_model::<V>(),\n                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,\n                mst_labels.spec_setsteph_wf(),\n            ensures mst.spec_setsteph_wf();"
   },
   {
     "id": 5,
     "function": "boruvka_mst_mt_with_seed",
     "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "112-117",
+    "lines": "124-135",
     "spec_strength": "unknown",
-    "snippet": "        fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(\n            vertices: &SetStEph<V>,\n            edges: &SetStEph<LabeledEdge<V>>,\n            seed: u64,\n        ) -> SetStEph<usize>\n            requires Self::spec_boruvkamteph_wf(edges@);"
+    "snippet": "        fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(\n            vertices: &SetStEph<V>,\n            edges: &SetStEph<LabeledEdge<V>>,\n            seed: u64,\n        ) -> (mst: SetStEph<usize>)\n            requires\n                Self::spec_boruvkamteph_wf(edges@),\n                vertices.spec_setsteph_wf(),\n                edges.spec_setsteph_wf(),\n                obeys_key_model::<V>(),\n                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,\n            ensures mst.spec_setsteph_wf();"
   },
   {
     "id": 6,
     "function": "mst_weight",
     "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "121-124",
-    "spec_strength": "",
+    "lines": "139-142",
+    "spec_strength": "unknown",
     "snippet": "        fn mst_weight<V: StT + Hash>(\n            edges: &SetStEph<LabeledEdge<V>>,\n            mst_labels: &SetStEph<usize>,\n        ) -> WrappedF64;"
   },
   {
     "id": 7,
+    "function": "hash_coin",
+    "file": "Chap66/BoruvkaMtEph.rs",
+    "lines": "150",
+    "spec_strength": "hole",
+    "snippet": "    fn hash_coin(seed: u64, round: usize, index: usize) -> bool {"
+  },
+  {
+    "id": 8,
+    "function": "hash_coin_flips_mt",
+    "file": "Chap66/BoruvkaMtEph.rs",
+    "lines": "164-174",
+    "spec_strength": "unknown",
+    "snippet": "    fn hash_coin_flips_mt<V: StTInMtT + Hash + Ord + 'static>(\n        vertices: Arc<Vec<V>>,\n        seed: u64,\n        round: usize,\n        start: usize,\n        end: usize,\n    ) -> HashMapWithViewPlus<V, bool>\n        requires\n            start <= end, end <= vertices@.len(),\n            obeys_key_model::<V>(),\n            forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,"
+  },
+  {
+    "id": 9,
+    "function": "compute_remaining_mt",
+    "file": "Chap66/BoruvkaMtEph.rs",
+    "lines": "232-238",
+    "spec_strength": "unknown",
+    "snippet": "    fn compute_remaining_mt<V: StTInMtT + Hash + Ord + 'static>(\n        vertices: Arc<Vec<V>>,\n        partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,\n        start: usize,\n        end: usize,\n    ) -> Vec<V>\n        requires start <= end, end <= vertices@.len(),"
+  },
+  {
+    "id": 10,
+    "function": "collect_mst_labels_mt",
+    "file": "Chap66/BoruvkaMtEph.rs",
+    "lines": "291-297",
+    "spec_strength": "unknown",
+    "snippet": "    fn collect_mst_labels_mt<V: StTInMtT + Hash + Ord + 'static>(\n        keys: Arc<Vec<V>>,\n        partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,\n        start: usize,\n        end: usize,\n    ) -> Vec<usize>\n        requires start <= end, end <= keys@.len(),"
+  },
+  {
+    "id": 11,
+    "function": "build_partition_map_mt",
+    "file": "Chap66/BoruvkaMtEph.rs",
+    "lines": "350-359",
+    "spec_strength": "unknown",
+    "snippet": "    fn build_partition_map_mt<V: StTInMtT + Hash + Ord + 'static>(\n        vertices: Arc<Vec<V>>,\n        partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,\n        start: usize,\n        end: usize,\n    ) -> HashMapWithViewPlus<V, V>\n        requires\n            start <= end, end <= vertices@.len(),\n            obeys_key_model::<V>(),\n            forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,"
+  },
+  {
+    "id": 12,
+    "function": "filter_tail_to_head_mt",
+    "file": "Chap66/BoruvkaMtEph.rs",
+    "lines": "578-588",
+    "spec_strength": "unknown",
+    "snippet": "    fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + 'static>(\n        vertices: Arc<Vec<V>>,\n        bridges: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,\n        coin_flips: Arc<HashMapWithViewPlus<V, bool>>,\n        start: usize,\n        end: usize,\n    ) -> HashMapWithViewPlus<V, (V, WrappedF64, usize)>\n        requires\n            start <= end, end <= vertices@.len(),\n            obeys_key_model::<V>(),\n            forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,"
+  },
+  {
+    "id": 13,
+    "function": "reroute_edges_mt",
+    "file": "Chap66/BoruvkaMtEph.rs",
+    "lines": "792-801",
+    "spec_strength": "unknown",
+    "snippet": "    fn reroute_edges_mt<V: StTInMtT + Hash + Ord + 'static>(\n        edges: Arc<Vec<LabeledEdge<V>>>,\n        partition: Arc<HashMapWithViewPlus<V, V>>,\n        start: usize,\n        end: usize,\n    ) -> Vec<LabeledEdge<V>>\n        requires\n            start <= end, end <= edges@.len(),\n            obeys_key_model::<V>(),\n            forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,"
+  },
+  {
+    "id": 14,
     "function": "partial_cmp",
     "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "131-133",
+    "lines": "965-967",
     "spec_strength": "",
     "snippet": "        fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {\n            Some(self.cmp(other))\n        }"
   },
   {
-    "id": 8,
+    "id": 15,
     "function": "cmp",
     "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "137-142",
+    "lines": "971-976",
     "spec_strength": "",
     "snippet": "        fn cmp(&self, other: &Self) -> std::cmp::Ordering {\n            self.0.cmp(&other.0)\n                .then_with(|| self.1.cmp(&other.1))\n                .then_with(|| self.2.val.partial_cmp(&other.2.val).unwrap_or(std::cmp::Ordering::Equal))\n                .then_with(|| self.3.cmp(&other.3))\n        }"
   },
   {
-    "id": 9,
+    "id": 16,
     "function": "hash",
     "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "146-151",
+    "lines": "980-985",
     "spec_strength": "",
     "snippet": "        fn hash<H: std::hash::Hasher>(&self, state: &mut H) {\n            self.0.hash(state);\n            self.1.hash(state);\n            self.2.val.to_bits().hash(state);\n            self.3.hash(state);\n        }"
-  },
-  {
-    "id": 10,
-    "function": "hash_coin",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "166-177",
-    "spec_strength": "",
-    "snippet": "    // Hash-based coin flip: deterministic from (seed, round, vertex index).\n    // Replaces sequential StdRng coin flips with a parallelizable hash function.\n    #[cfg(not(verus_keep_ghost))]\n    fn hash_coin(seed: u64, round: usize, index: usize) -> bool {\n        use std::hash::{Hash, Hasher};\n        use std::collections::hash_map::DefaultHasher;\n        let mut hasher = DefaultHasher::new();\n        seed.hash(&mut hasher);\n        round.hash(&mut hasher);\n        index.hash(&mut hasher);\n        hasher.finish() % 2 == 0\n    }"
-  },
-  {
-    "id": 11,
-    "function": "hash_coin_flips_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "179-212",
-    "spec_strength": "",
-    "snippet": "    /// Parallel coin flip generation using divide-and-conquer.\n    ///\n    /// - Work O(n), Span O(log n) — parallel hash-based coin generation via ParaPair!.\n    #[cfg(not(verus_keep_ghost))]\n    fn hash_coin_flips_mt<V: StTInMtT + Hash + Ord + 'static>(\n        vertices: Arc<Vec<V>>,\n        seed: u64,\n        round: usize,\n        start: usize,\n        end: usize,\n    ) -> HashMap<V, bool> {\n        let size = end - start;\n        if size == 0 {\n            return HashMap::new();\n        }\n        if size == 1 {\n            let mut coins = HashMap::new();\n            let _ = coins.insert(vertices[start].clone(), hash_coin(seed, round, start));\n            return coins;\n        }\n\n        let mid = start + size / 2;\n        let v1 = vertices.clone();\n        let v2 = vertices;\n\n        let pair = ParaPair!(\n            move || hash_coin_flips_mt(v1, seed, round, start, mid),\n            move || hash_coin_flips_mt(v2, seed, round, mid, end)\n        );\n\n        let mut merged = pair.0;\n        merged.extend(pair.1);\n        merged\n    }"
-  },
-  {
-    "id": 12,
-    "function": "compute_remaining_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "214-250",
-    "spec_strength": "",
-    "snippet": "    /// Parallel remaining-vertex filter using divide-and-conquer.\n    ///\n    /// - Work O(n), Span O(log n) — parallel filter via ParaPair!.\n    #[cfg(not(verus_keep_ghost))]\n    fn compute_remaining_mt<V: StTInMtT + Hash + Ord + 'static>(\n        vertices: Arc<Vec<V>>,\n        partition: Arc<HashMap<V, (V, WrappedF64, usize)>>,\n        start: usize,\n        end: usize,\n    ) -> Vec<V> {\n        let size = end - start;\n        if size == 0 {\n            return Vec::new();\n        }\n        if size == 1 {\n            let v = &vertices[start];\n            if !partition.contains_key(v) {\n                return vec![v.clone()];\n            }\n            return Vec::new();\n        }\n\n        let mid = start + size / 2;\n        let v1 = vertices.clone();\n        let p1 = partition.clone();\n        let v2 = vertices;\n        let p2 = partition;\n\n        let pair = ParaPair!(\n            move || compute_remaining_mt(v1, p1, start, mid),\n            move || compute_remaining_mt(v2, p2, mid, end)\n        );\n\n        let mut left = pair.0;\n        left.extend(pair.1);\n        left\n    }"
-  },
-  {
-    "id": 13,
-    "function": "collect_mst_labels_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "252-287",
-    "spec_strength": "",
-    "snippet": "    /// Parallel MST label collection using divide-and-conquer.\n    ///\n    /// - Work O(n), Span O(log n) — parallel label extraction via ParaPair!.\n    #[cfg(not(verus_keep_ghost))]\n    fn collect_mst_labels_mt<V: StTInMtT + Hash + Ord + 'static>(\n        keys: Arc<Vec<V>>,\n        partition: Arc<HashMap<V, (V, WrappedF64, usize)>>,\n        start: usize,\n        end: usize,\n    ) -> Vec<usize> {\n        let size = end - start;\n        if size == 0 {\n            return Vec::new();\n        }\n        if size == 1 {\n            if let Some((_, _, label)) = partition.get(&keys[start]) {\n                return vec![*label];\n            }\n            return Vec::new();\n        }\n\n        let mid = start + size / 2;\n        let k1 = keys.clone();\n        let p1 = partition.clone();\n        let k2 = keys;\n        let p2 = partition;\n\n        let pair = ParaPair!(\n            move || collect_mst_labels_mt(k1, p1, start, mid),\n            move || collect_mst_labels_mt(k2, p2, mid, end)\n        );\n\n        let mut left = pair.0;\n        left.extend(pair.1);\n        left\n    }"
-  },
-  {
-    "id": 14,
-    "function": "build_partition_map_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "289-329",
-    "spec_strength": "",
-    "snippet": "    /// Parallel partition map construction using divide-and-conquer.\n    /// Maps tails→heads from partition, remaining→identity.\n    ///\n    /// - Work O(n), Span O(log n) — parallel map building via ParaPair!.\n    #[cfg(not(verus_keep_ghost))]\n    fn build_partition_map_mt<V: StTInMtT + Hash + Ord + 'static>(\n        vertices: Arc<Vec<V>>,\n        partition: Arc<HashMap<V, (V, WrappedF64, usize)>>,\n        start: usize,\n        end: usize,\n    ) -> HashMap<V, V> {\n        let size = end - start;\n        if size == 0 {\n            return HashMap::new();\n        }\n        if size == 1 {\n            let v = &vertices[start];\n            let mut heads = HashMap::new();\n            if let Some((head, _, _)) = partition.get(v) {\n                let _ = heads.insert(v.clone(), head.clone());\n            } else {\n                let _ = heads.insert(v.clone(), v.clone());\n            }\n            return heads;\n        }\n\n        let mid = start + size / 2;\n        let v1 = vertices.clone();\n        let p1 = partition.clone();\n        let v2 = vertices;\n        let p2 = partition;\n\n        let pair = ParaPair!(\n            move || build_partition_map_mt(v1, p1, start, mid),\n            move || build_partition_map_mt(v2, p2, mid, end)\n        );\n\n        let mut merged = pair.0;\n        merged.extend(pair.1);\n        merged\n    }"
-  },
-  {
-    "id": 15,
-    "function": "filter_tail_to_head_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "430-480",
-    "spec_strength": "",
-    "snippet": "    /// Parallel filter: find edges from Tail→Head.\n    ///\n    /// - Claude-Opus-4.6: Work O(n), Span O(log n) — parallel divide-and-conquer via ParaPair!.\n    #[cfg(not(verus_keep_ghost))]\n    fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + 'static>(\n        vertices: Arc<Vec<V>>,\n        bridges: Arc<HashMap<V, (V, WrappedF64, usize)>>,\n        coin_flips: Arc<HashMap<V, bool>>,\n        start: usize,\n        end: usize,\n    ) -> HashMap<V, (V, WrappedF64, usize)> {\n        let size = end - start;\n        if size == 0 {\n            return HashMap::new();\n        }\n\n        if size == 1 {\n            // Base case: check single vertex.\n            let u = &vertices[start];\n            if let Some((v, w, label)) = bridges.get(u) {\n                let u_heads = coin_flips.get(u).copied().unwrap_or(false);\n                let v_heads = coin_flips.get(v).copied().unwrap_or(false);\n\n                if !u_heads && v_heads {\n                    let mut min_edges = HashMap::new();\n                    let _ = min_edges.insert(u.clone(), (v.clone(), *w, *label));\n                    return min_edges;\n                }\n            }\n            return HashMap::new();\n        }\n\n        // Divide and conquer.\n        let mid = start + size / 2;\n        let verts1 = vertices.clone();\n        let bridges1 = bridges.clone();\n        let flips1 = coin_flips.clone();\n        let verts2 = vertices;\n        let bridges2 = bridges;\n        let flips2 = coin_flips;\n\n        let pair = ParaPair!(\n            move || filter_tail_to_head_mt(verts1, bridges1, flips1, start, mid),\n            move || filter_tail_to_head_mt(verts2, bridges2, flips2, mid, end)\n        );\n\n        // Merge.\n        let mut merged = pair.0;\n        merged.extend(pair.1);\n        merged\n    }"
-  },
-  {
-    "id": 16,
-    "function": "reroute_edges_mt",
-    "file": "Chap66/BoruvkaMtEph.rs",
-    "lines": "545-587",
-    "spec_strength": "",
-    "snippet": "    /// Parallel edge re-routing: map edges to new endpoints and remove self-edges.\n    ///\n    /// - Claude-Opus-4.6: Work O(m), Span O(log m) — parallel divide-and-conquer via ParaPair!.\n    #[cfg(not(verus_keep_ghost))]\n    fn reroute_edges_mt<V: StTInMtT + Hash + Ord + 'static>(\n        edges: Arc<Vec<LabeledEdge<V>>>,\n        partition: Arc<HashMap<V, V>>,\n        start: usize,\n        end: usize,\n    ) -> Vec<LabeledEdge<V>> {\n        let size = end - start;\n        if size == 0 {\n            return Vec::new();\n        }\n\n        if size == 1 {\n            let LabeledEdge(u, v, w, label) = &edges[start];\n            let new_u = partition.get(u).cloned().unwrap_or_else(|| u.clone());\n            let new_v = partition.get(v).cloned().unwrap_or_else(|| v.clone());\n\n            if new_u != new_v {\n                return vec![LabeledEdge(new_u, new_v, *w, *label)];\n            }\n            return Vec::new();\n        }\n\n        // Divide and conquer.\n        let mid = start + size / 2;\n        let edges1 = edges.clone();\n        let part1 = partition.clone();\n        let edges2 = edges;\n        let part2 = partition;\n\n        let pair = ParaPair!(move || reroute_edges_mt(edges1, part1, start, mid), move || {\n            reroute_edges_mt(edges2, part2, mid, end)\n        });\n\n        // Merge.\n        let mut left_result = pair.0;\n        let mut right_result = pair.1;\n        left_result.append(&mut right_result);\n        left_result\n    }"
   },
   {
     "id": 17,
     "function": "eq",
     "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "63-64",
-    "spec_strength": "unknown",
+    "lines": "62-63",
+    "spec_strength": "hole",
     "snippet": "        fn eq(&self, other: &Self) -> (r: bool)\n            ensures r == (self@ == other@)"
   },
   {
     "id": 18,
     "function": "coin_flip",
     "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "100-102",
+    "lines": "100-101",
     "spec_strength": "unknown",
-    "snippet": "    fn coin_flip(seed: u64, index: usize) -> (flip: bool)\n        requires true,\n        ensures flip == (((seed ^ (index as u64)) & 1u64) == 1u64)"
+    "snippet": "    fn coin_flip(seed: u64, index: usize) -> (flip: bool)\n        ensures flip == (((seed ^ (index as u64)) & 1u64) == 1u64)"
   },
   {
     "id": 19,
     "function": "vertex_bridges",
     "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "119-127",
+    "lines": "118-126",
     "spec_strength": "unknown",
-    "snippet": "        fn vertex_bridges<V: StT + Hash + Ord>(\n            edges: &SetStEph<LabeledEdge<V>>,\n        ) -> (bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)\n            requires\n                obeys_key_model::<V>(),\n                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,\n                spec_all_weights_finite(edges@),\n            ensures\n                forall|v: V| #[trigger] bridges@.contains_key(v@) ==> {"
+    "snippet": "        fn vertex_bridges<V: HashOrd>(\n            edges: &SetStEph<LabeledEdge<V>>,\n        ) -> (bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)\n            requires\n                obeys_key_model::<V>(),\n                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,\n                spec_all_weights_finite(edges@),\n            ensures\n                forall|v: V| #[trigger] bridges@.contains_key(v@) ==> {"
   },
   {
     "id": 20,
     "function": "bridge_star_partition",
     "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "134-142",
+    "lines": "133-141",
     "spec_strength": "unknown",
-    "snippet": "        fn bridge_star_partition<V: StT + Hash + Ord>(\n            vertices: &SetStEph<V>,\n            bridges: &HashMapWithViewPlus<V, (V, WrappedF64, usize)>,\n            seed: u64,\n        ) -> (partition: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>))\n            requires\n                obeys_key_model::<V>(),\n                obeys_feq_full::<V>(),\n                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2;"
+    "snippet": "        fn bridge_star_partition<V: HashOrd>(\n            vertices: &SetStEph<V>,\n            bridges: &HashMapWithViewPlus<V, (V, WrappedF64, usize)>,\n            seed: u64,\n        ) -> (partition: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>))\n            requires\n                obeys_key_model::<V>(),\n                obeys_feq_full::<V>(),\n                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2;"
   },
   {
     "id": 21,
     "function": "boruvka_mst",
     "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "146-158",
+    "lines": "145-157",
     "spec_strength": "unknown",
-    "snippet": "        fn boruvka_mst<V: StT + Hash + Ord>(\n            vertices: &SetStEph<V>,\n            edges: &SetStEph<LabeledEdge<V>>,\n            mst_labels: SetStEph<usize>,\n            seed: u64,\n        ) -> (mst: SetStEph<usize>)\n            requires\n                Self::spec_boruvkasteph_wf(edges@),\n                obeys_key_model::<V>(),\n                obeys_feq_full::<V>(),\n                obeys_key_model::<LabeledEdge<V>>(),\n                obeys_feq_full::<LabeledEdge<V>>(),\n                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2;"
+    "snippet": "        fn boruvka_mst<V: HashOrd>(\n            vertices: &SetStEph<V>,\n            edges: &SetStEph<LabeledEdge<V>>,\n            mst_labels: SetStEph<usize>,\n            seed: u64,\n        ) -> (mst: SetStEph<usize>)\n            requires\n                Self::spec_boruvkasteph_wf(edges@),\n                obeys_key_model::<V>(),\n                obeys_feq_full::<V>(),\n                obeys_key_model::<LabeledEdge<V>>(),\n                obeys_feq_full::<LabeledEdge<V>>(),\n                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2;"
   },
   {
     "id": 22,
     "function": "boruvka_mst_with_seed",
     "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "162-173",
+    "lines": "161-172",
     "spec_strength": "unknown",
-    "snippet": "        fn boruvka_mst_with_seed<V: StT + Hash + Ord>(\n            vertices: &SetStEph<V>,\n            edges: &SetStEph<LabeledEdge<V>>,\n            seed: u64,\n        ) -> (mst: SetStEph<usize>)\n            requires\n                Self::spec_boruvkasteph_wf(edges@),\n                obeys_key_model::<V>(),\n                obeys_feq_full::<V>(),\n                obeys_key_model::<LabeledEdge<V>>(),\n                obeys_feq_full::<LabeledEdge<V>>(),\n                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2;"
+    "snippet": "        fn boruvka_mst_with_seed<V: HashOrd>(\n            vertices: &SetStEph<V>,\n            edges: &SetStEph<LabeledEdge<V>>,\n            seed: u64,\n        ) -> (mst: SetStEph<usize>)\n            requires\n                Self::spec_boruvkasteph_wf(edges@),\n                obeys_key_model::<V>(),\n                obeys_feq_full::<V>(),\n                obeys_key_model::<LabeledEdge<V>>(),\n                obeys_feq_full::<LabeledEdge<V>>(),\n                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2;"
   },
   {
     "id": 23,
     "function": "mst_weight",
     "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "177-180",
+    "lines": "176-179",
     "spec_strength": "",
     "snippet": "        fn mst_weight<V: StT + Hash>(\n            edges: &SetStEph<LabeledEdge<V>>,\n            mst_labels: &SetStEph<usize>,\n        ) -> (total: WrappedF64);"
   },
@@ -187,7 +187,7 @@
     "id": 24,
     "function": "partial_cmp",
     "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "505-507",
+    "lines": "504-506",
     "spec_strength": "",
     "snippet": "        fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {\n            Some(self.cmp(other))\n        }"
   },
@@ -195,7 +195,7 @@
     "id": 25,
     "function": "cmp",
     "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "511-516",
+    "lines": "510-515",
     "spec_strength": "",
     "snippet": "        fn cmp(&self, other: &Self) -> std::cmp::Ordering {\n            self.0.cmp(&other.0)\n                .then_with(|| self.1.cmp(&other.1))\n                .then_with(|| self.2.val.partial_cmp(&other.2.val).unwrap_or(std::cmp::Ordering::Equal))\n                .then_with(|| self.3.cmp(&other.3))\n        }"
   },
@@ -203,7 +203,7 @@
     "id": 26,
     "function": "hash",
     "file": "Chap66/BoruvkaStEph.rs",
-    "lines": "520-525",
+    "lines": "519-524",
     "spec_strength": "",
     "snippet": "        fn hash<H: std::hash::Hasher>(&self, state: &mut H) {\n            self.0.hash(state);\n            self.1.hash(state);\n            self.2.val.to_bits().hash(state);\n            self.3.hash(state);\n        }"
   }

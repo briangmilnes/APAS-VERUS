@@ -1,85 +1,85 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS/src/Chap64/
-Codebase: /home/milnes/projects/APAS-VERUS
+Path: /home/milnes/projects/APAS-VERUS-agent4/src/Chap64/
+Codebase: /home/milnes/projects/APAS-VERUS-agent4
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS/src/Chap64/analyses/veracity-review-verus-style.log
+Logging to: /home/milnes/projects/APAS-VERUS-agent4/src/Chap64/analyses/veracity-review-verus-style.log
 
 Checking 3 files...
 
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [23] free fn type bounds match trait
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:35: warning: [14] struct SpanTreeMtEph should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:35: warning: [14] struct SpanTreeMtEph should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:37: warning: [14] struct SpanTreeMtEphEdgesInv should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:37: warning: [14] struct SpanTreeMtEphEdgesInv should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:41: warning: [18] fn new_spanning_edges_arc should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:52: warning: [18] trait SpanTreeMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:52: warning: [20] trait SpanTreeMtEphTrait is defined but has no impl
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:54: warning: [22] spec fn spec_spantreemteph_wf in trait SpanTreeMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:26: warning: [14] struct SpanTreeMtEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:26: warning: [14] struct SpanTreeMtEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:54: warning: [19] spanning_tree_star_contraction_mt return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:152: warning: [19] verify_spanning_tree return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:30: warning: [20] trait SpanTreeMtEphTrait is defined but has no impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeMtEph.rs:32: warning: [22] spec fn spec_spantreemteph_wf in trait SpanTreeMtEphTrait has a body; should be abstract (no body) with concrete spec in the impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [13] no non-derive trait impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:28: warning: [14] struct SpanTreeStEph should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:28: warning: [14] struct SpanTreeStEph should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:32: warning: [20] trait SpanTreeStEphTrait is defined but has no impl
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:34: warning: [22] spec fn spec_spantreesteph_wf in trait SpanTreeStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:26: warning: [14] struct SpanTreeStEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:26: warning: [14] struct SpanTreeStEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:51: warning: [19] spanning_tree_star_contraction return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:146: warning: [19] verify_spanning_tree return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:30: warning: [20] trait SpanTreeStEphTrait is defined but has no impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:32: warning: [22] spec fn spec_spantreesteph_wf in trait SpanTreeStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
 
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [5] no vstd imports (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [11] no Set/Seq usage (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [13] no non-derive trait impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [14] no Debug/Display impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:58: warning: [12] trait TSPApproxStEphTrait fn shortcut_tour should have requires/ensures
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:37: warning: [14] struct TSPApproxStEph should have impl Debug outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:37: warning: [14] struct TSPApproxStEph should have impl Display outside verus!
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:41: warning: [20] trait TSPApproxStEphTrait is defined but has no impl
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:43: warning: [22] spec fn spec_tspapproxsteph_wf in trait TSPApproxStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:1: info: [5] no vstd imports (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:1: info: [11] no Set/Seq usage (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:1: info: [13] no non-derive trait impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:1: info: [14] no Debug/Display impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:1: info: [15] no PartialEq/Eq/Clone/Hash/Ord impls (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:1: info: [23] free fn type bounds match trait
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:54: warning: [12] trait TSPApproxStEphTrait fn shortcut_tour should have requires/ensures
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:33: warning: [14] struct TSPApproxStEph should have impl Debug outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:33: warning: [14] struct TSPApproxStEph should have impl Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:189: warning: [19] shortcut_tour return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:315: warning: [19] approx_metric_tsp return name 'result' could be more descriptive
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:37: warning: [20] trait TSPApproxStEphTrait is defined but has no impl
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:39: warning: [22] spec fn spec_tspapproxsteph_wf in trait TSPApproxStEphTrait has a body; should be abstract (no body) with concrete spec in the impl
 
 ════════════════════════════════════════════════════════════════
-Summary: 49 passed, 17 warnings in 3 files (checked 3 files)
+Summary: 47 passed, 19 warnings in 3 files (checked 3 files)
 ════════════════════════════════════════════════════════════════

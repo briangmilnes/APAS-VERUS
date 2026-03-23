@@ -3,72 +3,88 @@
     "id": 1,
     "function": "star_contract_mt",
     "file": "Chap62/StarContractionMtEph.rs",
-    "lines": "44-49",
+    "lines": "45-55",
     "spec_strength": "unknown",
-    "snippet": "        fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G) -> R\n        where\n            V: StT + MtT + Hash + Ord + 'static,\n            F: Fn(&SetStEph<V>) -> R,\n            G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R\n        requires Self::spec_starcontractionmteph_wf(graph);"
+    "snippet": "        fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G) -> R\n        where\n            V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,\n            F: Fn(&SetStEph<V>) -> R,\n            G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R\n        requires\n            Self::spec_starcontractionmteph_wf(graph),\n            valid_key_type_Edge::<V>(),\n            forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),\n            forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|\n                #[trigger] expand.requires((v, e, c, p, r));"
   },
   {
     "id": 2,
     "function": "contract_to_vertices_mt",
     "file": "Chap62/StarContractionMtEph.rs",
-    "lines": "53-54",
+    "lines": "59-62",
     "spec_strength": "unknown",
-    "snippet": "        fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> SetStEph<V>\n            requires Self::spec_starcontractionmteph_wf(graph);"
+    "snippet": "        fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> SetStEph<V>\n            requires\n                Self::spec_starcontractionmteph_wf(graph),\n                valid_key_type_Edge::<V>();"
   },
   {
     "id": 3,
-    "function": "build_quotient_graph_parallel",
+    "function": "star_contract_mt_fuel",
     "file": "Chap62/StarContractionMtEph.rs",
-    "lines": "99-120",
-    "spec_strength": "",
-    "snippet": "    /// Build quotient graph from partition (parallel version)\n    ///\n    /// Routes edges through partition map using divide-and-conquer parallelism.\n    ///\n    /// - APAS: (no cost stated) — helper not in prose.\n    /// - Claude-Opus-4.6: Work O(m), Span O(lg m) — delegates to route_edges_parallel which uses ParaPair fork-join.\n    #[cfg(not(verus_keep_ghost))]\n    fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + 'static>(\n        graph: &UnDirGraphMtEph<V>,\n        centers: &SetStEph<V>,\n        partition_map: &HashMap<V, V>,\n    ) -> UnDirGraphMtEph<V> {\n        let edges_vec = graph.edges().iter().cloned().collect::<Vec<Edge<V>>>();\n        let edges_seq = ArraySeqStEphS::from_vec(edges_vec);\n        let n_edges = edges_seq.length();\n\n        let part_map_arc = Arc::new(partition_map.clone());\n\n        let quotient_edges = route_edges_parallel(&edges_seq, part_map_arc, 0, n_edges);\n\n        <UnDirGraphMtEph<V> as UnDirGraphMtEphTrait<V>>::from_sets(centers.clone(), quotient_edges)\n    }"
+    "lines": "86-102",
+    "spec_strength": "unknown",
+    "snippet": "    fn star_contract_mt_fuel<V, R, F, G>(\n        graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G, fuel: usize,\n    ) -> (result: R)\n    where\n        V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,\n        F: Fn(&SetStEph<V>) -> R,\n        G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R,\n    requires\n        spec_graphview_wf(graph@),\n        valid_key_type_Edge::<V>(),\n        forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),\n        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|\n            #[trigger] expand.requires((v, e, c, p, r)),\n    ensures\n        (graph@.A.is_empty() || fuel == 0) ==>\n            exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),\n    decreases fuel,"
   },
   {
     "id": 4,
-    "function": "route_edges_parallel",
+    "function": "build_quotient_graph_parallel",
     "file": "Chap62/StarContractionMtEph.rs",
-    "lines": "122-172",
-    "spec_strength": "",
-    "snippet": "    /// Parallel edge routing using divide-and-conquer\n    ///\n    /// - APAS: (no cost stated) — helper not in prose.\n    /// - Claude-Opus-4.6: Work O(k), Span O(lg k) — binary fork-join via ParaPair; k = end - start.\n    #[cfg(not(verus_keep_ghost))]\n    fn route_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(\n        edges: &ArraySeqStEphS<Edge<V>>,\n        partition_map: Arc<HashMap<V, V>>,\n        start: usize,\n        end: usize,\n    ) -> SetStEph<Edge<V>> {\n        let size = end - start;\n\n        if size == 0 {\n            return SetLit![];\n        }\n\n        if size == 1 {\n            let edge = edges.nth(start as N);\n            let Edge(u, v) = edge;\n            let u_center = partition_map.get(u).unwrap_or(u);\n            let v_center = partition_map.get(v).unwrap_or(v);\n\n            if u_center != v_center {\n                let new_edge = if u_center < v_center {\n                    Edge(u_center.clone(), v_center.clone())\n                } else {\n                    Edge(v_center.clone(), u_center.clone())\n                };\n                return SetLit![new_edge];\n            }\n            return SetLit![];\n        }\n\n        let mid = start + size / 2;\n\n        let edges1 = edges.clone();\n        let map1 = partition_map.clone();\n        let edges2 = edges.clone();\n        let map2 = partition_map;\n\n        let pair = ParaPair!(move || route_edges_parallel(&edges1, map1, start, mid), move || {\n            route_edges_parallel(&edges2, map2, mid, end)\n        });\n\n        let mut result = pair.0;\n        for edge in pair.1.iter() {\n            let _ = result.insert(edge.clone());\n        }\n        result\n    }"
+    "lines": "181-192",
+    "spec_strength": "unknown",
+    "snippet": "    fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(\n        graph: &UnDirGraphMtEph<V>,\n        centers: &SetStEph<V>,\n        partition_map: &HashMapWithViewPlus<V, V>,\n    ) -> (quotient: UnDirGraphMtEph<V>)\n        requires\n            valid_key_type_Edge::<V>(),\n            spec_graphview_wf(graph@),\n            centers.spec_setsteph_wf(),\n            spec_valid_partition_map::<V>(graph@.V, centers@, partition_map@),\n        ensures\n            spec_graphview_wf(quotient@),"
   },
   {
     "id": 5,
-    "function": "star_contract",
-    "file": "Chap62/StarContractionStEph.rs",
-    "lines": "39-44",
+    "function": "route_edges_parallel",
+    "file": "Chap62/StarContractionMtEph.rs",
+    "lines": "249-270",
     "spec_strength": "unknown",
-    "snippet": "        fn star_contract<V, R, F, G>(graph: &UnDirGraphStEph<V>, base: &F, expand: &G) -> R\n        where\n            V: StT + Hash + Ord,\n            F: Fn(&SetStEph<V>) -> R,\n            G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMap<V, V>, R) -> R\n        requires Self::spec_starcontractionsteph_wf(graph);"
+    "snippet": "    fn route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(\n        edges: Arc<ArraySeqStEphS<Edge<V>>>,\n        partition_map: Arc<HashMapWithViewPlus<V, V>>,\n        Ghost(graph_v_view): Ghost<Set<V::V>>,\n        Ghost(centers_view): Ghost<Set<V::V>>,\n        start: usize,\n        end: usize,\n    ) -> (result: SetStEph<Edge<V>>)\n        requires\n            start <= end,\n            end as nat <= (*edges)@.len(),\n            valid_key_type_Edge::<V>(),\n            forall |j: int| start as int <= j < end as int ==>\n                graph_v_view.contains(#[trigger] (*edges).spec_index(j)@.0) &&\n                graph_v_view.contains((*edges).spec_index(j)@.1),\n            spec_valid_partition_map::<V>(graph_v_view, centers_view, (*partition_map)@),\n        ensures\n            result.spec_setsteph_wf(),\n            forall |u_v: V::V, w_v: V::V|\n                #[trigger] result@.contains((u_v, w_v)) ==>\n                    centers_view.contains(u_v) && centers_view.contains(w_v),\n        decreases end - start,"
   },
   {
     "id": 6,
-    "function": "contract_to_vertices",
+    "function": "star_contract",
     "file": "Chap62/StarContractionStEph.rs",
-    "lines": "48-49",
+    "lines": "44-54",
     "spec_strength": "unknown",
-    "snippet": "        fn contract_to_vertices<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> SetStEph<V>\n            requires Self::spec_starcontractionsteph_wf(graph);"
+    "snippet": "        fn star_contract<V, R, F, G>(graph: &UnDirGraphStEph<V>, base: &F, expand: &G) -> R\n        where\n            V: HashOrd,\n            F: Fn(&SetStEph<V>) -> R,\n            G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R\n        requires\n            Self::spec_starcontractionsteph_wf(graph),\n            valid_key_type_Edge::<V>(),\n            forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),\n            forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|\n                #[trigger] expand.requires((v, e, c, p, r));"
   },
   {
     "id": 7,
-    "function": "build_quotient_graph",
+    "function": "contract_to_vertices",
     "file": "Chap62/StarContractionStEph.rs",
-    "lines": "93-124",
-    "spec_strength": "",
-    "snippet": "    /// Build quotient graph from partition\n    ///\n    /// Routes edges through partition map, removing self-loops.\n    ///\n    /// - APAS: (no cost stated) — helper not in prose.\n    /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential loop over all edges.\n    #[cfg(not(verus_keep_ghost))]\n    fn build_quotient_graph<V: StT + Hash + Ord>(\n        graph: &UnDirGraphStEph<V>,\n        centers: &SetStEph<V>,\n        partition_map: &HashMap<V, V>,\n    ) -> UnDirGraphStEph<V> {\n        let mut quotient_edges: SetStEph<Edge<V>> = SetLit![];\n\n        for edge in graph.edges().iter() {\n            let Edge(u, v) = edge;\n\n            let u_center = partition_map.get(u).unwrap_or(u);\n            let v_center = partition_map.get(v).unwrap_or(v);\n\n            if u_center != v_center {\n                let new_edge = if u_center < v_center {\n                    Edge(u_center.clone(), v_center.clone())\n                } else {\n                    Edge(v_center.clone(), u_center.clone())\n                };\n                let _ = quotient_edges.insert(new_edge);\n            }\n        }\n\n        <UnDirGraphStEph<V> as UnDirGraphStEphTrait<V>>::from_sets(centers.clone(), quotient_edges)\n    }"
+    "lines": "58-61",
+    "spec_strength": "unknown",
+    "snippet": "        fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<V>\n            requires\n                Self::spec_starcontractionsteph_wf(graph),\n                valid_key_type_Edge::<V>();"
   },
   {
     "id": 8,
-    "function": "parallel_star_partition",
-    "file": "Chap62/StarPartitionMtEph.rs",
-    "lines": "39-43",
+    "function": "star_contract_fuel",
+    "file": "Chap62/StarContractionStEph.rs",
+    "lines": "67-83",
     "spec_strength": "unknown",
-    "snippet": "        fn parallel_star_partition<V: StT + MtT + Hash + Ord + 'static>(\n            graph: &UnDirGraphMtEph<V>,\n            seed: u64,\n        ) -> (SetStEph<V>, HashMap<V, V>)\n            requires Self::spec_starpartitionmteph_wf(graph);"
+    "snippet": "    fn star_contract_fuel<V, R, F, G>(\n        graph: &UnDirGraphStEph<V>, base: &F, expand: &G, fuel: usize,\n    ) -> (result: R)\n    where\n        V: HashOrd,\n        F: Fn(&SetStEph<V>) -> R,\n        G: Fn(&SetStEph<V>, &SetStEph<Edge<V>>, &SetStEph<V>, &HashMapWithViewPlus<V, V>, R) -> R,\n    requires\n        spec_graphview_wf(graph@),\n        valid_key_type_Edge::<V>(),\n        forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),\n        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|\n            #[trigger] expand.requires((v, e, c, p, r)),\n    ensures\n        (graph@.A.is_empty() || fuel == 0) ==>\n            exists|s: &SetStEph<V>| s@ == graph@.V && #[trigger] s.spec_setsteph_wf() && base.ensures((s,), result),\n    decreases fuel,"
   },
   {
     "id": 9,
+    "function": "build_quotient_graph",
+    "file": "Chap62/StarContractionStEph.rs",
+    "lines": "162-173",
+    "spec_strength": "unknown",
+    "snippet": "    fn build_quotient_graph<V: HashOrd>(\n        graph: &UnDirGraphStEph<V>,\n        centers: &SetStEph<V>,\n        partition_map: &HashMapWithViewPlus<V, V>,\n    ) -> (quotient: UnDirGraphStEph<V>)\n        requires\n            valid_key_type_Edge::<V>(),\n            spec_graphview_wf(graph@),\n            centers.spec_setsteph_wf(),\n            spec_valid_partition_map::<V>(graph@.V, centers@, partition_map@),\n        ensures\n            spec_graphview_wf(quotient@),"
+  },
+  {
+    "id": 10,
+    "function": "parallel_star_partition",
+    "file": "Chap62/StarPartitionMtEph.rs",
+    "lines": "43-47",
+    "spec_strength": "unknown",
+    "snippet": "        fn parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(\n            graph: &UnDirGraphMtEph<V>,\n            seed: u64,\n        ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)\n            requires Self::spec_starpartitionmteph_wf(graph), valid_key_type_Edge::<V>();"
+  },
+  {
+    "id": 11,
     "function": "sequential_star_partition",
     "file": "Chap62/StarPartitionStEph.rs",
-    "lines": "38-39",
+    "lines": "41-42",
     "spec_strength": "unknown",
-    "snippet": "        fn sequential_star_partition<V: StT + Hash + Ord>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>)\n            requires Self::spec_starpartitionsteph_wf(graph);"
+    "snippet": "        fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)\n            requires Self::spec_starpartitionsteph_wf(graph);"
   }
 ]

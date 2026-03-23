@@ -3,8 +3,8 @@
     "id": 1,
     "function": "insertion_sort",
     "file": "Chap03/InsertionSortStEph.rs",
-    "lines": "38-43",
+    "lines": "39-43",
     "spec_strength": "unknown",
-    "snippet": "pub fn insertion_sort<T: TotalOrder + Copy>(a: &mut [T]) -> (sorted: &[T])\n        requires true,\n        ensures\n          sorted.len() == old(a).len(),\n          sorted@.to_multiset() == old(a)@.to_multiset(),\n          is_sorted(sorted),"
+    "snippet": "pub fn insertion_sort<T: TotalOrder + Copy>(a: &mut [T]) -> (sorted: &[T])\n        ensures\n          sorted.len() == old(a).len(),\n          sorted@.to_multiset() == old(a)@.to_multiset(),\n          is_sorted(sorted),"
   }
 ]

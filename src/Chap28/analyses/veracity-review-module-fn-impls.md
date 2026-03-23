@@ -56,24 +56,24 @@
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
 | 11 | `max_contig_sub_sum_brute` | Y | Y |  |  | Y |  |  | unknown | 53&#8209;59 |
-| 12 | `max_with_neginf` |  |  |  | Y | Y |  |  | unknown | 69&#8209;72 |
+| 12 | `max_with_neginf` |  |  |  | Y | Y |  |  | unknown | 70&#8209;72 |
 
 ### Chap28/MaxContigSubSumDivConMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
 | 13 | `max_contig_sub_sum_divcon_mt` | Y | Y |  |  | Y |  |  | unknown | 48&#8209;55 |
-| 14 | `max_with_neginf` |  |  |  | Y | Y |  |  | unknown | 61&#8209;63 |
-| 15 | `max_suffix_sum` |  |  |  | Y | Y |  |  | unknown | 73&#8209;75 |
-| 16 | `max_prefix_sum` |  |  |  | Y | Y |  |  | unknown | 123&#8209;125 |
+| 14 | `max_with_neginf` |  |  |  | Y | Y |  |  | unknown | 64&#8209;65 |
+| 15 | `max_suffix_sum` |  |  |  | Y | Y |  |  | unknown | 78&#8209;80 |
+| 16 | `max_prefix_sum` |  |  |  | Y | Y |  |  | unknown | 131&#8209;133 |
 
 ### Chap28/MaxContigSubSumDivConOptMtEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
 | 17 | `max_contig_sub_sum_divcon_opt_mt` | Y | Y |  |  | Y |  |  | unknown | 54&#8209;61 |
-| 18 | `max_with_neginf` |  |  |  | Y | Y |  |  | unknown | 67&#8209;69 |
-| 19 | `max_contig_sub_sum_aux` |  |  |  | Y | Y |  |  | unknown | 79&#8209;87 |
+| 18 | `max_with_neginf` |  |  |  | Y | Y |  |  | unknown | 70&#8209;71 |
+| 19 | `max_contig_sub_sum_aux` |  |  |  | Y | Y |  |  | unknown | 84&#8209;92 |
 
 ### Chap28/MaxContigSubSumDivConOptStEph.rs
 
@@ -81,8 +81,8 @@
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
 | 20 | `lemma_strength_combine` |  |  |  | Y | Y |  |  | unknown | 69&#8209;118 |
 | 21 | `max_contig_sub_sum_divcon_opt` | Y | Y |  |  | Y |  |  | unknown | 263&#8209;269 |
-| 22 | `max_with_neginf` |  |  |  | Y | Y |  |  | unknown | 277&#8209;279 |
-| 23 | `max_contig_sub_sum_aux` |  |  |  | Y | Y |  |  | unknown | 292&#8209;302 |
+| 22 | `max_with_neginf` |  |  |  | Y | Y |  |  | unknown | 280&#8209;281 |
+| 23 | `max_contig_sub_sum_aux` |  |  |  | Y | Y |  |  | unknown | 294&#8209;304 |
 
 ### Chap28/MaxContigSubSumDivConStEph.rs
 
@@ -90,9 +90,9 @@
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
 | 24 | `lemma_divcon_combine` |  |  |  | Y | Y |  |  | unknown | 61&#8209;88 |
 | 25 | `max_contig_sub_sum_divcon` | Y | Y |  |  | Y |  |  | unknown | 154&#8209;160 |
-| 26 | `max_with_neginf` |  |  |  | Y | Y |  |  | unknown | 168&#8209;170 |
-| 27 | `max_suffix_sum` |  |  |  | Y | Y |  |  | unknown | 185&#8209;190 |
-| 28 | `max_prefix_sum` |  |  |  | Y | Y |  |  | unknown | 261&#8209;266 |
+| 26 | `max_with_neginf` |  |  |  | Y | Y |  |  | unknown | 171&#8209;172 |
+| 27 | `max_suffix_sum` |  |  |  | Y | Y |  |  | unknown | 187&#8209;192 |
+| 28 | `max_prefix_sum` |  |  |  | Y | Y |  |  | unknown | 263&#8209;268 |
 
 ### Chap28/MaxContigSubSumIterStEph.rs
 
@@ -101,7 +101,7 @@
 | 29 | `lemma_max_ending_at_is_max` |  |  |  | Y | Y |  |  | unknown | 74&#8209;80 |
 | 30 | `lemma_max_ending_at_achieved` |  |  |  | Y | Y |  |  | unknown | 97&#8209;104 |
 | 31 | `max_contig_sub_sum_iter` | Y | Y |  |  | Y |  |  | unknown | 133&#8209;139 |
-| 32 | `max_with_neginf` |  |  |  | Y | Y |  |  | unknown | 147&#8209;149 |
+| 32 | `max_with_neginf` |  |  |  | Y | Y |  |  | unknown | 148&#8209;149 |
 
 ### Chap28/MaxContigSubSumOptMtEph.rs
 
@@ -121,14 +121,14 @@
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
 | 36 | `max_contig_sub_sum_reduced_mcsse` | Y | Y |  |  | Y |  |  | unknown | 52&#8209;58 |
-| 37 | `max_with_neginf` |  |  |  | Y | Y |  |  | unknown | 68&#8209;70 |
+| 37 | `max_with_neginf` |  |  |  | Y | Y |  |  | unknown | 69&#8209;70 |
 
 ### Chap28/MaxContigSubSumReducedStEph.rs
 
 | # | Function | Trait | IT | IBI | ML | V! | -V! | NoSpec | SpecStr | Lines |
 |---|----------|:-----:|:--:|:--:|:--:|:--:|:---:|:------:|:-------:|------:|
 | 38 | `max_contig_sub_sum_reduced` | Y | Y |  |  | Y |  |  | unknown | 49&#8209;55 |
-| 39 | `max_with_neginf` |  |  |  | Y | Y |  |  | unknown | 65&#8209;67 |
+| 39 | `max_with_neginf` |  |  |  | Y | Y |  |  | unknown | 66&#8209;67 |
 
 
 ### Legend

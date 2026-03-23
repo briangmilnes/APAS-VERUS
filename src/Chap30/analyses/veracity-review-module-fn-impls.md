@@ -34,16 +34,16 @@
 | 2 | `value` | Y | Y |  |  | Y |  | Y |  | 36 |
 | 3 | `infinity` | Y | Y |  |  | Y |  |  | hole | 40 |
 | 4 | `zero` | Y | Y |  |  | Y |  | Y |  | 44 |
-| 5 | `default` |  | Y |  |  | Y |  | Y |  | 58 |
-| 6 | `eq` |  | Y |  |  | Y |  |  | hole | 66 |
-| 7 | `partial_cmp` |  | Y |  |  | Y |  |  | hole | 75 |
-| 8 | `cmp` |  | Y |  |  | Y |  |  | hole | 83 |
-| 9 | `hash` |  | Y |  |  | Y |  |  | hole | 106 |
-| 10 | `from` x2 |  | Y |  |  | Y |  |  | hole | 113 |
-| 11 | `add` |  | Y |  |  | Y |  |  | hole | 127 |
-| 12 | `sub` |  | Y |  |  | Y |  |  | hole | 134 |
-| 13 | `mul` |  | Y |  |  | Y |  |  | hole | 141 |
-| 14 | `div` |  | Y |  |  | Y |  |  | hole | 148 |
+| 5 | `default` |  | Y |  |  | Y |  | Y |  | 60 |
+| 6 | `eq` |  | Y |  |  | Y |  |  | hole | 68 |
+| 7 | `partial_cmp` |  | Y |  |  | Y |  |  | hole | 79 |
+| 8 | `cmp` |  | Y |  |  | Y |  |  | hole | 87 |
+| 9 | `hash` |  | Y |  |  | Y |  |  | hole | 110 |
+| 10 | `from` x2 |  | Y |  |  | Y |  |  | hole | 117 |
+| 11 | `add` |  | Y |  |  | Y |  |  | hole | 133 |
+| 12 | `sub` |  | Y |  |  | Y |  |  | hole | 142 |
+| 13 | `mul` |  | Y |  |  | Y |  |  | hole | 151 |
+| 14 | `div` |  | Y |  |  | Y |  |  | hole | 160 |
 
 
 ### Legend
