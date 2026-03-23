@@ -42,7 +42,7 @@ broadcast use {
     // 4. type definitions
 
     #[verifier::reject_recursive_types(T)]
-    pub struct OrderedSetStEph<T: StT + Ord> {
+    pub struct OrderedSetStEph<T: StT + Ord + TotalOrder> {
         pub base_set: AVLTreeSetStEph<T>,
     }
 
@@ -50,7 +50,7 @@ broadcast use {
 
     // 5. view impls
 
-    impl<T: StT + Ord> View for OrderedSetStEph<T> {
+    impl<T: StT + Ord + TotalOrder> View for OrderedSetStEph<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Set<<T as View>::V> { self.base_set@ }
     }
@@ -58,7 +58,7 @@ broadcast use {
     // 8. traits
 
     /// Trait defining all ordered set operations (ADT 41.1 + ADT 43.1) with ephemeral semantics
-    pub trait OrderedSetStEphTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
+    pub trait OrderedSetStEphTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Set<<T as View>::V>> {
         spec fn spec_orderedsetsteph_wf(&self) -> bool;
 
         // Base set operations (ADT 41.1) - ephemeral semantics
@@ -168,7 +168,6 @@ broadcast use {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then returns first element
         fn first(&self) -> (first: Option<T>)
-            where T: TotalOrder
             requires self.spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
@@ -178,7 +177,6 @@ broadcast use {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then returns last element
         fn last(&self) -> (last: Option<T>)
-            where T: TotalOrder
             requires self.spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
@@ -188,7 +186,6 @@ broadcast use {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then scans for predecessor
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
-            where T: TotalOrder
             requires self.spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
@@ -198,7 +195,6 @@ broadcast use {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then scans for successor
         fn next(&self, k: &T) -> (successor: Option<T>)
-            where T: TotalOrder
             requires self.spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
@@ -239,7 +235,6 @@ broadcast use {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then counts elements < k
         fn rank(&self, k: &T) -> (rank: usize)
-            where T: TotalOrder
             requires self.spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
@@ -247,14 +242,9 @@ broadcast use {
                 rank as int == self@.filter(|x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, *k) && t@ == x && t@ != k@).len();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- to_seq then indexes
-        /// The backing sequence is sorted under TotalOrder::le.
-        spec fn spec_sorted(&self) -> bool where T: TotalOrder;
-
         fn select(&self, i: usize) -> (selected: Option<T>)
-            where T: TotalOrder
             requires
                 self.spec_orderedsetsteph_wf(),
-                self.spec_sorted(),
             ensures
                 self@.finite(),
                 i >= self@.len() ==> selected matches None,
@@ -278,13 +268,10 @@ broadcast use {
 
     // 9. impls
 
-    impl<T: StT + Ord> OrderedSetStEphTrait<T> for OrderedSetStEph<T> {
+    impl<T: StT + Ord + TotalOrder> OrderedSetStEphTrait<T> for OrderedSetStEph<T> {
         open spec fn spec_orderedsetsteph_wf(&self) -> bool {
             self.base_set.spec_avltreesetsteph_wf()
-        }
-
-        open spec fn spec_sorted(&self) -> bool where T: TotalOrder {
-            spec_seq_sorted(spec_inorder_values(self.base_set.elements.root))
+            && self.base_set.spec_elements_sorted()
         }
 
         fn size(&self) -> (count: usize)
@@ -292,26 +279,42 @@ broadcast use {
 
         fn empty() -> (empty: Self)
         {
-            OrderedSetStEph {
-                base_set: AVLTreeSetStEph::empty(),
+            let base = AVLTreeSetStEph::empty();
+            proof {
+                let vals = spec_inorder_values::<T>(base.elements.root);
+                lemma_inorder_values_maps_to_views::<T>(base.elements.root);
+                base.elements@.unique_seq_to_set();
+                assert(vals.len() == 0);
             }
+            OrderedSetStEph { base_set: base }
         }
 
         fn singleton(x: T) -> (tree: Self)
         {
-            OrderedSetStEph {
-                base_set: AVLTreeSetStEph::singleton(x),
+            let base = AVLTreeSetStEph::singleton(x);
+            proof {
+                let vals = spec_inorder_values::<T>(base.elements.root);
+                lemma_inorder_values_maps_to_views::<T>(base.elements.root);
+                base.elements@.unique_seq_to_set();
+                assert(vals.len() == 1);
             }
+            OrderedSetStEph { base_set: base }
         }
 
         fn find(&self, x: &T) -> (found: B)
         { self.base_set.find(x) }
 
         fn insert(&mut self, x: T)
-        { self.base_set.insert(x); }
+        {
+            proof { assert(obeys_feq_full_trigger::<T>()); }
+            self.base_set.insert_sorted(x);
+        }
 
         fn delete(&mut self, x: &T)
-        { self.base_set.delete(x); }
+        {
+            proof { assert(obeys_feq_full_trigger::<T>()); }
+            self.base_set.delete_sorted(x);
+        }
 
         fn filter<F: PredSt<T>>(
             &mut self,
@@ -319,25 +322,26 @@ broadcast use {
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
         )
         {
-            let found = self.base_set.filter(f, Ghost(spec_pred));
+            proof { assert(obeys_feq_full_trigger::<T>()); }
+            let found = self.base_set.filter_sorted(f, Ghost(spec_pred));
             self.base_set = found;
         }
 
         fn intersection(&mut self, other: &Self)
         {
-            let found = self.base_set.intersection(&other.base_set);
+            let found = self.base_set.intersection_sorted(&other.base_set);
             self.base_set = found;
         }
 
         fn union(&mut self, other: &Self)
         {
-            let found = self.base_set.union(&other.base_set);
+            let found = self.base_set.union_sorted(&other.base_set);
             self.base_set = found;
         }
 
         fn difference(&mut self, other: &Self)
         {
-            let found = self.base_set.difference(&other.base_set);
+            let found = self.base_set.difference_sorted(&other.base_set);
             self.base_set = found;
         }
 
@@ -402,7 +406,6 @@ broadcast use {
         }
 
         fn first(&self) -> (first: Option<T>)
-            where T: TotalOrder
             ensures
                 self@.finite(),
                 self@.len() == 0 <==> first matches None,
@@ -493,7 +496,6 @@ broadcast use {
         }
 
         fn last(&self) -> (last: Option<T>)
-            where T: TotalOrder
             ensures
                 self@.finite(),
                 self@.len() == 0 <==> last matches None,
@@ -584,7 +586,6 @@ broadcast use {
         }
 
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
-            where T: TotalOrder
         {
             assert(obeys_feq_full_trigger::<T>());
             let len = self.base_set.elements.length();
@@ -707,7 +708,6 @@ broadcast use {
         }
 
         fn next(&self, k: &T) -> (successor: Option<T>)
-            where T: TotalOrder
         {
             assert(obeys_feq_full_trigger::<T>());
             let len = self.base_set.elements.length();
@@ -1050,7 +1050,6 @@ broadcast use {
         }
 
         fn rank(&self, k: &T) -> (rank: usize)
-            where T: TotalOrder
         {
             assert(obeys_feq_full_trigger::<T>());
             let n = self.base_set.elements.length();
@@ -1137,7 +1136,6 @@ broadcast use {
         }
 
         fn select(&self, i: usize) -> (selected: Option<T>)
-            where T: TotalOrder
         {
             assert(obeys_feq_full_trigger::<T>());
             let sz = self.size();
@@ -1362,7 +1360,7 @@ broadcast use {
 
     
 
-    impl<T: StT + Ord> OrderedSetStEph<T> {
+    impl<T: StT + Ord + TotalOrder> OrderedSetStEph<T> {
         /// Returns an iterator over the set elements in sorted order.
         pub fn iter(&self) -> (it: OrderedSetStEphIter<'_, T>)
             requires self.spec_orderedsetsteph_wf(),
@@ -1377,22 +1375,22 @@ broadcast use {
     }
 
     #[verifier::reject_recursive_types(T)]
-    pub struct OrderedSetStEphIter<'a, T: StT + Ord> {
+    pub struct OrderedSetStEphIter<'a, T: StT + Ord + TotalOrder> {
         pub seq: &'a AVLTreeSeqStEphS<T>,
         pub pos: usize,
         pub len: usize,
     }
 
-    impl<'a, T: StT + Ord> View for OrderedSetStEphIter<'a, T> {
+    impl<'a, T: StT + Ord + TotalOrder> View for OrderedSetStEphIter<'a, T> {
         type V = (int, Seq<T::V>);
         open spec fn view(&self) -> (int, Seq<T::V>) { (self.pos as int, self.seq@) }
     }
 
-    pub open spec fn iter_invariant<'a, T: StT + Ord>(it: &OrderedSetStEphIter<'a, T>) -> bool {
+    pub open spec fn iter_invariant<'a, T: StT + Ord + TotalOrder>(it: &OrderedSetStEphIter<'a, T>) -> bool {
         0 <= it@.0 <= it@.1.len()
     }
 
-    impl<'a, T: StT + Ord> std::iter::Iterator for OrderedSetStEphIter<'a, T> {
+    impl<'a, T: StT + Ord + TotalOrder> std::iter::Iterator for OrderedSetStEphIter<'a, T> {
         type Item = &'a T;
 
         #[verifier::external_body]
@@ -1425,13 +1423,13 @@ broadcast use {
     }
 
     #[verifier::reject_recursive_types(T)]
-    pub struct OrderedSetStEphGhostIterator<'a, T: StT + Ord> {
+    pub struct OrderedSetStEphGhostIterator<'a, T: StT + Ord + TotalOrder> {
         pub pos: int,
         pub elements: Seq<T::V>,
         pub phantom: core::marker::PhantomData<&'a T>,
     }
 
-    impl<'a, T: StT + Ord> View for OrderedSetStEphGhostIterator<'a, T> {
+    impl<'a, T: StT + Ord + TotalOrder> View for OrderedSetStEphGhostIterator<'a, T> {
         type V = Seq<T::V>;
 
         open spec fn view(&self) -> Seq<T::V> {
@@ -1439,14 +1437,14 @@ broadcast use {
         }
     }
 
-    impl<'a, T: StT + Ord> vstd::pervasive::ForLoopGhostIteratorNew for OrderedSetStEphIter<'a, T> {
+    impl<'a, T: StT + Ord + TotalOrder> vstd::pervasive::ForLoopGhostIteratorNew for OrderedSetStEphIter<'a, T> {
         type GhostIter = OrderedSetStEphGhostIterator<'a, T>;
         open spec fn ghost_iter(&self) -> OrderedSetStEphGhostIterator<'a, T> {
             OrderedSetStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
         }
     }
 
-    impl<'a, T: StT + Ord> vstd::pervasive::ForLoopGhostIterator for OrderedSetStEphGhostIterator<'a, T> {
+    impl<'a, T: StT + Ord + TotalOrder> vstd::pervasive::ForLoopGhostIterator for OrderedSetStEphGhostIterator<'a, T> {
         type ExecIter = OrderedSetStEphIter<'a, T>;
         type Item = T::V;
         type Decrease = int;
@@ -1481,7 +1479,7 @@ broadcast use {
         }
     }
 
-    impl<'a, T: StT + Ord> std::iter::IntoIterator for &'a OrderedSetStEph<T> {
+    impl<'a, T: StT + Ord + TotalOrder> std::iter::IntoIterator for &'a OrderedSetStEph<T> {
         type Item = &'a T;
         type IntoIter = OrderedSetStEphIter<'a, T>;
         fn into_iter(self) -> (it: Self::IntoIter)
@@ -1498,7 +1496,7 @@ broadcast use {
 
     // 11. derive impls in verus!
 
-    impl<T: StT + Ord> Clone for OrderedSetStEph<T> {
+    impl<T: StT + Ord + TotalOrder> Clone for OrderedSetStEph<T> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
@@ -1508,7 +1506,7 @@ broadcast use {
         }
     }
 
-    pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (constructed: OrderedSetStEph<T>)
+    pub fn from_sorted_elements<T: StT + Ord + TotalOrder>(elements: Vec<T>) -> (constructed: OrderedSetStEph<T>)
         requires elements@.len() < usize::MAX,
         ensures constructed@.finite(), constructed.spec_orderedsetsteph_wf()
     {
@@ -1533,11 +1531,11 @@ broadcast use {
 
     // 13. derive impls outside verus!
 
-    impl<T: StT + Ord> Default for OrderedSetStEph<T> {
+    impl<T: StT + Ord + TotalOrder> Default for OrderedSetStEph<T> {
         fn default() -> Self { Self::empty() }
     }
 
-    impl<T: StT + Ord> PartialEq for OrderedSetStEph<T> {
+    impl<T: StT + Ord + TotalOrder> PartialEq for OrderedSetStEph<T> {
         fn eq(&self, other: &Self) -> bool {
             self.size() == other.size() && {
                 let seq = self.to_seq();
@@ -1551,7 +1549,7 @@ broadcast use {
         }
     }
 
-    impl<T: StT + Ord> fmt::Debug for OrderedSetStEph<T> {
+    impl<T: StT + Ord + TotalOrder> fmt::Debug for OrderedSetStEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "{{")?;
             let seq = self.to_seq();
@@ -1563,7 +1561,7 @@ broadcast use {
         }
     }
 
-    impl<T: StT + Ord> fmt::Display for OrderedSetStEph<T> {
+    impl<T: StT + Ord + TotalOrder> fmt::Display for OrderedSetStEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "{{")?;
             let seq = self.to_seq();

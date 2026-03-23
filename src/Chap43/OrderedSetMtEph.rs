@@ -41,21 +41,21 @@ pub mod OrderedSetMtEph {
 
     pub struct OrderedSetMtEphInv;
 
-    impl<T: MtKey + 'static> RwLockPredicate<OrderedSetStEph<T>> for OrderedSetMtEphInv {
+    impl<T: MtKey + TotalOrder + 'static> RwLockPredicate<OrderedSetStEph<T>> for OrderedSetMtEphInv {
         open spec fn inv(self, v: OrderedSetStEph<T>) -> bool {
             v.spec_orderedsetsteph_wf()
         }
     }
 
     #[verifier::reject_recursive_types(T)]
-    pub struct OrderedSetMtEph<T: MtKey + 'static> {
+    pub struct OrderedSetMtEph<T: MtKey + TotalOrder + 'static> {
         pub(crate) locked_set: RwLock<OrderedSetStEph<T>, OrderedSetMtEphInv>,
         pub(crate) ghost_locked_set: Ghost<Set<<T as View>::V>>,
     }
 
     pub type OrderedSetMt<T> = OrderedSetMtEph<T>;
 
-    impl<T: MtKey + 'static> OrderedSetMtEph<T> {
+    impl<T: MtKey + TotalOrder + 'static> OrderedSetMtEph<T> {
         #[verifier::type_invariant]
         spec fn wf(self) -> bool {
             self.ghost_locked_set@.finite()
@@ -67,7 +67,7 @@ pub mod OrderedSetMtEph {
     }
 
     // Helper: construct Mt wrapper from St set (used by split/get_range/split_rank/from_seq).
-    fn from_st<T: MtKey + 'static>(inner: OrderedSetStEph<T>) -> (s: OrderedSetMtEph<T>)
+    fn from_st<T: MtKey + TotalOrder + 'static>(inner: OrderedSetStEph<T>) -> (s: OrderedSetMtEph<T>)
         requires inner.spec_orderedsetsteph_wf(), inner@.finite()
         ensures s@ == inner@, s@.finite(), s.spec_orderedsetmteph_wf()
     {
@@ -80,7 +80,7 @@ pub mod OrderedSetMtEph {
 
     // 5. view impls
 
-    impl<T: MtKey + 'static> View for OrderedSetMtEph<T> {
+    impl<T: MtKey + TotalOrder + 'static> View for OrderedSetMtEph<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Set<<T as View>::V> {
             self.spec_ghost_locked_set()
@@ -90,7 +90,7 @@ pub mod OrderedSetMtEph {
     // 8. traits
 
     /// Trait defining all ordered set operations (ADT 41.1 + ADT 43.1) with multi-threaded ephemeral semantics.
-    pub trait OrderedSetMtEphTrait<T: MtKey + 'static>: Sized + View<V = Set<<T as View>::V>> {
+    pub trait OrderedSetMtEphTrait<T: MtKey + TotalOrder + 'static>: Sized + View<V = Set<<T as View>::V>> {
         spec fn spec_orderedsetmteph_wf(&self) -> bool;
 
         // Base set operations (ADT 41.1) - ephemeral semantics with parallelism
@@ -162,7 +162,7 @@ pub mod OrderedSetMtEph {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + first)
         fn first(&self) -> (first: Option<T>)
-            where T: TotalOrder
+
             ensures
                 self@.finite(),
                 self@.len() == 0 <==> first matches None,
@@ -171,7 +171,7 @@ pub mod OrderedSetMtEph {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + last)
         fn last(&self) -> (last: Option<T>)
-            where T: TotalOrder
+
             ensures
                 self@.finite(),
                 self@.len() == 0 <==> last matches None,
@@ -180,7 +180,7 @@ pub mod OrderedSetMtEph {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + scan)
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
-            where T: TotalOrder
+
             ensures
                 self@.finite(),
                 predecessor matches Some(v) ==> self@.contains(v@),
@@ -189,7 +189,7 @@ pub mod OrderedSetMtEph {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + scan)
         fn next(&self, k: &T) -> (successor: Option<T>)
-            where T: TotalOrder
+
             ensures
                 self@.finite(),
                 successor matches Some(v) ==> self@.contains(v@),
@@ -213,7 +213,7 @@ pub mod OrderedSetMtEph {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + count)
         fn rank(&self, k: &T) -> (rank: usize)
-            where T: TotalOrder
+
             ensures
                 self@.finite(),
                 rank <= self@.len(),
@@ -221,7 +221,7 @@ pub mod OrderedSetMtEph {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + index)
         fn select(&self, i: usize) -> (selected: Option<T>)
-            where T: TotalOrder
+
             ensures
                 self@.finite(),
                 i >= self@.len() ==> selected matches None,
@@ -236,7 +236,7 @@ pub mod OrderedSetMtEph {
 
     // 9. impls
 
-    impl<T: MtKey + 'static> OrderedSetMtEphTrait<T> for OrderedSetMtEph<T> {
+    impl<T: MtKey + TotalOrder + 'static> OrderedSetMtEphTrait<T> for OrderedSetMtEph<T> {
         open spec fn spec_orderedsetmteph_wf(&self) -> bool {
             self@.finite()
         }
@@ -409,7 +409,7 @@ pub mod OrderedSetMtEph {
         }
 
         fn first(&self) -> (first: Option<T>)
-            where T: TotalOrder
+
         {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
@@ -421,7 +421,7 @@ pub mod OrderedSetMtEph {
         }
 
         fn last(&self) -> (last: Option<T>)
-            where T: TotalOrder
+
         {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
@@ -433,7 +433,7 @@ pub mod OrderedSetMtEph {
         }
 
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
-            where T: TotalOrder
+
         {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
@@ -445,7 +445,7 @@ pub mod OrderedSetMtEph {
         }
 
         fn next(&self, k: &T) -> (successor: Option<T>)
-            where T: TotalOrder
+
         {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
@@ -495,7 +495,7 @@ pub mod OrderedSetMtEph {
         }
 
         fn rank(&self, k: &T) -> (rank: usize)
-            where T: TotalOrder
+
         {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
@@ -507,12 +507,12 @@ pub mod OrderedSetMtEph {
         }
 
         fn select(&self, i: usize) -> (selected: Option<T>)
-            where T: TotalOrder
+
         {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner.spec_sorted()); }
+            // RwLock inv provides inner.spec_orderedsetsteph_wf() which now includes sorted.
             let selected = inner.select(i);
             proof { assume(inner@ =~= self@); }
             read_handle.release_read();
@@ -540,13 +540,13 @@ pub mod OrderedSetMtEph {
 
     use std::fmt;
 
-    impl<T: MtKey + 'static> fmt::Debug for OrderedSetMtEph<T> {
+    impl<T: MtKey + TotalOrder + 'static> fmt::Debug for OrderedSetMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedSetMtEph(size: {})", self.size())
         }
     }
 
-    impl<T: MtKey + 'static> fmt::Display for OrderedSetMtEph<T> {
+    impl<T: MtKey + TotalOrder + 'static> fmt::Display for OrderedSetMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedSetMtEph(size: {})", self.size())
         }

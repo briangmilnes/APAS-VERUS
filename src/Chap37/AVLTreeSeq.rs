@@ -41,6 +41,9 @@ pub mod AVLTreeSeq {
 
     verus! {
 
+    // 3. broadcast use
+    broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+
     // 4. type definitions
     pub type Link<T> = Option<Box<AVLTreeNode<T>>>;
 

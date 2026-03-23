@@ -448,35 +448,35 @@ Table of Contents:
 ✓ src/Chap36/QuickSortStEph.rs
    2 clean proof functions
 ⚠ src/Chap37/AVLTreeSeq.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1225: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1221 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1228: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1224 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1223 |         {
-      1224 |             proof {
-      1226 |                 assume(spec_avltreeseq_wf(other.root));
-      1227 |                 assume(obeys_feq_full::<T>());
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1226: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1221 |         fn eq(&self, other: &Self) -> (equal: bool)
+      1226 |         {
+      1227 |             proof {
+      1229 |                 assume(spec_avltreeseq_wf(other.root));
+      1230 |                 assume(obeys_feq_full::<T>());
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1229: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1224 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1224 |             proof {
-      1225 |                 assume(spec_avltreeseq_wf(self.root));
-      1227 |                 assume(obeys_feq_full::<T>());
-      1228 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1227: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1221 |         fn eq(&self, other: &Self) -> (equal: bool)
+      1227 |             proof {
+      1228 |                 assume(spec_avltreeseq_wf(self.root));
+      1230 |                 assume(obeys_feq_full::<T>());
+      1231 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1230: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1224 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1225 |                 assume(spec_avltreeseq_wf(self.root));
-      1226 |                 assume(spec_avltreeseq_wf(other.root));
-      1228 |             }
-      1229 |             // Per-node size bound in wf gives cached_size < usize::MAX.
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1250: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1236 |         fn clone(&self) -> (copy: Self)
+      1228 |                 assume(spec_avltreeseq_wf(self.root));
+      1229 |                 assume(spec_avltreeseq_wf(other.root));
+      1231 |             }
+      1232 |             // Per-node size bound in wf gives cached_size < usize::MAX.
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1253: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1239 |         fn clone(&self) -> (copy: Self)
             ...
-      1248 |                 // So copy@ == self@
-      1249 |             }
-      1251 |             copy
-      1252 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1116: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+      1251 |                 // So copy@ == self@
+      1252 |             }
+      1254 |             copy
+      1255 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1119: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
 ⚠ src/Chap37/AVLTreeSeqMtPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:733: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        729 |         fn eq(&self, other: &Self) -> (equal: bool)
@@ -1067,14 +1067,7 @@ Table of Contents:
    1 clean proof function
 ✓ src/Chap43/Example43_1.rs
    1 clean proof function
-❌ src/Chap43/OrderedSetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:515: error: assume() [algorithmic] - proof { assume(inner.spec_sorted()); }
-       509 |         fn select(&self, i: usize) -> (selected: Option<T>)
-            ...
-       513 |             let read_handle = self.locked_set.acquire_read();
-       514 |             let inner = read_handle.borrow();
-       516 |             let selected = inner.select(i);
-       517 |             proof { assume(inner@ =~= self@); }
+ℹ src/Chap43/OrderedSetMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:249: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.len()); } [medium]
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:277: info: structural_false_positive RWLOCK_GHOST find — proof { assume(found == self@.contains(x@)); } [medium]
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:287: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } [medium]
@@ -1092,12 +1085,9 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:517: info: structural_false_positive RWLOCK_GHOST select — proof { assume(inner@ =~= self@); } [medium]
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:530: info: structural_false_positive RWLOCK_GHOST split_rank — assume(left.spec_orderedsetsteph_wf()); [medium]
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:531: info: structural_false_positive RWLOCK_GHOST split_rank — assume(right.spec_orderedsetsteph_wf()); [medium]
-   Holes: 1 total
-      1 × assume()
    Info: 17 × structural_false_positive
-      17 × RWLOCK_GHOST
 ℹ src/Chap43/OrderedSetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1398: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:1396: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
    Info: 1 × structural_false_positive
 ℹ src/Chap43/OrderedSetStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:1341: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
@@ -1907,7 +1897,7 @@ Chap43::OrderedSetMtEph  depends upon only clean modules
 Chap43::OrderedSetStEph  depends upon only clean modules
 Chap43::OrderedSetStPer  depends upon only clean modules
 Chap43::OrderedTableMtEph  depends upon only clean modules
-Chap43::OrderedTableMtPer  depends upon holed modules: Chap43::OrderedSetMtEph
+Chap43::OrderedTableMtPer  depends upon only clean modules
 Chap43::OrderedTableStEph  depends upon only clean modules
 Chap43::OrderedTableStPer  depends upon only clean modules
 Chap44::DocumentIndex  depends upon only clean modules
@@ -2170,7 +2160,7 @@ src/Chap43/OrderedSetMtEph.rs  depends upon only clean modules
 src/Chap43/OrderedSetStEph.rs  depends upon only clean modules
 src/Chap43/OrderedSetStPer.rs  depends upon only clean modules
 src/Chap43/OrderedTableMtEph.rs  depends upon only clean modules
-src/Chap43/OrderedTableMtPer.rs  depends upon holed modules: Chap43::OrderedSetMtEph
+src/Chap43/OrderedTableMtPer.rs  depends upon only clean modules
 src/Chap43/OrderedTableStEph.rs  depends upon only clean modules
 src/Chap43/OrderedTableStPer.rs  depends upon only clean modules
 src/Chap44/DocumentIndex.rs  depends upon only clean modules
@@ -2293,8 +2283,8 @@ src/ParaPairs.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   254 clean (no holes, no errors; 98%)
-   4 holed (holes or errors, 1%)
+   255 clean (no holes, no errors; 98%)
+   3 holed (holes or errors, 1%)
    258 total
 
 Proof Functions:
@@ -2305,18 +2295,17 @@ Proof Functions:
 Function Specs:
    5158 exec fns with complete spec (requires+ensures) (69%)
    58 exec fns missing spec (0%)
-   2236 proof/spec fns clean (30%)
+   2234 proof/spec fns clean (29%)
    0 proof/spec fns with holes (0%)
-   7452 total fns
+   7450 total fns
 
 
-Holes Found: 2 (actionable)
-   1 × assume() [algorithmic] (50%)
-   1 × external (50%)
-Real Proof Targets: 2 (all actionable)
+Holes Found: 1 (actionable)
+   1 × external (100%)
+Real Proof Targets: 1 (all actionable)
 
 Per-Chapter Holes:
-  Chap43:  1  Chap45:  1
+  Chap45:  1
 
 Warnings: 160 total
    1 × fn_missing_requires
@@ -2330,9 +2319,9 @@ Accepted (reviewed): 62 total
    10 × trivial_spec_wf
    5 × external_accept_hole
    4 × unsafe_block_accept_hole
-   1 × external_type_specification_accept_hole
-   1 × struct_outside_verus_accept_hole
    1 × enum_outside_verus_accept_hole
+   1 × struct_outside_verus_accept_hole
+   1 × external_type_specification_accept_hole
 
 Accepted by Chapter:
   Chap02:  6  Chap11:  6  Chap12: 19
@@ -2358,58 +2347,57 @@ Structural (info only): 184
 =================================================================
 
    1  Chap45  (1 holes, 7 files)
-   2  Chap43  (1 holes, 11 files)
-   3  Chap55  (0 holes, 8 files)
-   4  Chap50  (0 holes, 8 files)
-   5  Chap11  (0 holes, 5 files)
-   6  Chap02  (0 holes, 2 files)
-   7  Chap61  (0 holes, 4 files)
-   8  Chap38  (0 holes, 2 files)
-   9  Chap30  (0 holes, 1 files)
-   10  Chap17  (0 holes, 1 files)
-   11  Chap53  (0 holes, 5 files)
-   12  Chap56  (0 holes, 12 files)
-   13  Chap52  (0 holes, 14 files)
-   14  Chap49  (0 holes, 8 files)
-   15  Chap28  (0 holes, 11 files)
-   16  Chap39  (0 holes, 4 files)
-   17  Chap51  (0 holes, 8 files)
-   18  Chap65  (0 holes, 3 files)
-   19  Chap21  (0 holes, 12 files)
-   20  Chap12  (0 holes, 3 files)
-   21  Concurrency  (0 holes, 1 files)
-   22  Chap64  (0 holes, 3 files)
-   23  Chap40  (0 holes, 3 files)
-   24  Chap42  (0 holes, 4 files)
-   25  Chap19  (0 holes, 4 files)
-   26  Chap47  (0 holes, 9 files)
-   27  Chap06  (0 holes, 21 files)
-   28  Chap57  (0 holes, 3 files)
-   29  Chap36  (0 holes, 3 files)
-   30  Chap62  (0 holes, 4 files)
-   31  Chap26  (0 holes, 8 files)
-   32  Chap35  (0 holes, 4 files)
-   33  Chap37  (0 holes, 19 files)
-   34  Chap03  (0 holes, 1 files)
-   35  Chap23  (0 holes, 2 files)
-   36  Chap44  (0 holes, 2 files)
-   37  Chap41  (0 holes, 7 files)
-   38  Chap05  (0 holes, 5 files)
-   39  Chap59  (0 holes, 4 files)
-   40  Chap58  (0 holes, 2 files)
-   41  Chap54  (0 holes, 4 files)
-   42  Chap66  (0 holes, 2 files)
+   2  Chap47  (0 holes, 9 files)
+   3  Chap41  (0 holes, 7 files)
+   4  Chap52  (0 holes, 14 files)
+   5  Chap66  (0 holes, 2 files)
+   6  Chap58  (0 holes, 2 files)
+   7  Chap54  (0 holes, 4 files)
+   8  Chap23  (0 holes, 2 files)
+   9  Chap63  (0 holes, 2 files)
+   10  Chap36  (0 holes, 3 files)
+   11  Chap27  (0 holes, 4 files)
+   12  Chap02  (0 holes, 2 files)
+   13  Chap35  (0 holes, 4 files)
+   14  Chap06  (0 holes, 21 files)
+   15  Chap12  (0 holes, 3 files)
+   16  Chap55  (0 holes, 8 files)
+   17  Chap62  (0 holes, 4 files)
+   18  Chap37  (0 holes, 19 files)
+   19  Chap59  (0 holes, 4 files)
+   20  Chap53  (0 holes, 5 files)
+   21  Chap38  (0 holes, 2 files)
+   22  Concurrency  (0 holes, 1 files)
+   23  Chap43  (0 holes, 11 files)
+   24  Chap11  (0 holes, 5 files)
+   25  Chap39  (0 holes, 4 files)
+   26  Chap19  (0 holes, 4 files)
+   27  Chap05  (0 holes, 5 files)
+   28  Chap26  (0 holes, 8 files)
+   29  Chap65  (0 holes, 3 files)
+   30  Chap61  (0 holes, 4 files)
+   31  Chap44  (0 holes, 2 files)
+   32  Chap30  (0 holes, 1 files)
+   33  ParaPairs  (0 holes, 1 files)
+   34  Chap64  (0 holes, 3 files)
+   35  Chap03  (0 holes, 1 files)
+   36  Chap28  (0 holes, 11 files)
+   37  Chap21  (0 holes, 12 files)
+   38  Chap40  (0 holes, 3 files)
+   39  Chap42  (0 holes, 4 files)
+   40  Chap17  (0 holes, 1 files)
+   41  Chap56  (0 holes, 12 files)
+   42  Chap57  (0 holes, 3 files)
    43  Chap18  (0 holes, 7 files)
-   44  Chap63  (0 holes, 2 files)
-   45  ParaPairs  (0 holes, 1 files)
-   46  Chap27  (0 holes, 4 files)
+   44  Chap50  (0 holes, 8 files)
+   45  Chap51  (0 holes, 8 files)
+   46  Chap49  (0 holes, 8 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
 =================================================================
 
    1  src/Chap45/Example45_2.rs  (1 holes)
-   2  src/Chap43/OrderedSetMtEph.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
@@ -2433,9 +2421,9 @@ Structural (info only): 184
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 44 clean, 2 holed, 2 holes (global), 258 modules
+Chapter Status — 46 chapters, 45 clean, 1 holed, 1 holes (global), 258 modules
 
-CLEAN CHAPTERS (44)
+CLEAN CHAPTERS (45)
   Chapter        Files
   -------------- -----
   Chap02             2
@@ -2461,6 +2449,7 @@ CLEAN CHAPTERS (44)
   Chap40             3
   Chap41             7
   Chap42             4
+  Chap43            11
   Chap44             2
   Chap47             9
   Chap49             8
@@ -2483,10 +2472,9 @@ CLEAN CHAPTERS (44)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (2) — 2 holes
+HOLED CHAPTERS (1) — 1 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
-  Chap43             1    11  internal  Chap43::OrderedSetMtEph
   Chap45             1     7  YES       
 
 DEPENDENCY CHAIN (chapter-level, external only)
@@ -2497,8 +2485,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-23 08:44:25 -07:00
-Ended:     2026-03-23 08:44:26 -07:00
-Duration:  1595ms
+Started:   2026-03-23 09:18:34 -07:00
+Ended:     2026-03-23 09:18:36 -07:00
+Duration:  1688ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log

@@ -42,7 +42,7 @@ pub mod OrderedTableMtPer {
 
     pub struct OrderedTableMtPerInv;
 
-    impl<K: MtKey + 'static, V: StTInMtT + Ord + 'static> RwLockPredicate<OrderedTableStPer<K, V>> for OrderedTableMtPerInv {
+    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> RwLockPredicate<OrderedTableStPer<K, V>> for OrderedTableMtPerInv {
         open spec fn inv(self, v: OrderedTableStPer<K, V>) -> bool {
             v.spec_orderedtablestper_wf()
         }
@@ -50,12 +50,12 @@ pub mod OrderedTableMtPer {
 
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
-    pub struct OrderedTableMtPer<K: MtKey + 'static, V: StTInMtT + Ord + 'static> {
+    pub struct OrderedTableMtPer<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> {
         pub(crate) locked_table: RwLock<OrderedTableStPer<K, V>, OrderedTableMtPerInv>,
         pub(crate) ghost_locked_table: Ghost<Map<K::V, V::V>>,
     }
 
-    impl<K: MtKey + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPer<K, V> {
+    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPer<K, V> {
         #[verifier::type_invariant]
         spec fn inv(self) -> bool {
             self.ghost_locked_table@.dom().finite()
@@ -69,7 +69,7 @@ pub mod OrderedTableMtPer {
     // 6. spec fns
 
     /// Construct Mt wrapper from an St table.
-    fn from_st_table<K: MtKey + 'static, V: StTInMtT + Ord + 'static>(
+    fn from_st_table<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static>(
         inner: OrderedTableStPer<K, V>,
     ) -> (s: OrderedTableMtPer<K, V>)
         requires inner@.dom().finite()
@@ -87,7 +87,7 @@ pub mod OrderedTableMtPer {
 
     // 5. view impls
 
-    impl<K: MtKey + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
         type V = Map<K::V, V::V>;
         open spec fn view(&self) -> Map<K::V, V::V> {
             self.spec_ghost_locked_table()
@@ -96,7 +96,7 @@ pub mod OrderedTableMtPer {
 
     // 8. traits
 
-    pub trait OrderedTableMtPerTrait<K: MtKey + 'static, V: StTInMtT + Ord + 'static>: Sized + View<V = Map<K::V, V::V>> {
+    pub trait OrderedTableMtPerTrait<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static>: Sized + View<V = Map<K::V, V::V>> {
         spec fn spec_orderedtablemtper_wf(&self) -> bool;
 
         /// - APAS: Work Θ(1), Span Θ(1)
@@ -149,7 +149,7 @@ pub mod OrderedTableMtPer {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + first)
         fn first_key(&self) -> (first: Option<K>)
-            where K: TotalOrder
+
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
@@ -159,7 +159,7 @@ pub mod OrderedTableMtPer {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + last)
         fn last_key(&self) -> (last: Option<K>)
-            where K: TotalOrder
+
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
@@ -169,7 +169,7 @@ pub mod OrderedTableMtPer {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + scan)
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            where K: TotalOrder
+
             ensures
                 self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
@@ -179,7 +179,7 @@ pub mod OrderedTableMtPer {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + scan)
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            where K: TotalOrder
+
             ensures
                 self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
@@ -206,7 +206,7 @@ pub mod OrderedTableMtPer {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + count)
         fn rank_key(&self, k: &K) -> (rank: usize)
-            where K: TotalOrder
+
             ensures
                 self@.dom().finite(),
                 rank <= self@.dom().len(),
@@ -215,7 +215,7 @@ pub mod OrderedTableMtPer {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + index)
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            where K: TotalOrder
+
             ensures
                 self@.dom().finite(),
                 i >= self@.dom().len() ==> selected matches None,
@@ -231,7 +231,7 @@ pub mod OrderedTableMtPer {
 
     // 9. impls
 
-    impl<K: MtKey + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
+    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
         open spec fn spec_orderedtablemtper_wf(&self) -> bool {
             self@.dom().finite()
         }
@@ -428,7 +428,7 @@ pub mod OrderedTableMtPer {
         }
 
         fn first_key(&self) -> (first: Option<K>)
-            where K: TotalOrder
+
         {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
@@ -439,7 +439,7 @@ pub mod OrderedTableMtPer {
         }
 
         fn last_key(&self) -> (last: Option<K>)
-            where K: TotalOrder
+
         {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
@@ -450,7 +450,7 @@ pub mod OrderedTableMtPer {
         }
 
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            where K: TotalOrder
+
         {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
@@ -461,7 +461,7 @@ pub mod OrderedTableMtPer {
         }
 
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            where K: TotalOrder
+
         {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
@@ -513,7 +513,7 @@ pub mod OrderedTableMtPer {
         }
 
         fn rank_key(&self, k: &K) -> (rank: usize)
-            where K: TotalOrder
+
         {
             proof { assert(obeys_view_eq_trigger::<K>()); }
             let read_handle = self.locked_table.acquire_read();
@@ -525,7 +525,7 @@ pub mod OrderedTableMtPer {
         }
 
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            where K: TotalOrder
+
         {
             proof { assert(obeys_view_eq_trigger::<K>()); }
             let read_handle = self.locked_table.acquire_read();
@@ -548,7 +548,7 @@ pub mod OrderedTableMtPer {
 
     // 11. derive impls in verus!
 
-    impl<K: MtKey + 'static, V: StTInMtT + Ord + 'static> Clone for OrderedTableMtPer<K, V> {
+    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> Clone for OrderedTableMtPer<K, V> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
@@ -574,17 +574,17 @@ pub mod OrderedTableMtPer {
 
     use std::fmt;
 
-    impl<K: MtKey + 'static, V: MtKey + 'static> Default for OrderedTableMtPer<K, V> {
+    impl<K: MtKey + TotalOrder + 'static, V: MtKey + 'static> Default for OrderedTableMtPer<K, V> {
         fn default() -> Self { Self::empty() }
     }
 
-    impl<K: MtKey + 'static, V: MtKey + 'static> fmt::Debug for OrderedTableMtPer<K, V> {
+    impl<K: MtKey + TotalOrder + 'static, V: MtKey + 'static> fmt::Debug for OrderedTableMtPer<K, V> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedTableMtPer(size: {})", self.size())
         }
     }
 
-    impl<K: MtKey + 'static, V: MtKey + 'static> fmt::Display for OrderedTableMtPer<K, V> {
+    impl<K: MtKey + TotalOrder + 'static, V: MtKey + 'static> fmt::Display for OrderedTableMtPer<K, V> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedTableMtPer(size: {})", self.size())
         }

@@ -11,6 +11,7 @@ pub mod AdjTableGraphMtPer {
     use crate::Chap43::OrderedSetMtEph::OrderedSetMtEph::OrderedSetMtEphTrait;
     use crate::Chap43::OrderedTableMtPer::OrderedTableMtPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
 
     verus! {
 
@@ -41,13 +42,13 @@ broadcast use {
     // - Sets (AVLTreeSetMtPer<V>) implement Ord via lexicographic ordering of elements
     // - This constraint enables efficient parallel operations on the adjacency structure
     #[derive(Clone)]
-    pub struct AdjTableGraphMtPer<V: StTInMtT + Ord + 'static> {
+    pub struct AdjTableGraphMtPer<V: StTInMtT + Ord + TotalOrder + 'static> {
         adj: OrderedTableMtPer<V, AVLTreeSetMtPer<V>>,
     }
 
     // 5. view impls
 
-    impl<V: StTInMtT + Ord + 'static> View for AdjTableGraphMtPer<V> {
+    impl<V: StTInMtT + Ord + TotalOrder + 'static> View for AdjTableGraphMtPer<V> {
         type V = Self;
         open spec fn view(&self) -> Self::V { *self }
     }
@@ -69,7 +70,7 @@ broadcast use {
 
     // 8. traits
 
-    pub trait AdjTableGraphMtPerTrait<V: StTInMtT + Ord + 'static> {
+    pub trait AdjTableGraphMtPerTrait<V: StTInMtT + Ord + TotalOrder + 'static> {
         spec fn spec_adjtablegraphmtper_wf(&self) -> bool;
         spec fn spec_adj(&self) -> Map<<V as View>::V, Set<<V as View>::V>>;
         spec fn spec_num_edges(&self) -> nat;
@@ -124,7 +125,7 @@ broadcast use {
 
     // 9. impls
 
-    impl<V: StTInMtT + Ord + 'static> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
+    impl<V: StTInMtT + Ord + TotalOrder + 'static> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
         open spec fn spec_adjtablegraphmtper_wf(&self) -> bool {
             forall|u: <V as View>::V, v: <V as View>::V|
                 self.spec_adj().dom().contains(u)
@@ -258,7 +259,7 @@ broadcast use {
 
     // 11. derive impls in verus!
 
-    impl<V: StTInMtT + Ord + 'static> Default for AdjTableGraphMtPer<V> {
+    impl<V: StTInMtT + Ord + TotalOrder + 'static> Default for AdjTableGraphMtPer<V> {
         fn default() -> Self { Self::empty() }
     }
 
