@@ -1,0 +1,201 @@
+# APAS Cost Reference — Chapters 37–44
+#
+# Extracted from APAS study materials. Each entry cites the textbook reference
+# (CS = Cost Specification, Alg = Algorithm, DT = Data Type).
+#
+# Notation:
+#   n = |a| or max(|a|, |b|)
+#   m = min(|a|, |b|)
+#   lg = log base 2
+#   W(f(x)) = work of applying f to x
+#   S(f(x)) = span of applying f to x
+#
+# This file is the single source of truth for "what does APAS say."
+# Generated once, human-reviewed, then frozen.
+
+# ---------------------------------------------------------------------------
+# Ch37: BST Introduction (DT 37.7, Alg 37.4)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch37 Alg 37.4"
+chapter = 37
+description = "BST find — root-to-leaf path"
+operations = [
+    { name = "find", work = "O(h(T))", span = "O(h(T))", notes = "h(T) = height; O(lg n) when balanced" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch38: Parametric BSTs (CS 38.11)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch38 CS 38.11"
+chapter = 38
+description = "Parametric BST cost specification (balanced BST via joinMid)"
+operations = [
+    { name = "empty",        work = "O(1)",             span = "O(1)" },
+    { name = "singleton",    work = "O(1)",             span = "O(1)" },
+    { name = "split",        work = "O(lg |t|)",        span = "O(lg |t|)" },
+    { name = "join",         work = "O(lg(|t1|+|t2|))", span = "O(lg(|t1|+|t2|))" },
+    { name = "joinM",        work = "O(lg(|t1|+|t2|))", span = "O(lg(|t1|+|t2|))" },
+    { name = "joinPair",     work = "O(lg(|t1|+|t2|))", span = "O(lg(|t1|+|t2|))" },
+    { name = "find",         work = "O(lg |t|)",        span = "O(lg |t|)" },
+    { name = "insert",       work = "O(lg |t|)",        span = "O(lg |t|)" },
+    { name = "delete",       work = "O(lg |t|)",        span = "O(lg |t|)" },
+    { name = "union",        work = "O(m * lg(n/m))",   span = "O(lg n)" },
+    { name = "intersect",    work = "O(m * lg(n/m))",   span = "O(lg n)" },
+    { name = "difference",   work = "O(m * lg(n/m))",   span = "O(lg n)" },
+    { name = "filter",       work = "O(Σ W(f(x)))",     span = "O(lg |t| + max S(f(x)))" },
+    { name = "reduce",       work = "O(Σ W(f(x)))",     span = "O(lg |t| + max S(f(x)))" },
+]
+
+# Treap-specific costs (Ch39)
+[[cost_spec]]
+ref = "Ch39 DS 39.3"
+chapter = 39
+description = "Treap implementation of parametric BST — w.h.p. bounds"
+operations = [
+    { name = "join",    work = "O(lg(|t1|+|t2|))", span = "O(lg(|t1|+|t2|))", notes = "bounded by h(t1)+h(t2); w.h.p." },
+    { name = "split",   work = "O(lg |t|)",         span = "O(lg |t|)",         notes = "joinM at each level is O(1) due to priority ordering" },
+    { name = "expose",  work = "O(1)",              span = "O(1)" },
+    { name = "joinMid", work = "O(lg(|t1|+|t2|))", span = "O(lg(|t1|+|t2|))", notes = "delegates to join" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch40: Augmenting BSTs (Alg 40.1)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch40 Alg 40.1"
+chapter = 40
+description = "Rank and select on size-augmented BSTs"
+operations = [
+    { name = "rank",   work = "O(lg n)", span = "O(lg n)", notes = "requires size augmentation" },
+    { name = "select", work = "O(lg n)", span = "O(lg n)", notes = "requires size augmentation" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch41: Sets ADT (CS 41.3 enumerable, CS 41.4 tree-based, Ex 41.3 fromSeq)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch41 CS 41.3"
+chapter = 41
+description = "Enumerable sets (array-based, universe size u)"
+operations = [
+    { name = "size",         work = "O(u)", span = "O(1)" },
+    { name = "singleton",    work = "O(u)", span = "O(1)" },
+    { name = "toSeq",        work = "O(u)", span = "O(1)" },
+    { name = "filter",       work = "O(u + Σ W(f(x)))", span = "O(1 + max S(f(x)))" },
+    { name = "intersection", work = "O(u)", span = "O(1)" },
+    { name = "union",        work = "O(u)", span = "O(1)" },
+    { name = "difference",   work = "O(u)", span = "O(1)" },
+    { name = "find",         work = "O(1)", span = "O(1)" },
+    { name = "insert",       work = "O(u)", span = "O(1)" },
+    { name = "delete",       work = "O(u)", span = "O(1)" },
+]
+
+[[cost_spec]]
+ref = "Ch41 CS 41.4"
+chapter = 41
+description = "Tree-based sets (BST implementation)"
+operations = [
+    { name = "size",         work = "O(1)",             span = "O(1)" },
+    { name = "singleton",    work = "O(1)",             span = "O(1)" },
+    { name = "toSeq",        work = "O(|a|)",           span = "O(lg |a|)" },
+    { name = "filter",       work = "O(Σ W(f(x)))",     span = "O(lg |a| + max S(f(x)))" },
+    { name = "intersection", work = "O(m * lg(1+n/m))", span = "O(lg n)" },
+    { name = "union",        work = "O(m * lg(1+n/m))", span = "O(lg n)" },
+    { name = "difference",   work = "O(m * lg(1+n/m))", span = "O(lg n)" },
+    { name = "find",         work = "O(lg |a|)",        span = "O(lg |a|)" },
+    { name = "insert",       work = "O(lg |a|)",        span = "O(lg |a|)" },
+    { name = "delete",       work = "O(lg |a|)",        span = "O(lg |a|)" },
+]
+
+[[cost_spec]]
+ref = "Ch41 Ex 41.3"
+chapter = 41
+description = "fromSeq — sequential and parallel variants"
+operations = [
+    { name = "fromSeq (sequential)", work = "O(n lg n)", span = "O(n lg n)", notes = "iterate insert" },
+    { name = "fromSeq (parallel)",   work = "O(n lg n)", span = "O(lg^2 n)", notes = "reduce union over singletons" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch42: Tables ADT (CS 42.5)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch42 CS 42.5"
+chapter = 42
+description = "Tree-based tables (combining function assumed O(1))"
+operations = [
+    { name = "size",         work = "O(1)",             span = "O(1)" },
+    { name = "singleton",    work = "O(1)",             span = "O(1)" },
+    { name = "domain",       work = "O(|a|)",           span = "O(lg |a|)" },
+    { name = "filter",       work = "O(Σ W(f(.)))",     span = "O(lg |a| + max S(f(.)))" },
+    { name = "map",          work = "O(Σ W(f(.)))",     span = "O(lg |a| + max S(f(.)))" },
+    { name = "find",         work = "O(lg |a|)",        span = "O(lg |a|)" },
+    { name = "delete",       work = "O(lg |a|)",        span = "O(lg |a|)" },
+    { name = "insert",       work = "O(lg |a|)",        span = "O(lg |a|)" },
+    { name = "intersection", work = "O(m * lg(1+n/m))", span = "O(lg(n+m))" },
+    { name = "union",        work = "O(m * lg(1+n/m))", span = "O(lg(n+m))" },
+    { name = "difference",   work = "O(m * lg(1+n/m))", span = "O(lg(n+m))" },
+    { name = "restrict",     work = "O(m * lg(1+n/m))", span = "O(lg(n+m))" },
+    { name = "subtract",     work = "O(m * lg(1+n/m))", span = "O(lg(n+m))" },
+    { name = "tabulate",     work = "O(|s| * W(f))",    span = "O(lg |s| + S(f))" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch43: Ordered Sets and Tables (CS 43.2)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch43 CS 43.2"
+chapter = 43
+description = "Ordered set/table operations (tree-based). Base ops inherit CS 41.4/42.5."
+operations = [
+    { name = "first",     work = "O(lg n)", span = "O(lg n)" },
+    { name = "last",      work = "O(lg n)", span = "O(lg n)" },
+    { name = "previous",  work = "O(lg n)", span = "O(lg n)" },
+    { name = "next",      work = "O(lg n)", span = "O(lg n)" },
+    { name = "split",     work = "O(lg n)", span = "O(lg n)" },
+    { name = "join",      work = "O(lg n)", span = "O(lg n)", notes = "requires max(A1) < min(A2)" },
+    { name = "getRange",  work = "O(lg n)", span = "O(lg n)" },
+    { name = "rank",      work = "O(lg n)", span = "O(lg n)" },
+    { name = "select",    work = "O(lg n)", span = "O(lg n)" },
+    { name = "splitRank", work = "O(lg n)", span = "O(lg n)" },
+]
+
+# Ch43 Def 43.3: Reducer-augmented ordered table
+[[cost_spec]]
+ref = "Ch43 Def 43.3"
+chapter = 43
+description = "Reducer-augmented ordered table (reduceVal via augmented nodes)"
+operations = [
+    { name = "reduceVal", work = "O(1)", span = "O(1)", notes = "stored at root; range queries via getRange + reduceVal = O(lg n)" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch44: Indexing and Searching (Alg 44.2, Alg 44.3)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch44 Alg 44.2"
+chapter = 44
+description = "Document index construction"
+operations = [
+    { name = "makeIndex", work = "O(n lg n)", span = "O(lg^2 n)", notes = "n = total tokens; dominated by collect (sort)" },
+]
+
+[[cost_spec]]
+ref = "Ch44 Alg 44.3"
+chapter = 44
+description = "Document index query operations"
+operations = [
+    { name = "find",        work = "O(lg n)", span = "O(lg n)", notes = "n = number of unique words" },
+    { name = "queryAnd",    work = "O(m * lg(1+n/m))", span = "O(lg n + lg m)", notes = "delegates to Set.intersection" },
+    { name = "queryOr",     work = "O(m * lg(1+n/m))", span = "O(lg n + lg m)", notes = "delegates to Set.union" },
+    { name = "queryAndNot", work = "O(m * lg(1+n/m))", span = "O(lg n + lg m)", notes = "delegates to Set.difference" },
+]
