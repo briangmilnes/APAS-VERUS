@@ -22,7 +22,7 @@ pub mod LinProbFlatHashTableStEph {
     use crate::Types::Types::*;
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
+    use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger};
 
     verus! {
 
@@ -835,6 +835,8 @@ pub mod LinProbFlatHashTableStEph {
                     pairs@.len() <= table.current_size as int,
                     new_size as int > table.current_size as int,
                     spec_count_empties(new_table.table@) >= (new_size - j) as int,
+                    obeys_feq_clone::<Key>(),
+                    obeys_feq_clone::<Value>(),
                 decreases pairs.len() - j,
             {
                 let key = clone_elem(&pairs[j].0);

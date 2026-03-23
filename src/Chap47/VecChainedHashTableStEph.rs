@@ -22,7 +22,7 @@ pub mod VecChainedHashTableStEph {
     use crate::Types::Types::*;
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
+    use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger};
 
     verus! {
 
@@ -40,8 +40,10 @@ pub mod VecChainedHashTableStEph {
         proof fn _vec_chained_hash_table_verified() {}
 
         /// Clones a Vec<(Key, Value)> with sequence equality ensures.
-        // veracity: no_requires
-        fn clone_vec_pairs<Key: Clone, Value: Clone>(pairs: &Vec<(Key, Value)>) -> (cloned: Vec<(Key, Value)>)
+        fn clone_vec_pairs<Key: Eq + Clone, Value: Eq + Clone>(pairs: &Vec<(Key, Value)>) -> (cloned: Vec<(Key, Value)>)
+            requires
+                obeys_feq_clone::<Key>(),
+                obeys_feq_clone::<Value>(),
             ensures cloned@ =~= pairs@,
         {
             let mut new_vec: Vec<(Key, Value)> = Vec::new();
@@ -52,6 +54,8 @@ pub mod VecChainedHashTableStEph {
                     new_vec@.len() == i as int,
                     forall |j: int| 0 <= j < i as int
                         ==> #[trigger] new_vec@[j] == pairs@[j],
+                    obeys_feq_clone::<Key>(),
+                    obeys_feq_clone::<Value>(),
                 decreases pairs.len() - i,
             {
                 let k = clone_elem(&pairs[i].0);
@@ -287,6 +291,7 @@ pub mod VecChainedHashTableStEph {
                         index as nat == (table.spec_hash@)(*key) % (table.current_size as nat),
                         forall |j: int| i as int <= j < bv.len()
                             ==> (#[trigger] bv[j]).0 != *key,
+                        obeys_feq_clone::<Value>(),
                     decreases i,
                 {
                     i = i - 1;
@@ -347,6 +352,8 @@ pub mod VecChainedHashTableStEph {
                             ==> (#[trigger] original[j]).0 != *key,
                         deleted ==> exists |j: int| 0 <= j < i as int
                             && (#[trigger] original[j]).0 == *key,
+                        obeys_feq_clone::<Key>(),
+                        obeys_feq_clone::<Value>(),
                     decreases bucket_len - i,
                 {
                     proof { assert(obeys_feq_full_trigger::<Key>()); }
@@ -451,6 +458,8 @@ pub mod VecChainedHashTableStEph {
                         spec_seq_pairs_to_map(pairs@) =~=
                             spec_table_to_map::<Key, Value, Vec<(Key, Value)>>(
                                 table.table@.subrange(0, i as int)),
+                        obeys_feq_clone::<Key>(),
+                        obeys_feq_clone::<Value>(),
                     decreases table.table.len() - i,
                 {
                     let ghost outer_map = spec_seq_pairs_to_map(pairs@);
@@ -465,6 +474,8 @@ pub mod VecChainedHashTableStEph {
                                 outer_map.union_prefer_right(
                                     spec_seq_pairs_to_map(
                                         table.table@[i as int]@.subrange(0, j as int))),
+                            obeys_feq_clone::<Key>(),
+                            obeys_feq_clone::<Value>(),
                         decreases chain_len - j,
                     {
                         let ghost old_pairs = pairs@;
@@ -560,6 +571,8 @@ pub mod VecChainedHashTableStEph {
                         new_table@ =~= spec_seq_pairs_to_map(
                             pairs@.subrange(0, m as int)),
                         new_table.spec_hash == table.spec_hash,
+                        obeys_feq_clone::<Key>(),
+                        obeys_feq_clone::<Value>(),
                     decreases pairs.len() - m,
                 {
                     let key = clone_elem(&pairs[m].0);

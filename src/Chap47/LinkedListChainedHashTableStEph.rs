@@ -22,7 +22,7 @@ pub mod LinkedListChainedHashTableStEph {
     use crate::Types::Types::*;
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
+    use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger};
 
     verus! {
 
@@ -40,10 +40,12 @@ pub mod LinkedListChainedHashTableStEph {
         proof fn _linked_list_chained_hash_table_verified() {}
 
         /// Clones a LinkedListStEphS<(Key, Value)> with sequence equality ensures.
-        // veracity: no_requires
-        fn clone_linked_list_entry<Key: Clone, Value: Clone>(
+        fn clone_linked_list_entry<Key: Eq + Clone, Value: Eq + Clone>(
             entry: &LinkedListStEphS<(Key, Value)>,
         ) -> (cloned: LinkedListStEphS<(Key, Value)>)
+            requires
+                obeys_feq_clone::<Key>(),
+                obeys_feq_clone::<Value>(),
             ensures cloned.seq@ =~= entry.seq@,
         {
             let mut new_seq: Vec<(Key, Value)> = Vec::new();
@@ -54,6 +56,8 @@ pub mod LinkedListChainedHashTableStEph {
                     new_seq@.len() == i as int,
                     forall |j: int| 0 <= j < i as int
                         ==> #[trigger] new_seq@[j] == entry.seq@[j],
+                    obeys_feq_clone::<Key>(),
+                    obeys_feq_clone::<Value>(),
                 decreases entry.seq.len() - i,
             {
                 let k = clone_elem(&entry.seq[i].0);
@@ -285,6 +289,7 @@ pub mod LinkedListChainedHashTableStEph {
                         index as nat == (table.spec_hash@)(*key) % (table.current_size as nat),
                         forall |j: int| i as int <= j < bv.len()
                             ==> (#[trigger] bv[j]).0 != *key,
+                        obeys_feq_clone::<Value>(),
                     decreases i,
                 {
                     i = i - 1;
@@ -346,6 +351,8 @@ pub mod LinkedListChainedHashTableStEph {
                             ==> (#[trigger] original[j]).0 != *key,
                         deleted ==> exists |j: int| 0 <= j < i as int
                             && (#[trigger] original[j]).0 == *key,
+                        obeys_feq_clone::<Key>(),
+                        obeys_feq_clone::<Value>(),
                     decreases bucket_len - i,
                 {
                     proof { assert(obeys_feq_full_trigger::<Key>()); }
@@ -448,6 +455,8 @@ pub mod LinkedListChainedHashTableStEph {
                         spec_seq_pairs_to_map(pairs@) =~=
                             spec_table_to_map::<Key, Value, LinkedListStEphS<(Key, Value)>>(
                                 table.table@.subrange(0, i as int)),
+                        obeys_feq_clone::<Key>(),
+                        obeys_feq_clone::<Value>(),
                     decreases table.table.len() - i,
                 {
                     let ghost outer_map = spec_seq_pairs_to_map(pairs@);
@@ -462,6 +471,8 @@ pub mod LinkedListChainedHashTableStEph {
                                 outer_map.union_prefer_right(
                                     spec_seq_pairs_to_map(
                                         table.table@[i as int].seq@.subrange(0, j as int))),
+                            obeys_feq_clone::<Key>(),
+                            obeys_feq_clone::<Value>(),
                         decreases chain_len - j,
                     {
                         let ghost old_pairs = pairs@;
@@ -558,6 +569,8 @@ pub mod LinkedListChainedHashTableStEph {
                         new_table@ =~= spec_seq_pairs_to_map(
                             pairs@.subrange(0, m as int)),
                         new_table.spec_hash == table.spec_hash,
+                        obeys_feq_clone::<Key>(),
+                        obeys_feq_clone::<Value>(),
                     decreases pairs.len() - m,
                 {
                     let key = clone_elem(&pairs[m].0);

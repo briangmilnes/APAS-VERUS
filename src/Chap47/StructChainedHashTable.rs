@@ -26,7 +26,7 @@ pub mod StructChainedHashTable {
     use crate::Types::Types::*;
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
+    use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger};
 
     verus! {
 
@@ -196,8 +196,9 @@ pub mod StructChainedHashTable {
                     proof { assert(obeys_feq_full_trigger::<Key>()); }
                     let eq = feq(&node.key, key);
                     if eq {
-                        let v = clone_elem(&node.value);
+                        let v = node.value.clone();
                         proof {
+                            assume(v == node.value); // Clone bridge: behind EntryTrait, no feq path.
                             reveal_with_fuel(spec_chain_to_map, 2);
                         }
                         Some(v)
@@ -485,6 +486,8 @@ pub mod StructChainedHashTable {
                         forall |j: int, k: Key| 0 <= j < (i as int)
                             && #[trigger] table.table@[j].spec_entry_to_map().dom().contains(k)
                             ==> pairs_map.dom().contains(k),
+                        obeys_feq_clone::<Key>(),
+                        obeys_feq_clone::<Value>(),
                     decreases table.table.len() - i,
                 {
                     let chain_clone = table.table[i].clone();
@@ -523,6 +526,8 @@ pub mod StructChainedHashTable {
                             forall |j: int, k: Key| 0 <= j < (i as int)
                                 && #[trigger] table.table@[j].spec_entry_to_map().dom().contains(k)
                                 ==> old_outer_pairs_map.dom().contains(k),
+                            obeys_feq_clone::<Key>(),
+                            obeys_feq_clone::<Value>(),
                         decreases current,
                     {
                         let node_box = current.unwrap();
@@ -786,6 +791,8 @@ pub mod StructChainedHashTable {
                         new_table@ =~= spec_seq_pairs_to_map::<Key, Value>(
                             pairs@.subrange(0, m as int)
                         ),
+                        obeys_feq_clone::<Key>(),
+                        obeys_feq_clone::<Value>(),
                     decreases pairs.len() - m,
                 {
                     let key = clone_elem(&pairs[m].0);

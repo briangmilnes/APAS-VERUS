@@ -110,14 +110,13 @@ pub mod ParaHashTableStEph {
 
     // 7. proof fns
 
-    /// Clone bridge for generic element: ensures cloned value equals original.
-    /// Uses the standard clone-body assume bridge per partial_eq_eq_clone_standard.
-    // veracity: no_requires
-    pub fn clone_elem<T: Clone>(x: &T) -> (c: T)
+    /// Clone bridge for generic element: requires obeys_feq_clone so axiom_cloned_implies_eq fires.
+    pub fn clone_elem<T: Eq + Clone>(x: &T) -> (c: T)
+        requires obeys_feq_clone::<T>(),
         ensures c == *x,
     {
         let c = x.clone();
-        proof { assume(c == *x); } // Clone bridge: T::clone preserves value.
+        assert(cloned(*x, c));
         c
     }
 
@@ -465,6 +464,8 @@ pub mod ParaHashTableStEph {
                 Self::spec_impl_wf(old(table)),
                 old(table).num_elements < usize::MAX,
                 Self::spec_has_insert_capacity(old(table)),
+                obeys_feq_clone::<Key>(),
+                obeys_feq_clone::<Value>(),
             ensures
                 table@ == old(table)@.insert(key, value),
                 Self::spec_impl_wf(table),
