@@ -24,14 +24,17 @@ The default keeps its existing APAS cost spec comment.
 
 ## Order
 
-Validate after each file.
+Rename all functions in a file, then run `scripts/validate.sh`. The verified count
+must stay at 4424 or higher with 0 errors. If validation fails, fix the file before
+moving to the next. These are mechanical renames — if validation fails, you mis-copied
+a spec or forgot to pass an argument in the delegation.
 
-1. `src/Chap41/AVLTreeSetStEph.rs` — 7 fns: find, insert, delete, filter, intersection, union, difference
-2. `src/Chap41/AVLTreeSetStPer.rs` — 7 fns: same
-3. `src/Chap43/OrderedSetStEph.rs` — 8 fns: first, last, previous, next, rank, split, get_range, split_rank
-4. `src/Chap43/OrderedSetStPer.rs` — 8 fns: same
-5. `src/Chap43/OrderedTableStEph.rs` — 11 fns: find, insert, delete, first_key, last_key, previous_key, next_key, rank_key, split_key, get_key_range, split_rank_key
-6. `src/Chap43/OrderedTableStPer.rs` — 11 fns: same
+1. `src/Chap41/AVLTreeSetStEph.rs` — 7 fns: find, insert, delete, filter, intersection, union, difference → validate
+2. `src/Chap41/AVLTreeSetStPer.rs` — 7 fns: same → validate
+3. `src/Chap43/OrderedSetStEph.rs` — 8 fns: first, last, previous, next, rank, split, get_range, split_rank → validate
+4. `src/Chap43/OrderedSetStPer.rs` — 8 fns: same → validate
+5. `src/Chap43/OrderedTableStEph.rs` — 11 fns: find, insert, delete, first_key, last_key, previous_key, next_key, rank_key, split_key, get_key_range, split_rank_key → validate
+6. `src/Chap43/OrderedTableStPer.rs` — 11 fns: same → validate
 
 ## NOT Renamed
 
