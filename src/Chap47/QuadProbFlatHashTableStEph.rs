@@ -11,8 +11,8 @@ pub mod QuadProbFlatHashTableStEph {
     // 2. imports
     // 3. broadcast use
     // 4. type definitions (inside verus!)
-    // 6. spec fns (inside verus!: spec_is_power_of_two, spec_tri_probe, spec_quadprobflathashsteph_wf)
-    // 7. proof fns (inside verus!: lemma_triangular_injective, lemma_empty_slot_reachable)
+    // 6. spec fns (inside verus!: spec_is_power_of_two, spec_tri_probe, spec_quadprobflathashsteph_wf, spec_count_empties)
+    // 7. proof fns (inside verus!: lemma_triangular_injective, lemma_empty_slot_reachable, lemma_*_empties)
     // 9. impls (inside verus!)
     // 13. derive impls outside verus!
 
@@ -22,6 +22,8 @@ pub mod QuadProbFlatHashTableStEph {
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
     use vstd::arithmetic::power::pow;
+    #[cfg(verus_keep_ghost)]
+    use vstd::set_lib::{set_int_range, lemma_int_range, lemma_subset_equality};
     use crate::Chap47::FlatHashTable::FlatHashTable::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
@@ -125,6 +127,103 @@ pub mod QuadProbFlatHashTableStEph {
         assert(2 * x + 2 * (a + 1) == 2 * y);
     }
 
+    /// If a is odd and 2^n divides a*b, then 2^n divides b.
+    proof fn lemma_odd_factor_pow2(a: int, b: int, n: nat)
+        requires
+            a % 2 != 0,
+            n >= 1,
+            (a * b) % pow(2, n) == 0,
+        ensures
+            b % pow(2, n) == 0,
+        decreases n,
+    {
+        vstd::arithmetic::power::lemma_pow1(2int);
+        if n == 1 {
+            assert(pow(2, 1nat) == 2);
+            vstd::arithmetic::div_mod::lemma_mul_mod_noop(a, b, 2);
+            vstd::arithmetic::div_mod::lemma_mod_bound(b, 2);
+            if b % 2 == 1 {
+                assert(((a % 2) * (b % 2)) % 2 == (a * b) % 2);
+                assert((1 * 1) % 2 == 0);
+            }
+        } else {
+            let pn1 = pow(2, (n - 1) as nat);
+            vstd::arithmetic::power::lemma_pow_positive(2, (n - 1) as nat);
+            vstd::arithmetic::power::lemma_pow_adds(2, 1, (n - 1) as nat);
+            assert(pow(2, n) == 2 * pn1);
+            vstd::arithmetic::mul::lemma_mul_is_commutative(2int, pn1);
+            assert(pn1 * 2 == pow(2, n));
+
+            // (a*b) % pn1 == 0 via mod_mod.
+            vstd::arithmetic::div_mod::lemma_mod_mod(a * b, pn1, 2);
+            vstd::arithmetic::div_mod::lemma_small_mod(0nat, pn1 as nat);
+            assert((a * b) % pn1 == 0);
+
+            // IH: b % pn1 == 0.
+            lemma_odd_factor_pow2(a, b, (n - 1) as nat);
+
+            // b = pn1 * c.
+            let c = b / pn1;
+            vstd::arithmetic::div_mod::lemma_fundamental_div_mod(b, pn1);
+            assert(b == pn1 * c);
+
+            // a * b = pn1 * (a * c).
+            assert(a * b == a * (pn1 * c));
+            vstd::arithmetic::mul::lemma_mul_is_commutative(a, pn1);
+            vstd::arithmetic::mul::lemma_mul_is_associative(pn1, a, c);
+            assert(a * (pn1 * c) == pn1 * (a * c)) by (nonlinear_arith);
+            let ac = a * c;
+
+            // Decompose ac = 2*q + r.
+            vstd::arithmetic::div_mod::lemma_fundamental_div_mod(ac, 2);
+            vstd::arithmetic::div_mod::lemma_mod_bound(ac, 2);
+            let r = ac % 2;
+            let q = ac / 2;
+            assert(ac == 2 * q + r);
+            assert(0 <= r < 2);
+
+            // pn1 * ac = (2*pn1)*q + pn1*r.
+            let two_pn1 = 2 * pn1;
+            assert(two_pn1 == pow(2, n));
+            vstd::arithmetic::mul::lemma_mul_is_distributive_add(pn1, 2 * q, r);
+            vstd::arithmetic::mul::lemma_mul_is_associative(pn1, 2int, q);
+            vstd::arithmetic::mul::lemma_mul_is_commutative(pn1, 2int);
+            assert(pn1 * (2 * q) == two_pn1 * q);
+            assert(pn1 * ac == two_pn1 * q + pn1 * r);
+            assert(a * b == two_pn1 * q + pn1 * r);
+
+            vstd::arithmetic::div_mod::lemma_mod_multiples_vanish(q, pn1 * r, two_pn1);
+            assert((a * b) % two_pn1 == (pn1 * r) % two_pn1);
+            assert((pn1 * r) % two_pn1 == 0);
+
+            // r must be 0: if r == 1, pn1 % two_pn1 == pn1 > 0.
+            if r == 1 {
+                vstd::arithmetic::mul::lemma_mul_basics(pn1);
+                vstd::arithmetic::div_mod::lemma_small_mod(pn1 as nat, two_pn1 as nat);
+            }
+            assert(r == 0);
+            assert(ac % 2 == 0);
+
+            // Since a odd and ac even, c even.
+            vstd::arithmetic::div_mod::lemma_mul_mod_noop(a, c, 2);
+            vstd::arithmetic::div_mod::lemma_mod_bound(c, 2);
+            if c % 2 == 1 {
+                assert(((a % 2) * (c % 2)) % 2 == ac % 2);
+                assert((1 * 1) % 2 == 0);
+            }
+            assert(c % 2 == 0);
+
+            // c = 2*d, b = pn1 * 2 * d = pow(2,n) * d.
+            let d = c / 2;
+            vstd::arithmetic::div_mod::lemma_fundamental_div_mod(c, 2);
+            assert(c == 2 * d);
+            vstd::arithmetic::mul::lemma_mul_is_associative(pn1, 2int, d);
+            assert(b == two_pn1 * d);
+            vstd::arithmetic::mul::lemma_mul_is_commutative(two_pn1, d);
+            vstd::arithmetic::div_mod::lemma_mod_multiples_basic(d, two_pn1);
+        }
+    }
+
     /// The triangular probing sequence is injective modulo 2^k:
     /// for 0 <= i < j < 2^k, i*(i+1)/2 mod 2^k != j*(j+1)/2 mod 2^k.
     ///
@@ -146,14 +245,120 @@ pub mod QuadProbFlatHashTableStEph {
         ensures
             (i * (i + 1) / 2) % m != (j * (j + 1) / 2) % m,
     {
-        assume(false); // TODO: implement parity argument above using nonlinear_arith
+        let k: nat = choose |k: nat| k >= 1 && m == pow(2, k);
+
+        if (i * (i + 1) / 2) % m == (j * (j + 1) / 2) % m {
+            let ti = i * (i + 1) / 2;
+            let tj = j * (j + 1) / 2;
+
+            // (j-i)*(j+i+1) == j*(j+1) - i*(i+1).
+            assert((j - i) * (j + i + 1) == j * (j + 1) - i * (i + 1)) by (nonlinear_arith);
+
+            // Both are even (consecutive products).
+            lemma_consecutive_even(i);
+            lemma_consecutive_even(j);
+            vstd::arithmetic::div_mod::lemma_fundamental_div_mod(i * (i + 1), 2);
+            vstd::arithmetic::div_mod::lemma_fundamental_div_mod(j * (j + 1), 2);
+            assert(i * (i + 1) == 2 * ti);
+            assert(j * (j + 1) == 2 * tj);
+
+            // prod = 2 * (tj - ti).
+            let prod = (j - i) * (j + i + 1);
+            assert(prod == 2 * (tj - ti)) by (nonlinear_arith)
+                requires prod == j * (j + 1) - i * (i + 1),
+                         i * (i + 1) == 2 * ti,
+                         j * (j + 1) == 2 * tj;
+
+            // tj - ti == m * q, so prod == 2 * m * q.
+            vstd::arithmetic::div_mod::lemma_fundamental_div_mod(ti, m);
+            vstd::arithmetic::div_mod::lemma_fundamental_div_mod(tj, m);
+            vstd::arithmetic::mul::lemma_mul_is_distributive_sub(m, tj / m, ti / m);
+            assert(tj - ti == m * (tj / m - ti / m));
+            let q = tj / m - ti / m;
+            assert(prod == 2 * (m * q)) by (nonlinear_arith)
+                requires prod == 2 * (tj - ti), tj - ti == m * q;
+
+            // 2*m == pow(2, k+1).
+            vstd::arithmetic::power::lemma_pow_adds(2, 1, k);
+            vstd::arithmetic::power::lemma_pow1(2int);
+            let two_m = pow(2, (k + 1) as nat);
+            assert(two_m == 2 * m);
+
+            // prod == two_m * q, so prod % two_m == 0.
+            vstd::arithmetic::mul::lemma_mul_is_associative(2int, m, q);
+            assert(prod == two_m * q);
+            vstd::arithmetic::mul::lemma_mul_is_commutative(two_m, q);
+            vstd::arithmetic::div_mod::lemma_mod_multiples_basic(q, two_m);
+            assert(prod % two_m == 0);
+
+            // Parity: (j-i) + (j+i+1) = 2j+1 is odd.
+            let a = j - i;
+            let b = j + i + 1;
+            assert(a + b == 2 * j + 1) by (nonlinear_arith)
+                requires a == j - i, b == j + i + 1;
+            assert(a > 0);
+            assert(b > 0);
+            assert(a < m);
+            assert(b < 2 * m);
+            vstd::arithmetic::div_mod::lemma_add_mod_noop(a, b, 2);
+            assert((a + b) % 2 == 1);
+            vstd::arithmetic::div_mod::lemma_mod_bound(a, 2);
+            vstd::arithmetic::div_mod::lemma_mod_bound(b, 2);
+
+            // prod = a * b.
+            if a % 2 != 0 {
+                // a odd => apply lemma_odd_factor_pow2: two_m | b.
+                lemma_odd_factor_pow2(a, b, (k + 1) as nat);
+                // b < two_m and b > 0, so b % two_m == b != 0.
+                vstd::arithmetic::div_mod::lemma_small_mod(b as nat, two_m as nat);
+            } else {
+                // b odd => two_m | a.
+                assert(b % 2 != 0);
+                vstd::arithmetic::mul::lemma_mul_is_commutative(a, b);
+                lemma_odd_factor_pow2(b, a, (k + 1) as nat);
+                vstd::arithmetic::power::lemma_pow_positive(2, k);
+                vstd::arithmetic::div_mod::lemma_small_mod(a as nat, two_m as nat);
+            }
+        }
+    }
+
+    /// Adding a constant preserves inequality modulo m.
+    /// Contrapositive: if (a+x) % m == (a+y) % m with 0 <= a,x,y < m and x != y, false.
+    proof fn lemma_mod_add_cancel(a: int, x: int, y: int, m: int)
+        requires
+            m > 0,
+            0 <= a < m,
+            0 <= x < m,
+            0 <= y < m,
+            x != y,
+            (a + x) % m == (a + y) % m,
+        ensures false,
+    {
+        if a + x < m && a + y < m {
+            vstd::arithmetic::div_mod::lemma_small_mod((a + x) as nat, m as nat);
+            vstd::arithmetic::div_mod::lemma_small_mod((a + y) as nat, m as nat);
+        } else if a + x >= m && a + y >= m {
+            vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(a + x - m, m);
+            vstd::arithmetic::div_mod::lemma_small_mod((a + x - m) as nat, m as nat);
+            vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(a + y - m, m);
+            vstd::arithmetic::div_mod::lemma_small_mod((a + y - m) as nat, m as nat);
+        } else if a + x < m {
+            vstd::arithmetic::div_mod::lemma_small_mod((a + x) as nat, m as nat);
+            vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(a + y - m, m);
+            vstd::arithmetic::div_mod::lemma_small_mod((a + y - m) as nat, m as nat);
+        } else {
+            vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(a + x - m, m);
+            vstd::arithmetic::div_mod::lemma_small_mod((a + x - m) as nat, m as nat);
+            vstd::arithmetic::div_mod::lemma_small_mod((a + y) as nat, m as nat);
+        }
     }
 
     /// The triangular probe sequence visits all m slots when m is a power of two.
-    /// Therefore a non-full table always has a reachable Empty slot.
+    /// Therefore a table with an Empty slot always has a reachable Empty slot.
     ///
-    /// PROOF OBLIGATION: follows from lemma_triangular_injective (m distinct values
-    /// mod m cover all of {0..m-1}) plus pigeonhole (num_elements < m => Empty exists).
+    /// Follows from lemma_triangular_injective (m distinct values mod m cover all of
+    /// {0..m-1}) plus the exists-Empty precondition: some slot is Empty, every probe
+    /// position is non-Empty, but probes cover all slots — contradiction.
     ///
     /// Preconditions encode the exhaustion state: all m probe positions were visited
     /// without finding an empty slot or matching key. This is unreachable.
@@ -166,6 +371,8 @@ pub mod QuadProbFlatHashTableStEph {
             spec_quadprobflathashsteph_wf(table),
             h < table.current_size,
             h as nat == (table.spec_hash@)(*key) % (table.current_size as nat),
+            exists |s: int| #![trigger table.table@[s]]
+                0 <= s < table.current_size as int && table.table@[s] is Empty,
             forall |d: int| 0 <= d < table.current_size as int
                 ==> !spec_flat_has_key(
                     table.table@[spec_tri_probe(h as int, d, table.current_size as int)],
@@ -175,7 +382,154 @@ pub mod QuadProbFlatHashTableStEph {
                     spec_tri_probe(h as int, d, table.current_size as int)] is Empty),
         ensures false,
     {
-        assume(false); // TODO: prove via lemma_triangular_injective + pigeonhole
+        let m = table.current_size as int;
+        let hi = h as int;
+
+        // Witness: an Empty slot exists.
+        let s = choose |s: int| #![trigger table.table@[s]]
+            0 <= s < m && table.table@[s] is Empty;
+
+        // Build the probe sequence and show no_duplicates via injectivity.
+        let probes = Seq::new(m as nat, |d: int| spec_tri_probe(hi, d, m));
+
+        assert(probes.no_duplicates()) by {
+            assert forall |i: int, j: int|
+                0 <= i < m && 0 <= j < m && i != j
+                implies probes[i] != probes[j] by {
+                let ti = i * (i + 1) / 2;
+                let tj = j * (j + 1) / 2;
+                if i < j {
+                    lemma_triangular_injective(i, j, m);
+                } else {
+                    lemma_triangular_injective(j, i, m);
+                }
+                // T(i) % m != T(j) % m. Show (h + T(i)) % m != (h + T(j)) % m.
+                vstd::arithmetic::div_mod::lemma_add_mod_noop(hi, ti, m);
+                vstd::arithmetic::div_mod::lemma_add_mod_noop(hi, tj, m);
+                vstd::arithmetic::div_mod::lemma_mod_bound(hi, m);
+                vstd::arithmetic::div_mod::lemma_mod_bound(ti, m);
+                vstd::arithmetic::div_mod::lemma_mod_bound(tj, m);
+                if (hi + ti) % m == (hi + tj) % m {
+                    lemma_mod_add_cancel(hi % m, ti % m, tj % m, m);
+                }
+            }
+        };
+
+        // probes.to_set() has m elements.
+        probes.unique_seq_to_set();
+
+        // probes.to_set() ⊆ set_int_range(0, m) — all probe values in [0, m).
+        assert(probes.to_set().subset_of(set_int_range(0, m))) by {
+            assert forall |x: int| probes.to_set().contains(x)
+                implies set_int_range(0, m).contains(x) by {
+                let d = choose |d: int| 0 <= d < m && probes[d] == x;
+                vstd::arithmetic::div_mod::lemma_mod_bound(hi + d * (d + 1) / 2, m);
+            }
+        };
+
+        // set_int_range(0, m) has cardinality m.
+        lemma_int_range(0, m);
+
+        // Both finite, same cardinality, subset — so equal.
+        lemma_subset_equality(probes.to_set(), set_int_range(0, m));
+
+        // s ∈ set_int_range(0, m), so s ∈ probes.to_set().
+        assert(set_int_range(0, m).contains(s));
+        assert(probes.to_set().contains(s));
+
+        // probes.contains(s) gives a witness d.
+        assert(probes.contains(s));
+        let d_s = choose |d: int| 0 <= d < m && probes[d] == s;
+        assert(spec_tri_probe(hi, d_s, m) == s);
+
+        // But the requires says table.table@[spec_tri_probe(h, d_s, m)] is not Empty.
+        assert(!(table.table@[spec_tri_probe(hi, d_s, m)] is Empty));
+        // Yet table.table@[s] is Empty. Contradiction.
+    }
+
+    /// Counts the number of Empty entries in a flat hash table sequence.
+    pub open spec fn spec_count_empties<Key, Value>(
+        table: Seq<FlatEntry<Key, Value>>,
+    ) -> int
+        decreases table.len(),
+    {
+        if table.len() == 0 { 0 }
+        else if table.last() is Empty { spec_count_empties(table.drop_last()) + 1 }
+        else { spec_count_empties(table.drop_last()) }
+    }
+
+    /// An all-Empty sequence has empties count equal to its length.
+    pub proof fn lemma_all_empties_count<Key, Value>(table: Seq<FlatEntry<Key, Value>>)
+        requires forall |j: int| 0 <= j < table.len() ==> (#[trigger] table[j]) is Empty,
+        ensures spec_count_empties(table) == table.len(),
+        decreases table.len(),
+    {
+        if table.len() > 0 {
+            assert(table.last() == table[table.len() - 1]);
+            assert forall |j: int| 0 <= j < table.drop_last().len()
+                implies (#[trigger] table.drop_last()[j]) is Empty by {
+                assert(table.drop_last()[j] == table[j]);
+            }
+            lemma_all_empties_count::<Key, Value>(table.drop_last());
+        }
+    }
+
+    /// If empties count > 0, there exists an Empty slot.
+    pub proof fn lemma_empties_positive_implies_exists_empty<Key, Value>(
+        table: Seq<FlatEntry<Key, Value>>,
+    )
+        requires spec_count_empties(table) > 0,
+        ensures exists |j: int| 0 <= j < table.len() && (#[trigger] table[j]) is Empty,
+        decreases table.len(),
+    {
+        if table.last() is Empty {
+            assert(table[table.len() - 1] is Empty);
+        } else {
+            lemma_empties_positive_implies_exists_empty::<Key, Value>(table.drop_last());
+            let j = choose |j: int| 0 <= j < table.drop_last().len()
+                && (#[trigger] table.drop_last()[j]) is Empty;
+            assert(table[j] == table.drop_last()[j]);
+        }
+    }
+
+    /// Changing one slot decreases empties by at most 1.
+    pub proof fn lemma_one_slot_change_empties<Key, Value>(
+        old_table: Seq<FlatEntry<Key, Value>>,
+        new_table: Seq<FlatEntry<Key, Value>>,
+        s: int,
+    )
+        requires
+            old_table.len() == new_table.len(),
+            0 <= s < old_table.len(),
+            forall |j: int| 0 <= j < old_table.len() && j != s
+                ==> #[trigger] new_table[j] == old_table[j],
+        ensures
+            spec_count_empties(new_table) >= spec_count_empties(old_table) - 1,
+        decreases old_table.len(),
+    {
+        if old_table.len() == 1 {
+            assert(old_table.drop_last().len() == 0);
+            assert(spec_count_empties::<Key, Value>(old_table.drop_last()) == 0);
+            assert(new_table.drop_last().len() == 0);
+            assert(spec_count_empties::<Key, Value>(new_table.drop_last()) == 0);
+        } else if s == old_table.len() - 1 {
+            assert forall |j: int| 0 <= j < old_table.drop_last().len()
+                implies #[trigger] new_table.drop_last()[j] == old_table.drop_last()[j] by {
+                assert(new_table.drop_last()[j] == new_table[j]);
+                assert(old_table.drop_last()[j] == old_table[j]);
+            }
+            assert(new_table.drop_last() =~= old_table.drop_last());
+        } else {
+            assert(new_table.last() == old_table.last());
+            assert(s < old_table.drop_last().len());
+            assert forall |j: int| 0 <= j < old_table.drop_last().len() && j != s
+                implies #[trigger] new_table.drop_last()[j] == old_table.drop_last()[j] by {
+                assert(new_table.drop_last()[j] == new_table[j]);
+                assert(old_table.drop_last()[j] == old_table[j]);
+            }
+            lemma_one_slot_change_empties::<Key, Value>(
+                old_table.drop_last(), new_table.drop_last(), s);
+        }
     }
 
     // 9. impls
@@ -188,9 +542,16 @@ pub mod QuadProbFlatHashTableStEph {
             spec_quadprobflathashsteph_wf(table)
         }
 
-        /// Resize is only valid to a power-of-two new size, preserving the wf invariant.
+        /// Flat tables require at least one Empty slot for insertion.
+        open spec fn spec_has_insert_capacity(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) -> bool {
+            exists |j: int| #![trigger table.table@[j]]
+                0 <= j < table.table@.len() && table.table@[j] is Empty
+        }
+
+        /// Resize is only valid to a larger power-of-two new size.
         open spec fn spec_resize_ok(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, new_size: usize) -> bool {
             spec_is_power_of_two(new_size as int)
+            && new_size as int > table.current_size as int
         }
 
         /// - APAS: Work O(1/(1-α)) expected, Span O(1/(1-α)).
@@ -465,14 +826,20 @@ pub mod QuadProbFlatHashTableStEph {
                 // Bridge: loop invariant uses `m`, lemma requires `table.current_size`.
                 assert(m == table.current_size);
                 assert forall |d: int| 0 <= d < table.current_size as int
-                    ==> !spec_flat_has_key(
+                    implies !spec_flat_has_key(
                         table.table@[spec_tri_probe(h as int, d, table.current_size as int)], key) by {
                     assert(spec_tri_probe(h as int, d, m as int) == spec_tri_probe(h as int, d, table.current_size as int));
                 }
                 assert forall |d: int| 0 <= d < table.current_size as int
-                    ==> !(#[trigger] table.table@[spec_tri_probe(h as int, d, table.current_size as int)] is Empty) by {
+                    implies !(#[trigger] table.table@[spec_tri_probe(h as int, d, table.current_size as int)] is Empty) by {
                     assert(spec_tri_probe(h as int, d, m as int) == spec_tri_probe(h as int, d, table.current_size as int));
                 }
+                // spec_has_insert_capacity(old(table)) says an Empty slot exists.
+                // table.table@ == old(table).table@ (invariant), so it still exists.
+                let s_wit = choose |s: int| #![trigger old(table).table@[s]]
+                    0 <= s < old(table).table@.len() && old(table).table@[s] is Empty;
+                assert(table.table@[s_wit] is Empty);
+                assert(0 <= s_wit && s_wit < table.current_size as int);
                 lemma_empty_slot_reachable::<Key, Value, Metrics, H>(table, &key, h);
             }
         }
@@ -772,6 +1139,7 @@ pub mod QuadProbFlatHashTableStEph {
                 invariant
                     i <= table.table@.len(),
                     table.table@.len() == table.current_size as int,
+                    pairs@.len() <= i as int,
                     spec_seq_pairs_to_map(pairs@) =~=
                         spec_table_to_map::<Key, Value, FlatEntry<Key, Value>>(
                             table.table@.subrange(0, i as int)),
@@ -846,6 +1214,7 @@ pub mod QuadProbFlatHashTableStEph {
                 // spec_is_power_of_two follows from spec_resize_ok requirement.
                 assert(spec_is_power_of_two(new_size as int));
                 assert(spec_quadprobflathashsteph_wf(&new_table));
+                lemma_all_empties_count::<Key, Value>(new_table.table@);
             }
 
             // Phase 3: reinsert all pairs.
@@ -860,12 +1229,31 @@ pub mod QuadProbFlatHashTableStEph {
                     Self::spec_impl_wf(&new_table),
                     new_table@ =~= spec_seq_pairs_to_map(pairs@.subrange(0, j as int)),
                     new_table.spec_hash == table.spec_hash,
+                    pairs@.len() <= table.current_size as int,
+                    new_size as int > table.current_size as int,
+                    spec_count_empties(new_table.table@) >= (new_size - j) as int,
                 decreases pairs.len() - j,
             {
                 let key = clone_elem(&pairs[j].0);
                 let value = clone_elem(&pairs[j].1);
+                proof {
+                    // Prove spec_has_insert_capacity: empties > 0 implies exists Empty slot.
+                    assert((new_size - j) as int > 0int) by {
+                        assert(j as int <= pairs@.len());
+                        assert(pairs@.len() <= table.current_size as int);
+                        assert(new_size as int > table.current_size as int);
+                    }
+                    lemma_empties_positive_implies_exists_empty::<Key, Value>(
+                        new_table.table@);
+                }
+                let ghost old_new_table_seq = new_table.table@;
                 Self::insert(&mut new_table, key, value);
                 proof {
+                    // Use exists |s| from insert ensures to maintain empties invariant.
+                    let s = choose |s: int| #[trigger] spec_other_slots_preserved(
+                        old_new_table_seq, new_table.table@, s);
+                    lemma_one_slot_change_empties::<Key, Value>(
+                        old_new_table_seq, new_table.table@, s);
                     assert(pairs@.subrange(0, (j + 1) as int).drop_last()
                         =~= pairs@.subrange(0, j as int));
                     assert(pairs@.subrange(0, (j + 1) as int).last() == pairs@[j as int]);
