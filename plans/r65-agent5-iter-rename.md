@@ -52,4 +52,4 @@ a spec or forgot to pass an argument in the delegation.
 - Commit: `R65: Phase 1 rename 52 iterative functions to _iter (Chap41, Chap43)`
 - Push to `agent5/ready`.
 
-AFK.
+DOT. AFK.
