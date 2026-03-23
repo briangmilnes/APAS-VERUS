@@ -22,14 +22,14 @@ Table of Contents:
 
 ✓ GraphSearchMtPer.rs
 ❌ GraphSearchStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/GraphSearchStEph.rs:144: error: assume() [algorithmic] - proof { assume(visited@.len() + frontier@.len() < usize::MAX
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:144: error: assume() [algorithmic] - proof { assume(visited@.len() + frontier@.len() < usize::MAX
        117 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>>(
             ...
        142 |                 forall|v: &V, r: AVLTreeSetStEph<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetsteph_wf(),
        143 |         {
        145 |             let visited_new = visited.union(&frontier);
        146 | 
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/GraphSearchStEph.rs:163: error: assume() [algorithmic] - proof { assume(new_neighbors@.len() + neighbors@.len() < usi
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStEph.rs:163: error: assume() [algorithmic] - proof { assume(new_neighbors@.len() + neighbors@.len() < usi
        117 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>>(
             ...
        161 |                 let v = frontier_seq.nth(i);
@@ -39,14 +39,14 @@ Table of Contents:
    Holes: 2 total
       2 × assume()
 ❌ GraphSearchStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/GraphSearchStPer.rs:152: error: assume() [algorithmic] - proof { assume(visited@.len() + frontier@.len() < usize::MAX
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:152: error: assume() [algorithmic] - proof { assume(visited@.len() + frontier@.len() < usize::MAX
        125 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, S: SelectionStrategy<V>>(
             ...
        150 |                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
        151 |         {
        153 |             let visited_new = visited.union(&frontier);
        154 | 
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/GraphSearchStPer.rs:170: error: assume() [algorithmic] - proof { assume(new_neighbors@.len() + neighbors@.len() < usi
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchStPer.rs:170: error: assume() [algorithmic] - proof { assume(new_neighbors@.len() + neighbors@.len() < usi
        125 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, S: SelectionStrategy<V>>(
             ...
        168 |                 let v = frontier.elements.nth(i);
@@ -56,28 +56,28 @@ Table of Contents:
    Holes: 2 total
       2 × assume()
 ❌ PQMinStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStEph.rs:171: error: assume() [algorithmic] - proof { assume(visited@.len() + 1 < usize::MAX as nat); }
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:171: error: assume() [algorithmic] - proof { assume(visited@.len() + 1 < usize::MAX as nat); }
        128 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(
             ...
        169 |             let frontier_new = frontier.difference(&AVLTreeSetStEph::singleton(entry));
        170 | 
        172 |             let visited_new = visited.union(&AVLTreeSetStEph::singleton(v.clone()));
        173 | 
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStEph.rs:193: error: assume() [algorithmic] - proof { assume(frontier_updated@.len() + 1 < usize::MAX as n
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:193: error: assume() [algorithmic] - proof { assume(frontier_updated@.len() + 1 < usize::MAX as n
        128 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(
             ...
        191 |                     let neighbor_p = priority_fn(neighbor);
        192 |                     let neighbor_entry = Pair(Pair(neighbor_p.clone(), neighbor.clone()), neighbor.clone());
        194 |                     frontier_updated = frontier_updated.union(&AVLTreeSetStEph::singleton(neighbor_entry));
        195 |                 }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStEph.rs:221: error: assume() [algorithmic] - proof { assume(priorities@.len() + 1 < usize::MAX as nat); }
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:221: error: assume() [algorithmic] - proof { assume(priorities@.len() + 1 < usize::MAX as nat); }
        128 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(
             ...
        219 |             let vref = visited_seq.nth(j);
        220 |             let p = priority_fn(vref);
        222 |             priorities = priorities.union(&AVLTreeSetStEph::singleton(Pair(vref.clone(), p)));
        223 |             j = j + 1;
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStEph.rs:265: error: assume() [algorithmic] - proof { assume(initial_frontier@.len() + 1 < usize::MAX as n
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStEph.rs:265: error: assume() [algorithmic] - proof { assume(initial_frontier@.len() + 1 < usize::MAX as n
        229 |     pub fn pq_min_multi<V: StT + Ord, P: StT + Ord, G, PF>(
             ...
        263 |             let p = priority_fn(v);
@@ -87,28 +87,28 @@ Table of Contents:
    Holes: 4 total
       4 × assume()
 ❌ PQMinStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStPer.rs:162: error: assume() [algorithmic] - proof { assume(visited@.len() + 1 < usize::MAX as nat); }
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:162: error: assume() [algorithmic] - proof { assume(visited@.len() + 1 < usize::MAX as nat); }
        125 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P>(
             ...
        160 |             let frontier_new = frontier.difference(&AVLTreeSetStPer::singleton(entry));
        161 | 
        163 |             let visited_new = visited.union(&AVLTreeSetStPer::singleton(v.clone()));
        164 | 
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStPer.rs:183: error: assume() [algorithmic] - proof { assume(frontier_updated@.len() + 1 < usize::MAX as n
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:183: error: assume() [algorithmic] - proof { assume(frontier_updated@.len() + 1 < usize::MAX as n
        125 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P>(
             ...
        181 |                     let neighbor_p = priority_fn(neighbor);
        182 |                     let neighbor_entry = Pair(Pair(neighbor_p.clone(), neighbor.clone()), neighbor.clone());
        184 |                     frontier_updated = frontier_updated.union(&AVLTreeSetStPer::singleton(neighbor_entry));
        185 |                 }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStPer.rs:210: error: assume() [algorithmic] - proof { assume(priorities@.len() + 1 < usize::MAX as nat); }
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:210: error: assume() [algorithmic] - proof { assume(priorities@.len() + 1 < usize::MAX as nat); }
        125 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P>(
             ...
        208 |             let vref = visited.elements.nth(j);
        209 |             let p = priority_fn(vref);
        211 |             priorities = priorities.union(&AVLTreeSetStPer::singleton(Pair(vref.clone(), p)));
        212 |             j = j + 1;
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap53/PQMinStPer.rs:253: error: assume() [algorithmic] - proof { assume(initial_frontier@.len() + 1 < usize::MAX as n
+/home/milnes/projects/APAS-VERUS/src/Chap53/PQMinStPer.rs:253: error: assume() [algorithmic] - proof { assume(initial_frontier@.len() + 1 < usize::MAX as n
        218 |     pub fn pq_min_multi<V: StT + Ord, P: StT + Ord, G, PF>(
             ...
        251 |             let p = priority_fn(v);
@@ -172,12 +172,12 @@ Real Proof Targets: 12 (all actionable)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-22 19:28:23 -07:00
-Ended:     2026-03-22 19:28:23 -07:00
-Duration:  20ms
+Started:   2026-03-22 19:46:02 -07:00
+Ended:     2026-03-22 19:46:02 -07:00
+Duration:  13ms
 
 Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
-d:     2026-03-22 19:28:23 -07:00
-Duration:  20ms
+d:     2026-03-22 19:46:02 -07:00
+Duration:  13ms
 
 Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
