@@ -358,7 +358,11 @@ pub mod OrderedTableMtPer {
             read_handle.release_read();
             let mut result = OrderedTableStPer::empty();
             let len = entries.length();
-            proof { assume(len + 1 < usize::MAX as nat); } // RWLOCK_GHOST
+            proof {
+                lemma_size_lt_usize_max::<Pair<K, V>>(&entries.root);
+                lemma_size_eq_inorder_len::<Pair<K, V>>(&entries.root);
+                assert(len < usize::MAX);
+            }
             let mut i: usize = 0;
             while i < len
                 invariant
@@ -368,7 +372,7 @@ pub mod OrderedTableMtPer {
                     result@.dom().len() <= i as nat,
                     i <= len,
                     len as nat == entries.spec_seq().len(),
-                    len + 1 < usize::MAX as nat,
+                    len < usize::MAX,
                     forall|k: &K, v: &V| f.requires((k, v)),
                     obeys_view_eq::<K>(),
                     obeys_feq_full::<Pair<K, V>>(),
@@ -394,7 +398,11 @@ pub mod OrderedTableMtPer {
             read_handle.release_read();
             let mut result = OrderedTableStPer::empty();
             let len = entries.length();
-            proof { assume(len + 1 < usize::MAX as nat); } // RWLOCK_GHOST
+            proof {
+                lemma_size_lt_usize_max::<Pair<K, V>>(&entries.root);
+                lemma_size_eq_inorder_len::<Pair<K, V>>(&entries.root);
+                assert(len < usize::MAX);
+            }
             let mut i: usize = 0;
             while i < len
                 invariant
@@ -404,7 +412,7 @@ pub mod OrderedTableMtPer {
                     result@.dom().len() <= i as nat,
                     i <= len,
                     len as nat == entries.spec_seq().len(),
-                    len + 1 < usize::MAX as nat,
+                    len < usize::MAX,
                     forall|p: &Pair<K, V>| f.requires((p,)),
                     obeys_view_eq::<K>(),
                     obeys_feq_full::<Pair<K, V>>(),

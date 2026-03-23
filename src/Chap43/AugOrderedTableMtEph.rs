@@ -32,6 +32,7 @@ pub mod AugOrderedTableMtEph {
     use crate::vstdplus::feq::feq::obeys_feq_full;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
+    use crate::vstdplus::clone_plus::clone_plus::clone_fn2;
     use crate::{OrderedTableMtEphLit, ParaPair};
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
@@ -114,17 +115,6 @@ broadcast use {
         t: &AugOrderedTableMtEph<K, V, F>,
     )
         ensures t@ =~= t.base_table@
-    {}
-
-    /// Clone bridge: cloning a multi-threaded reducer preserves its call precondition.
-    /// Justified because Clone on a Fn captures the same environment, preserving behavior.
-    #[verifier::external_body]
-    proof fn lemma_mt_reducer_clone_total<V: MtVal, F: MtReduceFn<V>>(
-        original: &F,
-        cloned: &F,
-    )
-        requires forall|v1: &V, v2: &V| #[trigger] original.requires((v1, v2)),
-        ensures forall|v1: &V, v2: &V| #[trigger] cloned.requires((v1, v2)),
     {}
 
     // 8. traits
@@ -621,13 +611,10 @@ broadcast use {
             let r = Self {
                 base_table: new_base,
                 cached_reduction: new_reduction,
-                reducer: self.reducer.clone(),
+                reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
             };
-            proof {
-                lemma_aug_view(&r);
-                lemma_mt_reducer_clone_total::<V, F>(&self.reducer, &r.reducer);
-            }
+            proof { lemma_aug_view(&r); }
             r
         }
 
@@ -708,8 +695,7 @@ broadcast use {
                     };
                     let right_table = range_table.get_key_range(&right_start, k2);
 
-                    let reducer = range_table.reducer.clone();
-                    proof { lemma_mt_reducer_clone_total::<V, F>(&range_table.reducer, &reducer); }
+                    let reducer = clone_fn2(&range_table.reducer);
 
                     let mid_val = match range_table.find(&mid_key) {
                         Some(v) => v,

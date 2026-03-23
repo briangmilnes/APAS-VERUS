@@ -897,6 +897,7 @@ broadcast use {
 
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
         {
+            proof { self.base_set.elements@.unique_seq_to_set(); }
             let elements = &self.base_set.elements;
             let size = elements.length();
             let mut result = Self::empty();
