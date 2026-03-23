@@ -141,7 +141,15 @@ pub mod StarContractionStEph {
         graph@.A.is_empty() ==>
             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
     {
-        star_contract_fuel(graph, base, expand, graph.sizeV())
+        let fuel = graph.sizeV();
+        let result = star_contract_fuel(graph, base, expand, fuel);
+        proof {
+            if graph@.A.is_empty() {
+                // Callee's antecedent (graph@.A.is_empty() || fuel == 0) holds.
+                assert(graph@.A.is_empty() || fuel == 0);
+            }
+        }
+        result
     }
 
     /// Build quotient graph from partition.

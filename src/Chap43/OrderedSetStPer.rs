@@ -901,6 +901,10 @@ broadcast use {
             let size = elements.length();
             let mut result = Self::empty();
             let mut i: usize = 0;
+            proof {
+                // Bridge: size == elements@.len() == elements@.to_set().len() == self@.len().
+                elements@.unique_seq_to_set();
+            }
             while i < size
                 invariant
                     i <= size,
@@ -948,6 +952,8 @@ broadcast use {
                                 }
                             };
                         };
+                        // Reassert for Z3: self is immutable.
+                        assert(size as nat == self@.len());
                     }
                 }
                 i = i + 1;
