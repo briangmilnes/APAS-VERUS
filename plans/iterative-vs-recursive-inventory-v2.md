@@ -389,8 +389,10 @@ not a BST by value). Recursive tree-based implementations require either:
 - **Option B**: Add value-based traversal methods to AVLTreeSeqStEph.
 - **Option C**: New dedicated BST-by-value type for Ch41.
 
-Option A is the path of least resistance — BSTTreapStEph already has verified
-recursive implementations of most Ch38 algorithms.
+**Decision pending.** The backing store choice for Phase 2 requires human
+review. Do NOT default to BSTTreapStEph (Option A) without explicit approval.
+The choice affects the architectural relationship between Ch38/39/41/43 and
+needs careful consideration.
 
 ### What the recursive implementations look like
 
