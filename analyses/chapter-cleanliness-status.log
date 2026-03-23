@@ -1,6 +1,6 @@
-Chapter Status — 46 chapters, 37 clean, 9 holed, 36 holes (global), 258 modules
+Chapter Status — 46 chapters, 41 clean, 5 holed, 24 holes (global), 258 modules
 
-CLEAN CHAPTERS (37)
+CLEAN CHAPTERS (41)
   Chapter        Files
   -------------- -----
   Chap02             2
@@ -20,14 +20,16 @@ CLEAN CHAPTERS (37)
   Chap35             4
   Chap36             3
   Chap37            19
+  Chap38             2
+  Chap39             4
   Chap40             3
+  Chap41             7
   Chap42             4
   Chap44             2
   Chap49             8
   Chap50             8
   Chap51             8
   Chap52            14
-  Chap53             5
   Chap54             4
   Chap55             8
   Chap56            12
@@ -35,29 +37,24 @@ CLEAN CHAPTERS (37)
   Chap58             2
   Chap59             4
   Chap61             4
+  Chap62             4
   Chap63             2
   Chap64             3
+  Chap65             3
   Chap66             2
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (9) — 36 holes
+HOLED CHAPTERS (5) — 24 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
-  Chap26             2     8  YES       
-  Chap38             7     2  YES       
-  Chap39             9     4  internal  Chap39::BSTParaTreapMtEph
-  Chap41             5     7  internal  Chap41::AVLTreeSetStEph
-  Chap43             5    11  NO        Chap41::AVLTreeSetStEph
+  Chap26             1     8  YES       
+  Chap43             6    11  internal  Chap43::OrderedSetStPer, Chap43::OrderedSetStEph
   Chap45             1     7  YES       
-  Chap47             3     9  internal  Chap47::ParaHashTableStEph
-  Chap62             2     4  YES       
-  Chap65             2     3  YES       
+  Chap47             4     9  internal  Chap47::ParaHashTableStEph
+  Chap53            12     5  YES       
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
   --------------  -------------------
-  Chap43          Chap41
-  Chap52          Chap43, Chap41
-  Chap53          Chap41
-  Chap55          Chap41
+  Chap52          Chap43

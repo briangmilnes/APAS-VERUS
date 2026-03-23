@@ -141,8 +141,8 @@ fn test_default_insert_with_probe() {
         table.table.push(FlatEntry::Empty);
     }
 
-    // Call the default trait method directly
-    <LinProbFlatHashTableStEph as FlatHashTable<i32, String, FlatEntry<i32, String>, (), HashFn>>::insert_with_probe(
+    // Call the trait method directly
+    <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::insert(
         &mut table,
         5,
         "five".to_string(),
@@ -154,7 +154,7 @@ fn test_default_insert_with_probe() {
 }
 
 #[test]
-fn test_default_lookup_with_probe() {
+fn test_default_lookup() {
     let mut table: FlatTable =
         <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::createTable(
             mod_hash,
@@ -170,13 +170,13 @@ fn test_default_lookup_with_probe() {
 
     // Call the default trait method directly
     let result =
-        <LinProbFlatHashTableStEph as FlatHashTable<i32, String, FlatEntry<i32, String>, (), HashFn>>::lookup_with_probe(
+        <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::lookup(
             &table, &5,
         );
     assert_eq!(result, Some("five".to_string()));
 
     let result_missing =
-        <LinProbFlatHashTableStEph as FlatHashTable<i32, String, FlatEntry<i32, String>, (), HashFn>>::lookup_with_probe(
+        <LinProbFlatHashTableStEph as ParaHashTableStEphTrait<i32, String, FlatEntry<i32, String>, (), HashFn>>::lookup(
             &table, &99,
         );
     assert_eq!(result_missing, None);

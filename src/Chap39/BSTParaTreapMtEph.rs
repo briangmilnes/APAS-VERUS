@@ -203,7 +203,7 @@ pub mod BSTParaTreapMtEph {
 
     /// Expose the type invariant guarantee of finiteness to callers in other modules.
     /// Calling this is a no-op at runtime; the spec-level ensures establishes tree@.finite().
-    pub fn param_treap_assert_finite<T: MtKey>(tree: &ParamTreap<T>)
+    pub fn param_treap_assert_finite<T: MtKey>(tree: &ParamTreap<T>) // veracity: no_requires
         ensures tree@.finite(),
     {
         proof { use_type_invariant(tree); }

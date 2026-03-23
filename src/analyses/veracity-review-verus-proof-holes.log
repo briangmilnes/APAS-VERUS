@@ -723,46 +723,25 @@ Table of Contents:
    Info: 5 × structural_false_positive
 ✓ src/Chap37/BSTSplayStEph.rs
    1 clean proof function
-❌ src/Chap38/BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:712: error: assume() [algorithmic] - proof { assume(obeys_feq_clone::<T>()); } // assume_eq_clone
-       689 |     fn expose_internal<T: MtKey>(tree: &ParamBST<T>) -> (exposed: Exposed<T>)
+⚠ src/Chap38/BSTParaMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:642: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       635 |         fn clone(&self) -> (cloned: Self)
             ...
-       710 |     {
-       711 |         proof { use_type_invariant(tree); }
-       713 |         let handle = tree.locked_root.acquire_read();
-       714 |         let exposed = match handle.borrow() {
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:640: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       633 |         fn clone(&self) -> (cloned: Self)
+       640 |                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
+       641 |             };
+       643 |             cloned
+       644 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:657: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       648 |         fn clone(&self) -> (cloned: Self)
             ...
-       638 |                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
-       639 |             };
-       641 |             cloned
-       642 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:655: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       646 |         fn clone(&self) -> (cloned: Self)
-            ...
-       653 |                 right: self.right.clone(),
-       654 |             };
-       656 |             cloned
-       657 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1643: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1644: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
-   Holes: 1 total
-      1 × assume()
-   Info: 2 × structural_false_positive
-      2 × UNSAFE_SEND_SYNC
-   Proof functions: 6 total (6 clean, 0 holed)
-❌ src/Chap38/BSTParaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:479: error: assume() [algorithmic] - proof { assume(obeys_feq_clone::<T>()); } // assume_eq_clone
-       461 |         fn expose(&self) -> (exposed: Exposed<T>)
-            ...
-       477 |         {
-       478 |             proof { use_type_invariant(self); }
-       480 |             let handle = self.locked_root.acquire_read();
-       481 |             let exposed = match handle.borrow() {
-   Holes: 1 total
-      1 × assume()
-   Proof functions: 5 total (5 clean, 0 holed)
+       655 |                 right: self.right.clone(),
+       656 |             };
+       658 |             cloned
+       659 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1645: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1646: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
+✓ src/Chap38/BSTParaStEph.rs
+   5 clean proof functions
 ⚠ src/Chap39/BSTParaTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:206: error: fn_missing_requires - fn param_treap_assert_finite — exec fn should have requires
        192 |     pub proof fn lemma_cmp_equal_congruent_right<T: MtKey>(a: T, b: T, c: T)
@@ -778,51 +757,37 @@ Table of Contents:
        418 | 
        420 |         ensures true,
        421 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1779: error: fn_missing_ensures - fn reduce_inner — exec fn should have ensures
-      1755 |     fn filter_parallel<T: MtKey + ClonePreservesView + 'static, F: Pred<T>>(
-            ...
-      1777 |     }
-      1778 | 
-      1780 |     where
-      1781 |         F: Fn(T, T) -> T + Send + Sync + 'static,
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:1812: error: fn_missing_ensures - fn reduce_parallel — exec fn should have ensures
-      1779 |     fn reduce_inner<T: MtKey + ClonePreservesView + 'static, F>(tree: &ParamTreap<T>, op: &Arc<F>, identity: T) -> T
-            ...
-      1810 |     }
-      1811 | 
-      1813 |     where
-      1814 |         F: Fn(T, T) -> T + Send + Sync + 'static,
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:2162: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2131 |         fn clone(&self) -> (cloned: Self)
-            ...
-      2160 |                         };
-      2161 |                         // Clone bridge: structural copy inherits BST ordering and size bound.
-      2163 |                         assume(forall|t: T| (#[trigger] rv.contains(t@)) ==> t.cmp_spec(&key) == Greater);
-      2164 |                         assume(lv.len() + rv.len() < usize::MAX as nat);
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:2163: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2131 |         fn clone(&self) -> (cloned: Self)
-            ...
-      2161 |                         // Clone bridge: structural copy inherits BST ordering and size bound.
-      2162 |                         assume(forall|t: T| (#[trigger] lv.contains(t@)) ==> t.cmp_spec(&key) == Less);
-      2164 |                         assume(lv.len() + rv.len() < usize::MAX as nat);
-      2165 |                     }
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:2164: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2131 |         fn clone(&self) -> (cloned: Self)
+      2133 |         fn clone(&self) -> (cloned: Self)
             ...
-      2162 |                         assume(forall|t: T| (#[trigger] lv.contains(t@)) ==> t.cmp_spec(&key) == Less);
-      2163 |                         assume(forall|t: T| (#[trigger] rv.contains(t@)) ==> t.cmp_spec(&key) == Greater);
-      2165 |                     }
-      2166 |                     new_param_treap(
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:2172: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2131 |         fn clone(&self) -> (cloned: Self)
+      2162 |                         };
+      2163 |                         // Clone bridge: structural copy inherits BST ordering and size bound.
+      2165 |                         assume(forall|t: T| (#[trigger] rv.contains(t@)) ==> t.cmp_spec(&key) == Greater);
+      2166 |                         assume(lv.len() + rv.len() < usize::MAX as nat);
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:2165: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2133 |         fn clone(&self) -> (cloned: Self)
             ...
-      2170 |                 }
-      2171 |             };
-      2173 |             cloned
-      2174 |         }
+      2163 |                         // Clone bridge: structural copy inherits BST ordering and size bound.
+      2164 |                         assume(forall|t: T| (#[trigger] lv.contains(t@)) ==> t.cmp_spec(&key) == Less);
+      2166 |                         assume(lv.len() + rv.len() < usize::MAX as nat);
+      2167 |                     }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:2166: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2133 |         fn clone(&self) -> (cloned: Self)
+            ...
+      2164 |                         assume(forall|t: T| (#[trigger] lv.contains(t@)) ==> t.cmp_spec(&key) == Less);
+      2165 |                         assume(forall|t: T| (#[trigger] rv.contains(t@)) ==> t.cmp_spec(&key) == Greater);
+      2167 |                     }
+      2168 |                     new_param_treap(
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:2174: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2133 |         fn clone(&self) -> (cloned: Self)
+            ...
+      2172 |                 }
+      2173 |             };
+      2175 |             cloned
+      2176 |         }
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:410: info: structural_false_positive OPAQUE_EXTERNAL priority_for — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:2222: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Send for ParamTreap<T> {} [high]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:2223: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Sync for ParamTreap<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:2224: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Send for ParamTreap<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTParaTreapMtEph.rs:2225: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Sync for ParamTreap<T> {} [high]
 ⚠ src/Chap39/BSTSetTreapMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTSetTreapMtEph.rs:374: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        370 |         fn clone(&self) -> (cloned: Self)
@@ -846,61 +811,54 @@ Table of Contents:
        374 |                 }));
        376 |                 c
        377 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:388: error: fn_missing_requires - fn size_link — exec fn should have requires
-       382 |         open spec fn inv(self, v: Link<T>) -> bool {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1161: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1157 |         fn clone(&self) -> (cloned: Self)
             ...
-       386 | 
-       387 |     /// - APAS: Work Θ(1), Span Θ(1)
-       389 |         ensures sz as nat == Lnk::spec_size_link(link),
-       390 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1157: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1153 |         fn clone(&self) -> (cloned: Self)
+      1159 |         {
+      1160 |             proof {
+      1162 |                 assume(Lnk::spec_link_size_wf(&self.right));
+      1163 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1162: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1157 |         fn clone(&self) -> (cloned: Self)
             ...
-      1155 |         {
-      1156 |             proof {
-      1158 |                 assume(Lnk::spec_link_size_wf(&self.right));
-      1159 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1158: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1153 |         fn clone(&self) -> (cloned: Self)
+      1160 |             proof {
+      1161 |                 assume(Lnk::spec_link_size_wf(&self.left));
+      1163 |             }
+      1164 |             let cloned = Node {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1171: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1157 |         fn clone(&self) -> (cloned: Self)
             ...
-      1156 |             proof {
-      1157 |                 assume(Lnk::spec_link_size_wf(&self.left));
-      1159 |             }
-      1160 |             let cloned = Node {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1167: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1153 |         fn clone(&self) -> (cloned: Self)
+      1169 |                 right: clone_link(&self.right),
+      1170 |             };
+      1172 |             cloned
+      1173 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1184: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1177 |         fn clone(&self) -> (cloned: Self)
             ...
-      1165 |                 right: clone_link(&self.right),
-      1166 |             };
-      1168 |             cloned
-      1169 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1180: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1173 |         fn clone(&self) -> (cloned: Self)
+      1182 |             handle.release_read();
+      1183 |             proof {
+      1185 |                 assume(self.ghost_locked_root@.finite());
+      1186 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1185: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1177 |         fn clone(&self) -> (cloned: Self)
             ...
-      1178 |             handle.release_read();
-      1179 |             proof {
-      1181 |                 assume(self.ghost_locked_root@.finite());
-      1182 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1181: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1173 |         fn clone(&self) -> (cloned: Self)
+      1183 |             proof {
+      1184 |                 assume(spec_bsttreapmteph_link_wf(&inner_clone));
+      1186 |             }
+      1187 |             let cloned = BSTTreapMtEph {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1191: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1177 |         fn clone(&self) -> (cloned: Self)
             ...
-      1179 |             proof {
-      1180 |                 assume(spec_bsttreapmteph_link_wf(&inner_clone));
-      1182 |             }
-      1183 |             let cloned = BSTTreapMtEph {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1187: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1173 |         fn clone(&self) -> (cloned: Self)
-            ...
-      1185 |                 ghost_locked_root: Ghost(self.ghost_locked_root@),
-      1186 |             };
-      1188 |             cloned
-      1189 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1065: info: structural_false_positive RWLOCK_GHOST find — proof { assume(result.is_some() <==> self@.contains(target@) [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1082: info: structural_false_positive RWLOCK_GHOST size — proof { assume(result as nat == self@.len()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1106: info: structural_false_positive RWLOCK_GHOST minimum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1116: info: structural_false_positive RWLOCK_GHOST maximum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1128: info: structural_false_positive RWLOCK_GHOST in_order — proof { assume(ordered@.len() == self@.len()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1140: info: structural_false_positive RWLOCK_GHOST pre_order — proof { assume(preordered@.len() == self@.len()); } [medium]
+      1189 |                 ghost_locked_root: Ghost(self.ghost_locked_root@),
+      1190 |             };
+      1192 |             cloned
+      1193 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1069: info: structural_false_positive RWLOCK_GHOST find — proof { assume(result.is_some() <==> self@.contains(target@) [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1086: info: structural_false_positive RWLOCK_GHOST size — proof { assume(result as nat == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1110: info: structural_false_positive RWLOCK_GHOST minimum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1120: info: structural_false_positive RWLOCK_GHOST maximum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1132: info: structural_false_positive RWLOCK_GHOST in_order — proof { assume(ordered@.len() == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1144: info: structural_false_positive RWLOCK_GHOST pre_order — proof { assume(preordered@.len() == self@.len()); } [medium]
 ✓ src/Chap39/BSTTreapStEph.rs
    16 clean proof functions
 ⚠ src/Chap40/BSTKeyValueStEph.rs
@@ -2077,22 +2035,8 @@ Table of Contents:
 ✓ src/Chap64/SpanTreeMtEph.rs
 ✓ src/Chap64/SpanTreeStEph.rs
 ✓ src/Chap64/TSPApproxStEph.rs
-⚠ src/Chap65/KruskalStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:62: error: fn_missing_requires - fn sort_edges_by_weight — exec fn should have requires
-        54 |         fn verify_mst_size<V: HashOrd>(
-            ...
-        60 | 
-        61 |     /// Sort edges by weight — verified selection sort.
-        63 |         ensures
-        64 |             edges@.len() == old(edges)@.len(),
-⚠ src/Chap65/PrimStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:76: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
-        69 |         fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64
-            ...
-        74 |     /// - APAS: N/A — Verus-specific scaffolding.
-        75 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        77 |         ensures entry.priority == priority, entry.vertex == vertex, entry.parent == parent,
-        78 |     {
+✓ src/Chap65/KruskalStEph.rs
+✓ src/Chap65/PrimStEph.rs
 ✓ src/Chap65/UnionFindStEph.rs
 ⚠ src/Chap66/BoruvkaMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:51: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
@@ -2651,8 +2595,8 @@ src/ParaPairs.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   235 clean (no holes, no errors; 91%)
-   23 holed (holes or errors, 8%)
+   240 clean (no holes, no errors; 93%)
+   18 holed (holes or errors, 6%)
    258 total
 
 Proof Functions:
@@ -2661,26 +2605,25 @@ Proof Functions:
    410 total
 
 Function Specs:
-   5147 exec fns with complete spec (requires+ensures) (69%)
-   67 exec fns missing spec (0%)
+   5152 exec fns with complete spec (requires+ensures) (69%)
+   62 exec fns missing spec (0%)
    2212 proof/spec fns clean (29%)
    2 proof/spec fns with holes (0%)
    7428 total fns
 
 
-Holes Found: 26 (actionable)
-   2 × assume(false) (7%)
-   19 × assume() (73%)
-   4 × external_body (15%)
-   1 × external (3%)
+Holes Found: 24 (actionable)
+   2 × assume(false) (8%)
+   17 × assume() (70%)
+   4 × external_body (16%)
+   1 × external (4%)
 
 Per-Chapter Holes:
-  Chap26:  1  Chap38:  2  Chap43:  6
-  Chap45:  1  Chap47:  4  Chap53: 12
+  Chap26:  1  Chap43:  6  Chap45:  1
+  Chap47:  4  Chap53: 12
 
-Warnings: 183 total
-   8 × fn_missing_requires
-   2 × fn_missing_ensures
+Warnings: 178 total
+   5 × fn_missing_requires
    16 × fn_missing_wf_requires
    6 × fn_missing_wf_ensures
    151 × assume_eq_clone_workaround
@@ -2692,8 +2635,8 @@ Accepted (reviewed): 62 total
    5 × external_accept_hole
    4 × unsafe_block_accept_hole
    1 × enum_outside_verus_accept_hole
-   1 × external_type_specification_accept_hole
    1 × struct_outside_verus_accept_hole
+   1 × external_type_specification_accept_hole
 
 Accepted by Chapter:
   Chap02:  6  Chap11:  6  Chap12: 19
@@ -2721,49 +2664,49 @@ Structural (info only): 184
    1  Chap53  (12 holes, 5 files)
    2  Chap43  (6 holes, 11 files)
    3  Chap47  (4 holes, 9 files)
-   4  Chap38  (2 holes, 2 files)
-   5  Chap26  (1 holes, 8 files)
-   6  Chap45  (1 holes, 7 files)
-   7  Chap40  (0 holes, 3 files)
-   8  Chap62  (0 holes, 4 files)
-   9  ParaPairs  (0 holes, 1 files)
-   10  Chap36  (0 holes, 3 files)
-   11  Chap50  (0 holes, 8 files)
-   12  Chap03  (0 holes, 1 files)
-   13  Chap54  (0 holes, 4 files)
-   14  Chap41  (0 holes, 7 files)
-   15  Chap44  (0 holes, 2 files)
-   16  Chap49  (0 holes, 8 files)
-   17  Concurrency  (0 holes, 1 files)
-   18  Chap61  (0 holes, 4 files)
-   19  Chap02  (0 holes, 2 files)
-   20  Chap06  (0 holes, 21 files)
-   21  Chap23  (0 holes, 2 files)
-   22  Chap55  (0 holes, 8 files)
-   23  Chap58  (0 holes, 2 files)
-   24  Chap05  (0 holes, 5 files)
-   25  Chap30  (0 holes, 1 files)
-   26  Chap17  (0 holes, 1 files)
-   27  Chap52  (0 holes, 14 files)
-   28  Chap63  (0 holes, 2 files)
-   29  Chap56  (0 holes, 12 files)
-   30  Chap51  (0 holes, 8 files)
-   31  Chap18  (0 holes, 7 files)
-   32  Chap35  (0 holes, 4 files)
-   33  Chap37  (0 holes, 19 files)
-   34  Chap12  (0 holes, 3 files)
+   4  Chap26  (1 holes, 8 files)
+   5  Chap45  (1 holes, 7 files)
+   6  Chap18  (0 holes, 7 files)
+   7  Chap61  (0 holes, 4 files)
+   8  Chap56  (0 holes, 12 files)
+   9  Chap41  (0 holes, 7 files)
+   10  Chap58  (0 holes, 2 files)
+   11  Chap65  (0 holes, 3 files)
+   12  Chap06  (0 holes, 21 files)
+   13  Chap49  (0 holes, 8 files)
+   14  Chap21  (0 holes, 12 files)
+   15  Chap37  (0 holes, 19 files)
+   16  Chap55  (0 holes, 8 files)
+   17  Chap59  (0 holes, 4 files)
+   18  Chap62  (0 holes, 4 files)
+   19  Chap03  (0 holes, 1 files)
+   20  Chap02  (0 holes, 2 files)
+   21  Concurrency  (0 holes, 1 files)
+   22  Chap42  (0 holes, 4 files)
+   23  Chap35  (0 holes, 4 files)
+   24  Chap64  (0 holes, 3 files)
+   25  Chap12  (0 holes, 3 files)
+   26  Chap40  (0 holes, 3 files)
+   27  Chap05  (0 holes, 5 files)
+   28  Chap23  (0 holes, 2 files)
+   29  Chap36  (0 holes, 3 files)
+   30  Chap30  (0 holes, 1 files)
+   31  Chap50  (0 holes, 8 files)
+   32  Chap38  (0 holes, 2 files)
+   33  Chap44  (0 holes, 2 files)
+   34  Chap19  (0 holes, 4 files)
    35  Chap57  (0 holes, 3 files)
-   36  Chap28  (0 holes, 11 files)
-   37  Chap27  (0 holes, 4 files)
-   38  Chap19  (0 holes, 4 files)
-   39  Chap42  (0 holes, 4 files)
-   40  Chap11  (0 holes, 5 files)
-   41  Chap65  (0 holes, 3 files)
-   42  Chap39  (0 holes, 4 files)
-   43  Chap64  (0 holes, 3 files)
-   44  Chap21  (0 holes, 12 files)
-   45  Chap66  (0 holes, 2 files)
-   46  Chap59  (0 holes, 4 files)
+   36  Chap66  (0 holes, 2 files)
+   37  ParaPairs  (0 holes, 1 files)
+   38  Chap51  (0 holes, 8 files)
+   39  Chap11  (0 holes, 5 files)
+   40  Chap54  (0 holes, 4 files)
+   41  Chap17  (0 holes, 1 files)
+   42  Chap63  (0 holes, 2 files)
+   43  Chap28  (0 holes, 11 files)
+   44  Chap39  (0 holes, 4 files)
+   45  Chap52  (0 holes, 14 files)
+   46  Chap27  (0 holes, 4 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
@@ -2771,27 +2714,24 @@ Structural (info only): 184
 
    1  src/Chap53/PQMinStEph.rs  (4 holes)
    2  src/Chap53/PQMinStPer.rs  (4 holes)
-   3  src/Chap53/GraphSearchStEph.rs  (2 holes)
-   4  src/Chap43/OrderedTableMtPer.rs  (2 holes)
-   5  src/Chap47/ParaHashTableStEph.rs  (2 holes)
+   3  src/Chap47/ParaHashTableStEph.rs  (2 holes)
+   4  src/Chap53/GraphSearchStEph.rs  (2 holes)
+   5  src/Chap43/OrderedTableMtPer.rs  (2 holes)
    6  src/Chap53/GraphSearchStPer.rs  (2 holes)
-   7  src/Chap38/BSTParaMtEph.rs  (1 holes)
-   8  src/Chap43/AugOrderedTableStPer.rs  (1 holes)
+   7  src/Chap43/AugOrderedTableMtEph.rs  (1 holes)
+   8  src/Chap43/OrderedSetStPer.rs  (1 holes)
    9  src/Chap26/ETSPMtEph.rs  (1 holes)
-   10  src/Chap43/OrderedSetStPer.rs  (1 holes)
-   11  src/Chap43/OrderedSetStEph.rs  (1 holes)
+   10  src/Chap43/OrderedSetStEph.rs  (1 holes)
+   11  src/Chap43/AugOrderedTableStPer.rs  (1 holes)
    12  src/Chap45/Example45_2.rs  (1 holes)
-   13  src/Chap43/AugOrderedTableMtEph.rs  (1 holes)
-   14  src/Chap38/BSTParaStEph.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
 =================================================================
 
    1  src/Chap53  (12 holes, 5 files)
-   2  src/Chap38  (2 holes, 2 files)
+   2  src/Chap26  (1 holes, 8 files)
    3  src/Chap45  (1 holes, 7 files)
-   4  src/Chap26  (1 holes, 8 files)
 
 =================================================================
 4.4. Not Verusified
@@ -2809,9 +2749,9 @@ Structural (info only): 184
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 40 clean, 6 holed, 26 holes (global), 258 modules
+Chapter Status — 46 chapters, 41 clean, 5 holed, 24 holes (global), 258 modules
 
-CLEAN CHAPTERS (40)
+CLEAN CHAPTERS (41)
   Chapter        Files
   -------------- -----
   Chap02             2
@@ -2831,6 +2771,7 @@ CLEAN CHAPTERS (40)
   Chap35             4
   Chap36             3
   Chap37            19
+  Chap38             2
   Chap39             4
   Chap40             3
   Chap41             7
@@ -2855,11 +2796,10 @@ CLEAN CHAPTERS (40)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (6) — 26 holes
+HOLED CHAPTERS (5) — 24 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
   Chap26             1     8  YES       
-  Chap38             2     2  YES       
   Chap43             6    11  internal  Chap43::OrderedSetStPer, Chap43::OrderedSetStEph
   Chap45             1     7  YES       
   Chap47             4     9  internal  Chap47::ParaHashTableStEph
@@ -2874,8 +2814,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-21 20:50:33 -07:00
-Ended:     2026-03-21 20:50:35 -07:00
-Duration:  1810ms
+Started:   2026-03-22 11:50:11 -07:00
+Ended:     2026-03-22 11:50:12 -07:00
+Duration:  1505ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log

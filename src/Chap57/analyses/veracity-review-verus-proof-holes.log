@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap57/DijkstraStEphU64.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap57/
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,16 +20,18 @@ Table of Contents:
 1. File Holes
 =================================================================
 
+✓ DijkstraStEphF64.rs
 ⚠ DijkstraStEphU64.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:104: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:104: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
         88 |         fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
             ...
        102 |     /// - APAS: N/A — Verus-specific scaffolding.
        103 |     /// - Claude-Opus-4.6: Work O(1), Span O(1).
        105 |         ensures r.dist == dist, r.vertex == vertex,
        106 |     {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:111: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:128: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:111: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:128: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+✓ StackStEph.rs
 
 =================================================================
 2. Depends Upon
@@ -39,22 +41,26 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
+DijkstraStEphF64  depends upon only clean modules
 DijkstraStEphU64  depends upon only clean modules
+StackStEph  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
+DijkstraStEphF64.rs  depends upon only clean modules
 DijkstraStEphU64.rs  depends upon only clean modules
+StackStEph.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   0 clean (no holes, no errors; 0%)
-   1 holed (holes or errors, 100%)
-   1 total
+   2 clean (no holes, no errors; 66%)
+   1 holed (holes or errors, 33%)
+   3 total
 
 Proof Functions:
    4 clean (100%)
@@ -62,11 +68,11 @@ Proof Functions:
    4 total
 
 Function Specs:
-   6 exec fns with complete spec (requires+ensures) (40%)
-   1 exec fns missing spec (6%)
-   8 proof/spec fns clean (53%)
+   21 exec fns with complete spec (requires+ensures) (63%)
+   1 exec fns missing spec (3%)
+   11 proof/spec fns clean (33%)
    0 proof/spec fns with holes (0%)
-   15 total fns
+   33 total fns
 
 
 Holes Found: 0 (actionable)
@@ -83,8 +89,13 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-21 21:21:50 -07:00
-Ended:     2026-03-21 21:21:50 -07:00
-Duration:  5ms
+Started:   2026-03-22 11:50:11 -07:00
+Ended:     2026-03-22 11:50:11 -07:00
+Duration:  7ms
+
+Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
+ed:   2026-03-22 11:50:11 -07:00
+Ended:     2026-03-22 11:50:11 -07:00
+Duration:  7ms
 
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log

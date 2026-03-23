@@ -20,6 +20,7 @@ pub mod QuadProbFlatHashTableStEph {
     use std::marker::PhantomData;
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
     use vstd::arithmetic::power::pow;
     use crate::Chap47::FlatHashTable::FlatHashTable::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;

@@ -61,22 +61,22 @@ fn test_probe_quadratic_sequence() {
             Ghost::assume_new(),
         );
 
-    // Verify quadratic probing: (hash + i²) mod m
+    // Verify triangular probing: (hash + i*(i+1)/2) mod m
     let key = 5;
     let slot0 = QuadProbFlatHashTableStEph::probe(&table, &key, 0);
     let slot1 = QuadProbFlatHashTableStEph::probe(&table, &key, 1);
     let slot2 = QuadProbFlatHashTableStEph::probe(&table, &key, 2);
     let slot3 = QuadProbFlatHashTableStEph::probe(&table, &key, 3);
 
-    // hash(5) = 5, so:
-    // slot0 = (5 + 0²) % 11 = 5
-    // slot1 = (5 + 1²) % 11 = 6
-    // slot2 = (5 + 4) % 11 = 9
-    // slot3 = (5 + 9) % 11 = 3
+    // hash(5) = 5, triangular offsets: 0, 1, 3, 6
+    // slot0 = (5 + 0) % 11 = 5
+    // slot1 = (5 + 1) % 11 = 6
+    // slot2 = (5 + 3) % 11 = 8
+    // slot3 = (5 + 6) % 11 = 0
     assert_eq!(slot0, 5);
     assert_eq!(slot1, 6);
-    assert_eq!(slot2, 9);
-    assert_eq!(slot3, 3);
+    assert_eq!(slot2, 8);
+    assert_eq!(slot3, 0);
 }
 
 #[test]
