@@ -418,6 +418,7 @@ pub mod BSTParaTreapMtEph {
     }
 
     fn tree_priority_internal<T: MtKey + ClonePreservesView + 'static>(tree: &ParamTreap<T>) -> (p: i64)
+        requires tree.spec_bstparatreapmteph_wf(),
         ensures true,
     {
         let handle = tree.root.acquire_read();

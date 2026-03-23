@@ -21,22 +21,22 @@ Table of Contents:
 =================================================================
 
 ⚠ BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:642: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:642: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        635 |         fn clone(&self) -> (cloned: Self)
             ...
        640 |                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
        641 |             };
        643 |             cloned
        644 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:657: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:657: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        648 |         fn clone(&self) -> (cloned: Self)
             ...
        655 |                 right: self.right.clone(),
        656 |             };
        658 |             cloned
        659 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1645: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
-/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1646: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:1645: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:1646: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
 ✓ BSTParaStEph.rs
    5 clean proof functions
 
@@ -95,9 +95,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-22 19:13:11 -07:00
-Ended:     2026-03-22 19:13:11 -07:00
-Duration:  39ms
+Started:   2026-03-22 19:28:22 -07:00
+Ended:     2026-03-22 19:28:22 -07:00
+Duration:  53ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
