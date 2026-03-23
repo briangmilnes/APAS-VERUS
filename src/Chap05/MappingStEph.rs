@@ -18,7 +18,6 @@
 
 //		1. module
 
-
 pub mod MappingStEph {
 
     use vstd::prelude::*;
@@ -46,7 +45,6 @@ verus! {
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;
 
-
     //		3. broadcast use
 
     broadcast use {
@@ -72,7 +70,6 @@ verus! {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
-
     //		4. type definitions
 
     #[verifier::reject_recursive_types(A)]
@@ -80,7 +77,6 @@ verus! {
     pub struct MappingStEph<A: StT + Hash, B: StT + Hash> {
         pub mapping: RelationStEph<A, B>,
     }
-
 
     //		5. view impls
 
@@ -94,7 +90,6 @@ verus! {
             )
         }
     }
-
 
     //		6. spec fns
 
@@ -120,7 +115,6 @@ verus! {
     pub open spec fn is_functional_set_at<X, Y>(s: Set<(X, Y)>, p: (X, Y)) -> bool {
         forall |q: (X, Y)| #![trigger s.contains(q)] s.contains(q) && q.0 == p.0 ==> q.1 == p.1
     }
-
 
     //		8. traits
 
@@ -235,7 +229,6 @@ verus! {
                 it@.1.no_duplicates();
     }
 
-
     //		9. impls
 
     impl<X: StT + Hash, Y: StT + Hash>
@@ -245,6 +238,7 @@ verus! {
                self.mapping@.finite()
             && valid_key_type_Pair::<X, Y>()
             && is_functional_set(self.mapping@)
+            && obeys_feq_full::<Pair<X, Y>>()
         }
 
         open spec fn spec_valid_key_type() -> bool {
@@ -255,11 +249,11 @@ verus! {
             is_functional_set(self.mapping@)
         }
 
+        #[verifier::loop_isolation(false)]
         fn is_functional_vec_at(v: &Vec<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool) {
             let n = v.len();
             for i in 0..n
                 invariant
-                    obeys_feq_full_Pair::<X, Y>(),
                     n == v@.len(),
                     forall |k: int| #![trigger v@[k]] 0 <= k < i && v@[k]@.0 == p@.0 ==> v@[k]@.1 == p@.1,
             {
@@ -296,7 +290,6 @@ verus! {
             // TRY: removed proof block
             true
         }
-
 
         fn is_functional_SetStEph_at(s: &SetStEph<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool) {
             let mut iter = s.iter();
@@ -375,6 +368,7 @@ verus! {
         }
 
         fn empty() -> MappingStEph<X, Y> {
+                      assert(obeys_feq_full_trigger::<Pair<X, Y>>());
             let result = MappingStEph { mapping: RelationStEph::empty() };
             proof { 
                assert(result@.dom() =~= Set::empty());
@@ -383,6 +377,7 @@ verus! {
         }
 
         fn from_vec(v: Vec<Pair<X, Y>>) -> MappingStEph<X, Y> {
+                      assert(obeys_feq_full_trigger::<Pair<X, Y>>());
             let ghost v_seq = v@;
             let pairs = SetStEph::from_vec(v);
             let result = MappingStEph { mapping: RelationStEph::from_set(pairs) };
@@ -409,6 +404,7 @@ verus! {
         }
 
         fn from_relation(r: &RelationStEph<X, Y>) -> MappingStEph<X, Y> {
+                      assert(obeys_feq_full_trigger::<Pair<X, Y>>());
             let result = MappingStEph { mapping: r.clone() };
             proof {
                 // result.mapping@ == r@ (from clone ensures).
@@ -471,7 +467,6 @@ verus! {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
-
 
     //		10. iterators
 
@@ -591,7 +586,6 @@ verus! {
         }
     }
 
-
     //		11. derive impls in verus!
 
     impl<A: StT + Hash, B: StT + Hash> Clone for MappingStEph<A, B> {
@@ -625,7 +619,6 @@ verus! {
 
   } // verus!
 
-
     //		12. macros
 
     #[macro_export]
@@ -649,7 +642,6 @@ verus! {
             < $crate::Chap05::MappingStEph::MappingStEph::MappingStEph<_, _> >::from_vec(__pairs)
         }};
     }
-
 
     //		13. derive impls outside verus!
 

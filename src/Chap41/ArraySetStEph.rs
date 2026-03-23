@@ -53,7 +53,6 @@ pub mod ArraySetStEph {
         vstd::set_lib::group_set_lib_default,
     };
 
-
     // 4. type definitions
 
     #[verifier::reject_recursive_types(T)]
@@ -63,7 +62,6 @@ pub mod ArraySetStEph {
 
     pub type ArraySetS<T> = ArraySetStEph<T>;
 
-
     // 5. view impls
 
     impl<T: StT + Ord> View for ArraySetStEph<T> {
@@ -72,7 +70,6 @@ pub mod ArraySetStEph {
             self.elements@.to_set()
         }
     }
-
 
     // 7. proof fns
 
@@ -300,7 +297,6 @@ pub mod ArraySetStEph {
         }
     }
 
-
     // 8. traits
 
     pub trait ArraySetStEphTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
@@ -429,7 +425,6 @@ pub mod ArraySetStEph {
                 self.spec_arraysetsteph_wf();
     }
 
-
     // 9. impls
 
     impl<T: StT + Ord> ArraySetStEph<T> {
@@ -505,6 +500,7 @@ pub mod ArraySetStEph {
 
         fn from_seq(seq: ArraySeqStEphS<T>) -> (constructed: Self)
         {
+                      assert(obeys_feq_full_trigger::<T>());
             if seq.length() == 0 {
                 return Self::empty();
             }
@@ -564,6 +560,7 @@ pub mod ArraySetStEph {
             constructed
         }
 
+        #[verifier::loop_isolation(false)]
         fn find(&self, x: &T) -> (found: B)
         {
             assert(obeys_feq_full_trigger::<T>());
@@ -573,7 +570,6 @@ pub mod ArraySetStEph {
                 invariant
                     i <= n,
                     n as int == self.elements.spec_len(),
-                    obeys_feq_full::<T>(),
                     forall|j: int| 0 <= j < i ==> self.elements@[j] != x@,
                 decreases n - i,
             {
@@ -595,6 +591,7 @@ pub mod ArraySetStEph {
             false
         }
 
+        #[verifier::loop_isolation(false)]
         fn filter<F: PredSt<T>>(
             &self,
             f: F,
@@ -612,7 +609,6 @@ pub mod ArraySetStEph {
                     i <= n,
                     self.elements@ == old_view,
                     old_view.no_duplicates(),
-                    obeys_feq_full::<T>(),
                     forall|t: &T| #[trigger] f.requires((t,)),
                     forall|x: T, keep: bool|
                         f.ensures((&x,), keep) ==> keep == spec_pred(x@),
@@ -922,6 +918,7 @@ pub mod ArraySetStEph {
             remaining
         }
 
+        #[verifier::loop_isolation(false)]
         fn union(&self, other: &Self) -> (combined: Self)
         {
             let ghost self_view = self.elements@;
@@ -932,14 +929,12 @@ pub mod ArraySetStEph {
             let mut result_vec: Vec<T> = Vec::new();
             let ghost mut rv_views: Seq<<T as View>::V> = Seq::empty();
 
-            
             let mut i: usize = 0;
             while i < self_len
                 invariant
                     i <= self_len,
                     self_len as int == self.elements.spec_len(),
                     self.elements@ == self_view,
-                    obeys_feq_full::<T>(),
                     rv_views =~= self_view.subrange(0, i as int),
                     rv_views.len() == result_vec@.len(),
                     forall|j: int| #![trigger rv_views[j]]
@@ -964,7 +959,6 @@ pub mod ArraySetStEph {
                 assert(self_view.subrange(0, self_len as int) =~= self_view);
             }
 
-            
             let mut j: usize = 0;
             while j < other_len
                 invariant
@@ -1077,6 +1071,7 @@ pub mod ArraySetStEph {
             combined
         }
 
+        #[verifier::loop_isolation(false)]
         fn delete(&mut self, x: &T)
         {
             let ghost old_view = self.elements@;
@@ -1091,7 +1086,6 @@ pub mod ArraySetStEph {
                     n as int == self.elements.spec_len(),
                     self.elements@ == old_view,
                     old_view.no_duplicates(),
-                    obeys_feq_full::<T>(),
                     x@ == x_view,
                     rv_views =~=
                         old_view.subrange(0, i as int).filter(|e: <T as View>::V| e != x_view),
@@ -1152,6 +1146,7 @@ pub mod ArraySetStEph {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn insert(&mut self, x: T)
         {
             if !self.find(&x) {
@@ -1166,7 +1161,6 @@ pub mod ArraySetStEph {
                         i <= n,
                         n as int == self.elements.spec_len(),
                         self.elements@ == old_view,
-                        obeys_feq_full::<T>(),
                         rv_views =~= old_view.subrange(0, i as int),
                         rv_views.len() == new_vec@.len(),
                         forall|j: int| #![trigger rv_views[j]]
@@ -1220,9 +1214,6 @@ pub mod ArraySetStEph {
             }
         }
     }
-
-
-    
 
     impl<T: StT + Ord> Default for ArraySetStEph<T> {
         fn default() -> Self { Self::empty() }

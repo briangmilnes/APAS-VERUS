@@ -137,7 +137,7 @@ broadcast use {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to OrderedTableStEph.find (linear scan)
         fn find(&self, k: &K) -> (found: Option<V>)
-            requires self.spec_augorderedtablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
+            requires self.spec_augorderedtablesteph_wf(), obeys_view_eq::<K>()
             ensures
                 match found {
                     Some(v) => self@.contains_key(k@) && v@ == self@[k@],
@@ -146,7 +146,7 @@ broadcast use {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to find
         fn lookup(&self, k: &K) -> (value: Option<V>)
-            requires self.spec_augorderedtablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
+            requires self.spec_augorderedtablesteph_wf(), obeys_view_eq::<K>()
             ensures
                 match value {
                     Some(v) => self@.contains_key(k@) && v@ == self@[k@],
@@ -164,7 +164,6 @@ broadcast use {
                 old(self).spec_augorderedtablesteph_wf(),
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                 obeys_view_eq::<K>(),
-                obeys_feq_full::<Pair<K, V>>(),
                 !old(self)@.contains_key(k@) ==> old(self)@.dom().len() + 1 < usize::MAX as nat,
             ensures
                 self@.contains_key(k@),
@@ -180,8 +179,6 @@ broadcast use {
             requires
                 old(self).spec_augorderedtablesteph_wf(),
                 obeys_view_eq::<K>(),
-                obeys_feq_full::<V>(),
-                obeys_feq_full::<Pair<K, V>>(),
             ensures self@.dom().finite();
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to OrderedTableStEph.domain
@@ -254,7 +251,6 @@ broadcast use {
                 other.spec_augorderedtablesteph_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_feq_clone::<K>(),
-                obeys_feq_full::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
                 old(self)@.dom().len() + other@.dom().len() < usize::MAX,
             ensures
@@ -272,7 +268,7 @@ broadcast use {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to OrderedTableStEph.difference (linear scan)
         fn difference(&mut self, other: &Self)
-            requires old(self).spec_augorderedtablesteph_wf(), other.spec_augorderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
+            requires old(self).spec_augorderedtablesteph_wf(), other.spec_augorderedtablesteph_wf(),obeys_view_eq::<K>()
             ensures
                 self@.dom() =~= old(self)@.dom().difference(other@.dom()),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
@@ -280,7 +276,7 @@ broadcast use {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- linear scan over self for each key
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
-            requires old(self).spec_augorderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>()
+            requires old(self).spec_augorderedtablesteph_wf()
             ensures
                 self@.dom() =~= old(self)@.dom().intersect(keys@),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
@@ -288,7 +284,7 @@ broadcast use {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- linear scan over self for each key
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
-            requires old(self).spec_augorderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>()
+            requires old(self).spec_augorderedtablesteph_wf()
             ensures
                 self@.dom() =~= old(self)@.dom().difference(keys@),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
@@ -357,7 +353,6 @@ broadcast use {
                 old(self).spec_augorderedtablesteph_wf(),
                 other.spec_augorderedtablesteph_wf(),
                 obeys_feq_clone::<K>(),
-                obeys_feq_full::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
                 old(self)@.dom().len() + other@.dom().len() < usize::MAX,
             ensures
@@ -421,6 +416,8 @@ broadcast use {
         open spec fn spec_augorderedtablesteph_wf(&self) -> bool {
             self.base_table.spec_orderedtablesteph_wf()
             && forall|v1: &V, v2: &V| #[trigger] self.reducer.requires((v1, v2))
+            && obeys_feq_fulls::<K, V>()
+            && obeys_feq_full::<Pair<K, V>>()
         }
 
         fn size(&self) -> (count: usize)
@@ -512,6 +509,9 @@ broadcast use {
 
         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)
         {
+                      assert(obeys_feq_full_trigger::<K>());
+           assert(obeys_feq_full_trigger::<V>());
+           assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let base_table = OrderedTableStEph::tabulate(f, keys);
             let cached_reduction = calculate_reduction(&base_table, &reducer, &identity);
 

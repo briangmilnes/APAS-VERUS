@@ -36,6 +36,10 @@ pub mod AugOrderedTableMtEph {
     use crate::{OrderedTableMtEphLit, ParaPair};
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_fulls;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
 
     verus! {
 
@@ -142,7 +146,7 @@ broadcast use {
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- delegates to TableMtEph which uses linear scan
         fn find(&self, k: &K) -> (found: Option<V>)
-            requires self.spec_augorderedtablemteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
+            requires self.spec_augorderedtablemteph_wf(), obeys_view_eq::<K>()
             ensures
                 match found {
                     Some(v) => self@.contains_key(k@),
@@ -151,7 +155,7 @@ broadcast use {
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- delegates to TableMtEph which uses linear scan
         fn lookup(&self, k: &K) -> (value: Option<V>)
-            requires self.spec_augorderedtablemteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
+            requires self.spec_augorderedtablemteph_wf(), obeys_view_eq::<K>()
             ensures
                 match value {
                     Some(v) => self@.contains_key(k@),
@@ -170,7 +174,6 @@ broadcast use {
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                 obeys_view_eq::<K>(),
                 obeys_feq_clone::<K>(),
-                obeys_feq_full::<Pair<K, V>>(),
             ensures self@.dom().finite();
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- mutates base table (linear scan), then recalculates reduction O(n)
@@ -178,7 +181,6 @@ broadcast use {
             requires
                 old(self).spec_augorderedtablemteph_wf(),
                 obeys_view_eq::<K>(),
-                obeys_feq_full::<V>(),
             ensures self@.dom().finite();
         /// - APAS: Work O(n), Span O(n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- extracts keys from base table entries
@@ -347,7 +349,6 @@ broadcast use {
             requires
                 self.spec_augorderedtablemteph_wf(),
                 obeys_view_eq::<K>(),
-                obeys_feq_full::<V>(),
             ensures self@.dom().finite();
     }
 
@@ -357,6 +358,8 @@ broadcast use {
         open spec fn spec_augorderedtablemteph_wf(&self) -> bool {
             self@.dom().finite() && self.base_table.spec_orderedtablemteph_wf()
             && forall|v1: &V, v2: &V| #[trigger] self.reducer.requires((v1, v2))
+            && obeys_feq_fulls::<K, V>()
+            && obeys_feq_full::<Pair<K, V>>()
         }
 
         fn size(&self) -> (count: usize)
@@ -369,6 +372,9 @@ broadcast use {
         fn empty(reducer: F, identity: V) -> (empty: Self)
             ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_augorderedtablemteph_wf()
         {
+                      assert(obeys_feq_full_trigger::<K>());
+           assert(obeys_feq_full_trigger::<V>());
+           assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let base = OrderedTableMtEph::empty();
             let r = Self {
                 base_table: base,
@@ -383,6 +389,9 @@ broadcast use {
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
             ensures tree@.dom().finite(), tree.spec_augorderedtablemteph_wf()
         {
+                      assert(obeys_feq_full_trigger::<K>());
+           assert(obeys_feq_full_trigger::<V>());
+           assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let base = OrderedTableMtEph::singleton(k, v.clone());
             let r = Self {
                 base_table: base,

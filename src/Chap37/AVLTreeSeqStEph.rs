@@ -19,7 +19,6 @@
 
 //		1. module
 
-
 // Table of Contents
 // 1. module
 // 2. imports
@@ -46,6 +45,8 @@ pub mod AVLTreeSeqStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{lemma_cloned_view_eq, obeys_feq_full};
     use crate::vstdplus::feq::feq::feq;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
 
     verus! {
 
@@ -55,7 +56,6 @@ pub mod AVLTreeSeqStEph {
 
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
-
 
     //		3. broadcast use
 
@@ -68,7 +68,6 @@ pub mod AVLTreeSeqStEph {
         vstd::seq_lib::group_seq_properties,
         vstd::seq_lib::group_to_multiset_ensures,
     };
-
 
     //		4. type definitions
 
@@ -97,7 +96,6 @@ pub mod AVLTreeSeqStEph {
         pub current: Option<&'a AVLTreeNode<T>>,
     }
 
-
     //		5. view impls
 
     // 5. view impls
@@ -108,7 +106,6 @@ pub mod AVLTreeSeqStEph {
             spec_inorder(self.root)
         }
     }
-
 
     //		6. spec fns
 
@@ -169,7 +166,6 @@ pub mod AVLTreeSeqStEph {
             }
         }
     }
-
 
     //		7. proof fns/broadcast groups
 
@@ -233,7 +229,6 @@ pub mod AVLTreeSeqStEph {
         lemma_wf_implies_len_bound_steph,
     }
 
-
     //		8. traits
 
     // 8. traits
@@ -278,7 +273,7 @@ pub mod AVLTreeSeqStEph {
             ensures single == (self.spec_seq().len() == 1);
 
         fn subseq_copy(&self, start: N, length: N) -> (sub: Self)
-            requires self.spec_avltreeseqsteph_wf(), obeys_feq_full::<T>(), self.spec_seq().len() < usize::MAX,
+            requires self.spec_avltreeseqsteph_wf(),self.spec_seq().len() < usize::MAX,
             ensures sub.spec_seq() =~= spec_subseq(self.spec_seq(), start as nat, length as nat);
 
         fn new_root() -> (tree: Self)
@@ -302,7 +297,7 @@ pub mod AVLTreeSeqStEph {
                 spec_inorder(tree.root) =~= values@.map_values(|t: T| t@);
 
         fn to_arrayseq(&self) -> (seq: ArraySeqStEphS<T>)
-            requires self.spec_avltreeseqsteph_wf(), obeys_feq_full::<T>(),
+            requires self.spec_avltreeseqsteph_wf(),
             ensures
                 seq.spec_len() == self.spec_seq().len(),
                 forall|i: int| #![trigger seq.spec_index(i)]
@@ -320,7 +315,7 @@ pub mod AVLTreeSeqStEph {
                 self.spec_avltreeseqsteph_wf();
 
         fn contains_value(&self, target: &T) -> (found: B)
-            requires self.spec_avltreeseqsteph_wf(), obeys_feq_full::<T>(),
+            requires self.spec_avltreeseqsteph_wf(),
             ensures found == exists|j: int| 0 <= j < self.spec_seq().len()
                 && self.spec_seq()[j] == target@;
 
@@ -333,7 +328,7 @@ pub mod AVLTreeSeqStEph {
                 self.spec_avltreeseqsteph_wf();
 
         fn delete_value(&mut self, target: &T) -> (deleted: bool)
-            requires old(self).spec_avltreeseqsteph_wf(), obeys_feq_full::<T>(),
+            requires old(self).spec_avltreeseqsteph_wf(),
             ensures
                 !deleted ==> self.spec_seq() =~= old(self).spec_seq(),
                 deleted ==> exists|idx: int|
@@ -345,7 +340,6 @@ pub mod AVLTreeSeqStEph {
                         + old(self).spec_seq().subrange(idx + 1,
                             old(self).spec_seq().len() as int);
     }
-
 
     //		9. impls
 
@@ -708,6 +702,7 @@ pub mod AVLTreeSeqStEph {
             spec_cached_height(&copy) == spec_cached_height(link),
         decreases *link,
     {
+              assert(obeys_feq_full_trigger::<T>());
         match link {
             None => None,
             Some(node) => {
@@ -738,13 +733,16 @@ pub mod AVLTreeSeqStEph {
         open spec fn spec_avltreeseqsteph_wf(&self) -> bool {
             spec_avltreeseqsteph_wf(self.root)
             && self.next_key as nat == spec_cached_size(&self.root)
+            && obeys_feq_full::<T>()
         }
 
         fn empty() -> (tree: Self) {
+                      assert(obeys_feq_full_trigger::<T>());
             AVLTreeSeqStEphS { root: None, next_key: 0 }
         }
 
         fn new() -> (tree: Self) {
+                      assert(obeys_feq_full_trigger::<T>());
             Self::empty()
         }
 
@@ -764,6 +762,7 @@ pub mod AVLTreeSeqStEph {
         }
 
         fn singleton(item: T) -> (tree: Self) {
+                      assert(obeys_feq_full_trigger::<T>());
             let mut t = AVLTreeSeqStEphS { root: None, next_key: 0 };
             t.root = insert_at_link(t.root.take(), 0, item, &mut t.next_key);
             proof { lemma_size_eq_inorder_len::<T>(&t.root); }
@@ -823,6 +822,7 @@ pub mod AVLTreeSeqStEph {
         }
 
         fn new_root() -> (tree: Self) {
+                      assert(obeys_feq_full_trigger::<T>());
             Self::empty()
         }
 
@@ -833,6 +833,7 @@ pub mod AVLTreeSeqStEph {
         }
 
         fn from_vec(values: Vec<T>) -> (tree: AVLTreeSeqStEphS<T>) {
+                      assert(obeys_feq_full_trigger::<T>());
             broadcast use Seq::<_>::lemma_push_map_commute;
             let length = values.len();
             let mut t = AVLTreeSeqStEphS { root: None, next_key: 0 };
@@ -1058,7 +1059,6 @@ pub mod AVLTreeSeqStEph {
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
-
     impl<T: StT> Default for AVLTreeSeqStEphS<T> {
         fn default() -> Self { Self::new() }
     }
@@ -1146,6 +1146,7 @@ pub mod AVLTreeSeqStEph {
                 copy@ == self@,
                 self.spec_avltreeseqsteph_wf() ==> copy.spec_avltreeseqsteph_wf(),
         {
+                      assert(obeys_feq_full_trigger::<T>());
             AVLTreeSeqStEphS {
                 root: clone_link(&self.root),
                 next_key: self.next_key,

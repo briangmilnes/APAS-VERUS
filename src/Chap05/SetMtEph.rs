@@ -21,7 +21,6 @@
 
 //		1. module
 
-
 // Verus requires parentheses around closures with ensures clauses in function arguments
 #[allow(unused_parens)]
 pub mod SetMtEph {
@@ -54,7 +53,6 @@ verus! {
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
 
-
     //		3. broadcast use
 
     broadcast use {
@@ -78,12 +76,10 @@ verus! {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
-
     //		4. type definitions
 
     #[verifier::reject_recursive_types(T)]
     pub struct SetMtEph<T: StT + Hash> { pub elements: HashSetWithViewPlus<T> }
-
 
     //		5. view impls
 
@@ -91,7 +87,6 @@ verus! {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Self::V { self.elements@ }
     }
-
 
     //		6. spec fns
 
@@ -105,7 +100,6 @@ verus! {
     pub open spec fn spec_setmteph_wf_generic<V: StT + Hash>(s: &SetMtEph<V>) -> bool {
         s@.finite() && valid_key_type::<V>()
     }
-
 
     //		7. proof fns/broadcast groups
 
@@ -124,7 +118,6 @@ verus! {
     pub broadcast group group_set_mt_eph_lemmas {
         lemma_singleton_choose,
     }
-
 
     //		8. traits
 
@@ -299,13 +292,13 @@ verus! {
                 self@.contains(element@);
     }
 
-
     //		9. impls
 
     impl<T: StT + Hash> SetMtEphTrait<T> for SetMtEph<T> {
 
         open spec fn spec_setmteph_wf(&self) -> bool {
             self@.finite() && valid_key_type::<T>()
+            && obeys_feq_full::<T>()
         }
 
         open spec fn spec_valid_key_type() -> bool {
@@ -313,6 +306,7 @@ verus! {
         }
 
         fn from_vec(v: Vec<T>) -> SetMtEph<T> {
+                      assert(obeys_feq_full_trigger::<T>());
             let mut s: SetMtEph<T> = SetMtEph::empty();
             let ghost v_seq: Seq<T> = v@;
 
@@ -354,9 +348,12 @@ verus! {
             seq
         }
 
-        fn empty() -> SetMtEph<T> { SetMtEph { elements: HashSetWithViewPlus::new() } }
+        fn empty() -> SetMtEph<T> {
+        assert(obeys_feq_full_trigger::<T>());
+         SetMtEph { elements: HashSetWithViewPlus::new() } }
 
         fn singleton(x: T) -> (s: SetMtEph<T>) {
+                      assert(obeys_feq_full_trigger::<T>());
             let mut s = HashSetWithViewPlus::new();
             let _ = s.insert(x);
             SetMtEph { elements: s }
@@ -695,7 +692,6 @@ verus! {
             }
         }
 
-
         fn partition_on_elt(x: &T, parts: &SetMtEph<SetMtEph<T>>) -> bool {
             let parts_iter = parts.iter();
             let mut parts_it = parts_iter;
@@ -849,7 +845,6 @@ verus! {
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
-
     //		10. iterators
 
     /// Iterator wrapper to hide std::collections::hash_set::Iter.
@@ -969,7 +964,6 @@ verus! {
         }
     }
 
-
     //		11. top level coarse locking
 
     pub struct SetMtEphInv;
@@ -1030,6 +1024,7 @@ verus! {
 
     impl<T: StT + Hash> LockedSetMtEphTrait<T> for LockedSetMtEph<T> {
         fn empty() -> (s: Self) {
+                      assert(obeys_feq_full_trigger::<T>());
             let inner = SetMtEph::empty();
             let ghost view = inner@;
             LockedSetMtEph {
@@ -1102,7 +1097,6 @@ verus! {
 
   } // verus!
 
-
     //		13. macros
 
     #[macro_export]
@@ -1116,7 +1110,6 @@ verus! {
             __s
         }};
     }
-
 
     //		14. derive impls outside verus!
 

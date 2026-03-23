@@ -88,15 +88,22 @@ pub mod PQMinStEph {
     impl<V: StT + Ord, P: StT + Ord> PQMinStEphTrait<V, P> for PQMinResult<V, P> {
         open spec fn spec_pqminsteph_wf(&self) -> bool {
             spec_pqminsteph_wf_generic(self)
+            && obeys_feq_fulls::<P, V>()
         }
 
         fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)
         where G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P,
-        { pq_min(graph, source, priority_fn, Ghost(vertex_universe)) }
+        {
+        assert(obeys_feq_full_trigger::<P>());
+        assert(obeys_feq_full_trigger::<V>());
+         pq_min(graph, source, priority_fn, Ghost(vertex_universe)) }
 
         fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStEph<V>, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)
         where G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P,
-        { pq_min_multi(graph, sources, priority_fn, Ghost(vertex_universe)) }
+        {
+        assert(obeys_feq_full_trigger::<P>());
+        assert(obeys_feq_full_trigger::<V>());
+         pq_min_multi(graph, sources, priority_fn, Ghost(vertex_universe)) }
     }
 
     /// Priority-first search from single source (Section 53.4).
@@ -122,6 +129,8 @@ pub mod PQMinStEph {
             spec_pqminsteph_wf_generic(&search),
             search.visited@.contains(source@),
     {
+              assert(obeys_feq_full_trigger::<P>());
+       assert(obeys_feq_full_trigger::<V>());
         let sources = AVLTreeSetStEph::singleton(source);
         proof {
             assert(sources@.subset_of(vertex_universe)) by {

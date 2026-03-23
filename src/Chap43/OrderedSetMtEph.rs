@@ -71,6 +71,7 @@ pub mod OrderedSetMtEph {
         requires inner.spec_orderedsetsteph_wf(), inner@.finite()
         ensures s@ == inner@, s@.finite(), s.spec_orderedsetmteph_wf()
     {
+              assert(obeys_feq_full_trigger::<T>());
         let ghost view = inner@;
         OrderedSetMtEph {
             locked_set: RwLock::new(inner, Ghost(OrderedSetMtEphInv)),
@@ -239,6 +240,7 @@ pub mod OrderedSetMtEph {
     impl<T: MtKey + TotalOrder + 'static> OrderedSetMtEphTrait<T> for OrderedSetMtEph<T> {
         open spec fn spec_orderedsetmteph_wf(&self) -> bool {
             self@.finite()
+            && obeys_feq_full::<T>()
         }
 
         fn size(&self) -> (count: usize) {
@@ -252,6 +254,7 @@ pub mod OrderedSetMtEph {
         }
 
         fn empty() -> (empty: Self) {
+                      assert(obeys_feq_full_trigger::<T>());
             let inner = OrderedSetStEph::empty();
             let ghost view = inner@;
             OrderedSetMtEph {
@@ -261,6 +264,7 @@ pub mod OrderedSetMtEph {
         }
 
         fn singleton(x: T) -> (tree: Self) {
+                      assert(obeys_feq_full_trigger::<T>());
             let inner = OrderedSetStEph::singleton(x);
             let ghost view = inner@;
             OrderedSetMtEph {
@@ -352,6 +356,7 @@ pub mod OrderedSetMtEph {
             self.ghost_locked_set = Ghost(old_view.difference(other_view));
         }
 
+        #[verifier::loop_isolation(false)]
         fn to_seq(&self) -> (seq: ArraySeqStPerS<T>) {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
@@ -370,7 +375,6 @@ pub mod OrderedSetMtEph {
                     len as nat == avl_seq@.len(),
                     0 <= i <= len,
                     elements@.len() == i as int,
-                    obeys_feq_full::<T>(),
                     forall|j: int| 0 <= j < i ==> (#[trigger] elements@[j])@ == avl_seq@[j],
                 decreases len - i,
             {

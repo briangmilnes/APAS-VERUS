@@ -82,7 +82,7 @@ broadcast use {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- agrees with APAS; delegates to TableStEph.find
         fn find(&self, k: &K) -> (found: Option<V>)
-            requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
+            requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>()
             ensures
                 match found {
                     Some(v) => self@.contains_key(k@) && v@ == self@[k@],
@@ -91,7 +91,7 @@ broadcast use {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- agrees with APAS; delegates to find
         fn lookup(&self, k: &K) -> (value: Option<V>)
-            requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
+            requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>()
             ensures
                 match value {
                     Some(v) => self@.contains_key(k@) && v@ == self@[k@],
@@ -109,7 +109,6 @@ broadcast use {
                 old(self).spec_orderedtablesteph_wf(),
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                 obeys_view_eq::<K>(),
-                obeys_feq_full::<Pair<K, V>>(),
                 !old(self)@.contains_key(k@) ==> old(self)@.dom().len() + 1 < usize::MAX as nat,
             ensures
                 self@.contains_key(k@),
@@ -126,8 +125,6 @@ broadcast use {
             requires
                 old(self).spec_orderedtablesteph_wf(),
                 obeys_view_eq::<K>(),
-                obeys_feq_full::<V>(),
-                obeys_feq_full::<Pair<K, V>>(),
             ensures self@ == old(self)@.remove(k@), self@.dom().finite(), self.spec_orderedtablesteph_wf();
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- agrees with APAS; collects keys from entries
@@ -209,7 +206,6 @@ broadcast use {
                 other.spec_orderedtablesteph_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_feq_clone::<K>(),
-                obeys_feq_full::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
                 old(self)@.dom().len() + other@.dom().len() < usize::MAX,
             ensures
@@ -228,7 +224,7 @@ broadcast use {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to TableStEph.difference which is linear scan
         fn difference(&mut self, other: &Self)
-            requires old(self).spec_orderedtablesteph_wf(), other.spec_orderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>(), obeys_view_eq::<K>()
+            requires old(self).spec_orderedtablesteph_wf(), other.spec_orderedtablesteph_wf(),obeys_view_eq::<K>()
             ensures
                 self@.dom() =~= old(self)@.dom().difference(other@.dom()),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
@@ -237,7 +233,7 @@ broadcast use {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- delegates to TableStEph.restrict which is linear scan per key
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
-            requires old(self).spec_orderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>()
+            requires old(self).spec_orderedtablesteph_wf()
             ensures
                 self@.dom() =~= old(self)@.dom().intersect(keys@),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
@@ -246,7 +242,7 @@ broadcast use {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- delegates to TableStEph.subtract which is linear scan per key
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
-            requires old(self).spec_orderedtablesteph_wf(), obeys_feq_full::<Pair<K, V>>()
+            requires old(self).spec_orderedtablesteph_wf()
             ensures
                 self@.dom() =~= old(self)@.dom().difference(keys@),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
@@ -326,7 +322,6 @@ broadcast use {
                 old(self).spec_orderedtablesteph_wf(),
                 other.spec_orderedtablesteph_wf(),
                 obeys_feq_clone::<K>(),
-                obeys_feq_full::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
                 old(self)@.dom().len() + other@.dom().len() < usize::MAX,
             ensures
@@ -468,6 +463,8 @@ broadcast use {
             self.base_seq.spec_avltreeseqsteph_wf()
             && spec_keys_no_dups(self.base_seq@)
             && self.base_seq@.len() < usize::MAX as nat
+            && obeys_feq_fulls::<K, V>()
+            && obeys_feq_full::<Pair<K, V>>()
         }
 
         fn size(&self) -> (count: usize)
@@ -550,7 +547,6 @@ broadcast use {
 
         fn insert<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
         {
-            assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let ghost old_seq = self.base_seq@;
             let ghost old_map = self@;
             let len = self.base_seq.length();
@@ -762,7 +758,6 @@ broadcast use {
 
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
         {
-            assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let ghost old_seq = self.base_seq@;
             let len = self.base_seq.length();
             let mut all: Vec<Pair<K, V>> = Vec::new();
@@ -914,8 +909,10 @@ broadcast use {
             domain
         }
 
+        #[verifier::loop_isolation(false)]
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
         {
+                      assert(obeys_feq_full_trigger::<V>());
             proof {
                 assert(obeys_feq_full_trigger::<K>());
                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
@@ -936,7 +933,6 @@ broadcast use {
                     seq_view.no_duplicates(),
                     seq_view.to_set() =~= keys@,
                     forall|k: &K| f.requires((k,)),
-                    obeys_feq_full::<K>(),
                     all@.len() == i as int,
                     key_args.len() == i as int,
                     results.len() == i as int,
@@ -1033,7 +1029,6 @@ broadcast use {
 
         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
         {
-            assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let len = self.base_seq.length();
             let mut all: Vec<Pair<K, V>> = Vec::new();
             let mut i: usize = 0;
@@ -1078,7 +1073,6 @@ broadcast use {
             Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,
         ) -> (filtered: Self)
         {
-            assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let len = avl_seq_length(&self.base_seq);
             let mut all: Vec<Pair<K, V>> = Vec::new();
             let mut i: usize = 0;
@@ -1217,7 +1211,6 @@ broadcast use {
 
         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
         {
-            assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let ghost old_seq = self.base_seq@;
             let ghost old_map = self@;
             let ghost other_map = other@;
@@ -1699,7 +1692,6 @@ broadcast use {
 
         fn difference(&mut self, other: &Self)
         {
-            assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let ghost old_seq = self.base_seq@;
             let ghost old_map = self@;
             let ghost other_map = other@;
@@ -1812,7 +1804,6 @@ broadcast use {
 
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
         {
-            assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let ghost old_seq = self.base_seq@;
             let ghost old_map = self@;
             let ghost keys_set = keys@;
@@ -1921,7 +1912,6 @@ broadcast use {
 
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
         {
-            assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let ghost old_seq = self.base_seq@;
             let ghost old_map = self@;
             let ghost keys_set = keys@;
@@ -2037,7 +2027,6 @@ broadcast use {
                 self.spec_orderedtablesteph_wf() ==> spec_entries_to_map(collected@) =~= self@,
                 self.spec_orderedtablesteph_wf() ==> spec_keys_no_dups(collected@),
         {
-            assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let len = avl_seq_length(&self.base_seq);
             let mut elements: Vec<Pair<K, V>> = Vec::new();
             let mut i: usize = 0;
@@ -2079,6 +2068,7 @@ broadcast use {
             result
         }
 
+        #[verifier::loop_isolation(false)]
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
             ensures
@@ -2087,7 +2077,6 @@ broadcast use {
                 first matches Some(k) ==> self@.dom().contains(k@),
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t),
         {
-            assert(obeys_feq_full_trigger::<K>());
             let len = avl_seq_length(&self.base_seq);
             proof {
                 lemma_entries_to_map_finite::<K::V, V::V>(self.base_seq@);
@@ -2108,7 +2097,6 @@ broadcast use {
                 let mut i: usize = 1;
                 while i < len
                     invariant
-                        obeys_feq_full::<K>(),
                         self.base_seq.spec_avltreeseqsteph_wf(),
                         1 <= i, i <= len,
                         len as nat == self.base_seq@.len(),
@@ -2170,6 +2158,7 @@ broadcast use {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
             ensures
@@ -2178,7 +2167,6 @@ broadcast use {
                 last matches Some(k) ==> self@.dom().contains(k@),
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v),
         {
-            assert(obeys_feq_full_trigger::<K>());
             let len = avl_seq_length(&self.base_seq);
             proof {
                 lemma_entries_to_map_finite::<K::V, V::V>(self.base_seq@);
@@ -2199,7 +2187,6 @@ broadcast use {
                 let mut i: usize = 1;
                 while i < len
                     invariant
-                        obeys_feq_full::<K>(),
                         self.base_seq.spec_avltreeseqsteph_wf(),
                         1 <= i, i <= len,
                         len as nat == self.base_seq@.len(),
@@ -2261,7 +2248,7 @@ broadcast use {
             }
         }
 
-
+        #[verifier::loop_isolation(false)]
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
             ensures
@@ -2270,7 +2257,6 @@ broadcast use {
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v),
         {
-            assert(obeys_feq_full_trigger::<K>());
             let len = avl_seq_length(&self.base_seq);
             proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_seq@); }
             let ghost vals = spec_inorder_values::<Pair<K, V>>(self.base_seq.root);
@@ -2281,7 +2267,6 @@ broadcast use {
             let mut i: usize = 0;
             while i < len
                 invariant
-                    obeys_feq_full::<K>(),
                     self.base_seq.spec_avltreeseqsteph_wf(),
                     0 <= i, i <= len,
                     len as nat == self.base_seq@.len(),
@@ -2376,6 +2361,7 @@ broadcast use {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
             ensures
@@ -2384,7 +2370,6 @@ broadcast use {
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t),
         {
-            assert(obeys_feq_full_trigger::<K>());
             let len = avl_seq_length(&self.base_seq);
             proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_seq@); }
             let ghost vals = spec_inorder_values::<Pair<K, V>>(self.base_seq.root);
@@ -2395,7 +2380,6 @@ broadcast use {
             let mut i: usize = 0;
             while i < len
                 invariant
-                    obeys_feq_full::<K>(),
                     self.base_seq.spec_avltreeseqsteph_wf(),
                     0 <= i, i <= len,
                     len as nat == self.base_seq@.len(),
@@ -2492,7 +2476,6 @@ broadcast use {
 
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
         {
-            assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let ghost old_seq = self.base_seq@;
             let ghost old_map = self@;
             let len = avl_seq_length(&self.base_seq);
@@ -2658,7 +2641,6 @@ broadcast use {
 
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
         {
-            assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let len = avl_seq_length(&self.base_seq);
             let mut range_entries: Vec<Pair<K, V>> = Vec::new();
             let mut i: usize = 0;
@@ -3226,6 +3208,7 @@ broadcast use {
         }
     }
 
+    #[verifier::loop_isolation(false)]
     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
         entries: AVLTreeSeqStPerS<Pair<K, V>>,
     ) -> (cloned: OrderedTableStEph<K, V>)
@@ -3239,6 +3222,8 @@ broadcast use {
             cloned@ =~= spec_entries_to_map(entries@),
             cloned.spec_orderedtablesteph_wf(),
     {
+              assert(obeys_feq_full_trigger::<K>());
+       assert(obeys_feq_full_trigger::<V>());
         assert(obeys_feq_full_trigger::<Pair<K, V>>());
         let len = entries.length();
         let mut elements: Vec<Pair<K, V>> = Vec::new();
@@ -3248,7 +3233,6 @@ broadcast use {
                 i <= len,
                 len as nat == entries@.len(),
                 entries.spec_avltreeseqstper_wf(),
-                obeys_feq_full::<Pair<K, V>>(),
                 elements@.len() == i as int,
                 forall|j: int| 0 <= j < i ==> (#[trigger] elements@[j])@ == entries@[j],
             decreases len - i,

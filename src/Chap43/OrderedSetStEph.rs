@@ -272,6 +272,7 @@ broadcast use {
         open spec fn spec_orderedsetsteph_wf(&self) -> bool {
             self.base_set.spec_avltreesetsteph_wf()
             && self.base_set.spec_elements_sorted()
+            && obeys_feq_full::<T>()
         }
 
         fn size(&self) -> (count: usize)
@@ -279,6 +280,7 @@ broadcast use {
 
         fn empty() -> (empty: Self)
         {
+                      assert(obeys_feq_full_trigger::<T>());
             let base = AVLTreeSetStEph::empty();
             proof {
                 let vals = spec_inorder_values::<T>(base.elements.root);
@@ -291,6 +293,7 @@ broadcast use {
 
         fn singleton(x: T) -> (tree: Self)
         {
+                      assert(obeys_feq_full_trigger::<T>());
             let base = AVLTreeSetStEph::singleton(x);
             proof {
                 let vals = spec_inorder_values::<T>(base.elements.root);
@@ -345,6 +348,7 @@ broadcast use {
             self.base_set = found;
         }
 
+        #[verifier::loop_isolation(false)]
         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
         {
             let eph_seq = self.base_set.to_seq();
@@ -358,7 +362,6 @@ broadcast use {
                     len as nat == eph_seq@.len(),
                     0 <= i <= len,
                     elements@.len() == i as int,
-                    obeys_feq_full::<T>(),
                     forall|j: int| 0 <= j < i ==> (#[trigger] elements@[j])@ == eph_seq@[j],
                 decreases len - i,
             {
@@ -383,6 +386,7 @@ broadcast use {
 
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
         {
+                      assert(obeys_feq_full_trigger::<T>());
             let mut constructed = Self::empty();
             let n = seq.length();
             let mut i: usize = 0;
@@ -405,6 +409,7 @@ broadcast use {
             constructed
         }
 
+        #[verifier::loop_isolation(false)]
         fn first(&self) -> (first: Option<T>)
             ensures
                 self@.finite(),
@@ -412,7 +417,6 @@ broadcast use {
                 first matches Some(v) ==> self@.contains(v@),
                 first matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==> TotalOrder::le(v, t),
         {
-            assert(obeys_feq_full_trigger::<T>());
             let len = self.base_set.elements.length();
             proof { self.base_set.elements@.unique_seq_to_set(); }
             if len == 0 {
@@ -435,7 +439,6 @@ broadcast use {
                         self.base_set.elements.spec_avltreeseqsteph_wf(),
                         self.base_set.elements@.no_duplicates(),
                         len as nat == self.base_set.elements@.len(),
-                        obeys_feq_full::<T>(),
                         1 <= i, i <= len,
                         0 <= min_idx, min_idx < i,
                         vals == spec_inorder_values::<T>(self.base_set.elements.root),
@@ -495,6 +498,7 @@ broadcast use {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn last(&self) -> (last: Option<T>)
             ensures
                 self@.finite(),
@@ -502,7 +506,6 @@ broadcast use {
                 last matches Some(v) ==> self@.contains(v@),
                 last matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==> TotalOrder::le(t, v),
         {
-            assert(obeys_feq_full_trigger::<T>());
             let len = self.base_set.elements.length();
             proof { self.base_set.elements@.unique_seq_to_set(); }
             if len == 0 {
@@ -525,7 +528,6 @@ broadcast use {
                         self.base_set.elements.spec_avltreeseqsteph_wf(),
                         self.base_set.elements@.no_duplicates(),
                         len as nat == self.base_set.elements@.len(),
-                        obeys_feq_full::<T>(),
                         1 <= i, i <= len,
                         0 <= max_idx, max_idx < i,
                         vals == spec_inorder_values::<T>(self.base_set.elements.root),
@@ -585,9 +587,9 @@ broadcast use {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let len = self.base_set.elements.length();
             proof { self.base_set.elements@.unique_seq_to_set(); }
             let ghost vals = spec_inorder_values::<T>(self.base_set.elements.root);
@@ -601,7 +603,6 @@ broadcast use {
                     self.base_set.elements.spec_avltreeseqsteph_wf(),
                     self.base_set.elements@.no_duplicates(),
                     len as nat == self.base_set.elements@.len(),
-                    obeys_feq_full::<T>(),
                     0 <= i, i <= len,
                     vals == spec_inorder_values::<T>(self.base_set.elements.root),
                     vals.len() == self.base_set.elements@.len(),
@@ -707,9 +708,9 @@ broadcast use {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn next(&self, k: &T) -> (successor: Option<T>)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let len = self.base_set.elements.length();
             proof { self.base_set.elements@.unique_seq_to_set(); }
             let ghost vals = spec_inorder_values::<T>(self.base_set.elements.root);
@@ -723,7 +724,6 @@ broadcast use {
                     self.base_set.elements.spec_avltreeseqsteph_wf(),
                     self.base_set.elements@.no_duplicates(),
                     len as nat == self.base_set.elements@.len(),
-                    obeys_feq_full::<T>(),
                     0 <= i, i <= len,
                     vals == spec_inorder_values::<T>(self.base_set.elements.root),
                     vals.len() == self.base_set.elements@.len(),
@@ -831,7 +831,6 @@ broadcast use {
         fn split(&mut self, k: &T) -> (split: (Self, B, Self))
             where Self: Sized
         {
-            assert(obeys_feq_full_trigger::<T>());
             let n = self.base_set.elements.length();
             proof {
                 self.base_set.elements@.unique_seq_to_set();
@@ -1003,7 +1002,6 @@ broadcast use {
 
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let mut range = Self::empty();
             let n = self.base_set.elements.length();
             proof {
@@ -1049,9 +1047,9 @@ broadcast use {
             range
         }
 
+        #[verifier::loop_isolation(false)]
         fn rank(&self, k: &T) -> (rank: usize)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let n = self.base_set.elements.length();
             proof { self.base_set.elements@.unique_seq_to_set(); }
             let ghost vals = spec_inorder_values::<T>(self.base_set.elements.root);
@@ -1066,7 +1064,6 @@ broadcast use {
                     elems.no_duplicates(),
                     n as nat == elems.len(),
                     elems =~= self.base_set.elements@,
-                    obeys_feq_full::<T>(),
                     0 <= j <= n,
                     vals == spec_inorder_values::<T>(self.base_set.elements.root),
                     vals.len() == elems.len(),
@@ -1137,7 +1134,6 @@ broadcast use {
 
         fn select(&self, i: usize) -> (selected: Option<T>)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let sz = self.size();
             if i >= sz {
                 None
@@ -1242,7 +1238,6 @@ broadcast use {
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
         {
-            assert(obeys_feq_full_trigger::<T>());
             let n = self.base_set.elements.length();
             proof {
                 self.base_set.elements@.unique_seq_to_set();
@@ -1357,8 +1352,6 @@ broadcast use {
             (left, right)
         }
     }
-
-    
 
     impl<T: StT + Ord + TotalOrder> OrderedSetStEph<T> {
         /// Returns an iterator over the set elements in sorted order.
@@ -1510,6 +1503,7 @@ broadcast use {
         requires elements@.len() < usize::MAX,
         ensures constructed@.finite(), constructed.spec_orderedsetsteph_wf()
     {
+              assert(obeys_feq_full_trigger::<T>());
         let seq = AVLTreeSeqStPerS::from_vec(elements);
         OrderedSetStEph::from_seq(seq)
     }

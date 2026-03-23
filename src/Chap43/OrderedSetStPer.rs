@@ -265,6 +265,7 @@ broadcast use {
     impl<T: StT + Ord> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
         open spec fn spec_orderedsetstper_wf(&self) -> bool {
             self.base_set.spec_avltreesetstper_wf()
+            && obeys_feq_full::<T>()
         }
 
         open spec fn spec_sorted_per(&self) -> bool where T: TotalOrder {
@@ -280,6 +281,7 @@ broadcast use {
         fn empty() -> (empty: Self)
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_orderedsetstper_wf()
         {
+                      assert(obeys_feq_full_trigger::<T>());
             OrderedSetStPer {
                 base_set: AVLTreeSetStPer::empty(),
             }
@@ -288,6 +290,7 @@ broadcast use {
         fn singleton(x: T) -> (tree: Self)
             ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_orderedsetstper_wf()
         {
+                      assert(obeys_feq_full_trigger::<T>());
             OrderedSetStPer {
                 base_set: AVLTreeSetStPer::singleton(x),
             }
@@ -359,15 +362,16 @@ broadcast use {
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
             ensures constructed@.finite()
         {
+                      assert(obeys_feq_full_trigger::<T>());
             OrderedSetStPer {
                 base_set: AVLTreeSetStPer::from_seq(seq),
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn first(&self) -> (first: Option<T>)
             where T: TotalOrder
         {
-            assert(obeys_feq_full_trigger::<T>());
             let len = self.base_set.elements.length();
             proof { self.base_set.elements@.unique_seq_to_set(); }
             if len == 0 {
@@ -387,7 +391,6 @@ broadcast use {
                         self.base_set.elements.spec_avltreeseqstper_wf(),
                         self.base_set.elements@.no_duplicates(),
                         len as nat == self.base_set.elements@.len(),
-                        obeys_feq_full::<T>(),
                         1 <= i, i <= len,
                         0 <= min_idx, min_idx < i,
                         ghost_vals.len() == i as int,
@@ -442,10 +445,10 @@ broadcast use {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn last(&self) -> (last: Option<T>)
             where T: TotalOrder
         {
-            assert(obeys_feq_full_trigger::<T>());
             let len = self.base_set.elements.length();
             proof { self.base_set.elements@.unique_seq_to_set(); }
             if len == 0 {
@@ -465,7 +468,6 @@ broadcast use {
                         self.base_set.elements.spec_avltreeseqstper_wf(),
                         self.base_set.elements@.no_duplicates(),
                         len as nat == self.base_set.elements@.len(),
-                        obeys_feq_full::<T>(),
                         1 <= i, i <= len,
                         0 <= max_idx, max_idx < i,
                         ghost_vals.len() == i as int,
@@ -520,10 +522,10 @@ broadcast use {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
             where T: TotalOrder
         {
-            assert(obeys_feq_full_trigger::<T>());
             let len = self.base_set.elements.length();
             proof { self.base_set.elements@.unique_seq_to_set(); }
             let ghost mut ghost_vals: Seq<T> = Seq::empty();
@@ -536,7 +538,6 @@ broadcast use {
                     self.base_set.elements.spec_avltreeseqstper_wf(),
                     self.base_set.elements@.no_duplicates(),
                     len as nat == self.base_set.elements@.len(),
-                    obeys_feq_full::<T>(),
                     0 <= i, i <= len,
                     ghost_vals.len() == i as int,
                     forall|j: int| #![trigger ghost_vals[j]]
@@ -628,10 +629,10 @@ broadcast use {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn next(&self, k: &T) -> (successor: Option<T>)
             where T: TotalOrder
         {
-            assert(obeys_feq_full_trigger::<T>());
             let len = self.base_set.elements.length();
             proof { self.base_set.elements@.unique_seq_to_set(); }
             let ghost mut ghost_vals: Seq<T> = Seq::empty();
@@ -644,7 +645,6 @@ broadcast use {
                     self.base_set.elements.spec_avltreeseqstper_wf(),
                     self.base_set.elements@.no_duplicates(),
                     len as nat == self.base_set.elements@.len(),
-                    obeys_feq_full::<T>(),
                     0 <= i, i <= len,
                     ghost_vals.len() == i as int,
                     forall|j: int| #![trigger ghost_vals[j]]
@@ -739,7 +739,6 @@ broadcast use {
         fn split(&self, k: &T) -> (split: (Self, B, Self))
             where Self: Sized
         {
-            assert(obeys_feq_full_trigger::<T>());
             let elements = &self.base_set.elements;
             let size = elements.length();
             proof { elements@.unique_seq_to_set(); }
@@ -947,7 +946,6 @@ broadcast use {
                     _ => true,
                 };
                 if ge_k1 && le_k2 {
-                    assert(obeys_feq_full_trigger::<T>());
                     let v = elem.clone();
                     proof {
                         lemma_cloned_view_eq(*elem, v);
@@ -976,10 +974,10 @@ broadcast use {
             result
         }
 
+        #[verifier::loop_isolation(false)]
         fn rank(&self, k: &T) -> (rank: usize)
             where T: TotalOrder
         {
-            assert(obeys_feq_full_trigger::<T>());
             let n = self.base_set.elements.length();
             proof { self.base_set.elements@.unique_seq_to_set(); }
             let ghost elems = self.base_set.elements@;
@@ -993,7 +991,6 @@ broadcast use {
                     elems.no_duplicates(),
                     n as nat == elems.len(),
                     elems =~= self.base_set.elements@,
-                    obeys_feq_full::<T>(),
                     0 <= j <= n,
                     ghost_vals.len() == j as int,
                     forall|idx: int| #![trigger ghost_vals[idx]]
@@ -1065,7 +1062,6 @@ broadcast use {
         fn select(&self, i: usize) -> (selected: Option<T>)
             where T: TotalOrder
         {
-            assert(obeys_feq_full_trigger::<T>());
             let sz = self.size();
             if i >= sz {
                 None
@@ -1170,7 +1166,6 @@ broadcast use {
         fn split_rank(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized
         {
-            assert(obeys_feq_full_trigger::<T>());
             let elements = &self.base_set.elements;
             let size = elements.length();
             proof { elements@.unique_seq_to_set(); }
@@ -1298,6 +1293,7 @@ broadcast use {
         requires elements@.len() < usize::MAX,
         ensures constructed@.finite(), constructed.spec_orderedsetstper_wf()
     {
+              assert(obeys_feq_full_trigger::<T>());
         let seq = AVLTreeSeqStPerS::from_vec(elements);
         // from_vec ensures seq.spec_avltreeseqstper_wf(), which from_seq requires.
         OrderedSetStPer::from_seq(seq)

@@ -46,7 +46,6 @@ broadcast use {
     vstd::set_lib::group_set_lib_default,
 };
 
-
     // 4. type definitions
 
     pub struct AVLTreeSetStEph<T: StT + Ord> {
@@ -55,14 +54,12 @@ broadcast use {
 
     pub type AVLTreeSetS<T> = AVLTreeSetStEph<T>;
 
-
     // 5. view impls
 
     impl<T: StT + Ord> View for AVLTreeSetStEph<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Set<<T as View>::V> { self.spec_set_view() }
     }
-
 
     // 6. spec fns
 
@@ -82,7 +79,6 @@ broadcast use {
             ==> (#[trigger] TotalOrder::le(s[i], s[j]))
     }
 
-
     // 7. proof fns
 
     /// Under wf, cached size equals inorder length, both < usize::MAX.
@@ -101,7 +97,6 @@ broadcast use {
             }
         }
     }
-
 
     /// The values sequence maps to the views sequence element-by-element.
     pub proof fn lemma_inorder_values_maps_to_views<T: StT>(link: Link<T>)
@@ -195,7 +190,6 @@ broadcast use {
             assert(sub[j] == s[lo + j]);
         };
     }
-
 
     // 8. traits
 
@@ -309,7 +303,6 @@ broadcast use {
             requires
                 old(self).spec_avltreesetsteph_wf(),
                 old(self).spec_elements_sorted(),
-                obeys_feq_full::<T>(),
                 old(self)@.len() + 1 < usize::MAX as nat,
             ensures
                 self@ == old(self)@.insert(x@),
@@ -320,7 +313,6 @@ broadcast use {
             requires
                 old(self).spec_avltreesetsteph_wf(),
                 old(self).spec_elements_sorted(),
-                obeys_feq_full::<T>(),
             ensures
                 self@ == old(self)@.remove(x@),
                 self.spec_avltreesetsteph_wf(),
@@ -334,7 +326,6 @@ broadcast use {
             requires
                 self.spec_avltreesetsteph_wf(),
                 self.spec_elements_sorted(),
-                obeys_feq_full::<T>(),
                 forall|t: &T| #[trigger] f.requires((t,)),
                 forall|x: T, keep: bool|
                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
@@ -379,7 +370,6 @@ broadcast use {
                 combined.spec_elements_sorted();
     }
 
-
     // 9. impls
 
     // 5. view impls
@@ -397,6 +387,7 @@ broadcast use {
             self.elements.spec_avltreeseqsteph_wf()
             && self.elements@.no_duplicates()
             && self@.finite()
+            && obeys_feq_full::<T>()
         }
 
         fn size(&self) -> (count: usize)
@@ -420,6 +411,7 @@ broadcast use {
 
         fn empty() -> (empty: Self)
         {
+                      assert(obeys_feq_full_trigger::<T>());
             let empty = AVLTreeSetStEph { elements: AVLTreeSeqStEphS::empty() };
             proof {
                 assert(empty.elements@ =~= Seq::<<T as View>::V>::empty());
@@ -519,7 +511,6 @@ broadcast use {
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
         ) -> (filtered: Self)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let mut filtered = Self::empty();
             let n = self.elements.length();
             let mut i: usize = 0;
@@ -602,7 +593,6 @@ broadcast use {
 
         fn intersection(&self, other: &Self) -> (common: Self)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let mut common = Self::empty();
             let n = self.elements.length();
             let mut i: usize = 0;
@@ -664,7 +654,6 @@ broadcast use {
 
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let mut remaining = Self::empty();
             let n = self.elements.length();
             let mut i: usize = 0;
@@ -726,7 +715,6 @@ broadcast use {
 
         fn union(&self, other: &Self) -> (combined: Self)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let mut combined = Self::empty();
             let self_len = self.elements.length();
             let mut i: usize = 0;
@@ -840,15 +828,14 @@ broadcast use {
             combined
         }
 
+        #[verifier::loop_isolation(false)]
         fn find(&self, x: &T) -> (found: B)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let n = self.elements.length();
             let mut i: usize = 0;
             while i < n
                 invariant
                     self.elements.spec_avltreeseqsteph_wf(),
-                    obeys_feq_full::<T>(),
                     n as int == self.elements.spec_seq().len(),
                     i <= n,
                     forall|k: int| #![trigger self.elements@[k]]
@@ -875,9 +862,9 @@ broadcast use {
             false
         }
 
+        #[verifier::loop_isolation(false)]
         fn delete(&mut self, x: &T)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let n = self.elements.length();
             let ghost orig_elems = self.elements@;
             let ghost orig_set = self@;
@@ -890,7 +877,6 @@ broadcast use {
                 invariant
                     self.elements.spec_avltreeseqsteph_wf(),
                     self.elements@.no_duplicates(),
-                    obeys_feq_full::<T>(),
                     n as int == self.elements.spec_seq().len(),
                     i <= n,
                     result_vec@.len() == i as int - skipped,
@@ -1013,6 +999,7 @@ broadcast use {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn insert(&mut self, x: T)
         {
             let ghost x_view = x@;
@@ -1021,7 +1008,6 @@ broadcast use {
             let ghost orig_set = self@;
             let found = self.find(&x);
             if !found {
-                assert(obeys_feq_full_trigger::<T>());
                 let n = self.elements.length();
                 let mut lo: usize = 0;
                 let mut hi: usize = n;
@@ -1045,7 +1031,6 @@ broadcast use {
                 while i < lo
                     invariant
                         self.elements.spec_avltreeseqsteph_wf(),
-                        obeys_feq_full::<T>(),
                         n as int == self.elements.spec_seq().len(),
                         i <= lo, lo <= n,
                         new_vec@.len() == i as int,
@@ -1110,7 +1095,6 @@ broadcast use {
                 while j < n
                     invariant
                         self.elements.spec_avltreeseqsteph_wf(),
-                        obeys_feq_full::<T>(),
                         n as int == self.elements.spec_seq().len(),
                         lo <= j, j <= n,
                         new_vec@.len() == (j + 1) as int,
@@ -1241,7 +1225,6 @@ broadcast use {
         }
     }
 
-
     // 9. impls (TotalOrder-gated trait impl)
 
     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTotalOrderTrait<T> for AVLTreeSetStEph<T> {
@@ -1256,6 +1239,7 @@ broadcast use {
         }
 
         /// Insert preserving sortedness.
+        #[verifier::loop_isolation(false)]
         fn insert_sorted(&mut self, x: T)
         {
             let ghost x_view = x@;
@@ -1265,7 +1249,6 @@ broadcast use {
             let ghost orig_vals = spec_inorder_values::<T>(self.elements.root);
             let found = self.find(&x);
             if !found {
-                assert(obeys_feq_full_trigger::<T>());
                 let n = self.elements.length();
                 proof {
                     lemma_inorder_values_maps_to_views::<T>(self.elements.root);
@@ -1278,7 +1261,6 @@ broadcast use {
                         self.elements.spec_avltreeseqsteph_wf(),
                         n as int == self.elements.spec_seq().len(),
                         lo <= hi, hi <= n,
-                        obeys_feq_full::<T>(),
                         orig_elems == self.elements@,
                         orig_vals == spec_inorder_values::<T>(self.elements.root),
                         spec_seq_sorted(orig_vals),
@@ -1348,7 +1330,6 @@ broadcast use {
                 while i < lo
                     invariant
                         self.elements.spec_avltreeseqsteph_wf(),
-                        obeys_feq_full::<T>(),
                         n as int == self.elements.spec_seq().len(),
                         i <= lo, lo <= n,
                         new_vec@.len() == i as int,
@@ -1390,7 +1371,6 @@ broadcast use {
                 while j < n
                     invariant
                         self.elements.spec_avltreeseqsteph_wf(),
-                        obeys_feq_full::<T>(),
                         n as int == self.elements.spec_seq().len(),
                         lo <= j, j <= n,
                         new_vec@.len() == (j + 1) as int,
@@ -1583,9 +1563,9 @@ broadcast use {
         }
 
         /// Delete preserving sortedness.
+        #[verifier::loop_isolation(false)]
         fn delete_sorted(&mut self, x: &T)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let n = self.elements.length();
             let ghost orig_elems = self.elements@;
             let ghost orig_set = self@;
@@ -1602,7 +1582,6 @@ broadcast use {
                 invariant
                     self.elements.spec_avltreeseqsteph_wf(),
                     self.elements@.no_duplicates(),
-                    obeys_feq_full::<T>(),
                     n as int == self.elements.spec_seq().len(),
                     i <= n,
                     result_vec@.len() == i as int - skipped,
@@ -1778,7 +1757,6 @@ broadcast use {
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
         ) -> (filtered: Self)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let mut filtered = Self::empty();
             proof { lemma_empty_set_is_sorted(&filtered); }
             let n = self.elements.length();
@@ -1860,7 +1838,6 @@ broadcast use {
 
         fn intersection_sorted(&self, other: &Self) -> (common: Self)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let mut common = Self::empty();
             proof { lemma_empty_set_is_sorted(&common); }
             let n = self.elements.length();
@@ -1922,7 +1899,6 @@ broadcast use {
 
         fn difference_sorted(&self, other: &Self) -> (remaining: Self)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let mut remaining = Self::empty();
             proof { lemma_empty_set_is_sorted(&remaining); }
             let n = self.elements.length();
@@ -1986,7 +1962,6 @@ broadcast use {
 
         fn union_sorted(&self, other: &Self) -> (combined: Self)
         {
-            assert(obeys_feq_full_trigger::<T>());
             let mut combined = Self::empty();
             proof { lemma_empty_set_is_sorted(&combined); }
             let self_len = self.elements.length();
@@ -2106,7 +2081,6 @@ broadcast use {
             combined
         }
     }
-
 
     // 11. derive impls in verus!
 

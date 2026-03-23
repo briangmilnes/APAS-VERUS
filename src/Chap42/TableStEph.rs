@@ -17,7 +17,6 @@
 
 //		1. module
 
-
 pub mod TableStEph {
 
     use std::cmp::Ordering;
@@ -64,7 +63,6 @@ broadcast use {
     vstd::seq_lib::group_to_multiset_ensures,
 };
 
-
     //		4. type definitions
 
     // 4. type definitions
@@ -77,7 +75,6 @@ broadcast use {
 
     pub type TableS<K, V> = TableStEph<K, V>;
 
-
     //		5. view impls
 
     impl<K: StT + Ord, V: StT> View for TableStEph<K, V> {
@@ -86,7 +83,6 @@ broadcast use {
             spec_entries_to_map(self.entries@)
         }
     }
-
 
     //		6. spec fns
 
@@ -112,7 +108,6 @@ broadcast use {
         forall|i: int, j: int|
             0 <= i < j < entries.len() ==> (#[trigger] entries[i]).0 != (#[trigger] entries[j]).0
     }
-
 
     //		7. proof fns/broadcast groups
 
@@ -285,7 +280,6 @@ broadcast use {
         }
     }
 
-
     //		8. traits
 
     // 8. traits
@@ -350,7 +344,6 @@ broadcast use {
                 forall|k: &K, v: &V| f.requires((k, v)),
                 forall|k: K, v: V, keep: bool|
                     f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
-                obeys_feq_full::<Pair<K, V>>(),
             ensures
                 self@.dom().subset_of(old(self)@.dom()),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
@@ -380,7 +373,6 @@ broadcast use {
                 other.spec_tablesteph_wf(),
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                 obeys_feq_clone::<K>(),
-                obeys_feq_full::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
             ensures
                 self@.dom() =~= old(self)@.dom().union(other@.dom()),
@@ -398,7 +390,6 @@ broadcast use {
         fn difference(&mut self, other: &Self)
             requires
                 old(self).spec_tablesteph_wf(),
-                obeys_feq_full::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
             ensures
                 self@.dom() =~= old(self)@.dom().difference(other@.dom()),
@@ -406,7 +397,7 @@ broadcast use {
         /// - APAS Cost Spec 42.5: Work lg |a|, Span lg |a|
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan; disagrees with APAS (not tree-based).
         fn find(&self, key: &K) -> (found: Option<V>)
-            requires self.spec_tablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
+            requires self.spec_tablesteph_wf(), obeys_view_eq::<K>()
             ensures
                 match found {
                     Some(v) => self@.contains_key(key@) && self@[key@] == v@,
@@ -415,7 +406,7 @@ broadcast use {
         /// - APAS Cost Spec 42.5: Work lg |a|, Span lg |a|
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan + rebuild; disagrees with APAS (not tree-based).
         fn delete(&mut self, key: &K)
-            requires old(self).spec_tablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>()
+            requires old(self).spec_tablesteph_wf(), obeys_view_eq::<K>()
             ensures self@ =~= old(self)@.remove(key@);
         /// - APAS Cost Spec 42.5: Work lg |a|, Span lg |a|
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan + rebuild; disagrees with APAS (not tree-based).
@@ -424,7 +415,6 @@ broadcast use {
                 old(self).spec_tablesteph_wf(),
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                 obeys_view_eq::<K>(),
-                obeys_feq_full::<Pair<K, V>>(),
             ensures
                 self@.contains_key(key@),
                 self@.dom() =~= old(self)@.dom().insert(key@),
@@ -440,7 +430,6 @@ broadcast use {
             requires
                 old(self).spec_tablesteph_wf(),
                 keys@.finite(),
-                obeys_feq_full::<Pair<K, V>>(),
             ensures
                 self@.dom() =~= old(self)@.dom().intersect(keys@),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
@@ -450,7 +439,6 @@ broadcast use {
             requires
                 old(self).spec_tablesteph_wf(),
                 keys@.finite(),
-                obeys_feq_full::<Pair<K, V>>(),
             ensures
                 self@.dom() =~= old(self)@.dom().difference(keys@),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
@@ -459,7 +447,6 @@ broadcast use {
         fn entries(&self) -> (entries: ArraySeqStEphS<Pair<K, V>>)
             ensures spec_entries_to_map(entries@) == self@;
     }
-
 
     //		9. impls
 
@@ -474,6 +461,8 @@ broadcast use {
     impl<K: StT + Ord, V: StT> TableStEphTrait<K, V> for TableStEph<K, V> {
         open spec fn spec_tablesteph_wf(&self) -> bool {
             spec_keys_no_dups(self.entries@)
+            && obeys_feq_fulls::<K, V>()
+            && obeys_feq_full::<Pair<K, V>>()
         }
 
         fn size(&self) -> (count: usize)
@@ -568,8 +557,12 @@ broadcast use {
             keys
         }
 
+        #[verifier::loop_isolation(false)]
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
         {
+                      assert(obeys_feq_full_trigger::<K>());
+           assert(obeys_feq_full_trigger::<V>());
+           assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let key_seq = keys.to_seq();
             let mut entries: Vec<Pair<K, V>> = Vec::new();
             let mut i: usize = 0;
@@ -582,7 +575,6 @@ broadcast use {
                     forall|j: int| #![trigger key_seq.seq@[j]] 0 <= j < i as int ==>
                         f.ensures((&key_seq.seq@[j],), entries@[j].1),
                     forall|k: &K| f.requires((k,)),
-                    obeys_feq_full::<K>(),
                 decreases key_seq.spec_len() - i,
             {
                 let key = key_seq.nth(i);
@@ -717,6 +709,7 @@ broadcast use {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn filter<F: Fn(&K, &V) -> B>(
             &mut self,
             f: F,
@@ -747,7 +740,6 @@ broadcast use {
                         && spec_pred((#[trigger] old_view[si]).0, old_view[si].1)
                         ==> exists|j: int| 0 <= j < sources.len() && sources[j] == si,
                     spec_keys_no_dups(old_view),
-                    obeys_feq_full::<Pair<K, V>>(),
                 decreases self.entries.spec_len() - i,
             {
                 let pair = self.entries.nth(i);
@@ -1012,6 +1004,7 @@ broadcast use {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
         {
             let ghost old_self_view = self.entries@;
@@ -1051,7 +1044,6 @@ broadcast use {
                         && !spec_entries_to_map(other.entries@).contains_key(old_self_view[k].0),
                     forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                     obeys_feq_clone::<K>(),
-                    obeys_feq_full::<Pair<K, V>>(),
                     obeys_view_eq::<K>(),
                 decreases self.entries.spec_len() - i,
             {
@@ -1152,7 +1144,6 @@ broadcast use {
                         (#[trigger] kept@[k]).1@ == old_self_view[k].1,
                     other.entries.seq@ == other_raw,
                     self.entries.seq@ == old_self_raw,
-                    obeys_feq_full::<Pair<K, V>>(),
                     obeys_view_eq::<K>(),
                 decreases other_len - j,
             {
@@ -1417,6 +1408,7 @@ broadcast use {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn difference(&mut self, other: &Self)
         {
             let ghost old_self_view = self.entries@;
@@ -1446,7 +1438,6 @@ broadcast use {
                     forall|j1: int, j2: int| #![trigger sources[j1], sources[j2]]
                         0 <= j1 < j2 < sources.len() ==> sources[j1] < sources[j2],
                     spec_keys_no_dups(old_self_view),
-                    obeys_feq_full::<Pair<K, V>>(),
                     obeys_view_eq::<K>(),
                 decreases self.entries.spec_len() - i,
             {
@@ -1598,6 +1589,7 @@ broadcast use {
             None
         }
 
+        #[verifier::loop_isolation(false)]
         fn delete(&mut self, key: &K)
         {
             let ghost old_view = self.entries@;
@@ -1624,7 +1616,6 @@ broadcast use {
                         && (#[trigger] old_view[si]).0 != key@
                         ==> exists|j: int| 0 <= j < src.len() && src[j] == si,
                     obeys_view_eq::<K>(),
-                    obeys_feq_full::<Pair<K, V>>(),
                 decreases self.entries.spec_len() - i,
             {
                 let pair = self.entries.nth(i);
@@ -1704,6 +1695,7 @@ broadcast use {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn insert<F: Fn(&V, &V) -> V>(&mut self, key: K, value: V, combine: F)
         {
             let ghost key_view: K::V = key@;
@@ -1732,7 +1724,6 @@ broadcast use {
                         && (#[trigger] old_view[si]).0 != key_view
                         ==> exists|j: int| 0 <= j < src.len() && src[j] == si,
                     obeys_view_eq::<K>(),
-                    obeys_feq_full::<Pair<K, V>>(),
                     key@ == key_view,
                     spec_keys_no_dups(old_view),
                     match_index <= n,
@@ -1859,6 +1850,7 @@ broadcast use {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
         {
             let ghost old_view = self.entries@;
@@ -1883,7 +1875,6 @@ broadcast use {
                     forall|j1: int, j2: int| #![trigger sources[j1], sources[j2]]
                         0 <= j1 < j2 < sources.len() ==> sources[j1] < sources[j2],
                     spec_keys_no_dups(old_view),
-                    obeys_feq_full::<Pair<K, V>>(),
                 decreases self.entries.spec_len() - i,
             {
                 let pair = self.entries.nth(i);
@@ -1962,6 +1953,7 @@ broadcast use {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
         {
             let ghost old_view = self.entries@;
@@ -1986,7 +1978,6 @@ broadcast use {
                     forall|j1: int, j2: int| #![trigger sources[j1], sources[j2]]
                         0 <= j1 < j2 < sources.len() ==> sources[j1] < sources[j2],
                     spec_keys_no_dups(old_view),
-                    obeys_feq_full::<Pair<K, V>>(),
                 decreases self.entries.spec_len() - i,
             {
                 let pair = self.entries.nth(i);
@@ -2091,9 +2082,6 @@ broadcast use {
         TableStEph { entries: seq }
     }
 
-
-    
-
     // 11. derive impls in verus!
 
     impl<K: StT + Ord, V: StT> Default for TableStEph<K, V> {
@@ -2131,7 +2119,6 @@ broadcast use {
     } // verus!
 
     // 12. macros
-
 
     //		12. macros
 

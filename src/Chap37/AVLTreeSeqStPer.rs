@@ -295,6 +295,7 @@ pub mod AVLTreeSeqStPer {
             node.left == left,
             node.right == right,
     {
+              assert(obeys_feq_full_trigger::<T>());
         let hl = height_fn(&left);
         let hr = height_fn(&right);
         let sz = 1 + size_fn(&left) + size_fn(&right);
@@ -642,17 +643,21 @@ pub mod AVLTreeSeqStPer {
 
         open spec fn spec_avltreeseqstper_wf(&self) -> bool {
             spec_avltreeseqstper_wf(self.root)
+            && obeys_feq_full::<T>()
         }
 
         fn empty() -> (tree: Self) {
+                      assert(obeys_feq_full_trigger::<T>());
             AVLTreeSeqStPerS { root: None }
         }
 
         fn new() -> (tree: Self) {
+                      assert(obeys_feq_full_trigger::<T>());
             Self::empty()
         }
 
         fn singleton(item: T) -> (tree: Self) {
+                      assert(obeys_feq_full_trigger::<T>());
             AVLTreeSeqStPerS {
                 root: Some(mk(item, None, None)),
             }
@@ -722,6 +727,7 @@ pub mod AVLTreeSeqStPer {
         }
 
         fn from_vec(values: Vec<T>) -> (tree: Self) {
+                      assert(obeys_feq_full_trigger::<T>());
             let tree = AVLTreeSeqStPerS {
                 root: build_balanced_from_slice(values.as_slice()),
             };
@@ -858,6 +864,7 @@ pub mod AVLTreeSeqStPer {
                 copy@ == self@,
                 self.spec_avltreeseqstper_wf() ==> copy.spec_avltreeseqstper_wf(),
         {
+                      assert(obeys_feq_full_trigger::<T>());
             let copy = AVLTreeSeqStPerS {
                 root: self.root.clone(),
             };

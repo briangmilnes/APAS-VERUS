@@ -34,6 +34,8 @@ pub mod BSTParaMtEph {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_full;
 
     verus! {
 
@@ -377,11 +379,13 @@ pub mod BSTParaMtEph {
     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
         open spec fn spec_bstparamteph_wf(&self) -> bool {
             self@.finite()
+            && obeys_feq_full::<T>()
         }
 
         fn new() -> (empty: Self)
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_bstparamteph_wf()
         {
+                      assert(obeys_feq_full_trigger::<T>());
             new_param_bst(None, Ghost(Set::empty()))
         }
 
@@ -464,6 +468,7 @@ pub mod BSTParaMtEph {
 
         fn insert(&mut self, key: T)
         {
+                      assert(obeys_feq_full_trigger::<T>());
             let _sz = self.size();
             let (left, _, right) = split_inner(self, &key);
             proof {
@@ -474,6 +479,7 @@ pub mod BSTParaMtEph {
 
         fn delete(&mut self, key: &T)
         {
+                      assert(obeys_feq_full_trigger::<T>());
             let _sz = self.size();
             let (left, _, right) = split_inner(self, key);
             proof {
@@ -960,7 +966,6 @@ pub mod BSTParaMtEph {
             },
         }
     }
-
 
     fn union_inner<T: MtKey>(a: &ParamBST<T>, b: &ParamBST<T>) -> (combined: ParamBST<T>)
         requires

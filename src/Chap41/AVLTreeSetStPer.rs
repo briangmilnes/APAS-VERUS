@@ -279,7 +279,6 @@ broadcast use {
             requires
                 self.spec_avltreesetstper_wf(),
                 self.spec_elements_sorted_per(),
-                obeys_feq_full::<T>(),
                 self@.len() + 1 < usize::MAX as nat,
             ensures
                 updated@ == self@.insert(x@),
@@ -357,6 +356,7 @@ broadcast use {
         #[verifier::loop_isolation(false)]
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
         {
+                      assert(obeys_feq_full_trigger::<T>());
             let mut constructed = Self::empty();
             let n = seq.length();
             proof {
@@ -1244,7 +1244,6 @@ broadcast use {
                 }
                 return updated;
             }
-            assert(obeys_feq_full_trigger::<T>());
             let n = self.elements.length();
             proof {
                 lemma_inorder_values_maps_to_views_per::<T>(&self.elements.root);
@@ -1257,7 +1256,6 @@ broadcast use {
                     self.elements.spec_avltreeseqstper_wf(),
                     n as int == self.elements.spec_seq().len(),
                     lo <= hi, hi <= n,
-                    obeys_feq_full::<T>(),
                     orig_elems == self.elements@,
                     orig_vals == spec_inorder_values_per::<T>(self.elements.root),
                     spec_seq_sorted_per(orig_vals),
@@ -1332,7 +1330,6 @@ broadcast use {
             while i < lo
                 invariant
                     self.elements.spec_avltreeseqstper_wf(),
-                    obeys_feq_full::<T>(),
                     n as int == self.elements.spec_seq().len(),
                     i <= lo, lo <= n,
                     new_vec@.len() == i as int,
@@ -1374,7 +1371,6 @@ broadcast use {
             while j < n
                 invariant
                     self.elements.spec_avltreeseqstper_wf(),
-                    obeys_feq_full::<T>(),
                     n as int == self.elements.spec_seq().len(),
                     lo <= j, j <= n,
                     new_vec@.len() == (j + 1) as int,

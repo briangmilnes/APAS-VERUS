@@ -33,6 +33,8 @@ pub mod BSTParaStEph {
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_full;
 
     verus! {
 
@@ -443,11 +445,14 @@ pub mod BSTParaStEph {
     impl<T: StT + Ord> ParamBSTTrait<T> for ParamBST<T> {
         open spec fn spec_bstparasteph_wf(&self) -> bool {
             self@.finite()
+            && obeys_feq_full::<T>()
         }
 
         fn new() -> (empty: Self)
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_bstparasteph_wf()
-        { new_param_bst(None, Ghost(Set::empty())) }
+        {
+        assert(obeys_feq_full_trigger::<T>());
+         new_param_bst(None, Ghost(Set::empty())) }
 
         fn singleton(key: T) -> (tree: Self)
             ensures
@@ -455,6 +460,7 @@ pub mod BSTParaStEph {
                 tree@.finite(),
                 tree.spec_bstparasteph_wf()
         {
+                      assert(obeys_feq_full_trigger::<T>());
             let left: Self = Self::new();
             let right: Self = Self::new();
             Self::join_mid(Exposed::Node(left, key, right))

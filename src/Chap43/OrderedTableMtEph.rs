@@ -33,6 +33,8 @@ pub mod OrderedTableMtEph {
     use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full, obeys_feq_full_trigger, obeys_view_eq_trigger};
     #[cfg(verus_keep_ghost)]
     use vstd::laws_eq::obeys_view_eq;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_fulls;
 
     verus! {
 
@@ -102,7 +104,7 @@ broadcast use {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StEph.find
         fn find(&self, k: &K) -> (found: Option<V>)
-            requires self.spec_orderedtablemteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
+            requires self.spec_orderedtablemteph_wf(), obeys_view_eq::<K>()
             ensures
                 match found {
                     Some(v) => self@.contains_key(k@),
@@ -112,7 +114,7 @@ broadcast use {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to find
         fn lookup(&self, k: &K) -> (value: Option<V>)
-            requires self.spec_orderedtablemteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
+            requires self.spec_orderedtablemteph_wf(), obeys_view_eq::<K>()
             ensures
                 match value {
                     Some(v) => self@.contains_key(k@),
@@ -133,7 +135,6 @@ broadcast use {
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                 obeys_view_eq::<K>(),
                 obeys_feq_clone::<K>(),
-                obeys_feq_full::<Pair<K, V>>(),
             ensures self@.dom().finite();
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
@@ -142,7 +143,6 @@ broadcast use {
             requires
                 old(self).spec_orderedtablemteph_wf(),
                 obeys_view_eq::<K>(),
-                obeys_feq_full::<V>(),
             ensures self@ == old(self)@.remove(k@), self@.dom().finite();
 
         /// - APAS: Work Θ(n), Span Θ(n)
@@ -307,6 +307,8 @@ broadcast use {
     impl<K: MtKey, V: MtVal> OrderedTableMtEphTrait<K, V> for OrderedTableMtEph<K, V> {
         open spec fn spec_orderedtablemteph_wf(&self) -> bool {
             self@.dom().finite()
+            && obeys_feq_fulls::<K, V>()
+            && obeys_feq_full::<Pair<K, V>>()
         }
 
         fn size(&self) -> (count: usize) {
@@ -320,11 +322,16 @@ broadcast use {
         }
 
         fn empty() -> (empty: Self) {
+                      assert(obeys_feq_full_trigger::<K>());
+           assert(obeys_feq_full_trigger::<V>());
+           assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let inner = OrderedTableStEph::empty();
             from_st(inner)
         }
 
         fn singleton(k: K, v: V) -> (tree: Self) {
+                      assert(obeys_feq_full_trigger::<K>());
+           assert(obeys_feq_full_trigger::<V>());
             proof { assert(obeys_feq_full_trigger::<Pair<K, V>>()); }
             let inner = OrderedTableStEph::singleton(k, v);
             from_st(inner)
@@ -619,6 +626,9 @@ broadcast use {
 
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self) {
 
+                      assert(obeys_feq_full_trigger::<K>());
+           assert(obeys_feq_full_trigger::<V>());
+           assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let range = inner.get_key_range(k1, k2);
@@ -757,6 +767,9 @@ broadcast use {
         requires inner@.dom().finite()
         ensures s@ =~= inner@, s@.dom().finite(), s.spec_orderedtablemteph_wf()
     {
+              assert(obeys_feq_full_trigger::<K>());
+       assert(obeys_feq_full_trigger::<V>());
+       assert(obeys_feq_full_trigger::<Pair<K, V>>());
         let ghost view = inner@;
         proof { assume(inner.spec_orderedtablesteph_wf()); }
         OrderedTableMtEph {
@@ -775,6 +788,8 @@ broadcast use {
             entries@.len() < usize::MAX as nat,
         ensures constructed@.dom().finite(), constructed.spec_orderedtablemteph_wf()
     {
+              assert(obeys_feq_full_trigger::<K>());
+       assert(obeys_feq_full_trigger::<V>());
         assert(obeys_feq_full_trigger::<Pair<K, V>>());
         let inner = crate::Chap43::OrderedTableStEph::OrderedTableStEph::from_sorted_entries(entries);
         from_st(inner)

@@ -427,7 +427,6 @@ pub mod OrderedTableStPer {
             requires
                 self.spec_orderedtablestper_wf(),
                 obeys_view_eq::<K>(),
-                obeys_feq_full::<Pair<K, V>>(),
                 self@.dom().len() + 1 < usize::MAX as nat,
             ensures
                 table@.dom() =~= self@.dom().insert(k@),
@@ -440,7 +439,6 @@ pub mod OrderedTableStPer {
                 self.spec_orderedtablestper_wf(),
                 obeys_feq_clone::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
-                obeys_feq_full::<Pair<K, V>>(),
             ensures table@ == self@.remove(k@), table@.dom().finite(), table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableStPer.domain
@@ -466,7 +464,7 @@ pub mod OrderedTableStPer {
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to TableStPer.map (linear iteration)
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (table: Self)
-            requires self.spec_orderedtablestper_wf(), forall|v: &V| f.requires((v,)), obeys_feq_full::<K>(),
+            requires self.spec_orderedtablestper_wf(), forall|v: &V| f.requires((v,)),
             ensures
                 table@.dom() == self@.dom(),
                 forall|k: K::V| #[trigger] table@.contains_key(k) ==>
@@ -482,7 +480,6 @@ pub mod OrderedTableStPer {
             requires
                 self.spec_orderedtablestper_wf(),
                 forall|k: &K, v: &V| f.requires((k, v)),
-                obeys_feq_full::<Pair<K, V>>(),
                 forall|k: K, v: V, keep: bool| f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
             ensures
                 table@.dom().subset_of(self@.dom()),
@@ -499,7 +496,6 @@ pub mod OrderedTableStPer {
                 other.spec_orderedtablestper_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_view_eq::<K>(),
-                obeys_feq_full::<K>(),
             ensures
                 table@.dom() =~= self@.dom().intersect(other@.dom()),
                 forall|k: K::V| #[trigger] table@.contains_key(k) ==>
@@ -517,7 +513,6 @@ pub mod OrderedTableStPer {
                 other.spec_orderedtablestper_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_view_eq::<K>(),
-                obeys_feq_full::<Pair<K, V>>(),
                 self@.dom().len() + other@.dom().len() < usize::MAX,
             ensures
                 table@.dom() =~= self@.dom().union(other@.dom()),
@@ -535,7 +530,7 @@ pub mod OrderedTableStPer {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to TableStPer.difference (linear scan)
         fn difference(&self, other: &Self) -> (table: Self)
-            requires self.spec_orderedtablestper_wf(), other.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
+            requires self.spec_orderedtablestper_wf(), other.spec_orderedtablestper_wf(), obeys_view_eq::<K>(),
             ensures
                 table@.dom() =~= self@.dom().difference(other@.dom()),
                 forall|k: K::V| #[trigger] table@.contains_key(k) ==> table@[k] == self@[k],
@@ -544,7 +539,7 @@ pub mod OrderedTableStPer {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- linear scan over self for each key
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (table: Self)
-            requires self.spec_orderedtablestper_wf(), obeys_feq_full::<Pair<K, V>>(),
+            requires self.spec_orderedtablestper_wf(),
             ensures
                 table@.dom() =~= self@.dom().intersect(keys@),
                 forall|k: K::V| #[trigger] table@.contains_key(k) ==> table@[k] == self@[k],
@@ -553,7 +548,7 @@ pub mod OrderedTableStPer {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- linear scan over self for each key
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (table: Self)
-            requires self.spec_orderedtablestper_wf(), obeys_feq_full::<Pair<K, V>>(),
+            requires self.spec_orderedtablestper_wf(),
             ensures
                 table@.dom() =~= self@.dom().difference(keys@),
                 forall|k: K::V| #[trigger] table@.contains_key(k) ==> table@[k] == self@[k],
@@ -695,6 +690,8 @@ pub mod OrderedTableStPer {
         open spec fn spec_orderedtablestper_wf(&self) -> bool {
             self.base_set.spec_avltreesetstper_wf()
             && spec_keys_no_dups(self.base_set.elements@)
+            && obeys_feq_fulls::<K, V>()
+            && obeys_feq_full::<Pair<K, V>>()
         }
 
         // Weaker wf predicate that only requires the seq wf and no-dup keys.
@@ -719,6 +716,9 @@ pub mod OrderedTableStPer {
         fn empty() -> (table: Self)
             ensures table@ == Map::<K::V, V::V>::empty(), table.spec_orderedtablestper_wf()
         {
+                      assert(obeys_feq_full_trigger::<K>());
+           assert(obeys_feq_full_trigger::<V>());
+           assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let base = AVLTreeSetStPer::empty();
             proof {
                 base.elements@.unique_seq_to_set();
@@ -728,6 +728,9 @@ pub mod OrderedTableStPer {
 
         fn singleton(k: K, v: V) -> (table: Self)
         {
+                      assert(obeys_feq_full_trigger::<K>());
+           assert(obeys_feq_full_trigger::<V>());
+           assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let pair = Pair(k, v);
             let base = AVLTreeSetStPer::singleton(pair);
             // base@ == Set::empty().insert(Pair(k,v)@)
@@ -778,6 +781,7 @@ pub mod OrderedTableStPer {
             OrderedTableStPer { base_set: base }
         }
 
+        #[verifier::loop_isolation(false)]
         fn find(&self, k: &K) -> (found: Option<V>)
         {
             let len = self.base_set.elements.length();
@@ -787,7 +791,6 @@ pub mod OrderedTableStPer {
                     self.base_set.elements.spec_avltreeseqstper_wf(),
                     spec_keys_no_dups(self.base_set.elements@),
                     obeys_view_eq::<K>(),
-                    obeys_feq_full::<V>(),
                     len == self.base_set.elements@.len(),
                     0 <= i <= len,
                     forall|j: int| 0 <= j < i as int
@@ -813,6 +816,7 @@ pub mod OrderedTableStPer {
             None
         }
 
+        #[verifier::loop_isolation(false)]
         fn insert(&self, k: K, v: V) -> (table: Self)
         {
             proof {
@@ -827,7 +831,6 @@ pub mod OrderedTableStPer {
                     self.base_set.elements.spec_avltreeseqstper_wf(),
                     spec_keys_no_dups(self.base_set.elements@),
                     obeys_view_eq::<K>(),
-                    obeys_feq_full::<Pair<K, V>>(),
                     len == self.base_set.elements@.len(),
                     0 <= i <= len,
                     forall|j: int| 0 <= j < i as int
@@ -898,6 +901,7 @@ pub mod OrderedTableStPer {
             OrderedTableStPer { base_set: inserted }
         }
 
+        #[verifier::loop_isolation(false)]
         fn delete(&self, k: &K) -> (table: Self)
         {
             let len = self.base_set.elements.length();
@@ -909,7 +913,6 @@ pub mod OrderedTableStPer {
                     spec_keys_no_dups(self.base_set.elements@),
                     obeys_view_eq::<K>(),
                     obeys_feq_clone::<Pair<K, V>>(),
-                    obeys_feq_full::<Pair<K, V>>(),
                     len == self.base_set.elements@.len(),
                     0 <= i <= len,
                     forall|j: int| 0 <= j < i as int
@@ -1005,8 +1008,11 @@ pub mod OrderedTableStPer {
             keys
         }
 
+        #[verifier::loop_isolation(false)]
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (table: Self)
         {
+                      assert(obeys_feq_full_trigger::<V>());
+           assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let key_seq = keys.to_seq();
             proof {
                 // key_seq@.no_duplicates() and key_seq@.to_set() =~= keys@ (from to_seq()).
@@ -1022,7 +1028,6 @@ pub mod OrderedTableStPer {
                 invariant
                     key_seq@.no_duplicates(),
                     key_seq@.to_set() =~= keys@,
-                    obeys_feq_full::<K>(),
                     len == key_seq.spec_len(),
                     key_seq.spec_len() == keys@.len(),
                     key_seq.spec_len() < usize::MAX,
@@ -1114,6 +1119,7 @@ pub mod OrderedTableStPer {
             table
         }
 
+        #[verifier::loop_isolation(false)]
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (table: Self)
         {
             let len = self.base_set.elements.length();
@@ -1124,7 +1130,6 @@ pub mod OrderedTableStPer {
                 invariant
                     self.base_set.elements.spec_avltreeseqstper_wf(),
                     spec_keys_no_dups(self.base_set.elements@),
-                    obeys_feq_full::<K>(),
                     len == self.base_set.elements@.len(),
                     0 <= i <= len,
                     forall|v: &V| f.requires((v,)),
@@ -1205,6 +1210,7 @@ pub mod OrderedTableStPer {
             table
         }
 
+        #[verifier::loop_isolation(false)]
         fn filter<F: Fn(&K, &V) -> B>(&self, f: F, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (table: Self)
         {
             let len = self.base_set.elements.length();
@@ -1216,7 +1222,6 @@ pub mod OrderedTableStPer {
                 invariant
                     self.base_set.elements.spec_avltreeseqstper_wf(),
                     spec_keys_no_dups(self.base_set.elements@),
-                    obeys_feq_full::<Pair<K, V>>(),
                     len == self.base_set.elements@.len(),
                     0 <= i <= len,
                     forall|k: &K, v: &V| f.requires((k, v)),
@@ -1502,6 +1507,7 @@ pub mod OrderedTableStPer {
             table
         }
 
+        #[verifier::loop_isolation(false)]
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)
         {
             let mut result_vec: Vec<Pair<K, V>> = Vec::new();
@@ -1530,9 +1536,6 @@ pub mod OrderedTableStPer {
                     spec_keys_no_dups(self.base_set.elements@),
                     spec_keys_no_dups(other.base_set.elements@),
                     obeys_view_eq::<K>(),
-                    obeys_feq_full::<V>(),
-                    obeys_feq_full::<K>(),
-                    obeys_feq_full::<Pair<K, V>>(),
                     forall|v1: &V, v2: &V| f.requires((v1, v2)),
                     self_len == self.base_set.elements@.len(),
                     0 <= i <= self_len,
@@ -1644,8 +1647,6 @@ pub mod OrderedTableStPer {
                     spec_keys_no_dups(self.base_set.elements@),
                     spec_keys_no_dups(other.base_set.elements@),
                     obeys_view_eq::<K>(),
-                    obeys_feq_full::<V>(),
-                    obeys_feq_full::<Pair<K, V>>(),
                     self_len == self.base_set.elements@.len(),
                     other_len == other.base_set.elements@.len(),
                     0 <= i <= other_len,
@@ -2222,10 +2223,10 @@ pub mod OrderedTableStPer {
             seq
         }
 
+        #[verifier::loop_isolation(false)]
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
         {
-            assert(obeys_feq_full_trigger::<K>());
             let len = self.base_set.elements.length();
             proof {
                 lemma_entries_to_map_finite::<K::V, V::V>(self.base_set.elements@);
@@ -2248,7 +2249,6 @@ pub mod OrderedTableStPer {
                         self.base_set.elements.spec_avltreeseqstper_wf(),
                         spec_keys_no_dups(self.base_set.elements@),
                         len as nat == self.base_set.elements@.len(),
-                        obeys_feq_full::<K>(),
                         1 <= i, i <= len,
                         0 <= min_idx, min_idx < i,
                         ghost_vals.len() == i as int,
@@ -2307,11 +2307,10 @@ pub mod OrderedTableStPer {
             }
         }
 
-
+        #[verifier::loop_isolation(false)]
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
         {
-            assert(obeys_feq_full_trigger::<K>());
             let len = self.base_set.elements.length();
             proof {
                 lemma_entries_to_map_finite::<K::V, V::V>(self.base_set.elements@);
@@ -2334,7 +2333,6 @@ pub mod OrderedTableStPer {
                         self.base_set.elements.spec_avltreeseqstper_wf(),
                         spec_keys_no_dups(self.base_set.elements@),
                         len as nat == self.base_set.elements@.len(),
-                        obeys_feq_full::<K>(),
                         1 <= i, i <= len,
                         0 <= max_idx, max_idx < i,
                         ghost_vals.len() == i as int,
@@ -2393,10 +2391,10 @@ pub mod OrderedTableStPer {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
         {
-            assert(obeys_feq_full_trigger::<K>());
             let len = self.base_set.elements.length();
             proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_set.elements@); }
             let ghost mut ghost_vals: Seq<Pair<K, V>> = Seq::empty();
@@ -2409,7 +2407,6 @@ pub mod OrderedTableStPer {
                     self.base_set.elements.spec_avltreeseqstper_wf(),
                     spec_keys_no_dups(self.base_set.elements@),
                     len as nat == self.base_set.elements@.len(),
-                    obeys_feq_full::<K>(),
                     0 <= i, i <= len,
                     ghost_vals.len() == i as int,
                     forall|j: int| #![trigger ghost_vals[j]]
@@ -2506,10 +2503,10 @@ pub mod OrderedTableStPer {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
         {
-            assert(obeys_feq_full_trigger::<K>());
             let len = self.base_set.elements.length();
             proof { lemma_entries_to_map_finite::<K::V, V::V>(self.base_set.elements@); }
             let ghost mut ghost_vals: Seq<Pair<K, V>> = Seq::empty();
@@ -2522,7 +2519,6 @@ pub mod OrderedTableStPer {
                     self.base_set.elements.spec_avltreeseqstper_wf(),
                     spec_keys_no_dups(self.base_set.elements@),
                     len as nat == self.base_set.elements@.len(),
-                    obeys_feq_full::<K>(),
                     0 <= i, i <= len,
                     ghost_vals.len() == i as int,
                     forall|j: int| #![trigger ghost_vals[j]]
@@ -3014,6 +3010,7 @@ pub mod OrderedTableStPer {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn split_rank_key(&self, i: usize) -> (parts: (Self, Self))
         {
             let len = self.base_set.elements.length();
@@ -3032,7 +3029,6 @@ pub mod OrderedTableStPer {
                     len == self.base_set.elements@.len(),
                     0 <= j <= len,
                     0 <= split_at <= len,
-                    obeys_feq_full::<Pair<K, V>>(),
                     left_src.len() == left_vec@.len(),
                     right_src.len() == right_vec@.len(),
                     dest.len() == j as int,
@@ -3219,6 +3215,9 @@ pub mod OrderedTableStPer {
             table@ =~= spec_entries_to_map(entries@),
             table.spec_orderedtablestper_wf(),
     {
+              assert(obeys_feq_full_trigger::<K>());
+       assert(obeys_feq_full_trigger::<V>());
+       assert(obeys_feq_full_trigger::<Pair<K, V>>());
         let base = AVLTreeSetStPer::from_seq(entries);
         // base@ =~= entries@.to_set(), base.spec_avltreesetstper_wf()
         // base.elements@.to_set() =~= entries@.to_set()

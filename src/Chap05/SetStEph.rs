@@ -18,7 +18,6 @@
 
 //		1. module
 
-
 pub mod SetStEph {
 
     use vstd::prelude::*;
@@ -44,7 +43,6 @@ verus! {
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
 
-
     //		3. broadcast use
 
     broadcast use {
@@ -68,7 +66,6 @@ verus! {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
-
     //		4. type definitions
 
     #[verifier::reject_recursive_types(T)]
@@ -76,14 +73,12 @@ verus! {
         pub elements: HashSetWithViewPlus<T>  // Public for open spec fn view()
     }
 
-
     //		5. view impls
 
     impl<T: StT + Hash> View for SetStEph<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Self::V { self.elements@ }
     }
-
 
     //		6. spec fns
 
@@ -97,7 +92,6 @@ verus! {
     pub open spec fn spec_setsteph_wf_generic<V: StT + Hash>(s: &SetStEph<V>) -> bool {
         s@.finite() && valid_key_type::<V>()
     }
-
 
     //		7. proof fns/broadcast groups
 
@@ -116,7 +110,6 @@ verus! {
     pub broadcast group group_set_st_eph_lemmas {
         lemma_singleton_choose,
     }
-
 
     //		8. traits
 
@@ -304,7 +297,6 @@ verus! {
                 self@.contains(element@);
     }
 
-
     //		9. impls
 
     impl<T: StT + Hash> SetStEphTrait<T> for SetStEph<T> {
@@ -312,6 +304,7 @@ verus! {
         open spec fn spec_setsteph_wf(&self) -> bool {
                self@.finite()
             && valid_key_type::<T>()
+            && obeys_feq_full::<T>()
         }
 
         open spec fn spec_valid_key_type() -> bool {
@@ -319,6 +312,7 @@ verus! {
         }
 
         fn from_vec(v: Vec<T>) -> (s: Self) {
+                      assert(obeys_feq_full_trigger::<T>());
             let mut s: SetStEph<T> = SetStEph::empty();
             let ghost v_seq: Seq<T> = v@;
             
@@ -367,9 +361,12 @@ verus! {
             seq
         }
 
-        fn empty() -> SetStEph<T> { SetStEph { elements: HashSetWithViewPlus::new() } }
+        fn empty() -> SetStEph<T> {
+        assert(obeys_feq_full_trigger::<T>());
+         SetStEph { elements: HashSetWithViewPlus::new() } }
 
         fn singleton(x: T) -> (s: SetStEph<T>) {
+                      assert(obeys_feq_full_trigger::<T>());
             let mut s = HashSetWithViewPlus::new();
             let _ = s.insert(x);
             SetStEph { elements: s }
@@ -574,7 +571,6 @@ verus! {
             }
         }
 
-
         fn partition_on_elt(x: &T, parts: &SetStEph<SetStEph<T>>) -> bool {
             let parts_iter = parts.iter();
             let mut parts_it = parts_iter;
@@ -771,7 +767,6 @@ verus! {
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
-
     //		10. iterators
 
     #[verifier::reject_recursive_types(T)]
@@ -880,7 +875,6 @@ verus! {
         }
     }
 
-
     //		11. derive impls in verus!
 
     impl<T: StT + Hash> Clone for SetStEph<T> {
@@ -908,8 +902,6 @@ verus! {
 
   } // verus!
 
-    
-
     //		12. macros
 
     #[macro_export]
@@ -923,7 +915,6 @@ verus! {
             __s
         }};
     }
-
 
      //		13. derive impls outside verus!
 

@@ -26,6 +26,8 @@ pub mod UnionFindStEph {
 
     verus! {
 
+    broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+
     // 4. type definitions
 
     #[verifier::reject_recursive_types(V)]

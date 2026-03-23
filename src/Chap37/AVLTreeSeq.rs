@@ -224,7 +224,6 @@ pub mod AVLTreeSeq {
         }
     }
 
-
     // 8. traits
 
     pub trait AVLTreeSeq<T: StT>: Sized {
@@ -267,7 +266,7 @@ pub mod AVLTreeSeq {
             ensures single == (self.spec_avltreeseq_seq().len() == 1);
 
         fn subseq_copy(&self, start: N, length: N) -> (sub: Self)
-            requires self.spec_avltreeseq_wf(), obeys_feq_full::<T>(),
+            requires self.spec_avltreeseq_wf(),
             ensures sub.spec_avltreeseq_seq() =~=
                 spec_avltreeseq_subseq(self.spec_avltreeseq_seq(), start as nat, length as nat);
 
@@ -291,7 +290,7 @@ pub mod AVLTreeSeq {
                 spec_avltreeseq_inorder(tree.root) =~= values@.map_values(|t: T| t@);
 
         fn to_arrayseq(&self) -> (seq: ArraySeqStEphS<T>)
-            requires self.spec_avltreeseq_wf(), obeys_feq_full::<T>(),
+            requires self.spec_avltreeseq_wf(),
             ensures
                 seq.spec_len() == self.spec_avltreeseq_seq().len(),
                 forall|i: int| #![trigger seq.spec_index(i)]
@@ -309,7 +308,7 @@ pub mod AVLTreeSeq {
             ensures self.spec_avltreeseq_seq() =~= old(self).spec_avltreeseq_seq().push(value@);
 
         fn contains_value(&self, target: &T) -> (found: B)
-            requires self.spec_avltreeseq_wf(), obeys_feq_full::<T>(),
+            requires self.spec_avltreeseq_wf(),
             ensures found == exists|j: int| 0 <= j < self.spec_avltreeseq_seq().len()
                 && self.spec_avltreeseq_seq()[j] == target@;
 
@@ -318,7 +317,7 @@ pub mod AVLTreeSeq {
             ensures self.spec_avltreeseq_seq() =~= old(self).spec_avltreeseq_seq().push(value@);
 
         fn delete_value(&mut self, target: &T) -> (deleted: bool)
-            requires old(self).spec_avltreeseq_wf(), obeys_feq_full::<T>(),
+            requires old(self).spec_avltreeseq_wf(),
             ensures
                 !deleted ==> self.spec_avltreeseq_seq() =~= old(self).spec_avltreeseq_seq(),
                 deleted ==> exists|idx: int|
@@ -335,10 +334,9 @@ pub mod AVLTreeSeq {
             ensures empty == (self.spec_avltreeseq_seq().len() == 0);
 
         fn values_in_order(&self) -> (values: Vec<T>)
-            requires self.spec_avltreeseq_wf(), obeys_feq_full::<T>(),
+            requires self.spec_avltreeseq_wf(),
             ensures values@.map_values(|t: T| t@) =~= self.spec_avltreeseq_seq();
     }
-
 
     // 9. impls
 
@@ -764,13 +762,16 @@ pub mod AVLTreeSeq {
             spec_avltreeseq_wf(self.root)
             && self.next_key < usize::MAX
             && spec_avltreeseq_cached_size(&self.root) + 1 < usize::MAX
+            && obeys_feq_full::<T>()
         }
 
         fn empty() -> (tree: Self) {
+                      assert(obeys_feq_full_trigger::<T>());
             AVLTreeS { root: None, next_key: 0 }
         }
 
         fn new() -> (tree: Self) {
+                      assert(obeys_feq_full_trigger::<T>());
             Self::empty()
         }
 
@@ -789,6 +790,7 @@ pub mod AVLTreeSeq {
         }
 
         fn singleton(item: T) -> (tree: Self) {
+                      assert(obeys_feq_full_trigger::<T>());
             let key = 0usize;
             let ghost item_view = item@;
             let node = Box::new(AVLTreeNode {
@@ -879,6 +881,7 @@ pub mod AVLTreeSeq {
         }
 
         fn new_root() -> (tree: Self) {
+                      assert(obeys_feq_full_trigger::<T>());
             Self::empty()
         }
 
@@ -889,6 +892,7 @@ pub mod AVLTreeSeq {
         }
 
         fn from_vec(values: Vec<T>) -> (tree: AVLTreeS<T>) {
+                      assert(obeys_feq_full_trigger::<T>());
             let length = values.len();
             let mut t = AVLTreeS { root: None, next_key: 0 };
             let mut i: usize = 0;
@@ -1109,7 +1113,6 @@ pub mod AVLTreeSeq {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
-
 
     // 10. iterators
 

@@ -143,7 +143,7 @@ broadcast use {
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- delegates to TableStPer which uses linear scan
         fn find(&self, k: &K) -> (found: Option<V>)
-            requires self.spec_augorderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+            requires self.spec_augorderedtablestper_wf(), obeys_view_eq::<K>(),
             ensures
                 match found {
                     Some(v) => self@.contains_key(k@) && v@ == self@[k@],
@@ -155,7 +155,6 @@ broadcast use {
             requires
                 self.spec_augorderedtablestper_wf(),
                 obeys_view_eq::<K>(),
-                obeys_feq_full::<Pair<K, V>>(),
                 self@.dom().len() + 1 < usize::MAX as nat,
             ensures
                 updated@.dom() =~= self@.dom().insert(k@),
@@ -169,7 +168,6 @@ broadcast use {
 
                 obeys_feq_clone::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
-                obeys_feq_full::<Pair<K, V>>(),
             ensures updated@.dom().finite(), updated.spec_augorderedtablestper_wf();
         /// - APAS: Work O(n), Span O(n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- extracts keys from base table entries
@@ -200,7 +198,6 @@ broadcast use {
                 self.spec_augorderedtablestper_wf(),
 
                 forall|v: &V| f.requires((v,)),
-                obeys_feq_full::<K>(),
             ensures
                 mapped@.dom() == self@.dom(),
                 forall|k: K::V| #[trigger] mapped@.contains_key(k) ==>
@@ -217,7 +214,6 @@ broadcast use {
                 self.spec_augorderedtablestper_wf(),
 
                 forall|k: &K, v: &V| f.requires((k, v)),
-                obeys_feq_full::<Pair<K, V>>(),
                 forall|k: K, v: V, keep: bool| f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
             ensures
                 filtered@.dom().subset_of(self@.dom()),
@@ -235,7 +231,6 @@ broadcast use {
                 other.spec_augorderedtablestper_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_view_eq::<K>(),
-                obeys_feq_full::<K>(),
             ensures
                 common@.dom() =~= self@.dom().intersect(other@.dom()),
                 forall|k: K::V| #[trigger] common@.contains_key(k) ==>
@@ -253,7 +248,6 @@ broadcast use {
                 other.spec_augorderedtablestper_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
                 obeys_view_eq::<K>(),
-                obeys_feq_full::<Pair<K, V>>(),
                 self@.dom().len() + other@.dom().len() < usize::MAX,
             ensures
                 combined@.dom() =~= self@.dom().union(other@.dom()),
@@ -275,7 +269,6 @@ broadcast use {
                 self.spec_augorderedtablestper_wf(),
                 other.spec_augorderedtablestper_wf(),
                 obeys_view_eq::<K>(),
-                obeys_feq_full::<Pair<K, V>>(),
             ensures
                 remaining@.dom() =~= self@.dom().difference(other@.dom()),
                 forall|k: K::V| #[trigger] remaining@.contains_key(k) ==> remaining@[k] == self@[k],
@@ -287,7 +280,6 @@ broadcast use {
             requires
                 self.spec_augorderedtablestper_wf(),
 
-                obeys_feq_full::<Pair<K, V>>(),
             ensures
                 restricted@.dom() =~= self@.dom().intersect(keys@),
                 forall|k: K::V| #[trigger] restricted@.contains_key(k) ==> restricted@[k] == self@[k],
@@ -299,7 +291,6 @@ broadcast use {
             requires
                 self.spec_augorderedtablestper_wf(),
 
-                obeys_feq_full::<Pair<K, V>>(),
             ensures
                 subtracted@.dom() =~= self@.dom().difference(keys@),
                 forall|k: K::V| #[trigger] subtracted@.contains_key(k) ==> subtracted@[k] == self@[k],
@@ -455,6 +446,8 @@ broadcast use {
         open spec fn spec_augorderedtablestper_wf(&self) -> bool {
             self.base_table.spec_orderedtablestper_wf()
             && forall|v1: &V, v2: &V| #[trigger] self.reducer.requires((v1, v2))
+            && obeys_feq_fulls::<K, V>()
+            && obeys_feq_full::<Pair<K, V>>()
         }
 
         fn size(&self) -> (count: usize)
@@ -467,6 +460,9 @@ broadcast use {
         fn empty(reducer: F, identity: V) -> (empty: Self)
             ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_augorderedtablestper_wf()
         {
+                      assert(obeys_feq_full_trigger::<K>());
+           assert(obeys_feq_full_trigger::<V>());
+           assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let base = OrderedTableStPer::empty();
             let r = Self {
                 base_table: base,
@@ -481,6 +477,9 @@ broadcast use {
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
             ensures tree@.dom().finite(), tree.spec_augorderedtablestper_wf()
         {
+                      assert(obeys_feq_full_trigger::<K>());
+           assert(obeys_feq_full_trigger::<V>());
+           assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let base = OrderedTableStPer::singleton(k, v.clone());
             let r = Self {
                 base_table: base,
@@ -541,6 +540,9 @@ broadcast use {
 
         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)
         {
+                      assert(obeys_feq_full_trigger::<K>());
+           assert(obeys_feq_full_trigger::<V>());
+           assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let base_table = OrderedTableStPer::tabulate(f, keys);
             let cached_reduction = calculate_reduction(&base_table, &reducer, &identity);
 

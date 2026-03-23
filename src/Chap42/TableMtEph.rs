@@ -17,7 +17,6 @@
 
 //		1. module
 
-
 pub mod TableMtEph {
 
     use std::cmp::Ordering;
@@ -38,6 +37,8 @@ pub mod TableMtEph {
     use crate::vstdplus::feq::feq::{lemma_seq_map_cloned_view_eq, obeys_feq_clone, obeys_feq_full, obeys_feq_full_trigger, obeys_view_eq_trigger};
     #[cfg(verus_keep_ghost)]
     use vstd::laws_eq::obeys_view_eq;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_fulls;
 
     verus! {
 
@@ -52,7 +53,6 @@ broadcast use {
     vstd::seq_lib::group_seq_properties,
     vstd::seq_lib::group_to_multiset_ensures,
 };
-
 
 //		4. type definitions
 
@@ -79,7 +79,6 @@ broadcast use {
 
     pub type TableS<K, V> = TableMtEph<K, V>;
 
-
 //		5. view impls
 
     impl<K: MtKey, V: MtVal> View for TableMtEph<K, V> {
@@ -88,7 +87,6 @@ broadcast use {
             spec_entries_to_map(self.entries@)
         }
     }
-
 
 //		6. spec fns
 
@@ -112,7 +110,6 @@ broadcast use {
         forall|i: int, j: int|
             0 <= i < j < entries.len() ==> (#[trigger] entries[i]).0 != (#[trigger] entries[j]).0
     }
-
 
 //		7. proof fns/broadcast groups
 
@@ -536,7 +533,6 @@ broadcast use {
         }
     }
 
-
 //		8. traits
 
     // 8. traits
@@ -593,7 +589,6 @@ broadcast use {
                 forall|k: &K, v: &V| f.requires((k, v)),
                 forall|k: K, v: V, keep: bool|
                     f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
-                obeys_feq_full::<Pair<K, V>>(),
             ensures
                 self@.dom().subset_of(old(self)@.dom()),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
@@ -625,7 +620,7 @@ broadcast use {
         /// - APAS Cost Spec 42.5: Work lg |a|, Span lg |a|
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan; disagrees with APAS (not tree-based).
         fn find(&self, key: &K) -> (found: Option<V>)
-            requires self.spec_tablemteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
+            requires self.spec_tablemteph_wf(), obeys_view_eq::<K>()
             ensures
                 match found {
                     Some(v) => self@.contains_key(key@) && self@[key@] == v@,
@@ -643,7 +638,6 @@ broadcast use {
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                 obeys_view_eq::<K>(),
                 obeys_feq_clone::<K>(),
-                obeys_feq_full::<Pair<K, V>>(),
             ensures
                 self@.contains_key(key@),
                 self@.dom() =~= old(self)@.dom().insert(key@),
@@ -668,12 +662,13 @@ broadcast use {
             ensures spec_entries_to_map(entries@) == self@;
     }
 
-
 //		9. impls
 
     impl<K: MtKey, V: MtVal> TableMtEphTrait<K, V> for TableMtEph<K, V> {
         open spec fn spec_tablemteph_wf(&self) -> bool {
             spec_keys_no_dups(self.entries@)
+            && obeys_feq_fulls::<K, V>()
+            && obeys_feq_full::<Pair<K, V>>()
         }
 
         fn size(&self) -> (count: usize)
@@ -686,6 +681,9 @@ broadcast use {
 
         fn empty() -> (empty: Self)
         {
+                      assert(obeys_feq_full_trigger::<K>());
+           assert(obeys_feq_full_trigger::<V>());
+           assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let entries = ArraySeqMtEphS::empty();
             assert(entries@ =~= Seq::<(K::V, V::V)>::empty());
             TableMtEph { entries }
@@ -693,6 +691,9 @@ broadcast use {
 
         fn singleton(key: K, value: V) -> (tree: Self)
         {
+                      assert(obeys_feq_full_trigger::<K>());
+           assert(obeys_feq_full_trigger::<V>());
+           assert(obeys_feq_full_trigger::<Pair<K, V>>());
             proof { assert(Pair_feq_trigger::<K, V>()); }
             let entries = ArraySeqMtEphS::singleton(Pair(key, value));
             let tree = TableMtEph { entries };
@@ -772,8 +773,12 @@ broadcast use {
             keys
         }
 
+        #[verifier::loop_isolation(false)]
         fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
         {
+                      assert(obeys_feq_full_trigger::<K>());
+           assert(obeys_feq_full_trigger::<V>());
+           assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let key_seq = keys.to_seq();
             let mut entries: Vec<Pair<K, V>> = Vec::new();
             let mut i: usize = 0;
@@ -786,7 +791,6 @@ broadcast use {
                     forall|j: int| #![trigger key_seq.seq@[j]] 0 <= j < i as int ==>
                         f.ensures((&key_seq.seq@[j],), entries@[j].1),
                     forall|k: &K| f.requires((k,)),
-                    obeys_feq_full::<K>(),
                 decreases key_seq.spec_len() - i,
             {
                 let key = key_seq.nth(i);
@@ -885,6 +889,7 @@ broadcast use {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(
             &mut self,
             f: F,
@@ -915,7 +920,6 @@ broadcast use {
                         && spec_pred((#[trigger] old_view[si]).0, old_view[si].1)
                         ==> exists|j: int| 0 <= j < sources.len() && sources[j] == si,
                     spec_keys_no_dups(old_view),
-                    obeys_feq_full::<Pair<K, V>>(),
                 decreases self.entries.spec_len() - i,
             {
                 let pair = self.entries.nth(i);
@@ -1137,6 +1141,7 @@ broadcast use {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn union<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, other: &Self, combine: F)
         {
             proof {
@@ -1166,7 +1171,6 @@ broadcast use {
                         ==> (#[trigger] kept@[k]).1@ == old_self_view[k].1,
                     forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                     obeys_feq_clone::<K>(),
-                    obeys_feq_full::<Pair<K, V>>(),
                     obeys_view_eq::<K>(),
                 decreases self.entries.spec_len() - i,
             {
@@ -1255,7 +1259,6 @@ broadcast use {
                         ==> #[trigger] phase2_sources[j1] < #[trigger] phase2_sources[j2],
                     forall|k: int| 0 <= k < phase2_sources.len()
                         ==> #[trigger] phase2_sources[k] < j as int,
-                    obeys_feq_full::<Pair<K, V>>(),
                     obeys_view_eq::<K>(),
                 decreases other_len - j,
             {
@@ -1496,6 +1499,7 @@ broadcast use {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn difference(&mut self, other: &Self)
         {
             proof {
@@ -1528,7 +1532,6 @@ broadcast use {
                     forall|j: int| 0 <= j < sources.len() ==> #[trigger] sources[j] < i as int,
                     forall|j1: int, j2: int|
                         0 <= j1 < j2 < sources.len() ==> #[trigger] sources[j1] < #[trigger] sources[j2],
-                    obeys_feq_full::<Pair<K, V>>(),
                     obeys_view_eq::<K>(),
                 decreases self.entries.spec_len() - i,
             {
@@ -1665,6 +1668,7 @@ broadcast use {
             None
         }
 
+        #[verifier::loop_isolation(false)]
         fn delete(&mut self, key: &K)
             ensures self@ =~= old(self)@.remove(key@)
         {
@@ -1696,7 +1700,6 @@ broadcast use {
                         && (#[trigger] old_view[si]).0 != key@
                         ==> exists|j: int| 0 <= j < src.len() && src[j] == si,
                     obeys_view_eq::<K>(),
-                    obeys_feq_full::<Pair<K, V>>(),
                 decreases self.entries.spec_len() - i,
             {
                 let pair = self.entries.nth(i);
@@ -1764,6 +1767,7 @@ broadcast use {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, key: K, value: V, combine: F)
         {
             let ghost key_view: K::V = key@;
@@ -1813,7 +1817,6 @@ broadcast use {
                         n == self.entries.spec_len(),
                         self.entries@ == old_view,
                         all@.len() == j as int,
-                        obeys_feq_full::<Pair<K, V>>(),
                         obeys_feq_clone::<K>(),
                         key@ == key_view,
                         match_index < n,
@@ -1890,7 +1893,6 @@ broadcast use {
                         n == self.entries.spec_len(),
                         self.entries@ == old_view,
                         all@.len() == j as int,
-                        obeys_feq_full::<Pair<K, V>>(),
                         key@ == key_view,
                         forall|k: int| 0 <= k < j as int ==>
                             old_view[k].0 == (#[trigger] all@[k]).0@
@@ -1972,6 +1974,7 @@ broadcast use {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
         {
             proof {
@@ -1999,7 +2002,6 @@ broadcast use {
                     forall|j: int| 0 <= j < sources.len() ==> #[trigger] sources[j] < i as int,
                     forall|j1: int, j2: int|
                         0 <= j1 < j2 < sources.len() ==> #[trigger] sources[j1] < #[trigger] sources[j2],
-                    obeys_feq_full::<Pair<K, V>>(),
                 decreases self.entries.spec_len() - i,
             {
                 let pair = self.entries.nth(i);
@@ -2065,6 +2067,7 @@ broadcast use {
             }
         }
 
+        #[verifier::loop_isolation(false)]
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
         {
             let ghost old_view = self.entries@;
@@ -2091,7 +2094,6 @@ broadcast use {
                     forall|j: int| 0 <= j < sources.len() ==> #[trigger] sources[j] < i as int,
                     forall|j1: int, j2: int|
                         0 <= j1 < j2 < sources.len() ==> #[trigger] sources[j1] < #[trigger] sources[j2],
-                    obeys_feq_full::<Pair<K, V>>(),
                 decreases self.entries.spec_len() - i,
             {
                 let pair = self.entries.nth(i);
@@ -2181,9 +2183,6 @@ broadcast use {
         TableMtEph { entries: seq }
     }
 
-
-
-
     // 11. derive impls in verus!
 
     #[cfg(verus_keep_ghost)]
@@ -2220,7 +2219,6 @@ broadcast use {
 
     // 13. derive impls outside verus!
 
-
     //		13. derive impls outside verus!
 
     impl<K: MtKey, V: MtVal> std::fmt::Debug for TableMtEph<K, V> {
@@ -2238,7 +2236,6 @@ broadcast use {
     }
 
     // 12. macros
-
 
     //		12. macros
 

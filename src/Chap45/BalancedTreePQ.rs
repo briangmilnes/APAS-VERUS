@@ -27,6 +27,8 @@ pub mod BalancedTreePQ {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
 
     verus! {
 
@@ -140,7 +142,7 @@ broadcast use {
                 ensures sorted@.len() == self@.len();
 
             fn contains(&self, element: &T) -> (found: bool)
-                requires self.spec_balancedtreepq_wf(), obeys_feq_full::<T>(),
+                requires self.spec_balancedtreepq_wf(),
                 ensures found == self@.contains(element@);
 
             fn remove(&self, element: &T) -> (rest_and_found: (Self, bool))
@@ -207,11 +209,13 @@ broadcast use {
         impl<T: StT + Ord + TotalOrder> BalancedTreePQTrait<T> for BalancedTreePQ<T> {
             open spec fn spec_balancedtreepq_wf(&self) -> bool {
                 self.elements.spec_avltreeseqstper_wf()
+                && obeys_feq_full::<T>()
             }
 
             /// - APAS: Work O(1), Span O(1).
             /// - Claude-Opus-4.6: Work O(1), Span O(1) — constant-time empty construction.
             fn empty() -> Self {
+                              assert(obeys_feq_full_trigger::<T>());
                 BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::empty(),
                 }
@@ -220,6 +224,7 @@ broadcast use {
             /// - APAS: Work O(1), Span O(1).
             /// - Claude-Opus-4.6: Work O(1), Span O(1) — constant-time singleton construction.
             fn singleton(element: T) -> Self {
+                              assert(obeys_feq_full_trigger::<T>());
                 BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::singleton(element),
                 }
@@ -389,6 +394,7 @@ broadcast use {
             /// - APAS: Work O(n log n), Span O(n log n).
             /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — n calls to insert, each O(n).
             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self {
+                              assert(obeys_feq_full_trigger::<T>());
                 let mut result = Self::empty();
                 let n = seq.length();
                 proof {
@@ -470,6 +476,7 @@ broadcast use {
             /// Already sorted — clone the backing tree.
             fn extract_all_sorted(&self) -> AVLTreeSeqStPerS<T> { self.elements.clone() }
 
+            #[verifier::loop_isolation(false)]
             fn contains(&self, element: &T) -> bool {
                 let n = self.elements.length();
                 let mut i: usize = 0;
@@ -479,7 +486,6 @@ broadcast use {
                         i <= n,
                         n as int == self@.len(),
                         self.elements.spec_avltreeseqstper_wf(),
-                        obeys_feq_full::<T>(),
                         !self@.subrange(0, i as int).contains(element@),
                     decreases n - i,
                 {
@@ -548,6 +554,7 @@ broadcast use {
             }
 
             fn from_vec(elements: Vec<T>) -> Self {
+                              assert(obeys_feq_full_trigger::<T>());
                 let mut result = Self::empty();
                 let n = elements.len();
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
@@ -672,7 +679,9 @@ broadcast use {
         impl<T: StT + Ord + TotalOrder> Default for BalancedTreePQ<T> {
             fn default() -> (d: Self)
                 ensures d@.len() == 0, d.spec_balancedtreepq_wf()
-            { Self::empty() }
+            {
+            assert(obeys_feq_full_trigger::<T>());
+             Self::empty() }
         }
 
         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {

@@ -19,7 +19,6 @@
 
 //		1. module
 
-
 // Table of Contents
 // 1. module
 // 2. imports
@@ -59,7 +58,6 @@ pub mod AVLTreeSeqMtPer {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-
     //		3. broadcast use
 
     // 3. broadcast use
@@ -71,7 +69,6 @@ pub mod AVLTreeSeqMtPer {
         vstd::seq_lib::group_seq_properties,
         vstd::seq_lib::group_to_multiset_ensures,
     };
-
 
     //		4. type definitions
 
@@ -99,7 +96,6 @@ pub mod AVLTreeSeqMtPer {
         pub index: usize,
     }
 
-
     //		5. view impls
 
     // 5. view impls
@@ -110,7 +106,6 @@ pub mod AVLTreeSeqMtPer {
             spec_inorder(self.root)
         }
     }
-
 
     //		6. spec fns
 
@@ -163,7 +158,6 @@ pub mod AVLTreeSeqMtPer {
         }
     }
 
-
     //		7. proof fns/broadcast groups
 
     // 7. proof fns
@@ -197,7 +191,6 @@ pub mod AVLTreeSeqMtPer {
             }
         }
     }
-
 
     //		8. traits
 
@@ -251,7 +244,6 @@ pub mod AVLTreeSeqMtPer {
             ensures true;
     }
 
-
     //		9. impls
 
     // 9. impls
@@ -289,6 +281,7 @@ pub mod AVLTreeSeqMtPer {
             node.left == left,
             node.right == right,
     {
+              assert(obeys_feq_full_trigger::<T>());
         let hl = height_fn(&left);
         let hr = height_fn(&right);
         let sz = 1 + size_fn(&left) + size_fn(&right);
@@ -597,17 +590,21 @@ pub mod AVLTreeSeqMtPer {
 
         open spec fn spec_avltreeseqmtper_wf(&self) -> bool {
             spec_avltreeseqmtper_wf(self.root)
+            && obeys_feq_full::<T>()
         }
 
         fn empty() -> (tree: Self) {
+                      assert(obeys_feq_full_trigger::<T>());
             AVLTreeSeqMtPerS { root: None }
         }
 
         fn new() -> (tree: Self) {
+                      assert(obeys_feq_full_trigger::<T>());
             Self::empty()
         }
 
         fn singleton(item: T) -> (tree: Self) {
+                      assert(obeys_feq_full_trigger::<T>());
             AVLTreeSeqMtPerS {
                 root: Some(mk(item, None, None)),
             }
@@ -668,6 +665,7 @@ pub mod AVLTreeSeqMtPer {
         }
 
         fn from_vec(values: Vec<T>) -> (tree: Self) {
+                      assert(obeys_feq_full_trigger::<T>());
             let tree = AVLTreeSeqMtPerS {
                 root: build_balanced_from_slice(&values),
             };
@@ -811,7 +809,6 @@ pub mod AVLTreeSeqMtPer {
 }
 
 //		12. macros
-
 
 #[macro_export]
 macro_rules! AVLTreeSeqMtPerLit {
