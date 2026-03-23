@@ -1691,39 +1691,25 @@ Table of Contents:
 ✓ src/Chap53/GraphSearchStEph.rs
 ✓ src/Chap53/GraphSearchStPer.rs
 ❌ src/Chap53/PQMinStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/PQMinStEph.rs:198: error: assume() [algorithmic] - proof { assume(visited@.len() + 1 < usize::MAX as nat); }
-       150 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/PQMinStEph.rs:269: error: assume() [algorithmic] - proof { assume(frontier_updated@.len() + 1 < usize::MAX as n
+       151 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(
             ...
-       196 |             // and Z3 cannot chain: (a) clone-preserves-view (needs obeys_feq_clone trigger),
-       197 |             // (b) Pair view field projection (.1), and (c) to_seq membership, in a single step.
-       199 |             let visited_new = visited.union(&AVLTreeSetStEph::singleton(v.clone()));
-       200 | 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/PQMinStEph.rs:225: error: assume() [algorithmic] - proof { assume(frontier_updated@.len() + 1 < usize::MAX as n
-       150 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(
-            ...
-       223 |                     // but proving this injection over the nested Pair type exceeds Z3's
-       224 |                     // quantifier instantiation capabilities.
-       226 |                     frontier_updated = frontier_updated.union(&AVLTreeSetStEph::singleton(neighbor_entry));
-       227 |                 }
-   Holes: 2 total
-      2 × assume()
+       267 |                     // generic Fn interface does not guarantee.
+       268 |                     let ghost old_fu = frontier_updated@;
+       270 |                     frontier_updated = frontier_updated.union(&AVLTreeSetStEph::singleton(neighbor_entry));
+       271 |                     // Maintain frontier vertex invariant after union.
+   Holes: 1 total
+      1 × assume()
 ❌ src/Chap53/PQMinStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/PQMinStPer.rs:183: error: assume() [algorithmic] - proof { assume(visited@.len() + 1 < usize::MAX as nat); }
-       147 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P>(
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/PQMinStPer.rs:255: error: assume() [algorithmic] - proof { assume(frontier_updated@.len() + 1 < usize::MAX as n
+       148 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P>(
             ...
-       181 |             let frontier_new = frontier.difference(&AVLTreeSetStPer::singleton(entry));
-       182 | 
-       184 |             let visited_new = visited.union(&AVLTreeSetStPer::singleton(v.clone()));
-       185 | 
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/PQMinStPer.rs:204: error: assume() [algorithmic] - proof { assume(frontier_updated@.len() + 1 < usize::MAX as n
-       147 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P>(
-            ...
-       202 |                     let neighbor_p = priority_fn(neighbor);
-       203 |                     let neighbor_entry = Pair(Pair(neighbor_p.clone(), neighbor.clone()), neighbor.clone());
-       205 |                     frontier_updated = frontier_updated.union(&AVLTreeSetStPer::singleton(neighbor_entry));
-       206 |                 }
-   Holes: 2 total
-      2 × assume()
+       253 |                     // generic Fn interface does not guarantee.
+       254 |                     let ghost old_fu = frontier_updated@;
+       256 |                     frontier_updated = frontier_updated.union(&AVLTreeSetStPer::singleton(neighbor_entry));
+       257 |                     // Maintain frontier vertex invariant after union.
+   Holes: 1 total
+      1 × assume()
 ✓ src/Chap54/BFSMtEph.rs
    7 clean proof functions
 ✓ src/Chap54/BFSMtPer.rs
@@ -2365,15 +2351,15 @@ Function Specs:
    7435 total fns
 
 
-Holes Found: 10 (actionable)
-   7 × assume() [algorithmic] (70%)
-   2 × external_body (20%)
-   1 × external (10%)
-Real Proof Targets: 10 (all actionable)
+Holes Found: 8 (actionable)
+   5 × assume() [algorithmic] (62%)
+   2 × external_body (25%)
+   1 × external (12%)
+Real Proof Targets: 8 (all actionable)
 
 Per-Chapter Holes:
   Chap26:  1  Chap43:  2  Chap45:  1
-  Chap47:  2  Chap53:  4
+  Chap47:  2  Chap53:  2
 
 Warnings: 159 total
    6 × fn_missing_wf_requires
@@ -2387,8 +2373,8 @@ Accepted (reviewed): 62 total
    5 × external_accept_hole
    4 × unsafe_block_accept_hole
    1 × external_type_specification_accept_hole
-   1 × enum_outside_verus_accept_hole
    1 × struct_outside_verus_accept_hole
+   1 × enum_outside_verus_accept_hole
 
 Accepted by Chapter:
   Chap02:  6  Chap11:  6  Chap12: 19
@@ -2413,72 +2399,72 @@ Structural (info only): 184
 4.1. Worst src/* Directories (all dirs, by holes)
 =================================================================
 
-   1  Chap53  (4 holes, 5 files)
-   2  Chap47  (2 holes, 9 files)
-   3  Chap43  (2 holes, 11 files)
-   4  Chap26  (1 holes, 8 files)
-   5  Chap45  (1 holes, 7 files)
-   6  Chap37  (0 holes, 19 files)
-   7  Chap17  (0 holes, 1 files)
-   8  Chap23  (0 holes, 2 files)
-   9  Chap54  (0 holes, 4 files)
+   1  Chap43  (2 holes, 11 files)
+   2  Chap53  (2 holes, 5 files)
+   3  Chap47  (2 holes, 9 files)
+   4  Chap45  (1 holes, 7 files)
+   5  Chap26  (1 holes, 8 files)
+   6  Chap54  (0 holes, 4 files)
+   7  Chap42  (0 holes, 4 files)
+   8  Chap27  (0 holes, 4 files)
+   9  Chap64  (0 holes, 3 files)
    10  Chap41  (0 holes, 7 files)
-   11  Chap61  (0 holes, 4 files)
-   12  Concurrency  (0 holes, 1 files)
-   13  Chap64  (0 holes, 3 files)
-   14  Chap42  (0 holes, 4 files)
-   15  Chap18  (0 holes, 7 files)
-   16  Chap58  (0 holes, 2 files)
-   17  Chap52  (0 holes, 14 files)
-   18  Chap36  (0 holes, 3 files)
-   19  Chap59  (0 holes, 4 files)
-   20  Chap44  (0 holes, 2 files)
-   21  Chap62  (0 holes, 4 files)
-   22  Chap38  (0 holes, 2 files)
-   23  Chap27  (0 holes, 4 files)
-   24  Chap56  (0 holes, 12 files)
-   25  Chap30  (0 holes, 1 files)
-   26  Chap65  (0 holes, 3 files)
-   27  Chap50  (0 holes, 8 files)
-   28  Chap40  (0 holes, 3 files)
-   29  Chap12  (0 holes, 3 files)
-   30  Chap02  (0 holes, 2 files)
-   31  Chap21  (0 holes, 12 files)
-   32  Chap19  (0 holes, 4 files)
-   33  ParaPairs  (0 holes, 1 files)
-   34  Chap39  (0 holes, 4 files)
-   35  Chap51  (0 holes, 8 files)
-   36  Chap55  (0 holes, 8 files)
-   37  Chap03  (0 holes, 1 files)
-   38  Chap11  (0 holes, 5 files)
-   39  Chap06  (0 holes, 21 files)
-   40  Chap35  (0 holes, 4 files)
-   41  Chap66  (0 holes, 2 files)
-   42  Chap49  (0 holes, 8 files)
-   43  Chap57  (0 holes, 3 files)
-   44  Chap63  (0 holes, 2 files)
-   45  Chap05  (0 holes, 5 files)
-   46  Chap28  (0 holes, 11 files)
+   11  Chap63  (0 holes, 2 files)
+   12  Chap39  (0 holes, 4 files)
+   13  Chap35  (0 holes, 4 files)
+   14  Chap44  (0 holes, 2 files)
+   15  Chap58  (0 holes, 2 files)
+   16  Chap59  (0 holes, 4 files)
+   17  Chap23  (0 holes, 2 files)
+   18  Concurrency  (0 holes, 1 files)
+   19  Chap30  (0 holes, 1 files)
+   20  Chap38  (0 holes, 2 files)
+   21  Chap36  (0 holes, 3 files)
+   22  Chap11  (0 holes, 5 files)
+   23  Chap28  (0 holes, 11 files)
+   24  Chap66  (0 holes, 2 files)
+   25  Chap61  (0 holes, 4 files)
+   26  Chap19  (0 holes, 4 files)
+   27  Chap40  (0 holes, 3 files)
+   28  Chap21  (0 holes, 12 files)
+   29  Chap51  (0 holes, 8 files)
+   30  Chap50  (0 holes, 8 files)
+   31  ParaPairs  (0 holes, 1 files)
+   32  Chap03  (0 holes, 1 files)
+   33  Chap57  (0 holes, 3 files)
+   34  Chap65  (0 holes, 3 files)
+   35  Chap37  (0 holes, 19 files)
+   36  Chap49  (0 holes, 8 files)
+   37  Chap55  (0 holes, 8 files)
+   38  Chap62  (0 holes, 4 files)
+   39  Chap17  (0 holes, 1 files)
+   40  Chap06  (0 holes, 21 files)
+   41  Chap56  (0 holes, 12 files)
+   42  Chap02  (0 holes, 2 files)
+   43  Chap52  (0 holes, 14 files)
+   44  Chap05  (0 holes, 5 files)
+   45  Chap12  (0 holes, 3 files)
+   46  Chap18  (0 holes, 7 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
 =================================================================
 
-   1  src/Chap53/PQMinStPer.rs  (2 holes)
-   2  src/Chap53/PQMinStEph.rs  (2 holes)
-   3  src/Chap47/ParaHashTableStEph.rs  (2 holes)
-   4  src/Chap45/Example45_2.rs  (1 holes)
-   5  src/Chap43/OrderedSetStPer.rs  (1 holes)
+   1  src/Chap47/ParaHashTableStEph.rs  (2 holes)
+   2  src/Chap26/ETSPMtEph.rs  (1 holes)
+   3  src/Chap43/OrderedSetStPer.rs  (1 holes)
+   4  src/Chap53/PQMinStPer.rs  (1 holes)
+   5  src/Chap45/Example45_2.rs  (1 holes)
    6  src/Chap43/OrderedSetStEph.rs  (1 holes)
-   7  src/Chap26/ETSPMtEph.rs  (1 holes)
+   7  src/Chap53/PQMinStEph.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
 =================================================================
 
-   1  src/Chap53  (4 holes, 5 files)
-   2  src/Chap26  (1 holes, 8 files)
-   3  src/Chap45  (1 holes, 7 files)
+   1  src/Chap53  (2 holes, 5 files)
+   2  src/Chap45  (1 holes, 7 files)
+   3  src/Chap26  (1 holes, 8 files)
 
 =================================================================
 4.4. Not Verusified
@@ -2496,7 +2482,7 @@ Structural (info only): 184
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 41 clean, 5 holed, 10 holes (global), 258 modules
+Chapter Status — 46 chapters, 41 clean, 5 holed, 8 holes (global), 258 modules
 
 CLEAN CHAPTERS (41)
   Chapter        Files
@@ -2543,14 +2529,14 @@ CLEAN CHAPTERS (41)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (5) — 10 holes
+HOLED CHAPTERS (5) — 8 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
   Chap26             1     8  YES       
   Chap43             2    11  internal  Chap43::OrderedSetStEph, Chap43::OrderedSetStPer
   Chap45             1     7  YES       
   Chap47             2     9  internal  Chap47::ParaHashTableStEph
-  Chap53             4     5  YES       
+  Chap53             2     5  YES       
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
@@ -2560,8 +2546,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-22 20:30:22 -07:00
-Ended:     2026-03-22 20:30:23 -07:00
-Duration:  1498ms
+Started:   2026-03-22 22:47:58 -07:00
+Ended:     2026-03-22 22:48:00 -07:00
+Duration:  1682ms
 
 Full output: /home/milnes/projects/APAS-VERUS-agent2/analyses/veracity-review-verus-proof-holes.log

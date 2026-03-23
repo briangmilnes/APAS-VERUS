@@ -2,11 +2,11 @@
 
 ## Summary
 
-Closed 2 of 6 targeted capacity assumes across Chap53 PQMin files. Added
-`lemma_wf_implies_len_bound_steph` to AVLTreeSeqStEph.rs (mirroring StPer version),
-then used it to prove capacity bounds in PQMinStEph.rs loop bodies. The remaining 4
-assumes (2 per file) in `pq_explore` involve Z3 limitations around nested Pair view
-projection and clone-preserves-view chaining.
+Closed 4 of 6 capacity `assume` holes across Chap53 PQMin files by proving
+`visited@.subset_of(vertex_universe)` invariant through the exploration loop. Used
+`clone_plus` (from `vstdplus::clone_plus`) to get `cloned` postconditions that standard
+`Clone::clone` lacks, then leveraged the feq broadcast axiom chain to establish view
+equality across clone boundaries.
 
 ## Verification
 
@@ -14,7 +14,7 @@ projection and clone-preserves-view chaining.
 |--------|--------|-------|
 | Verified | 4496 | 4498 |
 | Errors | 0 | 0 |
-| Project holes | 12 | 10 |
+| Project holes | 12 | 8 |
 | RTT | 2610 | 2610 |
 | PTT | 147 | 147 |
 
@@ -23,58 +23,53 @@ projection and clone-preserves-view chaining.
 | # | Chap | File | Before | After | Delta |
 |---|------|------|--------|-------|-------|
 | 1 | 37 | AVLTreeSeqStEph.rs | 0 | 0 | 0 |
-| 2 | 53 | PQMinStEph.rs | 4 | 2 | -2 |
-| 3 | 53 | PQMinStPer.rs | 2 | 2 | 0 |
+| 2 | 53 | PQMinStEph.rs | 4 | 1 | -3 |
+| 3 | 53 | PQMinStPer.rs | 2 | 1 | -1 |
+| **Total** | | | **6** | **2** | **-4** |
 
 ## What Was Done
 
-### AVLTreeSeqStEph.rs (Chap37) — infrastructure
+### Prior work (already committed)
 
-- Made `lemma_size_eq_inorder_len` public (was private).
-- Added `lemma_size_lt_usize_max` (recursive proof on Link, mirrors StPer).
-- Added `lemma_wf_implies_len_bound_steph` (broadcast proof: wf implies `@.len() < usize::MAX`).
-- Added `group_avltreeseqsteph_len_bound` broadcast group.
+- `lemma_wf_implies_len_bound_steph` in AVLTreeSeqStEph.rs — infrastructure for capacity proofs.
+- PQMinStEph priorities and initial_frontier loop capacity — closed via wf lemma + len_union.
 
-### PQMinStEph.rs (Chap53) — 4 to 2 holes
+### This session — visited capacity proofs
 
-- **Closed: `priorities` loop capacity** (was line 240). Added `priorities@.len() <= j`
-  loop invariant, called `lemma_wf_implies_len_bound_steph(visited_seq)` before loop,
-  used `lemma_len_union` per iteration.
-- **Closed: `initial_frontier` loop capacity** (was line 289). Same pattern with
-  `lemma_wf_implies_len_bound_steph(sources_seq)` and `lemma_len_union`.
-- **Remaining: `visited` capacity** (line 198). Assume `visited@.len() + 1 < usize::MAX`.
-- **Remaining: `frontier_updated` capacity** (line 225). Assume `frontier_updated@.len() + 1 < usize::MAX`.
+- **PQMinStEph visited capacity** (was line 198): Proved via `visited@.subset_of(vertex_universe)`
+  + `vstd::set_lib::lemma_len_subset`. Added vertex_universe ghost parameter to `pq_explore`
+  and `pq_min_multi` with constraints: `vertex_universe.finite()`,
+  `vertex_universe.len() + 1 < usize::MAX`, `visited_init@.subset_of(vertex_universe)`,
+  `graph.ensures(...) ==> result@.subset_of(vertex_universe)`, frontier entry vertex invariant.
+- **PQMinStPer visited capacity** (was line 183): Same approach mirrored for persistent API.
+- **PQMinStEph initial_frontier capacity** and **priorities capacity**: Already closed.
 
-### PQMinStPer.rs (Chap53) — unchanged at 2 holes
+### Key insight: clone_plus for view tracking
 
-- Priorities and initial_frontier loops were already closed in prior rounds.
-- **Remaining: `visited` capacity** (line 183). Same Z3 blocker as StEph.
-- **Remaining: `frontier_updated` capacity** (line 204). Same Z3 blocker as StEph.
+Standard `Clone::clone` in vstd has **no ensures for generic types**. After `let v = x.clone()`,
+Verus knows nothing about `v@`. Used `clone_plus()` (from `crate::vstdplus::clone_plus`)
+which ensures `cloned(*self, result)`. Combined with the feq axiom chain:
 
-## Techniques Used
+1. `assert(obeys_feq_full_trigger::<V>())` triggers `axiom_obeys_feq_full` (admitted broadcast)
+2. Gives `obeys_feq_full::<V>()` including `obeys_feq_clone::<V>()`
+3. `cloned(source, result)` + `obeys_feq_clone` fires `axiom_cloned_implies_eq_owned`
+4. Gives `source == result`, hence `source@ == result@`
 
-- **Broadcast lemma mirroring**: Wrote StEph version of `lemma_wf_implies_len_bound` by
-  following the StPer template, adapting for StEph's split `left_size + right_size` storage.
-- **Loop counter invariant**: Maintained `len <= loop_counter` invariant with
-  `lemma_len_union` to prove union capacity at each iteration.
+Named clone variables (`v_clone1`, `v_clone2`, `v_for_visited`, `neighbor_clone1`,
+`neighbor_clone2`) to give Verus handles for view tracking through Pair construction.
 
-## Remaining Holes — What Blocks Them
+## Remaining Holes
 
-All 4 remaining Chap53 holes are in `pq_explore` (2 in StEph, 2 in StPer). The blocker
-is the same for all four:
+| # | Chap | File | Line | Description |
+|---|------|------|------|-------------|
+| 1 | 53 | PQMinStEph.rs | 269 | frontier_updated capacity |
+| 2 | 53 | PQMinStPer.rs | 255 | frontier_updated capacity |
 
-1. **visited capacity**: Proving `visited ⊆ vertex_universe` requires extracting vertex
-   identity from frontier entries of type `Pair<Pair<P,V>,V>`. The Pair view maps to
-   nested tuples `((P::V,V::V),V::V)`, and Z3 cannot chain clone-preserves-view (needs
-   `obeys_feq_clone` trigger from feq.rs), Pair view field projection (`.1`), and
-   `to_seq` membership in a single proof step.
+Both require proving frontier length stays bounded. This needs an injection argument
+(each frontier entry uniquely determines a vertex via `priority_fn`), which requires
+`priority_fn` view-determinism that the generic `Fn` interface does not guarantee.
 
-2. **frontier_updated capacity**: Requires an injective mapping from frontier entries to
-   vertices (each `Pair(Pair(p,v),v)` uniquely determines `v` since `p = priority_fn(v)`
-   is deterministic). Proving this injection over the nested Pair type exceeds Z3's
-   quantifier instantiation depth.
+## Files Modified
 
-Both blockers stem from the same root: Z3 cannot reason through the combination of
-clone view preservation + nested generic type projection + set membership. A possible
-future fix: add a `ClonePreservesView` supertrait to `StT` (currently only in `HashOrd`),
-which would let the feq axioms fire automatically.
+- `src/Chap53/PQMinStEph.rs` — vertex_universe constraints, subset proof, clone_plus
+- `src/Chap53/PQMinStPer.rs` — mirror of StEph changes for persistent API
