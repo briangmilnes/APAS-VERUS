@@ -74,6 +74,7 @@ Function Specs:
 
 
 Holes Found: 0 (actionable)
+Real Proof Targets: 0 (all actionable)
 
 No proof holes or warnings found! All proofs are complete.
 
@@ -81,9 +82,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-22 18:40:26 -07:00
-Ended:     2026-03-22 18:40:26 -07:00
-Duration:  48ms
+Started:   2026-03-22 19:13:12 -07:00
+Ended:     2026-03-22 19:13:12 -07:00
+Duration:  27ms
 
 Full output: src/Chap54/analyses/veracity-review-verus-proof-holes.log
-city-review-verus-proof-holes.log
+output: src/Chap54/analyses/veracity-review-verus-proof-holes.log
