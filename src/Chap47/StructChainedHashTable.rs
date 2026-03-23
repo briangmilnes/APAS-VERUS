@@ -175,11 +175,12 @@ pub mod StructChainedHashTable {
         }
 
         /// Looks up key in chain, returning value if found.
-        // veracity: no_requires
-        fn chain_lookup<Key: Eq + View + Clone, Value: Clone>(
+        fn chain_lookup<Key: Eq + View + Clone, Value: Eq + Clone>(
             chain: &Option<Box<Node<Key, Value>>>,
             key: &Key,
         ) -> (found: Option<Value>)
+            requires
+                obeys_feq_clone::<Value>(),
             ensures
                 spec_chain_to_map(*chain).dom().contains(*key)
                     ==> found == Some(spec_chain_to_map(*chain)[*key]),
@@ -196,9 +197,8 @@ pub mod StructChainedHashTable {
                     proof { assert(obeys_feq_full_trigger::<Key>()); }
                     let eq = feq(&node.key, key);
                     if eq {
-                        let v = node.value.clone();
+                        let v = clone_elem(&node.value);
                         proof {
-                            assume(v == node.value); // Clone bridge: behind EntryTrait, no feq path.
                             reveal_with_fuel(spec_chain_to_map, 2);
                         }
                         Some(v)
@@ -264,7 +264,7 @@ pub mod StructChainedHashTable {
             }
         }
 
-        impl<Key: Eq + View + Clone, Value: Clone> EntryTrait<Key, Value> for ChainList<Key, Value> {
+        impl<Key: Eq + View + Clone, Value: Eq + View + Clone> EntryTrait<Key, Value> for ChainList<Key, Value> {
             open spec fn spec_entry_to_map(&self) -> Map<Key, Value> {
                 spec_chain_to_map(self.head)
             }
@@ -284,6 +284,7 @@ pub mod StructChainedHashTable {
             /// - Claude-Opus-4.6: Work O(n), Span O(n) — recursive scan of chain, n = chain length.
             fn lookup(&self, key: &Key) -> (found: Option<Value>)
             {
+                proof { assert(obeys_feq_full_trigger::<Value>()); }
                 chain_lookup(&self.head, key)
             }
 
