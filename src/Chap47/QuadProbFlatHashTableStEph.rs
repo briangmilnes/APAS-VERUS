@@ -373,7 +373,8 @@ pub mod QuadProbFlatHashTableStEph {
             h as nat == (table.spec_hash@)(*key) % (table.current_size as nat),
             exists |s: int| #![trigger table.table@[s]]
                 0 <= s < table.current_size as int && table.table@[s] is Empty,
-            forall |d: int| 0 <= d < table.current_size as int
+            forall |d: int| #![trigger spec_tri_probe(h as int, d, table.current_size as int)]
+                0 <= d < table.current_size as int
                 ==> !spec_flat_has_key(
                     #[trigger] table.table@[spec_tri_probe(h as int, d, table.current_size as int)],
                     *key),
@@ -825,7 +826,8 @@ pub mod QuadProbFlatHashTableStEph {
             proof {
                 // Bridge: loop invariant uses `m`, lemma requires `table.current_size`.
                 assert(m == table.current_size);
-                assert forall |d: int| 0 <= d < table.current_size as int
+                assert forall |d: int| #![trigger spec_tri_probe(h as int, d, table.current_size as int)]
+                    0 <= d < table.current_size as int
                     implies !spec_flat_has_key(
                         #[trigger] table.table@[spec_tri_probe(h as int, d, table.current_size as int)], key) by {
                     assert(spec_tri_probe(h as int, d, m as int) == spec_tri_probe(h as int, d, table.current_size as int));

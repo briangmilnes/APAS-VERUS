@@ -3,8 +3,8 @@
 ## Summary
 
 Proved both `assume(false)` holes in `QuadProbFlatHashTableStEph.rs`, closing
-Chap47's QuadProb module to 0 holes. Assessed ETSPMtEph.rs external_body as
-structural (float arithmetic boundary).
+Chap47's QuadProb module to 0 holes. Fixed 3 auto-trigger warnings in the same
+file. Assessed ETSPMtEph.rs external_body as structural (float arithmetic boundary).
 
 ## Holes Before/After
 
@@ -67,11 +67,18 @@ and `sqrt()`. The spec function `spec_point_distance` is `uninterp` (no body). V
 has no floating-point arithmetic axioms. This is a float-arithmetic boundary identical
 to the Chap56-59 graph algorithm pattern. Not algorithmic logic.
 
+### Trigger fixes (QuadProbFlatHashTableStEph.rs)
+
+Fixed 3 auto-trigger warnings by adding explicit `#[trigger]`/`#![trigger]` annotations:
+1. `lemma_empty_slot_reachable` requires clause (line 377): added `#![trigger spec_tri_probe(...)]`.
+2. `lemma_empty_slot_reachable` proof body (line 424): added `#[trigger]` on `probes.to_set().contains(x)`.
+3. `insert` exhaustion proof (line 829): added `#![trigger spec_tri_probe(...)]`.
+
 ## Verification
 
 - `scripts/validate.sh`: 4495 verified, 1 error (pre-existing Chap43/OrderedSetStPer.rs:910)
-- `scripts/rtt.sh`: 2610 tests passed, 0 skipped
-- `scripts/holes.sh src/Chap47/QuadProbFlatHashTableStEph.rs`: 0 holes, 9 clean proof fns
+- Zero auto-trigger warnings in assigned files
+- Chap47 QuadProbFlatHashTableStEph.rs: 0 holes, 9 clean proof functions
 
 ## Chapters Closed
 
