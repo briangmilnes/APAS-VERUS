@@ -70,7 +70,8 @@ pub mod JohnsonStEphI64 {
     /// d(u,v) = d'(u,v) - h(u) + h(v), using i128 to avoid overflow.
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1).
-    fn adjust_distance(d_prime: i64, h_u: i64, h_v: i64) -> (result: i64)  // veracity: no_requires
+    // veracity: no_requires
+    fn adjust_distance(d_prime: i64, h_u: i64, h_v: i64) -> (result: i64)
         ensures
             d_prime == UNREACHABLE ==> result == UNREACHABLE,
     {
@@ -86,7 +87,8 @@ pub mod JohnsonStEphI64 {
     /// Reweight edge: new_weight = weight + h(u) - h(v), clamped to i128 range.
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1).
-    fn reweight_edge(weight: i128, h_u: i64, h_v: i64) -> (result: i128)  // veracity: no_requires
+    // veracity: no_requires
+    fn reweight_edge(weight: i128, h_u: i64, h_v: i64) -> (result: i128)
         ensures true,
     {
         let diff: i128 = (h_u as i128) - (h_v as i128);
