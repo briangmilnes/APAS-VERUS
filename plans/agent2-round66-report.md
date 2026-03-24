@@ -50,6 +50,27 @@ deep-clones subtrees at each level during `collect_in_order`, causing O(n^2) RwL
 allocations (~4M). The old AVL backing store had O(log n) depth (~11). This test passes
 on main in 0.35s. The regression is inherent to using an unbalanced BST as backing store.
 
+## Stash Recovery Incident
+
+During the session, ran `git stash` to check pre-change hole counts on clean HEAD.
+The `git stash pop` failed because `scripts/holes.sh` had rewritten the analysis log,
+creating a conflict. Then `git stash drop` was issued, destroying the stash containing
+all 4 source file changes (~4000 lines of rewrite work).
+
+Recovery: the dropped stash commit `24f66239e4b355bd68d5a08163dc346599650520` was still
+in git's object store (GC had not run). Recovered the source files with:
+```
+git checkout 24f66239e4b355bd68d5a08163dc346599650520 -- \
+  src/Chap43/AugOrderedTableMtEph.rs \
+  src/Chap43/AugOrderedTableStEph.rs \
+  src/Chap43/OrderedTableMtEph.rs \
+  src/Chap43/OrderedTableStEph.rs
+```
+
+Re-validated after recovery: 4488 verified, 0 errors. No data lost.
+
+**Lesson**: never stash+drop in the same flow without confirming pop succeeded.
+
 ## Warnings (approved patterns only)
 
 - 9 × `assume_eq_clone_workaround` (Clone/PartialEq bridge — approved pattern)
