@@ -1,9 +1,10 @@
-# R72 Agent 4 Report: Iterator Standard Fix for Chap43 OrderedTable
+# R72 Agent 4 Report: Chap43 Iterator Standard Fix + PTTs
 
 ## Scope
 
-Fixed iterator standard compliance in 2 files identified by R71 review:
-OrderedTableStEph.rs and OrderedTableStPer.rs.
+Two objectives from R72 assignment:
+1. Fix Chap43 OrderedTable iterator standard (IntoIter wrapping + ghost protocol)
+2. Create iterator PTTs for Chap43 modules
 
 ## Changes
 
@@ -11,65 +12,89 @@ OrderedTableStEph.rs and OrderedTableStPer.rs.
 |---|------|------|--------|--------|
 | 1 | 43 | OrderedTableStEph.rs | Rewrote section 10: IntoIter wrapping + ghost protocol | -1 hole (assume in next removed) |
 | 2 | 43 | OrderedTableStPer.rs | Rewrote section 10: IntoIter wrapping + ghost protocol | -1 hole (assume in next removed) |
-| 3 | 43 | ProveOrderedTableStPer.rs | Updated PTT: 4 tests (2 loop + 2 for-loop) | all pass |
+| 3 | 43 | OrderedTableStEph.rs | Added `spec_orderedtablesteph_wf()` to singleton ensures | +7 holes (type axiom assumes) |
+| 4 | 43 | OrderedSetStEph.rs | Rewrote section 10: full 10-component iterator standard | 0 hole change |
+| 5 | 43 | ProveOrderedTableStPer.rs | Updated existing PTT: 4 tests match new View type | 4 pass |
+| 6 | 43 | ProveOrderedTableStEph.rs | New PTT: 4 loop/for patterns | 4 pass |
+| 7 | 43 | ProveOrderedSetStEph.rs | New PTT: 4 loop/for patterns | import fixed, needs ptt rerun |
+| 8 | — | Cargo.toml | Added ProveOrderedSetStEph + ProveOrderedTableStEph entries | — |
 
-## What Was Done
+## Part 1: Iterator Standard Rewrite (3 files)
 
-### Iterator rewrite (both files)
+### OrderedTableStEph.rs + OrderedTableStPer.rs
 
 Replaced manual `ArraySeqStPerS`-backed iterator with `IntoIter<Pair<K, V>>` wrapping
 (pattern from BalBinTreeStEph.rs). Changes per file:
 
 1. **Struct**: `{sorted, pos, len}` → `{inner: IntoIter<Pair<K, V>>}`
 2. **View**: `(int, Seq<(K::V, V::V)>)` → `(int, Seq<Pair<K, V>>)` (matches IntoIter's
-   raw exec-type view; old ArraySeqStPerS mapped through T::V)
-3. **iter_invariant**: Simplified to `0 <= it@.0 <= it@.1.len()` (removed `obeys_feq_full`)
+   raw exec-type view)
+3. **iter_invariant**: Simplified to `0 <= it@.0 <= it@.1.len()`
 4. **next()**: Delegates to `self.inner.next()` — NO assume needed (was
    `assume(iter_invariant(self))`)
-5. **iter()**: Removed `obeys_feq_full` from requires. Body: `sorted.seq.into_iter()`
-6. **Ghost iterator**: Added `OrderedTableSt{Eph,Per}GhostIterator` with pos/elements
-7. **ForLoopGhostIteratorNew**: Connects exec iterator view to ghost iterator
-8. **ForLoopGhostIterator**: 6 spec fns (exec_invariant, ghost_invariant, ghost_ensures,
-   ghost_decrease, ghost_peek_next, ghost_advance)
-9. **IntoIterator for &Self**: Added for StEph (was missing); updated for StPer
-10. **Debug/Display**: Added outside verus! for both iterator types
+5. **Ghost iterator**: Full ForLoopGhostIterator protocol (6 spec fns)
+6. **IntoIterator for &Self**: Added for StEph (was missing); updated for StPer
 
-### Key technical insight
+### OrderedSetStEph.rs
 
-The old `ArraySeqStPerS<T: View>` has `View::V = Seq<T::V>` (maps elements through views).
-`IntoIter<T>` has `View::V = (int, Seq<T>)` (raw exec type). The View type for the
-iterator struct had to change from `Seq<(K::V, V::V)>` to `Seq<Pair<K, V>>` to match.
-Consumer code (AugOrderedTableSt{Eph,Per}) only uses `.len()` so is unaffected.
+Rewrote iterator section with full 10-component standard wrapping `IntoIter<T>`:
+custom iter struct, View, iter_invariant, Iterator::next (no assume), ghost iterator
+struct, ForLoopGhostIteratorNew, ForLoopGhostIterator (6 spec fns), View for ghost
+iterator, iter() method, IntoIterator for `&Self`.
 
-### PTT updates
+## Part 2: Singleton wf Fix (OrderedTableStEph.rs)
 
-Changed ghost variable types from `Seq<(u64, u64)>` to `Seq<Pair<u64, u64>>` and
-`items.push(x@)` to `items.push(x)` to match the new View type.
+**Why source was touched**: PTT chain `singleton → insert → iter` failed because
+`insert()` requires `self.spec_orderedtablesteph_wf()` but `singleton()` didn't
+ensure it. Without wf in singleton's ensures, the PTT test couldn't call insert on
+the freshly-created table.
 
-## Iterator Standard Compliance (post-fix)
+**Fix**: Added `tree.spec_orderedtablesteph_wf()` to singleton ensures (trait + impl).
+Added 7 type axiom assumes in the proof body — identical to the pattern already in
+OrderedTableStPer.rs singleton (lines 834-849):
 
-| # | Component | StEph | StPer |
-|---|-----------|-------|-------|
-| 1 | Custom iterator struct | present | present |
-| 2 | View for iterator | `(int, Seq<Pair<K,V>>)` | `(int, Seq<Pair<K,V>>)` |
-| 3 | iter_invariant | present (simplified) | present (simplified) |
-| 4 | Iterator::next | present (no assume) | present (no assume) |
-| 5 | Ghost iterator struct | **present** | **present** |
-| 6 | ForLoopGhostIteratorNew | **present** | **present** |
-| 7 | ForLoopGhostIterator | **present** (6 spec fns) | **present** (6 spec fns) |
-| 8 | View for ghost iterator | **present** | **present** |
-| 9 | iter() method | present (relaxed requires) | present (relaxed requires) |
-| 10 | IntoIterator for &Self | **present** | present |
+```
+assume(obeys_feq_fulls::<K, V>());
+assume(obeys_feq_full::<Pair<K, V>>());
+assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
+assume(view_ord_consistent::<Pair<K, V>>());
+assume(spec_pair_key_determines_order::<K, V>());
+assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
+assume(view_ord_consistent::<K>());
+```
 
-All 10 components present in both files.
+These 7 assumes are the same type-class axioms that every Chap43 ordered module needs.
+StPer already had them. Net hole change: +7 (but these are structural type axioms, not
+algorithmic holes).
+
+## Part 3: PTT Results
+
+| # | Chap | PTT File | Patterns | Status |
+|---|------|----------|----------|--------|
+| 1 | 43 | ProveOrderedTableStPer.rs | 4 (2 loop + 2 for) | 4 pass |
+| 2 | 43 | ProveOrderedTableStEph.rs | 4 (2 loop + 2 for) | 4 pass |
+| 3 | 43 | ProveOrderedSetStEph.rs | 4 (2 loop + 2 for) | import fixed, needs rerun |
+
+### Skipped PTTs
+
+- **OrderedSetStPer**: Module commented out in lib.rs (77 field-rename errors from
+  AVLTreeSetStPer `elements` → `tree` rename). PTT file created then removed.
+- **OrderedTableMtEph**: Iterator `next()` is outside `verus!` (line 808-820) with no
+  ensures — not verifiable in PTT framework.
 
 ## Verification
 
-- 4436 verified, 0 errors
+- 4437 verified, 0 errors
 - 2528 RTT pass
-- 147 PTT pass (including 4 OrderedTableStPer iterator tests)
+- PTT: 151 pass (ProveOrderedSetStEph needs rerun after import fix)
 
 ## Net Hole Change
 
--2 holes (removed `assume(iter_invariant(self))` from next() in both files).
-Pre-existing algorithmic holes (axiom assumes, from_sorted_entries external_body) unchanged.
+- -2 holes: removed `assume(iter_invariant(self))` from next() in OrderedTableStEph + StPer
+- +7 holes: type axiom assumes in OrderedTableStEph singleton (matches StPer pattern)
+- Net: +5 holes in OrderedTableStEph (structural type axioms, not algorithmic)
+
+## Remaining Work
+
+- Run `ptt.sh` to confirm ProveOrderedSetStEph passes after import fix
+- OrderedSetStPer needs field rename fix before it can be uncommented + tested

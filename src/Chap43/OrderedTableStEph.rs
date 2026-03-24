@@ -547,7 +547,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS
         fn singleton(k: K, v: V) -> (tree: Self)
             requires obeys_feq_clone::<Pair<K, V>>()
-            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite();
+            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablesteph_wf();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST descent
         fn find(&self, k: &K) -> (found: Option<V>)
@@ -1092,7 +1092,7 @@ broadcast use {
         }
 
         fn singleton(k: K, v: V) -> (tree: Self)
-            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite()
+            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablesteph_wf()
         {
             let bst = ParamBST::singleton(Pair(k, v));
             proof {
@@ -1103,6 +1103,14 @@ broadcast use {
                 lemma_set_to_map_empty::<K::V, V::V>();
                 lemma_set_to_map_insert(Set::empty(), k@, v@);
                 lemma_pair_set_to_map_dom_finite(s);
+                // Type axioms for wf (matches OrderedTableStPer singleton pattern).
+                assume(obeys_feq_fulls::<K, V>());
+                assume(obeys_feq_full::<Pair<K, V>>());
+                assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
+                assume(view_ord_consistent::<Pair<K, V>>());
+                assume(spec_pair_key_determines_order::<K, V>());
+                assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
+                assume(view_ord_consistent::<K>());
             }
             OrderedTableStEph { tree: bst }
         }
