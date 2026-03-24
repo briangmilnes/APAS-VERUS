@@ -3404,8 +3404,7 @@ broadcast use {
             self.rank_key_iter(k)
         }
 
-        // Agent 3 owns rank_key proof — external_body to avoid merge conflict.
-        #[verifier::external_body]
+        #[verifier::loop_isolation(false)]
         fn rank_key_iter(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
         {
@@ -3417,22 +3416,111 @@ broadcast use {
             let len = sorted.length();
             let mut count: usize = 0;
             let mut i: usize = 0;
-            while i < len {
+            let ghost filter_pred = |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@;
+            let ghost mut counted_keys: Set<K::V> = Set::empty();
+            proof {
+                lemma_sorted_keys_pairwise_distinct(self.tree@, sorted@);
+            }
+            while i < len
+                invariant
+                    self.spec_orderedtablesteph_wf(),
+                    obeys_feq_full::<K>(),
+                    obeys_view_eq::<K>(),
+                    len as nat == sorted@.len(),
+                    sorted@.len() == self.tree@.len(),
+                    forall|v: <Pair<K, V> as View>::V| self.tree@.contains(v) <==> #[trigger] sorted@.contains(v),
+                    forall|ii: int, jj: int|
+                        0 <= ii < sorted@.len() && 0 <= jj < sorted@.len() && ii != jj
+                        ==> (#[trigger] sorted@[ii]).0 != (#[trigger] sorted@[jj]).0,
+                    0 <= i <= len,
+                    0 <= count <= i,
+                    counted_keys.finite(),
+                    count as nat == counted_keys.len(),
+                    forall|x: K::V| #[trigger] counted_keys.contains(x) ==>
+                        (exists|j: int| #![trigger sorted@[j]] 0 <= j < i as int
+                            && sorted@[j].0 == x && filter_pred(x)),
+                    forall|j: int| #![trigger sorted@[j]] 0 <= j < i as int && filter_pred(sorted@[j].0) ==>
+                        counted_keys.contains(sorted@[j].0),
+                    forall|x: K::V| counted_keys.contains(x) ==> #[trigger] self@.dom().contains(x),
+                decreases len - i,
+            {
                 let pair = sorted.nth(i);
                 let c = TotalOrder::cmp(&pair.0, k);
+                proof { reveal(obeys_view_eq); }
                 match c {
                     core::cmp::Ordering::Less => {
+                        proof {
+                            assert(count < len) by { };
+                            assert(TotalOrder::le(pair.0, *k) && pair.0 != *k);
+                            assert(pair.0@ != k@);
+                            assert(filter_pred(pair.0@)) by {
+                                assert(pair.0@ == pair.0@ && TotalOrder::le(pair.0, *k) && pair.0@ != k@);
+                            };
+                            assert(!counted_keys.contains(pair.0@)) by {
+                                if counted_keys.contains(pair.0@) {
+                                    let jj = choose|jj: int| 0 <= jj < i as int
+                                        && (#[trigger] sorted@[jj]).0 == pair.0@ && filter_pred(pair.0@);
+                                    assert(sorted@[jj as int].0 == sorted@[i as int].0);
+                                }
+                            };
+                            counted_keys = counted_keys.insert(pair.0@);
+                            assert(sorted@.contains(sorted@[i as int])) by {
+                                assert(sorted@[i as int] == sorted@[i as int]);
+                            };
+                            assert(self.tree@.contains(sorted@[i as int]));
+                            lemma_pair_in_set_map_contains(self.tree@, sorted@[i as int].0, sorted@[i as int].1);
+                        }
                         count = count + 1;
                     },
-                    _ => {},
+                    core::cmp::Ordering::Equal => {
+                        proof {
+                            assert(pair.0 == *k);
+                            assert(!filter_pred(pair.0@)) by {
+                                if filter_pred(pair.0@) {
+                                    let t: K = choose|t: K| #![trigger t@] t@ == pair.0@ && TotalOrder::le(t, *k) && t@ != k@;
+                                    assert(t@ == pair.0@ && pair.0@ == k@);
+                                    assert(t@ != k@);
+                                }
+                            };
+                        }
+                    },
+                    core::cmp::Ordering::Greater => {
+                        proof {
+                            assert(TotalOrder::le(*k, pair.0) && pair.0 != *k);
+                            assert(pair.0@ != k@);
+                            assert(!filter_pred(pair.0@)) by {
+                                if filter_pred(pair.0@) {
+                                    let t: K = choose|t: K| #![trigger t@] t@ == pair.0@ && TotalOrder::le(t, *k) && t@ != k@;
+                                    assert(t@ == pair.0@);
+                                    assert(t == pair.0);
+                                    TotalOrder::antisymmetric(pair.0, *k);
+                                }
+                            };
+                        }
+                    },
                 }
                 i = i + 1;
+            }
+            proof {
+                assert forall|x: K::V| counted_keys.contains(x)
+                    implies #[trigger] self@.dom().filter(filter_pred).contains(x) by {
+                };
+                assert forall|x: K::V| #[trigger] self@.dom().filter(filter_pred).contains(x)
+                    implies counted_keys.contains(x) by {
+                    lemma_map_contains_pair_in_set(self.tree@, x);
+                    let vv: V::V = choose|vv: V::V| self.tree@.contains((x, vv));
+                    assert(sorted@.contains((x, vv)));
+                    let j = choose|j: int| 0 <= j < sorted@.len() && sorted@[j] == (x, vv);
+                    assert(sorted@[j].0 == x && filter_pred(sorted@[j].0));
+                };
+                assert(counted_keys =~= self@.dom().filter(filter_pred));
+                self@.dom().lemma_len_filter(filter_pred);
+                lemma_pair_set_to_map_len(self.tree@);
             }
             count
         }
 
-        // Agent 3 owns select_key proof (depends on rank_key) — external_body to avoid merge conflict.
-        #[verifier::external_body]
+        #[verifier::loop_isolation(false)]
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
         {
@@ -3446,14 +3534,40 @@ broadcast use {
             } else {
                 let sorted = self.tree.in_order();
                 let len = sorted.length();
+                proof {
+                    assert forall|jj: int| 0 <= jj < sorted@.len()
+                        implies self.tree@.contains(#[trigger] sorted@[jj]) by {
+                        assert(sorted@.contains(sorted@[jj]));
+                    };
+                }
                 let mut j: usize = 0;
                 let mut result_key: Option<K> = None;
-                while j < len {
+                while j < len
+                    invariant
+                        j <= len,
+                        len as nat == sorted@.len(),
+                        self.spec_orderedtablesteph_wf(),
+                        obeys_view_eq::<K>(),
+                        obeys_feq_full::<K>(),
+                        obeys_feq_full::<Pair<K, V>>(),
+                        self@.dom().finite(),
+                        i < self@.dom().len(),
+                        forall|jj: int| 0 <= jj < sorted@.len() ==>
+                            self.tree@.contains(#[trigger] sorted@[jj]),
+                        result_key matches Some(rk) ==>
+                            self@.dom().contains(rk@) &&
+                            self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@]
+                                t@ == x && TotalOrder::le(t, rk) && t@ != rk@).len() == i as int,
+                    decreases len - j,
+                {
                     let candidate = sorted.nth(j);
                     let candidate_key = candidate.0.clone_plus();
                     proof { lemma_cloned_view_eq(candidate.0, candidate_key); }
                     let rank_val = self.rank_key(&candidate_key);
                     if rank_val == i && result_key.is_none() {
+                        proof {
+                            lemma_pair_in_set_map_contains(self.tree@, sorted@[j as int].0, sorted@[j as int].1);
+                        }
                         result_key = Some(candidate_key);
                     }
                     j = j + 1;
