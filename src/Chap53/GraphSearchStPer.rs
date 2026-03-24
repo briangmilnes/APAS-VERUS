@@ -7,6 +7,8 @@ pub mod GraphSearchStPer {
 
     use vstd::prelude::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::AVLTreeSeqStPerTrait;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
     use crate::Types::Types::*;
     #[cfg(verus_keep_ghost)]
@@ -55,6 +57,8 @@ pub mod GraphSearchStPer {
                 vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
                 vertex_universe.contains(source@),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
             ensures search.visited@.contains(source@);
 
         /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
@@ -71,6 +75,8 @@ pub mod GraphSearchStPer {
                 vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
                 sources@.subset_of(vertex_universe),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
             ensures sources@.subset_of(search.visited@);
 
         /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
@@ -85,6 +91,8 @@ pub mod GraphSearchStPer {
                 vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
                 vertex_universe.contains(source@),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
             ensures reachable_set@.contains(source@);
     }
 
@@ -95,17 +103,23 @@ pub mod GraphSearchStPer {
 
     impl<V: StT + Ord> SelectionStrategy<V> for SelectOne {
         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, B)) {
-            let n = frontier.elements.length();
+            let n = frontier.size();
             if n == 0 {
                 (AVLTreeSetStPer::empty(), false)
             } else {
-                let first_ref = frontier.elements.nth(0);
+                let seq = frontier.to_seq();
+                proof {
+                    // Prove seq is non-empty from frontier being non-empty.
+                    assert(seq@.to_set() =~= frontier@);
+                    assert(frontier@.len() > 0);
+                    if seq@.len() == 0 {
+                        assert(seq@.to_set() =~= Set::<<V as View>::V>::empty());
+                    }
+                }
+                let first_ref = seq.nth(0);
                 let first = first_ref.clone();
                 proof { assert(cloned(*first_ref, first)); }
-                let seq = frontier.to_seq();
                 assert(seq@.to_set() =~= frontier@);
-                assert(frontier.elements@[0] == first_ref@);
-                assert(frontier.elements@.contains(first_ref@));
                 assert(frontier@.contains(first@));
                 let result = AVLTreeSetStPer::singleton(first);
                 assert(result@.subset_of(frontier@)) by {
@@ -133,6 +147,8 @@ pub mod GraphSearchStPer {
             vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
             vertex_universe.contains(source@),
             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
+            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            view_ord_consistent::<V>(),
         ensures search.visited@.contains(source@),
     {
         let sources = AVLTreeSetStPer::singleton(source);
@@ -165,6 +181,8 @@ pub mod GraphSearchStPer {
             visited_init@.subset_of(vertex_universe),
             frontier_init@.subset_of(vertex_universe),
             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
+            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            view_ord_consistent::<V>(),
         ensures
             visited_init@.subset_of(visited_all@),
             frontier_init@.subset_of(visited_all@),
@@ -172,7 +190,7 @@ pub mod GraphSearchStPer {
         let mut visited = visited_init;
         let mut frontier = frontier_init;
 
-        while frontier.elements.length() > 0
+        while frontier.size() > 0
             invariant
                 visited.spec_avltreesetstper_wf(),
                 frontier.spec_avltreesetstper_wf(),
@@ -185,6 +203,8 @@ pub mod GraphSearchStPer {
                 visited@.subset_of(vertex_universe),
                 frontier@.subset_of(vertex_universe),
                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
         {
             proof {
                 vstd::set_lib::lemma_len_subset(visited@, vertex_universe);
@@ -193,13 +213,14 @@ pub mod GraphSearchStPer {
             let visited_new = visited.union(&frontier);
 
             let mut new_neighbors = AVLTreeSetStPer::empty();
-            let nlen = frontier.elements.length();
+            let frontier_seq = frontier.to_seq();
+            let nlen = frontier_seq.length();
             let mut i: usize = 0;
             while i < nlen
                 invariant
                     i <= nlen,
-                    nlen as nat == frontier.elements.spec_seq().len(),
-                    frontier.elements.spec_avltreeseqstper_wf(),
+                    nlen as nat == frontier_seq.spec_seq().len(),
+                    frontier_seq.spec_avltreeseqstper_wf(),
                     new_neighbors.spec_avltreesetstper_wf(),
                     forall|v: &V| #[trigger] graph.requires((v,)),
                     forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
@@ -207,9 +228,11 @@ pub mod GraphSearchStPer {
                     vertex_universe.finite(),
                     vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
                     forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
+                    vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                    view_ord_consistent::<V>(),
                 decreases nlen - i,
             {
-                let v = frontier.elements.nth(i);
+                let v = frontier_seq.nth(i);
                 let neighbors = graph(v);
                 proof {
                     vstd::set_lib::lemma_len_subset(new_neighbors@, vertex_universe);
@@ -259,6 +282,8 @@ pub mod GraphSearchStPer {
             vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
             sources@.subset_of(vertex_universe),
             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
+            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            view_ord_consistent::<V>(),
         ensures sources@.subset_of(search.visited@),
     {
         let visited = graph_search_explore(graph, strategy, AVLTreeSetStPer::empty(), sources, Ghost(vertex_universe));
@@ -295,6 +320,8 @@ pub mod GraphSearchStPer {
             vertex_universe.len() + vertex_universe.len() < usize::MAX as nat,
             vertex_universe.contains(source@),
             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r@.subset_of(vertex_universe),
+            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            view_ord_consistent::<V>(),
         ensures reachable_set@.contains(source@),
     {
         let result = graph_search(graph, source, &SelectAll, Ghost(vertex_universe));

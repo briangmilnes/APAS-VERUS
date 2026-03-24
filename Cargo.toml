@@ -920,17 +920,17 @@ path = "tests/Chap52/TestEdgeSetGraphMtEph.rs"
 name = "TestGraphSearchStEph"
 path = "tests/Chap53/TestGraphSearchStEph.rs"
 
-# [[test]]  # R67: module commented out in lib.rs (backing store rewire)
-# name = "TestGraphSearchStPer"
-# path = "tests/Chap53/TestGraphSearchStPer.rs"
+[[test]]
+name = "TestGraphSearchStPer"
+path = "tests/Chap53/TestGraphSearchStPer.rs"
 
 [[test]]
 name = "TestPQMinStEph"
 path = "tests/Chap53/TestPQMinStEph.rs"
 
-# [[test]]  # R67: module commented out in lib.rs (backing store rewire)
-# name = "TestPQMinStPer"
-# path = "tests/Chap53/TestPQMinStPer.rs"
+[[test]]
+name = "TestPQMinStPer"
+path = "tests/Chap53/TestPQMinStPer.rs"
 
 [[test]]
 name = "TestBFSMtEph"

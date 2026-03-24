@@ -431,7 +431,12 @@ pub mod BSTParaStEph {
         fn collect_in_order(&self, out: &mut Vec<T>)
             requires
                 self@.finite(),
-            ensures out@.len() == old(out)@.len() + self@.len();
+            ensures
+                out@.len() == old(out)@.len() + self@.len(),
+                forall|i: int| #![trigger out@[i]] 0 <= i < old(out)@.len() ==> out@[i] == old(out)@[i],
+                forall|i: int| #![trigger out@[i]] old(out)@.len() <= i < out@.len() ==> self@.contains(out@[i]@),
+                forall|v: T::V| self@.contains(v) ==>
+                    exists|i: int| #![trigger out@[i]] old(out)@.len() <= i < out@.len() && out@[i]@ == v;
         /// - APAS: Work O(|t|), Span O(|t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|) -- agrees with APAS.
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
