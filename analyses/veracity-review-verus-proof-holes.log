@@ -739,221 +739,210 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1132: info: structural_false_positive RWLOCK_GHOST in_order — proof { assume(ordered@.len() == self@.len()); } [medium]
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1144: info: structural_false_positive RWLOCK_GHOST pre_order — proof { assume(preordered@.len() == self@.len()); } [medium]
 ❌ src/Chap39/BSTTreapStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:141: error: assume() [algorithmic] - proof { assume(c@ == x@); } // eq/clone workaround: structur
-       137 |     fn clone_elem_st<T: StT + Ord + IsLtTransitive>(x: &T) -> (c: T)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2652: error: assume() [algorithmic] - proof { assume(left_base == identity); } // eq/clone workaro
+      2631 |     fn reduce_inner_st<T: StT + Ord + IsLtTransitive, F: Fn(T, T) -> T>(
             ...
-       139 |     {
-       140 |         let c = x.clone();
-       142 |         c
-       143 |     }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:151: error: assume() [algorithmic] - proof { assume(cloned@ =~= tree@ && spec_param_wf_link(&clon
-       146 |     fn clone_with_view<T: StT + Ord + IsLtTransitive>(tree: &BSTTreapStEph<T>) -> (cloned: BSTTreapStEph<T>)
+      2650 |                 }
+      2651 |                 let left_base = identity.clone();
+      2653 |                 let right_base = identity;
+      2654 |                 let left_acc = reduce_inner_st(left, op, left_base);
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:147: error: fn_missing_wf_requires - fn clone_with_view — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+       138 |     fn clone_elem_st<T: StT + Ord + IsLtTransitive>(x: &T) -> (c: T)
             ...
-       149 |     {
-       150 |         let cloned = tree.clone();
-       152 |         cloned
-       153 |     }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2651: error: assume() [algorithmic] - proof { assume(left_base == identity); } // eq/clone workaro
-      2630 |     fn reduce_inner_st<T: StT + Ord + IsLtTransitive, F: Fn(T, T) -> T>(
+       145 | 
+       146 |     /// Clone a BSTTreapStEph with view preservation.
+       148 |         requires spec_param_wf_link(&tree.root),
+       149 |         ensures cloned@ =~= tree@, spec_param_wf_link(&cloned.root),
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:147: error: fn_missing_wf_ensures - fn clone_with_view — ensures should include cloned.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+       138 |     fn clone_elem_st<T: StT + Ord + IsLtTransitive>(x: &T) -> (c: T)
             ...
-      2649 |                 }
-      2650 |                 let left_base = identity.clone();
-      2652 |                 let right_base = identity;
-      2653 |                 let left_acc = reduce_inner_st(left, op, left_base);
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:146: error: fn_missing_wf_requires - fn clone_with_view — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-       137 |     fn clone_elem_st<T: StT + Ord + IsLtTransitive>(x: &T) -> (c: T)
+       145 | 
+       146 |     /// Clone a BSTTreapStEph with view preservation.
+       148 |         requires spec_param_wf_link(&tree.root),
+       149 |         ensures cloned@ =~= tree@, spec_param_wf_link(&cloned.root),
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1488: error: fn_missing_wf_requires - fn make_node_treap_st — requires should include left.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1480 |         fn default() -> (d: Self)
             ...
-       144 | 
-       145 |     /// Clone a BSTTreapStEph with view preservation.
-       147 |         requires spec_param_wf_link(&tree.root),
-       148 |         ensures cloned@ =~= tree@, spec_param_wf_link(&cloned.root),
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:146: error: fn_missing_wf_ensures - fn clone_with_view — ensures should include cloned.spec_bsttreapsteph_wf() for return type BSTTreapStEph
-       137 |     fn clone_elem_st<T: StT + Ord + IsLtTransitive>(x: &T) -> (c: T)
+      1486 | 
+      1487 |     /// Build a new tree from (left, key, priority, right) maintaining BST ordering.
+      1489 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
+      1490 |     ) -> (node: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1488: error: fn_missing_wf_requires - fn make_node_treap_st — requires should include right.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1480 |         fn default() -> (d: Self)
             ...
-       144 | 
-       145 |     /// Clone a BSTTreapStEph with view preservation.
-       147 |         requires spec_param_wf_link(&tree.root),
-       148 |         ensures cloned@ =~= tree@, spec_param_wf_link(&cloned.root),
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1487: error: fn_missing_wf_requires - fn make_node_treap_st — requires should include left.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      1479 |         fn default() -> (d: Self)
+      1486 | 
+      1487 |     /// Build a new tree from (left, key, priority, right) maintaining BST ordering.
+      1489 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
+      1490 |     ) -> (node: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1488: error: fn_missing_wf_ensures - fn make_node_treap_st — ensures should include node.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+      1480 |         fn default() -> (d: Self)
             ...
-      1485 | 
-      1486 |     /// Build a new tree from (left, key, priority, right) maintaining BST ordering.
-      1488 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
-      1489 |     ) -> (node: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1487: error: fn_missing_wf_requires - fn make_node_treap_st — requires should include right.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      1479 |         fn default() -> (d: Self)
+      1486 | 
+      1487 |     /// Build a new tree from (left, key, priority, right) maintaining BST ordering.
+      1489 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
+      1490 |     ) -> (node: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1529: error: fn_missing_requires - fn tree_priority_st — exec fn should have requires
+      1488 |     fn make_node_treap_st<T: StT + Ord + IsLtTransitive>(
             ...
-      1485 | 
-      1486 |     /// Build a new tree from (left, key, priority, right) maintaining BST ordering.
-      1488 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
-      1489 |     ) -> (node: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1487: error: fn_missing_wf_ensures - fn make_node_treap_st — ensures should include node.spec_bsttreapsteph_wf() for return type BSTTreapStEph
-      1479 |         fn default() -> (d: Self)
+      1527 | 
+      1528 |     /// Read the priority of a tree's root node (i64::MIN for empty).
+      1530 |         ensures true,
+      1531 |     {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1539: error: fn_missing_wf_requires - fn expose_to_parts_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1529 |     fn tree_priority_st<T: StT + Ord + IsLtTransitive>(tree: &BSTTreapStEph<T>) -> (p: u64)
             ...
-      1485 | 
-      1486 |     /// Build a new tree from (left, key, priority, right) maintaining BST ordering.
-      1488 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
-      1489 |     ) -> (node: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1528: error: fn_missing_requires - fn tree_priority_st — exec fn should have requires
-      1487 |     fn make_node_treap_st<T: StT + Ord + IsLtTransitive>(
+      1537 | 
+      1538 |     /// Expose a tree into its constituent parts. Consumes the tree.
+      1540 |         requires
+      1541 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1574: error: fn_missing_wf_requires - fn join_with_priority_st — requires should include left.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1539 |     fn expose_to_parts_st<T: StT + Ord + IsLtTransitive>(tree: BSTTreapStEph<T>) -> (parts: Option<(BSTTreapStEph<T>, T, u64, BSTTreapStEph<T>)>)
             ...
-      1526 | 
-      1527 |     /// Read the priority of a tree's root node (i64::MIN for empty).
-      1529 |         ensures true,
-      1530 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1538: error: fn_missing_wf_requires - fn expose_to_parts_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      1528 |     fn tree_priority_st<T: StT + Ord + IsLtTransitive>(tree: &BSTTreapStEph<T>) -> (p: u64)
+      1572 | 
+      1573 |     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority.
+      1575 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
+      1576 |     ) -> (result: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1574: error: fn_missing_wf_requires - fn join_with_priority_st — requires should include right.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1539 |     fn expose_to_parts_st<T: StT + Ord + IsLtTransitive>(tree: BSTTreapStEph<T>) -> (parts: Option<(BSTTreapStEph<T>, T, u64, BSTTreapStEph<T>)>)
             ...
-      1536 | 
-      1537 |     /// Expose a tree into its constituent parts. Consumes the tree.
-      1539 |         requires
-      1540 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1573: error: fn_missing_wf_requires - fn join_with_priority_st — requires should include left.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      1538 |     fn expose_to_parts_st<T: StT + Ord + IsLtTransitive>(tree: BSTTreapStEph<T>) -> (parts: Option<(BSTTreapStEph<T>, T, u64, BSTTreapStEph<T>)>)
+      1572 | 
+      1573 |     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority.
+      1575 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
+      1576 |     ) -> (result: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1574: error: fn_missing_wf_ensures - fn join_with_priority_st — ensures should include result.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+      1539 |     fn expose_to_parts_st<T: StT + Ord + IsLtTransitive>(tree: BSTTreapStEph<T>) -> (parts: Option<(BSTTreapStEph<T>, T, u64, BSTTreapStEph<T>)>)
             ...
-      1571 | 
-      1572 |     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority.
-      1574 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
-      1575 |     ) -> (result: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1573: error: fn_missing_wf_requires - fn join_with_priority_st — requires should include right.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      1538 |     fn expose_to_parts_st<T: StT + Ord + IsLtTransitive>(tree: BSTTreapStEph<T>) -> (parts: Option<(BSTTreapStEph<T>, T, u64, BSTTreapStEph<T>)>)
+      1572 | 
+      1573 |     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority.
+      1575 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
+      1576 |     ) -> (result: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1665: error: fn_missing_wf_requires - fn split_inner_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1574 |     fn join_with_priority_st<T: StT + Ord + IsLtTransitive>(
             ...
-      1571 | 
-      1572 |     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority.
-      1574 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
-      1575 |     ) -> (result: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1573: error: fn_missing_wf_ensures - fn join_with_priority_st — ensures should include result.spec_bsttreapsteph_wf() for return type BSTTreapStEph
-      1538 |     fn expose_to_parts_st<T: StT + Ord + IsLtTransitive>(tree: BSTTreapStEph<T>) -> (parts: Option<(BSTTreapStEph<T>, T, u64, BSTTreapStEph<T>)>)
+      1663 |     }
+      1664 | 
+      1666 |         tree: BSTTreapStEph<T>, key: &T,
+      1667 |     ) -> (parts: (BSTTreapStEph<T>, bool, BSTTreapStEph<T>))
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1845: error: fn_missing_wf_requires - fn join_pair_inner_st — requires should include left.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1665 |     fn split_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      1571 | 
-      1572 |     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority.
-      1574 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
-      1575 |     ) -> (result: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1664: error: fn_missing_wf_requires - fn split_inner_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      1573 |     fn join_with_priority_st<T: StT + Ord + IsLtTransitive>(
+      1843 |     }
+      1844 | 
+      1846 |         left: BSTTreapStEph<T>, right: BSTTreapStEph<T>,
+      1847 |     ) -> (joined: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1845: error: fn_missing_wf_requires - fn join_pair_inner_st — requires should include right.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1665 |     fn split_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      1662 |     }
-      1663 | 
-      1665 |         tree: BSTTreapStEph<T>, key: &T,
-      1666 |     ) -> (parts: (BSTTreapStEph<T>, bool, BSTTreapStEph<T>))
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1844: error: fn_missing_wf_requires - fn join_pair_inner_st — requires should include left.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      1664 |     fn split_inner_st<T: StT + Ord + IsLtTransitive>(
+      1843 |     }
+      1844 | 
+      1846 |         left: BSTTreapStEph<T>, right: BSTTreapStEph<T>,
+      1847 |     ) -> (joined: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1845: error: fn_missing_wf_ensures - fn join_pair_inner_st — ensures should include joined.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+      1665 |     fn split_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      1842 |     }
-      1843 | 
-      1845 |         left: BSTTreapStEph<T>, right: BSTTreapStEph<T>,
-      1846 |     ) -> (joined: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1844: error: fn_missing_wf_requires - fn join_pair_inner_st — requires should include right.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      1664 |     fn split_inner_st<T: StT + Ord + IsLtTransitive>(
+      1843 |     }
+      1844 | 
+      1846 |         left: BSTTreapStEph<T>, right: BSTTreapStEph<T>,
+      1847 |     ) -> (joined: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2035: error: fn_missing_wf_requires - fn union_inner_st — requires should include a.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1845 |     fn join_pair_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      1842 |     }
-      1843 | 
-      1845 |         left: BSTTreapStEph<T>, right: BSTTreapStEph<T>,
-      1846 |     ) -> (joined: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1844: error: fn_missing_wf_ensures - fn join_pair_inner_st — ensures should include joined.spec_bsttreapsteph_wf() for return type BSTTreapStEph
-      1664 |     fn split_inner_st<T: StT + Ord + IsLtTransitive>(
+      2033 |     }
+      2034 | 
+      2036 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2037 |     ) -> (combined: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2035: error: fn_missing_wf_requires - fn union_inner_st — requires should include b.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1845 |     fn join_pair_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      1842 |     }
-      1843 | 
-      1845 |         left: BSTTreapStEph<T>, right: BSTTreapStEph<T>,
-      1846 |     ) -> (joined: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2034: error: fn_missing_wf_requires - fn union_inner_st — requires should include a.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      1844 |     fn join_pair_inner_st<T: StT + Ord + IsLtTransitive>(
+      2033 |     }
+      2034 | 
+      2036 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2037 |     ) -> (combined: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2035: error: fn_missing_wf_ensures - fn union_inner_st — ensures should include combined.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+      1845 |     fn join_pair_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      2032 |     }
-      2033 | 
-      2035 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
-      2036 |     ) -> (combined: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2034: error: fn_missing_wf_requires - fn union_inner_st — requires should include b.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      1844 |     fn join_pair_inner_st<T: StT + Ord + IsLtTransitive>(
+      2033 |     }
+      2034 | 
+      2036 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2037 |     ) -> (combined: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2187: error: fn_missing_wf_requires - fn intersect_inner_st — requires should include a.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      2035 |     fn union_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      2032 |     }
-      2033 | 
-      2035 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
-      2036 |     ) -> (combined: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2034: error: fn_missing_wf_ensures - fn union_inner_st — ensures should include combined.spec_bsttreapsteph_wf() for return type BSTTreapStEph
-      1844 |     fn join_pair_inner_st<T: StT + Ord + IsLtTransitive>(
+      2185 |     }
+      2186 | 
+      2188 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2189 |     ) -> (common: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2187: error: fn_missing_wf_requires - fn intersect_inner_st — requires should include b.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      2035 |     fn union_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      2032 |     }
-      2033 | 
-      2035 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
-      2036 |     ) -> (combined: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2186: error: fn_missing_wf_requires - fn intersect_inner_st — requires should include a.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      2034 |     fn union_inner_st<T: StT + Ord + IsLtTransitive>(
+      2185 |     }
+      2186 | 
+      2188 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2189 |     ) -> (common: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2187: error: fn_missing_wf_ensures - fn intersect_inner_st — ensures should include common.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+      2035 |     fn union_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      2184 |     }
-      2185 | 
-      2187 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
-      2188 |     ) -> (common: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2186: error: fn_missing_wf_requires - fn intersect_inner_st — requires should include b.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      2034 |     fn union_inner_st<T: StT + Ord + IsLtTransitive>(
+      2185 |     }
+      2186 | 
+      2188 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2189 |     ) -> (common: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2338: error: fn_missing_wf_requires - fn difference_inner_st — requires should include a.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      2187 |     fn intersect_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      2184 |     }
-      2185 | 
-      2187 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
-      2188 |     ) -> (common: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2186: error: fn_missing_wf_ensures - fn intersect_inner_st — ensures should include common.spec_bsttreapsteph_wf() for return type BSTTreapStEph
-      2034 |     fn union_inner_st<T: StT + Ord + IsLtTransitive>(
+      2336 |     }
+      2337 | 
+      2339 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2340 |     ) -> (remaining: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2338: error: fn_missing_wf_requires - fn difference_inner_st — requires should include b.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      2187 |     fn intersect_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      2184 |     }
-      2185 | 
-      2187 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
-      2188 |     ) -> (common: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2337: error: fn_missing_wf_requires - fn difference_inner_st — requires should include a.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      2186 |     fn intersect_inner_st<T: StT + Ord + IsLtTransitive>(
+      2336 |     }
+      2337 | 
+      2339 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2340 |     ) -> (remaining: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2338: error: fn_missing_wf_ensures - fn difference_inner_st — ensures should include remaining.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+      2187 |     fn intersect_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      2335 |     }
-      2336 | 
-      2338 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
-      2339 |     ) -> (remaining: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2337: error: fn_missing_wf_requires - fn difference_inner_st — requires should include b.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      2186 |     fn intersect_inner_st<T: StT + Ord + IsLtTransitive>(
+      2336 |     }
+      2337 | 
+      2339 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2340 |     ) -> (remaining: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2499: error: fn_missing_wf_requires - fn filter_inner_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      2338 |     fn difference_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      2335 |     }
-      2336 | 
-      2338 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
-      2339 |     ) -> (remaining: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2337: error: fn_missing_wf_ensures - fn difference_inner_st — ensures should include remaining.spec_bsttreapsteph_wf() for return type BSTTreapStEph
-      2186 |     fn intersect_inner_st<T: StT + Ord + IsLtTransitive>(
+      2497 |     }
+      2498 | 
+      2500 |         tree: BSTTreapStEph<T>,
+      2501 |         predicate: &F,
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2499: error: fn_missing_wf_ensures - fn filter_inner_st — ensures should include result.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+      2338 |     fn difference_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      2335 |     }
-      2336 | 
-      2338 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
-      2339 |     ) -> (remaining: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2498: error: fn_missing_wf_requires - fn filter_inner_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      2337 |     fn difference_inner_st<T: StT + Ord + IsLtTransitive>(
+      2497 |     }
+      2498 | 
+      2500 |         tree: BSTTreapStEph<T>,
+      2501 |         predicate: &F,
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2631: error: fn_missing_wf_requires - fn reduce_inner_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      2499 |     fn filter_inner_st<T: StT + Ord + IsLtTransitive, F: Fn(&T) -> bool>(
             ...
-      2496 |     }
-      2497 | 
-      2499 |         tree: BSTTreapStEph<T>,
-      2500 |         predicate: &F,
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2498: error: fn_missing_wf_ensures - fn filter_inner_st — ensures should include result.spec_bsttreapsteph_wf() for return type BSTTreapStEph
-      2337 |     fn difference_inner_st<T: StT + Ord + IsLtTransitive>(
+      2629 |     }
+      2630 | 
+      2632 |         tree: BSTTreapStEph<T>, op: &F, identity: T,
+      2633 |     ) -> (result: T)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2662: error: fn_missing_wf_requires - fn collect_in_order_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      2631 |     fn reduce_inner_st<T: StT + Ord + IsLtTransitive, F: Fn(T, T) -> T>(
             ...
-      2496 |     }
-      2497 | 
-      2499 |         tree: BSTTreapStEph<T>,
-      2500 |         predicate: &F,
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2630: error: fn_missing_wf_requires - fn reduce_inner_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      2498 |     fn filter_inner_st<T: StT + Ord + IsLtTransitive, F: Fn(&T) -> bool>(
-            ...
-      2628 |     }
-      2629 | 
-      2631 |         tree: BSTTreapStEph<T>, op: &F, identity: T,
-      2632 |     ) -> (result: T)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2661: error: fn_missing_wf_requires - fn collect_in_order_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      2630 |     fn reduce_inner_st<T: StT + Ord + IsLtTransitive, F: Fn(T, T) -> T>(
-            ...
-      2659 |     }
-      2660 | 
-      2662 |         tree: BSTTreapStEph<T>, out: &mut Vec<T>,
-      2663 |     )
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:374: info: structural_false_positive OPAQUE_EXTERNAL priority_for_st — #[verifier::external_body] [medium]
-   Holes: 3 total
-      3 × assume()
+      2660 |     }
+      2661 | 
+      2663 |         tree: BSTTreapStEph<T>, out: &mut Vec<T>,
+      2664 |     )
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:142: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:152: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:375: info: structural_false_positive OPAQUE_EXTERNAL priority_for_st — #[verifier::external_body] [medium]
+   Holes: 1 total
+      1 × assume()
    Info: 1 × structural_false_positive
       1 × OPAQUE_EXTERNAL
+   Info: 2 total
    Proof functions: 28 total (28 clean, 0 holed)
 ⚠ src/Chap40/BSTKeyValueStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:578: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
@@ -1494,275 +1483,27 @@ Table of Contents:
       1455 |                 assume(view_ord_consistent::<K>());
       1457 |             }
       1458 |             tabulated
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1542: error: admit() - admit();
-      1461 |         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:3408: error: external_body - #[verifier::external_body]
+      3409 |         fn rank_key_iter(&self, k: &K) -> (rank: usize)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:3435: error: external_body - #[verifier::external_body]
+      3436 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:3728: error: assume() [algorithmic] - assume(iter_invariant(self));
+      3706 |         fn next(&mut self) -> (next: Option<Pair<K, V>>)
             ...
-      1540 |                         // Backward direction: entry j was processed and mapped,
-      1541 |                         // so the result is in new_tree. Needs completeness invariant.
-      1543 |                     };
-      1544 |                 };
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1546: error: assume() [algorithmic] - assume(spec_pair_key_determines_order::<K, V>());
-      1461 |         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
+      3726 |             proof {
+      3727 |                 // Caller must maintain iter_invariant.
+      3729 |             }
+      3730 |             if self.pos < self.len {
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:3752: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include result.spec_orderedtablesteph_wf() for return type OrderedTableStEph
+      3745 |         fn clone(&self) -> (cloned: Self) {
             ...
-      1544 |                 };
-      1545 |                 // Prove wf for mapped.
-      1547 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1548 |                 assume(view_ord_consistent::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1547: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1461 |         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
-            ...
-      1545 |                 // Prove wf for mapped.
-      1546 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1548 |                 assume(view_ord_consistent::<K>());
-      1549 |                 assume(obeys_feq_fulls::<K, V>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1548: error: assume() [algorithmic] - assume(view_ord_consistent::<K>());
-      1461 |         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
-            ...
-      1546 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1547 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1549 |                 assume(obeys_feq_fulls::<K, V>());
-      1550 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1549: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
-      1461 |         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
-            ...
-      1547 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1548 |                 assume(view_ord_consistent::<K>());
-      1550 |             }
-      1551 |             mapped
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1608: error: assume() [algorithmic] - assume(spec_pair_key_determines_order::<K, V>());
-      1554 |         fn filter<F: Fn(&K, &V) -> B>(
-            ...
-      1606 |                 vstd::set_lib::lemma_len_subset(filtered_tree@, self.tree@);
-      1607 |                 // Prove wf.
-      1609 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1610 |                 assume(view_ord_consistent::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1609: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1554 |         fn filter<F: Fn(&K, &V) -> B>(
-            ...
-      1607 |                 // Prove wf.
-      1608 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1610 |                 assume(view_ord_consistent::<K>());
-      1611 |                 assume(obeys_feq_fulls::<K, V>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1610: error: assume() [algorithmic] - assume(view_ord_consistent::<K>());
-      1554 |         fn filter<F: Fn(&K, &V) -> B>(
-            ...
-      1608 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1609 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1611 |                 assume(obeys_feq_fulls::<K, V>());
-      1612 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1611: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
-      1554 |         fn filter<F: Fn(&K, &V) -> B>(
-            ...
-      1609 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1610 |                 assume(view_ord_consistent::<K>());
-      1612 |             }
-      1613 |             filtered
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1733: error: admit() - admit();
-      1638 |         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
-            ...
-      1731 |                 lemma_pair_set_to_map_dom_finite(old_tree);
-      1732 |                 // Domain + value proofs need tracking invariants. Admit for now.
-      1734 |                 // Prove wf.
-      1735 |                 assume(spec_pair_key_determines_order::<K, V>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1735: error: assume() [algorithmic] - assume(spec_pair_key_determines_order::<K, V>());
-      1638 |         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
-            ...
-      1733 |                 admit();
-      1734 |                 // Prove wf.
-      1736 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1737 |                 assume(view_ord_consistent::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1736: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1638 |         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
-            ...
-      1734 |                 // Prove wf.
-      1735 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1737 |                 assume(view_ord_consistent::<K>());
-      1738 |                 assume(obeys_feq_fulls::<K, V>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1737: error: assume() [algorithmic] - assume(view_ord_consistent::<K>());
-      1638 |         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
-            ...
-      1735 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1736 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1738 |                 assume(obeys_feq_fulls::<K, V>());
-      1739 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1738: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
-      1638 |         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
-            ...
-      1736 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1737 |                 assume(view_ord_consistent::<K>());
-      1739 |             }
-      1740 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1912: error: admit() - admit();
-      1742 |         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
-            ...
-      1910 |                 lemma_pair_set_to_map_dom_finite(old_tree);
-      1911 |                 // Postcondition proofs (complex — admit for now, will prove later).
-      1913 |             }
-      1914 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1995: error: admit() - admit();
-      1916 |         fn difference(&mut self, other: &Self)
-            ...
-      1993 |                 lemma_pair_set_to_map_dom_finite(old_tree);
-      1994 |                 // Domain + value proofs need tracking invariants. Admit for now.
-      1996 |                 // Prove wf.
-      1997 |                 assume(spec_pair_key_determines_order::<K, V>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1997: error: assume() [algorithmic] - assume(spec_pair_key_determines_order::<K, V>());
-      1916 |         fn difference(&mut self, other: &Self)
-            ...
-      1995 |                 admit();
-      1996 |                 // Prove wf.
-      1998 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1999 |                 assume(view_ord_consistent::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1998: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1916 |         fn difference(&mut self, other: &Self)
-            ...
-      1996 |                 // Prove wf.
-      1997 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1999 |                 assume(view_ord_consistent::<K>());
-      2000 |                 assume(obeys_feq_fulls::<K, V>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1999: error: assume() [algorithmic] - assume(view_ord_consistent::<K>());
-      1916 |         fn difference(&mut self, other: &Self)
-            ...
-      1997 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1998 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      2000 |                 assume(obeys_feq_fulls::<K, V>());
-      2001 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:2000: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
-      1916 |         fn difference(&mut self, other: &Self)
-            ...
-      1998 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1999 |                 assume(view_ord_consistent::<K>());
-      2001 |             }
-      2002 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:2075: error: admit() - admit();
-      2004 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
-            ...
-      2073 |                 lemma_pair_set_to_map_dom_finite(old_tree);
-      2074 |                 // Domain + value proofs need tracking invariants. Admit for now.
-      2076 |                 assume(spec_pair_key_determines_order::<K, V>());
-      2077 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:2076: error: assume() [algorithmic] - assume(spec_pair_key_determines_order::<K, V>());
-      2004 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
-            ...
-      2074 |                 // Domain + value proofs need tracking invariants. Admit for now.
-      2075 |                 admit();
-      2077 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      2078 |                 assume(view_ord_consistent::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:2077: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      2004 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
-            ...
-      2075 |                 admit();
-      2076 |                 assume(spec_pair_key_determines_order::<K, V>());
-      2078 |                 assume(view_ord_consistent::<K>());
-      2079 |                 assume(obeys_feq_fulls::<K, V>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:2078: error: assume() [algorithmic] - assume(view_ord_consistent::<K>());
-      2004 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
-            ...
-      2076 |                 assume(spec_pair_key_determines_order::<K, V>());
-      2077 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      2079 |                 assume(obeys_feq_fulls::<K, V>());
-      2080 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:2079: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
-      2004 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
-            ...
-      2077 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      2078 |                 assume(view_ord_consistent::<K>());
-      2080 |             }
-      2081 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:2154: error: admit() - admit();
-      2083 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
-            ...
-      2152 |                 lemma_pair_set_to_map_dom_finite(old_tree);
-      2153 |                 // Domain + value proofs need tracking invariants. Admit for now.
-      2155 |                 assume(spec_pair_key_determines_order::<K, V>());
-      2156 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:2155: error: assume() [algorithmic] - assume(spec_pair_key_determines_order::<K, V>());
-      2083 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
-            ...
-      2153 |                 // Domain + value proofs need tracking invariants. Admit for now.
-      2154 |                 admit();
-      2156 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      2157 |                 assume(view_ord_consistent::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:2156: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      2083 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
-            ...
-      2154 |                 admit();
-      2155 |                 assume(spec_pair_key_determines_order::<K, V>());
-      2157 |                 assume(view_ord_consistent::<K>());
-      2158 |                 assume(obeys_feq_fulls::<K, V>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:2157: error: assume() [algorithmic] - assume(view_ord_consistent::<K>());
-      2083 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
-            ...
-      2155 |                 assume(spec_pair_key_determines_order::<K, V>());
-      2156 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      2158 |                 assume(obeys_feq_fulls::<K, V>());
-      2159 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:2158: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
-      2083 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
-            ...
-      2156 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      2157 |                 assume(view_ord_consistent::<K>());
-      2159 |             }
-      2160 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:2231: error: admit() - admit();
-      2202 |         fn first_key_iter(&self) -> (first: Option<K>)
-            ...
-      2229 |                         // Proving TotalOrder::le for all keys requires connecting
-      2230 |                         // BST min_key ordering to key-level TotalOrder.
-      2232 |                     }
-      2233 |                     Some(k)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:2666: error: admit() - admit();
-      2561 |         fn split_key_iter(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
-            ...
-      2664 |                 lemma_pair_set_to_map_dom_finite(right_tree@);
-      2665 |                 // Postconditions need tracking invariants. Admit for now.
-      2667 |             }
-      2668 |             (left_table, found_val, right_table)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:2748: error: admit() - admit();
-      2681 |         fn get_key_range_iter(&self, k1: &K, k2: &K) -> (range: Self)
-            ...
-      2746 |                 lemma_pair_set_to_map_dom_finite(self.tree@);
-      2747 |                 // Postconditions need tracking invariants. Admit for now.
-      2749 |             }
-      2750 |             range
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:2791: error: admit() - admit();
-      2759 |         fn rank_key_iter(&self, k: &K) -> (rank: usize)
-            ...
-      2789 |             proof {
-      2790 |                 // Connecting count to dom.filter requires tracking invariant.
-      2792 |             }
-      2793 |             count
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:2845: error: admit() - admit();
-      2796 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            ...
-      2843 |                 proof {
-      2844 |                     // Postconditions need rank and domain proofs. Admit for now.
-      2846 |                 }
-      2847 |                 result_key
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:2954: error: admit() - admit();
-      2857 |         fn split_rank_key_iter(&mut self, i: usize) -> (split: (Self, Self))
-            ...
-      2952 |                 lemma_pair_set_to_map_dom_finite(right_tree@);
-      2953 |                 // Postconditions need tracking invariants. Admit for now.
-      2955 |             }
-      2956 |             (left_table, right_table)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:3023: error: assume() [algorithmic] - assume(iter_invariant(self));
-      3001 |         fn next(&mut self) -> (next: Option<Pair<K, V>>)
-            ...
-      3021 |             proof {
-      3022 |                 // Caller must maintain iter_invariant.
-      3024 |             }
-      3025 |             if self.pos < self.len {
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:3047: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include result.spec_orderedtablesteph_wf() for return type OrderedTableStEph
-      3040 |         fn clone(&self) -> (cloned: Self) {
-            ...
-      3045 |     }
-      3046 | 
-      3048 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
-      3049 |     ) -> (result: OrderedTableStEph<K, V>)
-   Holes: 43 total
-      31 × assume()
-      12 × admit()
+      3750 |     }
+      3751 | 
+      3753 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
+      3754 |     ) -> (result: OrderedTableStEph<K, V>)
+   Holes: 9 total
+      7 × assume()
+      2 × external_body
    Proof functions: 14 total (14 clean, 0 holed)
 ❌ src/Chap43/OrderedTableStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:843: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
@@ -1905,296 +1646,36 @@ Table of Contents:
       1146 |                 assume(view_ord_consistent::<K>());
       1148 |             }
       1149 |             tabulated
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1227: error: admit() - admit();
-      1153 |         fn map<F: Fn(&V) -> V>(&self, f: F) -> (table: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3305: error: assume() [algorithmic] - assume(iter_invariant(self));
+      3284 |         fn next(&mut self) -> (next: Option<Pair<K, V>>)
             ...
-      1225 |                         assert(sorted@.contains((key, v)));
-      1226 |                         let j = choose|j: int| 0 <= j < sorted@.len() && sorted@[j] == (key, v);
-      1228 |                     };
-      1229 |                 };
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1230: error: admit() - admit();  // Closure value tracking through loop.
-      1153 |         fn map<F: Fn(&V) -> V>(&self, f: F) -> (table: Self) {
+      3303 |         {
+      3304 |             proof {
+      3306 |             }
+      3307 |             if self.pos < self.len {
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3350: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      3346 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1228 |                     };
-      1229 |                 };
-      1231 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1232 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1231: error: assume() [algorithmic] - assume(spec_pair_key_determines_order::<K, V>());
-      1153 |         fn map<F: Fn(&V) -> V>(&self, f: F) -> (table: Self) {
+      3348 |         {
+      3349 |             let equal = self.tree.size() == other.tree.size();
+      3351 |             equal
+      3352 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3362: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      3356 |         fn clone(&self) -> (copy: Self)
             ...
-      1229 |                 };
-      1230 |                 admit();  // Closure value tracking through loop.
-      1232 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1233 |                 assume(view_ord_consistent::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1232: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1153 |         fn map<F: Fn(&V) -> V>(&self, f: F) -> (table: Self) {
+      3360 |                 tree: self.tree.clone(),
+      3361 |             };
+      3363 |             copy
+      3364 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3367: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include result.spec_orderedtablestper_wf() for return type OrderedTableStPer
+      3356 |         fn clone(&self) -> (copy: Self)
             ...
-      1230 |                 admit();  // Closure value tracking through loop.
-      1231 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1233 |                 assume(view_ord_consistent::<K>());
-      1234 |                 assume(obeys_feq_fulls::<K, V>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1233: error: assume() [algorithmic] - assume(view_ord_consistent::<K>());
-      1153 |         fn map<F: Fn(&V) -> V>(&self, f: F) -> (table: Self) {
-            ...
-      1231 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1232 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1234 |                 assume(obeys_feq_fulls::<K, V>());
-      1235 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1234: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
-      1153 |         fn map<F: Fn(&V) -> V>(&self, f: F) -> (table: Self) {
-            ...
-      1232 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1233 |                 assume(view_ord_consistent::<K>());
-      1235 |             }
-      1236 |             mapped
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1286: error: assume() [algorithmic] - assume(spec_pair_key_determines_order::<K, V>());
-      1239 |         fn filter<F: Fn(&K, &V) -> B>(
-            ...
-      1284 |                 };
-      1285 |                 vstd::set_lib::lemma_len_subset(filtered_tree@, self.tree@);
-      1287 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1288 |                 assume(view_ord_consistent::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1287: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1239 |         fn filter<F: Fn(&K, &V) -> B>(
-            ...
-      1285 |                 vstd::set_lib::lemma_len_subset(filtered_tree@, self.tree@);
-      1286 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1288 |                 assume(view_ord_consistent::<K>());
-      1289 |                 assume(obeys_feq_fulls::<K, V>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1288: error: assume() [algorithmic] - assume(view_ord_consistent::<K>());
-      1239 |         fn filter<F: Fn(&K, &V) -> B>(
-            ...
-      1286 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1287 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1289 |                 assume(obeys_feq_fulls::<K, V>());
-      1290 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1289: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
-      1239 |         fn filter<F: Fn(&K, &V) -> B>(
-            ...
-      1287 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1288 |                 assume(view_ord_consistent::<K>());
-      1290 |             }
-      1291 |             filtered
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1375: error: admit() - admit();
-      1295 |         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self) {
-            ...
-      1373 |                 lemma_pair_set_to_map_dom_finite(new_tree@);
-      1374 |                 lemma_pair_set_to_map_dom_finite(old_tree);
-      1376 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1377 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1376: error: assume() [algorithmic] - assume(spec_pair_key_determines_order::<K, V>());
-      1295 |         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self) {
-            ...
-      1374 |                 lemma_pair_set_to_map_dom_finite(old_tree);
-      1375 |                 admit();
-      1377 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1378 |                 assume(view_ord_consistent::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1377: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1295 |         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self) {
-            ...
-      1375 |                 admit();
-      1376 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1378 |                 assume(view_ord_consistent::<K>());
-      1379 |                 assume(obeys_feq_fulls::<K, V>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1378: error: assume() [algorithmic] - assume(view_ord_consistent::<K>());
-      1295 |         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self) {
-            ...
-      1376 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1377 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1379 |                 assume(obeys_feq_fulls::<K, V>());
-      1380 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1379: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
-      1295 |         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self) {
-            ...
-      1377 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1378 |                 assume(view_ord_consistent::<K>());
-      1380 |             }
-      1381 |             table
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1549: error: admit() - admit();
-      1385 |         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self) {
-            ...
-      1547 |                 lemma_pair_set_to_map_dom_finite(new_tree@);
-      1548 |                 lemma_pair_set_to_map_dom_finite(old_tree);
-      1550 |             }
-      1551 |             table
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1626: error: admit() - admit();
-      1555 |         fn difference(&self, other: &Self) -> (table: Self) {
-            ...
-      1624 |                 lemma_pair_set_to_map_dom_finite(new_tree@);
-      1625 |                 lemma_pair_set_to_map_dom_finite(old_tree);
-      1627 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1628 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1627: error: assume() [algorithmic] - assume(spec_pair_key_determines_order::<K, V>());
-      1555 |         fn difference(&self, other: &Self) -> (table: Self) {
-            ...
-      1625 |                 lemma_pair_set_to_map_dom_finite(old_tree);
-      1626 |                 admit();
-      1628 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1629 |                 assume(view_ord_consistent::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1628: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1555 |         fn difference(&self, other: &Self) -> (table: Self) {
-            ...
-      1626 |                 admit();
-      1627 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1629 |                 assume(view_ord_consistent::<K>());
-      1630 |                 assume(obeys_feq_fulls::<K, V>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1629: error: assume() [algorithmic] - assume(view_ord_consistent::<K>());
-      1555 |         fn difference(&self, other: &Self) -> (table: Self) {
-            ...
-      1627 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1628 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1630 |                 assume(obeys_feq_fulls::<K, V>());
-      1631 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1630: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
-      1555 |         fn difference(&self, other: &Self) -> (table: Self) {
-            ...
-      1628 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1629 |                 assume(view_ord_consistent::<K>());
-      1631 |             }
-      1632 |             table
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1701: error: admit() - admit();
-      1636 |         fn restrict(&self, keys: &ArraySetStEph<K>) -> (table: Self) {
-            ...
-      1699 |                 lemma_pair_set_to_map_dom_finite(new_tree@);
-      1700 |                 lemma_pair_set_to_map_dom_finite(old_tree);
-      1702 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1703 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1702: error: assume() [algorithmic] - assume(spec_pair_key_determines_order::<K, V>());
-      1636 |         fn restrict(&self, keys: &ArraySetStEph<K>) -> (table: Self) {
-            ...
-      1700 |                 lemma_pair_set_to_map_dom_finite(old_tree);
-      1701 |                 admit();
-      1703 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1704 |                 assume(view_ord_consistent::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1703: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1636 |         fn restrict(&self, keys: &ArraySetStEph<K>) -> (table: Self) {
-            ...
-      1701 |                 admit();
-      1702 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1704 |                 assume(view_ord_consistent::<K>());
-      1705 |                 assume(obeys_feq_fulls::<K, V>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1704: error: assume() [algorithmic] - assume(view_ord_consistent::<K>());
-      1636 |         fn restrict(&self, keys: &ArraySetStEph<K>) -> (table: Self) {
-            ...
-      1702 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1703 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1705 |                 assume(obeys_feq_fulls::<K, V>());
-      1706 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1705: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
-      1636 |         fn restrict(&self, keys: &ArraySetStEph<K>) -> (table: Self) {
-            ...
-      1703 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1704 |                 assume(view_ord_consistent::<K>());
-      1706 |             }
-      1707 |             table
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1776: error: admit() - admit();
-      1711 |         fn subtract(&self, keys: &ArraySetStEph<K>) -> (table: Self) {
-            ...
-      1774 |                 lemma_pair_set_to_map_dom_finite(new_tree@);
-      1775 |                 lemma_pair_set_to_map_dom_finite(old_tree);
-      1777 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1778 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1777: error: assume() [algorithmic] - assume(spec_pair_key_determines_order::<K, V>());
-      1711 |         fn subtract(&self, keys: &ArraySetStEph<K>) -> (table: Self) {
-            ...
-      1775 |                 lemma_pair_set_to_map_dom_finite(old_tree);
-      1776 |                 admit();
-      1778 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1779 |                 assume(view_ord_consistent::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1778: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1711 |         fn subtract(&self, keys: &ArraySetStEph<K>) -> (table: Self) {
-            ...
-      1776 |                 admit();
-      1777 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1779 |                 assume(view_ord_consistent::<K>());
-      1780 |                 assume(obeys_feq_fulls::<K, V>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1779: error: assume() [algorithmic] - assume(view_ord_consistent::<K>());
-      1711 |         fn subtract(&self, keys: &ArraySetStEph<K>) -> (table: Self) {
-            ...
-      1777 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1778 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1780 |                 assume(obeys_feq_fulls::<K, V>());
-      1781 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1780: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
-      1711 |         fn subtract(&self, keys: &ArraySetStEph<K>) -> (table: Self) {
-            ...
-      1778 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1779 |                 assume(view_ord_consistent::<K>());
-      1781 |             }
-      1782 |             table
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1844: error: admit() - admit();
-      1822 |         fn first_key_iter(&self) -> (first: Option<K>)
-            ...
-      1842 |                         assert(self.tree@.contains(min_pair@));
-      1843 |                         lemma_pair_in_set_map_contains(self.tree@, min_pair.0@, min_pair.1@);
-      1845 |                     }
-      1846 |                     Some(k)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:2261: error: admit() - admit();
-      2161 |         fn split_key_iter(&self, k: &K) -> (split: (Self, Option<V>, Self))
-            ...
-      2259 |                 lemma_pair_set_to_map_dom_finite(left_tree@);
-      2260 |                 lemma_pair_set_to_map_dom_finite(right_tree@);
-      2262 |             }
-      2263 |             (left_table, found_val, right_table)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:2339: error: admit() - admit();
-      2275 |         fn get_key_range_iter(&self, k1: &K, k2: &K) -> (range: Self) {
-            ...
-      2337 |                 lemma_pair_set_to_map_dom_finite(new_tree@);
-      2338 |                 lemma_pair_set_to_map_dom_finite(self.tree@);
-      2340 |             }
-      2341 |             range
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:2381: error: admit() - proof { admit(); }
-      2351 |         fn rank_key_iter(&self, k: &K) -> (rank: usize)
-            ...
-      2379 |                 i = i + 1;
-      2380 |             }
-      2382 |             count
-      2383 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:2433: error: admit() - proof { admit(); }
-      2386 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            ...
-      2431 |                     j = j + 1;
-      2432 |                 }
-      2434 |                 result_key
-      2435 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:2534: error: admit() - admit();
-      2445 |         fn split_rank_key_iter(&self, i: usize) -> (split: (Self, Self))
-            ...
-      2532 |                 lemma_pair_set_to_map_dom_finite(left_tree@);
-      2533 |                 lemma_pair_set_to_map_dom_finite(right_tree@);
-      2535 |             }
-      2536 |             (left_table, right_table)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:2614: error: assume() [algorithmic] - assume(iter_invariant(self));
-      2593 |         fn next(&mut self) -> (next: Option<Pair<K, V>>)
-            ...
-      2612 |         {
-      2613 |             proof {
-      2615 |             }
-      2616 |             if self.pos < self.len {
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:2659: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2655 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      2657 |         {
-      2658 |             let equal = self.tree.size() == other.tree.size();
-      2660 |             equal
-      2661 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:2671: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2665 |         fn clone(&self) -> (copy: Self)
-            ...
-      2669 |                 tree: self.tree.clone(),
-      2670 |             };
-      2672 |             copy
-      2673 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:2676: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include result.spec_orderedtablestper_wf() for return type OrderedTableStPer
-      2665 |         fn clone(&self) -> (copy: Self)
-            ...
-      2674 |     }
-      2675 | 
-      2677 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
-      2678 |     ) -> (result: OrderedTableStPer<K, V>)
-   Holes: 58 total
-      45 × assume()
-      13 × admit()
+      3365 |     }
+      3366 | 
+      3368 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
+      3369 |     ) -> (result: OrderedTableStPer<K, V>)
+   Holes: 21 total
+      21 × assume()
    Proof functions: 12 total (12 clean, 0 holed)
 ✓ src/Chap44/DocumentIndex.rs
    1 clean proof function
@@ -3249,14 +2730,14 @@ Function Specs:
    7575 total fns
 
 
-Holes Found: 107 (actionable)
-   81 × assume() [algorithmic] (75%)
-   25 × admit() (23%)
-   1 × unsafe {} (0%)
-Real Proof Targets: 107 (all actionable)
+Holes Found: 34 (actionable)
+   31 × assume() [algorithmic] (91%)
+   1 × unsafe {} (2%)
+   2 × external_body (5%)
+Real Proof Targets: 34 (all actionable)
 
 Per-Chapter Holes:
-  Chap39:  3  Chap43:104
+  Chap39:  1  Chap43: 33
 
 Warnings: 193 total
    2 × fn_missing_requires
@@ -3264,20 +2745,21 @@ Warnings: 193 total
    12 × fn_missing_wf_ensures
    155 × assume_eq_clone_workaround
 
-Accepted (reviewed): 60 total
+Accepted (reviewed): 62 total
    26 × external_body_accept_hole
-   14 × accept()
+   16 × accept()
    10 × trivial_spec_wf
    4 × unsafe_block_accept_hole
    3 × external_accept_hole
+   1 × struct_outside_verus_accept_hole
    1 × enum_outside_verus_accept_hole
    1 × external_type_specification_accept_hole
-   1 × struct_outside_verus_accept_hole
 
 Accepted by Chapter:
   Chap02:  6  Chap11:  6  Chap12: 19
   Chap18:  8  Chap19:  3  Chap30:  7
-  Chap37:  5  Chap40:  3  Chap41:  2
+  Chap37:  5  Chap39:  2  Chap40:  3
+  Chap41:  2
 
 Structural (info only): 194
    161 × RWLOCK_GHOST
@@ -3296,67 +2778,67 @@ Structural (info only): 194
 4.1. Worst src/* Directories (all dirs, by holes)
 =================================================================
 
-   1  Chap43  (104 holes, 10 files)
-   2  Chap39  (3 holes, 4 files)
-   3  Chap37  (0 holes, 19 files)
-   4  Chap50  (0 holes, 8 files)
-   5  Chap66  (0 holes, 2 files)
-   6  Chap26  (0 holes, 8 files)
-   7  Chap28  (0 holes, 11 files)
-   8  Chap12  (0 holes, 3 files)
-   9  Chap56  (0 holes, 10 files)
-   10  Chap30  (0 holes, 1 files)
-   11  Chap57  (0 holes, 3 files)
-   12  Chap06  (0 holes, 21 files)
-   13  Chap21  (0 holes, 5 files)
-   14  Chap64  (0 holes, 3 files)
-   15  Chap40  (0 holes, 3 files)
-   16  Chap17  (0 holes, 1 files)
-   17  Chap58  (0 holes, 2 files)
-   18  Chap02  (0 holes, 2 files)
-   19  ParaPairs  (0 holes, 1 files)
-   20  Chap18  (0 holes, 7 files)
-   21  Chap65  (0 holes, 3 files)
-   22  Chap44  (0 holes, 1 files)
-   23  Chap38  (0 holes, 2 files)
-   24  Chap23  (0 holes, 2 files)
-   25  Chap03  (0 holes, 1 files)
-   26  Chap51  (0 holes, 8 files)
-   27  Chap05  (0 holes, 5 files)
-   28  Chap52  (0 holes, 14 files)
-   29  Chap62  (0 holes, 4 files)
-   30  Chap53  (0 holes, 5 files)
-   31  Chap63  (0 holes, 2 files)
-   32  Chap11  (0 holes, 5 files)
-   33  Concurrency  (0 holes, 1 files)
-   34  Chap42  (0 holes, 3 files)
-   35  Chap49  (0 holes, 8 files)
-   36  Chap45  (0 holes, 6 files)
-   37  Chap41  (0 holes, 6 files)
-   38  Chap27  (0 holes, 4 files)
-   39  Chap59  (0 holes, 4 files)
-   40  Chap36  (0 holes, 3 files)
-   41  Chap55  (0 holes, 8 files)
-   42  Chap35  (0 holes, 4 files)
-   43  Chap47  (0 holes, 9 files)
-   44  Chap54  (0 holes, 4 files)
+   1  Chap43  (33 holes, 10 files)
+   2  Chap39  (1 holes, 4 files)
+   3  Chap27  (0 holes, 4 files)
+   4  Chap51  (0 holes, 8 files)
+   5  Chap05  (0 holes, 5 files)
+   6  Chap57  (0 holes, 3 files)
+   7  Chap50  (0 holes, 8 files)
+   8  Chap65  (0 holes, 3 files)
+   9  Chap59  (0 holes, 4 files)
+   10  Chap06  (0 holes, 21 files)
+   11  Chap55  (0 holes, 8 files)
+   12  Chap02  (0 holes, 2 files)
+   13  Chap54  (0 holes, 4 files)
+   14  Chap58  (0 holes, 2 files)
+   15  Chap52  (0 holes, 14 files)
+   16  Chap45  (0 holes, 6 files)
+   17  Chap64  (0 holes, 3 files)
+   18  Chap36  (0 holes, 3 files)
+   19  Chap56  (0 holes, 10 files)
+   20  Chap61  (0 holes, 4 files)
+   21  Chap28  (0 holes, 11 files)
+   22  Chap40  (0 holes, 3 files)
+   23  Chap12  (0 holes, 3 files)
+   24  Concurrency  (0 holes, 1 files)
+   25  Chap44  (0 holes, 1 files)
+   26  Chap37  (0 holes, 19 files)
+   27  Chap49  (0 holes, 8 files)
+   28  Chap38  (0 holes, 2 files)
+   29  Chap63  (0 holes, 2 files)
+   30  ParaPairs  (0 holes, 1 files)
+   31  Chap41  (0 holes, 6 files)
+   32  Chap18  (0 holes, 7 files)
+   33  Chap47  (0 holes, 9 files)
+   34  Chap11  (0 holes, 5 files)
+   35  Chap53  (0 holes, 5 files)
+   36  Chap66  (0 holes, 2 files)
+   37  Chap26  (0 holes, 8 files)
+   38  Chap21  (0 holes, 5 files)
+   39  Chap03  (0 holes, 1 files)
+   40  Chap23  (0 holes, 2 files)
+   41  Chap42  (0 holes, 3 files)
+   42  Chap30  (0 holes, 1 files)
+   43  Chap17  (0 holes, 1 files)
+   44  Chap35  (0 holes, 4 files)
    45  Chap19  (0 holes, 4 files)
-   46  Chap61  (0 holes, 4 files)
+   46  Chap62  (0 holes, 4 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
 =================================================================
 
-   1  src/Chap43/OrderedTableStPer.rs  (58 holes)
-   2  src/Chap43/OrderedTableStEph.rs  (43 holes)
+   1  src/Chap43/OrderedTableStPer.rs  (21 holes)
+   2  src/Chap43/OrderedTableStEph.rs  (9 holes)
    3  src/Chap43/OrderedSetStEph.rs  (3 holes)
-   4  src/Chap39/BSTTreapStEph.rs  (3 holes)
+   4  src/Chap39/BSTTreapStEph.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
 =================================================================
 
-   1  src/Chap39  (3 holes, 4 files)
+   1  src/Chap39  (1 holes, 4 files)
 
 =================================================================
 4.4. Not Verusified
@@ -3374,7 +2856,7 @@ Structural (info only): 194
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 44 clean, 2 holed, 107 holes (global), 244 modules
+Chapter Status — 46 chapters, 44 clean, 2 holed, 34 holes (global), 244 modules
 
 CLEAN CHAPTERS (44)
   Chapter        Files
@@ -3424,11 +2906,11 @@ CLEAN CHAPTERS (44)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (2) — 107 holes
+HOLED CHAPTERS (2) — 34 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
-  Chap39             3     4  YES       
-  Chap43           104    10  internal  Chap43::OrderedTableStPer, Chap43::OrderedTableStEph, Chap43::OrderedSetStEph
+  Chap39             1     4  YES       
+  Chap43            33    10  internal  Chap43::OrderedTableStPer, Chap43::OrderedTableStEph, Chap43::OrderedSetStEph
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
@@ -3439,8 +2921,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-24 07:30:10 -07:00
-Ended:     2026-03-24 07:30:12 -07:00
-Duration:  1779ms
+Started:   2026-03-24 08:08:04 -07:00
+Ended:     2026-03-24 08:08:05 -07:00
+Duration:  1614ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log
