@@ -4,6 +4,7 @@
 pub mod OrderedTableStPer {
 
     use std::cmp::Ordering::{Equal, Greater, Less};
+    use std::vec::IntoIter;
 
     use crate::Chap38::BSTParaStEph::BSTParaStEph::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
@@ -3229,44 +3230,36 @@ broadcast use {
         pub fn iter(&self) -> (it: OrderedTableStPerIter<K, V>)
             requires
                 self.spec_orderedtablestper_wf(),
-                obeys_feq_full::<Pair<K, V>>(),
             ensures
                 it@.0 == 0,
                 it@.1.len() == self.tree@.len(),
                 iter_invariant(&it),
         {
             let sorted = self.tree.in_order();
-            let len = sorted.length();
-            OrderedTableStPerIter { sorted, pos: 0, len }
+            OrderedTableStPerIter { inner: sorted.seq.into_iter() }
         }
     }
 
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
     pub struct OrderedTableStPerIter<K: StT + Ord, V: StT + Ord> {
-        pub sorted: ArraySeqStPerS<Pair<K, V>>,
-        pub pos: usize,
-        pub len: usize,
+        pub inner: IntoIter<Pair<K, V>>,
     }
 
     impl<K: StT + Ord, V: StT + Ord> View for OrderedTableStPerIter<K, V> {
-        type V = (int, Seq<(K::V, V::V)>);
-        open spec fn view(&self) -> (int, Seq<(K::V, V::V)>) { (self.pos as int, self.sorted@) }
+        type V = (int, Seq<Pair<K, V>>);
+        open spec fn view(&self) -> (int, Seq<Pair<K, V>>) { self.inner@ }
     }
 
     pub open spec fn iter_invariant<K: StT + Ord, V: StT + Ord>(it: &OrderedTableStPerIter<K, V>) -> bool {
-        &&& 0 <= it@.0 <= it@.1.len()
-        &&& it.len as nat == it.sorted@.len()
-        &&& obeys_feq_full::<Pair<K, V>>()
+        0 <= it@.0 <= it@.1.len()
     }
 
     impl<K: StT + Ord, V: StT + Ord> std::iter::Iterator for OrderedTableStPerIter<K, V> {
         type Item = Pair<K, V>;
 
         fn next(&mut self) -> (next: Option<Pair<K, V>>)
-            ensures
-                iter_invariant(self),
-                ({
+            ensures ({
                 let (old_index, old_seq) = old(self)@;
                 match next {
                     None => {
@@ -3278,23 +3271,12 @@ broadcast use {
                         &&& 0 <= old_index < old_seq.len()
                         &&& new_seq == old_seq
                         &&& new_index == old_index + 1
-                        &&& element@ == old_seq[old_index]
+                        &&& element == old_seq[old_index]
                     },
                 }
             })
         {
-            proof {
-                assume(iter_invariant(self));
-            }
-            if self.pos < self.len {
-                let elem = self.sorted.nth(self.pos);
-                let cloned = elem.clone_plus();
-                proof { lemma_cloned_view_eq(*elem, cloned); }
-                self.pos = self.pos + 1;
-                Some(cloned)
-            } else {
-                None
-            }
+            self.inner.next()
         }
     }
 
@@ -3304,7 +3286,6 @@ broadcast use {
         fn into_iter(self) -> (it: Self::IntoIter)
             requires
                 self.spec_orderedtablestper_wf(),
-                obeys_feq_full::<Pair<K, V>>(),
             ensures
                 it@.0 == 0,
                 it@.1.len() == self.tree@.len(),

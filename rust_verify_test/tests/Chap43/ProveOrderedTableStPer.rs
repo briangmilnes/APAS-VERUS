@@ -3,10 +3,6 @@
 //! Loop patterns tested (see docs/APAS-VERUSIterators.rs):
 //!   - loop-borrow-iter:   `loop { ... t.iter() ... }`
 //!   - loop-borrow-into:   `loop { ... (&t).into_iter() ... }`
-//!
-//! Note: for-borrow-iter and for-borrow-into patterns require ForLoopGhostIteratorNew,
-//! which is not implemented for the owned OrderedTableStPerIter (View type mismatch
-//! between Pair<K,V> and (K::V, V::V) makes ghost_peek_next non-trivial).
 
 #[macro_use]
 #[path = "../common/mod.rs"]
@@ -40,20 +36,19 @@ test_verify_one_file! {
                 .insert(3u64, 30u64);
 
             let mut it: OrderedTableStPerIter<u64, u64> = t.iter();
-            let ghost iter_seq: Seq<(u64, u64)> = it@.1;
-            let ghost mut items: Seq<(u64, u64)> = Seq::empty();
+            let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
+            let ghost mut items: Seq<Pair<u64, u64>> = Seq::empty();
 
             #[verifier::loop_isolation(false)]
             loop
                 invariant
                     items =~= iter_seq.take(it@.0 as int),
-                    iter_invariant(&it),
+                    0 <= it@.0 <= iter_seq.len(),
                     iter_seq == it@.1,
-                    it@.0 <= iter_seq.len(),
                 decreases iter_seq.len() - it@.0,
             {
                 if let Some(x) = it.next() {
-                    proof { items = items.push(x@); }
+                    proof { items = items.push(x); }
                 } else {
                     break;
                 }
@@ -92,20 +87,19 @@ test_verify_one_file! {
                 .insert(3u64, 30u64);
 
             let mut it: OrderedTableStPerIter<u64, u64> = (&t).into_iter();
-            let ghost iter_seq: Seq<(u64, u64)> = it@.1;
-            let ghost mut items: Seq<(u64, u64)> = Seq::empty();
+            let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
+            let ghost mut items: Seq<Pair<u64, u64>> = Seq::empty();
 
             #[verifier::loop_isolation(false)]
             loop
                 invariant
                     items =~= iter_seq.take(it@.0 as int),
-                    iter_invariant(&it),
+                    0 <= it@.0 <= iter_seq.len(),
                     iter_seq == it@.1,
-                    it@.0 <= iter_seq.len(),
                 decreases iter_seq.len() - it@.0,
             {
                 if let Some(x) = it.next() {
-                    proof { items = items.push(x@); }
+                    proof { items = items.push(x); }
                 } else {
                     break;
                 }
