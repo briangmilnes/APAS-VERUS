@@ -4,7 +4,7 @@
 //! O(1) slicing via shared `Arc<Vec<T>>` backing with offset/length window.
 //! Multiple slices can share the same backing storage; `slice()` and
 //! `subseq_copy()` are O(1) (just an Arc ref-count bump + window adjust).
-//! Iterators delegate to vstd's fully-specified `std::slice::Iter`.
+//! Iterators wrap vstd's `std::slice::Iter` following the iterator standard.
 
 // Table of Contents
 // 1. module
@@ -69,14 +69,6 @@ pub mod ArraySeqMtEphSlice {
 
     // 6. spec fns
 
-    impl<T> ArraySeqMtEphSliceS<T> {
-        /// The raw backing subrange as a Seq<T> (not View-mapped).
-        /// Connects arc_vec_as_slice result to spec_len/spec_index.
-        pub open spec fn spec_backing_seq(&self) -> Seq<T> {
-            (*self.data)@.subrange(self.start as int, (self.start + self.len) as int)
-        }
-    }
-
     // 8. traits
 
     pub trait ArraySeqMtEphSliceTrait<T: Eq + Clone>: Sized {
@@ -86,6 +78,9 @@ pub mod ArraySeqMtEphSlice {
 
         spec fn spec_index(&self, i: int) -> T
             recommends self.spec_arrayseqmtephslice_wf(), i < self.spec_len();
+
+        /// The raw backing subrange as a Seq<T> (not View-mapped).
+        spec fn spec_backing_seq(&self) -> Seq<T>;
 
         fn length(&self) -> (len: usize)
             requires self.spec_arrayseqmtephslice_wf(),
@@ -150,6 +145,13 @@ pub mod ArraySeqMtEphSlice {
                 new_seq.spec_len() == length as int,
                 forall|i: int| #![trigger new_seq.spec_index(i)]
                     0 <= i < length ==> new_seq.spec_index(i) == init_value;
+
+        fn iter(&self) -> (it: ArraySeqMtEphSliceIter<'_, T>)
+            requires self.spec_arrayseqmtephslice_wf(),
+            ensures
+                it@.0 == 0,
+                it@.1 == self.spec_backing_seq(),
+                iter_invariant(&it);
     }
 
     // 9. impls
@@ -166,6 +168,10 @@ pub mod ArraySeqMtEphSlice {
 
         open spec fn spec_index(&self, i: int) -> T {
             (*self.data)@[self.start as int + i]
+        }
+
+        open spec fn spec_backing_seq(&self) -> Seq<T> {
+            (*self.data)@.subrange(self.start as int, (self.start + self.len) as int)
         }
 
         fn length(&self) -> (len: usize) {
@@ -238,45 +244,126 @@ pub mod ArraySeqMtEphSlice {
                 len: length,
             }
         }
+
+        fn iter(&self) -> (it: ArraySeqMtEphSliceIter<'_, T>) {
+            let sl: &[T] = arc_vec_as_slice(&self.data, self.start, self.len);
+            assert(sl@.len() == self.len);
+            assert(sl@ == self.spec_backing_seq());
+            ArraySeqMtEphSliceIter { inner: sl.iter() }
+        }
     }
 
     // 10. iterators
 
-    // No custom iterator type. We return vstd's std::slice::Iter<'a, T>
-    // directly, inheriting all of its specs (View, ForLoopGhostIterator, etc.).
+    #[verifier::reject_recursive_types(T)]
+    pub struct ArraySeqMtEphSliceIter<'a, T> {
+        pub inner: std::slice::Iter<'a, T>,
+    }
 
-    impl<'a, T: Eq + Clone> ArraySeqMtEphSliceS<T> {
-        pub fn iter(&'a self) -> (it: std::slice::Iter<'a, T>)
-            requires self.spec_arrayseqmtephslice_wf(),
-            ensures
-                it@.0 == 0,
-                it@.1.len() == self.spec_len(),
-                forall|i: int| #![trigger it@.1[i]]
-                    0 <= i < self.spec_len() ==> it@.1[i] == self.spec_index(i),
+    impl<'a, T> View for ArraySeqMtEphSliceIter<'a, T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
+    }
+
+    pub open spec fn iter_invariant<'a, T>(it: &ArraySeqMtEphSliceIter<'a, T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    impl<'a, T> std::iter::Iterator for ArraySeqMtEphSliceIter<'a, T> {
+        type Item = &'a T;
+
+        fn next(&mut self) -> (next: Option<&'a T>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
+                match next {
+                    None => {
+                        &&& self@ == old(self)@
+                        &&& old_index >= old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = self@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& element == old_seq[old_index]
+                    },
+                }
+            })
         {
-            let sl: &[T] = arc_vec_as_slice(&self.data, self.start, self.len);
-            assert(sl@.len() == self.len);
-            assert(sl@ == self.spec_backing_seq());
-            sl.iter()
+            self.inner.next()
+        }
+    }
+
+    /// Ghost iterator for ForLoopGhostIterator support.
+    #[verifier::reject_recursive_types(T)]
+    pub struct ArraySeqMtEphSliceGhostIterator<'a, T> {
+        pub pos: int,
+        pub elements: Seq<T>,
+        pub phantom: core::marker::PhantomData<&'a T>,
+    }
+
+    impl<'a, T> View for ArraySeqMtEphSliceGhostIterator<'a, T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+    }
+
+    impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for ArraySeqMtEphSliceIter<'a, T> {
+        type GhostIter = ArraySeqMtEphSliceGhostIterator<'a, T>;
+        open spec fn ghost_iter(&self) -> ArraySeqMtEphSliceGhostIterator<'a, T> {
+            ArraySeqMtEphSliceGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for ArraySeqMtEphSliceGhostIterator<'a, T> {
+        type ExecIter = ArraySeqMtEphSliceIter<'a, T>;
+        type Item = T;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &ArraySeqMtEphSliceIter<'a, T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<T> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &ArraySeqMtEphSliceIter<'a, T>) -> ArraySeqMtEphSliceGhostIterator<'a, T> {
+            Self { pos: self.pos + 1, ..*self }
         }
     }
 
     impl<'a, T: Eq + Clone> std::iter::IntoIterator for &'a ArraySeqMtEphSliceS<T> {
         type Item = &'a T;
-        type IntoIter = std::slice::Iter<'a, T>;
+        type IntoIter = ArraySeqMtEphSliceIter<'a, T>;
 
-        fn into_iter(self) -> (it: std::slice::Iter<'a, T>)
+        fn into_iter(self) -> (it: Self::IntoIter)
             requires self.spec_arrayseqmtephslice_wf(),
             ensures
                 it@.0 == 0,
-                it@.1.len() == self.spec_len(),
-                forall|i: int| #![trigger it@.1[i]]
-                    0 <= i < self.spec_len() ==> it@.1[i] == self.spec_index(i),
+                it@.1 == self.spec_backing_seq(),
+                iter_invariant(&it),
         {
             let sl: &[T] = arc_vec_as_slice(&self.data, self.start, self.len);
             assert(sl@.len() == self.len);
             assert(sl@ == self.spec_backing_seq());
-            sl.iter()
+            ArraySeqMtEphSliceIter { inner: sl.iter() }
         }
     }
 

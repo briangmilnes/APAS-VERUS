@@ -2,23 +2,6 @@
 
 //! MtPer (immutable, thread-safe, structurally shared) AVL tree sequence using Arc path-copying.
 
-//  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
-
-//		1. module
-
 // Table of Contents
 // 1. module
 // 2. imports
@@ -26,10 +9,12 @@
 // 4. type definitions
 // 5. view impls
 // 6. spec fns
-// 7. proof fns
+// 7. proof fns/broadcast groups
 // 8. traits
 // 9. impls
+// 10. iterators
 // 11. derive impls in verus!
+// 12. macros
 // 13. derive impls outside verus!
 
 // 1. module
@@ -51,14 +36,10 @@ pub mod AVLTreeSeqMtPer {
 
     verus! {
 
-    //		2. imports
-
     // 2. imports
 
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
-
-    //		3. broadcast use
 
     // 3. broadcast use
 
@@ -69,8 +50,6 @@ pub mod AVLTreeSeqMtPer {
         vstd::seq_lib::group_seq_properties,
         vstd::seq_lib::group_to_multiset_ensures,
     };
-
-    //		4. type definitions
 
     // 4. type definitions
 
@@ -96,7 +75,19 @@ pub mod AVLTreeSeqMtPer {
         pub index: usize,
     }
 
-    //		5. view impls
+    #[verifier::reject_recursive_types(T)]
+    pub struct AVLTreeSeqMtPerBorrowIter<'a, T: StTInMtT> {
+        pub tree: &'a AVLTreeSeqMtPerS<T>,
+        pub pos: usize,
+        pub len: usize,
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct AVLTreeSeqMtPerGhostIterator<'a, T: StTInMtT> {
+        pub pos: int,
+        pub elements: Seq<T>,
+        pub phantom: core::marker::PhantomData<&'a T>,
+    }
 
     // 5. view impls
 
@@ -107,7 +98,17 @@ pub mod AVLTreeSeqMtPer {
         }
     }
 
-    //		6. spec fns
+    impl<'a, T: StTInMtT> View for AVLTreeSeqMtPerBorrowIter<'a, T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) {
+            (self.pos as int, spec_inorder_values(self.tree.root))
+        }
+    }
+
+    impl<'a, T: StTInMtT> View for AVLTreeSeqMtPerGhostIterator<'a, T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+    }
 
     // 6. spec fns
 
@@ -118,6 +119,16 @@ pub mod AVLTreeSeqMtPer {
         match link {
             None => Seq::empty(),
             Some(node) => spec_inorder(node.left) + seq![node.value@] + spec_inorder(node.right),
+        }
+    }
+
+    /// In-order traversal as a sequence of values (not view-mapped).
+    pub open spec fn spec_inorder_values<T: StTInMtT>(link: Link<T>) -> Seq<T>
+        decreases link,
+    {
+        match link {
+            None => Seq::empty(),
+            Some(node) => spec_inorder_values(node.left) + seq![node.value] + spec_inorder_values(node.right),
         }
     }
 
@@ -158,7 +169,9 @@ pub mod AVLTreeSeqMtPer {
         }
     }
 
-    //		7. proof fns/broadcast groups
+    pub open spec fn iter_invariant<'a, T: StTInMtT>(it: &AVLTreeSeqMtPerBorrowIter<'a, T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
 
     // 7. proof fns
 
@@ -177,6 +190,19 @@ pub mod AVLTreeSeqMtPer {
         }
     }
 
+    proof fn lemma_inorder_values_maps_to_inorder<T: StTInMtT>(link: Link<T>)
+        ensures spec_inorder_values(link).map_values(|t: T| t@) =~= spec_inorder(link),
+        decreases link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_inorder_values_maps_to_inorder::<T>(node.left);
+                lemma_inorder_values_maps_to_inorder::<T>(node.right);
+            }
+        }
+    }
+
     /// Under well-formedness, cached height <= cached size.
     proof fn lemma_height_le_size<T: StTInMtT>(link: &Link<T>)
         requires spec_avltreeseqmtper_wf(*link),
@@ -191,8 +217,6 @@ pub mod AVLTreeSeqMtPer {
             }
         }
     }
-
-    //		8. traits
 
     // 8. traits
 
@@ -242,9 +266,14 @@ pub mod AVLTreeSeqMtPer {
 
         fn values_in_order(&self) -> (values: Vec<T>)
             ensures true;
-    }
 
-    //		9. impls
+        fn iter<'a>(&'a self) -> (it: AVLTreeSeqMtPerBorrowIter<'a, T>)
+            requires self.spec_avltreeseqmtper_wf(),
+            ensures
+                it@.0 == 0int,
+                it@.1.map_values(|t: T| t@) =~= self.spec_seq(),
+                iter_invariant(&it);
+    }
 
     // 9. impls
 
@@ -581,8 +610,6 @@ pub mod AVLTreeSeqMtPer {
         true
     }
 
-    // 9. trait impl
-
     impl<T: StTInMtT> AVLTreeSeqMtPerTrait<T> for AVLTreeSeqMtPerS<T> {
         open spec fn spec_seq(&self) -> Seq<T::V> {
             spec_inorder(self.root)
@@ -677,6 +704,15 @@ pub mod AVLTreeSeqMtPer {
             inorder_collect(&self.root, &mut out);
             out
         }
+
+        fn iter<'a>(&'a self) -> (it: AVLTreeSeqMtPerBorrowIter<'a, T>) {
+            proof { lemma_inorder_values_maps_to_inorder::<T>(self.root); }
+            AVLTreeSeqMtPerBorrowIter {
+                tree: self,
+                pos: 0,
+                len: self.length(),
+            }
+        }
     }
 
     impl<T: StTInMtT> Default for AVLTreeSeqMtPerS<T> {
@@ -684,6 +720,96 @@ pub mod AVLTreeSeqMtPer {
     }
 
     // 10. iterators
+
+    impl<'a, T: StTInMtT> std::iter::Iterator for AVLTreeSeqMtPerBorrowIter<'a, T> {
+        type Item = &'a T;
+
+        #[verifier::external_body]
+        fn next(&mut self) -> (next: Option<&'a T>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
+                match next {
+                    None => {
+                        &&& self@ == old(self)@
+                        &&& old_index >= old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = self@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& element == old_seq[old_index]
+                    },
+                }
+            })
+        {
+            if self.pos >= self.len {
+                None
+            } else {
+                let result = self.tree.nth(self.pos);
+                self.pos += 1;
+                Some(result)
+            }
+        }
+    }
+
+    impl<'a, T: StTInMtT> vstd::pervasive::ForLoopGhostIteratorNew for AVLTreeSeqMtPerBorrowIter<'a, T> {
+        type GhostIter = AVLTreeSeqMtPerGhostIterator<'a, T>;
+        open spec fn ghost_iter(&self) -> AVLTreeSeqMtPerGhostIterator<'a, T> {
+            AVLTreeSeqMtPerGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, T: StTInMtT> vstd::pervasive::ForLoopGhostIterator for AVLTreeSeqMtPerGhostIterator<'a, T> {
+        type ExecIter = AVLTreeSeqMtPerBorrowIter<'a, T>;
+        type Item = T;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &AVLTreeSeqMtPerBorrowIter<'a, T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<T> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &AVLTreeSeqMtPerBorrowIter<'a, T>) -> AVLTreeSeqMtPerGhostIterator<'a, T> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, T: StTInMtT> std::iter::IntoIterator for &'a AVLTreeSeqMtPerS<T> {
+        type Item = &'a T;
+        type IntoIter = AVLTreeSeqMtPerBorrowIter<'a, T>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            requires self.spec_avltreeseqmtper_wf(),
+            ensures
+                it@.0 == 0int,
+                it@.1.map_values(|t: T| t@) =~= self.spec_seq(),
+                iter_invariant(&it),
+        {
+            self.iter()
+        }
+    }
+
+    // Consuming iterator (existing, pre-collects all values).
 
     impl<T: StTInMtT> Iterator for AVLTreeSeqMtPerIter<T> {
         type Item = T;
@@ -808,7 +934,7 @@ pub mod AVLTreeSeqMtPer {
 
 }
 
-//		12. macros
+// 12. macros
 
 #[macro_export]
 macro_rules! AVLTreeSeqMtPerLit {

@@ -1,23 +1,26 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Table of Contents Standard: the complete APAS-VERUS module template.
 //!
-//! Every APAS-VERUS source file follows this 14-section ordering. This file
-//! contains compilable code in every section, showing where each kind of
-//! definition belongs.
+//! Every APAS-VERUS source file follows this bottom-up, per-type ordering.
+//! Each type gets a complete 4-10 cycle (struct, view, specs, proofs, trait,
+//! impl, iterators) grouped together, ordered leaf-first (bottom-up). This
+//! makes it easy for a human reader to skip to the type they care about.
 //!
-//! Sections 1-12 live inside verus!. Sections 13-14 live outside verus!, but
-//! inside the pub mod.
+//! Sections 1-3 are global (one per file). Sections 4-10 repeat per type,
+//! with letter suffixes (a, b, c...) and the type name in the header comment.
+//! Section 11 (coarse locking) appears once, right before end of verus!.
+//! Sections 12-14 also repeat per type, bottom-up.
 //!
-//! Key pattern demonstrated: spec fns (section 6) can have looser bounds
-//! (T: View) than traits/impls (sections 8-9) which need exec bounds
-//! (T: View + Copy + PartialEq). This lets spec fns be reusable across
-//! more contexts.
+//! This file demonstrates a module with two structs: InnerS (leaf) and
+//! ExampleS (depends on InnerS). InnerS comes first (bottom-up). ExampleS
+//! has iterators, showing that iterator structs, views, ghost structs, and
+//! all iterator impls live together in section 10 with their parent type.
 //!
 //! Section 11 (top level coarse locking) is for Mt modules that wrap a verified
 //! St struct in an RwLock. It contains the complete Layer 2: Inv struct,
 //! RwLockPredicate impl, Locked struct, type_invariant inherent impl, Locked
-//! View, LockedTrait, and LockedTrait impl. Inside verus!, after iterators,
-//! before derive impls. Omit for files that do not use this pattern.
+//! View, LockedTrait, and LockedTrait impl. Inside verus!, after all type
+//! groups, before derive impls. Omit for files that do not use this pattern.
 //! See toplevel_coarse_rwlocks_for_mt_modules.rs for the full standard.
 //!
 //! Reference: src/Chap05/SetStEph.rs (the only chapter file with all 14 sections).
@@ -25,17 +28,26 @@
 //	1. module
 //	2. imports
 //	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
-//	10. iterators
+//	4a. type definitions — struct InnerS
+//	5a. view impls — struct InnerS
+//	6a. spec fns — struct InnerS
+//	7a. proof fns/broadcast groups — struct InnerS
+//	8a. traits — struct InnerS
+//	9a. impls — struct InnerS
+//	4b. type definitions — struct ExampleS
+//	5b. view impls — struct ExampleS
+//	6b. spec fns — struct ExampleS
+//	7b. proof fns/broadcast groups — struct ExampleS
+//	8b. traits — struct ExampleS
+//	9b. impls — struct ExampleS
+//	10b. iterators — struct ExampleS
 //	11. top level coarse locking
-//	12. derive impls in verus!
-//	13. macros
-//	14. derive impls outside verus!
+//	12a. derive impls in verus! — struct InnerS
+//	12b. derive impls in verus! — struct ExampleS
+//	13a. macros — struct InnerS
+//	13b. macros — struct ExampleS
+//	14a. derive impls outside verus! — struct InnerS
+//	14b. derive impls outside verus! — struct ExampleS
 //		1. module
 pub mod table_of_contents_standard {
 
@@ -57,30 +69,91 @@ pub mod table_of_contents_standard {
     // Import broadcast groups so their lemmas fire automatically.
     broadcast use vstd::seq::group_seq_axioms;
 
-    //		4. type definitions
+    // ========================================================================
+    // Type group a: InnerS (leaf type, no dependencies)
+    // ========================================================================
+
+    //		4a. type definitions — struct InnerS
+
+    pub struct InnerS {
+        pub val: u64,
+    }
+
+    //		5a. view impls — struct InnerS
+
+    impl View for InnerS {
+        type V = int;
+
+        open spec fn view(&self) -> int {
+            self.val as int
+        }
+    }
+
+    //		6a. spec fns — struct InnerS
+
+    pub open spec fn spec_inners_wf(s: &InnerS) -> bool {
+        s@ >= 0
+    }
+
+    //		7a. proof fns/broadcast groups — struct InnerS
+
+    pub broadcast proof fn lemma_inners_view_nat(s: &InnerS)
+        ensures
+            #[trigger] s@ >= 0,
+    {
+    }
+
+    pub broadcast group group_inners_lemmas {
+        lemma_inners_view_nat,
+    }
+
+    //		8a. traits — struct InnerS
+
+    pub trait InnerSTrait: Sized {
+        spec fn spec_val(&self) -> int;
+
+        fn new(val: u64) -> (s: Self)
+            ensures
+                s.spec_val() == val as int,
+        ;
+
+        fn get_val(&self) -> (v: u64)
+            ensures
+                v as int == self.spec_val(),
+        ;
+    }
+
+    //		9a. impls — struct InnerS
+
+    impl InnerSTrait for InnerS {
+        open spec fn spec_val(&self) -> int {
+            self@
+        }
+
+        fn new(val: u64) -> (s: Self) {
+            InnerS { val }
+        }
+
+        fn get_val(&self) -> (v: u64) {
+            self.val
+        }
+    }
+
+    // InnerS has no iterators, so no 10a section.
+
+    // ========================================================================
+    // Type group b: ExampleS (depends on InnerS, has iterators)
+    // ========================================================================
+
+    //		4b. type definitions — struct ExampleS
 
     #[verifier::reject_recursive_types(T)]
     pub struct ExampleS<T> {
         pub seq: Vec<T>,
     }
 
-    // Component 1: Custom iterator struct.
-    #[verifier::reject_recursive_types(T)]
-    pub struct ExampleIter<'a, T> {
-        pub inner: std::slice::Iter<'a, T>,
-    }
+    //		5b. view impls — struct ExampleS
 
-    // Component 5: Ghost iterator struct.
-    #[verifier::reject_recursive_types(T)]
-    pub struct ExampleGhostIterator<'a, T> {
-        pub pos: int,
-        pub elements: Seq<T>,
-        pub phantom: core::marker::PhantomData<&'a T>,
-    }
-
-    //		5. view impls
-    //
-    // View maps the concrete type to its abstract spec type.
     impl<T> View for ExampleS<T> {
         type V = Seq<T>;
 
@@ -89,28 +162,11 @@ pub mod table_of_contents_standard {
         }
     }
 
-    // Component 2: View for iterator.
-    impl<'a, T> View for ExampleIter<'a, T> {
-        type V = (int, Seq<T>);
-
-        open spec fn view(&self) -> (int, Seq<T>) {
-            self.inner@
-        }
-    }
-
-    // Component 8: View for ghost iterator.
-    impl<'a, T> View for ExampleGhostIterator<'a, T> {
-        type V = Seq<T>;
-
-        open spec fn view(&self) -> Seq<T> {
-            self.elements.take(self.pos)
-        }
-    }
-
-    //		6. spec fns
+    //		6b. spec fns — struct ExampleS
     //
     // Spec functions can have LOOSER bounds than the trait (section 8).
     // Here: T: View (spec-only). The trait requires T: View + Copy + PartialEq.
+
     /// Well-formedness predicate. Bound is T: View, not the full exec bound.
     pub open spec fn spec_tableofcontentsstandard_wf<T: View>(s: &ExampleS<T>) -> bool {
         s@.len() >= 0
@@ -121,14 +177,8 @@ pub mod table_of_contents_standard {
         s@.len()
     }
 
-    // Component 3: iter_invariant spec fn.
-    pub open spec fn iter_invariant<'a, T>(it: &ExampleIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
+    //		7b. proof fns/broadcast groups — struct ExampleS
 
-    //		7. proof fns/broadcast groups
-    //
-    // Lemmas and broadcast groups. Proof fns are spec/proof mode only.
     /// View length is always non-negative.
     pub broadcast proof fn lemma_view_len_nat<T>(s: &ExampleS<T>)
         ensures
@@ -140,7 +190,7 @@ pub mod table_of_contents_standard {
         lemma_view_len_nat,
     }
 
-    //		8. traits
+    //		8b. traits — struct ExampleS
     //
     // Traits have the full exec bounds needed by their methods.
     // Spec functions in traits are abstract (no body) or open.
@@ -175,7 +225,8 @@ pub mod table_of_contents_standard {
         ;
     }
 
-    //		9. impls
+    //		9b. impls — struct ExampleS
+
     impl<T: View + Copy + PartialEq> ExampleTrait<T> for ExampleS<T> {
         open spec fn spec_len(&self) -> nat {
             self@.len()
@@ -213,7 +264,7 @@ pub mod table_of_contents_standard {
         }
     }
 
-    // Component 9: iter() method with ensures.
+    // iter() method — lives in 9b (impls) because it's an inherent method on ExampleS.
     impl<T> ExampleS<T> {
         pub fn iter(&self) -> (it: ExampleIter<'_, T>)
             ensures
@@ -225,7 +276,7 @@ pub mod table_of_contents_standard {
         }
     }
 
-    // PartialEqSpecImpl goes here (section 9) because the style checker sees
+    // PartialEqSpecImpl goes here (section 9b) because the style checker sees
     // cfg-gated trait impls as regular impls, which must precede section 10.
     #[cfg(verus_keep_ghost)]
     impl<T: View + PartialEq> PartialEqSpecImpl for ExampleS<T> {
@@ -233,9 +284,32 @@ pub mod table_of_contents_standard {
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
-    //		10. iterators
+    //		10b. iterators — struct ExampleS
     //
-    // Iterator trait impls. Type definitions and views are in sections 4-5.
+    // Everything iterator-related for ExampleS lives here: the iterator struct,
+    // its view, the ghost iterator struct, its view, iter_invariant, all trait
+    // impls (Iterator, ForLoopGhostIteratorNew, ForLoopGhostIterator,
+    // IntoIterator). This keeps the full iterator story in one place.
+
+    // Component 1: Custom iterator struct.
+    #[verifier::reject_recursive_types(T)]
+    pub struct ExampleIter<'a, T> {
+        pub inner: std::slice::Iter<'a, T>,
+    }
+
+    // Component 2: View for iterator.
+    impl<'a, T> View for ExampleIter<'a, T> {
+        type V = (int, Seq<T>);
+
+        open spec fn view(&self) -> (int, Seq<T>) {
+            self.inner@
+        }
+    }
+
+    // Component 3: iter_invariant spec fn.
+    pub open spec fn iter_invariant<'a, T>(it: &ExampleIter<'a, T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
 
     // Component 4: Iterator::next with ensures.
     impl<'a, T> std::iter::Iterator for ExampleIter<'a, T> {
@@ -262,6 +336,14 @@ pub mod table_of_contents_standard {
         {
             self.inner.next()
         }
+    }
+
+    // Component 5: Ghost iterator struct.
+    #[verifier::reject_recursive_types(T)]
+    pub struct ExampleGhostIterator<'a, T> {
+        pub pos: int,
+        pub elements: Seq<T>,
+        pub phantom: core::marker::PhantomData<&'a T>,
     }
 
     // Component 6: ForLoopGhostIteratorNew.
@@ -318,6 +400,15 @@ pub mod table_of_contents_standard {
         }
     }
 
+    // Component 8: View for ghost iterator.
+    impl<'a, T> View for ExampleGhostIterator<'a, T> {
+        type V = Seq<T>;
+
+        open spec fn view(&self) -> Seq<T> {
+            self.elements.take(self.pos)
+        }
+    }
+
     // Component 10: IntoIterator for &Self.
     impl<'a, T> std::iter::IntoIterator for &'a ExampleS<T> {
         type Item = &'a T;
@@ -358,7 +449,33 @@ pub mod table_of_contents_standard {
     // do not use coarse locking.
     // See: src/standards/toplevel_coarse_rwlocks_for_mt_modules.rs
 
-    //		12. derive impls in verus!
+    //		12a. derive impls in verus! — struct InnerS
+
+    #[cfg(verus_keep_ghost)]
+    impl PartialEqSpecImpl for InnerS {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl Clone for InnerS {
+        fn clone(&self) -> (out: Self) {
+            InnerS { val: self.val }
+        }
+    }
+
+    impl PartialEq for InnerS {
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
+        {
+            let equal = (self.val == other.val);
+            proof { assume(equal == (self@ == other@)); }
+            equal
+        }
+    }
+
+    impl Eq for InnerS {}
+
+    //		12b. derive impls in verus! — struct ExampleS
     //
     // Clone, PartialEq, Eq go inside verus! so they can have ensures.
     impl<T: Clone> Clone for ExampleS<T> {
@@ -381,7 +498,11 @@ pub mod table_of_contents_standard {
 
     } // verus!
 
-    //		13. macros
+    //		13a. macros — struct InnerS
+    //
+    // (InnerS has no macro in this example.)
+
+    //		13b. macros — struct ExampleS
     //
     // macro_rules! goes outside verus!, inside the pub mod.
     // Use $crate for fully qualified paths so the macro works from any crate.
@@ -399,7 +520,21 @@ pub mod table_of_contents_standard {
         }};
     }
 
-    //		14. derive impls outside verus!
+    //		14a. derive impls outside verus! — struct InnerS
+
+    impl Display for InnerS {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "{}", self.val)
+        }
+    }
+
+    impl Debug for InnerS {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "InnerS({})", self.val)
+        }
+    }
+
+    //		14b. derive impls outside verus! — struct ExampleS
     //
     // Display and Debug go outside verus!, inside the pub mod.
 

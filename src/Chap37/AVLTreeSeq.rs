@@ -1190,6 +1190,20 @@ pub mod AVLTreeSeq {
         }
     }
 
+    impl<'a, T: StT> std::iter::IntoIterator for &'a AVLTreeS<T> {
+        type Item = &'a T;
+        type IntoIter = AVLTreeSeqIter<'a, T>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            requires self.spec_avltreeseq_wf(),
+            ensures
+                it@.0 == 0int,
+                it@.1.map_values(|t: T| t@) =~= self.spec_avltreeseq_seq(),
+                iter_invariant(&it),
+        {
+            self.iter()
+        }
+    }
+
     impl<T: StT> Default for AVLTreeS<T> {
         fn default() -> Self { Self::new() }
     }

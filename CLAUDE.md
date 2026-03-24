@@ -255,31 +255,43 @@ to be restarted (not just given new prompts), say so explicitly.
 
 ### Table of Contents Standard
 
-Every Verus source file follows this section ordering:
+Every Verus source file follows **bottom-up, per-type ordering**. Sections 1-3 are
+global. Sections 4-10 repeat per type with letter suffixes (a, b, c...), ordered
+leaf-first. Section 11 appears once. Sections 12-14 repeat per type, bottom-up.
 
 ```
 //  Table of Contents
 //  1. module
 //  2. imports
 //  3. broadcast use
-//  4. type definitions
-//  5. view impls
-//  6. spec fns
-//  7. proof fns/broadcast groups
-//  8. traits
-//  9. impls
-//  10. iterators
+//  4a. type definitions — struct Leaf
+//  5a. view impls — struct Leaf
+//  6a. spec fns — struct Leaf
+//  7a. proof fns/broadcast groups — struct Leaf
+//  8a. traits — struct Leaf
+//  9a. impls — struct Leaf
+//  4b. type definitions — struct Tree
+//  5b. view impls — struct Tree
+//  ...
+//  9b. impls — struct Tree
+//  10b. iterators — struct Tree
 //  11. top level coarse locking
-//  12. derive impls in verus!
-//  13. macros
-//  14. derive impls outside verus!
+//  12a. derive impls in verus! — struct Leaf
+//  12b. derive impls in verus! — struct Tree
+//  13a. macros — struct Leaf
+//  13b. macros — struct Tree
+//  14a. derive impls outside verus! — struct Leaf
+//  14b. derive impls outside verus! — struct Tree
 ```
 
 - Sections 1-12: inside `verus!`. Sections 13-14: outside `verus!`.
+- Each type gets a complete 4-10 cycle. Iterator structs, views, ghost structs, and
+  all iterator trait impls live in section 10 with their parent type.
+- Section headers use letter suffixes with type names: `// 4a. type definitions — struct Leaf`.
+- Omit sections that don't apply (e.g., 10 for types without iterators, 11 for non-Mt).
 - Section 11 is for Mt modules only. See `toplevel_coarse_rwlocks_for_mt_modules.rs`.
-- Omit sections that don't apply (especially 11 for non-Mt files).
-- Section headers are plain numbered comments, no dividers.
-- Use `veracity-review-verus-style -r` to reorder and insert TOC automatically.
+- For single-type files, omit the letter suffix: just `// 4. type definitions`.
+- See `src/standards/table_of_contents_standard.rs` for the full compilable example.
 
 ### Use Statement Order
 
