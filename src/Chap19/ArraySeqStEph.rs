@@ -1049,8 +1049,6 @@ pub mod ArraySeqStEph {
 
     //		10. iterators
 
-    //		10. iterators
-
     
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqStEphIter<'a, T> {
@@ -1175,8 +1173,6 @@ pub mod ArraySeqStEph {
         }
     }
 
-
-    //		11. derive impls in verus!
 
     //		11. derive impls in verus!
 

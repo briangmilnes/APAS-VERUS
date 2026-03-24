@@ -213,6 +213,16 @@ test_verify_one_file! {
 
             let ghost mut count: int = 0;
 
+            // Connect spec_backing_seq elements to spec_index values.
+            proof {
+                assert forall|j: int| 0 <= j < iter_seq.len()
+                    implies #[trigger] iter_seq[j] == 55u64
+                by {
+                    // sl.spec_index triggers the slice() ensures chain.
+                    assert(sl.spec_index(j) == a.spec_index(3 + j));
+                };
+            }
+
             for x in iter: it
                 invariant
                     iter.elements == iter_seq,
