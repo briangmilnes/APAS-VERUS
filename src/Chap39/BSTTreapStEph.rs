@@ -335,6 +335,41 @@ pub mod BSTTreapStEph {
         };
     }
 
+    /// Well-formed link implies the set view is finite.
+    pub proof fn lemma_wf_implies_finite<T: StT + Ord + IsLtTransitive>(link: &Link<T>)
+        requires spec_param_wf_link(link),
+        ensures spec_set_view_link(link).finite(),
+        decreases *link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_wf_implies_finite(&node.left);
+                lemma_wf_implies_finite(&node.right);
+            }
+        }
+    }
+
+    /// Well-formed link implies size_link == view.len().
+    pub proof fn lemma_wf_size_eq_view_len<T: StT + Ord + IsLtTransitive>(link: &Link<T>)
+        requires spec_param_wf_link(link),
+        ensures BSTTreapStEph::<T>::spec_size_link(link) == spec_set_view_link(link).len(),
+        decreases *link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_wf_size_eq_view_len(&node.left);
+                lemma_wf_size_eq_view_len(&node.right);
+                let lv = spec_set_view_link(&node.left);
+                let rv = spec_set_view_link(&node.right);
+                let kv = node.key@;
+                vstd::set_lib::lemma_set_disjoint_lens(lv, rv);
+                assert(!lv.union(rv).contains(kv));
+            }
+        }
+    }
+
     /// Hash-based priority for treap heap ordering.
     #[verifier::external_body]
     fn priority_for_st<T: StT + Ord + IsLtTransitive>(key: &T) -> (p: u64) {
@@ -1470,11 +1505,8 @@ pub mod BSTTreapStEph {
         let ls = BSTTreapStEph::<T>::size_link(&left.root);
         let rs = BSTTreapStEph::<T>::size_link(&right.root);
         proof {
-            // Show size_link matches set view length via wf invariant.
-            // For a well-formed link, size_link == spec_set_view_link.len().
-            // This follows from the wf invariant's size == lv.len() + rv.len() + 1.
-            assume(ls as nat == left@.len());
-            assume(rs as nat == right@.len());
+            lemma_wf_size_eq_view_len(&left.root);
+            lemma_wf_size_eq_view_len(&right.root);
         }
         let size = 1 + ls + rs;
         proof {
@@ -2655,20 +2687,26 @@ pub mod BSTTreapStEph {
     pub trait ParamBSTTreapStEphTrait<T: StT + Ord + IsLtTransitive>:
         Sized + View<V = Set<<T as View>::V>>
     {
+        spec fn spec_parambsttreapsteph_wf(&self) -> bool;
+
         /// - APAS: Work O(1), Span O(1)
         fn param_new() -> (tree: Self)
-            ensures tree@.finite(), tree@.len() == 0;
+            ensures tree@.finite(), tree@.len() == 0, tree.spec_parambsttreapsteph_wf();
 
         /// - APAS: Work O(1), Span O(1)
         fn singleton(key: T) -> (tree: Self)
             requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent_st::<T>(),
-            ensures tree@.finite(), tree@ =~= Set::<<T as View>::V>::empty().insert(key@);
+            ensures
+                tree@.finite(),
+                tree@ =~= Set::<<T as View>::V>::empty().insert(key@),
+                tree.spec_parambsttreapsteph_wf();
 
         /// - APAS: Work O(1), Span O(1)
         fn expose(&self) -> (exposed: ExposedTreap<T>)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent_st::<T>(),
+                self.spec_parambsttreapsteph_wf(),
             ensures
                 self@.len() == 0 ==> exposed is Leaf,
                 exposed is Leaf ==> self@ =~= Set::<T::V>::empty(),
@@ -2682,6 +2720,8 @@ pub mod BSTTreapStEph {
                     && l@.len() + r@.len() < usize::MAX as nat
                     && (forall|t: T| (#[trigger] l@.contains(t@)) ==> t.cmp_spec(&k) == Less)
                     && (forall|t: T| (#[trigger] r@.contains(t@)) ==> t.cmp_spec(&k) == Greater)
+                    && spec_param_wf_link(&l.root)
+                    && spec_param_wf_link(&r.root)
                 );
 
         /// - APAS: Work O(log(|left| + |right|)), Span O(log(|left| + |right|))
@@ -2697,40 +2737,54 @@ pub mod BSTTreapStEph {
                     && l@.len() + r@.len() < usize::MAX as nat
                     && (forall|t: T| (#[trigger] l@.contains(t@)) ==> t.cmp_spec(&k) == Less)
                     && (forall|t: T| (#[trigger] r@.contains(t@)) ==> t.cmp_spec(&k) == Greater)
+                    && spec_param_wf_link(&l.root)
+                    && spec_param_wf_link(&r.root)
                 ),
             ensures
                 tree@.finite(),
+                tree.spec_parambsttreapsteph_wf(),
                 exposed is Leaf ==> tree@ =~= Set::<T::V>::empty(),
                 exposed matches ExposedTreap::Node(l, k, r) ==> tree@ =~= l@.union(r@).insert(k@);
 
         /// - APAS: Work O(1), Span O(1)
         fn param_size(&self) -> (count: usize)
+            requires self.spec_parambsttreapsteph_wf(),
             ensures self@.finite(), count == self@.len();
 
         /// - APAS: Work O(1), Span O(1)
         fn param_is_empty(&self) -> (empty: bool)
+            requires self.spec_parambsttreapsteph_wf(),
             ensures self@.finite(), empty == (self@.len() == 0);
 
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         fn param_insert(&mut self, key: T)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent_st::<T>(),
+                old(self).spec_parambsttreapsteph_wf(),
                 old(self)@.len() < usize::MAX as nat,
-            ensures self@.finite(), self@ =~= old(self)@.insert(key@);
+            ensures
+                self@.finite(),
+                self@ =~= old(self)@.insert(key@),
+                self.spec_parambsttreapsteph_wf();
 
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         fn param_delete(&mut self, key: &T)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent_st::<T>(),
+                old(self).spec_parambsttreapsteph_wf(),
                 old(self)@.len() < usize::MAX as nat,
-            ensures self@.finite(), self@ =~= old(self)@.remove(key@);
+            ensures
+                self@.finite(),
+                self@ =~= old(self)@.remove(key@),
+                self.spec_parambsttreapsteph_wf();
 
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         fn param_find(&self, key: &T) -> (found: Option<T>)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent_st::<T>(),
+                self.spec_parambsttreapsteph_wf(),
             ensures
                 found matches Some(v) ==> v@ == key@ && self@.contains(v@),
                 found is None ==> !self@.contains(key@);
@@ -2740,6 +2794,7 @@ pub mod BSTTreapStEph {
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent_st::<T>(),
+                self.spec_parambsttreapsteph_wf(),
             ensures
                 parts.0@.finite(), parts.2@.finite(),
                 parts.1 == self@.contains(key@),
@@ -2748,43 +2803,65 @@ pub mod BSTTreapStEph {
                 parts.0@.disjoint(parts.2@),
                 !parts.0@.contains(key@) && !parts.2@.contains(key@),
                 forall|t: T| (#[trigger] parts.0@.contains(t@)) ==> t.cmp_spec(key) == Less,
-                forall|t: T| (#[trigger] parts.2@.contains(t@)) ==> t.cmp_spec(key) == Greater;
+                forall|t: T| (#[trigger] parts.2@.contains(t@)) ==> t.cmp_spec(key) == Greater,
+                parts.0.spec_parambsttreapsteph_wf(),
+                parts.2.spec_parambsttreapsteph_wf();
 
         /// - APAS: Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
         fn param_join_pair(&self, other: Self) -> (joined: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent_st::<T>(),
+                self.spec_parambsttreapsteph_wf(),
+                other.spec_parambsttreapsteph_wf(),
                 self@.disjoint(other@),
                 self@.finite(), other@.finite(),
                 self@.len() + other@.len() < usize::MAX as nat,
                 forall|s: T, o: T| #![trigger self@.contains(s@), other@.contains(o@)]
                     self@.contains(s@) && other@.contains(o@) ==> s.cmp_spec(&o) == Less,
-            ensures joined@.finite(), joined@ =~= self@.union(other@);
+            ensures
+                joined@.finite(),
+                joined@ =~= self@.union(other@),
+                joined.spec_parambsttreapsteph_wf();
 
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         fn param_union(&self, other: &Self) -> (combined: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent_st::<T>(),
+                self.spec_parambsttreapsteph_wf(),
+                other.spec_parambsttreapsteph_wf(),
                 self@.len() + other@.len() < usize::MAX as nat,
-            ensures combined@.finite(), combined@ == self@.union(other@);
+            ensures
+                combined@.finite(),
+                combined@ == self@.union(other@),
+                combined.spec_parambsttreapsteph_wf();
 
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         fn param_intersect(&self, other: &Self) -> (common: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent_st::<T>(),
+                self.spec_parambsttreapsteph_wf(),
+                other.spec_parambsttreapsteph_wf(),
                 self@.len() < usize::MAX as nat,
-            ensures common@.finite(), common@ == self@.intersect(other@);
+            ensures
+                common@.finite(),
+                common@ == self@.intersect(other@),
+                common.spec_parambsttreapsteph_wf();
 
         /// - APAS: Work O(m · lg(n/m)), Span O(lg n)
         fn param_difference(&self, other: &Self) -> (diff: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent_st::<T>(),
+                self.spec_parambsttreapsteph_wf(),
+                other.spec_parambsttreapsteph_wf(),
                 self@.len() < usize::MAX as nat,
-            ensures diff@.finite(), diff@ == self@.difference(other@);
+            ensures
+                diff@.finite(),
+                diff@ == self@.difference(other@),
+                diff.spec_parambsttreapsteph_wf();
 
         /// - APAS: Work O(|t|), Span O(lg |t|)
         fn param_filter<F: Fn(&T) -> bool>(
@@ -2795,6 +2872,7 @@ pub mod BSTTreapStEph {
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent_st::<T>(),
+                self.spec_parambsttreapsteph_wf(),
                 forall|t: &T| #[trigger] predicate.requires((t,)),
                 forall|x: T, keep: bool|
                     predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
@@ -2805,13 +2883,15 @@ pub mod BSTTreapStEph {
                 forall|v: T::V| #[trigger] filtered@.contains(v)
                     ==> self@.contains(v) && spec_pred(v),
                 forall|v: T::V| self@.contains(v) && spec_pred(v)
-                    ==> #[trigger] filtered@.contains(v);
+                    ==> #[trigger] filtered@.contains(v),
+                filtered.spec_parambsttreapsteph_wf();
 
         /// - APAS: Work O(|t|), Span O(lg |t|)
         fn param_reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (reduced: T)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent_st::<T>(),
+                self.spec_parambsttreapsteph_wf(),
                 forall|a: T, b: T| #[trigger] op.requires((a, b)),
             ensures true;
 
@@ -2820,12 +2900,17 @@ pub mod BSTTreapStEph {
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent_st::<T>(),
+                self.spec_parambsttreapsteph_wf(),
             ensures self@.finite(), ordered.spec_len() == self@.len();
     }
 
     // 9c. parametric trait impl
 
     impl<T: StT + Ord + IsLtTransitive> ParamBSTTreapStEphTrait<T> for BSTTreapStEph<T> {
+        open spec fn spec_parambsttreapsteph_wf(&self) -> bool {
+            spec_param_wf_link(&self.root)
+        }
+
         fn param_new() -> (tree: Self) {
             BSTTreapStEph { root: None }
         }
@@ -2841,7 +2926,6 @@ pub mod BSTTreapStEph {
         }
 
         fn expose(&self) -> (exposed: ExposedTreap<T>) {
-            proof { assume(spec_param_wf_link(&self.root)); } // St analog of use_type_invariant.
             let cloned = clone_with_view(self);
             match expose_to_parts_st(cloned) {
                 None => ExposedTreap::Leaf,
@@ -2854,9 +2938,6 @@ pub mod BSTTreapStEph {
                 ExposedTreap::Leaf => BSTTreapStEph { root: None },
                 ExposedTreap::Node(left, key, right) => {
                     proof {
-                        // St analog of use_type_invariant: children are structurally wf.
-                        assume(spec_param_wf_link(&left.root));
-                        assume(spec_param_wf_link(&right.root));
                         vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
                     }
                     let priority = priority_for_st(&key);
@@ -2867,8 +2948,8 @@ pub mod BSTTreapStEph {
 
         fn param_size(&self) -> (count: usize) {
             proof {
-                assume(spec_param_wf_link(&self.root)); // St analog of use_type_invariant.
-                assume(BSTTreapStEph::<T>::spec_size_link(&self.root) == self@.len());
+                lemma_wf_implies_finite(&self.root);
+                lemma_wf_size_eq_view_len(&self.root);
             }
             BSTTreapStEph::<T>::size_link(&self.root)
         }
@@ -2878,7 +2959,6 @@ pub mod BSTTreapStEph {
         }
 
         fn param_insert(&mut self, key: T) {
-            proof { assume(spec_param_wf_link(&self.root)); } // St analog of use_type_invariant.
             let ghost old_view = self@;
             let cloned = clone_with_view(&*self);
             let (left, _, right) = split_inner_st(cloned, &key);
@@ -2896,7 +2976,6 @@ pub mod BSTTreapStEph {
         }
 
         fn param_delete(&mut self, key: &T) {
-            proof { assume(spec_param_wf_link(&self.root)); } // St analog of use_type_invariant.
             let ghost old_view = self@;
             let ghost kref = *key;
             let cloned = clone_with_view(&*self);
@@ -2920,7 +2999,6 @@ pub mod BSTTreapStEph {
         fn param_find(&self, key: &T) -> (found: Option<T>)
             decreases self@.len(),
         {
-            proof { assume(spec_param_wf_link(&self.root)); } // St analog of use_type_invariant.
             let cloned = clone_with_view(self);
             match expose_to_parts_st(cloned) {
                 | None => None,
@@ -3001,37 +3079,28 @@ pub mod BSTTreapStEph {
         }
 
         fn param_split(&self, key: &T) -> (parts: (Self, bool, Self)) {
-            proof { assume(spec_param_wf_link(&self.root)); } // St analog of use_type_invariant.
             let cloned = clone_with_view(self);
             split_inner_st(cloned, key)
         }
 
         fn param_join_pair(&self, other: Self) -> (joined: Self) {
-            proof { assume(spec_param_wf_link(&self.root)); } // St analog of use_type_invariant.
-            proof { assume(spec_param_wf_link(&other.root)); }
             let cloned = clone_with_view(self);
             join_pair_inner_st(cloned, other)
         }
 
         fn param_union(&self, other: &Self) -> (combined: Self) {
-            proof { assume(spec_param_wf_link(&self.root)); } // St analog of use_type_invariant.
-            proof { assume(spec_param_wf_link(&other.root)); }
             let a = clone_with_view(self);
             let b = clone_with_view(other);
             union_inner_st(a, b)
         }
 
         fn param_intersect(&self, other: &Self) -> (common: Self) {
-            proof { assume(spec_param_wf_link(&self.root)); } // St analog of use_type_invariant.
-            proof { assume(spec_param_wf_link(&other.root)); }
             let a = clone_with_view(self);
             let b = clone_with_view(other);
             intersect_inner_st(a, b)
         }
 
         fn param_difference(&self, other: &Self) -> (diff: Self) {
-            proof { assume(spec_param_wf_link(&self.root)); } // St analog of use_type_invariant.
-            proof { assume(spec_param_wf_link(&other.root)); }
             let a = clone_with_view(self);
             let b = clone_with_view(other);
             difference_inner_st(a, b)
@@ -3042,24 +3111,23 @@ pub mod BSTTreapStEph {
             predicate: F,
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
         ) -> (filtered: Self) {
-            proof { assume(spec_param_wf_link(&self.root)); } // St analog of use_type_invariant.
             let cloned = clone_with_view(self);
             filter_inner_st(cloned, &predicate, Ghost(spec_pred))
         }
 
         fn param_reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (reduced: T) {
-            proof { assume(spec_param_wf_link(&self.root)); } // St analog of use_type_invariant.
             let cloned = clone_with_view(self);
-            proof { assume(cloned@.finite()); } // follows from wf.
+            proof { lemma_wf_implies_finite(&cloned.root); }
             reduce_inner_st(cloned, &op, base)
         }
 
         fn param_in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
-            proof { assume(spec_param_wf_link(&self.root)); } // St analog of use_type_invariant.
             let cloned = clone_with_view(self);
-            proof { assume(cloned@.finite()); }
+            proof {
+                lemma_wf_implies_finite(&cloned.root);
+                lemma_wf_implies_finite(&self.root);
+            }
             let mut out = Vec::new();
-            proof { assume(self@.finite()); }
             collect_in_order_st(cloned, &mut out);
             ArraySeqStPerS::from_vec(out)
         }
