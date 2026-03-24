@@ -24,7 +24,11 @@ pub mod AugOrderedTableMtEph {
     use vstd::prelude::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     use crate::Chap43::OrderedTableMtEph::OrderedTableMtEph::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
     use crate::Concurrency::Concurrency::*;
     #[cfg(verus_keep_ghost)]
     use vstd::laws_eq::obeys_view_eq;
@@ -201,6 +205,12 @@ broadcast use {
                 obeys_feq_full::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
                 keys@.len() < usize::MAX as nat,
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                view_ord_consistent::<Pair<K, V>>(),
+                spec_pair_key_determines_order::<K, V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                view_ord_consistent::<K>(),
+                obeys_feq_fulls::<K, V>(),
             ensures domain@.dom().finite();
         /// - APAS: Work O(n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- maps all values linearly, then recalculates reduction O(n)

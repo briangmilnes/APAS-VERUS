@@ -530,7 +530,7 @@ broadcast use {
     // 8. traits
 
     /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1) with ephemeral semantics.
-    pub trait OrderedTableStEphTrait<K: StT + Ord, V: StT>: Sized + View<V = Map<K::V, V::V>> {
+    pub trait OrderedTableStEphTrait<K: StT + Ord, V: StT + Ord>: Sized + View<V = Map<K::V, V::V>> {
         spec fn spec_orderedtablesteph_wf(&self) -> bool;
 
         /// - APAS: Work Θ(1), Span Θ(1)
@@ -608,6 +608,12 @@ broadcast use {
                 obeys_feq_full::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
                 keys@.len() < usize::MAX as nat,
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                view_ord_consistent::<Pair<K, V>>(),
+                spec_pair_key_determines_order::<K, V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                view_ord_consistent::<K>(),
+                obeys_feq_fulls::<K, V>(),
             ensures
                 tabulated@.dom() =~= keys@,
                 tabulated.spec_orderedtablesteph_wf(),
@@ -1320,11 +1326,6 @@ broadcast use {
             proof {
                 assert(obeys_feq_full_trigger::<K>());
                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
-                // Type-level axioms: Pair<K,V> ordering requires V: Ord, which the
-                // trait doesn't express (V: StT only). The impl has V: Ord so these
-                // hold, but we can't derive them from the trait requires.
-                assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
-                assume(view_ord_consistent::<Pair<K, V>>());
             }
             let seq = keys.to_seq();
             let len = seq.length();
@@ -1449,11 +1450,6 @@ broadcast use {
                     assert(f.ensures((&ka,), rv));
                     lemma_pair_in_set_map_contains(tree@, key, rv@);
                 };
-                // Prove spec_orderedtablesteph_wf.
-                assume(spec_pair_key_determines_order::<K, V>());
-                assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-                assume(view_ord_consistent::<K>());
-                assume(obeys_feq_fulls::<K, V>());
             }
             tabulated
         }

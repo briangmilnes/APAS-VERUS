@@ -21,68 +21,26 @@ Table of Contents:
 =================================================================
 
 ❌ OrderedTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1326: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
-      1318 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStEph.rs:3404: error: external_body - #[verifier::external_body]
+      3405 |         fn rank_key_iter(&self, k: &K) -> (rank: usize)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStEph.rs:3431: error: external_body - #[verifier::external_body]
+      3432 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStEph.rs:3724: error: assume() [algorithmic] - assume(iter_invariant(self));
+      3702 |         fn next(&mut self) -> (next: Option<Pair<K, V>>)
             ...
-      1324 |                 // trait doesn't express (V: StT only). The impl has V: Ord so these
-      1325 |                 // hold, but we can't derive them from the trait requires.
-      1327 |                 assume(view_ord_consistent::<Pair<K, V>>());
-      1328 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1327: error: assume() [algorithmic] - assume(view_ord_consistent::<Pair<K, V>>());
-      1318 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+      3722 |             proof {
+      3723 |                 // Caller must maintain iter_invariant.
+      3725 |             }
+      3726 |             if self.pos < self.len {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStEph.rs:3748: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include result.spec_orderedtablesteph_wf() for return type OrderedTableStEph
+      3741 |         fn clone(&self) -> (cloned: Self) {
             ...
-      1325 |                 // hold, but we can't derive them from the trait requires.
-      1326 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
-      1328 |             }
-      1329 |             let seq = keys.to_seq();
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1453: error: assume() [algorithmic] - assume(spec_pair_key_determines_order::<K, V>());
-      1318 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
-            ...
-      1451 |                 };
-      1452 |                 // Prove spec_orderedtablesteph_wf.
-      1454 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1455 |                 assume(view_ord_consistent::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1454: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1318 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
-            ...
-      1452 |                 // Prove spec_orderedtablesteph_wf.
-      1453 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1455 |                 assume(view_ord_consistent::<K>());
-      1456 |                 assume(obeys_feq_fulls::<K, V>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1455: error: assume() [algorithmic] - assume(view_ord_consistent::<K>());
-      1318 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
-            ...
-      1453 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1454 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1456 |                 assume(obeys_feq_fulls::<K, V>());
-      1457 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1456: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
-      1318 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
-            ...
-      1454 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1455 |                 assume(view_ord_consistent::<K>());
-      1457 |             }
-      1458 |             tabulated
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:3408: error: external_body - #[verifier::external_body]
-      3409 |         fn rank_key_iter(&self, k: &K) -> (rank: usize)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:3435: error: external_body - #[verifier::external_body]
-      3436 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:3728: error: assume() [algorithmic] - assume(iter_invariant(self));
-      3706 |         fn next(&mut self) -> (next: Option<Pair<K, V>>)
-            ...
-      3726 |             proof {
-      3727 |                 // Caller must maintain iter_invariant.
-      3729 |             }
-      3730 |             if self.pos < self.len {
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:3752: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include result.spec_orderedtablesteph_wf() for return type OrderedTableStEph
-      3745 |         fn clone(&self) -> (cloned: Self) {
-            ...
-      3750 |     }
-      3751 | 
-      3753 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
-      3754 |     ) -> (result: OrderedTableStEph<K, V>)
-   Holes: 9 total
-      7 × assume()
+      3746 |     }
+      3747 | 
+      3749 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
+      3750 |     ) -> (result: OrderedTableStEph<K, V>)
+   Holes: 3 total
+      1 × assume()
       2 × external_body
    Proof functions: 14 total (14 clean, 0 holed)
 
@@ -124,10 +82,10 @@ Function Specs:
    108 total fns
 
 
-Holes Found: 9 (actionable)
-   7 × assume() [algorithmic] (77%)
-   2 × external_body (22%)
-Real Proof Targets: 9 (all actionable)
+Holes Found: 3 (actionable)
+   1 × assume() [algorithmic] (33%)
+   2 × external_body (66%)
+Real Proof Targets: 3 (all actionable)
 
 Warnings: 1 total
    1 × fn_missing_wf_ensures
@@ -136,8 +94,8 @@ Warnings: 1 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-24 08:11:20 -07:00
-Ended:     2026-03-24 08:11:20 -07:00
-Duration:  60ms
+Started:   2026-03-24 12:42:01 -07:00
+Ended:     2026-03-24 12:42:02 -07:00
+Duration:  89ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
