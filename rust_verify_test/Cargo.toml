@@ -118,9 +118,9 @@ name = "ProvePrimTreeSeqStPer"
 path = "tests/Chap23/ProvePrimTreeSeqStPer.rs"
 
 # Chap43 iterator proof tests
-[[test]]
-name = "ProveOrderedTableStPer"
-path = "tests/Chap43/ProveOrderedTableStPer.rs"
+# [[test]]  # R67: module commented out in lib.rs (backing store rewire)
+# name = "ProveOrderedTableStPer"
+# path = "tests/Chap43/ProveOrderedTableStPer.rs"
 
 # Chap54 BFS tree iterator proof tests
 [[test]]
