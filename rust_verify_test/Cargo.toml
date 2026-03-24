@@ -119,6 +119,14 @@ path = "tests/Chap23/ProvePrimTreeSeqStPer.rs"
 
 # Chap43 iterator proof tests
 [[test]]
+name = "ProveOrderedSetStEph"
+path = "tests/Chap43/ProveOrderedSetStEph.rs"
+
+[[test]]
+name = "ProveOrderedTableStEph"
+path = "tests/Chap43/ProveOrderedTableStEph.rs"
+
+[[test]]
 name = "ProveOrderedTableStPer"
 path = "tests/Chap43/ProveOrderedTableStPer.rs"
 
