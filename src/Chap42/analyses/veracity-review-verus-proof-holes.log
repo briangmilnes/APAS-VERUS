@@ -20,40 +20,38 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-✓ Example42_1.rs
-   1 clean proof function
 ⚠ TableMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2202: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2198 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableMtEph.rs:2201: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2197 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      2200 |         {
-      2201 |             let equal = self.entries == other.entries;
-      2203 |             equal
-      2204 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2214: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2208 |         fn clone(&self) -> (cloned: Self)
+      2199 |         {
+      2200 |             let equal = self.entries == other.entries;
+      2202 |             equal
+      2203 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableMtEph.rs:2213: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2207 |         fn clone(&self) -> (cloned: Self)
             ...
-      2212 |                 entries: self.entries.clone(),
-      2213 |             };
-      2215 |             cloned
-      2216 |         }
+      2211 |                 entries: self.entries.clone(),
+      2212 |             };
+      2214 |             cloned
+      2215 |         }
 ⚠ TableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:2118: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2114 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStEph.rs:2106: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2102 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      2116 |         {
-      2117 |             let equal = self.entries == other.entries;
-      2119 |             equal
-      2120 |         }
+      2104 |         {
+      2105 |             let equal = self.entries == other.entries;
+      2107 |             equal
+      2108 |         }
 ⚠ TableStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2194: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStPer.rs:2194: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       2190 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       2192 |         {
       2193 |             let equal = self.entries == other.entries;
       2195 |             equal
       2196 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2205: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStPer.rs:2205: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       2200 |         fn clone(&self) -> (cloned: Self)
             ...
       2203 |             let cloned = TableStPer { entries: self.entries.clone() };
@@ -69,7 +67,6 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
-Example42_1  depends upon only clean modules
 TableMtEph  depends upon only clean modules
 TableStEph  depends upon only clean modules
 TableStPer  depends upon only clean modules
@@ -78,7 +75,6 @@ TableStPer  depends upon only clean modules
 2.2. By File
 =================================================================
 
-Example42_1.rs  depends upon only clean modules
 TableMtEph.rs  depends upon only clean modules
 TableStEph.rs  depends upon only clean modules
 TableStPer.rs  depends upon only clean modules
@@ -88,21 +84,21 @@ TableStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   4 clean (no holes, no errors; 100%)
+   3 clean (no holes, no errors; 100%)
    0 holed (holes or errors, 0%)
-   4 total
+   3 total
 
 Proof Functions:
-   32 clean (100%)
+   31 clean (100%)
    0 holed (0%)
-   32 total
+   31 total
 
 Function Specs:
    104 exec fns with complete spec (requires+ensures) (63%)
    3 exec fns missing spec (1%)
-   57 proof/spec fns clean (34%)
+   56 proof/spec fns clean (34%)
    0 proof/spec fns with holes (0%)
-   164 total fns
+   163 total fns
 
 
 Holes Found: 0 (actionable)
@@ -117,9 +113,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-23 09:18:33 -07:00
-Ended:     2026-03-23 09:18:33 -07:00
-Duration:  86ms
+Started:   2026-03-23 20:00:08 -07:00
+Ended:     2026-03-23 20:00:08 -07:00
+Duration:  76ms
 
 Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
+c/Chap42/analyses/veracity-review-verus-proof-holes.log

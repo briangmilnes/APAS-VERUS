@@ -3,7 +3,7 @@
     "id": 1,
     "function": "new_param_bst",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "94-103",
+    "lines": "96-105",
     "spec_strength": "unknown",
     "snippet": "    fn new_param_bst<T: MtKey>(\n        val: Option<Box<NodeInner<T>>>,\n        Ghost(contents): Ghost<Set<<T as View>::V>>,\n    ) -> (tree: ParamBST<T>)\n        requires\n            (BSTParaMtEphInv::<T> { contents }).inv(val),\n            contents.finite(),\n            forall|v: <T as View>::V| contents.contains(v)\n                ==> exists|t: T| t@ == v,\n        ensures tree@ =~= contents,"
   },
@@ -11,7 +11,7 @@
     "id": 2,
     "function": "clone_elem",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "153-155",
+    "lines": "155-157",
     "spec_strength": "unknown",
     "snippet": "    fn clone_elem<T: MtKey>(x: &T) -> (c: T)\n        requires obeys_feq_clone::<T>(),\n        ensures c == *x,"
   },
@@ -19,7 +19,7 @@
     "id": 3,
     "function": "lemma_cmp_antisymmetry",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "163-168",
+    "lines": "165-170",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_cmp_antisymmetry<T: MtKey>(a: T, b: T)\n        requires\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            a.cmp_spec(&b) == Greater,\n        ensures\n            b.cmp_spec(&a) == Less,"
   },
@@ -27,7 +27,7 @@
     "id": 4,
     "function": "lemma_cmp_transitivity",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "175-181",
+    "lines": "177-183",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_cmp_transitivity<T: MtKey>(a: T, b: T, c: T)\n        requires\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            a.cmp_spec(&b) == Less,\n            b.cmp_spec(&c) == Less,\n        ensures\n            a.cmp_spec(&c) == Less,"
   },
@@ -35,7 +35,7 @@
     "id": 5,
     "function": "lemma_cmp_eq_subst",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "188-195",
+    "lines": "190-197",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_cmp_eq_subst<T: MtKey>(a: T, b: T, c: T)\n        requires\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            view_ord_consistent::<T>(),\n            a.cmp_spec(&b) == Less,\n            b.cmp_spec(&c) == Equal,\n        ensures\n            a.cmp_spec(&c) == Less,"
   },
@@ -43,7 +43,7 @@
     "id": 6,
     "function": "lemma_cmp_equal_congruent",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "202-208",
+    "lines": "204-210",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_cmp_equal_congruent<T: MtKey>(a: T, b: T, c: T)\n        requires\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            view_ord_consistent::<T>(),\n            a.cmp_spec(&b) == Equal,\n        ensures\n            a.cmp_spec(&c) == b.cmp_spec(&c),"
   },
@@ -51,7 +51,7 @@
     "id": 7,
     "function": "lemma_cmp_equal_congruent_right",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "215-221",
+    "lines": "217-223",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_cmp_equal_congruent_right<T: MtKey>(a: T, b: T, c: T)\n        requires\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            view_ord_consistent::<T>(),\n            b.cmp_spec(&c) == Equal,\n        ensures\n            a.cmp_spec(&b) == a.cmp_spec(&c),"
   },
@@ -59,7 +59,7 @@
     "id": 8,
     "function": "lemma_cmp_order_axioms",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "229-235",
+    "lines": "231-237",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_cmp_order_axioms<T: MtKey>()\n        requires\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            view_ord_consistent::<T>(),\n        ensures\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            view_ord_consistent::<T>(),"
   },
@@ -67,7 +67,7 @@
     "id": 9,
     "function": "new",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "245-246",
+    "lines": "247-248",
     "spec_strength": "unknown",
     "snippet": "        fn new() -> (empty: Self)\n            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_bstparamteph_wf();"
   },
@@ -75,7 +75,7 @@
     "id": 10,
     "function": "singleton",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "249-252",
+    "lines": "251-254",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(key: T) -> (tree: Self)\n            ensures\n                tree@ == Set::<<T as View>::V>::empty().insert(key@),\n                tree@.finite();"
   },
@@ -83,7 +83,7 @@
     "id": 11,
     "function": "expose",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "255-256",
+    "lines": "257-258",
     "spec_strength": "unknown",
     "snippet": "        fn expose(&self) -> (exposed: Exposed<T>)\n            ensures self@.len() == 0 ==> exposed is Leaf;"
   },
@@ -91,7 +91,7 @@
     "id": 12,
     "function": "join_mid",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "259-261",
+    "lines": "261-263",
     "spec_strength": "unknown",
     "snippet": "        fn join_mid(exposed: Exposed<T>) -> (joined: Self)\n            requires\n                exposed matches Exposed::Node(l, k, r) ==> {"
   },
@@ -99,7 +99,7 @@
     "id": 13,
     "function": "size",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "275-276",
+    "lines": "277-278",
     "spec_strength": "unknown",
     "snippet": "        fn size(&self) -> (count: usize)\n            ensures count == self@.len(), self@.finite();"
   },
@@ -107,7 +107,7 @@
     "id": 14,
     "function": "is_empty",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "279-280",
+    "lines": "281-282",
     "spec_strength": "unknown",
     "snippet": "        fn is_empty(&self) -> (empty: B)\n            ensures empty == (self@.len() == 0), self@.finite();"
   },
@@ -115,7 +115,7 @@
     "id": 15,
     "function": "insert",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "283-288",
+    "lines": "285-290",
     "spec_strength": "unknown",
     "snippet": "        fn insert(&mut self, key: T)\n            requires\n                old(self)@.len() < usize::MAX as nat,\n                vstd::laws_cmp::obeys_cmp_spec::<T>(),\n                view_ord_consistent::<T>(),\n            ensures self.spec_bstparamteph_wf();"
   },
@@ -123,7 +123,7 @@
     "id": 16,
     "function": "delete",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "291-293",
+    "lines": "293-295",
     "spec_strength": "unknown",
     "snippet": "        fn delete(&mut self, key: &T)\n            requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),\n            ensures self.spec_bstparamteph_wf();"
   },
@@ -131,7 +131,7 @@
     "id": 17,
     "function": "find",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "296-298",
+    "lines": "298-300",
     "spec_strength": "unknown",
     "snippet": "        fn find(&self, key: &T) -> (found: Option<T>)\n            requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),\n            ensures found.is_some() <==> self@.contains(key@);"
   },
@@ -139,7 +139,7 @@
     "id": 18,
     "function": "split",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "301-306",
+    "lines": "303-308",
     "spec_strength": "unknown",
     "snippet": "        fn split(&self, key: &T) -> (parts: (Self, B, Self))\n            requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),\n            ensures\n                parts.1 == self@.contains(key@),\n                parts.0@.finite(),\n                parts.2@.finite();"
   },
@@ -147,7 +147,7 @@
     "id": 19,
     "function": "join_pair",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "309-314",
+    "lines": "311-316",
     "spec_strength": "unknown",
     "snippet": "        fn join_pair(&self, other: Self) -> (joined: Self)\n            requires\n                self@.len() + other@.len() <= usize::MAX as nat,\n                vstd::laws_cmp::obeys_cmp_spec::<T>(),\n                view_ord_consistent::<T>(),\n            ensures joined@.finite();"
   },
@@ -155,7 +155,7 @@
     "id": 20,
     "function": "join_pair_inner",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "316-325",
+    "lines": "318-327",
     "spec_strength": "unknown",
     "snippet": "        fn join_pair_inner(&self, right: &Self) -> (joined: Self)\n            requires\n                self@.finite(), right@.finite(),\n                self@.disjoint(right@),\n                self@.len() + right@.len() <= usize::MAX as nat,\n                vstd::laws_cmp::obeys_cmp_spec::<T>(),\n                view_ord_consistent::<T>(),\n                forall|s: T, o: T| #![trigger self@.contains(s@), right@.contains(o@)]\n                    self@.contains(s@) && right@.contains(o@) ==> s.cmp_spec(&o) == Less,\n            ensures joined@.finite(), joined@ =~= self@.union(right@);"
   },
@@ -163,7 +163,7 @@
     "id": 21,
     "function": "union",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "328-333",
+    "lines": "330-335",
     "spec_strength": "unknown",
     "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                self@.len() + other@.len() <= usize::MAX as nat,\n                vstd::laws_cmp::obeys_cmp_spec::<T>(),\n                view_ord_consistent::<T>(),\n            ensures combined@ == self@.union(other@), combined@.finite();"
   },
@@ -171,7 +171,7 @@
     "id": 22,
     "function": "intersect",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "336-338",
+    "lines": "338-340",
     "spec_strength": "unknown",
     "snippet": "        fn intersect(&self, other: &Self) -> (common: Self)\n            requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),\n            ensures common@ == self@.intersect(other@), common@.finite();"
   },
@@ -179,7 +179,7 @@
     "id": 23,
     "function": "difference",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "341-343",
+    "lines": "343-345",
     "spec_strength": "unknown",
     "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),\n            ensures remaining@ == self@.difference(other@), remaining@.finite();"
   },
@@ -187,7 +187,7 @@
     "id": 24,
     "function": "filter",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "346-363",
+    "lines": "348-365",
     "spec_strength": "unknown",
     "snippet": "        fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(\n            &self,\n            predicate: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                vstd::laws_cmp::obeys_cmp_spec::<T>(),\n                view_ord_consistent::<T>(),\n                forall|t: &T| #[trigger] predicate.requires((t,)),\n                forall|x: T, keep: bool|\n                    predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.subset_of(self@),\n                filtered@.finite(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
   },
@@ -195,7 +195,7 @@
     "id": 25,
     "function": "reduce",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "367-368",
+    "lines": "369-370",
     "spec_strength": "unknown",
     "snippet": "        fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T\n            requires forall|a: T, b: T| #[trigger] op.requires((a, b));"
   },
@@ -203,7 +203,7 @@
     "id": 26,
     "function": "in_order",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "371-372",
+    "lines": "373-374",
     "spec_strength": "unknown",
     "snippet": "        fn in_order(&self) -> (seq: ArraySeqStPerS<T>)\n            ensures seq@.len() == self@.len();"
   },
@@ -211,7 +211,7 @@
     "id": 27,
     "function": "new_leaf",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "685-686",
+    "lines": "691-692",
     "spec_strength": "unknown",
     "snippet": "    fn new_leaf<T: MtKey>() -> (tree: ParamBST<T>)\n        ensures tree@ =~= Set::<<T as View>::V>::empty()"
   },
@@ -219,7 +219,7 @@
     "id": 28,
     "function": "expose_internal",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "691-711",
+    "lines": "697-717",
     "spec_strength": "unknown",
     "snippet": "    fn expose_internal<T: MtKey>(tree: &ParamBST<T>) -> (exposed: Exposed<T>)\n        requires\n            tree@.finite(),\n        ensures\n            tree@.finite(),\n            exposed is Leaf ==> tree@.len() == 0,\n            exposed matches Exposed::Node(left, key, right) ==> (\n                tree@.contains(key@)\n                && left@.finite()\n                && right@.finite()\n                && left@.subset_of(tree@)\n                && right@.subset_of(tree@)\n                && tree@ =~= left@.union(right@).insert(key@)\n                && !left@.contains(key@)\n                && !right@.contains(key@)\n                && left@.disjoint(right@)\n                && left@.len() + right@.len() < usize::MAX as nat\n                && (forall|t: T| (#[trigger] left@.contains(t@)) ==> t.cmp_spec(&key) == Less)\n                && (forall|t: T| (#[trigger] right@.contains(t@)) ==> t.cmp_spec(&key) == Greater)\n            ),\n        decreases tree@.len(), 0nat,"
   },
@@ -227,7 +227,7 @@
     "id": 29,
     "function": "split_inner",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "750-767",
+    "lines": "756-773",
     "spec_strength": "unknown",
     "snippet": "    fn split_inner<T: MtKey>(tree: &ParamBST<T>, key: &T) -> (parts: (ParamBST<T>, B, ParamBST<T>))\n        requires\n            tree@.finite(),\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            view_ord_consistent::<T>(),\n        ensures\n            parts.0@.finite(),\n            parts.2@.finite(),\n            parts.1 == tree@.contains(key@),\n            tree@.finite(),\n            !parts.0@.contains(key@) && !parts.2@.contains(key@),\n            tree@ =~= parts.0@.union(parts.2@).union(\n                if parts.1 { Set::<<T as View>::V>::empty().insert(key@) } else { Set::<<T as View>::V>::empty() }\n            ),\n            forall|t: T| (#[trigger] parts.0@.contains(t@)) ==> t.cmp_spec(&key) == Less,\n            forall|t: T| (#[trigger] parts.2@.contains(t@)) ==> t.cmp_spec(&key) == Greater,\n            parts.0@.disjoint(parts.2@),\n        decreases tree@.len(),"
   },
@@ -235,7 +235,7 @@
     "id": 30,
     "function": "find_recursive",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "916-922",
+    "lines": "922-928",
     "spec_strength": "unknown",
     "snippet": "    fn find_recursive<T: MtKey>(tree: &ParamBST<T>, key: &T) -> (found: Option<T>)\n        requires\n            tree@.finite(),\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            view_ord_consistent::<T>(),\n        ensures found.is_some() <==> tree@.contains(key@),\n        decreases tree@.len(),"
   },
@@ -243,7 +243,7 @@
     "id": 31,
     "function": "min_key",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "944-950",
+    "lines": "950-956",
     "spec_strength": "unknown",
     "snippet": "    fn min_key<T: MtKey>(tree: &ParamBST<T>) -> (result: Option<T>)\n        requires\n            tree@.finite(),\n        ensures\n            result.is_none() <==> tree@.len() == 0,\n            result.is_some() ==> tree@.contains(result.unwrap()@),\n        decreases tree@.len(),"
   },
@@ -251,7 +251,7 @@
     "id": 32,
     "function": "union_inner",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "965-971",
+    "lines": "970-976",
     "spec_strength": "unknown",
     "snippet": "    fn union_inner<T: MtKey>(a: &ParamBST<T>, b: &ParamBST<T>) -> (combined: ParamBST<T>)\n        requires\n            a@.finite(), b@.finite(), a@.len() + b@.len() <= usize::MAX as nat,\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            view_ord_consistent::<T>(),\n        ensures combined@ == a@.union(b@), combined@.finite(),\n        decreases a@.len(),"
   },
@@ -259,7 +259,7 @@
     "id": 33,
     "function": "intersect_inner",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "1079-1085",
+    "lines": "1084-1090",
     "spec_strength": "unknown",
     "snippet": "    fn intersect_inner<T: MtKey>(a: &ParamBST<T>, b: &ParamBST<T>) -> (common: ParamBST<T>)\n        requires\n            a@.finite(), b@.finite(),\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            view_ord_consistent::<T>(),\n        ensures common@ == a@.intersect(b@), common@.finite(),\n        decreases a@.len(),"
   },
@@ -267,7 +267,7 @@
     "id": 34,
     "function": "difference_inner",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "1251-1257",
+    "lines": "1256-1262",
     "spec_strength": "unknown",
     "snippet": "    fn difference_inner<T: MtKey>(a: &ParamBST<T>, b: &ParamBST<T>) -> (remaining: ParamBST<T>)\n        requires\n            a@.finite(), b@.finite(),\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            view_ord_consistent::<T>(),\n        ensures remaining@ == a@.difference(b@), remaining@.finite(),\n        decreases a@.len(),"
   },
@@ -275,7 +275,7 @@
     "id": 35,
     "function": "filter_inner",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "1422-1441",
+    "lines": "1427-1446",
     "spec_strength": "unknown",
     "snippet": "    fn filter_inner<T: MtKey, F: Fn(&T) -> bool + Send + Sync + 'static>(\n        tree: &ParamBST<T>,\n        predicate: &Arc<F>,\n        Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n    ) -> (filtered: ParamBST<T>)\n        requires\n            tree@.finite(),\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            view_ord_consistent::<T>(),\n            forall|t: &T| #[trigger] predicate.requires((t,)),\n            forall|x: T, keep: bool|\n                predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),\n        ensures\n            filtered@.subset_of(tree@),\n            filtered@.finite(),\n            forall|v: T::V| #[trigger] filtered@.contains(v)\n                ==> tree@.contains(v) && spec_pred(v),\n            forall|v: T::V| tree@.contains(v) && spec_pred(v)\n                ==> #[trigger] filtered@.contains(v),\n        decreases tree@.len(),"
   },
@@ -283,7 +283,7 @@
     "id": 36,
     "function": "filter_parallel",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "1541-1558",
+    "lines": "1546-1563",
     "spec_strength": "unknown",
     "snippet": "    fn filter_parallel<T: MtKey, F: Fn(&T) -> bool + Send + Sync + 'static>(\n        tree: &ParamBST<T>,\n        predicate: F,\n        Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n    ) -> (filtered: ParamBST<T>)\n        requires\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            view_ord_consistent::<T>(),\n            forall|t: &T| #[trigger] predicate.requires((t,)),\n            forall|x: T, keep: bool|\n                predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),\n        ensures\n            filtered@.subset_of(tree@),\n            filtered@.finite(),\n            forall|v: T::V| #[trigger] filtered@.contains(v)\n                ==> tree@.contains(v) && spec_pred(v),\n            forall|v: T::V| tree@.contains(v) && spec_pred(v)\n                ==> #[trigger] filtered@.contains(v),"
   },
@@ -291,7 +291,7 @@
     "id": 37,
     "function": "reduce_inner",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "1565-1574",
+    "lines": "1570-1579",
     "spec_strength": "unknown",
     "snippet": "    fn reduce_inner<T: MtKey, F: Fn(T, T) -> T + Send + Sync + 'static>(\n        tree: &ParamBST<T>,\n        op: &Arc<F>,\n        identity: T,\n    ) -> (result: T)\n        requires\n            tree@.finite(),\n            forall|a: T, b: T| #[trigger] op.requires((a, b)),\n        ensures tree@.len() == 0 ==> result@ == identity@,\n        decreases tree@.len(),"
   },
@@ -299,7 +299,7 @@
     "id": 38,
     "function": "reduce_parallel",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "1603-1610",
+    "lines": "1608-1615",
     "spec_strength": "unknown",
     "snippet": "    fn reduce_parallel<T: MtKey, F: Fn(T, T) -> T + Send + Sync + 'static>(\n        tree: &ParamBST<T>,\n        op: F,\n        base: T,\n    ) -> (result: T)\n        requires\n            forall|a: T, b: T| #[trigger] op.requires((a, b)),\n        ensures tree@.len() == 0 ==> result@ == base@,"
   },
@@ -307,7 +307,7 @@
     "id": 39,
     "function": "collect_in_order",
     "file": "Chap38/BSTParaMtEph.rs",
-    "lines": "1617-1621",
+    "lines": "1622-1626",
     "spec_strength": "unknown",
     "snippet": "    fn collect_in_order<T: MtKey>(tree: &ParamBST<T>, out: &mut Vec<T>)\n        requires\n            tree@.finite(),\n        ensures out@.len() == old(out)@.len() + tree@.len(),\n        decreases tree@.len(),"
   },
@@ -315,7 +315,7 @@
     "id": 40,
     "function": "new_param_bst",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "95-104",
+    "lines": "97-106",
     "spec_strength": "unknown",
     "snippet": "    fn new_param_bst<T: StT + Ord>(\n        val: Option<Box<NodeInner<T>>>,\n        Ghost(contents): Ghost<Set<<T as View>::V>>,\n    ) -> (tree: ParamBST<T>)\n        requires\n            (BSTParaStEphInv::<T> { contents }).inv(val),\n            contents.finite(),\n            forall|v: <T as View>::V| contents.contains(v)\n                ==> exists|t: T| t@ == v,\n        ensures tree@ =~= contents,"
   },
@@ -323,7 +323,7 @@
     "id": 41,
     "function": "clone_elem",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "154-156",
+    "lines": "156-158",
     "spec_strength": "unknown",
     "snippet": "    fn clone_elem<T: StT>(x: &T) -> (c: T)\n        requires obeys_feq_clone::<T>(),\n        ensures c == *x,"
   },
@@ -331,7 +331,7 @@
     "id": 42,
     "function": "lemma_cmp_antisymmetry",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "164-169",
+    "lines": "166-171",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)\n        requires\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            a.cmp_spec(&b) == Greater,\n        ensures\n            b.cmp_spec(&a) == Less,"
   },
@@ -339,7 +339,7 @@
     "id": 43,
     "function": "lemma_cmp_transitivity",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "176-182",
+    "lines": "178-184",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_cmp_transitivity<T: StT + Ord>(a: T, b: T, c: T)\n        requires\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            a.cmp_spec(&b) == Less,\n            b.cmp_spec(&c) == Less,\n        ensures\n            a.cmp_spec(&c) == Less,"
   },
@@ -347,7 +347,7 @@
     "id": 44,
     "function": "lemma_cmp_eq_subst",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "189-196",
+    "lines": "191-198",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_cmp_eq_subst<T: StT + Ord>(a: T, b: T, c: T)\n        requires\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            view_ord_consistent::<T>(),\n            a.cmp_spec(&b) == Less,\n            b.cmp_spec(&c) == Equal,\n        ensures\n            a.cmp_spec(&c) == Less,"
   },
@@ -355,7 +355,7 @@
     "id": 45,
     "function": "lemma_cmp_equal_congruent",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "207-213",
+    "lines": "209-215",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_cmp_equal_congruent<T: StT + Ord>(a: T, b: T, c: T)\n        requires\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            view_ord_consistent::<T>(),\n            a.cmp_spec(&b) == Equal,\n        ensures\n            a.cmp_spec(&c) == b.cmp_spec(&c),"
   },
@@ -363,7 +363,7 @@
     "id": 46,
     "function": "lemma_cmp_equal_congruent_right",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "227-233",
+    "lines": "229-235",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_cmp_equal_congruent_right<T: StT + Ord>(a: T, b: T, c: T)\n        requires\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            view_ord_consistent::<T>(),\n            b.cmp_spec(&c) == Equal,\n        ensures\n            a.cmp_spec(&b) == a.cmp_spec(&c),"
   },
@@ -371,7 +371,7 @@
     "id": 47,
     "function": "new",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "247-248",
+    "lines": "249-250",
     "spec_strength": "unknown",
     "snippet": "        fn new() -> (empty: Self)\n            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_bstparasteph_wf();"
   },
@@ -379,7 +379,7 @@
     "id": 48,
     "function": "singleton",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "251-255",
+    "lines": "253-257",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(key: T) -> (tree: Self)\n            ensures\n                tree@ == Set::<<T as View>::V>::empty().insert(key@),\n                tree@.finite(),\n                tree.spec_bstparasteph_wf();"
   },
@@ -387,7 +387,7 @@
     "id": 49,
     "function": "expose",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "258-262",
+    "lines": "260-264",
     "spec_strength": "unknown",
     "snippet": "        fn expose(&self) -> (exposed: Exposed<T>)\n            ensures\n                self@.len() == 0 ==> exposed is Leaf,\n                exposed is Leaf ==> self@ =~= Set::<<T as View>::V>::empty(),\n                exposed matches Exposed::Node(l, k, r) ==> {"
   },
@@ -395,7 +395,7 @@
     "id": 50,
     "function": "join_mid",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "275-277",
+    "lines": "277-279",
     "spec_strength": "unknown",
     "snippet": "        fn join_mid(exposed: Exposed<T>) -> (joined: Self)\n            requires\n                exposed matches Exposed::Node(l, k, r) ==> {"
   },
@@ -403,7 +403,7 @@
     "id": 51,
     "function": "join_m",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "291-300",
+    "lines": "293-302",
     "spec_strength": "unknown",
     "snippet": "        fn join_m(left: Self, key: T, right: Self) -> (tree: Self)\n            requires\n                left@.finite(), right@.finite(),\n                left@.disjoint(right@),\n                !left@.contains(key@),\n                !right@.contains(key@),\n                left@.len() + right@.len() < usize::MAX as nat,\n                forall|t: T| (#[trigger] left@.contains(t@)) ==> t.cmp_spec(&key) == Less,\n                forall|t: T| (#[trigger] right@.contains(t@)) ==> t.cmp_spec(&key) == Greater,\n            ensures tree@ =~= left@.union(right@).insert(key@);"
   },
@@ -411,7 +411,7 @@
     "id": 52,
     "function": "size",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "303-304",
+    "lines": "305-306",
     "spec_strength": "unknown",
     "snippet": "        fn size(&self) -> (count: usize)\n            ensures count == self@.len(), self@.finite();"
   },
@@ -419,7 +419,7 @@
     "id": 53,
     "function": "is_empty",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "307-308",
+    "lines": "309-310",
     "spec_strength": "unknown",
     "snippet": "        fn is_empty(&self) -> (empty: B)\n            ensures empty == (self@.len() == 0), self@.finite();"
   },
@@ -427,7 +427,7 @@
     "id": 54,
     "function": "insert",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "311-319",
+    "lines": "313-321",
     "spec_strength": "unknown",
     "snippet": "        fn insert(&mut self, key: T)\n            requires\n                old(self).spec_bstparasteph_wf(),\n                old(self)@.len() < usize::MAX as nat,\n                vstd::laws_cmp::obeys_cmp_spec::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                self.spec_bstparasteph_wf(),\n                self@ =~= old(self)@.insert(key@);"
   },
@@ -435,7 +435,7 @@
     "id": 55,
     "function": "delete",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "322-330",
+    "lines": "324-332",
     "spec_strength": "unknown",
     "snippet": "        fn delete(&mut self, key: &T)\n            requires\n                old(self).spec_bstparasteph_wf(),\n                old(self)@.len() < usize::MAX as nat,\n                vstd::laws_cmp::obeys_cmp_spec::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                self.spec_bstparasteph_wf(),\n                self@ =~= old(self)@.remove(key@);"
   },
@@ -443,7 +443,7 @@
     "id": 56,
     "function": "find",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "333-337",
+    "lines": "335-339",
     "spec_strength": "unknown",
     "snippet": "        fn find(&self, key: &T) -> (found: Option<T>)\n            requires\n                vstd::laws_cmp::obeys_cmp_spec::<T>(),\n                view_ord_consistent::<T>(),\n            ensures found.is_some() <==> self@.contains(key@);"
   },
@@ -451,7 +451,7 @@
     "id": 57,
     "function": "split",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "340-353",
+    "lines": "342-355",
     "spec_strength": "unknown",
     "snippet": "        fn split(&self, key: &T) -> (parts: (Self, B, Self))\n            requires\n                vstd::laws_cmp::obeys_cmp_spec::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                parts.1 == self@.contains(key@),\n                parts.0@.finite(),\n                parts.2@.finite(),\n                parts.0@.union(parts.2@) =~= self@.remove(key@),\n                parts.0@.disjoint(parts.2@),\n                !parts.0@.contains(key@),\n                !parts.2@.contains(key@),\n                forall|t: T| (#[trigger] parts.0@.contains(t@)) ==> t.cmp_spec(&key) == Less,\n                forall|t: T| (#[trigger] parts.2@.contains(t@)) ==> t.cmp_spec(&key) == Greater;"
   },
@@ -459,7 +459,7 @@
     "id": 58,
     "function": "min_key",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "356-364",
+    "lines": "358-366",
     "spec_strength": "unknown",
     "snippet": "        fn min_key(&self) -> (minimum: Option<T>)\n            requires\n                vstd::laws_cmp::obeys_cmp_spec::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                self@.len() == 0 <==> minimum.is_none(),\n                minimum.is_some() ==> self@.contains(minimum.unwrap()@),\n                minimum.is_some() ==> forall|t: T| (#[trigger] self@.contains(t@)) ==>\n                    minimum.unwrap().cmp_spec(&t) == Less || minimum.unwrap()@ == t@;"
   },
@@ -467,7 +467,7 @@
     "id": 59,
     "function": "join_pair",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "367-375",
+    "lines": "369-377",
     "spec_strength": "unknown",
     "snippet": "        fn join_pair(&self, other: Self) -> (joined: Self)\n            requires\n                vstd::laws_cmp::obeys_cmp_spec::<T>(),\n                view_ord_consistent::<T>(),\n                self@.disjoint(other@),\n                self@.finite(), other@.finite(),\n                self@.len() + other@.len() < usize::MAX as nat,\n                forall|s: T, o: T| #![trigger self@.contains(s@), other@.contains(o@)] self@.contains(s@) && other@.contains(o@) ==> s.cmp_spec(&o) == Less,\n            ensures joined@.finite(), joined@ =~= self@.union(other@);"
   },
@@ -475,7 +475,7 @@
     "id": 60,
     "function": "union",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "378-383",
+    "lines": "380-385",
     "spec_strength": "unknown",
     "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                vstd::laws_cmp::obeys_cmp_spec::<T>(),\n                view_ord_consistent::<T>(),\n                self@.len() + other@.len() <= usize::MAX as nat,\n            ensures combined@ == self@.union(other@), combined@.finite();"
   },
@@ -483,7 +483,7 @@
     "id": 61,
     "function": "intersect",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "386-390",
+    "lines": "388-392",
     "spec_strength": "unknown",
     "snippet": "        fn intersect(&self, other: &Self) -> (common: Self)\n            requires\n                vstd::laws_cmp::obeys_cmp_spec::<T>(),\n                view_ord_consistent::<T>(),\n            ensures common@ == self@.intersect(other@), common@.finite();"
   },
@@ -491,7 +491,7 @@
     "id": 62,
     "function": "difference",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "393-397",
+    "lines": "395-399",
     "spec_strength": "unknown",
     "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires\n                vstd::laws_cmp::obeys_cmp_spec::<T>(),\n                view_ord_consistent::<T>(),\n            ensures remaining@ == self@.difference(other@), remaining@.finite();"
   },
@@ -499,7 +499,7 @@
     "id": 63,
     "function": "filter",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "400-418",
+    "lines": "402-420",
     "spec_strength": "unknown",
     "snippet": "        fn filter<F: Fn(&T) -> bool>(\n            &self,\n            predicate: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self@.finite(),\n                forall|t: &T| predicate.requires((t,)),\n                forall|x: T, keep: bool|\n                    predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),\n                vstd::laws_cmp::obeys_cmp_spec::<T>(),\n                view_ord_consistent::<T>(),\n            ensures\n                filtered@.subset_of(self@),\n                filtered@.finite(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
   },
@@ -507,7 +507,7 @@
     "id": 64,
     "function": "reduce",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "422-426",
+    "lines": "424-428",
     "spec_strength": "unknown",
     "snippet": "        fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (result: T)\n            requires\n                self@.finite(),\n                forall|a: T, b: T| op.requires((a, b)),\n            ensures self@.len() == 0 ==> result@ == base@;"
   },
@@ -515,7 +515,7 @@
     "id": 65,
     "function": "collect_in_order",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "429-432",
+    "lines": "431-434",
     "spec_strength": "unknown",
     "snippet": "        fn collect_in_order(&self, out: &mut Vec<T>)\n            requires\n                self@.finite(),\n            ensures out@.len() == old(out)@.len() + self@.len();"
   },
@@ -523,7 +523,7 @@
     "id": 66,
     "function": "in_order",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "435-438",
+    "lines": "437-440",
     "spec_strength": "unknown",
     "snippet": "        fn in_order(&self) -> (seq: ArraySeqStPerS<T>)\n            ensures\n                seq@.len() == self@.len(),\n                forall|v: T::V| self@.contains(v) <==> seq@.contains(v);"
   },
@@ -531,7 +531,7 @@
     "id": 67,
     "function": "filter_inner",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "1484-1503",
+    "lines": "1490-1509",
     "spec_strength": "unknown",
     "snippet": "    fn filter_inner<T: StT + Ord, F: Fn(&T) -> bool>(\n        tree: &ParamBST<T>,\n        predicate: &F,\n        Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n    ) -> (filtered: ParamBST<T>)\n        requires\n            tree@.finite(),\n            forall|t: &T| predicate.requires((t,)),\n            forall|x: T, keep: bool|\n                predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            vstd::laws_cmp::obeys_cmp_spec::<T>(),\n            view_ord_consistent::<T>(),\n        ensures\n            filtered@.subset_of(tree@),\n            filtered@.finite(),\n            forall|v: T::V| #[trigger] filtered@.contains(v)\n                ==> tree@.contains(v) && spec_pred(v),\n            forall|v: T::V| tree@.contains(v) && spec_pred(v)\n                ==> #[trigger] filtered@.contains(v),\n        decreases tree@.len(),"
   },
@@ -539,7 +539,7 @@
     "id": 68,
     "function": "reduce_inner",
     "file": "Chap38/BSTParaStEph.rs",
-    "lines": "1558-1567",
+    "lines": "1564-1573",
     "spec_strength": "unknown",
     "snippet": "    fn reduce_inner<T: StT + Ord, F: Fn(T, T) -> T>(\n        tree: &ParamBST<T>,\n        op: &F,\n        identity: T,\n    ) -> (result: T)\n        requires\n            tree@.finite(),\n            forall|a: T, b: T| op.requires((a, b)),\n        ensures tree@.len() == 0 ==> result@ == identity@,\n        decreases tree@.len(),"
   }

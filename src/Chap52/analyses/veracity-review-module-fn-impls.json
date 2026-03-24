@@ -699,7 +699,7 @@
     "id": 88,
     "function": "empty",
     "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "78-79",
+    "lines": "79-80",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (out: Self)\n            ensures out.spec_adjtablegraphmtper_wf();"
   },
@@ -707,7 +707,7 @@
     "id": 89,
     "function": "num_vertices",
     "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "81-82",
+    "lines": "82-83",
     "spec_strength": "unknown",
     "snippet": "        fn num_vertices(&self) -> N\n            requires self.spec_adjtablegraphmtper_wf();"
   },
@@ -715,7 +715,7 @@
     "id": 90,
     "function": "num_edges",
     "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "84-86",
+    "lines": "85-87",
     "spec_strength": "unknown",
     "snippet": "        fn num_edges(&self) -> (m: N)\n            requires self.spec_adjtablegraphmtper_wf(), self.spec_num_edges() <= usize::MAX as nat\n            ensures m as nat == self.spec_num_edges();"
   },
@@ -723,7 +723,7 @@
     "id": 91,
     "function": "has_edge",
     "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "88-90",
+    "lines": "89-91",
     "spec_strength": "unknown",
     "snippet": "        fn has_edge(&self, u: &V, v: &V) -> (found: B)\n            requires self.spec_adjtablegraphmtper_wf()\n            ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@));"
   },
@@ -731,7 +731,7 @@
     "id": 92,
     "function": "out_neighbors",
     "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "92-96",
+    "lines": "93-97",
     "spec_strength": "unknown",
     "snippet": "        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)\n            requires self.spec_adjtablegraphmtper_wf()\n            ensures\n                self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],\n                !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty();"
   },
@@ -739,7 +739,7 @@
     "id": 93,
     "function": "out_degree",
     "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "98-99",
+    "lines": "99-100",
     "spec_strength": "unknown",
     "snippet": "        fn out_degree(&self, u: &V) -> N\n            requires self.spec_adjtablegraphmtper_wf();"
   },
@@ -747,7 +747,7 @@
     "id": 94,
     "function": "insert_vertex",
     "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "101-103",
+    "lines": "102-104",
     "spec_strength": "unknown",
     "snippet": "        fn insert_vertex(&self, v: V) -> (updated: Self)\n            requires self.spec_adjtablegraphmtper_wf()\n            ensures updated.spec_adjtablegraphmtper_wf(), updated.spec_adj().dom().contains(v@);"
   },
@@ -755,7 +755,7 @@
     "id": 95,
     "function": "delete_vertex",
     "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "105-107",
+    "lines": "106-108",
     "spec_strength": "unknown",
     "snippet": "        fn delete_vertex(&self, v: &V) -> (updated: Self)\n            requires self.spec_adjtablegraphmtper_wf()\n            ensures updated.spec_adjtablegraphmtper_wf(), !updated.spec_adj().dom().contains(v@);"
   },
@@ -763,7 +763,7 @@
     "id": 96,
     "function": "insert_edge",
     "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "109-115",
+    "lines": "110-116",
     "spec_strength": "unknown",
     "snippet": "        fn insert_edge(&self, u: V, v: V) -> (updated: Self)\n            requires self.spec_adjtablegraphmtper_wf()\n            ensures\n                updated.spec_adjtablegraphmtper_wf(),\n                updated.spec_adj().dom().contains(u@),\n                updated.spec_adj().dom().contains(v@),\n                updated.spec_adj()[u@].contains(v@);"
   },
@@ -771,7 +771,7 @@
     "id": 97,
     "function": "delete_edge",
     "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "117-122",
+    "lines": "118-123",
     "spec_strength": "unknown",
     "snippet": "        fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)\n            requires self.spec_adjtablegraphmtper_wf()\n            ensures\n                updated.spec_adjtablegraphmtper_wf(),\n                !updated.spec_adj().dom().contains(u@)\n                    || !updated.spec_adj()[u@].contains(v@);"
   },
@@ -779,7 +779,7 @@
     "id": 98,
     "function": "default",
     "file": "Chap52/AdjTableGraphMtPer.rs",
-    "lines": "262",
+    "lines": "263",
     "spec_strength": "",
     "snippet": "        fn default() -> Self { Self::empty() }"
   },

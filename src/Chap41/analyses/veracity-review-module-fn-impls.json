@@ -3,7 +3,7 @@
     "id": 1,
     "function": "size",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "114-116",
+    "lines": "115-117",
     "spec_strength": "hole",
     "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_avltreesetmteph_wf(),\n            ensures count == self@.len(), self@.finite();"
   },
@@ -11,7 +11,7 @@
     "id": 2,
     "function": "to_seq",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "119-124",
+    "lines": "120-125",
     "spec_strength": "hole",
     "snippet": "        fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)\n            requires self.spec_avltreesetmteph_wf(),\n            ensures\n                self@.finite(),\n                seq@.to_set() =~= self@,\n                forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);"
   },
@@ -19,7 +19,7 @@
     "id": 3,
     "function": "empty",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "127-130",
+    "lines": "128-131",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (empty: Self)\n            ensures\n                empty@ == Set::<<T as View>::V>::empty(),\n                empty.spec_avltreesetmteph_wf();"
   },
@@ -27,7 +27,7 @@
     "id": 4,
     "function": "singleton",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "133-137",
+    "lines": "134-138",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(x: T) -> (tree: Self)\n            ensures\n                tree@ == Set::<<T as View>::V>::empty().insert(x@),\n                tree@.finite(),\n                tree.spec_avltreesetmteph_wf();"
   },
@@ -35,7 +35,7 @@
     "id": 5,
     "function": "from_seq",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "139-143",
+    "lines": "140-144",
     "spec_strength": "unknown",
     "snippet": "        fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)\n            requires seq.spec_avltreeseqsteph_wf(),\n            ensures\n                constructed@.finite(),\n                constructed.spec_avltreesetmteph_wf();"
   },
@@ -43,7 +43,7 @@
     "id": 6,
     "function": "filter",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "146-163",
+    "lines": "147-164",
     "spec_strength": "hole",
     "snippet": "        fn filter<F: Pred<T> + Clone>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_avltreesetmteph_wf(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.finite(),\n                filtered@.subset_of(self@),\n                filtered.spec_avltreesetmteph_wf(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
   },
@@ -51,7 +51,7 @@
     "id": 7,
     "function": "intersection",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "166-171",
+    "lines": "167-172",
     "spec_strength": "hole",
     "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            requires self.spec_avltreesetmteph_wf(), other.spec_avltreesetmteph_wf(),\n            ensures\n                common@ == self@.intersect(other@),\n                common@.finite(),\n                common.spec_avltreesetmteph_wf();"
   },
@@ -59,7 +59,7 @@
     "id": 8,
     "function": "difference",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "174-179",
+    "lines": "175-180",
     "spec_strength": "hole",
     "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires self.spec_avltreesetmteph_wf(), other.spec_avltreesetmteph_wf(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining@.finite(),\n                remaining.spec_avltreesetmteph_wf();"
   },
@@ -67,7 +67,7 @@
     "id": 9,
     "function": "union",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "182-190",
+    "lines": "183-191",
     "spec_strength": "hole",
     "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_avltreesetmteph_wf(),\n                other.spec_avltreesetmteph_wf(),\n                self@.len() + other@.len() < usize::MAX as nat,\n            ensures\n                combined@ == self@.union(other@),\n                combined@.finite(),\n                combined.spec_avltreesetmteph_wf();"
   },
@@ -75,7 +75,7 @@
     "id": 10,
     "function": "find",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "193-195",
+    "lines": "194-196",
     "spec_strength": "hole",
     "snippet": "        fn find(&self, x: &T) -> (found: B)\n            requires self.spec_avltreesetmteph_wf(),\n            ensures found == self@.contains(x@);"
   },
@@ -83,7 +83,7 @@
     "id": 11,
     "function": "delete",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "198-203",
+    "lines": "199-204",
     "spec_strength": "unknown",
     "snippet": "        fn delete(&mut self, x: &T)\n            requires old(self).spec_avltreesetmteph_wf(),\n            ensures\n                self@ == old(self)@.remove(x@),\n                self@.finite(),\n                self.spec_avltreesetmteph_wf();"
   },
@@ -91,7 +91,7 @@
     "id": 12,
     "function": "insert",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "206-213",
+    "lines": "207-214",
     "spec_strength": "hole",
     "snippet": "        fn insert(&mut self, x: T)\n            requires\n                old(self).spec_avltreesetmteph_wf(),\n                old(self)@.len() + 1 < usize::MAX as nat,\n            ensures\n                self@ == old(self)@.insert(x@),\n                self@.finite(),\n                self.spec_avltreesetmteph_wf();"
   },
@@ -99,7 +99,7 @@
     "id": 13,
     "function": "iter",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "214-216",
+    "lines": "215-217",
     "spec_strength": "unknown",
     "snippet": "        fn iter(&self) -> (it: AVLTreeSetMtEphIter<T>)\n            requires self.spec_avltreesetmteph_wf(),\n            ensures it@.0 == 0, avltreesetmteph_iter_invariant(&it);"
   },
@@ -107,7 +107,7 @@
     "id": 14,
     "function": "default",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "452",
+    "lines": "453",
     "spec_strength": "",
     "snippet": "        fn default() -> Self { Self::empty() }"
   },
@@ -115,7 +115,7 @@
     "id": 15,
     "function": "next",
     "file": "Chap41/AVLTreeSetMtEph.rs",
-    "lines": "460-476",
+    "lines": "461-477",
     "spec_strength": "hole",
     "snippet": "        fn next(&mut self) -> (next: Option<T>)\n            ensures ({\n                let (old_index, old_seq) = old(self)@;\n                match next {\n                    None => {\n                        &&& self@ == old(self)@\n                        &&& old_index >= old_seq.len()\n                    },\n                    Some(element) => {\n                        let (new_index, new_seq) = self@;\n                        &&& 0 <= old_index < old_seq.len()\n                        &&& new_seq == old_seq\n                        &&& new_index == old_index + 1\n                        &&& element == old_seq[old_index]\n                    },\n                }\n            })"
   },
@@ -251,7 +251,7 @@
     "id": 32,
     "function": "lemma_wf_implies_len_bound",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "89-94",
+    "lines": "96-101",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_wf_implies_len_bound<T: StT>(link: &Link<T>)\n        requires spec_avltreeseqsteph_wf(*link),\n        ensures\n            spec_cached_size(link) == spec_inorder(*link).len(),\n            spec_inorder(*link).len() < usize::MAX,\n        decreases *link,"
   },
@@ -259,7 +259,7 @@
     "id": 33,
     "function": "lemma_inorder_values_maps_to_views",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "107-109",
+    "lines": "114-116",
     "spec_strength": "unknown",
     "snippet": "    pub proof fn lemma_inorder_values_maps_to_views<T: StT>(link: Link<T>)\n        ensures spec_inorder_values(link).map_values(|t: T| t@) =~= spec_inorder(link),\n        decreases link,"
   },
@@ -267,7 +267,7 @@
     "id": 34,
     "function": "lemma_empty_set_is_sorted",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "129-134",
+    "lines": "134-139",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_empty_set_is_sorted<T: StT + Ord + TotalOrder>(set: &AVLTreeSetStEph<T>)\n        requires\n            set@ =~= Set::<<T as View>::V>::empty(),\n            set.spec_avltreesetsteph_wf(),\n        ensures\n            set.spec_elements_sorted(),"
   },
@@ -275,7 +275,7 @@
     "id": 35,
     "function": "lemma_push_sorted",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "152-157",
+    "lines": "143-148",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_push_sorted<T: TotalOrder>(s: Seq<T>, v: T)\n        requires\n            spec_seq_sorted(s),\n            s.len() > 0 ==> TotalOrder::le(s.last(), v),\n        ensures\n            spec_seq_sorted(s.push(v)),"
   },
@@ -283,7 +283,7 @@
     "id": 36,
     "function": "lemma_subseq_sorted",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "184-189",
+    "lines": "170-175",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_subseq_sorted<T: TotalOrder>(s: Seq<T>, lo: int, hi: int)\n        requires\n            spec_seq_sorted(s),\n            0 <= lo <= hi <= s.len(),\n        ensures\n            spec_seq_sorted(s.subrange(lo, hi)),"
   },
@@ -291,7 +291,7 @@
     "id": 37,
     "function": "size",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "207-209",
+    "lines": "192-194",
     "spec_strength": "unknown",
     "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_avltreesetsteph_wf(),\n            ensures count == self@.len();"
   },
@@ -299,7 +299,7 @@
     "id": 38,
     "function": "to_seq",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "212-217",
+    "lines": "197-202",
     "spec_strength": "unknown",
     "snippet": "        fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)\n            requires self.spec_avltreesetsteph_wf(),\n            ensures\n                seq.spec_avltreeseqsteph_wf(),\n                seq@.to_set() =~= self@,\n                forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);"
   },
@@ -307,7 +307,7 @@
     "id": 39,
     "function": "empty",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "220-223",
+    "lines": "205-208",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (empty: Self)\n            ensures\n                empty@ == Set::<<T as View>::V>::empty(),\n                empty.spec_avltreesetsteph_wf();"
   },
@@ -315,7 +315,7 @@
     "id": 40,
     "function": "singleton",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "226-229",
+    "lines": "211-214",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(x: T) -> (tree: Self)\n            ensures\n                tree@ == Set::<<T as View>::V>::empty().insert(x@),\n                tree.spec_avltreesetsteph_wf();"
   },
@@ -323,7 +323,7 @@
     "id": 41,
     "function": "from_seq",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "231-235",
+    "lines": "216-220",
     "spec_strength": "unknown",
     "snippet": "        fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)\n            requires seq.spec_avltreeseqsteph_wf(),\n            ensures\n                constructed@ =~= seq@.to_set(),\n                constructed.spec_avltreesetsteph_wf();"
   },
@@ -331,7 +331,7 @@
     "id": 42,
     "function": "filter",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "238-254",
+    "lines": "222-238",
     "spec_strength": "unknown",
     "snippet": "        fn filter<F: PredSt<T>>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.subset_of(self@),\n                filtered.spec_avltreesetsteph_wf(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
   },
@@ -339,7 +339,7 @@
     "id": 43,
     "function": "intersection",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "257-261",
+    "lines": "240-244",
     "spec_strength": "unknown",
     "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            requires self.spec_avltreesetsteph_wf(), other.spec_avltreesetsteph_wf(),\n            ensures\n                common@ == self@.intersect(other@),\n                common.spec_avltreesetsteph_wf();"
   },
@@ -347,7 +347,7 @@
     "id": 44,
     "function": "difference",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "264-268",
+    "lines": "246-250",
     "spec_strength": "unknown",
     "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires self.spec_avltreesetsteph_wf(), other.spec_avltreesetsteph_wf(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining.spec_avltreesetsteph_wf();"
   },
@@ -355,7 +355,7 @@
     "id": 45,
     "function": "union",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "271-278",
+    "lines": "252-259",
     "spec_strength": "unknown",
     "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                other.spec_avltreesetsteph_wf(),\n                self@.len() + other@.len() < usize::MAX as nat,\n            ensures\n                combined@ == self@.union(other@),\n                combined.spec_avltreesetsteph_wf();"
   },
@@ -363,7 +363,7 @@
     "id": 46,
     "function": "find",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "281-283",
+    "lines": "261-263",
     "spec_strength": "unknown",
     "snippet": "        fn find(&self, x: &T) -> (found: B)\n            requires self.spec_avltreesetsteph_wf(),\n            ensures found == self@.contains(x@);"
   },
@@ -371,7 +371,7 @@
     "id": 47,
     "function": "delete",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "286-290",
+    "lines": "265-269",
     "spec_strength": "unknown",
     "snippet": "        fn delete(&mut self, x: &T)\n            requires old(self).spec_avltreesetsteph_wf(),\n            ensures\n                self@ == old(self)@.remove(x@),\n                self.spec_avltreesetsteph_wf();"
   },
@@ -379,188 +379,340 @@
     "id": 48,
     "function": "insert",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "293-299",
+    "lines": "271-277",
     "spec_strength": "unknown",
     "snippet": "        fn insert(&mut self, x: T)\n            requires\n                old(self).spec_avltreesetsteph_wf(),\n                old(self)@.len() + 1 < usize::MAX as nat,\n            ensures\n                self@ == old(self)@.insert(x@),\n                self.spec_avltreesetsteph_wf();"
   },
   {
     "id": 49,
-    "function": "insert_sorted",
+    "function": "find_iter",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "308-317",
+    "lines": "279-281",
     "spec_strength": "unknown",
-    "snippet": "        fn insert_sorted(&mut self, x: T)\n            requires\n                old(self).spec_avltreesetsteph_wf(),\n                old(self).spec_elements_sorted(),\n                obeys_feq_full::<T>(),\n                old(self)@.len() + 1 < usize::MAX as nat,\n            ensures\n                self@ == old(self)@.insert(x@),\n                self.spec_avltreesetsteph_wf(),\n                self.spec_elements_sorted();"
+    "snippet": "        fn find_iter(&self, x: &T) -> (found: B)\n            requires self.spec_avltreesetsteph_wf(),\n            ensures found == self@.contains(x@);"
   },
   {
     "id": 50,
-    "function": "delete_sorted",
+    "function": "insert_iter",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "319-327",
+    "lines": "283-289",
     "spec_strength": "unknown",
-    "snippet": "        fn delete_sorted(&mut self, x: &T)\n            requires\n                old(self).spec_avltreesetsteph_wf(),\n                old(self).spec_elements_sorted(),\n                obeys_feq_full::<T>(),\n            ensures\n                self@ == old(self)@.remove(x@),\n                self.spec_avltreesetsteph_wf(),\n                self.spec_elements_sorted();"
+    "snippet": "        fn insert_iter(&mut self, x: T)\n            requires\n                old(self).spec_avltreesetsteph_wf(),\n                old(self)@.len() + 1 < usize::MAX as nat,\n            ensures\n                self@ == old(self)@.insert(x@),\n                self.spec_avltreesetsteph_wf();"
   },
   {
     "id": 51,
-    "function": "filter_sorted",
+    "function": "delete_iter",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "329-348",
+    "lines": "291-295",
     "spec_strength": "unknown",
-    "snippet": "        fn filter_sorted<F: PredSt<T>>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                self.spec_elements_sorted(),\n                obeys_feq_full::<T>(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.subset_of(self@),\n                filtered.spec_avltreesetsteph_wf(),\n                filtered.spec_elements_sorted(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
+    "snippet": "        fn delete_iter(&mut self, x: &T)\n            requires old(self).spec_avltreesetsteph_wf(),\n            ensures\n                self@ == old(self)@.remove(x@),\n                self.spec_avltreesetsteph_wf();"
   },
   {
     "id": 52,
+    "function": "filter_iter",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "297-313",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter_iter<F: PredSt<T>>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.subset_of(self@),\n                filtered.spec_avltreesetsteph_wf(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
+  },
+  {
+    "id": 53,
+    "function": "intersection_iter",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "315-319",
+    "spec_strength": "unknown",
+    "snippet": "        fn intersection_iter(&self, other: &Self) -> (common: Self)\n            requires self.spec_avltreesetsteph_wf(), other.spec_avltreesetsteph_wf(),\n            ensures\n                common@ == self@.intersect(other@),\n                common.spec_avltreesetsteph_wf();"
+  },
+  {
+    "id": 54,
+    "function": "union_iter",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "321-328",
+    "spec_strength": "unknown",
+    "snippet": "        fn union_iter(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                other.spec_avltreesetsteph_wf(),\n                self@.len() + other@.len() < usize::MAX as nat,\n            ensures\n                combined@ == self@.union(other@),\n                combined.spec_avltreesetsteph_wf();"
+  },
+  {
+    "id": 55,
+    "function": "difference_iter",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "330-334",
+    "spec_strength": "unknown",
+    "snippet": "        fn difference_iter(&self, other: &Self) -> (remaining: Self)\n            requires self.spec_avltreesetsteph_wf(), other.spec_avltreesetsteph_wf(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining.spec_avltreesetsteph_wf();"
+  },
+  {
+    "id": 56,
+    "function": "insert_sorted",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "343-351",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert_sorted(&mut self, x: T)\n            requires\n                old(self).spec_avltreesetsteph_wf(),\n                old(self).spec_elements_sorted(),\n                old(self)@.len() + 1 < usize::MAX as nat,\n            ensures\n                self@ == old(self)@.insert(x@),\n                self.spec_avltreesetsteph_wf(),\n                self.spec_elements_sorted();"
+  },
+  {
+    "id": 57,
+    "function": "delete_sorted",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "353-360",
+    "spec_strength": "unknown",
+    "snippet": "        fn delete_sorted(&mut self, x: &T)\n            requires\n                old(self).spec_avltreesetsteph_wf(),\n                old(self).spec_elements_sorted(),\n            ensures\n                self@ == old(self)@.remove(x@),\n                self.spec_avltreesetsteph_wf(),\n                self.spec_elements_sorted();"
+  },
+  {
+    "id": 58,
+    "function": "filter_sorted",
+    "file": "Chap41/AVLTreeSetStEph.rs",
+    "lines": "362-380",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter_sorted<F: PredSt<T>>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                self.spec_elements_sorted(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.subset_of(self@),\n                filtered.spec_avltreesetsteph_wf(),\n                filtered.spec_elements_sorted(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
+  },
+  {
+    "id": 59,
     "function": "intersection_sorted",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "350-358",
+    "lines": "382-390",
     "spec_strength": "unknown",
     "snippet": "        fn intersection_sorted(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                self.spec_elements_sorted(),\n                other.spec_avltreesetsteph_wf(),\n            ensures\n                common@ == self@.intersect(other@),\n                common.spec_avltreesetsteph_wf(),\n                common.spec_elements_sorted();"
   },
   {
-    "id": 53,
+    "id": 60,
     "function": "difference_sorted",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "360-368",
+    "lines": "392-400",
     "spec_strength": "unknown",
     "snippet": "        fn difference_sorted(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                self.spec_elements_sorted(),\n                other.spec_avltreesetsteph_wf(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining.spec_avltreesetsteph_wf(),\n                remaining.spec_elements_sorted();"
   },
   {
-    "id": 54,
+    "id": 61,
     "function": "union_sorted",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "370-379",
+    "lines": "402-411",
     "spec_strength": "unknown",
     "snippet": "        fn union_sorted(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_avltreesetsteph_wf(),\n                self.spec_elements_sorted(),\n                other.spec_avltreesetsteph_wf(),\n                self@.len() + other@.len() < usize::MAX as nat,\n            ensures\n                combined@ == self@.union(other@),\n                combined.spec_avltreesetsteph_wf(),\n                combined.spec_elements_sorted();"
   },
   {
-    "id": 55,
+    "id": 62,
     "function": "default",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "2116",
+    "lines": "697",
     "spec_strength": "",
     "snippet": "        fn default() -> Self { Self::empty() }"
   },
   {
-    "id": 56,
+    "id": 63,
     "function": "eq",
     "file": "Chap41/AVLTreeSetStEph.rs",
-    "lines": "2128-2129",
+    "lines": "709-710",
     "spec_strength": "hole",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
   {
-    "id": 57,
+    "id": 64,
+    "function": "lemma_inorder_values_maps_to_views_per",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "82-84",
+    "spec_strength": "unknown",
+    "snippet": "    pub proof fn lemma_inorder_values_maps_to_views_per<T: StT>(link: &Link<T>)\n        ensures spec_inorder_values_per(*link).map_values(|t: T| t@) =~= spec_inorder(*link),\n        decreases *link,"
+  },
+  {
+    "id": 65,
+    "function": "lemma_push_sorted_per",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "104-109",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_push_sorted_per<T: TotalOrder>(s: Seq<T>, v: T)\n        requires\n            spec_seq_sorted_per(s),\n            s.len() > 0 ==> TotalOrder::le(s.last(), v),\n        ensures\n            spec_seq_sorted_per(s.push(v)),"
+  },
+  {
+    "id": 66,
+    "function": "lemma_map_view_feq_implies_ext_eq_per",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "132-137",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_map_view_feq_implies_ext_eq_per<T: View + Eq + Clone>(a: Seq<T>, b: Seq<T>)\n        requires\n            a.map_values(|t: T| t@) =~= b.map_values(|t: T| t@),\n            obeys_feq_full::<T>(),\n        ensures\n            a =~= b,"
+  },
+  {
+    "id": 67,
+    "function": "lemma_subseq_sorted_per",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "153-158",
+    "spec_strength": "unknown",
+    "snippet": "    proof fn lemma_subseq_sorted_per<T: TotalOrder>(s: Seq<T>, lo: int, hi: int)\n        requires\n            spec_seq_sorted_per(s),\n            0 <= lo <= hi <= s.len(),\n        ensures\n            spec_seq_sorted_per(s.subrange(lo, hi)),"
+  },
+  {
+    "id": 68,
     "function": "size",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "65-67",
+    "lines": "175-177",
     "spec_strength": "unknown",
     "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_avltreesetstper_wf(),\n            ensures count == self@.len();"
   },
   {
-    "id": 58,
+    "id": 69,
     "function": "to_seq",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "70-73",
+    "lines": "180-183",
     "spec_strength": "unknown",
     "snippet": "        fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)\n            ensures\n                seq@.to_set() =~= self@,\n                forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);"
   },
   {
-    "id": 59,
+    "id": 70,
     "function": "empty",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "76-79",
+    "lines": "186-189",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (empty: Self)\n            ensures\n                empty@ == Set::<<T as View>::V>::empty(),\n                empty.spec_avltreesetstper_wf();"
   },
   {
-    "id": 60,
+    "id": 71,
     "function": "singleton",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "82-85",
+    "lines": "192-195",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(x: T) -> (tree: Self)\n            ensures\n                tree@ == Set::<<T as View>::V>::empty().insert(x@),\n                tree.spec_avltreesetstper_wf();"
   },
   {
-    "id": 61,
+    "id": 72,
     "function": "from_seq",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "87-91",
+    "lines": "197-201",
     "spec_strength": "unknown",
     "snippet": "        fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)\n            requires seq.spec_avltreeseqstper_wf(),\n            ensures\n                constructed@ =~= seq@.to_set(),\n                constructed.spec_avltreesetstper_wf();"
   },
   {
-    "id": 62,
+    "id": 73,
     "function": "filter",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "94-110",
+    "lines": "204-220",
     "spec_strength": "unknown",
     "snippet": "        fn filter<F: PredSt<T>>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.subset_of(self@),\n                filtered.spec_avltreesetstper_wf(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
   },
   {
-    "id": 63,
+    "id": 74,
     "function": "intersection",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "113-119",
+    "lines": "223-229",
     "spec_strength": "unknown",
     "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                other.spec_avltreesetstper_wf(),\n            ensures\n                common@ == self@.intersect(other@),\n                common.spec_avltreesetstper_wf();"
   },
   {
-    "id": 64,
+    "id": 75,
     "function": "difference",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "122-128",
+    "lines": "232-238",
     "spec_strength": "unknown",
     "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                other.spec_avltreesetstper_wf(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining.spec_avltreesetstper_wf();"
   },
   {
-    "id": 65,
+    "id": 76,
     "function": "union",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "131-138",
+    "lines": "241-248",
     "spec_strength": "unknown",
     "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                other.spec_avltreesetstper_wf(),\n                self@.len() + other@.len() < usize::MAX as nat,\n            ensures\n                combined@ == self@.union(other@),\n                combined.spec_avltreesetstper_wf();"
   },
   {
-    "id": 66,
+    "id": 77,
     "function": "find",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "141-143",
+    "lines": "251-253",
     "spec_strength": "unknown",
     "snippet": "        fn find(&self, x: &T) -> (found: B)\n            requires self.spec_avltreesetstper_wf(),\n            ensures found == self@.contains(x@);"
   },
   {
-    "id": 67,
+    "id": 78,
     "function": "delete",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "146-150",
+    "lines": "256-260",
     "spec_strength": "unknown",
     "snippet": "        fn delete(&self, x: &T) -> (updated: Self)\n            requires self.spec_avltreesetstper_wf(),\n            ensures\n                updated@ == self@.remove(x@),\n                updated.spec_avltreesetstper_wf();"
   },
   {
-    "id": 68,
+    "id": 79,
     "function": "insert",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "153-159",
+    "lines": "263-269",
     "spec_strength": "unknown",
     "snippet": "        fn insert(&self, x: T) -> (updated: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                self@.len() + 1 < usize::MAX as nat,\n            ensures\n                updated@ == self@.insert(x@),\n                updated.spec_avltreesetstper_wf();"
   },
   {
-    "id": 69,
+    "id": 80,
+    "function": "find_iter",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "271-273",
+    "spec_strength": "unknown",
+    "snippet": "        fn find_iter(&self, x: &T) -> (found: B)\n            requires self.spec_avltreesetstper_wf(),\n            ensures found == self@.contains(x@);"
+  },
+  {
+    "id": 81,
+    "function": "insert_iter",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "275-281",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert_iter(&self, x: T) -> (updated: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                self@.len() + 1 < usize::MAX as nat,\n            ensures\n                updated@ == self@.insert(x@),\n                updated.spec_avltreesetstper_wf();"
+  },
+  {
+    "id": 82,
+    "function": "delete_iter",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "283-287",
+    "spec_strength": "unknown",
+    "snippet": "        fn delete_iter(&self, x: &T) -> (updated: Self)\n            requires self.spec_avltreesetstper_wf(),\n            ensures\n                updated@ == self@.remove(x@),\n                updated.spec_avltreesetstper_wf();"
+  },
+  {
+    "id": 83,
+    "function": "filter_iter",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "289-305",
+    "spec_strength": "unknown",
+    "snippet": "        fn filter_iter<F: PredSt<T>>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.subset_of(self@),\n                filtered.spec_avltreesetstper_wf(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
+  },
+  {
+    "id": 84,
+    "function": "intersection_iter",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "307-313",
+    "spec_strength": "unknown",
+    "snippet": "        fn intersection_iter(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                other.spec_avltreesetstper_wf(),\n            ensures\n                common@ == self@.intersect(other@),\n                common.spec_avltreesetstper_wf();"
+  },
+  {
+    "id": 85,
+    "function": "union_iter",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "315-322",
+    "spec_strength": "unknown",
+    "snippet": "        fn union_iter(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                other.spec_avltreesetstper_wf(),\n                self@.len() + other@.len() < usize::MAX as nat,\n            ensures\n                combined@ == self@.union(other@),\n                combined.spec_avltreesetstper_wf();"
+  },
+  {
+    "id": 86,
+    "function": "difference_iter",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "324-330",
+    "spec_strength": "unknown",
+    "snippet": "        fn difference_iter(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                other.spec_avltreesetstper_wf(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining.spec_avltreesetstper_wf();"
+  },
+  {
+    "id": 87,
+    "function": "insert_sorted_per",
+    "file": "Chap41/AVLTreeSetStPer.rs",
+    "lines": "339-347",
+    "spec_strength": "unknown",
+    "snippet": "        fn insert_sorted_per(&self, x: T) -> (updated: Self)\n            requires\n                self.spec_avltreesetstper_wf(),\n                self.spec_elements_sorted_per(),\n                self@.len() + 1 < usize::MAX as nat,\n            ensures\n                updated@ == self@.insert(x@),\n                updated.spec_avltreesetstper_wf(),\n                updated.spec_elements_sorted_per();"
+  },
+  {
+    "id": 88,
     "function": "default",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "1081",
+    "lines": "1656",
     "spec_strength": "",
     "snippet": "        fn default() -> Self { Self::empty() }"
   },
   {
-    "id": 70,
+    "id": 89,
     "function": "eq",
     "file": "Chap41/AVLTreeSetStPer.rs",
-    "lines": "1091-1092",
+    "lines": "1666-1667",
     "spec_strength": "hole",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
   {
-    "id": 71,
+    "id": 90,
     "function": "zero_bit_false",
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "102-104",
@@ -568,7 +720,7 @@
     "snippet": "    proof fn zero_bit_false(i: u64)\n        requires i < 64,\n        ensures !get_bit64!(0u64, i),"
   },
   {
-    "id": 72,
+    "id": 91,
     "function": "set_bit64_proof",
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "108-115",
@@ -576,7 +728,7 @@
     "snippet": "    proof fn set_bit64_proof(bv_new: u64, bv_old: u64, index: u64, bit: bool)\n        requires\n            bv_new == set_bit64!(bv_old, index, bit),\n            index < 64,\n        ensures\n            get_bit64!(bv_new, index) == bit,\n            forall|loc2: u64| #![trigger (0x1u64 & (bv_new >> loc2))] (loc2 < 64 && loc2 != index) ==>\n                (get_bit64!(bv_new, loc2) == get_bit64!(bv_old, loc2)),"
   },
   {
-    "id": 73,
+    "id": 92,
     "function": "bit_or_64_proof",
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "119-122",
@@ -584,7 +736,7 @@
     "snippet": "    proof fn bit_or_64_proof(bv1: u64, bv2: u64, bv_new: u64)\n        requires bv_new == bv1 | bv2,\n        ensures forall|i: u64| #![trigger (0x1u64 & (bv_new >> i))] (i < 64) ==>\n            get_bit64!(bv_new, i) == (get_bit64!(bv1, i) || get_bit64!(bv2, i)),"
   },
   {
-    "id": 74,
+    "id": 93,
     "function": "bit_and_64_proof",
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "126-129",
@@ -592,7 +744,7 @@
     "snippet": "    proof fn bit_and_64_proof(bv1: u64, bv2: u64, bv_new: u64)\n        requires bv_new == bv1 & bv2,\n        ensures forall|i: u64| #![trigger (0x1u64 & (bv_new >> i))] (i < 64) ==>\n            get_bit64!(bv_new, i) == (get_bit64!(bv1, i) && get_bit64!(bv2, i)),"
   },
   {
-    "id": 75,
+    "id": 94,
     "function": "bit_andnot_64_proof",
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "133-136",
@@ -600,7 +752,7 @@
     "snippet": "    proof fn bit_andnot_64_proof(bv1: u64, bv2: u64, bv_new: u64)\n        requires bv_new == bv1 & !bv2,\n        ensures forall|i: u64| #![trigger (0x1u64 & (bv_new >> i))] (i < 64) ==>\n            get_bit64!(bv_new, i) == (get_bit64!(bv1, i) && !get_bit64!(bv2, i)),"
   },
   {
-    "id": 76,
+    "id": 95,
     "function": "lemma_bounded_usize_set_finite",
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "140-142",
@@ -608,7 +760,7 @@
     "snippet": "    proof fn lemma_bounded_usize_set_finite(n: usize)\n        ensures Set::new(|i: usize| (i as int) < n as int).finite()\n        decreases n"
   },
   {
-    "id": 77,
+    "id": 96,
     "function": "lemma_view_finite",
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "154-159",
@@ -616,7 +768,7 @@
     "snippet": "    proof fn lemma_view_finite(bits: Seq<u64>, universe_size: usize)\n        requires bits.len() == num_words(universe_size as int),\n        ensures Set::new(|i: usize|\n            (i as int) < universe_size as int\n            && u64_view(bits[i as int / 64])[i as int % 64]\n        ).finite(),"
   },
   {
-    "id": 78,
+    "id": 97,
     "function": "new",
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "178-182",
@@ -624,7 +776,7 @@
     "snippet": "        fn new(u: usize) -> (empty: Self)\n            ensures\n                empty@ == Set::<usize>::empty(),\n                empty.spec_arraysetenummteph_wf(),\n                empty.spec_universe_size() == u;"
   },
   {
-    "id": 79,
+    "id": 98,
     "function": "size",
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "186-188",
@@ -632,7 +784,7 @@
     "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_arraysetenummteph_wf(),\n            ensures count == self@.len(), self@.finite();"
   },
   {
-    "id": 80,
+    "id": 99,
     "function": "to_seq",
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "192-197",
@@ -640,7 +792,7 @@
     "snippet": "        fn to_seq(&self) -> (seq: ArraySeqMtEphS<usize>)\n            requires self.spec_arraysetenummteph_wf(),\n            ensures\n                self@.finite(),\n                seq@.to_set() =~= self@,\n                forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);"
   },
   {
-    "id": 81,
+    "id": 100,
     "function": "empty",
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "200-204",
@@ -648,7 +800,7 @@
     "snippet": "        fn empty(u: usize) -> (empty: Self)\n            ensures\n                empty@ == Set::<usize>::empty(),\n                empty.spec_arraysetenummteph_wf(),\n                empty.spec_universe_size() == u;"
   },
   {
-    "id": 82,
+    "id": 101,
     "function": "singleton",
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "208-214",
@@ -656,7 +808,7 @@
     "snippet": "        fn singleton(u: usize, x: usize) -> (tree: Self)\n            ensures\n                (x < u ==> tree@ == Set::<usize>::empty().insert(x)),\n                (x >= u ==> tree@ == Set::<usize>::empty()),\n                tree@.finite(),\n                tree.spec_arraysetenummteph_wf(),\n                tree.spec_universe_size() == u;"
   },
   {
-    "id": 83,
+    "id": 102,
     "function": "from_seq",
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "217-221",
@@ -664,7 +816,7 @@
     "snippet": "        fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (constructed: Self)\n            ensures\n                constructed@.finite(),\n                constructed.spec_arraysetenummteph_wf(),\n                constructed.spec_universe_size() == u;"
   },
   {
-    "id": 84,
+    "id": 103,
     "function": "filter",
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "225-233",
@@ -672,7 +824,7 @@
     "snippet": "        fn filter<F: Fn(usize) -> bool + Send + Sync + 'static + Clone>(&self, f: F) -> (filtered: Self)\n            requires\n                self.spec_arraysetenummteph_wf(),\n                forall|i: usize| i < self.spec_universe_size() ==> #[trigger] f.requires((i,)),\n            ensures\n                filtered@.finite(),\n                filtered@.subset_of(self@),\n                filtered.spec_arraysetenummteph_wf(),\n                filtered.spec_universe_size() == self.spec_universe_size();"
   },
   {
-    "id": 85,
+    "id": 104,
     "function": "intersection",
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "237-246",
@@ -680,7 +832,7 @@
     "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_arraysetenummteph_wf(),\n                other.spec_arraysetenummteph_wf(),\n                self.spec_universe_size() == other.spec_universe_size(),\n            ensures\n                common@ == self@.intersect(other@),\n                common@.finite(),\n                common.spec_arraysetenummteph_wf(),\n                common.spec_universe_size() == self.spec_universe_size();"
   },
   {
-    "id": 86,
+    "id": 105,
     "function": "difference",
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "250-259",
@@ -688,7 +840,7 @@
     "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_arraysetenummteph_wf(),\n                other.spec_arraysetenummteph_wf(),\n                self.spec_universe_size() == other.spec_universe_size(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining@.finite(),\n                remaining.spec_arraysetenummteph_wf(),\n                remaining.spec_universe_size() == self.spec_universe_size();"
   },
   {
-    "id": 87,
+    "id": 106,
     "function": "union",
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "263-272",
@@ -696,7 +848,7 @@
     "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_arraysetenummteph_wf(),\n                other.spec_arraysetenummteph_wf(),\n                self.spec_universe_size() == other.spec_universe_size(),\n            ensures\n                combined@ == self@.union(other@),\n                combined@.finite(),\n                combined.spec_arraysetenummteph_wf(),\n                combined.spec_universe_size() == self.spec_universe_size();"
   },
   {
-    "id": 88,
+    "id": 107,
     "function": "find",
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "276-278",
@@ -704,7 +856,7 @@
     "snippet": "        fn find(&self, x: usize) -> (found: B)\n            requires self.spec_arraysetenummteph_wf(),\n            ensures found == self@.contains(x);"
   },
   {
-    "id": 89,
+    "id": 108,
     "function": "delete",
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "282-288",
@@ -712,7 +864,7 @@
     "snippet": "        fn delete(&mut self, x: usize)\n            requires old(self).spec_arraysetenummteph_wf(),\n            ensures\n                self@ == old(self)@.remove(x),\n                self@.finite(),\n                self.spec_arraysetenummteph_wf(),\n                self.spec_universe_size() == old(self).spec_universe_size();"
   },
   {
-    "id": 90,
+    "id": 109,
     "function": "insert",
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "292-299",
@@ -720,7 +872,7 @@
     "snippet": "        fn insert(&mut self, x: usize)\n            requires old(self).spec_arraysetenummteph_wf(),\n            ensures\n                (x < old(self).spec_universe_size() ==> self@ == old(self)@.insert(x)),\n                (x >= old(self).spec_universe_size() ==> self@ == old(self)@),\n                self@.finite(),\n                self.spec_arraysetenummteph_wf(),\n                self.spec_universe_size() == old(self).spec_universe_size();"
   },
   {
-    "id": 91,
+    "id": 110,
     "function": "eq",
     "file": "Chap41/ArraySetEnumMtEph.rs",
     "lines": "946-947",
@@ -728,175 +880,175 @@
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
   {
-    "id": 92,
+    "id": 111,
     "function": "lemma_filter_remove",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "80-83",
+    "lines": "77-80",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_filter_remove<V>(s: Seq<V>, v: V)\n        requires s.no_duplicates()\n        ensures s.filter(|e: V| e != v).to_set() =~= s.to_set().remove(v)\n        decreases s.len()"
   },
   {
-    "id": 93,
+    "id": 112,
     "function": "lemma_push_preserves_no_dups",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "119-124",
+    "lines": "116-121",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_push_preserves_no_dups<V>(s: Seq<V>, x: V)\n        requires\n            s.no_duplicates(),\n            !s.contains(x),\n        ensures\n            s.push(x).no_duplicates()"
   },
   {
-    "id": 94,
+    "id": 113,
     "function": "lemma_filter_in_original",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "144-146",
+    "lines": "141-143",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_filter_in_original<V>(s: Seq<V>, pred: spec_fn(V) -> bool)\n        ensures forall|v: V| s.filter(pred).contains(v) ==> #[trigger] s.contains(v)\n        decreases s.len()"
   },
   {
-    "id": 95,
+    "id": 114,
     "function": "lemma_filter_preserves_no_dups",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "180-183",
+    "lines": "177-180",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_filter_preserves_no_dups<V>(s: Seq<V>, pred: spec_fn(V) -> bool)\n        requires s.no_duplicates()\n        ensures s.filter(pred).no_duplicates()\n        decreases s.len()"
   },
   {
-    "id": 96,
+    "id": 115,
     "function": "lemma_filter_to_set_intersect",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "214-217",
+    "lines": "211-214",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_filter_to_set_intersect<V>(s: Seq<V>, set: Set<V>)\n        requires s.no_duplicates()\n        ensures s.filter(|e: V| set.contains(e)).to_set() =~= s.to_set().intersect(set)\n        decreases s.len()"
   },
   {
-    "id": 97,
+    "id": 116,
     "function": "lemma_filter_to_set_difference",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "249-252",
+    "lines": "246-249",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_filter_to_set_difference<V>(s: Seq<V>, set: Set<V>)\n        requires s.no_duplicates()\n        ensures s.filter(|e: V| !set.contains(e)).to_set() =~= s.to_set().difference(set)\n        decreases s.len()"
   },
   {
-    "id": 98,
+    "id": 117,
     "function": "lemma_subseq_no_dups_subset",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "285-291",
+    "lines": "282-288",
     "spec_strength": "unknown",
     "snippet": "    proof fn lemma_subseq_no_dups_subset<V>(orig: Seq<V>, sub: Seq<V>)\n        requires\n            orig.no_duplicates(),\n            forall|i: int| #![trigger sub[i]] 0 <= i < sub.len() ==> orig.contains(sub[i]),\n            sub.no_duplicates(),\n        ensures\n            sub.to_set().subset_of(orig.to_set())"
   },
   {
-    "id": 99,
+    "id": 118,
     "function": "size",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "311-313",
+    "lines": "307-309",
     "spec_strength": "unknown",
     "snippet": "        fn size(&self) -> (count: usize)\n            requires self.spec_arraysetsteph_wf()\n            ensures count == self@.len(), self@.finite();"
   },
   {
-    "id": 100,
+    "id": 119,
     "function": "to_seq",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "317-322",
+    "lines": "313-318",
     "spec_strength": "unknown",
     "snippet": "        fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)\n            requires self.spec_arraysetsteph_wf(),\n            ensures\n                self@.finite(),\n                seq@.no_duplicates(),\n                seq@.to_set() =~= self@;"
   },
   {
-    "id": 101,
+    "id": 120,
     "function": "empty",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "326-327",
+    "lines": "322-323",
     "spec_strength": "unknown",
     "snippet": "        fn empty() -> (empty: Self)\n            ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_arraysetsteph_wf();"
   },
   {
-    "id": 102,
+    "id": 121,
     "function": "singleton",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "331-332",
+    "lines": "327-328",
     "spec_strength": "unknown",
     "snippet": "        fn singleton(x: T) -> (tree: Self)\n            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_arraysetsteph_wf();"
   },
   {
-    "id": 103,
+    "id": 122,
     "function": "from_seq",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "336-340",
+    "lines": "332-336",
     "spec_strength": "unknown",
     "snippet": "        fn from_seq(seq: ArraySeqStEphS<T>) -> (constructed: Self)\n            ensures\n                constructed@ =~= seq@.to_set(),\n                constructed@.finite(),\n                constructed.spec_arraysetsteph_wf();"
   },
   {
-    "id": 104,
+    "id": 123,
     "function": "filter",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "344-362",
+    "lines": "340-358",
     "spec_strength": "unknown",
     "snippet": "        fn filter<F: PredSt<T>>(\n            &self,\n            f: F,\n            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,\n        ) -> (filtered: Self)\n            requires\n                self.spec_arraysetsteph_wf(),\n                self@.finite(),\n                forall|t: &T| #[trigger] f.requires((t,)),\n                forall|x: T, keep: bool|\n                    f.ensures((&x,), keep) ==> keep == spec_pred(x@),\n            ensures\n                filtered@.finite(),\n                filtered@.subset_of(self@),\n                filtered.spec_arraysetsteph_wf(),\n                forall|v: T::V| #[trigger] filtered@.contains(v)\n                    ==> self@.contains(v) && spec_pred(v),\n                forall|v: T::V| self@.contains(v) && spec_pred(v)\n                    ==> #[trigger] filtered@.contains(v);"
   },
   {
-    "id": 105,
+    "id": 124,
     "function": "intersection",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "366-375",
+    "lines": "362-371",
     "spec_strength": "unknown",
     "snippet": "        fn intersection(&self, other: &Self) -> (common: Self)\n            requires\n                self.spec_arraysetsteph_wf(),\n                other.spec_arraysetsteph_wf(),\n                self@.finite(),\n                other@.finite(),\n            ensures\n                common@ == self@.intersect(other@),\n                common@.finite(),\n                common.spec_arraysetsteph_wf();"
   },
   {
-    "id": 106,
+    "id": 125,
     "function": "difference",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "379-388",
+    "lines": "375-384",
     "spec_strength": "unknown",
     "snippet": "        fn difference(&self, other: &Self) -> (remaining: Self)\n            requires\n                self.spec_arraysetsteph_wf(),\n                other.spec_arraysetsteph_wf(),\n                self@.finite(),\n                other@.finite(),\n            ensures\n                remaining@ == self@.difference(other@),\n                remaining@.finite(),\n                remaining.spec_arraysetsteph_wf();"
   },
   {
-    "id": 107,
+    "id": 126,
     "function": "union",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "392-401",
+    "lines": "388-397",
     "spec_strength": "unknown",
     "snippet": "        fn union(&self, other: &Self) -> (combined: Self)\n            requires\n                self.spec_arraysetsteph_wf(),\n                other.spec_arraysetsteph_wf(),\n                self@.finite(),\n                other@.finite(),\n            ensures\n                combined@ == self@.union(other@),\n                combined@.finite(),\n                combined.spec_arraysetsteph_wf();"
   },
   {
-    "id": 108,
+    "id": 127,
     "function": "find",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "405-407",
+    "lines": "401-403",
     "spec_strength": "unknown",
     "snippet": "        fn find(&self, x: &T) -> (found: B)\n            requires self@.finite(),\n            ensures found == self@.contains(x@);"
   },
   {
-    "id": 109,
+    "id": 128,
     "function": "delete",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "411-418",
+    "lines": "407-414",
     "spec_strength": "unknown",
     "snippet": "        fn delete(&mut self, x: &T)\n            requires\n                old(self).spec_arraysetsteph_wf(),\n                old(self)@.finite(),\n            ensures\n                self@ == old(self)@.remove(x@),\n                self@.finite(),\n                self.spec_arraysetsteph_wf();"
   },
   {
-    "id": 110,
+    "id": 129,
     "function": "insert",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "422-429",
+    "lines": "418-425",
     "spec_strength": "unknown",
     "snippet": "        fn insert(&mut self, x: T)\n            requires\n                old(self).spec_arraysetsteph_wf(),\n                old(self)@.finite(),\n            ensures\n                self@ == old(self)@.insert(x@),\n                self@.finite(),\n                self.spec_arraysetsteph_wf();"
   },
   {
-    "id": 111,
+    "id": 130,
     "function": "default",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "1228",
+    "lines": "1219",
     "spec_strength": "",
     "snippet": "        fn default() -> Self { Self::empty() }"
   },
   {
-    "id": 112,
+    "id": 131,
     "function": "eq",
     "file": "Chap41/ArraySetStEph.rs",
-    "lines": "1240-1241",
+    "lines": "1231-1232",
     "spec_strength": "hole",
     "snippet": "        fn eq(&self, other: &Self) -> (equal: bool)\n            ensures equal == (self@ == other@)"
   },
   {
-    "id": 113,
+    "id": 132,
     "function": "example_41_1_array_set",
     "file": "Chap41/Example41_3.rs",
     "lines": "18",
@@ -904,7 +1056,7 @@
     "snippet": "        fn example_41_1_array_set();"
   },
   {
-    "id": 114,
+    "id": 133,
     "function": "example_41_1_avl_set",
     "file": "Chap41/Example41_3.rs",
     "lines": "21",
@@ -912,7 +1064,7 @@
     "snippet": "        fn example_41_1_avl_set();"
   },
   {
-    "id": 115,
+    "id": 134,
     "function": "demonstrate_set_operations",
     "file": "Chap41/Example41_3.rs",
     "lines": "24",
@@ -920,7 +1072,7 @@
     "snippet": "        fn demonstrate_set_operations();"
   },
   {
-    "id": 116,
+    "id": 135,
     "function": "example_41_1_array_set_impl",
     "file": "Chap41/Example41_3.rs",
     "lines": "27",
@@ -928,7 +1080,7 @@
     "snippet": "    fn example_41_1_array_set_impl()"
   },
   {
-    "id": 117,
+    "id": 136,
     "function": "example_41_1_avl_set_impl",
     "file": "Chap41/Example41_3.rs",
     "lines": "70",
@@ -936,7 +1088,7 @@
     "snippet": "    fn example_41_1_avl_set_impl()"
   },
   {
-    "id": 118,
+    "id": 137,
     "function": "example_41_3_from_seq_demonstration_impl",
     "file": "Chap41/Example41_3.rs",
     "lines": "113",
@@ -944,7 +1096,7 @@
     "snippet": "    fn example_41_3_from_seq_demonstration_impl()"
   },
   {
-    "id": 119,
+    "id": 138,
     "function": "additional_set_operations_impl",
     "file": "Chap41/Example41_3.rs",
     "lines": "141",
@@ -952,7 +1104,7 @@
     "snippet": "    fn additional_set_operations_impl()"
   },
   {
-    "id": 120,
+    "id": 139,
     "function": "example_41_3_from_seq_demonstration",
     "file": "Chap41/Example41_3.rs",
     "lines": "191",
@@ -960,7 +1112,7 @@
     "snippet": "    pub fn example_41_3_from_seq_demonstration()"
   },
   {
-    "id": 121,
+    "id": 140,
     "function": "additional_set_operations",
     "file": "Chap41/Example41_3.rs",
     "lines": "193",

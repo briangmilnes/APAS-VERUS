@@ -7,6 +7,8 @@ pub mod PQMinStEph {
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeSeqStEphTrait;
     #[cfg(verus_keep_ghost)]
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::lemma_wf_implies_len_bound_steph;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
@@ -18,6 +20,8 @@ pub mod PQMinStEph {
     broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
     // 4. type definitions
+    #[verifier::reject_recursive_types(V)]
+    #[verifier::reject_recursive_types(P)]
     pub struct PQMinResult<V: StT + Ord, P: StT + Ord> {
         pub visited: AVLTreeSetStEph<V>,
         pub priorities: AVLTreeSetStEph<Pair<V, P>>,
@@ -55,6 +59,13 @@ pub mod PQMinStEph {
                     #![trigger priority_fn.ensures((v1,), r1), priority_fn.ensures((v2,), r2)]
                     v1@ == v2@ && priority_fn.ensures((v1,), r1) && priority_fn.ensures((v2,), r2)
                     ==> r1@ == r2@,
+                // Type axioms for AVLTreeSetStEph operations.
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<Pair<P, V>, V>>(),
+                view_ord_consistent::<Pair<Pair<P, V>, V>>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<V, P>>(),
+                view_ord_consistent::<Pair<V, P>>(),
             ensures
                 spec_pqminsteph_wf_generic(&search),
                 search.visited@.contains(source@);
@@ -78,6 +89,13 @@ pub mod PQMinStEph {
                     #![trigger priority_fn.ensures((v1,), r1), priority_fn.ensures((v2,), r2)]
                     v1@ == v2@ && priority_fn.ensures((v1,), r1) && priority_fn.ensures((v2,), r2)
                     ==> r1@ == r2@,
+                // Type axioms for AVLTreeSetStEph operations.
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<Pair<P, V>, V>>(),
+                view_ord_consistent::<Pair<Pair<P, V>, V>>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<V, P>>(),
+                view_ord_consistent::<Pair<V, P>>(),
             ensures
                 spec_pqminsteph_wf_generic(&search),
                 sources@.subset_of(search.visited@);
@@ -125,6 +143,12 @@ pub mod PQMinStEph {
                 #![trigger priority_fn.ensures((v1,), r1), priority_fn.ensures((v2,), r2)]
                 v1@ == v2@ && priority_fn.ensures((v1,), r1) && priority_fn.ensures((v2,), r2)
                 ==> r1@ == r2@,
+            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            view_ord_consistent::<V>(),
+            vstd::laws_cmp::obeys_cmp_spec::<Pair<Pair<P, V>, V>>(),
+            view_ord_consistent::<Pair<Pair<P, V>, V>>(),
+            vstd::laws_cmp::obeys_cmp_spec::<Pair<V, P>>(),
+            view_ord_consistent::<Pair<V, P>>(),
         ensures
             spec_pqminsteph_wf_generic(&search),
             search.visited@.contains(source@),
@@ -202,6 +226,13 @@ pub mod PQMinStEph {
             forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
                 frontier_init@.contains(e) ==> (exists|v_ref: &V, p_val: P|
                     v_ref@ == e.1 && #[trigger] priority_fn.ensures((v_ref,), p_val) && p_val@ == e.0.0),
+            // Type axioms for AVLTreeSetStEph operations.
+            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            view_ord_consistent::<V>(),
+            vstd::laws_cmp::obeys_cmp_spec::<Pair<Pair<P, V>, V>>(),
+            view_ord_consistent::<Pair<Pair<P, V>, V>>(),
+            vstd::laws_cmp::obeys_cmp_spec::<Pair<V, P>>(),
+            view_ord_consistent::<Pair<V, P>>(),
         ensures
             result.0.spec_avltreesetsteph_wf(),
             result.1.spec_avltreesetsteph_wf(),
@@ -236,6 +267,13 @@ pub mod PQMinStEph {
                     #![trigger priority_fn.ensures((v1,), r1), priority_fn.ensures((v2,), r2)]
                     v1@ == v2@ && priority_fn.ensures((v1,), r1) && priority_fn.ensures((v2,), r2)
                     ==> r1@ == r2@,
+                // Type axioms for AVLTreeSetStEph operations.
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<Pair<P, V>, V>>(),
+                view_ord_consistent::<Pair<Pair<P, V>, V>>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<V, P>>(),
+                view_ord_consistent::<Pair<V, P>>(),
         {
             let seq = frontier.to_seq();
             assert(seq@.len() > 0) by {
@@ -309,6 +347,11 @@ pub mod PQMinStEph {
                         #![trigger priority_fn.ensures((v1,), r1), priority_fn.ensures((v2,), r2)]
                         v1@ == v2@ && priority_fn.ensures((v1,), r1) && priority_fn.ensures((v2,), r2)
                         ==> r1@ == r2@,
+                    // Type axioms for AVLTreeSetStEph operations.
+                    vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                    view_ord_consistent::<V>(),
+                    vstd::laws_cmp::obeys_cmp_spec::<Pair<Pair<P, V>, V>>(),
+                    view_ord_consistent::<Pair<Pair<P, V>, V>>(),
                 decreases nlen - i,
             {
                 let neighbor = neighbors_seq.nth(i);
@@ -415,6 +458,8 @@ pub mod PQMinStEph {
                 priorities@.len() <= j as nat,
                 forall|v: &V| #[trigger] priority_fn.requires((v,)),
                 priorities@.len() <= j as nat,
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<V, P>>(),
+                view_ord_consistent::<Pair<V, P>>(),
             decreases vlen - j,
         {
             let vref = visited_seq.nth(j);
@@ -457,6 +502,12 @@ pub mod PQMinStEph {
                 #![trigger priority_fn.ensures((v1,), r1), priority_fn.ensures((v2,), r2)]
                 v1@ == v2@ && priority_fn.ensures((v1,), r1) && priority_fn.ensures((v2,), r2)
                 ==> r1@ == r2@,
+            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            view_ord_consistent::<V>(),
+            vstd::laws_cmp::obeys_cmp_spec::<Pair<Pair<P, V>, V>>(),
+            view_ord_consistent::<Pair<Pair<P, V>, V>>(),
+            vstd::laws_cmp::obeys_cmp_spec::<Pair<V, P>>(),
+            view_ord_consistent::<Pair<V, P>>(),
         ensures
             spec_pqminsteph_wf_generic(&search),
             sources@.subset_of(search.visited@),
@@ -500,6 +551,9 @@ pub mod PQMinStEph {
                 forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
                     initial_frontier@.contains(e) ==> (exists|v_ref: &V, p_val: P|
                         v_ref@ == e.1 && priority_fn.ensures((v_ref,), p_val) && p_val@ == e.0.0),
+                // Type axioms for AVLTreeSetStEph operations.
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<Pair<P, V>, V>>(),
+                view_ord_consistent::<Pair<Pair<P, V>, V>>(),
             decreases slen - i,
         {
             let v = sources_seq.nth(i);

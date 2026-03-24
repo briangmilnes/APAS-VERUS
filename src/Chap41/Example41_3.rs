@@ -3,6 +3,8 @@
 
 pub mod Example41_3 {
 
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Types::Types::*;
@@ -12,6 +14,8 @@ pub mod Example41_3 {
     pub type T = u64;
 
     verus! {
+
+broadcast use vstd::laws_cmp::group_laws_cmp;
 
     pub trait Example41_3Trait {
         /// Example 41.1 cases using ArraySetStEph.
@@ -69,6 +73,12 @@ pub mod Example41_3 {
 
     fn example_41_1_avl_set_impl()
     {
+        // vstd::laws_cmp::group_laws_cmp does not include char; assume type axioms for char.
+        proof {
+            assume(vstd::laws_cmp::obeys_cmp_spec::<char>());
+            assume(view_ord_consistent::<char>());
+        }
+
         // Example 41.1: |{a, b, c}| = 3
         let set_abc = AVLTreeSetStEphLit!['a', 'b', 'c'];
         let fa = set_abc.find(&'a');

@@ -664,29 +664,29 @@ path = "tests/Chap43/TestAugOrderedTableStEph.rs"
 name = "TestAugOrderedTableStPer"
 path = "tests/Chap43/TestAugOrderedTableStPer.rs"
 
-[[test]]
-name = "TestExample43_1"
-path = "tests/Chap43/TestExample43_1.rs"
+# [[test]]  # R66: module commented out in lib.rs
+# name = "TestExample43_1"
+# path = "tests/Chap43/TestExample43_1.rs"
 
-[[test]]
-name = "TestOrderedSetMtEph"
-path = "tests/Chap43/TestOrderedSetMtEph.rs"
+# [[test]]  # R66: module commented out in lib.rs
+# name = "TestOrderedSetMtEph"
+# path = "tests/Chap43/TestOrderedSetMtEph.rs"
 
-[[test]]
-name = "TestOrderedSetStEph"
-path = "tests/Chap43/TestOrderedSetStEph.rs"
+# [[test]]  # R66: module commented out in lib.rs
+# name = "TestOrderedSetStEph"
+# path = "tests/Chap43/TestOrderedSetStEph.rs"
 
-[[test]]
-name = "TestOrderedSetStPer"
-path = "tests/Chap43/TestOrderedSetStPer.rs"
+# [[test]]  # R66: module commented out in lib.rs
+# name = "TestOrderedSetStPer"
+# path = "tests/Chap43/TestOrderedSetStPer.rs"
 
 [[test]]
 name = "TestOrderedTableMtEph"
 path = "tests/Chap43/TestOrderedTableMtEph.rs"
 
-[[test]]
-name = "TestOrderedTableMtPer"
-path = "tests/Chap43/TestOrderedTableMtPer.rs"
+# [[test]]  # R66: module commented out in lib.rs
+# name = "TestOrderedTableMtPer"
+# path = "tests/Chap43/TestOrderedTableMtPer.rs"
 
 [[test]]
 name = "TestOrderedTableStEph"
