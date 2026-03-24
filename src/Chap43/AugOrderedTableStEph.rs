@@ -201,8 +201,7 @@ broadcast use {
                 forall|k: K::V| #[trigger] tabulated@.contains_key(k) ==>
                     (exists|key_arg: K, result: V|
                         key_arg@ == k && f.ensures((&key_arg,), result)
-                        && tabulated@[k] == result@),
-                tabulated@.dom().finite();
+                        && tabulated@[k] == result@);
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- delegates to OrderedTableStEph.map (collect + rebuild)
         fn map<G: Fn(&K, &V) -> V>(&self, f: G) -> (mapped: Self)

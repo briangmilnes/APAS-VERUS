@@ -82,7 +82,7 @@ broadcast use {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- wraps AVLTreeSetStPer.singleton
         fn singleton(x: T) -> (tree: Self)
-            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_orderedsetstper_wf();
+            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_orderedsetstper_wf();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- delegates to AVLTreeSetStPer.find (BST search)
         fn find(&self, x: &T) -> (found: B)
@@ -94,12 +94,12 @@ broadcast use {
             requires
                 self.spec_orderedsetstper_wf(),
                 self@.len() + 1 < usize::MAX as nat,
-            ensures updated@ == self@.insert(x@), updated@.finite(), updated.spec_orderedsetstper_wf();
+            ensures updated@ == self@.insert(x@), updated.spec_orderedsetstper_wf();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- delegates to AVLTreeSetStPer.delete (BST delete)
         fn delete(&self, x: &T) -> (updated: Self)
             requires self.spec_orderedsetstper_wf(),
-            ensures updated@ == self@.remove(x@), updated@.finite(), updated.spec_orderedsetstper_wf();
+            ensures updated@ == self@.remove(x@), updated.spec_orderedsetstper_wf();
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to AVLTreeSetStPer.filter
         fn filter<F: PredSt<T>>(
@@ -112,12 +112,12 @@ broadcast use {
                 forall|t: &T| #[trigger] f.requires((t,)),
                 forall|x: T, keep: bool|
                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
-            ensures filtered@.finite(), filtered@.subset_of(self@), filtered.spec_orderedsetstper_wf();
+            ensures filtered@.subset_of(self@), filtered.spec_orderedsetstper_wf();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- delegates to AVLTreeSetStPer.intersection (sequential)
         fn intersection(&self, other: &Self) -> (common: Self)
             requires self.spec_orderedsetstper_wf(), other.spec_orderedsetstper_wf(),
-            ensures common@ == self@.intersect(other@), common@.finite(), common.spec_orderedsetstper_wf();
+            ensures common@ == self@.intersect(other@), common.spec_orderedsetstper_wf();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- delegates to AVLTreeSetStPer.union (sequential)
         fn union(&self, other: &Self) -> (combined: Self)
@@ -125,12 +125,12 @@ broadcast use {
                 self.spec_orderedsetstper_wf(),
                 other.spec_orderedsetstper_wf(),
                 self@.len() + other@.len() < usize::MAX as nat,
-            ensures combined@ == self@.union(other@), combined@.finite(), combined.spec_orderedsetstper_wf();
+            ensures combined@ == self@.union(other@), combined.spec_orderedsetstper_wf();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- delegates to AVLTreeSetStPer.difference (sequential)
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires self.spec_orderedsetstper_wf(), other.spec_orderedsetstper_wf(),
-            ensures remaining@ == self@.difference(other@), remaining@.finite(), remaining.spec_orderedsetstper_wf();
+            ensures remaining@ == self@.difference(other@), remaining.spec_orderedsetstper_wf();
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to AVLTreeSetStPer.to_seq (in-order traversal)
         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
@@ -142,7 +142,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- delegates to AVLTreeSetStPer.from_seq (n inserts)
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
             requires seq.spec_avltreeseqstper_wf(),
-            ensures constructed@.finite(), constructed.spec_orderedsetstper_wf();
+            ensures constructed.spec_orderedsetstper_wf();
 
         // Ordering operations (ADT 43.1)
         /// - APAS: Work Θ(log n), Span Θ(log n)
@@ -372,7 +372,7 @@ broadcast use {
         }
 
         fn singleton(x: T) -> (tree: Self)
-            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_orderedsetstper_wf()
+            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_orderedsetstper_wf()
         {
                       assert(obeys_feq_full_trigger::<T>());
             OrderedSetStPer {
@@ -1429,7 +1429,7 @@ broadcast use {
 
     pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (constructed: OrderedSetStPer<T>)
         requires elements@.len() < usize::MAX,
-        ensures constructed@.finite(), constructed.spec_orderedsetstper_wf()
+        ensures constructed.spec_orderedsetstper_wf()
     {
               assert(obeys_feq_full_trigger::<T>());
         let seq = AVLTreeSeqStPerS::from_vec(elements);

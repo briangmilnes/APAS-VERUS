@@ -73,7 +73,7 @@ pub mod OrderedTableMtPer {
         inner: OrderedTableStPer<K, V>,
     ) -> (s: OrderedTableMtPer<K, V>)
         requires inner@.dom().finite()
-        ensures s@.dom().finite(), s.spec_orderedtablemtper_wf()
+        ensures s.spec_orderedtablemtper_wf()
     {
         let ghost view = inner@;
         proof {
@@ -112,7 +112,7 @@ pub mod OrderedTableMtPer {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- wraps StPer.singleton + RwLock
         fn singleton(k: K, v: V) -> (tree: Self)
-            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablemtper_wf();
+            ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree.spec_orderedtablemtper_wf();
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.find (linear scan)

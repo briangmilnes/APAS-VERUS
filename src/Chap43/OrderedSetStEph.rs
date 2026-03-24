@@ -216,7 +216,7 @@ broadcast use {
     // 8. traits
 
     /// Trait defining all ordered set operations (ADT 41.1 + ADT 43.1) with ephemeral semantics.
-    /// Postconditions for ordering operations use cmp_spec (from Ord) rather than TotalOrder::le,
+    /// Postconditions for ordering operations use cmp_spec (from Ord) rather than TotalOrder::le;
     /// matching ParamBST's ensure style directly.
     pub trait OrderedSetStEphTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Set<<T as View>::V>> {
         spec fn spec_orderedsetsteph_wf(&self) -> bool;
@@ -241,7 +241,6 @@ broadcast use {
                 view_ord_consistent::<T>(),
             ensures
                 tree@ == Set::<<T as View>::V>::empty().insert(x@),
-                tree@.finite(),
                 tree.spec_orderedsetsteph_wf();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         fn find(&self, x: &T) -> (found: B)
@@ -254,14 +253,12 @@ broadcast use {
                 old(self)@.len() + 1 < usize::MAX as nat,
             ensures
                 self@ == old(self)@.insert(x@),
-                self@.finite(),
                 self.spec_orderedsetsteph_wf();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         fn delete(&mut self, x: &T)
             requires old(self).spec_orderedsetsteph_wf(),
             ensures
                 self@ == old(self)@.remove(x@),
-                self@.finite(),
                 self.spec_orderedsetsteph_wf();
         /// - APAS: Work Θ(n), Span Θ(n)
         fn filter<F: PredSt<T>>(
@@ -275,14 +272,12 @@ broadcast use {
                 forall|x: T, keep: bool|
                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
             ensures
-                self@.finite(),
                 self.spec_orderedsetsteph_wf();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1))
         fn intersection(&mut self, other: &Self)
             requires old(self).spec_orderedsetsteph_wf(), other.spec_orderedsetsteph_wf(),
             ensures
                 self@ == old(self)@.intersect(other@),
-                self@.finite(),
                 self.spec_orderedsetsteph_wf();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1))
         fn union(&mut self, other: &Self)
@@ -292,14 +287,12 @@ broadcast use {
                 old(self)@.len() + other@.len() < usize::MAX as nat,
             ensures
                 self@ == old(self)@.union(other@),
-                self@.finite(),
                 self.spec_orderedsetsteph_wf();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1))
         fn difference(&mut self, other: &Self)
             requires old(self).spec_orderedsetsteph_wf(), other.spec_orderedsetsteph_wf(),
             ensures
                 self@ == old(self)@.difference(other@),
-                self@.finite(),
                 self.spec_orderedsetsteph_wf();
         /// - APAS: Work Θ(n), Span Θ(n)
         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
@@ -317,7 +310,6 @@ broadcast use {
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
             ensures
-                constructed@.finite(),
                 constructed.spec_orderedsetsteph_wf();
 
         // Ordering operations (ADT 43.1) — postconditions in cmp_spec style.
@@ -380,7 +372,7 @@ broadcast use {
                 old(self).spec_orderedsetsteph_wf(),
                 other.spec_orderedsetsteph_wf(),
                 old(self)@.len() + other@.len() < usize::MAX as nat,
-            ensures self@ == old(self)@.union(other@), self@.finite(), self.spec_orderedsetsteph_wf();
+            ensures self@ == old(self)@.union(other@), self.spec_orderedsetsteph_wf();
         /// - APAS: Work Θ(log n + m), Span Θ(log n)
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
             requires self.spec_orderedsetsteph_wf(),
@@ -1066,7 +1058,7 @@ broadcast use {
             elements@.len() < usize::MAX,
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
-        ensures constructed@.finite(), constructed.spec_orderedsetsteph_wf()
+        ensures constructed.spec_orderedsetsteph_wf()
     {
         assert(obeys_feq_full_trigger::<T>());
         let seq = AVLTreeSeqStPerS::from_vec(elements);

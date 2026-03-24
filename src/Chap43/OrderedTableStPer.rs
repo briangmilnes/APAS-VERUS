@@ -449,7 +449,7 @@ broadcast use {
         /// - APAS: Work Θ(1), Span Θ(1)
         fn singleton(k: K, v: V) -> (table: Self)
             requires obeys_feq_clone::<Pair<K, V>>(),
-            ensures table@ == Map::<K::V, V::V>::empty().insert(k@, v@), table@.dom().finite(), table.spec_orderedtablestper_wf();
+            ensures table@ == Map::<K::V, V::V>::empty().insert(k@, v@), table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         fn find(&self, k: &K) -> (found: Option<V>)
             requires self.spec_orderedtablestper_find_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
@@ -466,7 +466,6 @@ broadcast use {
                 self@.dom().len() + 1 < usize::MAX as nat,
             ensures
                 table@.dom() =~= self@.dom().insert(k@),
-                table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         fn delete(&self, k: &K) -> (table: Self)
@@ -474,7 +473,7 @@ broadcast use {
                 self.spec_orderedtablestper_wf(),
                 obeys_feq_clone::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
-            ensures table@ == self@.remove(k@), table@.dom().finite(), table.spec_orderedtablestper_wf();
+            ensures table@ == self@.remove(k@), table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(n), Span Θ(n)
         fn domain(&self) -> (keys: ArraySetStEph<K>)
             requires self.spec_orderedtablestper_wf(), obeys_feq_clone::<K>()
@@ -492,8 +491,7 @@ broadcast use {
                 forall|k: K::V| #[trigger] table@.contains_key(k) ==>
                     (exists|key_arg: K, result: V|
                         key_arg@ == k && f.ensures((&key_arg,), result)
-                        && table@[k] == result@),
-                table@.dom().finite();
+                        && table@[k] == result@);
         /// - APAS: Work Θ(n), Span Θ(n)
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (table: Self)
             requires self.spec_orderedtablestper_wf(), forall|v: &V| f.requires((v,)),
@@ -504,7 +502,6 @@ broadcast use {
                         old_val@ == self@[k]
                         && f.ensures((&old_val,), result)
                         && table@[k] == result@),
-                table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(n), Span Θ(n)
         fn filter<F: Fn(&K, &V) -> B>(&self, f: F, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (table: Self)
@@ -517,7 +514,6 @@ broadcast use {
                 forall|k: K::V| #[trigger] table@.contains_key(k) ==> table@[k] == self@[k],
                 forall|k: K::V| self@.dom().contains(k) && spec_pred(k, self@[k])
                     ==> #[trigger] table@.dom().contains(k),
-                table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)
@@ -533,7 +529,6 @@ broadcast use {
                         v1@ == self@[k] && v2@ == other@[k]
                         && f.ensures((&v1, &v2), r)
                         && table@[k] == r@),
-                table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self)
@@ -554,7 +549,6 @@ broadcast use {
                         v1@ == self@[k] && v2@ == other@[k]
                         && f.ensures((&v1, &v2), r)
                         && table@[k] == r@),
-                table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         fn difference(&self, other: &Self) -> (table: Self)
@@ -562,7 +556,6 @@ broadcast use {
             ensures
                 table@.dom() =~= self@.dom().difference(other@.dom()),
                 forall|k: K::V| #[trigger] table@.contains_key(k) ==> table@[k] == self@[k],
-                table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (table: Self)
@@ -570,7 +563,6 @@ broadcast use {
             ensures
                 table@.dom() =~= self@.dom().intersect(keys@),
                 forall|k: K::V| #[trigger] table@.contains_key(k) ==> table@[k] == self@[k],
-                table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (table: Self)
@@ -578,7 +570,6 @@ broadcast use {
             ensures
                 table@.dom() =~= self@.dom().difference(keys@),
                 forall|k: K::V| #[trigger] table@.contains_key(k) ==> table@[k] == self@[k],
-                table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(n log n), Span Θ(n log n)
         fn collect(&self) -> (sorted_entries: AVLTreeSeqStPerS<Pair<K, V>>)
@@ -628,8 +619,6 @@ broadcast use {
                 obeys_view_eq::<K>(),
             ensures
                 self@.dom().finite(),
-                parts.0@.dom().finite(),
-                parts.2@.dom().finite(),
                 parts.1 matches Some(v) ==> self@.contains_key(k@) && v@ == self@[k@],
                 parts.1 matches None ==> !self@.contains_key(k@),
                 !parts.0@.dom().contains(k@),
@@ -650,14 +639,12 @@ broadcast use {
                 left@.dom().len() + right@.dom().len() < usize::MAX,
             ensures
                 table@.dom() =~= left@.dom().union(right@.dom()),
-                table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(log n + m), Span Θ(log n)
         fn get_key_range(&self, k1: &K, k2: &K) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
             ensures
-                table@.dom().finite(),
                 table@.dom().subset_of(self@.dom()),
                 forall|key| #[trigger] table@.dom().contains(key) ==> table@[key] == self@[key],
                 table.spec_orderedtablestper_wf();
@@ -689,8 +676,6 @@ broadcast use {
                 self.spec_orderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
-                parts.0@.dom().finite(),
-                parts.1@.dom().finite(),
                 parts.0@.dom().subset_of(self@.dom()),
                 parts.1@.dom().subset_of(self@.dom()),
                 parts.0@.dom().disjoint(parts.1@.dom()),
@@ -711,14 +696,13 @@ broadcast use {
                 self@.dom().len() + 1 < usize::MAX as nat,
             ensures
                 table@.dom() =~= self@.dom().insert(k@),
-                table@.dom().finite(),
                 table.spec_orderedtablestper_wf();
         fn delete_iter(&self, k: &K) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
                 obeys_feq_clone::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
-            ensures table@ == self@.remove(k@), table@.dom().finite(), table.spec_orderedtablestper_wf();
+            ensures table@ == self@.remove(k@), table.spec_orderedtablestper_wf();
         fn first_key_iter(&self) -> (key: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablestper_wf(),
@@ -758,8 +742,6 @@ broadcast use {
                 obeys_view_eq::<K>(),
             ensures
                 self@.dom().finite(),
-                parts.0@.dom().finite(),
-                parts.2@.dom().finite(),
                 parts.1 matches Some(v) ==> self@.contains_key(k@) && v@ == self@[k@],
                 parts.1 matches None ==> !self@.contains_key(k@),
                 !parts.0@.dom().contains(k@),
@@ -774,7 +756,6 @@ broadcast use {
             requires
                 self.spec_orderedtablestper_wf(),
             ensures
-                table@.dom().finite(),
                 table@.dom().subset_of(self@.dom()),
                 forall|key| #[trigger] table@.dom().contains(key) ==> table@[key] == self@[key],
                 table.spec_orderedtablestper_wf();
@@ -793,8 +774,6 @@ broadcast use {
                 self.spec_orderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
-                parts.0@.dom().finite(),
-                parts.1@.dom().finite(),
                 parts.0@.dom().subset_of(self@.dom()),
                 parts.1@.dom().subset_of(self@.dom()),
                 parts.0@.dom().disjoint(parts.1@.dom()),

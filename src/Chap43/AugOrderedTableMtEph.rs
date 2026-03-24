@@ -142,7 +142,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- constructs singleton base table with reducer/identity
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
             requires forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2))
-            ensures tree@.dom().finite(), tree.spec_augorderedtablemteph_wf();
+            ensures tree.spec_augorderedtablemteph_wf();
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- delegates to TableMtEph which uses linear scan
         fn find(&self, k: &K) -> (found: Option<V>)
@@ -306,7 +306,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- delegates to base table get_key_range + recalculates reduction
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             requires self.spec_augorderedtablemteph_wf()
-            ensures range@.dom().finite(), range.spec_augorderedtablemteph_wf();
+            ensures range.spec_augorderedtablemteph_wf();
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- external_body, delegates to base table which collects+sorts+counts
         fn rank_key(&self, k: &K) -> (rank: usize)
@@ -387,7 +387,7 @@ broadcast use {
         }
 
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
-            ensures tree@.dom().finite(), tree.spec_augorderedtablemteph_wf()
+            ensures tree.spec_augorderedtablemteph_wf()
         {
                       assert(obeys_feq_full_trigger::<K>());
            assert(obeys_feq_full_trigger::<V>());
@@ -612,7 +612,7 @@ broadcast use {
         }
 
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
-            ensures range@.dom().finite(), range.spec_augorderedtablemteph_wf()
+            ensures range.spec_augorderedtablemteph_wf()
         {
             let new_base = self.base_table.get_key_range(k1, k2);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);

@@ -209,14 +209,12 @@ broadcast use {
             ensures
                 (x < u ==> tree@ == Set::<usize>::empty().insert(x)),
                 (x >= u ==> tree@ == Set::<usize>::empty()),
-                tree@.finite(),
                 tree.spec_arraysetenummteph_wf(),
                 tree.spec_universe_size() == u;
 
         /// - Claude-Opus-4.6: Work Θ(u/w + |seq|), Span Θ(1) -- allocate + set bits.
         fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (constructed: Self)
             ensures
-                constructed@.finite(),
                 constructed.spec_arraysetenummteph_wf(),
                 constructed.spec_universe_size() == u;
 
@@ -227,7 +225,6 @@ broadcast use {
                 self.spec_arraysetenummteph_wf(),
                 forall|i: usize| i < self.spec_universe_size() ==> #[trigger] f.requires((i,)),
             ensures
-                filtered@.finite(),
                 filtered@.subset_of(self@),
                 filtered.spec_arraysetenummteph_wf(),
                 filtered.spec_universe_size() == self.spec_universe_size();
@@ -241,7 +238,6 @@ broadcast use {
                 self.spec_universe_size() == other.spec_universe_size(),
             ensures
                 common@ == self@.intersect(other@),
-                common@.finite(),
                 common.spec_arraysetenummteph_wf(),
                 common.spec_universe_size() == self.spec_universe_size();
 
@@ -254,7 +250,6 @@ broadcast use {
                 self.spec_universe_size() == other.spec_universe_size(),
             ensures
                 remaining@ == self@.difference(other@),
-                remaining@.finite(),
                 remaining.spec_arraysetenummteph_wf(),
                 remaining.spec_universe_size() == self.spec_universe_size();
 
@@ -267,7 +262,6 @@ broadcast use {
                 self.spec_universe_size() == other.spec_universe_size(),
             ensures
                 combined@ == self@.union(other@),
-                combined@.finite(),
                 combined.spec_arraysetenummteph_wf(),
                 combined.spec_universe_size() == self.spec_universe_size();
 
@@ -283,7 +277,6 @@ broadcast use {
             requires old(self).spec_arraysetenummteph_wf(),
             ensures
                 self@ == old(self)@.remove(x),
-                self@.finite(),
                 self.spec_arraysetenummteph_wf(),
                 self.spec_universe_size() == old(self).spec_universe_size();
 
@@ -294,7 +287,6 @@ broadcast use {
             ensures
                 (x < old(self).spec_universe_size() ==> self@ == old(self)@.insert(x)),
                 (x >= old(self).spec_universe_size() ==> self@ == old(self)@),
-                self@.finite(),
                 self.spec_arraysetenummteph_wf(),
                 self.spec_universe_size() == old(self).spec_universe_size();
     }
@@ -524,7 +516,6 @@ broadcast use {
             ensures
                 (x < u ==> tree@ == Set::<usize>::empty().insert(x)),
                 (x >= u ==> tree@ == Set::<usize>::empty()),
-                tree@.finite(),
                 tree.spec_arraysetenummteph_wf(),
                 tree.spec_universe_size() == u,
         {
@@ -540,7 +531,6 @@ broadcast use {
 
         fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (constructed: Self)
             ensures
-                constructed@.finite(),
                 constructed.spec_arraysetenummteph_wf(),
                 constructed.spec_universe_size() == u,
         {
@@ -580,7 +570,6 @@ broadcast use {
 
         fn filter<F: Fn(usize) -> bool + Send + Sync + 'static + Clone>(&self, f: F) -> (filtered: Self)
             ensures
-                filtered@.finite(),
                 filtered@.subset_of(self@),
                 filtered.spec_arraysetenummteph_wf(),
                 filtered.spec_universe_size() == self.spec_universe_size(),
@@ -678,7 +667,6 @@ broadcast use {
         fn intersection(&self, other: &Self) -> (common: Self)
             ensures
                 common@ == self@.intersect(other@),
-                common@.finite(),
                 common.spec_arraysetenummteph_wf(),
                 common.spec_universe_size() == self.spec_universe_size(),
         {
@@ -729,7 +717,6 @@ broadcast use {
         fn difference(&self, other: &Self) -> (remaining: Self)
             ensures
                 remaining@ == self@.difference(other@),
-                remaining@.finite(),
                 remaining.spec_arraysetenummteph_wf(),
                 remaining.spec_universe_size() == self.spec_universe_size(),
         {
@@ -780,7 +767,6 @@ broadcast use {
         fn union(&self, other: &Self) -> (combined: Self)
             ensures
                 combined@ == self@.union(other@),
-                combined@.finite(),
                 combined.spec_arraysetenummteph_wf(),
                 combined.spec_universe_size() == self.spec_universe_size(),
         {
@@ -844,7 +830,6 @@ broadcast use {
         fn delete(&mut self, x: usize)
             ensures
                 self@ == old(self)@.remove(x),
-                self@.finite(),
                 self.spec_arraysetenummteph_wf(),
                 self.spec_universe_size() == old(self).spec_universe_size(),
         {
@@ -893,7 +878,6 @@ broadcast use {
             ensures
                 (x < old(self).spec_universe_size() ==> self@ == old(self)@.insert(x)),
                 (x >= old(self).spec_universe_size() ==> self@ == old(self)@),
-                self@.finite(),
                 self.spec_arraysetenummteph_wf(),
                 self.spec_universe_size() == old(self).spec_universe_size(),
         {

@@ -56,7 +56,6 @@ broadcast use {
     vstd::set_lib::group_set_lib_default,
 };
 
-
     // 4. type definitions
 
     pub struct AVLTreeSetMtEphInv;
@@ -78,7 +77,6 @@ broadcast use {
         pub pos: int,
         pub elements: Seq<T>,
     }
-
 
     // 5. view impls
 
@@ -104,7 +102,6 @@ broadcast use {
     pub open spec fn avltreesetmteph_iter_invariant<T: StTInMtT + Ord + 'static>(it: &AVLTreeSetMtEphIter<T>) -> bool {
         0 <= it@.0 <= it@.1.len()
     }
-
 
     // 8. traits
 
@@ -136,7 +133,6 @@ broadcast use {
         fn singleton(x: T) -> (tree: Self)
             ensures
                 tree@ == Set::<<T as View>::V>::empty().insert(x@),
-                tree@.finite(),
                 tree.spec_avltreesetmteph_wf();
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(log n), Parallelism Θ(n)
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
@@ -145,7 +141,6 @@ broadcast use {
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
             ensures
-                constructed@.finite(),
                 constructed.spec_avltreesetmteph_wf();
         /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
         /// - claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
@@ -160,7 +155,6 @@ broadcast use {
                 forall|x: T, keep: bool|
                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
             ensures
-                filtered@.finite(),
                 filtered@.subset_of(self@),
                 filtered.spec_avltreesetmteph_wf(),
                 forall|v: T::V| #[trigger] filtered@.contains(v)
@@ -173,7 +167,6 @@ broadcast use {
             requires self.spec_avltreesetmteph_wf(), other.spec_avltreesetmteph_wf(),
             ensures
                 common@ == self@.intersect(other@),
-                common@.finite(),
                 common.spec_avltreesetmteph_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
@@ -181,7 +174,6 @@ broadcast use {
             requires self.spec_avltreesetmteph_wf(), other.spec_avltreesetmteph_wf(),
             ensures
                 remaining@ == self@.difference(other@),
-                remaining@.finite(),
                 remaining.spec_avltreesetmteph_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
@@ -192,7 +184,6 @@ broadcast use {
                 self@.len() + other@.len() < usize::MAX as nat,
             ensures
                 combined@ == self@.union(other@),
-                combined@.finite(),
                 combined.spec_avltreesetmteph_wf();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
@@ -208,7 +199,6 @@ broadcast use {
             requires old(self).spec_avltreesetmteph_wf(),
             ensures
                 self@ == old(self)@.remove(x@),
-                self@.finite(),
                 self.spec_avltreesetmteph_wf();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
@@ -218,13 +208,11 @@ broadcast use {
                 old(self)@.len() + 1 < usize::MAX as nat,
             ensures
                 self@ == old(self)@.insert(x@),
-                self@.finite(),
                 self.spec_avltreesetmteph_wf();
         fn iter(&self) -> (it: AVLTreeSetMtEphIter<T>)
             requires self.spec_avltreesetmteph_wf(),
             ensures it@.0 == 0, avltreesetmteph_iter_invariant(&it);
     }
-
 
     // 5. view impls
 
@@ -241,7 +229,6 @@ broadcast use {
             v.spec_avltreesetsteph_wf()
         }
     }
-
 
     // 9. impls
 
@@ -488,8 +475,6 @@ broadcast use {
     impl<T: StTInMtT + Ord + 'static> Default for AVLTreeSetMtEph<T> {
         fn default() -> Self { Self::empty() }
     }
-
-    
 
     impl<T: StTInMtT + Ord + 'static> std::iter::Iterator for AVLTreeSetMtEphIter<T> {
         type Item = T;

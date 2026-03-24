@@ -69,7 +69,7 @@ pub mod OrderedSetMtEph {
     // Helper: construct Mt wrapper from St set (used by split/get_range/split_rank/from_seq).
     fn from_st<T: MtKey + TotalOrder + 'static>(inner: OrderedSetStEph<T>) -> (s: OrderedSetMtEph<T>)
         requires inner.spec_orderedsetsteph_wf(), inner@.finite()
-        ensures s@ == inner@, s@.finite(), s.spec_orderedsetmteph_wf()
+        ensures s@ == inner@, s.spec_orderedsetmteph_wf()
     {
               assert(obeys_feq_full_trigger::<T>());
         let ghost view = inner@;
@@ -106,7 +106,7 @@ pub mod OrderedSetMtEph {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- wraps StEph.singleton + RwLock
         fn singleton(x: T) -> (tree: Self)
-            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_orderedsetmteph_wf();
+            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_orderedsetmteph_wf();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- acquires lock, delegates to StEph.find (BST search)
         fn find(&self, x: &T) -> (found: B)

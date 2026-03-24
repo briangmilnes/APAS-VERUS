@@ -1,0 +1,8 @@
+src/Chap41/ArraySetStEph.rs:328:info: REMOVED redundant tree@.finite() (covered by spec_arraysetsteph_wf)
+src/Chap41/ArraySetStEph.rs:335:info: REMOVED redundant constructed@.finite() (covered by spec_arraysetsteph_wf)
+src/Chap41/ArraySetStEph.rs:352:info: REMOVED redundant filtered@.finite() (covered by spec_arraysetsteph_wf)
+src/Chap41/ArraySetStEph.rs:370:info: REMOVED redundant common@.finite() (covered by spec_arraysetsteph_wf)
+src/Chap41/ArraySetStEph.rs:383:info: REMOVED redundant remaining@.finite() (covered by spec_arraysetsteph_wf)
+src/Chap41/ArraySetStEph.rs:396:info: REMOVED redundant combined@.finite() (covered by spec_arraysetsteph_wf)
+src/Chap41/ArraySetStEph.rs:413:info: REMOVED redundant self@.finite() (covered by spec_arraysetsteph_wf)
+src/Chap41/ArraySetStEph.rs:424:info: REMOVED redundant self@.finite() (covered by spec_arraysetsteph_wf)

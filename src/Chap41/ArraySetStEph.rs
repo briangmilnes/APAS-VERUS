@@ -325,14 +325,13 @@ pub mod ArraySetStEph {
         /// - APAS: no cost spec (unordered array set)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn singleton(x: T) -> (tree: Self)
-            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_arraysetsteph_wf();
+            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_arraysetsteph_wf();
 
         /// - APAS: no cost spec (unordered array set)
         /// - Claude-Opus-4.6: Work Θ(n^2), Span Θ(n^2) -- inserts each element with linear find.
         fn from_seq(seq: ArraySeqStEphS<T>) -> (constructed: Self)
             ensures
                 constructed@ =~= seq@.to_set(),
-                constructed@.finite(),
                 constructed.spec_arraysetsteph_wf();
 
         /// - APAS: no cost spec (unordered array set)
@@ -349,7 +348,6 @@ pub mod ArraySetStEph {
                 forall|x: T, keep: bool|
                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
             ensures
-                filtered@.finite(),
                 filtered@.subset_of(self@),
                 filtered.spec_arraysetsteph_wf(),
                 forall|v: T::V| #[trigger] filtered@.contains(v)
@@ -367,7 +365,6 @@ pub mod ArraySetStEph {
                 other@.finite(),
             ensures
                 common@ == self@.intersect(other@),
-                common@.finite(),
                 common.spec_arraysetsteph_wf();
 
         /// - APAS: no cost spec (unordered array set)
@@ -380,7 +377,6 @@ pub mod ArraySetStEph {
                 other@.finite(),
             ensures
                 remaining@ == self@.difference(other@),
-                remaining@.finite(),
                 remaining.spec_arraysetsteph_wf();
 
         /// - APAS: no cost spec (unordered array set)
@@ -393,7 +389,6 @@ pub mod ArraySetStEph {
                 other@.finite(),
             ensures
                 combined@ == self@.union(other@),
-                combined@.finite(),
                 combined.spec_arraysetsteph_wf();
 
         /// - APAS: no cost spec (unordered array set)
@@ -410,7 +405,6 @@ pub mod ArraySetStEph {
                 old(self)@.finite(),
             ensures
                 self@ == old(self)@.remove(x@),
-                self@.finite(),
                 self.spec_arraysetsteph_wf();
 
         /// - APAS: no cost spec (unordered array set)
@@ -421,7 +415,6 @@ pub mod ArraySetStEph {
                 old(self)@.finite(),
             ensures
                 self@ == old(self)@.insert(x@),
-                self@.finite(),
                 self.spec_arraysetsteph_wf();
     }
 

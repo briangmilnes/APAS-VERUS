@@ -64,14 +64,12 @@ broadcast use {
         pub ghost_set_view: Ghost<Set<<T as View>::V>>,
     }
 
-
     // 5. view impls
 
     impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtPer<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Set<<T as View>::V> { self.spec_set_view() }
     }
-
 
     // 6. spec fns
 
@@ -109,10 +107,10 @@ broadcast use {
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn singleton(x: T) -> (tree: Self)
-            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree@.finite(), tree.spec_avltreesetmtper_wf();
+            ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_avltreesetmtper_wf();
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(log n), Parallelism Θ(n)
         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
-            ensures constructed@.finite(), constructed.spec_avltreesetmtper_wf();
+            ensures constructed.spec_avltreesetmtper_wf();
         /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
         /// - claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
         fn filter<F: Pred<T> + Clone>(
@@ -125,7 +123,6 @@ broadcast use {
                 forall|x: T, keep: bool|
                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
             ensures
-                filtered@.finite(),
                 filtered@.subset_of(self@),
                 filtered.spec_avltreesetmtper_wf(),
                 forall|v: T::V| #[trigger] filtered@.contains(v)
@@ -135,15 +132,15 @@ broadcast use {
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn intersection(&self, other: &Self) -> (common: Self)
-            ensures common@ == self@.intersect(other@), common@.finite(), common.spec_avltreesetmtper_wf();
+            ensures common@ == self@.intersect(other@), common.spec_avltreesetmtper_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn difference(&self, other: &Self) -> (remaining: Self)
-            ensures remaining@ == self@.difference(other@), remaining@.finite(), remaining.spec_avltreesetmtper_wf();
+            ensures remaining@ == self@.difference(other@), remaining.spec_avltreesetmtper_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn union(&self, other: &Self) -> (combined: Self)
-            ensures combined@ == self@.union(other@), combined@.finite(), combined.spec_avltreesetmtper_wf();
+            ensures combined@ == self@.union(other@), combined.spec_avltreesetmtper_wf();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn find(&self, x: &T) -> (found: B)
@@ -152,13 +149,12 @@ broadcast use {
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn delete(&self, x: &T) -> (updated: Self)
-            ensures updated@ == self@.remove(x@), updated@.finite(), updated.spec_avltreesetmtper_wf();
+            ensures updated@ == self@.remove(x@), updated.spec_avltreesetmtper_wf();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn insert(&self, x: T) -> (updated: Self)
-            ensures updated@ == self@.insert(x@), updated@.finite(), updated.spec_avltreesetmtper_wf();
+            ensures updated@ == self@.insert(x@), updated.spec_avltreesetmtper_wf();
     }
-
 
     // 9. impls
 
@@ -375,7 +371,6 @@ broadcast use {
             updated
         }
     }
-
 
     // 12. derive impls in verus!
 

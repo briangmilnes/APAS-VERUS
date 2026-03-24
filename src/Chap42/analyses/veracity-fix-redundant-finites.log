@@ -1,0 +1,1 @@
+src/Chap42/TableStPer.rs:2050:info: REMOVED redundant grouped@.dom().finite() (covered by spec_tablestper_wf)

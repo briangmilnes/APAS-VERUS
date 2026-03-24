@@ -138,7 +138,7 @@ broadcast use {
             requires
                 obeys_feq_clone::<Pair<K, V>>(),
                 forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
-            ensures tree@.dom().finite(), tree.spec_augorderedtablestper_wf();
+            ensures tree.spec_augorderedtablestper_wf();
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- delegates to TableStPer which uses linear scan
         fn find(&self, k: &K) -> (found: Option<V>)
@@ -157,7 +157,6 @@ broadcast use {
                 self@.dom().len() + 1 < usize::MAX as nat,
             ensures
                 updated@.dom() =~= self@.dom().insert(k@),
-                updated@.dom().finite(),
                 updated.spec_augorderedtablestper_wf();
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- clones base table (persistent), deletes linearly, recalculates reduction O(n)
@@ -167,7 +166,7 @@ broadcast use {
 
                 obeys_feq_clone::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
-            ensures updated@.dom().finite(), updated.spec_augorderedtablestper_wf();
+            ensures updated.spec_augorderedtablestper_wf();
         /// - APAS: Work O(n), Span O(n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- extracts keys from base table entries
         fn domain(&self) -> (domain: ArraySetStEph<K>)
@@ -188,8 +187,7 @@ broadcast use {
                 forall|k: K::V| #[trigger] tabulated@.contains_key(k) ==>
                     (exists|key_arg: K, result: V|
                         key_arg@ == k && f.ensures((&key_arg,), result)
-                        && tabulated@[k] == result@),
-                tabulated@.dom().finite();
+                        && tabulated@[k] == result@);
         /// - APAS: Work O(n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- maps all values linearly, then recalculates reduction O(n)
         fn map<G: Fn(&V) -> V>(&self, f: G) -> (mapped: Self)
@@ -204,7 +202,6 @@ broadcast use {
                         old_val@ == self@[k]
                         && f.ensures((&old_val,), result)
                         && mapped@[k] == result@),
-                mapped@.dom().finite(),
                 mapped.spec_augorderedtablestper_wf();
         /// - APAS: Work O(n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- filters base table linearly, then recalculates reduction O(n)
@@ -219,7 +216,6 @@ broadcast use {
                 forall|k: K::V| #[trigger] filtered@.contains_key(k) ==> filtered@[k] == self@[k],
                 forall|k: K::V| self@.dom().contains(k) && spec_pred(k, self@[k])
                     ==> #[trigger] filtered@.dom().contains(k),
-                filtered@.dom().finite(),
                 filtered.spec_augorderedtablestper_wf();
         /// - APAS: Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Claude-Opus-4.6: Work O(n * m), Span O(n * m) -- delegates to base table intersection (linear scan), then recalculates reduction
@@ -237,7 +233,6 @@ broadcast use {
                         v1@ == self@[k] && v2@ == other@[k]
                         && f.ensures((&v1, &v2), r)
                         && common@[k] == r@),
-                common@.dom().finite(),
                 common.spec_augorderedtablestper_wf();
         /// - APAS: Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) -- delegates to base table union (linear merge), then recalculates reduction
@@ -259,7 +254,6 @@ broadcast use {
                         v1@ == self@[k] && v2@ == other@[k]
                         && f.ensures((&v1, &v2), r)
                         && combined@[k] == r@),
-                combined@.dom().finite(),
                 combined.spec_augorderedtablestper_wf();
         /// - APAS: Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Claude-Opus-4.6: Work O(n * m), Span O(n * m) -- delegates to base table difference (linear scan), then recalculates reduction
@@ -271,7 +265,6 @@ broadcast use {
             ensures
                 remaining@.dom() =~= self@.dom().difference(other@.dom()),
                 forall|k: K::V| #[trigger] remaining@.contains_key(k) ==> remaining@[k] == self@[k],
-                remaining@.dom().finite(),
                 remaining.spec_augorderedtablestper_wf();
         /// - APAS: Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Claude-Opus-4.6: Work O(n * m), Span O(n * m) -- delegates to base table restrict (linear scan), then recalculates reduction
@@ -282,7 +275,6 @@ broadcast use {
             ensures
                 restricted@.dom() =~= self@.dom().intersect(keys@),
                 forall|k: K::V| #[trigger] restricted@.contains_key(k) ==> restricted@[k] == self@[k],
-                restricted@.dom().finite(),
                 restricted.spec_augorderedtablestper_wf();
         /// - APAS: Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Claude-Opus-4.6: Work O(n * m), Span O(n * m) -- delegates to base table subtract (linear scan), then recalculates reduction
@@ -293,7 +285,6 @@ broadcast use {
             ensures
                 subtracted@.dom() =~= self@.dom().difference(keys@),
                 forall|k: K::V| #[trigger] subtracted@.contains_key(k) ==> subtracted@[k] == self@[k],
-                subtracted@.dom().finite(),
                 subtracted.spec_augorderedtablestper_wf();
         /// - APAS: Work O(n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- collects base table entries into AVLTreeSeqStPer
@@ -349,8 +340,6 @@ broadcast use {
                 obeys_view_eq::<K>(),
             ensures
                 self@.dom().finite(),
-                parts.0@.dom().finite(),
-                parts.2@.dom().finite(),
                 parts.1 matches Some(v) ==> self@.contains_key(k@) && v@ == self@[k@],
                 parts.1 matches None ==> !self@.contains_key(k@),
                 !parts.0@.dom().contains(k@),
@@ -372,7 +361,6 @@ broadcast use {
                 left@.dom().len() + right@.dom().len() < usize::MAX,
             ensures
                 joined@.dom() =~= left@.dom().union(right@.dom()),
-                joined@.dom().finite(),
                 joined.spec_augorderedtablestper_wf();
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- collects entries, sorts, filters range, builds new table + recalculates reduction
@@ -380,7 +368,6 @@ broadcast use {
             requires
                 self.spec_augorderedtablestper_wf(),
             ensures
-                range@.dom().finite(),
                 range@.dom().subset_of(self@.dom()),
                 forall|key| #[trigger] range@.dom().contains(key) ==> range@[key] == self@[key],
                 range.spec_augorderedtablestper_wf();
@@ -415,9 +402,7 @@ broadcast use {
                 self.spec_augorderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
-                split.0@.dom().finite(),
                 split.0@.dom().subset_of(self@.dom()),
-                split.1@.dom().finite(),
                 split.1@.dom().subset_of(self@.dom()),
                 split.0@.dom().disjoint(split.1@.dom()),
                 forall|key| #[trigger] self@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key),
@@ -475,7 +460,7 @@ broadcast use {
         }
 
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
-            ensures tree@.dom().finite(), tree.spec_augorderedtablestper_wf()
+            ensures tree.spec_augorderedtablestper_wf()
         {
                       assert(obeys_feq_full_trigger::<K>());
            assert(obeys_feq_full_trigger::<V>());
@@ -515,7 +500,7 @@ broadcast use {
         }
 
         fn delete(&self, k: &K) -> (updated: Self)
-            ensures updated@.dom().finite(), updated.spec_augorderedtablestper_wf()
+            ensures updated.spec_augorderedtablestper_wf()
         {
             let new_base = self.base_table.delete(k);
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);
@@ -733,8 +718,6 @@ broadcast use {
         fn split_key(&self, k: &K) -> (parts: (Self, Option<V>, Self))
             ensures
                 self@.dom().finite(),
-                parts.0@.dom().finite(),
-                parts.2@.dom().finite(),
                 parts.1 matches Some(v) ==> self@.contains_key(k@) && v@ == self@[k@],
                 parts.1 matches None ==> !self@.contains_key(k@),
                 !parts.0@.dom().contains(k@),
@@ -798,7 +781,6 @@ broadcast use {
 
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             ensures
-                range@.dom().finite(),
                 range@.dom().subset_of(self@.dom()),
                 forall|key| #[trigger] range@.dom().contains(key) ==> range@[key] == self@[key],
                 range.spec_augorderedtablestper_wf(),
@@ -845,9 +827,7 @@ broadcast use {
         fn split_rank_key(&self, i: usize) -> (split: (Self, Self))
             ensures
                 self@.dom().finite(),
-                split.0@.dom().finite(),
                 split.0@.dom().subset_of(self@.dom()),
-                split.1@.dom().finite(),
                 split.1@.dom().subset_of(self@.dom()),
                 split.0@.dom().disjoint(split.1@.dom()),
                 forall|key| #[trigger] self@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key),

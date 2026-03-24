@@ -17,7 +17,6 @@
 
 //		1. module
 
-
 pub mod TableStPer {
 
     use std::cmp::Ordering;
@@ -63,7 +62,6 @@ pub mod TableStPer {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
-
     //		4. type definitions
 
     // 4. type definitions
@@ -76,7 +74,6 @@ pub mod TableStPer {
 
     pub type TableS<K, V> = TableStPer<K, V>;
 
-
     //		5. view impls
 
     // 5. view impls
@@ -87,7 +84,6 @@ pub mod TableStPer {
             spec_entries_to_map(self.entries@)
         }
     }
-
 
     //		6. spec fns
 
@@ -140,7 +136,6 @@ pub mod TableStPer {
             spec_collect_domain(pairs.drop_last()).insert(pairs.last().0)
         }
     }
-
 
     //		7. proof fns/broadcast groups
 
@@ -370,7 +365,6 @@ pub mod TableStPer {
         }
     }
 
-
     //		8. traits
 
     // 8. traits
@@ -560,7 +554,6 @@ pub mod TableStPer {
         fn collect(&self) -> (collected: ArraySeqStPerS<Pair<K, V>>)
             ensures spec_entries_to_map(collected@) == self@;
     }
-
 
     //		9. impls
 
@@ -2027,9 +2020,6 @@ pub mod TableStPer {
         TableStPer { entries: seq }
     }
 
-
-    
-
     /// APAS Algorithm 42.3: collect groups a sequence of (key, value) pairs into a table
     /// mapping each key to the subsequence of values for that key, preserving order.
     pub fn collect_by_key<K: StT + Ord + Eq, V: StT>(
@@ -2047,7 +2037,6 @@ pub mod TableStPer {
                 <==> spec_collect_domain::<K::V, V::V>(pairs@).contains(k),
             forall|k: K::V| #[trigger] grouped@.contains_key(k)
                 ==> grouped@[k] == spec_collect_key::<K::V, V::V>(pairs@, k),
-            grouped@.dom().finite(),
     {
         let mut result = TableStPer::<K, ArraySeqStPerS<V>>::empty();
         let ghost pairs_view = pairs@;
@@ -2173,7 +2162,6 @@ pub mod TableStPer {
         result
     }
 
-
     //		11. derive impls in verus!
 
     // 11. derive impls in verus!
@@ -2216,7 +2204,6 @@ pub mod TableStPer {
 
     // 12. macros
 
-
     //		12. macros
 
     /// Macro for creating table literals.
@@ -2233,7 +2220,6 @@ pub mod TableStPer {
     }
 
     // 13. derive impls outside verus!
-
 
     //		13. derive impls outside verus!
 
