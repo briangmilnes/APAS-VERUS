@@ -1080,57 +1080,57 @@ Table of Contents:
       1475 |             equal
       1476 |         }
 ℹ src/Chap41/AVLTreeSetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:424: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:520: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:411: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:505: info: accept()
    Info: 2 total
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:257: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.len()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:269: info: structural_false_positive RWLOCK_GHOST to_seq — assume(seq@.to_set() =~= self@); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:319: info: structural_false_positive RWLOCK_GHOST filter — assume(vstd::laws_cmp::obeys_cmp_spec::<T>()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:320: info: structural_false_positive RWLOCK_GHOST filter — assume(view_ord_consistent::<T>()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:331: info: structural_false_positive RWLOCK_GHOST filter — assume(filtered@.subset_of(self@)); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:332: info: structural_false_positive RWLOCK_GHOST filter — assume(filtered.spec_avltreesetmteph_wf()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:333: info: structural_false_positive RWLOCK_GHOST filter — assume(forall|v: T::V| #[trigger] filtered@.contains(v) [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:335: info: structural_false_positive RWLOCK_GHOST filter — assume(forall|v: T::V| self@.contains(v) && spec_pred(v) [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:347: info: structural_false_positive RWLOCK_GHOST intersection — assume(vstd::laws_cmp::obeys_cmp_spec::<T>()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:348: info: structural_false_positive RWLOCK_GHOST intersection — assume(view_ord_consistent::<T>()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:360: info: structural_false_positive RWLOCK_GHOST intersection — assume(common@ == self@.intersect(other@)); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:372: info: structural_false_positive RWLOCK_GHOST difference — assume(vstd::laws_cmp::obeys_cmp_spec::<T>()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:373: info: structural_false_positive RWLOCK_GHOST difference — assume(view_ord_consistent::<T>()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:385: info: structural_false_positive RWLOCK_GHOST difference — assume(remaining@ == self@.difference(other@)); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:399: info: structural_false_positive RWLOCK_GHOST union — assume(self_st@.len() + other_st@.len() < usize::MAX as nat) [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:401: info: structural_false_positive RWLOCK_GHOST union — assume(vstd::laws_cmp::obeys_cmp_spec::<T>()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:402: info: structural_false_positive RWLOCK_GHOST union — assume(view_ord_consistent::<T>()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:414: info: structural_false_positive RWLOCK_GHOST union — assume(combined@ == self@.union(other@)); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:436: info: structural_false_positive RWLOCK_GHOST delete — assume(vstd::laws_cmp::obeys_cmp_spec::<T>()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:437: info: structural_false_positive RWLOCK_GHOST delete — assume(view_ord_consistent::<T>()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:451: info: structural_false_positive RWLOCK_GHOST insert — assume(current@.len() + 1 < usize::MAX as nat); // RWLOCK_GH [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:453: info: structural_false_positive RWLOCK_GHOST insert — assume(vstd::laws_cmp::obeys_cmp_spec::<T>()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:454: info: structural_false_positive RWLOCK_GHOST insert — assume(view_ord_consistent::<T>()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:596: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph — unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtEph<T> {} [high]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:597: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph — unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:244: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:256: info: structural_false_positive RWLOCK_GHOST to_seq — assume(seq@.to_set() =~= self@); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:306: info: structural_false_positive RWLOCK_GHOST filter — assume(vstd::laws_cmp::obeys_cmp_spec::<T>()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:307: info: structural_false_positive RWLOCK_GHOST filter — assume(view_ord_consistent::<T>()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:318: info: structural_false_positive RWLOCK_GHOST filter — assume(filtered@.subset_of(self@)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:319: info: structural_false_positive RWLOCK_GHOST filter — assume(filtered.spec_avltreesetmteph_wf()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:320: info: structural_false_positive RWLOCK_GHOST filter — assume(forall|v: T::V| #[trigger] filtered@.contains(v) [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:322: info: structural_false_positive RWLOCK_GHOST filter — assume(forall|v: T::V| self@.contains(v) && spec_pred(v) [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:334: info: structural_false_positive RWLOCK_GHOST intersection — assume(vstd::laws_cmp::obeys_cmp_spec::<T>()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:335: info: structural_false_positive RWLOCK_GHOST intersection — assume(view_ord_consistent::<T>()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:347: info: structural_false_positive RWLOCK_GHOST intersection — assume(common@ == self@.intersect(other@)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:359: info: structural_false_positive RWLOCK_GHOST difference — assume(vstd::laws_cmp::obeys_cmp_spec::<T>()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:360: info: structural_false_positive RWLOCK_GHOST difference — assume(view_ord_consistent::<T>()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:372: info: structural_false_positive RWLOCK_GHOST difference — assume(remaining@ == self@.difference(other@)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:386: info: structural_false_positive RWLOCK_GHOST union — assume(self_st@.len() + other_st@.len() < usize::MAX as nat) [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:388: info: structural_false_positive RWLOCK_GHOST union — assume(vstd::laws_cmp::obeys_cmp_spec::<T>()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:389: info: structural_false_positive RWLOCK_GHOST union — assume(view_ord_consistent::<T>()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:401: info: structural_false_positive RWLOCK_GHOST union — assume(combined@ == self@.union(other@)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:423: info: structural_false_positive RWLOCK_GHOST delete — assume(vstd::laws_cmp::obeys_cmp_spec::<T>()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:424: info: structural_false_positive RWLOCK_GHOST delete — assume(view_ord_consistent::<T>()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:438: info: structural_false_positive RWLOCK_GHOST insert — assume(current@.len() + 1 < usize::MAX as nat); // RWLOCK_GH [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:440: info: structural_false_positive RWLOCK_GHOST insert — assume(vstd::laws_cmp::obeys_cmp_spec::<T>()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:441: info: structural_false_positive RWLOCK_GHOST insert — assume(view_ord_consistent::<T>()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:581: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph — unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtEph<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:582: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtEph — unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {} [high]
    Info: 25 × structural_false_positive
 ⚠ src/Chap41/AVLTreeSetMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:403: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       395 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:398: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       390 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       401 |             self_handle.release_read();
-       402 |             other_handle.release_read();
-       404 |             equal
-       405 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:178: info: structural_false_positive RWLOCK_GHOST size — assume(count == self@.len()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:194: info: structural_false_positive RWLOCK_GHOST to_seq — assume(seq@.to_set() =~= self@); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:266: info: structural_false_positive RWLOCK_GHOST filter — assume(filtered@.subset_of(self@)); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:267: info: structural_false_positive RWLOCK_GHOST filter — assume(forall|v: T::V| #[trigger] filtered@.contains(v) [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:269: info: structural_false_positive RWLOCK_GHOST filter — assume(forall|v: T::V| self@.contains(v) && spec_pred(v) [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:289: info: structural_false_positive RWLOCK_GHOST intersection — assume(common@ == self@.intersect(other@)); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:308: info: structural_false_positive RWLOCK_GHOST difference — assume(remaining@ == self@.difference(other@)); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:327: info: structural_false_positive RWLOCK_GHOST union — assume(combined@ == self@.union(other@)); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:338: info: structural_false_positive RWLOCK_GHOST find — assume(found == self@.contains(x@)); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:356: info: structural_false_positive RWLOCK_GHOST delete — assume(updated@ == self@.remove(x@)); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:373: info: structural_false_positive RWLOCK_GHOST insert — assume(updated@ == self@.insert(x@)); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:416: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:457: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtPer — unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtPer<T> {} [high]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:458: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtPer — unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {} [high]
+       396 |             self_handle.release_read();
+       397 |             other_handle.release_read();
+       399 |             equal
+       400 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:174: info: structural_false_positive RWLOCK_GHOST size — assume(count == self@.len()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:190: info: structural_false_positive RWLOCK_GHOST to_seq — assume(seq@.to_set() =~= self@); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:262: info: structural_false_positive RWLOCK_GHOST filter — assume(filtered@.subset_of(self@)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:263: info: structural_false_positive RWLOCK_GHOST filter — assume(forall|v: T::V| #[trigger] filtered@.contains(v) [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:265: info: structural_false_positive RWLOCK_GHOST filter — assume(forall|v: T::V| self@.contains(v) && spec_pred(v) [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:285: info: structural_false_positive RWLOCK_GHOST intersection — assume(common@ == self@.intersect(other@)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:304: info: structural_false_positive RWLOCK_GHOST difference — assume(remaining@ == self@.difference(other@)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:323: info: structural_false_positive RWLOCK_GHOST union — assume(combined@ == self@.union(other@)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:334: info: structural_false_positive RWLOCK_GHOST find — assume(found == self@.contains(x@)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:352: info: structural_false_positive RWLOCK_GHOST delete — assume(updated@ == self@.remove(x@)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:369: info: structural_false_positive RWLOCK_GHOST insert — assume(updated@ == self@.insert(x@)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:411: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:452: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtPer — unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtPer<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:453: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtPer — unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {} [high]
 ⚠ src/Chap41/AVLTreeSetStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:768: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        764 |         fn eq(&self, other: &Self) -> (equal: bool)
@@ -1204,49 +1204,49 @@ Table of Contents:
        667 |             equal
        668 |         }
 ⚠ src/Chap41/ArraySetEnumMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:950: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       946 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:934: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       930 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       948 |         {
-       949 |             let equal = self.universe_size == other.universe_size && self.bits == other.bits;
-       951 |             equal
-       952 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:963: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       956 |         fn clone(&self) -> (cloned: Self)
+       932 |         {
+       933 |             let equal = self.universe_size == other.universe_size && self.bits == other.bits;
+       935 |             equal
+       936 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:947: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       940 |         fn clone(&self) -> (cloned: Self)
             ...
-       961 |                 universe_size: self.universe_size,
-       962 |             };
-       964 |             cloned
-       965 |         }
+       945 |                 universe_size: self.universe_size,
+       946 |             };
+       948 |             cloned
+       949 |         }
 ⚠ src/Chap41/ArraySetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1235: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1231 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1228: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1224 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1233 |         {
-      1234 |             proof {
-      1236 |                 assume(other.spec_arraysetsteph_wf());
-      1237 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1236: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1231 |         fn eq(&self, other: &Self) -> (equal: bool)
+      1226 |         {
+      1227 |             proof {
+      1229 |                 assume(other.spec_arraysetsteph_wf());
+      1230 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1229: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1224 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1234 |             proof {
-      1235 |                 assume(self.spec_arraysetsteph_wf());
-      1237 |             }
-      1238 |             let equal = self.size() == other.size() && {
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1258: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1231 |         fn eq(&self, other: &Self) -> (equal: bool)
+      1227 |             proof {
+      1228 |                 assume(self.spec_arraysetsteph_wf());
+      1230 |             }
+      1231 |             let equal = self.size() == other.size() && {
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1251: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1224 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1256 |                 all_found
-      1257 |             };
-      1259 |             equal
-      1260 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1271: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1264 |         fn clone(&self) -> (cloned: Self)
+      1249 |                 all_found
+      1250 |             };
+      1252 |             equal
+      1253 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1264: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1257 |         fn clone(&self) -> (cloned: Self)
             ...
-      1269 |             };
-      1270 |             proof {
-      1272 |                 lemma_seq_map_cloned_view_eq(
-      1273 |                     self.elements.seq@,
+      1262 |             };
+      1263 |             proof {
+      1265 |                 lemma_seq_map_cloned_view_eq(
+      1266 |                     self.elements.seq@,
 ⚠ src/Chap42/TableMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2201: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       2197 |         fn eq(&self, other: &Self) -> (equal: bool)
@@ -1271,30 +1271,30 @@ Table of Contents:
       2107 |             equal
       2108 |         }
 ⚠ src/Chap42/TableStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2194: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2190 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2182: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2178 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      2192 |         {
-      2193 |             let equal = self.entries == other.entries;
-      2195 |             equal
-      2196 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2205: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2200 |         fn clone(&self) -> (cloned: Self)
+      2180 |         {
+      2181 |             let equal = self.entries == other.entries;
+      2183 |             equal
+      2184 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2193: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2188 |         fn clone(&self) -> (cloned: Self)
             ...
-      2203 |             let cloned = TableStPer { entries: self.entries.clone() };
-      2204 |             proof {
-      2206 |                 lemma_seq_map_cloned_view_eq(
-      2207 |                     self.entries.seq@,
+      2191 |             let cloned = TableStPer { entries: self.entries.clone() };
+      2192 |             proof {
+      2194 |                 lemma_seq_map_cloned_view_eq(
+      2195 |                     self.entries.seq@,
 ✓ src/Chap43/AugOrderedTableMtEph.rs
    1 clean proof function
 ⚠ src/Chap43/AugOrderedTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:854: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       850 |         fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap43/AugOrderedTableStEph.rs:853: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       849 |         fn clone(&self) -> (cloned: Self)
             ...
-       852 |         {
-       853 |             let base_cloned = self.base_table.clone();
-       855 |             Self {
-       856 |                 base_table: base_cloned,
+       851 |         {
+       852 |             let base_cloned = self.base_table.clone();
+       854 |             Self {
+       855 |                 base_table: base_cloned,
 ✓ src/Chap43/AugOrderedTableStPer.rs
    1 clean proof function
 ℹ src/Chap43/OrderedSetMtEph.rs
@@ -1317,28 +1317,28 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetMtEph.rs:535: info: structural_false_positive RWLOCK_GHOST split_rank — assume(right.spec_orderedsetsteph_wf()); [medium]
    Info: 17 × structural_false_positive
 ❌ src/Chap43/OrderedSetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:793: error: assume() [algorithmic] - proof { assume(k1_clone@ == k1@); }
-       772 |         fn get_range_iter(&self, k1: &T, k2: &T) -> (range: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:785: error: assume() [algorithmic] - proof { assume(k1_clone@ == k1@); }
+       764 |         fn get_range_iter(&self, k1: &T, k2: &T) -> (range: Self)
             ...
-       791 |             if found_k1 {
-       792 |                 let k1_clone = k1.clone();
-       794 |                 result_tree.insert(k1_clone);
-       795 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:809: error: assume() [algorithmic] - proof { assume(k2_clone@ == k2@); }
-       772 |         fn get_range_iter(&self, k1: &T, k2: &T) -> (range: Self)
+       783 |             if found_k1 {
+       784 |                 let k1_clone = k1.clone();
+       786 |                 result_tree.insert(k1_clone);
+       787 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:801: error: assume() [algorithmic] - proof { assume(k2_clone@ == k2@); }
+       764 |         fn get_range_iter(&self, k1: &T, k2: &T) -> (range: Self)
             ...
-       807 |             if found_k2 {
-       808 |                 let k2_clone = k2.clone();
-       810 |                 result_tree.insert(k2_clone);
-       811 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:975: error: unsafe {} - Some(unsafe { &*ptr })
-       952 |         fn next(&mut self) -> (next: Option<&'a T>)
+       799 |             if found_k2 {
+       800 |                 let k2_clone = k2.clone();
+       802 |                 result_tree.insert(k2_clone);
+       803 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:967: error: unsafe {} - Some(unsafe { &*ptr })
+       944 |         fn next(&mut self) -> (next: Option<&'a T>)
             ...
-       973 |                 // Safety: elements are owned by the iterator and valid for 'a
-       974 |                 // because the iterator lives at most as long as the borrowed set.
-       976 |             } else {
-       977 |                 None
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:951: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+       965 |                 // Safety: elements are owned by the iterator and valid for 'a
+       966 |                 // because the iterator lives at most as long as the borrowed set.
+       968 |             } else {
+       969 |                 None
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStEph.rs:943: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
    Holes: 3 total
       2 × assume()
       1 × unsafe {}
@@ -1441,241 +1441,231 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:522: info: structural_false_positive RWLOCK_GHOST rank_key — proof { assume(inner@ =~= self@); } [medium]
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:534: info: structural_false_positive RWLOCK_GHOST select_key — proof { assume(inner@ =~= self@); } [medium]
 ❌ src/Chap43/OrderedTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1326: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
-      1318 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1327: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
+      1319 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
             ...
-      1324 |                 // trait doesn't express (V: StT only). The impl has V: Ord so these
-      1325 |                 // hold, but we can't derive them from the trait requires.
-      1327 |                 assume(view_ord_consistent::<Pair<K, V>>());
-      1328 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1327: error: assume() [algorithmic] - assume(view_ord_consistent::<Pair<K, V>>());
-      1318 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+      1325 |                 // trait doesn't express (V: StT only). The impl has V: Ord so these
+      1326 |                 // hold, but we can't derive them from the trait requires.
+      1328 |                 assume(view_ord_consistent::<Pair<K, V>>());
+      1329 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1328: error: assume() [algorithmic] - assume(view_ord_consistent::<Pair<K, V>>());
+      1319 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
             ...
-      1325 |                 // hold, but we can't derive them from the trait requires.
-      1326 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
-      1328 |             }
-      1329 |             let seq = keys.to_seq();
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1453: error: assume() [algorithmic] - assume(spec_pair_key_determines_order::<K, V>());
-      1318 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+      1326 |                 // hold, but we can't derive them from the trait requires.
+      1327 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
+      1329 |             }
+      1330 |             let seq = keys.to_seq();
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1454: error: assume() [algorithmic] - assume(spec_pair_key_determines_order::<K, V>());
+      1319 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
             ...
-      1451 |                 };
-      1452 |                 // Prove spec_orderedtablesteph_wf.
-      1454 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1455 |                 assume(view_ord_consistent::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1454: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1318 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+      1452 |                 };
+      1453 |                 // Prove spec_orderedtablesteph_wf.
+      1455 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
+      1456 |                 assume(view_ord_consistent::<K>());
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1455: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
+      1319 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
             ...
-      1452 |                 // Prove spec_orderedtablesteph_wf.
-      1453 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1455 |                 assume(view_ord_consistent::<K>());
-      1456 |                 assume(obeys_feq_fulls::<K, V>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1455: error: assume() [algorithmic] - assume(view_ord_consistent::<K>());
-      1318 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+      1453 |                 // Prove spec_orderedtablesteph_wf.
+      1454 |                 assume(spec_pair_key_determines_order::<K, V>());
+      1456 |                 assume(view_ord_consistent::<K>());
+      1457 |                 assume(obeys_feq_fulls::<K, V>());
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1456: error: assume() [algorithmic] - assume(view_ord_consistent::<K>());
+      1319 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
             ...
-      1453 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1454 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1456 |                 assume(obeys_feq_fulls::<K, V>());
-      1457 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1456: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
-      1318 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+      1454 |                 assume(spec_pair_key_determines_order::<K, V>());
+      1455 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
+      1457 |                 assume(obeys_feq_fulls::<K, V>());
+      1458 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:1457: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
+      1319 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
             ...
-      1454 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1455 |                 assume(view_ord_consistent::<K>());
-      1457 |             }
-      1458 |             tabulated
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:3408: error: external_body - #[verifier::external_body]
-      3409 |         fn rank_key_iter(&self, k: &K) -> (rank: usize)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:3435: error: external_body - #[verifier::external_body]
-      3436 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:3728: error: assume() [algorithmic] - assume(iter_invariant(self));
-      3706 |         fn next(&mut self) -> (next: Option<Pair<K, V>>)
+      1455 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
+      1456 |                 assume(view_ord_consistent::<K>());
+      1458 |             }
+      1459 |             tabulated
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:3409: error: external_body - #[verifier::external_body]
+      3410 |         fn rank_key_iter(&self, k: &K) -> (rank: usize)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:3436: error: external_body - #[verifier::external_body]
+      3437 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:3753: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include result.spec_orderedtablesteph_wf() for return type OrderedTableStEph
+      3746 |         fn clone(&self) -> (cloned: Self) {
             ...
-      3726 |             proof {
-      3727 |                 // Caller must maintain iter_invariant.
-      3729 |             }
-      3730 |             if self.pos < self.len {
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:3752: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include result.spec_orderedtablesteph_wf() for return type OrderedTableStEph
-      3745 |         fn clone(&self) -> (cloned: Self) {
-            ...
-      3750 |     }
-      3751 | 
-      3753 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
-      3754 |     ) -> (result: OrderedTableStEph<K, V>)
-   Holes: 9 total
-      7 × assume()
+      3751 |     }
+      3752 | 
+      3754 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
+      3755 |     ) -> (result: OrderedTableStEph<K, V>)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStEph.rs:3729: info: accept()
+   Holes: 8 total
+      6 × assume()
       2 × external_body
+   Info: 1 total
    Proof functions: 14 total (14 clean, 0 holed)
 ❌ src/Chap43/OrderedTableStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:843: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
-       839 |         fn empty() -> (table: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:823: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
+       819 |         fn empty() -> (table: Self) {
             ...
-       841 |             proof {
-       842 |                 lemma_set_to_map_empty::<K::V, V::V>();
-       844 |                 assume(obeys_feq_full::<Pair<K, V>>());
-       845 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:844: error: assume() [algorithmic] - assume(obeys_feq_full::<Pair<K, V>>());
-       839 |         fn empty() -> (table: Self) {
+       821 |             proof {
+       822 |                 lemma_set_to_map_empty::<K::V, V::V>();
+       824 |                 assume(obeys_feq_full::<Pair<K, V>>());
+       825 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:824: error: assume() [algorithmic] - assume(obeys_feq_full::<Pair<K, V>>());
+       819 |         fn empty() -> (table: Self) {
             ...
-       842 |                 lemma_set_to_map_empty::<K::V, V::V>();
-       843 |                 assume(obeys_feq_fulls::<K, V>());
-       845 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
-       846 |                 assume(view_ord_consistent::<Pair<K, V>>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:845: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
-       839 |         fn empty() -> (table: Self) {
+       822 |                 lemma_set_to_map_empty::<K::V, V::V>();
+       823 |                 assume(obeys_feq_fulls::<K, V>());
+       825 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
+       826 |                 assume(view_ord_consistent::<Pair<K, V>>());
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:825: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
+       819 |         fn empty() -> (table: Self) {
             ...
-       843 |                 assume(obeys_feq_fulls::<K, V>());
-       844 |                 assume(obeys_feq_full::<Pair<K, V>>());
-       846 |                 assume(view_ord_consistent::<Pair<K, V>>());
-       847 |                 assume(spec_pair_key_determines_order::<K, V>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:846: error: assume() [algorithmic] - assume(view_ord_consistent::<Pair<K, V>>());
-       839 |         fn empty() -> (table: Self) {
+       823 |                 assume(obeys_feq_fulls::<K, V>());
+       824 |                 assume(obeys_feq_full::<Pair<K, V>>());
+       826 |                 assume(view_ord_consistent::<Pair<K, V>>());
+       827 |                 assume(spec_pair_key_determines_order::<K, V>());
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:826: error: assume() [algorithmic] - assume(view_ord_consistent::<Pair<K, V>>());
+       819 |         fn empty() -> (table: Self) {
             ...
-       844 |                 assume(obeys_feq_full::<Pair<K, V>>());
-       845 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
-       847 |                 assume(spec_pair_key_determines_order::<K, V>());
-       848 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:847: error: assume() [algorithmic] - assume(spec_pair_key_determines_order::<K, V>());
-       839 |         fn empty() -> (table: Self) {
+       824 |                 assume(obeys_feq_full::<Pair<K, V>>());
+       825 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
+       827 |                 assume(spec_pair_key_determines_order::<K, V>());
+       828 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:827: error: assume() [algorithmic] - assume(spec_pair_key_determines_order::<K, V>());
+       819 |         fn empty() -> (table: Self) {
             ...
-       845 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
-       846 |                 assume(view_ord_consistent::<Pair<K, V>>());
-       848 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-       849 |                 assume(view_ord_consistent::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:848: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-       839 |         fn empty() -> (table: Self) {
+       825 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
+       826 |                 assume(view_ord_consistent::<Pair<K, V>>());
+       828 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
+       829 |                 assume(view_ord_consistent::<K>());
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:828: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
+       819 |         fn empty() -> (table: Self) {
             ...
-       846 |                 assume(view_ord_consistent::<Pair<K, V>>());
-       847 |                 assume(spec_pair_key_determines_order::<K, V>());
-       849 |                 assume(view_ord_consistent::<K>());
-       850 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:849: error: assume() [algorithmic] - assume(view_ord_consistent::<K>());
-       839 |         fn empty() -> (table: Self) {
+       826 |                 assume(view_ord_consistent::<Pair<K, V>>());
+       827 |                 assume(spec_pair_key_determines_order::<K, V>());
+       829 |                 assume(view_ord_consistent::<K>());
+       830 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:829: error: assume() [algorithmic] - assume(view_ord_consistent::<K>());
+       819 |         fn empty() -> (table: Self) {
             ...
-       847 |                 assume(spec_pair_key_determines_order::<K, V>());
-       848 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-       850 |             }
-       851 |             OrderedTableStPer { tree }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:862: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
-       854 |         fn singleton(k: K, v: V) -> (table: Self) {
+       827 |                 assume(spec_pair_key_determines_order::<K, V>());
+       828 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
+       830 |             }
+       831 |             OrderedTableStPer { tree }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:842: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
+       834 |         fn singleton(k: K, v: V) -> (table: Self) {
             ...
-       860 |                 lemma_set_to_map_insert(Set::empty(), k@, v@);
-       861 |                 lemma_pair_set_to_map_dom_finite(s);
-       863 |                 assume(obeys_feq_full::<Pair<K, V>>());
-       864 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:863: error: assume() [algorithmic] - assume(obeys_feq_full::<Pair<K, V>>());
-       854 |         fn singleton(k: K, v: V) -> (table: Self) {
+       840 |                 lemma_set_to_map_insert(Set::empty(), k@, v@);
+       841 |                 lemma_pair_set_to_map_dom_finite(s);
+       843 |                 assume(obeys_feq_full::<Pair<K, V>>());
+       844 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:843: error: assume() [algorithmic] - assume(obeys_feq_full::<Pair<K, V>>());
+       834 |         fn singleton(k: K, v: V) -> (table: Self) {
             ...
-       861 |                 lemma_pair_set_to_map_dom_finite(s);
-       862 |                 assume(obeys_feq_fulls::<K, V>());
-       864 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
-       865 |                 assume(view_ord_consistent::<Pair<K, V>>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:864: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
-       854 |         fn singleton(k: K, v: V) -> (table: Self) {
+       841 |                 lemma_pair_set_to_map_dom_finite(s);
+       842 |                 assume(obeys_feq_fulls::<K, V>());
+       844 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
+       845 |                 assume(view_ord_consistent::<Pair<K, V>>());
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:844: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
+       834 |         fn singleton(k: K, v: V) -> (table: Self) {
             ...
-       862 |                 assume(obeys_feq_fulls::<K, V>());
-       863 |                 assume(obeys_feq_full::<Pair<K, V>>());
-       865 |                 assume(view_ord_consistent::<Pair<K, V>>());
-       866 |                 assume(spec_pair_key_determines_order::<K, V>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:865: error: assume() [algorithmic] - assume(view_ord_consistent::<Pair<K, V>>());
-       854 |         fn singleton(k: K, v: V) -> (table: Self) {
+       842 |                 assume(obeys_feq_fulls::<K, V>());
+       843 |                 assume(obeys_feq_full::<Pair<K, V>>());
+       845 |                 assume(view_ord_consistent::<Pair<K, V>>());
+       846 |                 assume(spec_pair_key_determines_order::<K, V>());
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:845: error: assume() [algorithmic] - assume(view_ord_consistent::<Pair<K, V>>());
+       834 |         fn singleton(k: K, v: V) -> (table: Self) {
             ...
-       863 |                 assume(obeys_feq_full::<Pair<K, V>>());
-       864 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
-       866 |                 assume(spec_pair_key_determines_order::<K, V>());
-       867 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:866: error: assume() [algorithmic] - assume(spec_pair_key_determines_order::<K, V>());
-       854 |         fn singleton(k: K, v: V) -> (table: Self) {
+       843 |                 assume(obeys_feq_full::<Pair<K, V>>());
+       844 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
+       846 |                 assume(spec_pair_key_determines_order::<K, V>());
+       847 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:846: error: assume() [algorithmic] - assume(spec_pair_key_determines_order::<K, V>());
+       834 |         fn singleton(k: K, v: V) -> (table: Self) {
             ...
-       864 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
-       865 |                 assume(view_ord_consistent::<Pair<K, V>>());
-       867 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-       868 |                 assume(view_ord_consistent::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:867: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-       854 |         fn singleton(k: K, v: V) -> (table: Self) {
+       844 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
+       845 |                 assume(view_ord_consistent::<Pair<K, V>>());
+       847 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
+       848 |                 assume(view_ord_consistent::<K>());
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:847: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
+       834 |         fn singleton(k: K, v: V) -> (table: Self) {
             ...
-       865 |                 assume(view_ord_consistent::<Pair<K, V>>());
-       866 |                 assume(spec_pair_key_determines_order::<K, V>());
-       868 |                 assume(view_ord_consistent::<K>());
-       869 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:868: error: assume() [algorithmic] - assume(view_ord_consistent::<K>());
-       854 |         fn singleton(k: K, v: V) -> (table: Self) {
+       845 |                 assume(view_ord_consistent::<Pair<K, V>>());
+       846 |                 assume(spec_pair_key_determines_order::<K, V>());
+       848 |                 assume(view_ord_consistent::<K>());
+       849 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:848: error: assume() [algorithmic] - assume(view_ord_consistent::<K>());
+       834 |         fn singleton(k: K, v: V) -> (table: Self) {
             ...
-       866 |                 assume(spec_pair_key_determines_order::<K, V>());
-       867 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-       869 |             }
-       870 |             OrderedTableStPer { tree: bst }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1026: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
-      1022 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self) {
+       846 |                 assume(spec_pair_key_determines_order::<K, V>());
+       847 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
+       849 |             }
+       850 |             OrderedTableStPer { tree: bst }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1006: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
+      1002 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self) {
             ...
-      1024 |                 assert(obeys_feq_full_trigger::<K>());
-      1025 |                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
-      1027 |                 assume(view_ord_consistent::<Pair<K, V>>());
-      1028 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1027: error: assume() [algorithmic] - assume(view_ord_consistent::<Pair<K, V>>());
-      1022 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self) {
+      1004 |                 assert(obeys_feq_full_trigger::<K>());
+      1005 |                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
+      1007 |                 assume(view_ord_consistent::<Pair<K, V>>());
+      1008 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1007: error: assume() [algorithmic] - assume(view_ord_consistent::<Pair<K, V>>());
+      1002 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self) {
             ...
-      1025 |                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
-      1026 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
-      1028 |             }
-      1029 |             let seq = keys.to_seq();
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1144: error: assume() [algorithmic] - assume(spec_pair_key_determines_order::<K, V>());
-      1022 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self) {
+      1005 |                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
+      1006 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
+      1008 |             }
+      1009 |             let seq = keys.to_seq();
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1124: error: assume() [algorithmic] - assume(spec_pair_key_determines_order::<K, V>());
+      1002 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self) {
             ...
-      1142 |                     lemma_pair_in_set_map_contains(tree@, key, rv@);
-      1143 |                 };
-      1145 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1146 |                 assume(view_ord_consistent::<K>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1145: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1022 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self) {
+      1122 |                     lemma_pair_in_set_map_contains(tree@, key, rv@);
+      1123 |                 };
+      1125 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
+      1126 |                 assume(view_ord_consistent::<K>());
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1125: error: assume() [algorithmic] - assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
+      1002 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self) {
             ...
-      1143 |                 };
-      1144 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1146 |                 assume(view_ord_consistent::<K>());
-      1147 |                 assume(obeys_feq_fulls::<K, V>());
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1146: error: assume() [algorithmic] - assume(view_ord_consistent::<K>());
-      1022 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self) {
+      1123 |                 };
+      1124 |                 assume(spec_pair_key_determines_order::<K, V>());
+      1126 |                 assume(view_ord_consistent::<K>());
+      1127 |                 assume(obeys_feq_fulls::<K, V>());
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1126: error: assume() [algorithmic] - assume(view_ord_consistent::<K>());
+      1002 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self) {
             ...
-      1144 |                 assume(spec_pair_key_determines_order::<K, V>());
-      1145 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1147 |                 assume(obeys_feq_fulls::<K, V>());
-      1148 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1147: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
-      1022 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self) {
+      1124 |                 assume(spec_pair_key_determines_order::<K, V>());
+      1125 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
+      1127 |                 assume(obeys_feq_fulls::<K, V>());
+      1128 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:1127: error: assume() [algorithmic] - assume(obeys_feq_fulls::<K, V>());
+      1002 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self) {
             ...
-      1145 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-      1146 |                 assume(view_ord_consistent::<K>());
-      1148 |             }
-      1149 |             tabulated
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3305: error: assume() [algorithmic] - assume(iter_invariant(self));
-      3284 |         fn next(&mut self) -> (next: Option<Pair<K, V>>)
+      1125 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
+      1126 |                 assume(view_ord_consistent::<K>());
+      1128 |             }
+      1129 |             tabulated
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3330: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      3326 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      3303 |         {
-      3304 |             proof {
-      3306 |             }
-      3307 |             if self.pos < self.len {
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3350: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      3346 |         fn eq(&self, other: &Self) -> (equal: bool)
+      3328 |         {
+      3329 |             let equal = self.tree.size() == other.tree.size();
+      3331 |             equal
+      3332 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3342: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      3336 |         fn clone(&self) -> (copy: Self)
             ...
-      3348 |         {
-      3349 |             let equal = self.tree.size() == other.tree.size();
-      3351 |             equal
-      3352 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3362: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      3356 |         fn clone(&self) -> (copy: Self)
+      3340 |                 tree: self.tree.clone(),
+      3341 |             };
+      3343 |             copy
+      3344 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3347: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include result.spec_orderedtablestper_wf() for return type OrderedTableStPer
+      3336 |         fn clone(&self) -> (copy: Self)
             ...
-      3360 |                 tree: self.tree.clone(),
-      3361 |             };
-      3363 |             copy
-      3364 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3367: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include result.spec_orderedtablestper_wf() for return type OrderedTableStPer
-      3356 |         fn clone(&self) -> (copy: Self)
-            ...
-      3365 |     }
-      3366 | 
-      3368 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
-      3369 |     ) -> (result: OrderedTableStPer<K, V>)
-   Holes: 21 total
-      21 × assume()
+      3345 |     }
+      3346 | 
+      3348 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
+      3349 |     ) -> (result: OrderedTableStPer<K, V>)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3285: info: accept()
+   Holes: 20 total
+      20 × assume()
+   Info: 1 total
    Proof functions: 12 total (12 clean, 0 holed)
 ✓ src/Chap44/DocumentIndex.rs
    1 clean proof function
@@ -2730,14 +2720,14 @@ Function Specs:
    7575 total fns
 
 
-Holes Found: 34 (actionable)
-   31 × assume() [algorithmic] (91%)
-   1 × unsafe {} (2%)
-   2 × external_body (5%)
-Real Proof Targets: 34 (all actionable)
+Holes Found: 32 (actionable)
+   29 × assume() [algorithmic] (90%)
+   1 × unsafe {} (3%)
+   2 × external_body (6%)
+Real Proof Targets: 32 (all actionable)
 
 Per-Chapter Holes:
-  Chap39:  1  Chap43: 33
+  Chap39:  1  Chap43: 31
 
 Warnings: 193 total
    2 × fn_missing_requires
@@ -2745,26 +2735,26 @@ Warnings: 193 total
    12 × fn_missing_wf_ensures
    155 × assume_eq_clone_workaround
 
-Accepted (reviewed): 62 total
+Accepted (reviewed): 64 total
    26 × external_body_accept_hole
-   16 × accept()
+   18 × accept()
    10 × trivial_spec_wf
    4 × unsafe_block_accept_hole
    3 × external_accept_hole
    1 × struct_outside_verus_accept_hole
-   1 × enum_outside_verus_accept_hole
    1 × external_type_specification_accept_hole
+   1 × enum_outside_verus_accept_hole
 
 Accepted by Chapter:
   Chap02:  6  Chap11:  6  Chap12: 19
   Chap18:  8  Chap19:  3  Chap30:  7
   Chap37:  5  Chap39:  2  Chap40:  3
-  Chap41:  2
+  Chap41:  2  Chap43:  2
 
 Structural (info only): 194
    161 × RWLOCK_GHOST
-   10 × STD_TRAIT_IMPL
    10 × UNSAFE_SEND_SYNC
+   10 × STD_TRAIT_IMPL
    9 × OPAQUE_EXTERNAL
    4 × THREAD_SPAWN
 
@@ -2778,59 +2768,59 @@ Structural (info only): 194
 4.1. Worst src/* Directories (all dirs, by holes)
 =================================================================
 
-   1  Chap43  (33 holes, 10 files)
+   1  Chap43  (31 holes, 10 files)
    2  Chap39  (1 holes, 4 files)
-   3  Chap27  (0 holes, 4 files)
-   4  Chap51  (0 holes, 8 files)
+   3  Chap51  (0 holes, 8 files)
+   4  Chap54  (0 holes, 4 files)
    5  Chap05  (0 holes, 5 files)
-   6  Chap57  (0 holes, 3 files)
-   7  Chap50  (0 holes, 8 files)
-   8  Chap65  (0 holes, 3 files)
-   9  Chap59  (0 holes, 4 files)
-   10  Chap06  (0 holes, 21 files)
-   11  Chap55  (0 holes, 8 files)
-   12  Chap02  (0 holes, 2 files)
-   13  Chap54  (0 holes, 4 files)
-   14  Chap58  (0 holes, 2 files)
-   15  Chap52  (0 holes, 14 files)
-   16  Chap45  (0 holes, 6 files)
-   17  Chap64  (0 holes, 3 files)
-   18  Chap36  (0 holes, 3 files)
-   19  Chap56  (0 holes, 10 files)
+   6  Chap02  (0 holes, 2 files)
+   7  Chap03  (0 holes, 1 files)
+   8  Chap64  (0 holes, 3 files)
+   9  Chap19  (0 holes, 4 files)
+   10  Chap40  (0 holes, 3 files)
+   11  Chap44  (0 holes, 1 files)
+   12  Chap45  (0 holes, 6 files)
+   13  Chap23  (0 holes, 2 files)
+   14  Chap52  (0 holes, 14 files)
+   15  Chap06  (0 holes, 21 files)
+   16  Chap42  (0 holes, 3 files)
+   17  ParaPairs  (0 holes, 1 files)
+   18  Chap55  (0 holes, 8 files)
+   19  Chap63  (0 holes, 2 files)
    20  Chap61  (0 holes, 4 files)
-   21  Chap28  (0 holes, 11 files)
-   22  Chap40  (0 holes, 3 files)
-   23  Chap12  (0 holes, 3 files)
-   24  Concurrency  (0 holes, 1 files)
-   25  Chap44  (0 holes, 1 files)
-   26  Chap37  (0 holes, 19 files)
-   27  Chap49  (0 holes, 8 files)
-   28  Chap38  (0 holes, 2 files)
-   29  Chap63  (0 holes, 2 files)
-   30  ParaPairs  (0 holes, 1 files)
+   21  Chap37  (0 holes, 19 files)
+   22  Chap12  (0 holes, 3 files)
+   23  Chap65  (0 holes, 3 files)
+   24  Chap26  (0 holes, 8 files)
+   25  Chap49  (0 holes, 8 files)
+   26  Chap28  (0 holes, 11 files)
+   27  Chap57  (0 holes, 3 files)
+   28  Chap11  (0 holes, 5 files)
+   29  Chap47  (0 holes, 9 files)
+   30  Chap62  (0 holes, 4 files)
    31  Chap41  (0 holes, 6 files)
-   32  Chap18  (0 holes, 7 files)
-   33  Chap47  (0 holes, 9 files)
-   34  Chap11  (0 holes, 5 files)
-   35  Chap53  (0 holes, 5 files)
-   36  Chap66  (0 holes, 2 files)
-   37  Chap26  (0 holes, 8 files)
-   38  Chap21  (0 holes, 5 files)
-   39  Chap03  (0 holes, 1 files)
-   40  Chap23  (0 holes, 2 files)
-   41  Chap42  (0 holes, 3 files)
-   42  Chap30  (0 holes, 1 files)
-   43  Chap17  (0 holes, 1 files)
-   44  Chap35  (0 holes, 4 files)
-   45  Chap19  (0 holes, 4 files)
-   46  Chap62  (0 holes, 4 files)
+   32  Chap59  (0 holes, 4 files)
+   33  Chap27  (0 holes, 4 files)
+   34  Chap53  (0 holes, 5 files)
+   35  Chap35  (0 holes, 4 files)
+   36  Concurrency  (0 holes, 1 files)
+   37  Chap30  (0 holes, 1 files)
+   38  Chap50  (0 holes, 8 files)
+   39  Chap21  (0 holes, 5 files)
+   40  Chap66  (0 holes, 2 files)
+   41  Chap58  (0 holes, 2 files)
+   42  Chap56  (0 holes, 10 files)
+   43  Chap36  (0 holes, 3 files)
+   44  Chap17  (0 holes, 1 files)
+   45  Chap38  (0 holes, 2 files)
+   46  Chap18  (0 holes, 7 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
 =================================================================
 
-   1  src/Chap43/OrderedTableStPer.rs  (21 holes)
-   2  src/Chap43/OrderedTableStEph.rs  (9 holes)
+   1  src/Chap43/OrderedTableStPer.rs  (20 holes)
+   2  src/Chap43/OrderedTableStEph.rs  (8 holes)
    3  src/Chap43/OrderedSetStEph.rs  (3 holes)
    4  src/Chap39/BSTTreapStEph.rs  (1 holes)
 
@@ -2856,7 +2846,7 @@ Structural (info only): 194
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 44 clean, 2 holed, 34 holes (global), 244 modules
+Chapter Status — 46 chapters, 44 clean, 2 holed, 32 holes (global), 244 modules
 
 CLEAN CHAPTERS (44)
   Chapter        Files
@@ -2906,11 +2896,11 @@ CLEAN CHAPTERS (44)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (2) — 34 holes
+HOLED CHAPTERS (2) — 32 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
   Chap39             1     4  YES       
-  Chap43            33    10  internal  Chap43::OrderedTableStPer, Chap43::OrderedTableStEph, Chap43::OrderedSetStEph
+  Chap43            31    10  internal  Chap43::OrderedTableStEph, Chap43::OrderedTableStPer, Chap43::OrderedSetStEph
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
@@ -2921,8 +2911,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-24 08:08:04 -07:00
-Ended:     2026-03-24 08:08:05 -07:00
-Duration:  1614ms
+Started:   2026-03-24 13:10:15 -07:00
+Ended:     2026-03-24 13:10:17 -07:00
+Duration:  1524ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log
