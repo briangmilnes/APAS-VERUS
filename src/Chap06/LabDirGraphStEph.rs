@@ -397,19 +397,127 @@ verus! {
         }
     }
 
+    //		10. iterators
+
+    /// Iterator wrapper for LabDirGraphStEph vertex iteration.
+    #[verifier::reject_recursive_types(V)]
+    pub struct LabDirGraphStEphIter<'a, V: StT + Hash> {
+        pub inner: SetStEphIter<'a, V>,
+    }
+
+    impl<'a, V: StT + Hash> View for LabDirGraphStEphIter<'a, V> {
+        type V = (int, Seq<V>);
+        open spec fn view(&self) -> (int, Seq<V>) { self.inner@ }
+    }
+
+    pub open spec fn iter_invariant<'a, V: StT + Hash>(it: &LabDirGraphStEphIter<'a, V>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    impl<'a, V: StT + Hash> std::iter::Iterator for LabDirGraphStEphIter<'a, V> {
+        type Item = &'a V;
+
+        fn next(&mut self) -> (next: Option<&'a V>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
+                match next {
+                    None => {
+                        &&& self@ == old(self)@
+                        &&& old_index >= old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = self@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& element == old_seq[old_index]
+                    },
+                }
+            })
+        {
+            self.inner.next()
+        }
+    }
+
+    /// Ghost iterator for ForLoopGhostIterator support.
+    #[verifier::reject_recursive_types(V)]
+    pub struct LabDirGraphStEphGhostIterator<'a, V: StT + Hash> {
+        pub pos: int,
+        pub elements: Seq<V>,
+        pub phantom: core::marker::PhantomData<&'a V>,
+    }
+
+    impl<'a, V: StT + Hash> vstd::pervasive::ForLoopGhostIteratorNew for LabDirGraphStEphIter<'a, V> {
+        type GhostIter = LabDirGraphStEphGhostIterator<'a, V>;
+
+        open spec fn ghost_iter(&self) -> LabDirGraphStEphGhostIterator<'a, V> {
+            LabDirGraphStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, V: StT + Hash> vstd::pervasive::ForLoopGhostIterator for LabDirGraphStEphGhostIterator<'a, V> {
+        type ExecIter = LabDirGraphStEphIter<'a, V>;
+        type Item = V;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &LabDirGraphStEphIter<'a, V>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<V> {
+            if 0 <= self.pos < self.elements.len() {
+                Some(self.elements[self.pos])
+            } else {
+                None
+            }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &LabDirGraphStEphIter<'a, V>) -> LabDirGraphStEphGhostIterator<'a, V> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, V: StT + Hash> View for LabDirGraphStEphGhostIterator<'a, V> {
+        type V = Seq<V>;
+
+        open spec fn view(&self) -> Seq<V> {
+            self.elements.take(self.pos)
+        }
+    }
+
     impl<'a, V: StT + Hash, L: StT + Hash> std::iter::IntoIterator for &'a LabDirGraphStEph<V, L> {
         type Item = &'a V;
-        type IntoIter = SetStEphIter<'a, V>;
+        type IntoIter = LabDirGraphStEphIter<'a, V>;
         fn into_iter(self) -> (it: Self::IntoIter)
             requires valid_key_type::<V>()
             ensures
                 it@.0 == 0int,
                 it@.1.map(|i: int, k: V| k@).to_set() == self@.V,
                 it@.1.no_duplicates(),
+                iter_invariant(&it),
         {
-            self.vertices().iter()
+            LabDirGraphStEphIter { inner: self.vertices().iter() }
         }
     }
+
+    //		11. derive impls in verus!
 
     impl<V: StT + Hash, L: StT + Hash> Clone for LabDirGraphStEph<V, L> {
         fn clone(&self) -> (cloned: Self)

@@ -226,7 +226,8 @@ verus! {
                 it@.0 == 0int,
                 it@.1.map(|i: int, p: Pair<X, Y>| p@).to_set() ==
                     Set::new(|p: (X::V, Y::V)| self@.dom().contains(p.0) && self@[p.0] == p.1),
-                it@.1.no_duplicates();
+                it@.1.no_duplicates(),
+                iter_invariant(&it);
     }
 
     //		9. impls
@@ -480,6 +481,10 @@ verus! {
     impl<'a, X: StT + Hash, Y: StT + Hash> View for MappingStEphIter<'a, X, Y> {
         type V = (int, Seq<Pair<X, Y>>);
         open spec fn view(&self) -> (int, Seq<Pair<X, Y>>) { self.inner@ }
+    }
+
+    pub open spec fn iter_invariant<'a, X: StT + Hash, Y: StT + Hash>(it: &MappingStEphIter<'a, X, Y>) -> bool {
+        0 <= it@.0 <= it@.1.len()
     }
 
     impl<'a, X: StT + Hash, Y: StT + Hash> std::iter::Iterator for MappingStEphIter<'a, X, Y> {

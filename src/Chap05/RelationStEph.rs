@@ -152,7 +152,8 @@ verus! {
             ensures
                 it@.0 == 0int,
                 it@.1.map(|i: int, p: Pair<X, Y>| p@).to_set() == self@,
-                it@.1.no_duplicates();
+                it@.1.no_duplicates(),
+                iter_invariant(&it);
     }
 
 
@@ -292,6 +293,10 @@ verus! {
     impl<'a, X: StT + Hash, Y: StT + Hash> View for RelationStEphIter<'a, X, Y> {
         type V = (int, Seq<Pair<X, Y>>);
         open spec fn view(&self) -> (int, Seq<Pair<X, Y>>) { self.inner@ }
+    }
+
+    pub open spec fn iter_invariant<'a, X: StT + Hash, Y: StT + Hash>(it: &RelationStEphIter<'a, X, Y>) -> bool {
+        0 <= it@.0 <= it@.1.len()
     }
 
     impl<'a, X: StT + Hash, Y: StT + Hash> std::iter::Iterator for RelationStEphIter<'a, X, Y> {

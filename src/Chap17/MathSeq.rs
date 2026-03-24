@@ -567,6 +567,10 @@ pub mod MathSeq {
             }
 
             fn iter(&self) -> (it: MathSeqIter<'_, T>)
+                ensures
+                    it@.0 == 0,
+                    it@.1 == self.data@,
+                    iter_invariant(&it),
             {
                 MathSeqIter { inner: self.data.iter() }
             }
@@ -593,13 +597,13 @@ pub mod MathSeq {
 
     /// Ghost iterator for ForLoopGhostIterator support.
     #[verifier::reject_recursive_types(T)]
-    pub struct MathSeqGhostIter<'a, T> {
+    pub struct MathSeqGhostIterator<'a, T> {
         pub pos: int,
         pub elements: Seq<T>,
         pub phantom: core::marker::PhantomData<&'a T>,
     }
 
-    impl<'a, T> View for MathSeqGhostIter<'a, T> {
+    impl<'a, T> View for MathSeqGhostIterator<'a, T> {
         type V = Seq<T>;
         open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
     }
@@ -634,13 +638,13 @@ pub mod MathSeq {
     }
 
     impl<'a, T> vstd::pervasive::ForLoopGhostIteratorNew for MathSeqIter<'a, T> {
-        type GhostIter = MathSeqGhostIter<'a, T>;
-        open spec fn ghost_iter(&self) -> MathSeqGhostIter<'a, T> {
-            MathSeqGhostIter { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        type GhostIter = MathSeqGhostIterator<'a, T>;
+        open spec fn ghost_iter(&self) -> MathSeqGhostIterator<'a, T> {
+            MathSeqGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
         }
     }
 
-    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for MathSeqGhostIter<'a, T> {
+    impl<'a, T> vstd::pervasive::ForLoopGhostIterator for MathSeqGhostIterator<'a, T> {
         type ExecIter = MathSeqIter<'a, T>;
         type Item = T;
         type Decrease = int;
@@ -670,7 +674,7 @@ pub mod MathSeq {
             if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
         }
 
-        open spec fn ghost_advance(&self, _exec_iter: &MathSeqIter<'a, T>) -> MathSeqGhostIter<'a, T> {
+        open spec fn ghost_advance(&self, _exec_iter: &MathSeqIter<'a, T>) -> MathSeqGhostIterator<'a, T> {
             Self { pos: self.pos + 1, ..*self }
         }
     }
