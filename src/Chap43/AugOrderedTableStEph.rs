@@ -25,8 +25,6 @@ pub mod AugOrderedTableStEph {
     #[cfg(verus_keep_ghost)]
     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::*;
-    #[cfg(verus_keep_ghost)]
-    use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     use crate::OrderedTableStEphLit;
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
