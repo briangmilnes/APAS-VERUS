@@ -23,6 +23,8 @@ pub mod AugOrderedTableStPer {
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Chap43::OrderedTableStPer::OrderedTableStPer::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     use crate::OrderedTableStPerLit;
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
@@ -130,7 +132,15 @@ broadcast use {
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- constructs empty base table with reducer/identity
         fn empty(reducer: F, identity: V) -> (empty: Self)
-            requires forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
+            requires
+                forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
+                obeys_feq_fulls::<K, V>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                view_ord_consistent::<Pair<K, V>>(),
+                spec_pair_key_determines_order::<K, V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                view_ord_consistent::<K>(),
             ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_augorderedtablestper_wf();
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- constructs singleton base table with reducer/identity
@@ -138,6 +148,13 @@ broadcast use {
             requires
                 obeys_feq_clone::<Pair<K, V>>(),
                 forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
+                obeys_feq_fulls::<K, V>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                view_ord_consistent::<Pair<K, V>>(),
+                spec_pair_key_determines_order::<K, V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                view_ord_consistent::<K>(),
             ensures tree.spec_augorderedtablestper_wf();
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- delegates to TableStPer which uses linear scan
@@ -181,6 +198,13 @@ broadcast use {
                 obeys_feq_full::<K>(),
                 forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
                 keys@.len() < usize::MAX,
+                obeys_feq_fulls::<K, V>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                view_ord_consistent::<Pair<K, V>>(),
+                spec_pair_key_determines_order::<K, V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                view_ord_consistent::<K>(),
             ensures
                 tabulated@.dom() =~= keys@,
                 tabulated.spec_augorderedtablestper_wf(),
