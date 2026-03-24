@@ -1,0 +1,127 @@
+# APAS Cost Reference — Chapters 24–28
+#
+# Extracted from APAS study materials. Each entry cites the textbook reference.
+#
+# Notation:
+#   n = |a| or max(|a|, |b|)
+#   lg = log base 2
+
+# ---------------------------------------------------------------------------
+# Ch25: Reductions (Ex 25.1–25.5)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch25 Ex 25.2"
+chapter = 25
+description = "Reduction from finding minimum to finding maximum"
+operations = [
+    { name = "find_min_via_max", work = "O(n)", span = "O(n)", notes = "work-efficient; linear transform + linear max" },
+]
+
+[[cost_spec]]
+ref = "Ch25 Ex 25.5"
+chapter = 25
+description = "Brute-force overlap computation for two strings"
+operations = [
+    { name = "overlap_brute_force", work = "O(|a| * |b|)", span = "O(lg(|a| + |b|))" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch26: Divide and Conquer (Alg 26.2, 26.4, 26.5, 26.7)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch26 Alg 26.2"
+chapter = 26
+description = "Reduce via divide and conquer"
+operations = [
+    { name = "reduce", work = "O(n)", span = "O(lg n)", notes = "assumes O(1) associative binary op" },
+]
+
+[[cost_spec]]
+ref = "Ch26 Alg 26.4"
+chapter = 26
+description = "Merge sort"
+operations = [
+    { name = "merge_sort", work = "O(n lg n)", span = "O(lg^2 n)", notes = "merge is O(n) work, O(lg n) span" },
+]
+
+[[cost_spec]]
+ref = "Ch26 Alg 26.5"
+chapter = 26
+description = "Scan via divide and conquer"
+operations = [
+    { name = "scan_dc", work = "O(n lg n)", span = "O(lg n)" },
+]
+
+[[cost_spec]]
+ref = "Ch26 Alg 26.7"
+chapter = 26
+description = "Divide-and-conquer heuristic for planar Euclidean TSP"
+operations = [
+    { name = "etsp_dc", work = "O(n^2)", span = "O(lg^2 n)" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch27: Contraction (Alg 27.2, 27.3)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch27 Alg 27.2"
+chapter = 27
+description = "Reduce with contraction"
+operations = [
+    { name = "reduce_contract", work = "O(n)", span = "O(lg n)", notes = "W(n) = W(n/2) + n; S(n) = S(n/2) + 1" },
+]
+
+[[cost_spec]]
+ref = "Ch27 Alg 27.3"
+chapter = 27
+description = "Scan with contraction"
+operations = [
+    { name = "scan_contract", work = "O(n)", span = "O(lg n)", notes = "W(n) = W(n/2) + n; S(n) = S(n/2) + 1" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch28: MCSS (Alg 28.6–28.19)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch28 Alg 28.6"
+chapter = 28
+description = "Brute-force MCS"
+operations = [
+    { name = "mcs_brute_force", work = "O(n^3)", span = "O(lg n)" },
+]
+
+[[cost_spec]]
+ref = "Ch28 Alg 28.15"
+chapter = 28
+description = "Kadane's iterative MCSS"
+operations = [
+    { name = "mcss_kadane", work = "O(n)", span = "O(n)", notes = "work-optimal but no parallelism" },
+]
+
+[[cost_spec]]
+ref = "Ch28 Alg 28.16"
+chapter = 28
+description = "Work-optimal parallel MCSS using scans"
+operations = [
+    { name = "mcss_scan", work = "O(n)", span = "O(lg n)", notes = "two scans + tabulate" },
+]
+
+[[cost_spec]]
+ref = "Ch28 Alg 28.17"
+chapter = 28
+description = "Simple divide-and-conquer MCSS"
+operations = [
+    { name = "mcss_dc", work = "O(n lg n)", span = "O(lg^2 n)" },
+]
+
+[[cost_spec]]
+ref = "Ch28 Alg 28.19"
+chapter = 28
+description = "Linear-work divide-and-conquer MCSS with MCSSPS strengthening"
+operations = [
+    { name = "mcss_dc_strengthened", work = "O(n)", span = "O(lg^2 n)", notes = "returns (max, prefix, suffix, total); combine is O(1)" },
+]

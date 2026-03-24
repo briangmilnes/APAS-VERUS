@@ -1,0 +1,80 @@
+# APAS Cost Reference — Chapters 60–66
+#
+# Extracted from APAS study materials. Each entry cites the textbook reference.
+#
+# Notation:
+#   n = |V|, m = |E|
+#   lg = log base 2
+
+# ---------------------------------------------------------------------------
+# Ch61: Edge Contraction (Alg 61.6)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch61 Alg 61.6"
+chapter = 61
+description = "Parallel edge contraction on cycle graphs"
+operations = [
+    { name = "parallel_edge_contraction", work = "O(n)", span = "O(lg^2 n)", notes = "O(lg n) rounds w.h.p." },
+]
+
+# ---------------------------------------------------------------------------
+# Ch62: Star Contraction (Thm 62.1, 62.3)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch62 Thm 62.1"
+chapter = 62
+description = "Star partition"
+operations = [
+    { name = "starPartition", work = "O(n + m)", span = "O(lg n)", notes = "array-based" },
+]
+
+[[cost_spec]]
+ref = "Ch62 Thm 62.3"
+chapter = 62
+description = "Star contraction to isolated vertices"
+operations = [
+    { name = "starContract", work = "O((n + m) lg n)", span = "O(lg^2 n)" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch65: MST — Prim and Kruskal (Alg 65.1, 65.2)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch65 Alg 65.1"
+chapter = 65
+description = "Prim's MST algorithm"
+operations = [
+    { name = "prim (binary heap)", work = "O(m lg n)", span = "O(m lg n)" },
+    { name = "prim (Fibonacci heap)", work = "O(m + n lg n)", span = "O(m + n lg n)" },
+]
+
+[[cost_spec]]
+ref = "Ch65 Alg 65.2"
+chapter = 65
+description = "Kruskal's MST algorithm"
+operations = [
+    { name = "kruskal", work = "O(m lg n)", span = "O(m lg n)", notes = "sequential; sort + union-find" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch66: Boruvka's MST (Alg 66.1, 66.3)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch66 Alg 66.1"
+chapter = 66
+description = "Boruvka's parallel MST with tree contraction"
+operations = [
+    { name = "boruvka", work = "O(m lg n)", span = "O(lg^3 n)" },
+]
+
+[[cost_spec]]
+ref = "Ch66 Alg 66.3"
+chapter = 66
+description = "Boruvka's parallel MST with star contraction"
+operations = [
+    { name = "boruvka_star", work = "O(m lg n)", span = "O(lg^2 n)", notes = "removes expected n/4 vertices per round" },
+]

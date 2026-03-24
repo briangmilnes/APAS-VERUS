@@ -1,0 +1,50 @@
+# APAS Cost Reference — Chapters 11–16
+#
+# Extracted from APAS study materials. Each entry cites the textbook reference.
+#
+# Notation:
+#   n = |a| or max(|a|, |b|)
+#   lg = log base 2
+#
+# Ch11-14: No algorithm cost specifications (definitional/structural chapters).
+# Ch15-16: Work/span analysis framework, recurrence examples.
+
+# ---------------------------------------------------------------------------
+# Ch15: Work and Span Analysis
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch15 Ex 15.6"
+chapter = 15
+description = "Parallel mergesort with linear-time merge"
+operations = [
+    { name = "mergesort", work = "O(n lg n)", span = "O(lg^2 n)", notes = "parallelism = Theta(n / lg n)" },
+]
+
+[[cost_spec]]
+ref = "Ch15 Def 15.7"
+chapter = 15
+description = "Greedy scheduler execution time bound on P processors"
+operations = [
+    { name = "greedy_schedule", work = "W", span = "S", notes = "T_P < W/P + S; near-optimal within factor 2 of max(W/P, S)" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch16: Recurrences
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch16 Ex 16.2"
+chapter = 16
+description = "Mergesort work and span recurrences"
+operations = [
+    { name = "mergesort", work = "O(n lg n)", span = "O(lg^2 n)", notes = "W(n) <= 2W(n/2) + O(n); S(n) <= S(n/2) + O(lg n)" },
+]
+
+[[cost_spec]]
+ref = "Ch16 Thm 16.1"
+chapter = 16
+description = "Superlinear recurrence theorem: W(n) = 2W(n/2) + k*n^(1+eps)"
+operations = [
+    { name = "superlinear_recurrence", work = "O(n^(1+eps))", span = "O(n^(1+eps))", notes = "root dominated" },
+]

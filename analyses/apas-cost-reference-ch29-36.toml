@@ -1,0 +1,47 @@
+# APAS Cost Reference — Chapters 29–36
+#
+# Extracted from APAS study materials. Each entry cites the textbook reference.
+#
+# Notation:
+#   n = |a| or max(|a|, |b|)
+#   lg = log base 2
+#
+# Ch29-32: No algorithm cost specifications in study materials.
+# Ch33: Darts Game framework. Ch35: Select. Ch36: Quicksort.
+
+# ---------------------------------------------------------------------------
+# Ch33: Darts Game
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch33 Darts Game"
+chapter = 33
+description = "Darts Game total expected throws with linear penalty f(n) = n"
+operations = [
+    { name = "darts_game", work = "O(n)", span = "O(lg^2 n)", notes = "per-round work linear, per-round span O(lg n); O(lg n) rounds expected" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch35: Select (Alg 35.2)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch35 Alg 35.2"
+chapter = 35
+description = "Contraction-based randomized select (order statistics)"
+operations = [
+    { name = "select", work = "O(n)", span = "O(lg^2 n)", notes = "expected; contraction by 3/4 per round" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch36: Quicksort (Alg 36.1)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch36 Alg 36.1"
+chapter = 36
+description = "Randomized quicksort"
+operations = [
+    { name = "quicksort (expected)", work = "O(n lg n)", span = "O(lg^2 n)", notes = "expected bounds; E[comparisons] = 2n*H_n" },
+    { name = "quicksort (worst case)", work = "O(n^2)", span = "O(n lg n)", notes = "pivot always extreme element" },
+]

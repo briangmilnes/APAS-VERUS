@@ -1,0 +1,77 @@
+# APAS Cost Reference — Chapters 1–5
+#
+# Extracted from APAS study materials. Each entry cites the textbook reference
+# (CS = Cost Specification, Alg = Algorithm, DT = Data Type, Thm = Theorem).
+#
+# Notation:
+#   n = |a| or max(|a|, |b|)
+#   m = min(|a|, |b|)
+#   lg = log base 2
+#   W(f(x)) = work of applying f to x
+#   S(f(x)) = span of applying f to x
+#
+# This file is the single source of truth for "what does APAS say" for Ch1-5.
+# Generated once, human-reviewed, then frozen.
+
+# ---------------------------------------------------------------------------
+# Ch2: Parallelism (Def 2.1 work/span composition, Ex 2.7, Ex 2.8)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch2 Def 2.1"
+chapter = 2
+description = "Work and span composition rules for sequential and parallel composition"
+operations = [
+    { name = "seq_compose", work = "1 + W1 + W2", span = "1 + S1 + S2", notes = "sequential: span adds" },
+    { name = "par_compose", work = "1 + W1 + W2", span = "1 + max(S1,S2)", notes = "parallel: span takes max" },
+]
+
+[[cost_spec]]
+ref = "Ch2 Ex 2.8"
+chapter = 2
+description = "Parallel merge sort"
+operations = [
+    { name = "merge_sort", work = "O(n lg n)", span = "O(lg^2 n)" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch3: Specification (CS 3.2, CS 3.3, DT 3.4, CS 3.5)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch3 CS 3.2"
+chapter = 3
+description = "Efficient parallel comparison sort"
+operations = [
+    { name = "sort", work = "O(n lg n)", span = "O(lg^2 n)", notes = "assumes constant-work comparisons" },
+]
+
+[[cost_spec]]
+ref = "Ch3 CS 3.3"
+chapter = 3
+description = "Inefficient but parallel comparison sort"
+operations = [
+    { name = "sort", work = "O(n^2)", span = "O(lg n)", notes = "smaller span than CS 3.2 but much more work" },
+]
+
+[[cost_spec]]
+ref = "Ch3 DT 3.4 / CS 3.5"
+chapter = 3
+description = "Priority Queue ADT"
+operations = [
+    { name = "empty", work = "O(1)", span = "O(1)" },
+    { name = "insert", work = "O(lg n)", span = "O(lg n)" },
+    { name = "removeMin", work = "O(lg n)", span = "O(lg n)" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch4: Genome Sequencing (Alg 4.14)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch4 Alg 4.14"
+chapter = 4
+description = "Greedy approximate shortest superstring (greedyApproxSS)"
+operations = [
+    { name = "greedyApproxSS", work = "O(n * m^2)", span = "O(n lg m)", notes = "n snippets, m = max snippet length" },
+]

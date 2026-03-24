@@ -1,0 +1,117 @@
+# APAS Cost Reference — Chapters 45–51
+#
+# Extracted from APAS study materials. Each entry cites the textbook reference.
+#
+# Notation:
+#   n = |a| or max(|a|, |b|)
+#   m = min(|a|, |b|)
+#   lg = log base 2
+
+# ---------------------------------------------------------------------------
+# Ch45: Priority Queues (DT 45.1, DT 45.3, Alg 45.2)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch45 DT 45.1"
+chapter = 45
+description = "Meldable Priority Queue — balanced tree implementation"
+operations = [
+    { name = "insert",    work = "O(lg n)", span = "O(lg n)" },
+    { name = "deleteMin", work = "O(lg n)", span = "O(lg n)" },
+    { name = "meld",      work = "O(m * lg(1 + n/m))", span = "O(m * lg(1 + n/m))", notes = "m = min(|A|,|B|), n = max(|A|,|B|)" },
+    { name = "fromSeq",   work = "O(n lg n)", span = "O(n lg n)" },
+]
+
+[[cost_spec]]
+ref = "Ch45 DT 45.3"
+chapter = 45
+description = "Leftist heap"
+operations = [
+    { name = "meld",      work = "O(lg |A| + lg |B|)", span = "O(lg |A| + lg |B|)", notes = "traverses right spines only" },
+    { name = "insert",    work = "O(lg n)", span = "O(lg n)", notes = "meld(singleton(k), Q)" },
+    { name = "deleteMin", work = "O(lg n)", span = "O(lg n)", notes = "meld(L, R)" },
+    { name = "fromSeq",   work = "O(n)", span = "O(lg^2 n)", notes = "reduce meld over singletons" },
+]
+
+[[cost_spec]]
+ref = "Ch45 Alg 45.2"
+chapter = 45
+description = "Heapsort"
+operations = [
+    { name = "sort", work = "O(n lg n)", span = "O(n lg n)", notes = "n inserts + n deleteMins" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch47: Hash Tables (Def 47.3, Alg 47.4, Def 47.5)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch47 Def 47.3"
+chapter = 47
+description = "Separate chaining hash table"
+operations = [
+    { name = "insert", work = "O(1)", span = "O(1)" },
+    { name = "lookup", work = "O(1 + alpha)", span = "O(1 + alpha)", notes = "alpha = load factor = n/m" },
+    { name = "delete", work = "O(1 + alpha)", span = "O(1 + alpha)" },
+]
+
+[[cost_spec]]
+ref = "Ch47 Alg 47.4"
+chapter = 47
+description = "Perfect hashing (static set)"
+operations = [
+    { name = "lookup", work = "O(1)", span = "O(1)", notes = "worst-case; collision-free" },
+]
+
+[[cost_spec]]
+ref = "Ch47 Def 47.5"
+chapter = 47
+description = "Open addressing probe costs"
+operations = [
+    { name = "unsuccessful lookup / insert", work = "O(1 / (1 - alpha))", span = "O(1 / (1 - alpha))" },
+    { name = "successful lookup", work = "O((1/alpha) ln(1/(1-alpha)))", span = "O((1/alpha) ln(1/(1-alpha)))" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch49: Subset Sum and Edit Distance (Alg 49.2, 49.5)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch49 Alg 49.2"
+chapter = 49
+description = "Subset Sum with DP"
+operations = [
+    { name = "SS", work = "O(k * |S|)", span = "O(|S|)", notes = "pseudo-polynomial" },
+]
+
+[[cost_spec]]
+ref = "Ch49 Alg 49.5"
+chapter = 49
+description = "Minimum Edit Distance with DP"
+operations = [
+    { name = "MED", work = "O(|S| * |T|)", span = "O(|S| + |T|)" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch50: Optimal BST (Alg 50.2)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch50 Alg 50.2"
+chapter = 50
+description = "Optimal Binary Search Tree with DP"
+operations = [
+    { name = "OBST", work = "O(n^3)", span = "O(n lg n)", notes = "n^2 subproblems, n work each" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch51: Bottom-up DP (Alg 51.1)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch51 Alg 51.1"
+chapter = 51
+description = "Bottom-up MED (anti-diagonal pebbling)"
+operations = [
+    { name = "MED_bottom_up", work = "O(|S| * |T|)", span = "O(|S| + |T|)", notes = "same asymptotic as recursive DP" },
+]

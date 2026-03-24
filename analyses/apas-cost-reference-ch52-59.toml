@@ -1,0 +1,139 @@
+# APAS Cost Reference — Chapters 52–59
+#
+# Extracted from APAS study materials. Each entry cites the textbook reference.
+#
+# Notation:
+#   n = |V|, m = |E|
+#   d = diameter
+#   d_g(v) = degree of vertex v
+#   lg = log base 2
+
+# ---------------------------------------------------------------------------
+# Ch52: Graph Representations (CS 52.1, 52.3, 52.5, 52.6)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch52 CS 52.1"
+chapter = 52
+description = "Edge-set graph representation (tree-based sets)"
+operations = [
+    { name = "map_over_vertices",    work = "O(n)", span = "O(lg n)" },
+    { name = "map_over_edges",       work = "O(m)", span = "O(lg n)" },
+    { name = "map_over_neighbors",   work = "O(m)", span = "O(lg n)" },
+    { name = "find_degree",          work = "O(m)", span = "O(lg n)" },
+    { name = "is_edge",              work = "O(lg n)", span = "O(lg n)" },
+    { name = "insert_delete_vertex", work = "O(lg n)", span = "O(lg n)" },
+    { name = "insert_delete_edge",   work = "O(lg n)", span = "O(lg n)" },
+]
+
+[[cost_spec]]
+ref = "Ch52 CS 52.3"
+chapter = 52
+description = "Adjacency-table graph representation (tree-based)"
+operations = [
+    { name = "map_over_vertices",    work = "O(n)", span = "O(lg n)" },
+    { name = "map_over_edges",       work = "O(m)", span = "O(lg n)" },
+    { name = "map_over_neighbors",   work = "O(lg n + d_g(v))", span = "O(lg n)" },
+    { name = "find_degree",          work = "O(lg n)", span = "O(lg n)" },
+    { name = "is_edge",              work = "O(lg n)", span = "O(lg n)" },
+    { name = "insert_delete_vertex", work = "O(lg n)", span = "O(lg n)" },
+    { name = "insert_delete_edge",   work = "O(lg n)", span = "O(lg n)" },
+]
+
+[[cost_spec]]
+ref = "Ch52 CS 52.5"
+chapter = 52
+description = "Adjacency-sequence graph representation (array-based)"
+operations = [
+    { name = "map_over_vertices",    work = "O(n)", span = "O(1)" },
+    { name = "map_over_edges",       work = "O(n + m)", span = "O(1)" },
+    { name = "map_over_neighbors",   work = "O(d_g(v))", span = "O(1)" },
+    { name = "find_degree",          work = "O(1)", span = "O(1)" },
+    { name = "is_edge",              work = "O(d_g(u))", span = "O(lg d_g(u))" },
+    { name = "insert_delete_vertex", work = "O(n)", span = "O(1)" },
+    { name = "insert_delete_edge",   work = "O(n)", span = "O(1)" },
+]
+
+[[cost_spec]]
+ref = "Ch52 CS 52.6"
+chapter = 52
+description = "Adjacency-matrix graph representation"
+operations = [
+    { name = "map_over_vertices",    work = "O(n)", span = "O(1)" },
+    { name = "map_over_edges",       work = "O(n^2)", span = "O(1)" },
+    { name = "map_over_neighbors",   work = "O(n)", span = "O(1)" },
+    { name = "find_degree",          work = "O(n)", span = "O(lg n)" },
+    { name = "is_edge",              work = "O(1)", span = "O(1)" },
+    { name = "insert_delete_vertex", work = "O(n^2)", span = "O(1)" },
+    { name = "insert_delete_edge",   work = "O(n)", span = "O(1)" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch54: BFS (Alg 54.4, 54.6)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch54 Alg 54.4"
+chapter = 54
+description = "Parallel BFS reachability (tree-based sets and tables)"
+operations = [
+    { name = "bfs_reach", work = "O(m lg n)", span = "O(d lg^2 n)", notes = "d = diameter" },
+]
+
+[[cost_spec]]
+ref = "Ch54 Alg 54.6"
+chapter = 54
+description = "BFS shortest-path tree (ephemeral sequences)"
+operations = [
+    { name = "bfs_tree", work = "O(n + m)", span = "O(d lg n)" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch55: DFS (CS 55.8)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch55 CS 55.8"
+chapter = 55
+description = "DFS cost"
+operations = [
+    { name = "dfs (adjacency table)", work = "O((m+n) lg n)", span = "O((m+n) lg n)" },
+    { name = "dfs (adjacency sequence)", work = "O(m + n)", span = "O(m + n)", notes = "with ephemeral sequences" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch57: Dijkstra (Alg 57.2)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch57 Alg 57.2"
+chapter = 57
+description = "Dijkstra's algorithm with priority queue"
+operations = [
+    { name = "dijkstra", work = "O(m lg n)", span = "O(m lg n)", notes = "sequential; span = work" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch58: Bellman-Ford (Alg 58.2)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch58 Alg 58.2"
+chapter = 58
+description = "Bellman-Ford SSSP"
+operations = [
+    { name = "bellman_ford (tables)", work = "O(nm lg n)", span = "O(n lg n)", notes = "n rounds, each O((n+m) lg n) work, O(lg n) span" },
+    { name = "bellman_ford (sequences)", work = "O(nm)", span = "O(n lg n)", notes = "lg n factor better work than table version" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch59: Johnson's APSP (Alg 59.1)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch59 Alg 59.1"
+chapter = 59
+description = "Johnson's all-pairs shortest paths"
+operations = [
+    { name = "johnson_apsp", work = "O(mn lg n)", span = "O(m lg n)", notes = "1 Bellman-Ford + n parallel Dijkstras" },
+]
