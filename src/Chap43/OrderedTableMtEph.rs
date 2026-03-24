@@ -758,15 +758,13 @@ broadcast use {
         requires
             entries.spec_avltreeseqstper_wf(),
             entries@.len() < usize::MAX as nat,
+            vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+            view_ord_consistent::<Pair<K, V>>(),
         ensures constructed@.dom().finite(), constructed.spec_orderedtablemteph_wf()
     {
               assert(obeys_feq_full_trigger::<K>());
        assert(obeys_feq_full_trigger::<V>());
         assert(obeys_feq_full_trigger::<Pair<K, V>>());
-        proof {
-            assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
-            assume(view_ord_consistent::<Pair<K, V>>());
-        }
         let inner = crate::Chap43::OrderedTableStEph::OrderedTableStEph::from_sorted_entries(entries);
         from_st(inner)
     }

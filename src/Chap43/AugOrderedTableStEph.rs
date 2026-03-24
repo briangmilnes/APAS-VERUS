@@ -399,6 +399,7 @@ broadcast use {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- calculate_reduction is external_body (iterates all entries)
         fn reduce_val(&self) -> (reduced: V)
+            requires self.spec_augorderedtablesteph_wf(),
             ensures self@.dom().finite();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- get_key_range + calculate_reduction
@@ -792,8 +793,7 @@ broadcast use {
         {
             proof {
                 lemma_aug_view(self);
-                // ParamBST type invariant guarantees finite, but it's private.
-                assume(self.base_table.tree@.finite());
+                // wf chain: aug_wf → orderedtable_wf → bst_wf → tree@.finite().
                 lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
             }
             self.cached_reduction.clone()
@@ -804,11 +804,11 @@ broadcast use {
         {
             proof {
                 lemma_aug_view(self);
-                assume(self.base_table.tree@.finite());
+                // wf chain: aug_wf → orderedtable_wf → bst_wf → tree@.finite().
                 lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
             }
             let range_table = self.get_key_range(k1, k2);
-            range_table.reduce_val()
+            range_table.cached_reduction.clone()
         }
     }
 

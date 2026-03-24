@@ -426,6 +426,7 @@ broadcast use {
         /// - APAS: Work O(1), Span O(1) -- augmented tables cache the reduction
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- calculate_reduction is external_body, iterates all values
         fn reduce_val(&self) -> (reduced: V)
+            requires self.spec_augorderedtablestper_wf(),
             ensures self@.dom().finite();
         /// - APAS: Work O(log n), Span O(log n) -- split + cached reduction
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- get_key_range O(n log n) + calculate_reduction O(n)
@@ -885,8 +886,7 @@ broadcast use {
         {
             proof {
                 lemma_aug_view(self);
-                // ParamBST type invariant guarantees finite, but it's private.
-                assume(self.base_table.tree@.finite());
+                // wf chain: aug_wf → orderedtable_wf → bst_wf → tree@.finite().
                 lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
             }
             self.cached_reduction.clone()
@@ -897,12 +897,11 @@ broadcast use {
         {
             proof {
                 lemma_aug_view(self);
-                // ParamBST type invariant guarantees finite, but it's private.
-                assume(self.base_table.tree@.finite());
+                // wf chain: aug_wf → orderedtable_wf → bst_wf → tree@.finite().
                 lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
             }
             let range_table = self.get_key_range(k1, k2);
-            range_table.reduce_val()
+            range_table.cached_reduction.clone()
         }
     }
 

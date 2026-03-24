@@ -571,9 +571,35 @@ broadcast use {
             }
             let result = AVLTreeSeqStPerS::from_vec(elements);
             proof {
-                // collect_in_order ensures length but not full membership.
-                assume(result@.to_set() =~= self@);
-                assume(forall|i: int| 0 <= i < result@.len() ==> #[trigger] self@.contains(result@[i]));
+                // from_vec ensures: result@ =~= elements@.map_values(|t: T| t@).
+                // collect_in_order ensures membership in both directions.
+                let ghost elem_views = elements@.map_values(|t: T| t@);
+                assert(result@ =~= elem_views);
+
+                // Bridge: elem_views[i] == elements@[i]@ for all valid i.
+                assert forall|i: int| 0 <= i < elements@.len()
+                    implies elem_views[i] == (#[trigger] elements@[i])@ by {};
+
+                // Forward: each result element is in self@.
+                assert forall|i: int| 0 <= i < result@.len()
+                    implies #[trigger] self@.contains(result@[i]) by {
+                    assert(result@[i] == elem_views[i]);
+                    assert(elem_views[i] == elements@[i]@);
+                    // collect_in_order: self.base_set.tree@.contains(elements@[i]@).
+                };
+
+                // Backward: each element of self@ appears in result@.
+                assert forall|v: T::V| self@.contains(v)
+                    implies result@.contains(v) by {
+                    // collect_in_order: exists|i| elements@[i]@ == v.
+                    let i = choose|i: int| 0 <= i < elements@.len() && (#[trigger] elements@[i])@ == v;
+                    assert(0 <= i < result@.len());
+                    assert(result@[i] == elem_views[i]);
+                    assert(elem_views[i] == elements@[i]@);
+                    assert(result@[i] == v);
+                };
+
+                assert(result@.to_set() =~= self@);
             }
             result
         }
