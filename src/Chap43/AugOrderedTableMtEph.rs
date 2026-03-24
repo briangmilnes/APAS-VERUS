@@ -13,8 +13,8 @@ pub mod AugOrderedTableMtEph {
     // 7. free functions (calculate_reduction, recalculate_reduction)
     // 8. traits
     // 9. impls
+    // 10. iterators
     // 11. derive impls in verus!
-    // 10. iterators (outside verus!)
     // 13. derive impls outside verus!
     // 14. macros
 
@@ -360,6 +360,12 @@ broadcast use {
                 self.spec_augorderedtablemteph_wf(),
                 obeys_view_eq::<K>(),
             ensures self@.dom().finite();
+
+        fn iter<'a>(&'a self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+            requires self.spec_augorderedtablemteph_wf(),
+            ensures
+                it@.0 == 0,
+                iter_invariant(&it);
     }
 
     // 9. impls
@@ -742,6 +748,28 @@ broadcast use {
                 }
             }
         }
+
+        #[verifier::external_body]
+        fn iter<'a>(&'a self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+        {
+            self.base_table.iter()
+        }
+    }
+
+    // 10. iterators
+
+    impl<'a, K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> IntoIterator for &'a AugOrderedTableMtEph<K, V, F> {
+        type Item = Pair<K, V>;
+        type IntoIter = OrderedTableMtEphIter<'a, K, V>;
+
+        #[verifier::external_body]
+        fn into_iter(self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+            ensures
+                it@.0 == 0,
+                iter_invariant(&it),
+        {
+            self.iter()
+        }
     }
 
     // 11. derive impls in verus!
@@ -762,23 +790,6 @@ broadcast use {
     }
 
     } // verus!
-
-    // 10. iterators (outside verus! — snapshot-based, delegates to base_table.iter())
-
-    impl<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> AugOrderedTableMtEph<K, V, F> {
-        pub fn iter(&self) -> OrderedTableMtEphIter<'_, K, V> {
-            self.base_table.iter()
-        }
-    }
-
-    impl<'a, K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> std::iter::IntoIterator for &'a AugOrderedTableMtEph<K, V, F> {
-        type Item = Pair<K, V>;
-        type IntoIter = OrderedTableMtEphIter<'a, K, V>;
-
-        fn into_iter(self) -> Self::IntoIter {
-            self.base_table.iter()
-        }
-    }
 
     // 13. derive impls outside verus!
 

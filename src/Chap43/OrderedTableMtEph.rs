@@ -308,6 +308,12 @@ broadcast use {
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             ensures self@.dom().finite();
+
+        fn iter<'a>(&'a self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+            requires self.spec_orderedtablemteph_wf(),
+            ensures
+                it@.0 == 0,
+                iter_invariant(&it);
     }
 
     // 9. impls
@@ -655,6 +661,22 @@ broadcast use {
             }
             (from_st(left), from_st(right))
         }
+
+        #[verifier::external_body]
+        fn iter<'a>(&'a self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+        {
+            let read_handle = self.locked_table.acquire_read();
+            let inner = read_handle.borrow();
+            let sorted = inner.tree.in_order();
+            let n = sorted.length();
+            let mut snapshot: Vec<Pair<K, V>> = Vec::new();
+            for i in 0..n {
+                let e = sorted.nth(i);
+                snapshot.push(Pair(e.0.clone(), e.1.clone()));
+            }
+            read_handle.release_read();
+            OrderedTableMtEphIter { snapshot, pos: 0, _phantom: core::marker::PhantomData }
+        }
     }
 
     // 10. iterators
@@ -739,6 +761,53 @@ broadcast use {
         }
     }
 
+    impl<'a, K: MtKey, V: MtVal + Ord> Iterator for OrderedTableMtEphIter<'a, K, V> {
+        type Item = Pair<K, V>;
+
+        #[verifier::external_body]
+        fn next(&mut self) -> (next: Option<Pair<K, V>>)
+            ensures
+                ({
+                    let (old_index, old_seq) = old(self)@;
+                    match next {
+                        None => {
+                            &&& self@ == old(self)@
+                            &&& old_index >= old_seq.len()
+                        },
+                        Some(element) => {
+                            let (new_index, new_seq) = self@;
+                            &&& 0 <= old_index < old_seq.len()
+                            &&& new_seq == old_seq
+                            &&& new_index == old_index + 1
+                            &&& element == old_seq[old_index]
+                        },
+                    }
+                }),
+        {
+            if self.pos < self.snapshot.len() {
+                let item = self.snapshot[self.pos].clone();
+                self.pos += 1;
+                Some(item)
+            } else {
+                None
+            }
+        }
+    }
+
+    impl<'a, K: MtKey, V: MtVal + Ord> IntoIterator for &'a OrderedTableMtEph<K, V> {
+        type Item = Pair<K, V>;
+        type IntoIter = OrderedTableMtEphIter<'a, K, V>;
+
+        #[verifier::external_body]
+        fn into_iter(self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+            ensures
+                it@.0 == 0,
+                iter_invariant(&it),
+        {
+            self.iter()
+        }
+    }
+
     // 11. top level coarse locking
 
     /// Construct Mt wrapper from an St table.
@@ -811,45 +880,6 @@ broadcast use {
     unsafe impl<K: MtKey, V: MtVal + Ord> Send for OrderedTableMtEph<K, V> {}
     unsafe impl<K: MtKey, V: MtVal + Ord> Sync for OrderedTableMtEph<K, V> {}
 
-    impl<K: MtKey, V: MtVal + Ord> std::iter::Iterator for OrderedTableMtEphIter<'_, K, V> {
-        type Item = Pair<K, V>;
-
-        fn next(&mut self) -> Option<Pair<K, V>> {
-            if self.pos < self.snapshot.len() {
-                let item = self.snapshot[self.pos].clone();
-                self.pos += 1;
-                Some(item)
-            } else {
-                None
-            }
-        }
-    }
-
-    impl<K: MtKey, V: MtVal + Ord> OrderedTableMtEph<K, V> {
-        pub fn iter(&self) -> OrderedTableMtEphIter<'_, K, V> {
-            let read_handle = self.locked_table.acquire_read();
-            let inner = read_handle.borrow();
-            let sorted = inner.tree.in_order();
-            let n = sorted.length();
-            let mut snapshot: Vec<Pair<K, V>> = Vec::new();
-            for i in 0..n {
-                let e = sorted.nth(i);
-                snapshot.push(Pair(e.0.clone(), e.1.clone()));
-            }
-            read_handle.release_read();
-            OrderedTableMtEphIter { snapshot, pos: 0, _phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, K: MtKey, V: MtVal + Ord> std::iter::IntoIterator for &'a OrderedTableMtEph<K, V> {
-        type Item = Pair<K, V>;
-        type IntoIter = OrderedTableMtEphIter<'a, K, V>;
-
-        fn into_iter(self) -> Self::IntoIter {
-            self.iter()
-        }
-    }
-
     impl<K: MtKey, V: MtVal + Ord> PartialEq for OrderedTableMtEph<K, V> {
         fn eq(&self, other: &Self) -> bool {
             let self_read = self.locked_table.acquire_read();
@@ -874,6 +904,30 @@ broadcast use {
     impl<K: MtKey, V: MtVal + Ord> fmt::Display for OrderedTableMtEph<K, V> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedTableMtEph(size: {})", self.size())
+        }
+    }
+
+    impl<'a, K: MtKey, V: MtVal + Ord> fmt::Debug for OrderedTableMtEphIter<'a, K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("OrderedTableMtEphIter").finish()
+        }
+    }
+
+    impl<'a, K: MtKey, V: MtVal + Ord> fmt::Display for OrderedTableMtEphIter<'a, K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableMtEphIter")
+        }
+    }
+
+    impl<'a, K: MtKey, V: MtVal + Ord> fmt::Debug for OrderedTableMtEphGhostIterator<'a, K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("OrderedTableMtEphGhostIterator").finish()
+        }
+    }
+
+    impl<'a, K: MtKey, V: MtVal + Ord> fmt::Display for OrderedTableMtEphGhostIterator<'a, K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableMtEphGhostIterator")
         }
     }
 
