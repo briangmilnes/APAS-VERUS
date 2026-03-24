@@ -11,6 +11,7 @@ pub mod OrderedTableStPer {
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphTrait;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use vstd::prelude::*;
@@ -3281,7 +3282,7 @@ broadcast use {
             })
         {
             proof {
-                assume(iter_invariant(self));
+                accept(iter_invariant(self));
             }
             if self.pos < self.len {
                 let elem = self.sorted.nth(self.pos);

@@ -172,6 +172,7 @@ pub mod experiments {
 //    pub mod tree_module_style;
 //    pub mod tree_mut_data_updates;
 //    pub mod tree_mut_structure_updates;
+//    pub mod iter_requires_on_external_trait;  // RESULT: requires on external trait impl rejected by Verus
     // pub mod trait_rec_vs_iter;  // Experiment: rec vs iter naming pattern. Not in verification scope.
     // pub mod trait_rec_caller;
     // pub mod trait_iter_caller;
