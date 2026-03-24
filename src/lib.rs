@@ -643,11 +643,9 @@ pub mod Chap52 {
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
 pub mod Chap53 {
     pub mod PQMinStEph;
-    // R67: commented out — depend on AVLTreeSetStPer.elements field (removed in backing store rewire to ParamBST)
-    // pub mod PQMinStPer;
+    pub mod PQMinStPer;
     pub mod GraphSearchStEph;
-    // R67: commented out — depend on AVLTreeSetStPer.elements field (removed in backing store rewire to ParamBST)
-    // pub mod GraphSearchStPer;
+    pub mod GraphSearchStPer;
     // pub mod GraphSearchMtPer; // Requires AVLTreeSetMtPer (all_chapters feature)
 }
 
