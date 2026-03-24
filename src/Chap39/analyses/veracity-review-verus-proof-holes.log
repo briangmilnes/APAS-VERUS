@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap39/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap39/BSTTreapStEph.rs
 Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,111 +20,368 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-⚠ BSTParaTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:2166: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2135 |         fn clone(&self) -> (cloned: Self)
+❌ BSTTreapStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:141: error: assume() [algorithmic] - proof { assume(c@ == x@); } // eq/clone workaround: structur
+       137 |     fn clone_elem_st<T: StT + Ord + IsLtTransitive>(x: &T) -> (c: T)
             ...
-      2164 |                         };
-      2165 |                         // Clone bridge: structural copy inherits BST ordering and size bound.
-      2167 |                         assume(forall|t: T| (#[trigger] rv.contains(t@)) ==> t.cmp_spec(&key) == Greater);
-      2168 |                         assume(lv.len() + rv.len() < usize::MAX as nat);
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:2167: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2135 |         fn clone(&self) -> (cloned: Self)
+       139 |     {
+       140 |         let c = x.clone();
+       142 |         c
+       143 |     }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:151: error: assume() [algorithmic] - proof { assume(cloned@ =~= tree@ && spec_param_wf_link(&clon
+       146 |     fn clone_with_view<T: StT + Ord + IsLtTransitive>(tree: &BSTTreapStEph<T>) -> (cloned: BSTTreapStEph<T>)
             ...
-      2165 |                         // Clone bridge: structural copy inherits BST ordering and size bound.
-      2166 |                         assume(forall|t: T| (#[trigger] lv.contains(t@)) ==> t.cmp_spec(&key) == Less);
-      2168 |                         assume(lv.len() + rv.len() < usize::MAX as nat);
-      2169 |                     }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:2168: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2135 |         fn clone(&self) -> (cloned: Self)
+       149 |     {
+       150 |         let cloned = tree.clone();
+       152 |         cloned
+       153 |     }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1476: error: assume() [algorithmic] - assume(ls as nat == left@.len());
+      1452 |     fn make_node_treap_st<T: StT + Ord + IsLtTransitive>(
             ...
-      2166 |                         assume(forall|t: T| (#[trigger] lv.contains(t@)) ==> t.cmp_spec(&key) == Less);
-      2167 |                         assume(forall|t: T| (#[trigger] rv.contains(t@)) ==> t.cmp_spec(&key) == Greater);
-      2169 |                     }
-      2170 |                     new_param_treap(
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:2176: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2135 |         fn clone(&self) -> (cloned: Self)
+      1474 |             // For a well-formed link, size_link == spec_set_view_link.len().
+      1475 |             // This follows from the wf invariant's size == lv.len() + rv.len() + 1.
+      1477 |             assume(rs as nat == right@.len());
+      1478 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1477: error: assume() [algorithmic] - assume(rs as nat == right@.len());
+      1452 |     fn make_node_treap_st<T: StT + Ord + IsLtTransitive>(
             ...
-      2174 |                 }
-      2175 |             };
-      2177 |             cloned
-      2178 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:411: info: structural_false_positive OPAQUE_EXTERNAL priority_for — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:2226: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Send for ParamTreap<T> {} [high]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:2227: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Sync for ParamTreap<T> {} [high]
-⚠ BSTSetTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:374: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       370 |         fn clone(&self) -> (cloned: Self)
+      1475 |             // This follows from the wf invariant's size == lv.len() + rv.len() + 1.
+      1476 |             assume(ls as nat == left@.len());
+      1478 |         }
+      1479 |         let size = 1 + ls + rs;
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2619: error: assume() [algorithmic] - proof { assume(left_base == identity); } // eq/clone workaro
+      2598 |     fn reduce_inner_st<T: StT + Ord + IsLtTransitive, F: Fn(T, T) -> T>(
             ...
-       372 |         {
-       373 |             let cloned = BSTSetTreapMtEph { tree: self.tree.clone() };
-       375 |             cloned
-       376 |         }
-⚠ BSTTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:362: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       352 |     fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
+      2617 |                 }
+      2618 |                 let left_base = identity.clone();
+      2620 |                 let right_base = identity;
+      2621 |                 let left_acc = reduce_inner_st(left, op, left_base);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2844: error: assume() [algorithmic] - proof { assume(spec_param_wf_link(&self.root)); } // St anal
+      2842 | 
+      2843 |         fn expose(&self) -> (exposed: ExposedTreap<T>) {
+      2845 |             let cloned = clone_with_view(self);
+      2846 |             match expose_to_parts_st(cloned) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2858: error: assume() [algorithmic] - assume(spec_param_wf_link(&left.root));
+      2852 |         fn join_mid(exposed: ExposedTreap<T>) -> (tree: Self) {
             ...
-       360 |             None => {
-       361 |                 let c = None;
-       363 |                 c
-       364 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:375: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       352 |     fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
+      2856 |                     proof {
+      2857 |                         // St analog of use_type_invariant: children are structurally wf.
+      2859 |                         assume(spec_param_wf_link(&right.root));
+      2860 |                         vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2859: error: assume() [algorithmic] - assume(spec_param_wf_link(&right.root));
+      2852 |         fn join_mid(exposed: ExposedTreap<T>) -> (tree: Self) {
             ...
-       373 |                     right,
-       374 |                 }));
-       376 |                 c
-       377 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1161: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1157 |         fn clone(&self) -> (cloned: Self)
+      2857 |                         // St analog of use_type_invariant: children are structurally wf.
+      2858 |                         assume(spec_param_wf_link(&left.root));
+      2860 |                         vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+      2861 |                     }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2870: error: assume() [algorithmic] - assume(spec_param_wf_link(&self.root)); // St analog of use_
+      2868 |         fn param_size(&self) -> (count: usize) {
+      2869 |             proof {
+      2871 |                 assume(BSTTreapStEph::<T>::spec_size_link(&self.root) == self@.len());
+      2872 |             }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2871: error: assume() [algorithmic] - assume(BSTTreapStEph::<T>::spec_size_link(&self.root) == sel
+      2868 |         fn param_size(&self) -> (count: usize) {
             ...
-      1159 |         {
-      1160 |             proof {
-      1162 |                 assume(Lnk::spec_link_size_wf(&self.right));
-      1163 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1162: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1157 |         fn clone(&self) -> (cloned: Self)
+      2869 |             proof {
+      2870 |                 assume(spec_param_wf_link(&self.root)); // St analog of use_type_invariant.
+      2872 |             }
+      2873 |             BSTTreapStEph::<T>::size_link(&self.root)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2881: error: assume() [algorithmic] - proof { assume(spec_param_wf_link(&self.root)); } // St anal
+      2879 | 
+      2880 |         fn param_insert(&mut self, key: T) {
+      2882 |             let ghost old_view = self@;
+      2883 |             let cloned = clone_with_view(&*self);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2899: error: assume() [algorithmic] - proof { assume(spec_param_wf_link(&self.root)); } // St anal
+      2897 | 
+      2898 |         fn param_delete(&mut self, key: &T) {
+      2900 |             let ghost old_view = self@;
+      2901 |             let ghost kref = *key;
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2923: error: assume() [algorithmic] - proof { assume(spec_param_wf_link(&self.root)); } // St anal
+      2920 |         fn param_find(&self, key: &T) -> (found: Option<T>)
             ...
-      1160 |             proof {
-      1161 |                 assume(Lnk::spec_link_size_wf(&self.left));
-      1163 |             }
-      1164 |             let cloned = Node {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1171: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1157 |         fn clone(&self) -> (cloned: Self)
+      2921 |             decreases self@.len(),
+      2922 |         {
+      2924 |             let cloned = clone_with_view(self);
+      2925 |             match expose_to_parts_st(cloned) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:3004: error: assume() [algorithmic] - proof { assume(spec_param_wf_link(&self.root)); } // St anal
+      3002 | 
+      3003 |         fn param_split(&self, key: &T) -> (parts: (Self, bool, Self)) {
+      3005 |             let cloned = clone_with_view(self);
+      3006 |             split_inner_st(cloned, key)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:3010: error: assume() [algorithmic] - proof { assume(spec_param_wf_link(&self.root)); } // St anal
+      3008 | 
+      3009 |         fn param_join_pair(&self, other: Self) -> (joined: Self) {
+      3011 |             proof { assume(spec_param_wf_link(&other.root)); }
+      3012 |             let cloned = clone_with_view(self);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:3011: error: assume() [algorithmic] - proof { assume(spec_param_wf_link(&other.root)); }
+      3009 |         fn param_join_pair(&self, other: Self) -> (joined: Self) {
+      3010 |             proof { assume(spec_param_wf_link(&self.root)); } // St analog of use_type_invariant.
+      3012 |             let cloned = clone_with_view(self);
+      3013 |             join_pair_inner_st(cloned, other)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:3017: error: assume() [algorithmic] - proof { assume(spec_param_wf_link(&self.root)); } // St anal
+      3015 | 
+      3016 |         fn param_union(&self, other: &Self) -> (combined: Self) {
+      3018 |             proof { assume(spec_param_wf_link(&other.root)); }
+      3019 |             let a = clone_with_view(self);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:3018: error: assume() [algorithmic] - proof { assume(spec_param_wf_link(&other.root)); }
+      3016 |         fn param_union(&self, other: &Self) -> (combined: Self) {
+      3017 |             proof { assume(spec_param_wf_link(&self.root)); } // St analog of use_type_invariant.
+      3019 |             let a = clone_with_view(self);
+      3020 |             let b = clone_with_view(other);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:3025: error: assume() [algorithmic] - proof { assume(spec_param_wf_link(&self.root)); } // St anal
+      3023 | 
+      3024 |         fn param_intersect(&self, other: &Self) -> (common: Self) {
+      3026 |             proof { assume(spec_param_wf_link(&other.root)); }
+      3027 |             let a = clone_with_view(self);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:3026: error: assume() [algorithmic] - proof { assume(spec_param_wf_link(&other.root)); }
+      3024 |         fn param_intersect(&self, other: &Self) -> (common: Self) {
+      3025 |             proof { assume(spec_param_wf_link(&self.root)); } // St analog of use_type_invariant.
+      3027 |             let a = clone_with_view(self);
+      3028 |             let b = clone_with_view(other);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:3033: error: assume() [algorithmic] - proof { assume(spec_param_wf_link(&self.root)); } // St anal
+      3031 | 
+      3032 |         fn param_difference(&self, other: &Self) -> (diff: Self) {
+      3034 |             proof { assume(spec_param_wf_link(&other.root)); }
+      3035 |             let a = clone_with_view(self);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:3034: error: assume() [algorithmic] - proof { assume(spec_param_wf_link(&other.root)); }
+      3032 |         fn param_difference(&self, other: &Self) -> (diff: Self) {
+      3033 |             proof { assume(spec_param_wf_link(&self.root)); } // St analog of use_type_invariant.
+      3035 |             let a = clone_with_view(self);
+      3036 |             let b = clone_with_view(other);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:3045: error: assume() [algorithmic] - proof { assume(spec_param_wf_link(&self.root)); } // St anal
+      3040 |         fn param_filter<F: Fn(&T) -> bool>(
             ...
-      1169 |                 right: clone_link(&self.right),
-      1170 |             };
-      1172 |             cloned
-      1173 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1184: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1177 |         fn clone(&self) -> (cloned: Self)
+      3043 |             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+      3044 |         ) -> (filtered: Self) {
+      3046 |             let cloned = clone_with_view(self);
+      3047 |             filter_inner_st(cloned, &predicate, Ghost(spec_pred))
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:3051: error: assume() [algorithmic] - proof { assume(spec_param_wf_link(&self.root)); } // St anal
+      3049 | 
+      3050 |         fn param_reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (reduced: T) {
+      3052 |             let cloned = clone_with_view(self);
+      3053 |             proof { assume(cloned@.finite()); } // follows from wf.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:3053: error: assume() [algorithmic] - proof { assume(cloned@.finite()); } // follows from wf.
+      3050 |         fn param_reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (reduced: T) {
             ...
-      1182 |             handle.release_read();
-      1183 |             proof {
-      1185 |                 assume(self.ghost_locked_root@.finite());
-      1186 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1185: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1177 |         fn clone(&self) -> (cloned: Self)
+      3051 |             proof { assume(spec_param_wf_link(&self.root)); } // St analog of use_type_invariant.
+      3052 |             let cloned = clone_with_view(self);
+      3054 |             reduce_inner_st(cloned, &op, base)
+      3055 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:3058: error: assume() [algorithmic] - proof { assume(spec_param_wf_link(&self.root)); } // St anal
+      3056 | 
+      3057 |         fn param_in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
+      3059 |             let cloned = clone_with_view(self);
+      3060 |             proof { assume(cloned@.finite()); }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:3060: error: assume() [algorithmic] - proof { assume(cloned@.finite()); }
+      3057 |         fn param_in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
             ...
-      1183 |             proof {
-      1184 |                 assume(spec_bsttreapmteph_link_wf(&inner_clone));
-      1186 |             }
-      1187 |             let cloned = BSTTreapMtEph {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1191: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1177 |         fn clone(&self) -> (cloned: Self)
+      3058 |             proof { assume(spec_param_wf_link(&self.root)); } // St analog of use_type_invariant.
+      3059 |             let cloned = clone_with_view(self);
+      3061 |             let mut out = Vec::new();
+      3062 |             proof { assume(self@.finite()); }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:3062: error: assume() [algorithmic] - proof { assume(self@.finite()); }
+      3057 |         fn param_in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
             ...
-      1189 |                 ghost_locked_root: Ghost(self.ghost_locked_root@),
-      1190 |             };
-      1192 |             cloned
-      1193 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1069: info: structural_false_positive RWLOCK_GHOST find — proof { assume(result.is_some() <==> self@.contains(target@) [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1086: info: structural_false_positive RWLOCK_GHOST size — proof { assume(result as nat == self@.len()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1110: info: structural_false_positive RWLOCK_GHOST minimum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1120: info: structural_false_positive RWLOCK_GHOST maximum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1132: info: structural_false_positive RWLOCK_GHOST in_order — proof { assume(ordered@.len() == self@.len()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1144: info: structural_false_positive RWLOCK_GHOST pre_order — proof { assume(preordered@.len() == self@.len()); } [medium]
-✓ BSTTreapStEph.rs
-   16 clean proof functions
+      3060 |             proof { assume(cloned@.finite()); }
+      3061 |             let mut out = Vec::new();
+      3063 |             collect_in_order_st(cloned, &mut out);
+      3064 |             ArraySeqStPerS::from_vec(out)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:146: error: fn_missing_wf_requires - fn clone_with_view — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+       137 |     fn clone_elem_st<T: StT + Ord + IsLtTransitive>(x: &T) -> (c: T)
+            ...
+       144 | 
+       145 |     /// Clone a BSTTreapStEph with view preservation.
+       147 |         requires spec_param_wf_link(&tree.root),
+       148 |         ensures cloned@ =~= tree@, spec_param_wf_link(&cloned.root),
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:146: error: fn_missing_wf_ensures - fn clone_with_view — ensures should include cloned.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+       137 |     fn clone_elem_st<T: StT + Ord + IsLtTransitive>(x: &T) -> (c: T)
+            ...
+       144 | 
+       145 |     /// Clone a BSTTreapStEph with view preservation.
+       147 |         requires spec_param_wf_link(&tree.root),
+       148 |         ensures cloned@ =~= tree@, spec_param_wf_link(&cloned.root),
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1452: error: fn_missing_wf_requires - fn make_node_treap_st — requires should include left.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1444 |         fn default() -> (d: Self)
+            ...
+      1450 | 
+      1451 |     /// Build a new tree from (left, key, priority, right) maintaining BST ordering.
+      1453 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
+      1454 |     ) -> (node: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1452: error: fn_missing_wf_requires - fn make_node_treap_st — requires should include right.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1444 |         fn default() -> (d: Self)
+            ...
+      1450 | 
+      1451 |     /// Build a new tree from (left, key, priority, right) maintaining BST ordering.
+      1453 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
+      1454 |     ) -> (node: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1452: error: fn_missing_wf_ensures - fn make_node_treap_st — ensures should include node.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+      1444 |         fn default() -> (d: Self)
+            ...
+      1450 | 
+      1451 |     /// Build a new tree from (left, key, priority, right) maintaining BST ordering.
+      1453 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
+      1454 |     ) -> (node: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1496: error: fn_missing_requires - fn tree_priority_st — exec fn should have requires
+      1452 |     fn make_node_treap_st<T: StT + Ord + IsLtTransitive>(
+            ...
+      1494 | 
+      1495 |     /// Read the priority of a tree's root node (i64::MIN for empty).
+      1497 |         ensures true,
+      1498 |     {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1506: error: fn_missing_wf_requires - fn expose_to_parts_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1496 |     fn tree_priority_st<T: StT + Ord + IsLtTransitive>(tree: &BSTTreapStEph<T>) -> (p: u64)
+            ...
+      1504 | 
+      1505 |     /// Expose a tree into its constituent parts. Consumes the tree.
+      1507 |         requires
+      1508 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1541: error: fn_missing_wf_requires - fn join_with_priority_st — requires should include left.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1506 |     fn expose_to_parts_st<T: StT + Ord + IsLtTransitive>(tree: BSTTreapStEph<T>) -> (parts: Option<(BSTTreapStEph<T>, T, u64, BSTTreapStEph<T>)>)
+            ...
+      1539 | 
+      1540 |     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority.
+      1542 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
+      1543 |     ) -> (result: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1541: error: fn_missing_wf_requires - fn join_with_priority_st — requires should include right.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1506 |     fn expose_to_parts_st<T: StT + Ord + IsLtTransitive>(tree: BSTTreapStEph<T>) -> (parts: Option<(BSTTreapStEph<T>, T, u64, BSTTreapStEph<T>)>)
+            ...
+      1539 | 
+      1540 |     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority.
+      1542 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
+      1543 |     ) -> (result: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1541: error: fn_missing_wf_ensures - fn join_with_priority_st — ensures should include result.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+      1506 |     fn expose_to_parts_st<T: StT + Ord + IsLtTransitive>(tree: BSTTreapStEph<T>) -> (parts: Option<(BSTTreapStEph<T>, T, u64, BSTTreapStEph<T>)>)
+            ...
+      1539 | 
+      1540 |     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority.
+      1542 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
+      1543 |     ) -> (result: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1632: error: fn_missing_wf_requires - fn split_inner_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1541 |     fn join_with_priority_st<T: StT + Ord + IsLtTransitive>(
+            ...
+      1630 |     }
+      1631 | 
+      1633 |         tree: BSTTreapStEph<T>, key: &T,
+      1634 |     ) -> (parts: (BSTTreapStEph<T>, bool, BSTTreapStEph<T>))
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1812: error: fn_missing_wf_requires - fn join_pair_inner_st — requires should include left.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1632 |     fn split_inner_st<T: StT + Ord + IsLtTransitive>(
+            ...
+      1810 |     }
+      1811 | 
+      1813 |         left: BSTTreapStEph<T>, right: BSTTreapStEph<T>,
+      1814 |     ) -> (joined: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1812: error: fn_missing_wf_requires - fn join_pair_inner_st — requires should include right.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1632 |     fn split_inner_st<T: StT + Ord + IsLtTransitive>(
+            ...
+      1810 |     }
+      1811 | 
+      1813 |         left: BSTTreapStEph<T>, right: BSTTreapStEph<T>,
+      1814 |     ) -> (joined: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:1812: error: fn_missing_wf_ensures - fn join_pair_inner_st — ensures should include joined.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+      1632 |     fn split_inner_st<T: StT + Ord + IsLtTransitive>(
+            ...
+      1810 |     }
+      1811 | 
+      1813 |         left: BSTTreapStEph<T>, right: BSTTreapStEph<T>,
+      1814 |     ) -> (joined: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2002: error: fn_missing_wf_requires - fn union_inner_st — requires should include a.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1812 |     fn join_pair_inner_st<T: StT + Ord + IsLtTransitive>(
+            ...
+      2000 |     }
+      2001 | 
+      2003 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2004 |     ) -> (combined: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2002: error: fn_missing_wf_requires - fn union_inner_st — requires should include b.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1812 |     fn join_pair_inner_st<T: StT + Ord + IsLtTransitive>(
+            ...
+      2000 |     }
+      2001 | 
+      2003 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2004 |     ) -> (combined: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2002: error: fn_missing_wf_ensures - fn union_inner_st — ensures should include combined.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+      1812 |     fn join_pair_inner_st<T: StT + Ord + IsLtTransitive>(
+            ...
+      2000 |     }
+      2001 | 
+      2003 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2004 |     ) -> (combined: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2154: error: fn_missing_wf_requires - fn intersect_inner_st — requires should include a.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      2002 |     fn union_inner_st<T: StT + Ord + IsLtTransitive>(
+            ...
+      2152 |     }
+      2153 | 
+      2155 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2156 |     ) -> (common: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2154: error: fn_missing_wf_requires - fn intersect_inner_st — requires should include b.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      2002 |     fn union_inner_st<T: StT + Ord + IsLtTransitive>(
+            ...
+      2152 |     }
+      2153 | 
+      2155 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2156 |     ) -> (common: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2154: error: fn_missing_wf_ensures - fn intersect_inner_st — ensures should include common.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+      2002 |     fn union_inner_st<T: StT + Ord + IsLtTransitive>(
+            ...
+      2152 |     }
+      2153 | 
+      2155 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2156 |     ) -> (common: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2305: error: fn_missing_wf_requires - fn difference_inner_st — requires should include a.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      2154 |     fn intersect_inner_st<T: StT + Ord + IsLtTransitive>(
+            ...
+      2303 |     }
+      2304 | 
+      2306 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2307 |     ) -> (remaining: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2305: error: fn_missing_wf_requires - fn difference_inner_st — requires should include b.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      2154 |     fn intersect_inner_st<T: StT + Ord + IsLtTransitive>(
+            ...
+      2303 |     }
+      2304 | 
+      2306 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2307 |     ) -> (remaining: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2305: error: fn_missing_wf_ensures - fn difference_inner_st — ensures should include remaining.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+      2154 |     fn intersect_inner_st<T: StT + Ord + IsLtTransitive>(
+            ...
+      2303 |     }
+      2304 | 
+      2306 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2307 |     ) -> (remaining: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2466: error: fn_missing_wf_requires - fn filter_inner_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      2305 |     fn difference_inner_st<T: StT + Ord + IsLtTransitive>(
+            ...
+      2464 |     }
+      2465 | 
+      2467 |         tree: BSTTreapStEph<T>,
+      2468 |         predicate: &F,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2466: error: fn_missing_wf_ensures - fn filter_inner_st — ensures should include result.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+      2305 |     fn difference_inner_st<T: StT + Ord + IsLtTransitive>(
+            ...
+      2464 |     }
+      2465 | 
+      2467 |         tree: BSTTreapStEph<T>,
+      2468 |         predicate: &F,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2598: error: fn_missing_wf_requires - fn reduce_inner_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      2466 |     fn filter_inner_st<T: StT + Ord + IsLtTransitive, F: Fn(&T) -> bool>(
+            ...
+      2596 |     }
+      2597 | 
+      2599 |         tree: BSTTreapStEph<T>, op: &F, identity: T,
+      2600 |     ) -> (result: T)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:2629: error: fn_missing_wf_requires - fn collect_in_order_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      2598 |     fn reduce_inner_st<T: StT + Ord + IsLtTransitive, F: Fn(T, T) -> T>(
+            ...
+      2627 |     }
+      2628 | 
+      2630 |         tree: BSTTreapStEph<T>, out: &mut Vec<T>,
+      2631 |     )
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:339: info: structural_false_positive OPAQUE_EXTERNAL priority_for_st — #[verifier::external_body] [medium]
+   Holes: 28 total
+      28 × assume()
+   Info: 1 × structural_false_positive
+      1 × OPAQUE_EXTERNAL
+   Proof functions: 26 total (26 clean, 0 holed)
 
 =================================================================
 2. Depends Upon
@@ -134,18 +391,12 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
-BSTParaTreapMtEph  depends upon only clean modules
-BSTSetTreapMtEph  depends upon only clean modules
-BSTTreapMtEph  depends upon only clean modules
 BSTTreapStEph  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
-BSTParaTreapMtEph.rs  depends upon only clean modules
-BSTSetTreapMtEph.rs  depends upon only clean modules
-BSTTreapMtEph.rs  depends upon only clean modules
 BSTTreapStEph.rs  depends upon only clean modules
 
 =================================================================
@@ -153,49 +404,41 @@ BSTTreapStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   4 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
-   4 total
+   0 clean (no holes, no errors; 0%)
+   1 holed (holes or errors, 100%)
+   1 total
 
 Proof Functions:
-   33 clean (100%)
+   26 clean (100%)
    0 holed (0%)
-   33 total
+   26 total
 
 Function Specs:
-   190 exec fns with complete spec (requires+ensures) (65%)
-   3 exec fns missing spec (1%)
-   95 proof/spec fns clean (32%)
+   102 exec fns with complete spec (requires+ensures) (60%)
+   2 exec fns missing spec (1%)
+   65 proof/spec fns clean (38%)
    0 proof/spec fns with holes (0%)
-   288 total fns
+   169 total fns
 
 
-Holes Found: 0 (actionable)
-Real Proof Targets: 0 (all actionable)
+Holes Found: 28 (actionable)
+   28 × assume() [algorithmic] (100%)
+Real Proof Targets: 28 (all actionable)
 
-Warnings: 13 total
-   13 × assume_eq_clone_workaround
+Warnings: 27 total
+   1 × fn_missing_requires
+   18 × fn_missing_wf_requires
+   8 × fn_missing_wf_ensures
 
-Structural (info only): 9
-   6 × RWLOCK_GHOST
-   2 × UNSAFE_SEND_SYNC
+Structural (info only): 1
    1 × OPAQUE_EXTERNAL
-
-No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-23 20:00:07 -07:00
-Ended:     2026-03-23 20:00:08 -07:00
-Duration:  61ms
-
-Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log
-===================================
-
-Started:   2026-03-23 20:00:07 -07:00
-Ended:     2026-03-23 20:00:08 -07:00
-Duration:  61ms
+Started:   2026-03-24 06:39:01 -07:00
+Ended:     2026-03-24 06:39:01 -07:00
+Duration:  135ms
 
 Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log
