@@ -801,7 +801,7 @@ pub mod AVLTreeSeqStPer {
             ArraySeqStPerS::from_vec(v)
         }
 
-        #[verifier::external_body]
+        #[verifier::external_body] // veracity: accept — iterator boundary
         fn iter<'a>(&'a self) -> (it: AVLTreeSeqStPerIter<'a, T>)
         {
             let current = match &self.root {
@@ -927,7 +927,7 @@ pub mod AVLTreeSeqStPer {
         type Item = &'a T;
         type IntoIter = AVLTreeSeqStPerIter<'a, T>;
 
-        #[verifier::external_body]
+        #[verifier::external_body] // veracity: accept — iterator boundary
         fn into_iter(self) -> (it: AVLTreeSeqStPerIter<'a, T>)
             ensures
                 it@.0 == 0,

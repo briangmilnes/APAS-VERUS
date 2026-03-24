@@ -908,7 +908,7 @@ broadcast use {
 
     impl<T: StT + Ord + TotalOrder> OrderedSetStEph<T> {
         /// Returns an iterator over the set elements in sorted order.
-        #[verifier::external_body]
+        #[verifier::external_body] // veracity: accept — iterator boundary
         pub fn iter(&self) -> (it: OrderedSetStEphIter<'_, T>)
             requires self.spec_orderedsetsteph_wf(),
             ensures
@@ -1035,7 +1035,7 @@ broadcast use {
     impl<'a, T: StT + Ord + TotalOrder> std::iter::IntoIterator for &'a OrderedSetStEph<T> {
         type Item = &'a T;
         type IntoIter = OrderedSetStEphIter<'a, T>;
-        #[verifier::external_body]
+        #[verifier::external_body] // veracity: accept — iterator boundary
         fn into_iter(self) -> (it: Self::IntoIter)
             requires self.spec_orderedsetsteph_wf(),
             ensures

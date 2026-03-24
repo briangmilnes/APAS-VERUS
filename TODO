@@ -1,14 +1,24 @@
 
-1) Sweep PTTs for minimal proofs and covering of all iterators.
- They should be maximally using wfs and iter_invs.
-
 2) New TOC ify. Adjust style guide.
 
 3) X{St,Mt}{Per,Eph} consistency.
 
-4) Review marking.
+4) Review marking for human review.
 
 5) Alg analysis tool.
 
 6) AI alg analysis including marking discrepencies.
+
+7) FP.
+
+8) Are there any algorithmic external bodies?
+
+9) All gated files analyzed and proved. RTT PTT.
+
+10) Chap64
+
+11) Chap65
+
+12) Chap66
+
 

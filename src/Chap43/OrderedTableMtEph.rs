@@ -662,7 +662,7 @@ broadcast use {
             (from_st(left), from_st(right))
         }
 
-        #[verifier::external_body]
+        #[verifier::external_body] // veracity: accept — iterator boundary
         fn iter<'a>(&'a self) -> (it: OrderedTableMtEphIter<'a, K, V>)
         {
             let read_handle = self.locked_table.acquire_read();
@@ -798,7 +798,7 @@ broadcast use {
         type Item = Pair<K, V>;
         type IntoIter = OrderedTableMtEphIter<'a, K, V>;
 
-        #[verifier::external_body]
+        #[verifier::external_body] // veracity: accept — iterator boundary
         fn into_iter(self) -> (it: OrderedTableMtEphIter<'a, K, V>)
             ensures
                 it@.0 == 0,

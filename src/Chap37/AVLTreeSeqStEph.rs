@@ -931,7 +931,7 @@ pub mod AVLTreeSeqStEph {
             ArraySeqStEphS::from_vec(vals)
         }
 
-        #[verifier::external_body]
+        #[verifier::external_body] // veracity: accept — iterator boundary
         fn iter<'a>(&'a self) -> (it: AVLTreeSeqIterStEph<'a, T>)
         {
             let mut it = AVLTreeSeqIterStEph {
@@ -1190,7 +1190,7 @@ pub mod AVLTreeSeqStEph {
         type Item = &'a T;
         type IntoIter = AVLTreeSeqIterStEph<'a, T>;
 
-        #[verifier::external_body]
+        #[verifier::external_body] // veracity: accept — iterator boundary
         fn into_iter(self) -> (it: AVLTreeSeqIterStEph<'a, T>)
             ensures
                 it@.0 == 0,

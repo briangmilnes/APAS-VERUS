@@ -23,34 +23,34 @@ Table of Contents:
 ✓ KleeneStPer.rs
    9 clean proof functions
 ⚠ MappingStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:615: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       604 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:620: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       609 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       613 |             }
-       614 |             // Verus BUG is preventing this as of Version: 0.2026.02.05.80fb5a4.
-       616 |             r
-       617 |         }
+       618 |             }
+       619 |             // Verus BUG is preventing this as of Version: 0.2026.02.05.80fb5a4.
+       621 |             r
+       622 |         }
 ✓ RelationStEph.rs
 ⚠ SetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1093: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1089 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1094: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1090 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1091 |         {
-      1092 |             let equal = self.elements == other.elements;
-      1094 |             equal
-      1095 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1039: info: structural_false_positive RWLOCK_GHOST size — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1048: info: structural_false_positive RWLOCK_GHOST mem — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1056: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_locked_set@ == locked_val@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1067: info: structural_false_positive RWLOCK_GHOST choose — proof { assume(inner@ == self@); } [medium]
+      1092 |         {
+      1093 |             let equal = self.elements == other.elements;
+      1095 |             equal
+      1096 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1040: info: structural_false_positive RWLOCK_GHOST size — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1049: info: structural_false_positive RWLOCK_GHOST mem — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1057: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_locked_set@ == locked_val@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1068: info: structural_false_positive RWLOCK_GHOST choose — proof { assume(inner@ == self@); } [medium]
 ⚠ SetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:898: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       893 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:914: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       909 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       896 |             let equal = self.elements == other.elements;
-       897 |             // HashSetWithView* eq is external_body so we have to trust it here.
-       899 |             equal
-       900 |         }
+       912 |             let equal = self.elements == other.elements;
+       913 |             // HashSetWithView* eq is external_body so we have to trust it here.
+       915 |             equal
+       916 |         }
 
 =================================================================
 2. Depends Upon
@@ -91,11 +91,11 @@ Proof Functions:
    11 total
 
 Function Specs:
-   151 exec fns with complete spec (requires+ensures) (59%)
+   152 exec fns with complete spec (requires+ensures) (59%)
    0 exec fns missing spec (0%)
-   103 proof/spec fns clean (40%)
+   105 proof/spec fns clean (40%)
    0 proof/spec fns with holes (0%)
-   254 total fns
+   257 total fns
 
 
 Holes Found: 0 (actionable)
@@ -113,9 +113,11 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-24 13:57:11 -07:00
-Ended:     2026-03-24 13:57:11 -07:00
-Duration:  29ms
+Started:   2026-03-24 15:20:12 -07:00
+Ended:     2026-03-24 15:20:13 -07:00
+Duration:  32ms
 
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log
+Duration:  32ms
+
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log

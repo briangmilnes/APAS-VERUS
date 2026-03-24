@@ -749,7 +749,7 @@ broadcast use {
             }
         }
 
-        #[verifier::external_body]
+        #[verifier::external_body] // veracity: accept — iterator boundary
         fn iter<'a>(&'a self) -> (it: OrderedTableMtEphIter<'a, K, V>)
         {
             self.base_table.iter()
@@ -762,7 +762,7 @@ broadcast use {
         type Item = Pair<K, V>;
         type IntoIter = OrderedTableMtEphIter<'a, K, V>;
 
-        #[verifier::external_body]
+        #[verifier::external_body] // veracity: accept — iterator boundary
         fn into_iter(self) -> (it: OrderedTableMtEphIter<'a, K, V>)
             ensures
                 it@.0 == 0,

@@ -464,30 +464,22 @@ pub mod Chap37 {
     pub mod AVLTreeSeq;
     pub mod AVLTreeSeqStEph;
     pub mod AVLTreeSeqStPer;
-    #[cfg(feature = "all_chapters")]
-    pub mod AVLTreeSeqMtPer;
+    // pub mod AVLTreeSeqMtPer;  // broken: stale imports, never cargo-compiled
     pub mod BSTPlainStEph;
-    // pub mod BSTPlainMtEph;  // stale imports (was Verus-only, never cargo-compiled)
+    // pub mod BSTPlainMtEph;  // broken: stale imports, never cargo-compiled
     pub mod BSTAVLStEph;
-    // pub mod BSTAVLMtEph;  // stale imports (was Verus-only, never cargo-compiled)
+    // pub mod BSTAVLMtEph;  // broken: stale imports, never cargo-compiled
     pub mod BSTRBStEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod BSTRBMtEph;
+    // pub mod BSTRBMtEph;  // broken: compile errors, never cargo-compiled
     pub mod BSTSplayStEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod BSTSplayMtEph;
+    // pub mod BSTSplayMtEph;  // broken: compile errors, never cargo-compiled
     pub mod BSTBBAlphaStEph;
-    // pub mod BSTBBAlphaMtEph;  // stale imports (was Verus-only, never cargo-compiled)
-    #[cfg(feature = "all_chapters")]
-    pub mod BSTSetPlainMtEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod BSTSetAVLMtEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod BSTSetRBMtEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod BSTSetSplayMtEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod BSTSetBBAlphaMtEph;
+    // pub mod BSTBBAlphaMtEph;  // broken: stale imports, never cargo-compiled
+    // pub mod BSTSetPlainMtEph;  // broken: depends on BSTPlainMtEph
+    // pub mod BSTSetAVLMtEph;  // broken: depends on BSTAVLMtEph
+    // pub mod BSTSetRBMtEph;  // broken: depends on BSTRBMtEph
+    // pub mod BSTSetSplayMtEph;  // broken: depends on BSTSplayMtEph
+    // pub mod BSTSetBBAlphaMtEph;  // broken: depends on BSTBBAlphaMtEph
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
@@ -518,8 +510,7 @@ pub mod Chap41 {
     pub mod AVLTreeSetStEph;
     pub mod AVLTreeSetStPer;
     pub mod AVLTreeSetMtEph;
-    #[cfg(feature = "all_chapters")]
-    pub mod AVLTreeSetMtPer;
+    // pub mod AVLTreeSetMtPer;  // broken: never cargo-compiled
     pub mod Example41_3;
 }
 
@@ -631,14 +622,10 @@ pub mod Chap52 {
     // AdjTable St files: compile but fail verification (missing obeys_view_eq/feq proofs).
     // pub mod AdjTableGraphStEph;
     // pub mod AdjTableGraphStPer;
-    // AdjTable Mt/EdgeSet files depend on AVLTreeSetMtPer (Chap41, all_chapters).
-    #[cfg(feature = "all_chapters")]
-    pub mod AdjTableGraphMtPer;
-    // EdgeSet St files: fail compilation (missing Sized, subrange on wrong type).
-    // pub mod EdgeSetGraphStEph;
-    // pub mod EdgeSetGraphStPer;
-    #[cfg(feature = "all_chapters")]
-    pub mod EdgeSetGraphMtPer;
+    // pub mod AdjTableGraphMtPer;  // broken: depends on AVLTreeSetMtPer
+    // pub mod EdgeSetGraphStEph;  // broken: missing Sized, subrange errors
+    // pub mod EdgeSetGraphStPer;  // broken: missing Sized, subrange errors
+    // pub mod EdgeSetGraphMtPer;  // broken: depends on AVLTreeSetMtPer
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
@@ -647,7 +634,7 @@ pub mod Chap53 {
     pub mod PQMinStPer;
     pub mod GraphSearchStEph;
     pub mod GraphSearchStPer;
-    // pub mod GraphSearchMtPer; // Requires AVLTreeSetMtPer (all_chapters feature)
+    // pub mod GraphSearchMtPer;  // broken: depends on AVLTreeSetMtPer
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
@@ -730,22 +717,16 @@ pub mod Chap63 {
     // pub mod ConnectivityMtEph;  // depends on StarPartitionMtEph
 }
 
-#[cfg(all(feature = "all_chapters", not(feature = "wf")))]
-pub mod Chap64 {
-    pub mod SpanTreeStEph;
-    pub mod SpanTreeMtEph;
-    pub mod TSPApproxStEph;
-}
+// pub mod Chap64 — broken: never cargo-compiled
+//     pub mod SpanTreeStEph;
+//     pub mod SpanTreeMtEph;
+//     pub mod TSPApproxStEph;
 
-#[cfg(all(feature = "all_chapters", not(feature = "wf")))]
-pub mod Chap65 {
-    pub mod UnionFindStEph;
-    pub mod KruskalStEph;
-    pub mod PrimStEph;
-}
+// pub mod Chap65 — broken: never cargo-compiled
+//     pub mod UnionFindStEph;
+//     pub mod KruskalStEph;
+//     pub mod PrimStEph;
 
-#[cfg(all(feature = "all_chapters", not(feature = "wf")))]
-pub mod Chap66 {
-    pub mod BoruvkaStEph;
-    pub mod BoruvkaMtEph;
-}
+// pub mod Chap66 — broken: never cargo-compiled
+//     pub mod BoruvkaStEph;
+//     pub mod BoruvkaMtEph;
