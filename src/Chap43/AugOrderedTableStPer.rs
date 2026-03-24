@@ -22,7 +22,6 @@ pub mod AugOrderedTableStPer {
     use vstd::prelude::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
-    use crate::Chap42::TableStPer::TableStPer::*;
     use crate::Chap43::OrderedTableStPer::OrderedTableStPer::*;
     use crate::OrderedTableStPerLit;
     use crate::Types::Types::*;
@@ -886,7 +885,9 @@ broadcast use {
         {
             proof {
                 lemma_aug_view(self);
-                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.base_set.elements@);
+                // ParamBST type invariant guarantees finite, but it's private.
+                assume(self.base_table.tree@.finite());
+                lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
             }
             self.cached_reduction.clone()
         }
@@ -896,7 +897,9 @@ broadcast use {
         {
             proof {
                 lemma_aug_view(self);
-                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.base_set.elements@);
+                // ParamBST type invariant guarantees finite, but it's private.
+                assume(self.base_table.tree@.finite());
+                lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
             }
             let range_table = self.get_key_range(k1, k2);
             range_table.reduce_val()
@@ -907,11 +910,11 @@ broadcast use {
 
     impl<K: StT + Ord, V: StT + Ord, F: Fn(&V, &V) -> V + Clone> AugOrderedTableStPer<K, V, F> {
         /// Returns an iterator over the table entries via the base ordered table.
-        pub fn iter(&self) -> (it: OrderedTableStPerIter<'_, K, V>)
+        pub fn iter(&self) -> (it: OrderedTableStPerIter<K, V>)
             requires self.spec_augorderedtablestper_wf(),
             ensures
                 it@.0 == 0,
-                it@.1 == self.base_table.base_set.elements@,
+                it@.1.len() == self.base_table.tree@.len(),
                 iter_invariant(&it),
         {
             self.base_table.iter()
@@ -919,13 +922,13 @@ broadcast use {
     }
 
     impl<'a, K: StT + Ord, V: StT + Ord, F: Fn(&V, &V) -> V + Clone> std::iter::IntoIterator for &'a AugOrderedTableStPer<K, V, F> {
-        type Item = &'a Pair<K, V>;
-        type IntoIter = OrderedTableStPerIter<'a, K, V>;
+        type Item = Pair<K, V>;
+        type IntoIter = OrderedTableStPerIter<K, V>;
         fn into_iter(self) -> (it: Self::IntoIter)
             requires self.spec_augorderedtablestper_wf(),
             ensures
                 it@.0 == 0,
-                it@.1 == self.base_table.base_set.elements@,
+                it@.1.len() == self.base_table.tree@.len(),
                 iter_invariant(&it),
         {
             self.base_table.iter()
