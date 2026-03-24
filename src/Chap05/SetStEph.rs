@@ -132,7 +132,8 @@ verus! {
                 it@.0 == 0int,
                 it@.1.map(|i: int, k: T| k@).to_set() == self@,
                 it@.1.no_duplicates(),
-                forall |j: int| 0 <= j < it@.1.len() ==> self@.contains(#[trigger] it@.1[j]@);
+                forall |j: int| 0 <= j < it@.1.len() ==> self@.contains(#[trigger] it@.1[j]@),
+                iter_invariant(&it);
 
         /// - APAS: N/A — conversion utility, not in prose.
         /// - Claude-Opus-4.6: Work Θ(|self|), Span Θ(|self|) — iterates set, clones each element.
@@ -872,6 +873,21 @@ verus! {
 
         open spec fn view(&self) -> Seq<T> {
             self.elements.take(self.pos)
+        }
+    }
+
+    impl<'a, T: StT + Hash> std::iter::IntoIterator for &'a SetStEph<T> {
+        type Item = &'a T;
+        type IntoIter = SetStEphIter<'a, T>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            requires self.spec_setsteph_wf()
+            ensures
+                it@.0 == 0int,
+                it@.1.map(|i: int, k: T| k@).to_set() == self@,
+                it@.1.no_duplicates(),
+                iter_invariant(&it),
+        {
+            self.iter()
         }
     }
 

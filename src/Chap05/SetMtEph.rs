@@ -144,7 +144,8 @@ verus! {
             ensures
                 it@.0 == 0int,
                 it@.1.map(|i: int, k: T| k@).to_set() == self@,
-                it@.1.no_duplicates();
+                it@.1.no_duplicates(),
+                iter_invariant(&it);
 
         /// - APAS: N/A — conversion utility, not in prose.
         /// - Claude-Opus-4.6: Work Θ(|self|), Span Θ(|self|) — iterates set, clones each element.
