@@ -27,7 +27,7 @@ Table of Contents:
 ✓ AdjMatrixGraphStEph.rs
    3 clean proof functions
 ⚠ AdjMatrixGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:477: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjMatrixGraphStPer.rs:477: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        473 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        475 |         {
@@ -41,7 +41,7 @@ Table of Contents:
 ✓ AdjSeqGraphStEph.rs
    2 clean proof functions
 ⚠ AdjSeqGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:513: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjSeqGraphStPer.rs:513: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        509 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        511 |         {
@@ -132,9 +132,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-24 13:10:15 -07:00
-Ended:     2026-03-24 13:10:15 -07:00
-Duration:  43ms
+Started:   2026-03-24 12:46:01 -07:00
+Ended:     2026-03-24 12:46:01 -07:00
+Duration:  62ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap52/analyses/veracity-review-verus-proof-holes.log

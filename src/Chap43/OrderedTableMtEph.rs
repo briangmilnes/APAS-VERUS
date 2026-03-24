@@ -161,6 +161,12 @@ broadcast use {
                 obeys_feq_full::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
                 keys@.len() < usize::MAX as nat,
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                view_ord_consistent::<Pair<K, V>>(),
+                spec_pair_key_determines_order::<K, V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                view_ord_consistent::<K>(),
+                obeys_feq_fulls::<K, V>(),
             ensures tabulated@.dom().finite();
 
         /// - APAS: Work Θ(n), Span Θ(n)
