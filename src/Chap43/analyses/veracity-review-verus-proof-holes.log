@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap43/OrderedTableStPer.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap43/OrderedTableStEph.rs
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,28 +20,29 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-⚠ OrderedTableStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:3313: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      3309 |         fn eq(&self, other: &Self) -> (equal: bool)
+❌ OrderedTableStEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStEph.rs:3404: error: external_body - #[verifier::external_body]
+      3405 |         fn rank_key_iter(&self, k: &K) -> (rank: usize)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStEph.rs:3431: error: external_body - #[verifier::external_body]
+      3432 |         fn select_key(&self, i: usize) -> (selected: Option<K>)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStEph.rs:3724: error: assume() [algorithmic] - assume(iter_invariant(self));
+      3702 |         fn next(&mut self) -> (next: Option<Pair<K, V>>)
             ...
-      3311 |         {
-      3312 |             let equal = self.tree.size() == other.tree.size();
-      3314 |             equal
-      3315 |         }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:3325: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      3319 |         fn clone(&self) -> (copy: Self)
+      3722 |             proof {
+      3723 |                 // Caller must maintain iter_invariant.
+      3725 |             }
+      3726 |             if self.pos < self.len {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap43/OrderedTableStEph.rs:3748: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include result.spec_orderedtablesteph_wf() for return type OrderedTableStEph
+      3741 |         fn clone(&self) -> (cloned: Self) {
             ...
-      3323 |                 tree: self.tree.clone(),
-      3324 |             };
-      3326 |             copy
-      3327 |         }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap43/OrderedTableStPer.rs:3330: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include result.spec_orderedtablestper_wf() for return type OrderedTableStPer
-      3319 |         fn clone(&self) -> (copy: Self)
-            ...
-      3328 |     }
-      3329 | 
-      3331 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
-      3332 |     ) -> (result: OrderedTableStPer<K, V>)
+      3746 |     }
+      3747 | 
+      3749 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
+      3750 |     ) -> (result: OrderedTableStEph<K, V>)
+   Holes: 3 total
+      1 × assume()
+      2 × external_body
+   Proof functions: 14 total (14 clean, 0 holed)
 
 =================================================================
 2. Depends Upon
@@ -51,13 +52,13 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
-OrderedTableStPer  depends upon only clean modules
+OrderedTableStEph  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
-OrderedTableStPer.rs  depends upon only clean modules
+OrderedTableStEph.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
@@ -69,33 +70,32 @@ Modules:
    1 total
 
 Proof Functions:
-   12 clean (100%)
+   14 clean (100%)
    0 holed (0%)
-   12 total
+   14 total
 
 Function Specs:
-   81 exec fns with complete spec (requires+ensures) (76%)
+   85 exec fns with complete spec (requires+ensures) (78%)
    0 exec fns missing spec (0%)
-   25 proof/spec fns clean (23%)
+   23 proof/spec fns clean (21%)
    0 proof/spec fns with holes (0%)
-   106 total fns
+   108 total fns
 
 
-Holes Found: 0 (actionable)
-Real Proof Targets: 0 (all actionable)
+Holes Found: 3 (actionable)
+   1 × assume() [algorithmic] (33%)
+   2 × external_body (66%)
+Real Proof Targets: 3 (all actionable)
 
-Warnings: 3 total
+Warnings: 1 total
    1 × fn_missing_wf_ensures
-   2 × assume_eq_clone_workaround
-
-No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-24 13:44:26 -07:00
-Ended:     2026-03-24 13:44:27 -07:00
-Duration:  58ms
+Started:   2026-03-24 12:42:01 -07:00
+Ended:     2026-03-24 12:42:02 -07:00
+Duration:  89ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log

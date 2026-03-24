@@ -24,11 +24,11 @@ pub mod AugOrderedTableMtEph {
     use vstd::prelude::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     use crate::Chap43::OrderedTableMtEph::OrderedTableMtEph::*;
     #[cfg(verus_keep_ghost)]
     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
-    #[cfg(verus_keep_ghost)]
-    use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     use crate::Concurrency::Concurrency::*;
     #[cfg(verus_keep_ghost)]
     use vstd::laws_eq::obeys_view_eq;
