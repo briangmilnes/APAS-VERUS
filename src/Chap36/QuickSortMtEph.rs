@@ -557,10 +557,18 @@ pub mod QuickSortMtEph {
                     core::cmp::Ordering::Less => {
                         proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
                         left.push(elem);
+                        proof {
+                            let li = (left@.len() - 1) as int;
+                            assert(T::le(left@[li], pivot) && left@[li] != pivot);
+                        }
                     },
                     core::cmp::Ordering::Greater => {
                         proof { assert(T::le(pivot, elem)); assert(elem != pivot); }
                         right.push(elem);
+                        proof {
+                            let ri = (right@.len() - 1) as int;
+                            assert(T::le(pivot, right@[ri]) && right@[ri] != pivot);
+                        }
                     },
                     core::cmp::Ordering::Equal => {
                         equals.push(elem);
@@ -673,10 +681,18 @@ pub mod QuickSortMtEph {
                     core::cmp::Ordering::Less => {
                         proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
                         left.push(elem);
+                        proof {
+                            let li = (left@.len() - 1) as int;
+                            assert(T::le(left@[li], pivot) && left@[li] != pivot);
+                        }
                     },
                     core::cmp::Ordering::Greater => {
                         proof { assert(T::le(pivot, elem)); assert(elem != pivot); }
                         right.push(elem);
+                        proof {
+                            let ri = (right@.len() - 1) as int;
+                            assert(T::le(pivot, right@[ri]) && right@[ri] != pivot);
+                        }
                     },
                     core::cmp::Ordering::Equal => {
                         equals.push(elem);

@@ -252,6 +252,8 @@ pub mod OrderStatSelectStEph {
                 assert(left@.contains(sorted_left[j]));
                 let idx = choose|idx: int|
                     0 <= idx < left@.len() && left@[idx] == sorted_left[j];
+                assert(T::le(sorted_left[j], pivot));
+                assert(sorted_left[j] != pivot);
             };
 
             // sorted_right has same elements as right: all > pivot.
@@ -263,6 +265,8 @@ pub mod OrderStatSelectStEph {
                 assert(right@.contains(sorted_right[j]));
                 let idx = choose|idx: int|
                     0 <= idx < right@.len() && right@[idx] == sorted_right[j];
+                assert(T::le(pivot, sorted_right[j]));
+                assert(sorted_right[j] != pivot);
             };
 
             // The three-part concatenation is sorted because left < pivot == equals < right.
