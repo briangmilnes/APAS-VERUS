@@ -541,8 +541,8 @@ pub mod Chap43 {
     pub mod OrderedTableStPer;
     pub mod AugOrderedTableStPer;
     // Wave 3: OrderedSet (depend on AVLTreeSetStEph/StPer)
-    // R66: commented out — depend on AVLTreeSetStEph.elements field (removed in backing store rewire)
-    // pub mod OrderedSetStEph;
+    // R67: OrderedSetStEph rewritten for ParamBST backing.
+    pub mod OrderedSetStEph;
     // pub mod OrderedSetStPer;
     // Wave 4: ParamTreap now uses vstd::rwlock::RwLock, declared inside verus!
     // pub mod OrderedSetMtEph;
