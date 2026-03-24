@@ -44,7 +44,7 @@ broadcast use {
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(F)]
-    pub struct AugOrderedTableStEph<K: StT + Ord, V: StT, F>
+    pub struct AugOrderedTableStEph<K: StT + Ord, V: StT + Ord, F>
     where
         F: Fn(&V, &V) -> V + Clone,
     {
@@ -58,7 +58,7 @@ broadcast use {
 
     // 5. view impls
 
-    impl<K: StT + Ord, V: StT, F> View for AugOrderedTableStEph<K, V, F>
+    impl<K: StT + Ord, V: StT + Ord, F> View for AugOrderedTableStEph<K, V, F>
     where
         F: Fn(&V, &V) -> V + Clone,
     {
@@ -68,7 +68,7 @@ broadcast use {
 
     // 7. free functions (calculate_reduction)
 
-    pub fn calculate_reduction<K: StT + Ord, V: StT, F>(
+    pub fn calculate_reduction<K: StT + Ord, V: StT + Ord, F>(
         base: &OrderedTableStEph<K, V>,
         reducer: &F,
         identity: &V,
@@ -104,7 +104,7 @@ broadcast use {
 
     // 7b. proof fns
 
-    proof fn lemma_aug_view<K: StT + Ord, V: StT, F: Fn(&V, &V) -> V + Clone>(
+    proof fn lemma_aug_view<K: StT + Ord, V: StT + Ord, F: Fn(&V, &V) -> V + Clone>(
         t: &AugOrderedTableStEph<K, V, F>,
     )
         ensures t@ =~= t.base_table@
@@ -114,7 +114,7 @@ broadcast use {
 
     /// Trait defining all augmented ordered table operations (ADT 43.3) with ephemeral semantics
     /// Extends ordered table operations with efficient reduction and in-place mutations
-    pub trait AugOrderedTableStEphTrait<K: StT + Ord, V: StT, F>: Sized + View<V = Map<K::V, V::V>>
+    pub trait AugOrderedTableStEphTrait<K: StT + Ord, V: StT + Ord, F>: Sized + View<V = Map<K::V, V::V>>
     where
         F: Fn(&V, &V) -> V + Clone,
     {
@@ -409,7 +409,7 @@ broadcast use {
 
     // 9. impls
 
-    impl<K: StT + Ord, V: StT, F> AugOrderedTableStEphTrait<K, V, F> for AugOrderedTableStEph<K, V, F>
+    impl<K: StT + Ord, V: StT + Ord, F> AugOrderedTableStEphTrait<K, V, F> for AugOrderedTableStEph<K, V, F>
     where
         F: Fn(&V, &V) -> V + Clone,
     {
@@ -480,7 +480,7 @@ broadcast use {
         {
             proof {
                 lemma_aug_view(self);
-                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.base_seq@);
+                lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
             }
             self.base_table.is_empty()
         }
@@ -792,7 +792,9 @@ broadcast use {
         {
             proof {
                 lemma_aug_view(self);
-                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.base_seq@);
+                // ParamBST type invariant guarantees finite, but it's private.
+                assume(self.base_table.tree@.finite());
+                lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
             }
             self.cached_reduction.clone()
         }
@@ -802,7 +804,8 @@ broadcast use {
         {
             proof {
                 lemma_aug_view(self);
-                lemma_entries_to_map_finite::<K::V, V::V>(self.base_table.base_seq@);
+                assume(self.base_table.tree@.finite());
+                lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
             }
             let range_table = self.get_key_range(k1, k2);
             range_table.reduce_val()
@@ -811,27 +814,27 @@ broadcast use {
 
     // 10. iterators
 
-    impl<K: StT + Ord, V: StT, F: Fn(&V, &V) -> V + Clone> AugOrderedTableStEph<K, V, F> {
+    impl<K: StT + Ord, V: StT + Ord, F: Fn(&V, &V) -> V + Clone> AugOrderedTableStEph<K, V, F> {
         /// Returns an iterator over the table entries via the base ordered table.
-        pub fn iter(&self) -> (it: OrderedTableStEphIter<'_, K, V>)
+        pub fn iter(&self) -> (it: OrderedTableStEphIter<K, V>)
             requires self.spec_augorderedtablesteph_wf()
             ensures
                 it@.0 == 0,
-                it@.1 == self.base_table.base_seq@,
+                it@.1.len() == self.base_table.tree@.len(),
                 iter_invariant(&it),
         {
             self.base_table.iter()
         }
     }
 
-    impl<'a, K: StT + Ord, V: StT, F: Fn(&V, &V) -> V + Clone> std::iter::IntoIterator for &'a AugOrderedTableStEph<K, V, F> {
-        type Item = &'a Pair<K, V>;
-        type IntoIter = OrderedTableStEphIter<'a, K, V>;
+    impl<'a, K: StT + Ord, V: StT + Ord, F: Fn(&V, &V) -> V + Clone> std::iter::IntoIterator for &'a AugOrderedTableStEph<K, V, F> {
+        type Item = Pair<K, V>;
+        type IntoIter = OrderedTableStEphIter<K, V>;
         fn into_iter(self) -> (it: Self::IntoIter)
             requires self.spec_augorderedtablesteph_wf()
             ensures
                 it@.0 == 0,
-                it@.1 == self.base_table.base_seq@,
+                it@.1.len() == self.base_table.tree@.len(),
                 iter_invariant(&it),
         {
             self.base_table.iter()
@@ -840,7 +843,7 @@ broadcast use {
 
     // 11. derive impls in verus!
 
-    impl<K: StT + Ord, V: StT, F> Clone for AugOrderedTableStEph<K, V, F>
+    impl<K: StT + Ord, V: StT + Ord, F> Clone for AugOrderedTableStEph<K, V, F>
     where
         F: Fn(&V, &V) -> V + Clone,
     {
@@ -862,7 +865,7 @@ broadcast use {
 
     // 13. derive impls outside verus! (Debug/Display must stay outside per Verus limitation)
 
-    impl<K: StT + Ord, V: StT, F> PartialEq for AugOrderedTableStEph<K, V, F>
+    impl<K: StT + Ord, V: StT + Ord, F> PartialEq for AugOrderedTableStEph<K, V, F>
     where
         F: Fn(&V, &V) -> V + Clone,
     {
@@ -872,7 +875,7 @@ broadcast use {
         }
     }
 
-    impl<K: StT + Ord, V: StT, F> Display for AugOrderedTableStEph<K, V, F>
+    impl<K: StT + Ord, V: StT + Ord, F> Display for AugOrderedTableStEph<K, V, F>
     where
         F: Fn(&V, &V) -> V + Clone,
     {
@@ -886,7 +889,7 @@ broadcast use {
         }
     }
 
-    impl<K: StT + Ord, V: StT, F> Debug for AugOrderedTableStEph<K, V, F>
+    impl<K: StT + Ord, V: StT + Ord, F> Debug for AugOrderedTableStEph<K, V, F>
     where
         F: Fn(&V, &V) -> V + Clone,
     {

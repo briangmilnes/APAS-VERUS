@@ -54,7 +54,7 @@ broadcast use {
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(F)]
-    pub struct AugOrderedTableMtEph<K: MtKey, V: MtVal, F: MtReduceFn<V>> {
+    pub struct AugOrderedTableMtEph<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> {
         pub base_table: OrderedTableMtEph<K, V>,
         pub reducer: F,
         pub identity: V,
@@ -65,14 +65,14 @@ broadcast use {
 
     // 5. view impls
 
-    impl<K: MtKey, V: MtVal, F: MtReduceFn<V>> View for AugOrderedTableMtEph<K, V, F> {
+    impl<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> View for AugOrderedTableMtEph<K, V, F> {
         type V = Map<K::V, V::V>;
         open spec fn view(&self) -> Map<K::V, V::V> { self.base_table@ }
     }
 
     // 7. free functions (calculate_reduction, recalculate_reduction)
 
-    pub fn recalculate_reduction<K: MtKey, V: MtVal, F: MtReduceFn<V>>(
+    pub fn recalculate_reduction<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>>(
         table: &AugOrderedTableMtEph<K, V, F>,
     ) -> (reduced: V)
     requires table.spec_augorderedtablemteph_wf()
@@ -83,7 +83,7 @@ broadcast use {
         reduced
     }
 
-    pub fn calculate_reduction<K: MtKey, V: MtVal, F: MtReduceFn<V>>(
+    pub fn calculate_reduction<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>>(
         base: &OrderedTableMtEph<K, V>,
         reducer: &F,
         identity: &V,
@@ -115,7 +115,7 @@ broadcast use {
 
     // 7b. proof fns
 
-    proof fn lemma_aug_view<K: MtKey, V: MtVal, F: MtReduceFn<V>>(
+    proof fn lemma_aug_view<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>>(
         t: &AugOrderedTableMtEph<K, V, F>,
     )
         ensures t@ =~= t.base_table@
@@ -125,7 +125,7 @@ broadcast use {
 
     /// Trait defining all augmented ordered table operations (ADT 43.3) with multi-threaded ephemeral semantics
     /// Extends ordered table operations with efficient reduction and thread-safe operations
-    pub trait AugOrderedTableMtEphTrait<K: MtKey, V: MtVal, F: MtReduceFn<V>>: Sized + View<V = Map<K::V, V::V>> {
+    pub trait AugOrderedTableMtEphTrait<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>>: Sized + View<V = Map<K::V, V::V>> {
         spec fn spec_augorderedtablemteph_wf(&self) -> bool;
 
         /// - APAS: Work O(1), Span O(1)
@@ -354,7 +354,7 @@ broadcast use {
 
     // 9. impls
 
-    impl<K: MtKey, V: MtVal, F: MtReduceFn<V>> AugOrderedTableMtEphTrait<K, V, F> for AugOrderedTableMtEph<K, V, F> {
+    impl<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> AugOrderedTableMtEphTrait<K, V, F> for AugOrderedTableMtEph<K, V, F> {
         open spec fn spec_augorderedtablemteph_wf(&self) -> bool {
             self@.dom().finite() && self.base_table.spec_orderedtablemteph_wf()
             && forall|v1: &V, v2: &V| #[trigger] self.reducer.requires((v1, v2))
@@ -736,7 +736,7 @@ broadcast use {
 
     // 11. derive impls in verus!
 
-    impl<K: MtKey, V: MtVal, F: MtReduceFn<V>> Clone for AugOrderedTableMtEph<K, V, F> {
+    impl<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> Clone for AugOrderedTableMtEph<K, V, F> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
@@ -755,13 +755,13 @@ broadcast use {
 
     // 10. iterators (outside verus! — snapshot-based, delegates to base_table.iter())
 
-    impl<K: MtKey, V: MtVal, F: MtReduceFn<V>> AugOrderedTableMtEph<K, V, F> {
+    impl<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> AugOrderedTableMtEph<K, V, F> {
         pub fn iter(&self) -> OrderedTableMtEphIter<'_, K, V> {
             self.base_table.iter()
         }
     }
 
-    impl<'a, K: MtKey, V: MtVal, F: MtReduceFn<V>> std::iter::IntoIterator for &'a AugOrderedTableMtEph<K, V, F> {
+    impl<'a, K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> std::iter::IntoIterator for &'a AugOrderedTableMtEph<K, V, F> {
         type Item = Pair<K, V>;
         type IntoIter = OrderedTableMtEphIter<'a, K, V>;
 
@@ -772,14 +772,14 @@ broadcast use {
 
     // 13. derive impls outside verus!
 
-    impl<K: MtKey, V: MtVal, F: MtReduceFn<V>> PartialEq for AugOrderedTableMtEph<K, V, F> {
+    impl<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> PartialEq for AugOrderedTableMtEph<K, V, F> {
         fn eq(&self, other: &Self) -> bool {
             self.base_table == other.base_table
                 && self.cached_reduction == other.cached_reduction
         }
     }
 
-    impl<K: MtKey, V: MtVal, F: MtReduceFn<V>> Display for AugOrderedTableMtEph<K, V, F> {
+    impl<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> Display for AugOrderedTableMtEph<K, V, F> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             write!(
                 f,
@@ -790,7 +790,7 @@ broadcast use {
         }
     }
 
-    impl<K: MtKey, V: MtVal, F: MtReduceFn<V>> Debug for AugOrderedTableMtEph<K, V, F> {
+    impl<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> Debug for AugOrderedTableMtEph<K, V, F> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             f.debug_struct("AugOrderedTableMtEph")
                 .field("size", &self.size())

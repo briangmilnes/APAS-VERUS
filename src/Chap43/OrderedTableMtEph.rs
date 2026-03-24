@@ -25,6 +25,8 @@ pub mod OrderedTableMtEph {
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::*;
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
@@ -49,7 +51,7 @@ broadcast use {
 
     pub struct OrderedTableMtEphInv;
 
-    impl<K: MtKey, V: MtVal> RwLockPredicate<OrderedTableStEph<K, V>> for OrderedTableMtEphInv {
+    impl<K: MtKey, V: MtVal + Ord> RwLockPredicate<OrderedTableStEph<K, V>> for OrderedTableMtEphInv {
         open spec fn inv(self, v: OrderedTableStEph<K, V>) -> bool {
             v.spec_orderedtablesteph_wf()
         }
@@ -57,14 +59,14 @@ broadcast use {
 
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
-    pub struct OrderedTableMtEph<K: MtKey, V: MtVal> {
+    pub struct OrderedTableMtEph<K: MtKey, V: MtVal + Ord> {
         pub locked_table: RwLock<OrderedTableStEph<K, V>, OrderedTableMtEphInv>,
         pub ghost_locked_table: Ghost<Map<K::V, V::V>>,
     }
 
     pub type OrderedTableMt<K, V> = OrderedTableMtEph<K, V>;
 
-    impl<K: MtKey, V: MtVal> OrderedTableMtEph<K, V> {
+    impl<K: MtKey, V: MtVal + Ord> OrderedTableMtEph<K, V> {
         pub open spec fn spec_ghost_locked_table(self) -> Map<K::V, V::V> {
             self.ghost_locked_table@
         }
@@ -72,7 +74,7 @@ broadcast use {
 
     // 5. view impls
 
-    impl<K: MtKey, V: MtVal> View for OrderedTableMtEph<K, V> {
+    impl<K: MtKey, V: MtVal + Ord> View for OrderedTableMtEph<K, V> {
         type V = Map<K::V, V::V>;
         open spec fn view(&self) -> Map<K::V, V::V> {
             self.spec_ghost_locked_table()
@@ -82,7 +84,7 @@ broadcast use {
     // 8. traits
 
     /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1 for keys) with multi-threaded ephemeral semantics.
-    pub trait OrderedTableMtEphTrait<K: MtKey, V: MtVal>: Sized + View<V = Map<K::V, V::V>> {
+    pub trait OrderedTableMtEphTrait<K: MtKey, V: MtVal + Ord>: Sized + View<V = Map<K::V, V::V>> {
         spec fn spec_orderedtablemteph_wf(&self) -> bool;
 
         /// - APAS: Work Θ(1), Span Θ(1)
@@ -304,7 +306,7 @@ broadcast use {
 
     // 9. impls
 
-    impl<K: MtKey, V: MtVal> OrderedTableMtEphTrait<K, V> for OrderedTableMtEph<K, V> {
+    impl<K: MtKey, V: MtVal + Ord> OrderedTableMtEphTrait<K, V> for OrderedTableMtEph<K, V> {
         open spec fn spec_orderedtablemteph_wf(&self) -> bool {
             self@.dom().finite()
             && obeys_feq_fulls::<K, V>()
@@ -573,46 +575,17 @@ broadcast use {
             successor
         }
 
-        #[verifier::external_body]
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
         {
             proof { assert(obeys_view_eq_trigger::<K>()); }
-            // Acquire write, scan entries by key comparison for ordered split.
-            let (locked_val, write_handle) = self.locked_table.acquire_write();
-            let len = locked_val.base_seq.length();
-            let mut left_entries: Vec<Pair<K, V>> = Vec::new();
-            let mut found_value: Option<V> = None;
-            let mut right_entries: Vec<Pair<K, V>> = Vec::new();
-            let mut i: usize = 0;
-            while i < len
-                invariant
-                    i <= len,
-                    len as nat == locked_val.base_seq@.len(),
-                decreases len - i,
-            {
-                let pair = locked_val.base_seq.nth(i);
-                match pair.0.cmp(k) {
-                    std::cmp::Ordering::Less => {
-                        left_entries.push(Pair(pair.0.clone(), pair.1.clone()));
-                    },
-                    std::cmp::Ordering::Equal => {
-                        found_value = Some(pair.1.clone());
-                    },
-                    std::cmp::Ordering::Greater => {
-                        right_entries.push(Pair(pair.0.clone(), pair.1.clone()));
-                    },
-                }
-                i = i + 1;
-            }
+            let (mut locked_val, write_handle) = self.locked_table.acquire_write();
+            let (left_inner, found_value, right_inner) = locked_val.split_key(k);
             // Release write lock with empty.
             let empty_val = OrderedTableStEph::empty();
             self.ghost_locked_table = Ghost(empty_val@);
             proof { assume(empty_val.spec_orderedtablesteph_wf()); }
             write_handle.release_write(empty_val);
-            // Build left and right tables.
-            let left_inner = OrderedTableStEph { base_seq: AVLTreeSeqStEphS::from_vec(left_entries) };
-            let right_inner = OrderedTableStEph { base_seq: AVLTreeSeqStEphS::from_vec(right_entries) };
             proof {
                 assume(left_inner.spec_orderedtablesteph_wf());
                 assume(right_inner.spec_orderedtablesteph_wf());
@@ -718,14 +691,14 @@ broadcast use {
         }
     }
 
-    impl<'a, K: MtKey, V: MtVal> vstd::pervasive::ForLoopGhostIteratorNew for OrderedTableMtEphIter<'a, K, V> {
+    impl<'a, K: MtKey, V: MtVal + Ord> vstd::pervasive::ForLoopGhostIteratorNew for OrderedTableMtEphIter<'a, K, V> {
         type GhostIter = OrderedTableMtEphGhostIterator<'a, K, V>;
         open spec fn ghost_iter(&self) -> OrderedTableMtEphGhostIterator<'a, K, V> {
             OrderedTableMtEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
         }
     }
 
-    impl<'a, K: MtKey, V: MtVal> vstd::pervasive::ForLoopGhostIterator for OrderedTableMtEphGhostIterator<'a, K, V> {
+    impl<'a, K: MtKey, V: MtVal + Ord> vstd::pervasive::ForLoopGhostIterator for OrderedTableMtEphGhostIterator<'a, K, V> {
         type ExecIter = OrderedTableMtEphIter<'a, K, V>;
         type Item = Pair<K, V>;
         type Decrease = int;
@@ -763,7 +736,7 @@ broadcast use {
     // 11. top level coarse locking
 
     /// Construct Mt wrapper from an St table.
-    fn from_st<K: MtKey, V: MtVal>(inner: OrderedTableStEph<K, V>) -> (s: OrderedTableMtEph<K, V>)
+    fn from_st<K: MtKey, V: MtVal + Ord>(inner: OrderedTableStEph<K, V>) -> (s: OrderedTableMtEph<K, V>)
         requires inner@.dom().finite()
         ensures s@ =~= inner@, s@.dom().finite(), s.spec_orderedtablemteph_wf()
     {
@@ -779,25 +752,28 @@ broadcast use {
     }
 
     /// Build an MtEph table from entries (used by macro and tests).
-    pub fn from_sorted_entries<K: MtKey, V: MtVal>(
+    pub fn from_sorted_entries<K: MtKey, V: MtVal + Ord>(
         entries: AVLTreeSeqStPerS<Pair<K, V>>,
     ) -> (constructed: OrderedTableMtEph<K, V>)
         requires
             entries.spec_avltreeseqstper_wf(),
-            crate::Chap42::TableStEph::TableStEph::spec_keys_no_dups(entries@),
             entries@.len() < usize::MAX as nat,
         ensures constructed@.dom().finite(), constructed.spec_orderedtablemteph_wf()
     {
               assert(obeys_feq_full_trigger::<K>());
        assert(obeys_feq_full_trigger::<V>());
         assert(obeys_feq_full_trigger::<Pair<K, V>>());
+        proof {
+            assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
+            assume(view_ord_consistent::<Pair<K, V>>());
+        }
         let inner = crate::Chap43::OrderedTableStEph::OrderedTableStEph::from_sorted_entries(entries);
         from_st(inner)
     }
 
     // 12. derive impls in verus!
 
-    impl<K: MtKey, V: MtVal> Clone for OrderedTableMtEph<K, V> {
+    impl<K: MtKey, V: MtVal + Ord> Clone for OrderedTableMtEph<K, V> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
@@ -823,13 +799,15 @@ broadcast use {
 
     use std::fmt;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphTrait;
+    use crate::Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait;
+    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
 
     // Ghost<Map<K::V, V::V>> contains FnSpec which is not Send/Sync at the type level,
     // but Ghost is erased at runtime (zero-sized). Safe because no actual data crosses threads.
-    unsafe impl<K: MtKey, V: MtVal> Send for OrderedTableMtEph<K, V> {}
-    unsafe impl<K: MtKey, V: MtVal> Sync for OrderedTableMtEph<K, V> {}
+    unsafe impl<K: MtKey, V: MtVal + Ord> Send for OrderedTableMtEph<K, V> {}
+    unsafe impl<K: MtKey, V: MtVal + Ord> Sync for OrderedTableMtEph<K, V> {}
 
-    impl<K: MtKey, V: MtVal> std::iter::Iterator for OrderedTableMtEphIter<'_, K, V> {
+    impl<K: MtKey, V: MtVal + Ord> std::iter::Iterator for OrderedTableMtEphIter<'_, K, V> {
         type Item = Pair<K, V>;
 
         fn next(&mut self) -> Option<Pair<K, V>> {
@@ -843,14 +821,15 @@ broadcast use {
         }
     }
 
-    impl<K: MtKey, V: MtVal> OrderedTableMtEph<K, V> {
+    impl<K: MtKey, V: MtVal + Ord> OrderedTableMtEph<K, V> {
         pub fn iter(&self) -> OrderedTableMtEphIter<'_, K, V> {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
-            let n = inner.base_seq.length();
+            let sorted = inner.tree.in_order();
+            let n = sorted.length();
             let mut snapshot: Vec<Pair<K, V>> = Vec::new();
             for i in 0..n {
-                let e = inner.base_seq.nth(i);
+                let e = sorted.nth(i);
                 snapshot.push(Pair(e.0.clone(), e.1.clone()));
             }
             read_handle.release_read();
@@ -858,7 +837,7 @@ broadcast use {
         }
     }
 
-    impl<'a, K: MtKey, V: MtVal> std::iter::IntoIterator for &'a OrderedTableMtEph<K, V> {
+    impl<'a, K: MtKey, V: MtVal + Ord> std::iter::IntoIterator for &'a OrderedTableMtEph<K, V> {
         type Item = Pair<K, V>;
         type IntoIter = OrderedTableMtEphIter<'a, K, V>;
 
@@ -867,28 +846,28 @@ broadcast use {
         }
     }
 
-    impl<K: MtKey, V: MtVal> PartialEq for OrderedTableMtEph<K, V> {
+    impl<K: MtKey, V: MtVal + Ord> PartialEq for OrderedTableMtEph<K, V> {
         fn eq(&self, other: &Self) -> bool {
             let self_read = self.locked_table.acquire_read();
             let other_read = other.locked_table.acquire_read();
-            let result = self_read.borrow().base_seq == other_read.borrow().base_seq;
+            let result = self_read.borrow().tree.size() == other_read.borrow().tree.size();
             other_read.release_read();
             self_read.release_read();
             result
         }
     }
 
-    impl<K: MtKey, V: MtVal> Default for OrderedTableMtEph<K, V> {
+    impl<K: MtKey, V: MtVal + Ord> Default for OrderedTableMtEph<K, V> {
         fn default() -> Self { Self::empty() }
     }
 
-    impl<K: MtKey, V: MtVal> fmt::Debug for OrderedTableMtEph<K, V> {
+    impl<K: MtKey, V: MtVal + Ord> fmt::Debug for OrderedTableMtEph<K, V> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedTableMtEph(size: {})", self.size())
         }
     }
 
-    impl<K: MtKey, V: MtVal> fmt::Display for OrderedTableMtEph<K, V> {
+    impl<K: MtKey, V: MtVal + Ord> fmt::Display for OrderedTableMtEph<K, V> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedTableMtEph(size: {})", self.size())
         }
