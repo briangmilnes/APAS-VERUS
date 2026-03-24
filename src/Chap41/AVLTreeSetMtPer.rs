@@ -185,7 +185,8 @@ broadcast use {
         {
             let handle = self.locked_set.acquire_read();
             let inner_ref = handle.borrow();
-            let vals = inner_ref.elements.values_in_order();
+            let mut vals = Vec::new();
+            inner_ref.tree.collect_in_order(&mut vals);
             handle.release_read();
             let seq = AVLTreeSeqMtPerS::from_vec(vals);
             proof {
@@ -417,8 +418,10 @@ broadcast use {
         {
             let self_handle = self.locked_set.acquire_read();
             let other_handle = other.locked_set.acquire_read();
-            let self_seq = self_handle.borrow().elements.values_in_order();
-            let other_seq = other_handle.borrow().elements.values_in_order();
+            let mut self_seq = Vec::new();
+            self_handle.borrow().tree.collect_in_order(&mut self_seq);
+            let mut other_seq = Vec::new();
+            other_handle.borrow().tree.collect_in_order(&mut other_seq);
             self_handle.release_read();
             other_handle.release_read();
             let n_self = self_seq.len();
