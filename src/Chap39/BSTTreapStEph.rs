@@ -35,6 +35,9 @@ pub mod BSTTreapStEph {
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
     use crate::vstdplus::total_order::total_order::IsLtTransitive;
+    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger};
 
     verus! {
 
@@ -64,7 +67,11 @@ pub mod BSTTreapStEph {
 
     // 3. broadcast use
 
-    broadcast use {vstd::set::group_set_axioms, vstd::set_lib::group_set_properties};
+    broadcast use {
+        vstd::set::group_set_axioms,
+        vstd::set_lib::group_set_properties,
+        crate::vstdplus::feq::feq::group_feq_axioms,
+    };
 
     // 5. view impls
 
@@ -2634,6 +2641,7 @@ pub mod BSTTreapStEph {
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent_st::<T>(),
+            obeys_feq_clone::<T>(),
             tree@.finite(),
             spec_param_wf_link(&tree.root),
             forall|a: T, b: T| #[trigger] op.requires((a, b)),
@@ -2648,8 +2656,7 @@ pub mod BSTTreapStEph {
                     assert(right@.finite());
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
                 }
-                let left_base = identity.clone();
-                proof { assume(left_base == identity); } // eq/clone workaround.
+                let left_base = identity.clone_plus();
                 let right_base = identity;
                 let left_acc = reduce_inner_st(left, op, left_base);
                 let right_acc = reduce_inner_st(right, op, right_base);
@@ -2892,6 +2899,7 @@ pub mod BSTTreapStEph {
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent_st::<T>(),
+                obeys_feq_clone::<T>(),
                 self.spec_parambsttreapsteph_wf(),
                 forall|a: T, b: T| #[trigger] op.requires((a, b)),
             ensures true;

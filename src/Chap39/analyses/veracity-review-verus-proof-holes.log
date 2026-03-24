@@ -20,212 +20,200 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ BSTTreapStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2652: error: assume() [algorithmic] - proof { assume(left_base == identity); } // eq/clone workaro
-      2631 |     fn reduce_inner_st<T: StT + Ord + IsLtTransitive, F: Fn(T, T) -> T>(
+⚠ BSTTreapStEph.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:154: error: fn_missing_wf_requires - fn clone_with_view — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+       145 |     fn clone_elem_st<T: StT + Ord + IsLtTransitive>(x: &T) -> (c: T)
             ...
-      2650 |                 }
-      2651 |                 let left_base = identity.clone();
-      2653 |                 let right_base = identity;
-      2654 |                 let left_acc = reduce_inner_st(left, op, left_base);
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:147: error: fn_missing_wf_requires - fn clone_with_view — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-       138 |     fn clone_elem_st<T: StT + Ord + IsLtTransitive>(x: &T) -> (c: T)
+       152 | 
+       153 |     /// Clone a BSTTreapStEph with view preservation.
+       155 |         requires spec_param_wf_link(&tree.root),
+       156 |         ensures cloned@ =~= tree@, spec_param_wf_link(&cloned.root),
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:154: error: fn_missing_wf_ensures - fn clone_with_view — ensures should include cloned.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+       145 |     fn clone_elem_st<T: StT + Ord + IsLtTransitive>(x: &T) -> (c: T)
             ...
-       145 | 
-       146 |     /// Clone a BSTTreapStEph with view preservation.
-       148 |         requires spec_param_wf_link(&tree.root),
-       149 |         ensures cloned@ =~= tree@, spec_param_wf_link(&cloned.root),
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:147: error: fn_missing_wf_ensures - fn clone_with_view — ensures should include cloned.spec_bsttreapsteph_wf() for return type BSTTreapStEph
-       138 |     fn clone_elem_st<T: StT + Ord + IsLtTransitive>(x: &T) -> (c: T)
+       152 | 
+       153 |     /// Clone a BSTTreapStEph with view preservation.
+       155 |         requires spec_param_wf_link(&tree.root),
+       156 |         ensures cloned@ =~= tree@, spec_param_wf_link(&cloned.root),
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:1495: error: fn_missing_wf_requires - fn make_node_treap_st — requires should include left.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1487 |         fn default() -> (d: Self)
             ...
-       145 | 
-       146 |     /// Clone a BSTTreapStEph with view preservation.
-       148 |         requires spec_param_wf_link(&tree.root),
-       149 |         ensures cloned@ =~= tree@, spec_param_wf_link(&cloned.root),
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1488: error: fn_missing_wf_requires - fn make_node_treap_st — requires should include left.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      1480 |         fn default() -> (d: Self)
+      1493 | 
+      1494 |     /// Build a new tree from (left, key, priority, right) maintaining BST ordering.
+      1496 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
+      1497 |     ) -> (node: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:1495: error: fn_missing_wf_requires - fn make_node_treap_st — requires should include right.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1487 |         fn default() -> (d: Self)
             ...
-      1486 | 
-      1487 |     /// Build a new tree from (left, key, priority, right) maintaining BST ordering.
-      1489 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
-      1490 |     ) -> (node: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1488: error: fn_missing_wf_requires - fn make_node_treap_st — requires should include right.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      1480 |         fn default() -> (d: Self)
+      1493 | 
+      1494 |     /// Build a new tree from (left, key, priority, right) maintaining BST ordering.
+      1496 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
+      1497 |     ) -> (node: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:1495: error: fn_missing_wf_ensures - fn make_node_treap_st — ensures should include node.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+      1487 |         fn default() -> (d: Self)
             ...
-      1486 | 
-      1487 |     /// Build a new tree from (left, key, priority, right) maintaining BST ordering.
-      1489 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
-      1490 |     ) -> (node: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1488: error: fn_missing_wf_ensures - fn make_node_treap_st — ensures should include node.spec_bsttreapsteph_wf() for return type BSTTreapStEph
-      1480 |         fn default() -> (d: Self)
+      1493 | 
+      1494 |     /// Build a new tree from (left, key, priority, right) maintaining BST ordering.
+      1496 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
+      1497 |     ) -> (node: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:1536: error: fn_missing_requires - fn tree_priority_st — exec fn should have requires
+      1495 |     fn make_node_treap_st<T: StT + Ord + IsLtTransitive>(
             ...
-      1486 | 
-      1487 |     /// Build a new tree from (left, key, priority, right) maintaining BST ordering.
-      1489 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
-      1490 |     ) -> (node: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1529: error: fn_missing_requires - fn tree_priority_st — exec fn should have requires
-      1488 |     fn make_node_treap_st<T: StT + Ord + IsLtTransitive>(
+      1534 | 
+      1535 |     /// Read the priority of a tree's root node (i64::MIN for empty).
+      1537 |         ensures true,
+      1538 |     {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:1546: error: fn_missing_wf_requires - fn expose_to_parts_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1536 |     fn tree_priority_st<T: StT + Ord + IsLtTransitive>(tree: &BSTTreapStEph<T>) -> (p: u64)
             ...
-      1527 | 
-      1528 |     /// Read the priority of a tree's root node (i64::MIN for empty).
-      1530 |         ensures true,
-      1531 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1539: error: fn_missing_wf_requires - fn expose_to_parts_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      1529 |     fn tree_priority_st<T: StT + Ord + IsLtTransitive>(tree: &BSTTreapStEph<T>) -> (p: u64)
+      1544 | 
+      1545 |     /// Expose a tree into its constituent parts. Consumes the tree.
+      1547 |         requires
+      1548 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:1581: error: fn_missing_wf_requires - fn join_with_priority_st — requires should include left.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1546 |     fn expose_to_parts_st<T: StT + Ord + IsLtTransitive>(tree: BSTTreapStEph<T>) -> (parts: Option<(BSTTreapStEph<T>, T, u64, BSTTreapStEph<T>)>)
             ...
-      1537 | 
-      1538 |     /// Expose a tree into its constituent parts. Consumes the tree.
-      1540 |         requires
-      1541 |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1574: error: fn_missing_wf_requires - fn join_with_priority_st — requires should include left.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      1539 |     fn expose_to_parts_st<T: StT + Ord + IsLtTransitive>(tree: BSTTreapStEph<T>) -> (parts: Option<(BSTTreapStEph<T>, T, u64, BSTTreapStEph<T>)>)
+      1579 | 
+      1580 |     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority.
+      1582 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
+      1583 |     ) -> (result: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:1581: error: fn_missing_wf_requires - fn join_with_priority_st — requires should include right.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1546 |     fn expose_to_parts_st<T: StT + Ord + IsLtTransitive>(tree: BSTTreapStEph<T>) -> (parts: Option<(BSTTreapStEph<T>, T, u64, BSTTreapStEph<T>)>)
             ...
-      1572 | 
-      1573 |     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority.
-      1575 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
-      1576 |     ) -> (result: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1574: error: fn_missing_wf_requires - fn join_with_priority_st — requires should include right.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      1539 |     fn expose_to_parts_st<T: StT + Ord + IsLtTransitive>(tree: BSTTreapStEph<T>) -> (parts: Option<(BSTTreapStEph<T>, T, u64, BSTTreapStEph<T>)>)
+      1579 | 
+      1580 |     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority.
+      1582 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
+      1583 |     ) -> (result: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:1581: error: fn_missing_wf_ensures - fn join_with_priority_st — ensures should include result.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+      1546 |     fn expose_to_parts_st<T: StT + Ord + IsLtTransitive>(tree: BSTTreapStEph<T>) -> (parts: Option<(BSTTreapStEph<T>, T, u64, BSTTreapStEph<T>)>)
             ...
-      1572 | 
-      1573 |     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority.
-      1575 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
-      1576 |     ) -> (result: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1574: error: fn_missing_wf_ensures - fn join_with_priority_st — ensures should include result.spec_bsttreapsteph_wf() for return type BSTTreapStEph
-      1539 |     fn expose_to_parts_st<T: StT + Ord + IsLtTransitive>(tree: BSTTreapStEph<T>) -> (parts: Option<(BSTTreapStEph<T>, T, u64, BSTTreapStEph<T>)>)
+      1579 | 
+      1580 |     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority.
+      1582 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
+      1583 |     ) -> (result: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:1672: error: fn_missing_wf_requires - fn split_inner_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1581 |     fn join_with_priority_st<T: StT + Ord + IsLtTransitive>(
             ...
-      1572 | 
-      1573 |     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority.
-      1575 |         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
-      1576 |     ) -> (result: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1665: error: fn_missing_wf_requires - fn split_inner_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      1574 |     fn join_with_priority_st<T: StT + Ord + IsLtTransitive>(
+      1670 |     }
+      1671 | 
+      1673 |         tree: BSTTreapStEph<T>, key: &T,
+      1674 |     ) -> (parts: (BSTTreapStEph<T>, bool, BSTTreapStEph<T>))
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:1852: error: fn_missing_wf_requires - fn join_pair_inner_st — requires should include left.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1672 |     fn split_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      1663 |     }
-      1664 | 
-      1666 |         tree: BSTTreapStEph<T>, key: &T,
-      1667 |     ) -> (parts: (BSTTreapStEph<T>, bool, BSTTreapStEph<T>))
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1845: error: fn_missing_wf_requires - fn join_pair_inner_st — requires should include left.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      1665 |     fn split_inner_st<T: StT + Ord + IsLtTransitive>(
+      1850 |     }
+      1851 | 
+      1853 |         left: BSTTreapStEph<T>, right: BSTTreapStEph<T>,
+      1854 |     ) -> (joined: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:1852: error: fn_missing_wf_requires - fn join_pair_inner_st — requires should include right.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1672 |     fn split_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      1843 |     }
-      1844 | 
-      1846 |         left: BSTTreapStEph<T>, right: BSTTreapStEph<T>,
-      1847 |     ) -> (joined: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1845: error: fn_missing_wf_requires - fn join_pair_inner_st — requires should include right.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      1665 |     fn split_inner_st<T: StT + Ord + IsLtTransitive>(
+      1850 |     }
+      1851 | 
+      1853 |         left: BSTTreapStEph<T>, right: BSTTreapStEph<T>,
+      1854 |     ) -> (joined: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:1852: error: fn_missing_wf_ensures - fn join_pair_inner_st — ensures should include joined.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+      1672 |     fn split_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      1843 |     }
-      1844 | 
-      1846 |         left: BSTTreapStEph<T>, right: BSTTreapStEph<T>,
-      1847 |     ) -> (joined: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:1845: error: fn_missing_wf_ensures - fn join_pair_inner_st — ensures should include joined.spec_bsttreapsteph_wf() for return type BSTTreapStEph
-      1665 |     fn split_inner_st<T: StT + Ord + IsLtTransitive>(
+      1850 |     }
+      1851 | 
+      1853 |         left: BSTTreapStEph<T>, right: BSTTreapStEph<T>,
+      1854 |     ) -> (joined: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:2042: error: fn_missing_wf_requires - fn union_inner_st — requires should include a.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1852 |     fn join_pair_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      1843 |     }
-      1844 | 
-      1846 |         left: BSTTreapStEph<T>, right: BSTTreapStEph<T>,
-      1847 |     ) -> (joined: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2035: error: fn_missing_wf_requires - fn union_inner_st — requires should include a.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      1845 |     fn join_pair_inner_st<T: StT + Ord + IsLtTransitive>(
+      2040 |     }
+      2041 | 
+      2043 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2044 |     ) -> (combined: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:2042: error: fn_missing_wf_requires - fn union_inner_st — requires should include b.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      1852 |     fn join_pair_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      2033 |     }
-      2034 | 
-      2036 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
-      2037 |     ) -> (combined: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2035: error: fn_missing_wf_requires - fn union_inner_st — requires should include b.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      1845 |     fn join_pair_inner_st<T: StT + Ord + IsLtTransitive>(
+      2040 |     }
+      2041 | 
+      2043 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2044 |     ) -> (combined: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:2042: error: fn_missing_wf_ensures - fn union_inner_st — ensures should include combined.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+      1852 |     fn join_pair_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      2033 |     }
-      2034 | 
-      2036 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
-      2037 |     ) -> (combined: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2035: error: fn_missing_wf_ensures - fn union_inner_st — ensures should include combined.spec_bsttreapsteph_wf() for return type BSTTreapStEph
-      1845 |     fn join_pair_inner_st<T: StT + Ord + IsLtTransitive>(
+      2040 |     }
+      2041 | 
+      2043 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2044 |     ) -> (combined: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:2194: error: fn_missing_wf_requires - fn intersect_inner_st — requires should include a.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      2042 |     fn union_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      2033 |     }
-      2034 | 
-      2036 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
-      2037 |     ) -> (combined: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2187: error: fn_missing_wf_requires - fn intersect_inner_st — requires should include a.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      2035 |     fn union_inner_st<T: StT + Ord + IsLtTransitive>(
+      2192 |     }
+      2193 | 
+      2195 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2196 |     ) -> (common: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:2194: error: fn_missing_wf_requires - fn intersect_inner_st — requires should include b.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      2042 |     fn union_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      2185 |     }
-      2186 | 
-      2188 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
-      2189 |     ) -> (common: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2187: error: fn_missing_wf_requires - fn intersect_inner_st — requires should include b.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      2035 |     fn union_inner_st<T: StT + Ord + IsLtTransitive>(
+      2192 |     }
+      2193 | 
+      2195 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2196 |     ) -> (common: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:2194: error: fn_missing_wf_ensures - fn intersect_inner_st — ensures should include common.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+      2042 |     fn union_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      2185 |     }
-      2186 | 
-      2188 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
-      2189 |     ) -> (common: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2187: error: fn_missing_wf_ensures - fn intersect_inner_st — ensures should include common.spec_bsttreapsteph_wf() for return type BSTTreapStEph
-      2035 |     fn union_inner_st<T: StT + Ord + IsLtTransitive>(
+      2192 |     }
+      2193 | 
+      2195 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2196 |     ) -> (common: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:2345: error: fn_missing_wf_requires - fn difference_inner_st — requires should include a.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      2194 |     fn intersect_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      2185 |     }
-      2186 | 
-      2188 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
-      2189 |     ) -> (common: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2338: error: fn_missing_wf_requires - fn difference_inner_st — requires should include a.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      2187 |     fn intersect_inner_st<T: StT + Ord + IsLtTransitive>(
+      2343 |     }
+      2344 | 
+      2346 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2347 |     ) -> (remaining: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:2345: error: fn_missing_wf_requires - fn difference_inner_st — requires should include b.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      2194 |     fn intersect_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      2336 |     }
-      2337 | 
-      2339 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
-      2340 |     ) -> (remaining: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2338: error: fn_missing_wf_requires - fn difference_inner_st — requires should include b.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      2187 |     fn intersect_inner_st<T: StT + Ord + IsLtTransitive>(
+      2343 |     }
+      2344 | 
+      2346 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2347 |     ) -> (remaining: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:2345: error: fn_missing_wf_ensures - fn difference_inner_st — ensures should include remaining.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+      2194 |     fn intersect_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      2336 |     }
-      2337 | 
-      2339 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
-      2340 |     ) -> (remaining: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2338: error: fn_missing_wf_ensures - fn difference_inner_st — ensures should include remaining.spec_bsttreapsteph_wf() for return type BSTTreapStEph
-      2187 |     fn intersect_inner_st<T: StT + Ord + IsLtTransitive>(
+      2343 |     }
+      2344 | 
+      2346 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+      2347 |     ) -> (remaining: BSTTreapStEph<T>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:2506: error: fn_missing_wf_requires - fn filter_inner_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      2345 |     fn difference_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      2336 |     }
-      2337 | 
-      2339 |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
-      2340 |     ) -> (remaining: BSTTreapStEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2499: error: fn_missing_wf_requires - fn filter_inner_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      2338 |     fn difference_inner_st<T: StT + Ord + IsLtTransitive>(
+      2504 |     }
+      2505 | 
+      2507 |         tree: BSTTreapStEph<T>,
+      2508 |         predicate: &F,
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:2506: error: fn_missing_wf_ensures - fn filter_inner_st — ensures should include result.spec_bsttreapsteph_wf() for return type BSTTreapStEph
+      2345 |     fn difference_inner_st<T: StT + Ord + IsLtTransitive>(
             ...
-      2497 |     }
-      2498 | 
-      2500 |         tree: BSTTreapStEph<T>,
-      2501 |         predicate: &F,
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2499: error: fn_missing_wf_ensures - fn filter_inner_st — ensures should include result.spec_bsttreapsteph_wf() for return type BSTTreapStEph
-      2338 |     fn difference_inner_st<T: StT + Ord + IsLtTransitive>(
+      2504 |     }
+      2505 | 
+      2507 |         tree: BSTTreapStEph<T>,
+      2508 |         predicate: &F,
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:2638: error: fn_missing_wf_requires - fn reduce_inner_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      2506 |     fn filter_inner_st<T: StT + Ord + IsLtTransitive, F: Fn(&T) -> bool>(
             ...
-      2497 |     }
-      2498 | 
-      2500 |         tree: BSTTreapStEph<T>,
-      2501 |         predicate: &F,
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2631: error: fn_missing_wf_requires - fn reduce_inner_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      2499 |     fn filter_inner_st<T: StT + Ord + IsLtTransitive, F: Fn(&T) -> bool>(
+      2636 |     }
+      2637 | 
+      2639 |         tree: BSTTreapStEph<T>, op: &F, identity: T,
+      2640 |     ) -> (result: T)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:2669: error: fn_missing_wf_requires - fn collect_in_order_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
+      2638 |     fn reduce_inner_st<T: StT + Ord + IsLtTransitive, F: Fn(T, T) -> T>(
             ...
-      2629 |     }
-      2630 | 
-      2632 |         tree: BSTTreapStEph<T>, op: &F, identity: T,
-      2633 |     ) -> (result: T)
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:2662: error: fn_missing_wf_requires - fn collect_in_order_st — requires should include tree.spec_bsttreapsteph_wf() for input type BSTTreapStEph
-      2631 |     fn reduce_inner_st<T: StT + Ord + IsLtTransitive, F: Fn(T, T) -> T>(
-            ...
-      2660 |     }
-      2661 | 
-      2663 |         tree: BSTTreapStEph<T>, out: &mut Vec<T>,
-      2664 |     )
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:142: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:152: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:375: info: structural_false_positive OPAQUE_EXTERNAL priority_for_st — #[verifier::external_body] [medium]
-   Holes: 1 total
-      1 × assume()
-   Info: 1 × structural_false_positive
-      1 × OPAQUE_EXTERNAL
+      2667 |     }
+      2668 | 
+      2670 |         tree: BSTTreapStEph<T>, out: &mut Vec<T>,
+      2671 |     )
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:149: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:159: info: accept()
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap39/BSTTreapStEph.rs:382: info: structural_false_positive OPAQUE_EXTERNAL priority_for_st — #[verifier::external_body] [medium]
    Info: 2 total
-   Proof functions: 28 total (28 clean, 0 holed)
 
 =================================================================
 2. Depends Upon
@@ -265,9 +253,8 @@ Function Specs:
    173 total fns
 
 
-Holes Found: 1 (actionable)
-   1 × assume() [algorithmic] (100%)
-Real Proof Targets: 1 (all actionable)
+Holes Found: 0 (actionable)
+Real Proof Targets: 0 (all actionable)
 
 Warnings: 27 total
    1 × fn_missing_requires
@@ -280,12 +267,14 @@ Accepted (reviewed): 2 total
 Structural (info only): 1
    1 × OPAQUE_EXTERNAL
 
+No proof holes found! All proofs are complete.
+
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-24 08:11:06 -07:00
-Ended:     2026-03-24 08:11:06 -07:00
-Duration:  57ms
+Started:   2026-03-24 12:53:10 -07:00
+Ended:     2026-03-24 12:53:10 -07:00
+Duration:  58ms
 
 Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log

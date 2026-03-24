@@ -32,6 +32,7 @@ pub mod OrderedSetStEph {
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger};
 
@@ -781,8 +782,7 @@ broadcast use {
                 vstd::set_lib::lemma_len_subset(mid@, self@);
             }
             if found_k1 {
-                let k1_clone = k1.clone();
-                proof { assume(k1_clone@ == k1@); }
+                let k1_clone = k1.clone_plus();
                 result_tree.insert(k1_clone);
             }
             // After first insert: result_tree@ ⊂ self@, len bound for second insert.
@@ -797,8 +797,7 @@ broadcast use {
                 vstd::set_lib::lemma_len_subset(result_tree@, self@);
             }
             if found_k2 {
-                let k2_clone = k2.clone();
-                proof { assume(k2_clone@ == k2@); }
+                let k2_clone = k2.clone_plus();
                 result_tree.insert(k2_clone);
             }
             proof {
@@ -907,137 +906,31 @@ broadcast use {
     // 10. iterators
 
     impl<T: StT + Ord + TotalOrder> OrderedSetStEph<T> {
-        /// Returns an iterator over the set elements in sorted order.
-        pub fn iter(&self) -> (it: OrderedSetStEphIter<'_, T>)
+        /// Returns a consuming iterator over the set elements in sorted order.
+        pub fn iter(&self) -> (it: std::vec::IntoIter<T>)
             requires self.spec_orderedsetsteph_wf(),
+            ensures
+                it@.0 == 0,
+                it@.1.len() == self@.len(),
         {
             let mut elements: Vec<T> = Vec::new();
             self.base_set.tree.collect_in_order(&mut elements);
-            let len = elements.len();
-            OrderedSetStEphIter { elements, pos: 0, len, phantom: core::marker::PhantomData }
-        }
-    }
-
-    #[verifier::reject_recursive_types(T)]
-    pub struct OrderedSetStEphIter<'a, T: StT + Ord + TotalOrder> {
-        pub elements: Vec<T>,
-        pub pos: usize,
-        pub len: usize,
-        pub phantom: core::marker::PhantomData<&'a T>,
-    }
-
-    impl<'a, T: StT + Ord + TotalOrder> View for OrderedSetStEphIter<'a, T> {
-        type V = (int, Seq<T::V>);
-        open spec fn view(&self) -> (int, Seq<T::V>) {
-            (self.pos as int, self.elements@.map_values(|t: T| t@))
-        }
-    }
-
-    pub open spec fn iter_invariant<'a, T: StT + Ord + TotalOrder>(it: &OrderedSetStEphIter<'a, T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<'a, T: StT + Ord + TotalOrder> std::iter::Iterator for OrderedSetStEphIter<'a, T> {
-        type Item = &'a T;
-
-        #[verifier::external_body]
-        fn next(&mut self) -> (next: Option<&'a T>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element@ == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            if self.pos < self.len {
-                let ptr = &self.elements[self.pos] as *const T;
-                self.pos = self.pos + 1;
-                // Safety: elements are owned by the iterator and valid for 'a
-                // because the iterator lives at most as long as the borrowed set.
-                Some(unsafe { &*ptr })
-            } else {
-                None
-            }
-        }
-    }
-
-    #[verifier::reject_recursive_types(T)]
-    pub struct OrderedSetStEphGhostIterator<'a, T: StT + Ord + TotalOrder> {
-        pub pos: int,
-        pub elements: Seq<T::V>,
-        pub phantom: core::marker::PhantomData<&'a T>,
-    }
-
-    impl<'a, T: StT + Ord + TotalOrder> View for OrderedSetStEphGhostIterator<'a, T> {
-        type V = Seq<T::V>;
-
-        open spec fn view(&self) -> Seq<T::V> {
-            self.elements.take(self.pos)
-        }
-    }
-
-    impl<'a, T: StT + Ord + TotalOrder> vstd::pervasive::ForLoopGhostIteratorNew for OrderedSetStEphIter<'a, T> {
-        type GhostIter = OrderedSetStEphGhostIterator<'a, T>;
-        open spec fn ghost_iter(&self) -> OrderedSetStEphGhostIterator<'a, T> {
-            OrderedSetStEphGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
-        }
-    }
-
-    impl<'a, T: StT + Ord + TotalOrder> vstd::pervasive::ForLoopGhostIterator for OrderedSetStEphGhostIterator<'a, T> {
-        type ExecIter = OrderedSetStEphIter<'a, T>;
-        type Item = T::V;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &OrderedSetStEphIter<'a, T>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<T::V> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &OrderedSetStEphIter<'a, T>) -> OrderedSetStEphGhostIterator<'a, T> {
-            Self { pos: self.pos + 1, ..*self }
+            elements.into_iter()
         }
     }
 
     impl<'a, T: StT + Ord + TotalOrder> std::iter::IntoIterator for &'a OrderedSetStEph<T> {
-        type Item = &'a T;
-        type IntoIter = OrderedSetStEphIter<'a, T>;
+        type Item = T;
+        type IntoIter = std::vec::IntoIter<T>;
         fn into_iter(self) -> (it: Self::IntoIter)
             requires self.spec_orderedsetsteph_wf(),
+            ensures
+                it@.0 == 0,
+                it@.1.len() == self@.len(),
         {
             let mut elements: Vec<T> = Vec::new();
             self.base_set.tree.collect_in_order(&mut elements);
-            let len = elements.len();
-            OrderedSetStEphIter { elements, pos: 0, len, phantom: core::marker::PhantomData }
+            elements.into_iter()
         }
     }
 
