@@ -33,6 +33,7 @@ pub mod BSTTreapStEph {
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::total_order::total_order::IsLtTransitive;
 
     verus! {
@@ -138,7 +139,7 @@ pub mod BSTTreapStEph {
         ensures c@ == x@,
     {
         let c = x.clone();
-        proof { assume(c@ == x@); } // eq/clone workaround: structural copy preserves view.
+        proof { accept(c@ == x@); } // eq/clone workaround: structural copy preserves view.
         c
     }
 
@@ -148,7 +149,7 @@ pub mod BSTTreapStEph {
         ensures cloned@ =~= tree@, spec_param_wf_link(&cloned.root),
     {
         let cloned = tree.clone();
-        proof { assume(cloned@ =~= tree@ && spec_param_wf_link(&cloned.root)); } // eq/clone workaround.
+        proof { accept(cloned@ =~= tree@ && spec_param_wf_link(&cloned.root)); } // eq/clone workaround.
         cloned
     }
 
