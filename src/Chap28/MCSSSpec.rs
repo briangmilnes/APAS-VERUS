@@ -1,5 +1,4 @@
-// Copyright (C) 2025 Brian G. Milnes
-// SPDX-License-Identifier: MIT
+// Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
 //! Shared specifications for Maximum Contiguous Subsequence Sum (Chapter 28).
 //!

@@ -1,5 +1,5 @@
-// Copyright (C) 2025 Brian G. Milnes
-// SPDX-License-Identifier: MIT
+// Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+
 //! Maximum Contiguous Subsequence Sum — Work Optimal (Chapter 28, Algorithm 28.16).
 //!
 //! ## Table of Contents
