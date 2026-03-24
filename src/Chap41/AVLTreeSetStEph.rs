@@ -214,7 +214,10 @@ broadcast use {
                 tree.spec_avltreesetsteph_wf();
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
-            requires seq.spec_avltreeseqsteph_wf(),
+            requires
+                seq.spec_avltreeseqsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures
                 constructed@ =~= seq@.to_set(),
                 constructed.spec_avltreesetsteph_wf();
@@ -226,6 +229,8 @@ broadcast use {
         ) -> (filtered: Self)
             requires
                 self.spec_avltreesetsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
                 forall|t: &T| #[trigger] f.requires((t,)),
                 forall|x: T, keep: bool|
                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
@@ -238,13 +243,21 @@ broadcast use {
                     ==> #[trigger] filtered@.contains(v);
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         fn intersection(&self, other: &Self) -> (common: Self)
-            requires self.spec_avltreesetsteph_wf(), other.spec_avltreesetsteph_wf(),
+            requires
+                self.spec_avltreesetsteph_wf(),
+                other.spec_avltreesetsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures
                 common@ == self@.intersect(other@),
                 common.spec_avltreesetsteph_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         fn difference(&self, other: &Self) -> (remaining: Self)
-            requires self.spec_avltreesetsteph_wf(), other.spec_avltreesetsteph_wf(),
+            requires
+                self.spec_avltreesetsteph_wf(),
+                other.spec_avltreesetsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures
                 remaining@ == self@.difference(other@),
                 remaining.spec_avltreesetsteph_wf();
@@ -253,17 +266,25 @@ broadcast use {
             requires
                 self.spec_avltreesetsteph_wf(),
                 other.spec_avltreesetsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
                 self@.len() + other@.len() < usize::MAX as nat,
             ensures
                 combined@ == self@.union(other@),
                 combined.spec_avltreesetsteph_wf();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         fn find(&self, x: &T) -> (found: B)
-            requires self.spec_avltreesetsteph_wf(),
+            requires
+                self.spec_avltreesetsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures found == self@.contains(x@);
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         fn delete(&mut self, x: &T)
-            requires old(self).spec_avltreesetsteph_wf(),
+            requires
+                old(self).spec_avltreesetsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures
                 self@ == old(self)@.remove(x@),
                 self.spec_avltreesetsteph_wf();
@@ -271,25 +292,35 @@ broadcast use {
         fn insert(&mut self, x: T)
             requires
                 old(self).spec_avltreesetsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
                 old(self)@.len() + 1 < usize::MAX as nat,
             ensures
                 self@ == old(self)@.insert(x@),
                 self.spec_avltreesetsteph_wf();
         /// Iterative alternative to `find`.
         fn find_iter(&self, x: &T) -> (found: B)
-            requires self.spec_avltreesetsteph_wf(),
+            requires
+                self.spec_avltreesetsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures found == self@.contains(x@);
         /// Iterative alternative to `insert`.
         fn insert_iter(&mut self, x: T)
             requires
                 old(self).spec_avltreesetsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
                 old(self)@.len() + 1 < usize::MAX as nat,
             ensures
                 self@ == old(self)@.insert(x@),
                 self.spec_avltreesetsteph_wf();
         /// Iterative alternative to `delete`.
         fn delete_iter(&mut self, x: &T)
-            requires old(self).spec_avltreesetsteph_wf(),
+            requires
+                old(self).spec_avltreesetsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures
                 self@ == old(self)@.remove(x@),
                 self.spec_avltreesetsteph_wf();
@@ -301,6 +332,8 @@ broadcast use {
         ) -> (filtered: Self)
             requires
                 self.spec_avltreesetsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
                 forall|t: &T| #[trigger] f.requires((t,)),
                 forall|x: T, keep: bool|
                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
@@ -313,7 +346,11 @@ broadcast use {
                     ==> #[trigger] filtered@.contains(v);
         /// Iterative alternative to `intersection`.
         fn intersection_iter(&self, other: &Self) -> (common: Self)
-            requires self.spec_avltreesetsteph_wf(), other.spec_avltreesetsteph_wf(),
+            requires
+                self.spec_avltreesetsteph_wf(),
+                other.spec_avltreesetsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures
                 common@ == self@.intersect(other@),
                 common.spec_avltreesetsteph_wf();
@@ -322,13 +359,19 @@ broadcast use {
             requires
                 self.spec_avltreesetsteph_wf(),
                 other.spec_avltreesetsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
                 self@.len() + other@.len() < usize::MAX as nat,
             ensures
                 combined@ == self@.union(other@),
                 combined.spec_avltreesetsteph_wf();
         /// Iterative alternative to `difference`.
         fn difference_iter(&self, other: &Self) -> (remaining: Self)
-            requires self.spec_avltreesetsteph_wf(), other.spec_avltreesetsteph_wf(),
+            requires
+                self.spec_avltreesetsteph_wf(),
+                other.spec_avltreesetsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures
                 remaining@ == self@.difference(other@),
                 remaining.spec_avltreesetsteph_wf();
@@ -344,6 +387,8 @@ broadcast use {
             requires
                 old(self).spec_avltreesetsteph_wf(),
                 old(self).spec_elements_sorted(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
                 old(self)@.len() + 1 < usize::MAX as nat,
             ensures
                 self@ == old(self)@.insert(x@),
@@ -354,6 +399,8 @@ broadcast use {
             requires
                 old(self).spec_avltreesetsteph_wf(),
                 old(self).spec_elements_sorted(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures
                 self@ == old(self)@.remove(x@),
                 self.spec_avltreesetsteph_wf(),
@@ -367,6 +414,8 @@ broadcast use {
             requires
                 self.spec_avltreesetsteph_wf(),
                 self.spec_elements_sorted(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
                 forall|t: &T| #[trigger] f.requires((t,)),
                 forall|x: T, keep: bool|
                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
@@ -384,6 +433,8 @@ broadcast use {
                 self.spec_avltreesetsteph_wf(),
                 self.spec_elements_sorted(),
                 other.spec_avltreesetsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures
                 common@ == self@.intersect(other@),
                 common.spec_avltreesetsteph_wf(),
@@ -394,6 +445,8 @@ broadcast use {
                 self.spec_avltreesetsteph_wf(),
                 self.spec_elements_sorted(),
                 other.spec_avltreesetsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures
                 remaining@ == self@.difference(other@),
                 remaining.spec_avltreesetsteph_wf(),
@@ -404,6 +457,8 @@ broadcast use {
                 self.spec_avltreesetsteph_wf(),
                 self.spec_elements_sorted(),
                 other.spec_avltreesetsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
                 self@.len() + other@.len() < usize::MAX as nat,
             ensures
                 combined@ == self@.union(other@),
@@ -417,8 +472,6 @@ broadcast use {
         open spec fn spec_avltreesetsteph_wf(&self) -> bool {
             self.tree.spec_bstparasteph_wf()
             && self@.len() < usize::MAX as nat
-            && vstd::laws_cmp::obeys_cmp_spec::<T>()
-            && view_ord_consistent::<T>()
         }
 
         fn size(&self) -> (count: usize)
@@ -481,6 +534,8 @@ broadcast use {
                     i <= n,
                     constructed.spec_avltreesetsteph_wf(),
                     constructed@.len() <= i as nat,
+                    vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                    view_ord_consistent::<T>(),
                     forall|j: int| 0 <= j < i ==> #[trigger] constructed@.contains(seq@[j]),
                     forall|v: <T as View>::V| #[trigger] constructed@.contains(v) ==>
                         (exists|j: int| 0 <= j < i && seq@[j] == v),
@@ -712,6 +767,8 @@ broadcast use {
             proof {
                 assume(self.spec_avltreesetsteph_wf());
                 assume(other.spec_avltreesetsteph_wf());
+                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
+                assume(view_ord_consistent::<T>());
             }
             let equal = self.size() == other.size() && self.difference(other).size() == 0;
             proof { assume(equal == (self@ == other@)); }
