@@ -908,8 +908,12 @@ broadcast use {
 
     impl<T: StT + Ord + TotalOrder> OrderedSetStEph<T> {
         /// Returns an iterator over the set elements in sorted order.
+        #[verifier::external_body]
         pub fn iter(&self) -> (it: OrderedSetStEphIter<'_, T>)
             requires self.spec_orderedsetsteph_wf(),
+            ensures
+                it@.0 == 0,
+                iter_invariant(&it),
         {
             let mut elements: Vec<T> = Vec::new();
             self.base_set.tree.collect_in_order(&mut elements);
@@ -1031,8 +1035,12 @@ broadcast use {
     impl<'a, T: StT + Ord + TotalOrder> std::iter::IntoIterator for &'a OrderedSetStEph<T> {
         type Item = &'a T;
         type IntoIter = OrderedSetStEphIter<'a, T>;
+        #[verifier::external_body]
         fn into_iter(self) -> (it: Self::IntoIter)
             requires self.spec_orderedsetsteph_wf(),
+            ensures
+                it@.0 == 0,
+                iter_invariant(&it),
         {
             let mut elements: Vec<T> = Vec::new();
             self.base_set.tree.collect_in_order(&mut elements);
@@ -1123,6 +1131,30 @@ broadcast use {
                 write!(f, "{}", v[i])?;
             }
             write!(f, "}}")
+        }
+    }
+
+    impl<'a, T: StT + Ord + TotalOrder> fmt::Debug for OrderedSetStEphIter<'a, T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedSetStEphIter(pos={}, len={})", self.pos, self.len)
+        }
+    }
+
+    impl<'a, T: StT + Ord + TotalOrder> fmt::Display for OrderedSetStEphIter<'a, T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedSetStEphIter(pos={}, len={})", self.pos, self.len)
+        }
+    }
+
+    impl<'a, T: StT + Ord + TotalOrder> fmt::Debug for OrderedSetStEphGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedSetStEphGhostIterator")
+        }
+    }
+
+    impl<'a, T: StT + Ord + TotalOrder> fmt::Display for OrderedSetStEphGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedSetStEphGhostIterator")
         }
     }
 }

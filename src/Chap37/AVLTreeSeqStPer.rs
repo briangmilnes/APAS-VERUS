@@ -11,6 +11,7 @@
 // 7. proof fns
 // 8. traits
 // 9. impls
+// 10. iterators
 // 11. derive impls in verus!
 // 13. derive impls outside verus!
 
@@ -69,6 +70,15 @@ pub mod AVLTreeSeqStPer {
     pub struct AVLTreeSeqStPerIter<'a, T: StT> {
         pub stack: Vec<&'a Node<T>>,
         pub current: Option<&'a Node<T>>,
+        pub elements: Ghost<Seq<T::V>>,
+        pub pos: Ghost<int>,
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct AVLTreeSeqStPerGhostIterator<'a, T: StT> {
+        pub pos: int,
+        pub elements: Seq<T::V>,
+        pub phantom: core::marker::PhantomData<&'a T>,
     }
 
     // 5. view impls
@@ -80,7 +90,25 @@ pub mod AVLTreeSeqStPer {
         }
     }
 
+    impl<'a, T: StT> View for AVLTreeSeqStPerIter<'a, T> {
+        type V = (int, Seq<T::V>);
+        open spec fn view(&self) -> (int, Seq<T::V>) {
+            (self.pos@, self.elements@)
+        }
+    }
+
+    impl<'a, T: StT> View for AVLTreeSeqStPerGhostIterator<'a, T> {
+        type V = Seq<T::V>;
+        open spec fn view(&self) -> Seq<T::V> {
+            self.elements.take(self.pos)
+        }
+    }
+
     // 6. spec fns
+
+    pub open spec fn avltreeseqstper_iter_invariant<'a, T: StT>(it: &AVLTreeSeqStPerIter<'a, T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
 
     /// In-order traversal of the tree as a sequence of element views.
     pub open spec fn spec_inorder<T: StT>(link: Link<T>) -> Seq<T::V>
@@ -257,7 +285,11 @@ pub mod AVLTreeSeqStPer {
                 seq.spec_len() == self.spec_seq().len();
 
         fn iter<'a>(&'a self) -> (it: AVLTreeSeqStPerIter<'a, T>)
-            ensures true;
+            requires self.spec_avltreeseqstper_wf(),
+            ensures
+                it@.0 == 0,
+                it@.1 == self.spec_seq(),
+                avltreeseqstper_iter_invariant(&it);
     }
 
     // 9. impls
@@ -769,6 +801,7 @@ pub mod AVLTreeSeqStPer {
             ArraySeqStPerS::from_vec(v)
         }
 
+        #[verifier::external_body]
         fn iter<'a>(&'a self) -> (it: AVLTreeSeqStPerIter<'a, T>)
         {
             let current = match &self.root {
@@ -778,20 +811,14 @@ pub mod AVLTreeSeqStPer {
             AVLTreeSeqStPerIter {
                 stack: Vec::new(),
                 current,
+                elements: Ghost(self.spec_seq()),
+                pos: Ghost(0int),
             }
         }
     }
 
     impl<T: StT> Default for AVLTreeSeqStPerS<T> {
         fn default() -> Self { Self::empty() }
-    }
-
-    // 11. derive impls in verus!
-
-    #[cfg(verus_keep_ghost)]
-    impl<T: StT> PartialEqSpecImpl for AVLTreeSeqStPerS<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
     // 10. iterators
@@ -811,20 +838,28 @@ pub mod AVLTreeSeqStPer {
         }
     }
 
-    impl<'a, T: StT> IntoIterator for &'a AVLTreeSeqStPerS<T> {
-        type Item = &'a T;
-        type IntoIter = AVLTreeSeqStPerIter<'a, T>;
-        fn into_iter(self) -> (it: AVLTreeSeqStPerIter<'a, T>)
-            ensures true,
-        {
-            self.iter()
-        }
-    }
-
     impl<'a, T: StT> Iterator for AVLTreeSeqStPerIter<'a, T> {
         type Item = &'a T;
+
+        #[verifier::external_body]
         fn next(&mut self) -> (next: Option<Self::Item>)
-            ensures true,
+            ensures
+                ({
+                    let (old_index, old_seq) = old(self)@;
+                    match next {
+                        None => {
+                            &&& self@ == old(self)@
+                            &&& old_index >= old_seq.len()
+                        },
+                        Some(element) => {
+                            let (new_index, new_seq) = self@;
+                            &&& 0 <= old_index < old_seq.len()
+                            &&& new_seq == old_seq
+                            &&& new_index == old_index + 1
+                            &&& element@ == old_seq[old_index]
+                        },
+                    }
+                }),
         {
             if self.current.is_some() {
                 let cur = self.current.take();
@@ -841,7 +876,75 @@ pub mod AVLTreeSeqStPer {
         }
     }
 
+    impl<'a, T: StT> vstd::pervasive::ForLoopGhostIteratorNew for AVLTreeSeqStPerIter<'a, T> {
+        type GhostIter = AVLTreeSeqStPerGhostIterator<'a, T>;
+
+        open spec fn ghost_iter(&self) -> AVLTreeSeqStPerGhostIterator<'a, T> {
+            AVLTreeSeqStPerGhostIterator { pos: self@.0, elements: self@.1, phantom: core::marker::PhantomData }
+        }
+    }
+
+    impl<'a, T: StT> vstd::pervasive::ForLoopGhostIterator for AVLTreeSeqStPerGhostIterator<'a, T> {
+        type ExecIter = AVLTreeSeqStPerIter<'a, T>;
+        type Item = T::V;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &AVLTreeSeqStPerIter<'a, T>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<T::V> {
+            if 0 <= self.pos < self.elements.len() {
+                Some(self.elements[self.pos])
+            } else {
+                None
+            }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &AVLTreeSeqStPerIter<'a, T>) -> AVLTreeSeqStPerGhostIterator<'a, T> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, T: StT> IntoIterator for &'a AVLTreeSeqStPerS<T> {
+        type Item = &'a T;
+        type IntoIter = AVLTreeSeqStPerIter<'a, T>;
+
+        #[verifier::external_body]
+        fn into_iter(self) -> (it: AVLTreeSeqStPerIter<'a, T>)
+            ensures
+                it@.0 == 0,
+                it@.1 == spec_inorder(self.root),
+                avltreeseqstper_iter_invariant(&it),
+        {
+            self.iter()
+        }
+    }
+
     // 11. derive impls in verus!
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: StT> PartialEqSpecImpl for AVLTreeSeqStPerS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
 
     impl<T: StT> Eq for AVLTreeSeqStPerS<T> {}
 
@@ -926,6 +1029,18 @@ pub mod AVLTreeSeqStPer {
     impl<'a, T: StT> Display for AVLTreeSeqStPerIter<'a, T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             write!(f, "AVLTreeSeqStPerIter")
+        }
+    }
+
+    impl<'a, T: StT> Debug for AVLTreeSeqStPerGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("AVLTreeSeqStPerGhostIterator").finish()
+        }
+    }
+
+    impl<'a, T: StT> Display for AVLTreeSeqStPerGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AVLTreeSeqStPerGhostIterator")
         }
     }
 
