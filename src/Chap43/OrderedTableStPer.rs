@@ -445,10 +445,26 @@ broadcast use {
             ensures count == self@.dom().len(), self@.dom().finite();
         /// - APAS: Work Θ(1), Span Θ(1)
         fn empty() -> (table: Self)
+            requires
+                obeys_feq_fulls::<K, V>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                view_ord_consistent::<Pair<K, V>>(),
+                spec_pair_key_determines_order::<K, V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                view_ord_consistent::<K>(),
             ensures table@ == Map::<K::V, V::V>::empty(), table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(1), Span Θ(1)
         fn singleton(k: K, v: V) -> (table: Self)
-            requires obeys_feq_clone::<Pair<K, V>>(),
+            requires
+                obeys_feq_clone::<Pair<K, V>>(),
+                obeys_feq_fulls::<K, V>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                view_ord_consistent::<Pair<K, V>>(),
+                spec_pair_key_determines_order::<K, V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                view_ord_consistent::<K>(),
             ensures table@ == Map::<K::V, V::V>::empty().insert(k@, v@), table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         fn find(&self, k: &K) -> (found: Option<V>)
@@ -485,6 +501,13 @@ broadcast use {
                 forall|k: &K| f.requires((k,)),
                 obeys_feq_full::<K>(),
                 keys@.len() < usize::MAX,
+                obeys_feq_fulls::<K, V>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                view_ord_consistent::<Pair<K, V>>(),
+                spec_pair_key_determines_order::<K, V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                view_ord_consistent::<K>(),
             ensures
                 table@.dom() =~= keys@,
                 table.spec_orderedtablestper_wf(),
@@ -819,13 +842,6 @@ broadcast use {
             let tree = ParamBST::<Pair<K, V>>::new();
             proof {
                 lemma_set_to_map_empty::<K::V, V::V>();
-                assume(obeys_feq_fulls::<K, V>());
-                assume(obeys_feq_full::<Pair<K, V>>());
-                assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
-                assume(view_ord_consistent::<Pair<K, V>>());
-                assume(spec_pair_key_determines_order::<K, V>());
-                assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-                assume(view_ord_consistent::<K>());
             }
             OrderedTableStPer { tree }
         }
@@ -838,13 +854,6 @@ broadcast use {
                 lemma_set_to_map_empty::<K::V, V::V>();
                 lemma_set_to_map_insert(Set::empty(), k@, v@);
                 lemma_pair_set_to_map_dom_finite(s);
-                assume(obeys_feq_fulls::<K, V>());
-                assume(obeys_feq_full::<Pair<K, V>>());
-                assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
-                assume(view_ord_consistent::<Pair<K, V>>());
-                assume(spec_pair_key_determines_order::<K, V>());
-                assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-                assume(view_ord_consistent::<K>());
             }
             OrderedTableStPer { tree: bst }
         }
@@ -1002,8 +1011,6 @@ broadcast use {
             proof {
                 assert(obeys_feq_full_trigger::<K>());
                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
-                assume(vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>());
-                assume(view_ord_consistent::<Pair<K, V>>());
             }
             let seq = keys.to_seq();
             let len = seq.length();
@@ -1120,10 +1127,6 @@ broadcast use {
                     assert(f.ensures((&ka,), rv));
                     lemma_pair_in_set_map_contains(tree@, key, rv@);
                 };
-                assume(spec_pair_key_determines_order::<K, V>());
-                assume(vstd::laws_cmp::obeys_cmp_spec::<K>());
-                assume(view_ord_consistent::<K>());
-                assume(obeys_feq_fulls::<K, V>());
             }
             tabulated
         }
