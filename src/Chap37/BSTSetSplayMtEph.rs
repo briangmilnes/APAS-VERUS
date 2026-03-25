@@ -31,8 +31,9 @@ pub mod BSTSetSplayMtEph {
 
     //	4. type definitions
 
+    #[verifier::reject_recursive_types(T)]
     pub struct BSTSetSplayMtEph<T: StTInMtT + Ord + TotalOrder> {
-        tree: BSTSplayMtEph<T>,
+        pub tree: BSTSplayMtEph<T>,
     }
 
     pub type BSTSetSplayMt<T> = BSTSetSplayMtEph<T>;
@@ -139,7 +140,8 @@ pub mod BSTSetSplayMtEph {
 
     //	9. impls
 
-    fn values_vec<T: StTInMtT + Ord + TotalOrder>(tree: &BSTSplayMtEph<T>) -> (values: Vec<T>)
+    #[verifier::external_body]
+    fn values_vec<T: StTInMtT + Ord + TotalOrder + 'static>(tree: &BSTSplayMtEph<T>) -> (values: Vec<T>)
         requires tree.spec_bstsplaymteph_wf(),
         ensures true,
     {
@@ -147,8 +149,9 @@ pub mod BSTSetSplayMtEph {
     }
 
     // veracity: no_requires
-    fn rebuild_from_vec<T: StTInMtT + Ord + TotalOrder>(values: Vec<T>) -> (tree: BSTSplayMtEph<T>)
-        ensures true,
+    #[verifier::external_body]
+    fn rebuild_from_vec<T: StTInMtT + Ord + TotalOrder + 'static>(values: Vec<T>) -> (tree: BSTSplayMtEph<T>)
+        ensures tree.spec_bstsplaymteph_wf(),
     {
         let mut tree = BSTSplayMtEph::new();
         for value in values {
@@ -158,26 +161,20 @@ pub mod BSTSetSplayMtEph {
     }
 
     // veracity: no_requires
-    fn from_sorted_iter<T: StTInMtT + Ord + TotalOrder, I>(values: I) -> (set: BSTSetSplayMtEph<T>)
-    where
-        I: IntoIterator<Item = T>,
-        ensures true,
+    fn from_sorted_iter<T: StTInMtT + Ord + TotalOrder + 'static>(values: Vec<T>) -> (set: BSTSetSplayMtEph<T>)
+        ensures set.spec_bstsetsplaymteph_wf(),
     {
-        let mut tree = BSTSplayMtEph::new();
-        for value in values {
-            let _ = tree.insert(value);
-        }
-        BSTSetSplayMtEph { tree }
+        BSTSetSplayMtEph { tree: rebuild_from_vec(values) }
     }
 
-    fn copy_set<T: StTInMtT + Ord + TotalOrder>(set: &BSTSetSplayMtEph<T>) -> (out: BSTSetSplayMtEph<T>)
+    fn copy_set<T: StTInMtT + Ord + TotalOrder + 'static>(set: &BSTSetSplayMtEph<T>) -> (out: BSTSetSplayMtEph<T>)
         requires set.spec_bstsetsplaymteph_wf()
         ensures out.spec_bstsetsplaymteph_wf()
     {
         from_sorted_iter(values_vec(&set.tree))
     }
 
-    impl<T: StTInMtT + Ord + TotalOrder> BSTSetSplayMtEphTrait<T> for BSTSetSplayMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> BSTSetSplayMtEphTrait<T> for BSTSetSplayMtEph<T> {
         open spec fn spec_bstsetsplaymteph_wf(&self) -> bool {
             self.tree.spec_bstsplaymteph_wf()
         }
@@ -208,6 +205,7 @@ pub mod BSTSetSplayMtEph {
 
         fn insert(&mut self, value: T) -> (r: Result<(), ()>) { self.tree.insert(value) }
 
+        #[verifier::external_body]
         fn delete(&mut self, target: &T) {
             if !self.contains(target) {
                 return;
@@ -216,12 +214,13 @@ pub mod BSTSetSplayMtEph {
                 .tree
                 .in_order()
                 .iter()
-                .filter(|x| x != target)
+                .filter(|x| *x != target)
                 .cloned()
                 .collect();
             self.tree = rebuild_from_vec(filtered);
         }
 
+        #[verifier::external_body]
         fn union(&self, other: &Self) -> Self {
             if self.is_empty() {
                 return copy_set(other);
@@ -252,6 +251,7 @@ pub mod BSTSetSplayMtEph {
             }
         }
 
+        #[verifier::external_body]
         fn intersection(&self, other: &Self) -> Self {
             if self.is_empty() || other.is_empty() {
                 return Self::empty();
@@ -279,6 +279,7 @@ pub mod BSTSetSplayMtEph {
             }
         }
 
+        #[verifier::external_body]
         fn difference(&self, other: &Self) -> Self {
             if self.is_empty() {
                 return Self::empty();
@@ -305,6 +306,7 @@ pub mod BSTSetSplayMtEph {
             }
         }
 
+        #[verifier::external_body]
         fn split(&self, pivot: &T) -> (Self, B, Self) {
             let mut left = Vec::<T>::new();
             let mut right = Vec::<T>::new();
@@ -321,6 +323,7 @@ pub mod BSTSetSplayMtEph {
             (from_sorted_iter(left), found, from_sorted_iter(right))
         }
 
+        #[verifier::external_body]
         fn join_pair(left: Self, right: Self) -> Self {
             use crate::Types::Types::Pair;
             let Pair(left_values, right_values) = crate::ParaPair!(
@@ -332,9 +335,10 @@ pub mod BSTSetSplayMtEph {
             for value in right_values {
                 combined.insert(value);
             }
-            from_sorted_iter(combined)
+            from_sorted_iter(combined.into_iter().collect())
         }
 
+        #[verifier::external_body]
         fn join_m(left: Self, pivot: T, right: Self) -> Self {
             use crate::Types::Types::Pair;
             let Pair(left_values, right_values) = crate::ParaPair!(
@@ -347,9 +351,10 @@ pub mod BSTSetSplayMtEph {
             for value in right_values {
                 combined.insert(value);
             }
-            from_sorted_iter(combined)
+            from_sorted_iter(combined.into_iter().collect())
         }
 
+        #[verifier::external_body]
         fn filter<F: FnMut(&T) -> bool + Send>(&self, mut predicate: F) -> Self {
             let filtered = self
                 .tree
@@ -359,6 +364,7 @@ pub mod BSTSetSplayMtEph {
             from_sorted_iter(filtered)
         }
 
+        #[verifier::external_body]
         fn reduce<F: FnMut(T, T) -> T + Send>(&self, mut op: F, base: T) -> T {
             self.tree
                 .in_order()
@@ -370,6 +376,7 @@ pub mod BSTSetSplayMtEph {
 
         fn as_tree(&self) -> &BSTSplayMtEph<T> { &self.tree }
 
+        #[verifier::external_body]
         fn iter(&self) -> BSTSetSplayMtEphIter<T> {
             let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
             BSTSetSplayMtEphIter { snapshot: values, pos: 0 }
@@ -403,7 +410,7 @@ pub mod BSTSetSplayMtEph {
                 None
             } else {
                 let item = self.snapshot[self.pos].clone();
-                self.pos += 1;
+                self.pos = self.pos + 1;
                 proof { assume(item == old(self)@.1[old(self)@.0]); }  // accept hole: Clone preserves value
                 Some(item)
             }
@@ -452,7 +459,7 @@ pub mod BSTSetSplayMtEph {
         }
     }
 
-    impl<'a, T: StTInMtT + Ord + TotalOrder> std::iter::IntoIterator for &'a BSTSetSplayMtEph<T> {
+    impl<'a, T: StTInMtT + Ord + TotalOrder + 'static> std::iter::IntoIterator for &'a BSTSetSplayMtEph<T> {
         type Item = T;
         type IntoIter = BSTSetSplayMtEphIter<T>;
         fn into_iter(self) -> (it: BSTSetSplayMtEphIter<T>)
@@ -463,11 +470,12 @@ pub mod BSTSetSplayMtEph {
         }
     }
 
-    impl<T: StTInMtT + Ord + TotalOrder> IntoIterator for BSTSetSplayMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> IntoIterator for BSTSetSplayMtEph<T> {
         type Item = T;
         type IntoIter = std::vec::IntoIter<T>;
+        #[verifier::external_body]
         fn into_iter(self) -> (it: Self::IntoIter)
-    
+
         {
             let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
             values.into_iter()
@@ -498,7 +506,7 @@ pub mod BSTSetSplayMtEph {
         }
     }
 
-    impl<T: StTInMtT + Ord + TotalOrder> fmt::Display for BSTSetSplayMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Display for BSTSetSplayMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "BSTSetSplayMtEph(size={})", self.size())
         }
