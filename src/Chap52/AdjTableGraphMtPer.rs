@@ -11,6 +11,10 @@ pub mod AdjTableGraphMtPer {
     use crate::Chap43::OrderedTableMtPer::OrderedTableMtPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap43::OrderedTableStPer::OrderedTableStPer::spec_pair_key_determines_order;
 
     verus! {
 
@@ -76,6 +80,12 @@ broadcast use {
 
         /// Work Theta(1), Span Theta(1)
         fn empty() -> (out: Self)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<V, AVLTreeSetMtPer<V>>>(),
+                view_ord_consistent::<Pair<V, AVLTreeSetMtPer<V>>>(),
+                spec_pair_key_determines_order::<V, AVLTreeSetMtPer<V>>(),
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
             ensures out.spec_adjtablegraphmtper_wf();
         /// Work Theta(1), Span Theta(1)
         fn num_vertices(&self) -> N
