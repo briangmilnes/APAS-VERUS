@@ -22,12 +22,12 @@ Table of Contents:
 
 ✓ SpanTreeMtEph.rs
 ❌ SpanTreeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:53: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap64/SpanTreeStEph.rs:53: error: external_body - #[verifier::external_body]
         54 |     pub fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (result: SetStEph<Edge<V>>)
    Holes: 1 total
       1 × external_body
 ⚠ TSPApproxStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:84: error: fn_missing_requires - fn vec_contains_pair — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap64/TSPApproxStEph.rs:84: error: fn_missing_requires - fn vec_contains_pair — exec fn should have requires
         71 |         fn approx_metric_tsp<V: HashOrd>(
             ...
         82 | 
@@ -88,8 +88,9 @@ Warnings: 1 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-25 15:46:50 -07:00
-Ended:     2026-03-25 15:46:50 -07:00
-Duration:  10ms
+Started:   2026-03-25 16:33:36 -07:00
+Ended:     2026-03-25 16:33:36 -07:00
+Duration:  13ms
 
 Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
+analyses/veracity-review-verus-proof-holes.log

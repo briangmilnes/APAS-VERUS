@@ -83,6 +83,16 @@ pub mod BSTSplayMtEph {
         }
     }
 
+    /// Structural node count (recursive, independent of cached size field).
+    pub open spec fn link_node_count<T: StTInMtT + Ord + TotalOrder>(link: Link<T>) -> nat
+        decreases link,
+    {
+        match link {
+            None => 0nat,
+            Some(node) => 1 + link_node_count(node.left) + link_node_count(node.right),
+        }
+    }
+
     /// BST ordering invariant for splay tree links.
     pub open spec fn spec_is_bst_link<T: StTInMtT + Ord + TotalOrder>(link: Link<T>) -> bool
         decreases link,
@@ -96,6 +106,22 @@ pub mod BSTSplayMtEph {
                     TotalOrder::le(x, node.key) && x != node.key)
                 && (forall|x: T| (#[trigger] link_contains(node.right, x)) ==>
                     TotalOrder::le(node.key, x) && x != node.key)
+            }
+        }
+    }
+
+    // 7. proof fns
+
+    /// Height is bounded by structural node count.
+    proof fn lemma_height_le_node_count<T: StTInMtT + Ord + TotalOrder>(link: Link<T>)
+        ensures link_height(link) <= link_node_count(link),
+        decreases link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_height_le_node_count::<T>(node.left);
+                lemma_height_le_node_count::<T>(node.right);
             }
         }
     }
@@ -1451,11 +1477,38 @@ pub mod BSTSplayMtEph {
         out
     }
 
+    /// Recursive deep clone of a Link, bypassing derived Clone for Box/Option.
+    fn clone_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (c: Link<T>)
+        ensures c == *link,
+        decreases *link,
+    {
+        match link {
+            None => {
+                let c: Link<T> = None;
+                proof { assume(c == *link); }
+                c
+            }
+            Some(node) => {
+                let left = clone_link(&node.left);
+                let right = clone_link(&node.right);
+                let c = Some(Box::new(Node {
+                    key: node.key.clone(),
+                    size: node.size,
+                    left,
+                    right,
+                }));
+                proof { assume(c == *link); }
+                c
+            }
+        }
+    }
+
     // veracity: no_requires
     #[verifier::external_body]
     fn build_balanced<T: StTInMtT + Ord + TotalOrder + 'static>(values: &[T]) -> (link: Link<T>)
         ensures
             link_spec_size(link) <= values@.len(),
+            link_node_count(link) <= values@.len(),
             spec_is_bst_link(link),
     {
         if values.is_empty() {
@@ -1490,8 +1543,8 @@ pub mod BSTSplayMtEph {
             | Some(node) => {
                 let pred_left = Arc::clone(predicate);
                 let pred_right = Arc::clone(predicate);
-                let left_clone: Link<T> = node.left.clone();
-                let right_clone: Link<T> = node.right.clone();
+                let left_clone: Link<T> = clone_link(&node.left);
+                let right_clone: Link<T> = clone_link(&node.right);
 
                 use crate::Types::Types::Pair;
                 let Pair(left_vals, right_vals) = crate::ParaPair!(
@@ -1524,8 +1577,8 @@ pub mod BSTSplayMtEph {
                 let op_left = Arc::clone(op);
                 let op_right = Arc::clone(op);
                 let id_left = identity.clone();
-                let left_clone: Link<T> = node.left.clone();
-                let right_clone: Link<T> = node.right.clone();
+                let left_clone: Link<T> = clone_link(&node.left);
+                let right_clone: Link<T> = clone_link(&node.right);
 
                 use crate::Types::Types::Pair;
                 let Pair(left_acc, right_acc) = crate::ParaPair!(
@@ -1540,13 +1593,19 @@ pub mod BSTSplayMtEph {
     }
 
     fn height_rec<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (h: N)
-        requires link_height(*link) < usize::MAX as nat,
+        requires link_height(*link) <= usize::MAX as nat,
         ensures h as nat == link_height(*link),
         decreases *link,
     {
         match link {
             | None => 0,
-            | Some(node) => 1 + height_rec(&node.left).max(height_rec(&node.right)),
+            | Some(node) => {
+                proof {
+                    assert(link_height(node.left) < usize::MAX as nat);
+                    assert(link_height(node.right) < usize::MAX as nat);
+                }
+                1 + height_rec(&node.left).max(height_rec(&node.right))
+            }
         }
     }
 
@@ -1568,7 +1627,7 @@ pub mod BSTSplayMtEph {
 
     impl<T: StTInMtT + Ord + TotalOrder> RwLockPredicate<Link<T>> for BSTSplayMtEphInv {
         open spec fn inv(self, v: Link<T>) -> bool {
-            link_spec_size(v) <= usize::MAX && spec_is_bst_link(v)
+            link_node_count(v) <= usize::MAX && spec_is_bst_link(v)
         }
     }
 
@@ -1583,7 +1642,7 @@ pub mod BSTSplayMtEph {
     impl<T: StTInMtT + Ord + TotalOrder> BSTSplayMtEph<T> {
         #[verifier::type_invariant]
         spec fn wf(self) -> bool {
-            link_spec_size(self.ghost_root@) <= usize::MAX && spec_is_bst_link(self.ghost_root@)
+            link_node_count(self.ghost_root@) <= usize::MAX && spec_is_bst_link(self.ghost_root@)
         }
 
         pub closed spec fn spec_ghost_root(self) -> Link<T> {
@@ -1652,7 +1711,7 @@ pub mod BSTSplayMtEph {
 
     impl<T: StTInMtT + Ord + TotalOrder + 'static> BSTSplayMtEphTrait<T> for BSTSplayMtEph<T> {
         open spec fn spec_bstsplaymteph_wf(&self) -> bool {
-            link_spec_size(self@) <= usize::MAX
+            link_node_count(self@) <= usize::MAX
             && spec_is_bst_link(self@)
         }
 
@@ -1666,9 +1725,7 @@ pub mod BSTSplayMtEph {
         fn from_sorted_slice(values: &[T]) -> Self {
             let vlen = values.len();
             let link = build_balanced(values);
-            // build_balanced ensures link_spec_size(link) <= values@.len().
-            // vlen: usize = values.len(), so values@.len() <= usize::MAX.
-            assert(link_spec_size(link) <= vlen as nat);
+            assert(link_node_count(link) <= vlen as nat);
             let ghost ghost_link = link;
             BSTSplayMtEph {
                 root: RwLock::new(link, Ghost(BSTSplayMtEphInv)),
@@ -1684,7 +1741,7 @@ pub mod BSTSplayMtEph {
             if sz < usize::MAX {
                 insert_link(&mut current, value);
                 proof {
-                    assume(link_spec_size(current) <= usize::MAX as nat);
+                    assume(link_node_count(current) <= usize::MAX as nat);
                     assume(link_spec_size(current) <= link_spec_size(old(self)@) + 1);
                 }
                 let ghost new_root = current;
@@ -1724,11 +1781,13 @@ pub mod BSTSplayMtEph {
             b
         }
 
-        // Reader: assume return value matches ghost.
+        // Reader: height bounded by node count from lock predicate.
         fn height(&self) -> (h: N) {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
-            proof { assume(link_height(*data) < usize::MAX as nat); }
+            proof {
+                lemma_height_le_node_count::<T>(*data);
+            }
             let h = height_rec(data);
             proof { assume(h as nat == link_height(self@)); }
             handle.release_read();
@@ -1800,15 +1859,16 @@ pub mod BSTSplayMtEph {
     // 12. derive impls in verus!
 
     impl<T: StTInMtT + Ord + TotalOrder> Clone for Node<T> {
-        #[verifier::external_body]
         fn clone(&self) -> (r: Self)
             ensures r == *self,
         {
+            let left = clone_link(&self.left);
+            let right = clone_link(&self.right);
             let r = Node {
                 key: self.key.clone(),
                 size: self.size,
-                left: self.left.clone(),
-                right: self.right.clone(),
+                left,
+                right,
             };
             proof { assume(r == *self); }
             r
