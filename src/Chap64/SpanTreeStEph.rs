@@ -146,7 +146,6 @@ pub mod SpanTreeStEph {
     ///
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(|V| + |E_tree|), Span O(|V| + |E_tree|).
-    #[verifier::external_body]
     pub fn verify_spanning_tree<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
         tree_edges: &SetStEph<Edge<V>>,
@@ -170,10 +169,13 @@ pub mod SpanTreeStEph {
         let it = tree_edges.iter();
         let ghost edge_seq = it@.1;
 
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
         for edge in iter: it
             invariant
                 iter.elements == edge_seq,
                 edge_seq.map(|i: int, e: Edge<V>| e@).to_set() == tree_edges@,
+                graph_edges.spec_setsteph_wf(),
+                valid_key_type_Edge::<V>(),
         {
             if !graph_edges.mem(edge) {
                 let rev = Edge(edge.1.clone_plus(), edge.0.clone_plus());

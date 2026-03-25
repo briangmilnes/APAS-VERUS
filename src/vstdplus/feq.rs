@@ -240,9 +240,27 @@ pub mod feq {
         ensures vstd::laws_eq::obeys_view_eq::<T>()
     { admit(); }
 
+    // Broadcast proof: strictly_cloned values are equal (reference version).
+    pub broadcast proof fn axiom_strictly_cloned_implies_eq<T: Eq + Clone + Sized>(x: &T, y: T)
+        requires #[trigger] strictly_cloned(*x, y), obeys_feq_clone::<T>()
+        ensures *x == y
+    {
+        admit();
+    }
+
+    // Broadcast proof: strictly_cloned values are equal (owned version).
+    pub broadcast proof fn axiom_strictly_cloned_implies_eq_owned<T: Eq + Clone + Sized>(x: T, y: T)
+        requires #[trigger] strictly_cloned(x, y), obeys_feq_clone::<T>()
+        ensures x == y
+    {
+        admit();
+    }
+
     pub broadcast group group_feq_axioms {
         axiom_cloned_implies_eq,
         axiom_cloned_implies_eq_owned,
+        axiom_strictly_cloned_implies_eq,
+        axiom_strictly_cloned_implies_eq_owned,
         axiom_obeys_feq_full,
         axiom_obeys_view_eq,
     }
