@@ -18,6 +18,8 @@ pub mod float {
     use vstd::float::FloatBitsProperties;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::le_ensures;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
 
     verus! {
 
@@ -226,6 +228,15 @@ broadcast use {
     impl View for WrappedF64 {
         type V = f64;
         open spec fn view(&self) -> f64 { self.val }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl ClonePreservesView for WrappedF64 {
+        fn clone_view(&self) -> (result: Self)
+            ensures result@ == self@,
+        {
+            *self
+        }
     }
 
     impl WrappedF64 {

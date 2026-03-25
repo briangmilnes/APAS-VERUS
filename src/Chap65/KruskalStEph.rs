@@ -18,6 +18,8 @@ pub mod KruskalStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full;
     use crate::vstdplus::pervasives_plus::pervasives_plus::vec_swap;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
     use crate::SetLit;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
@@ -25,6 +27,8 @@ pub mod KruskalStEph {
     pub type T<V> = LabUnDirGraphStEph<V, WrappedF64>;
 
     verus! {
+
+    broadcast use crate::vstdplus::float::float::group_float_finite_total_order;
 
     // 4. type definitions
 
@@ -61,7 +65,6 @@ pub mod KruskalStEph {
     }
 
     /// Sort edges by weight — selection sort.
-    #[verifier::external_body]
     fn sort_edges_by_weight<V: HashOrd>(edges: &mut Vec<LabEdge<V, WrappedF64>>)
         requires forall|i: int| 0 <= i < old(edges)@.len() ==> #[trigger] old(edges)@[i].2.spec_is_finite(),
         ensures
@@ -80,6 +83,8 @@ pub mod KruskalStEph {
                 i <= n,
                 forall|k: int| 0 <= k < n ==>
                     old(edges)@.contains(#[trigger] edges@[k]),
+                forall|k: int| 0 <= k < n ==>
+                    (#[trigger] edges@[k]).2.spec_is_finite(),
                 forall|a: int, b: int| #![trigger edges@[a], edges@[b]]
                     0 <= a <= b < i as int ==>
                     edges@[a].2.val.le(edges@[b].2.val),
@@ -91,10 +96,13 @@ pub mod KruskalStEph {
             // Find index of minimum weight edge in [i..n).
             let mut min_idx: usize = i;
             let mut j: usize = i + 1;
+            proof { <f64 as FloatTotalOrder>::reflexive(edges@[i as int].2.val); }
             while j < n
                 invariant
                     n == edges@.len(),
                     i <= min_idx < j <= n,
+                    forall|k: int| 0 <= k < n ==>
+                        (#[trigger] edges@[k]).2.spec_is_finite(),
                     forall|k: int| i as int <= k < j as int ==>
                         edges@[min_idx as int].2.val.le(#[trigger] edges@[k].2.val),
                 decreases n - j,
@@ -103,6 +111,7 @@ pub mod KruskalStEph {
                     let ghost old_min = min_idx;
                     min_idx = j;
                     proof {
+                        <f64 as FloatTotalOrder>::reflexive(edges@[j as int].2.val);
                         assert forall|k: int| i as int <= k < j as int + 1
                             implies edges@[j as int].2.val.le(#[trigger] edges@[k].2.val)
                         by {
@@ -114,6 +123,10 @@ pub mod KruskalStEph {
                                 );
                             }
                         };
+                    }
+                } else {
+                    proof {
+                        <f64 as FloatTotalOrder>::totality(edges@[min_idx as int].2.val, edges@[j as int].2.val);
                     }
                 }
                 j += 1;
@@ -128,8 +141,8 @@ pub mod KruskalStEph {
             proof {
                 let new_i = i as int + 1;
                 // Prefix [0..new_i) sorted.
-                assert forall|a: int, b: int| 0 <= a <= b < new_i
-                    implies edges@[a].2.val.le(#[trigger] edges@[b].2.val)
+                assert forall|a: int, b: int| #![trigger edges@[a], edges@[b]] 0 <= a <= b < new_i
+                    implies edges@[a].2.val.le(edges@[b].2.val)
                 by {
                     if b == i as int && a < i as int {
                         // a < i: edges[a] ≤ old prefix-leq-suffix, which gives edges[a] ≤ edges[i].
@@ -138,8 +151,8 @@ pub mod KruskalStEph {
                     // a == b == i: reflexive; or a < b < i: old sorted-prefix invariant.
                 };
                 // Prefix [0..new_i) ≤ suffix [new_i..n).
-                assert forall|a: int, b: int| 0 <= a < new_i && new_i <= b < n
-                    implies edges@[a].2.val.le(#[trigger] edges@[b].2.val)
+                assert forall|a: int, b: int| #![trigger edges@[a], edges@[b]] 0 <= a < new_i && new_i <= b < n
+                    implies edges@[a].2.val.le(edges@[b].2.val)
                 by {
                     // edges[i] = old min of [i..n), so edges[i] ≤ edges[b] for b > i.
                     assert(edges@[i as int].2.val.le(edges@[b].2.val));
@@ -194,7 +207,7 @@ pub mod KruskalStEph {
             decreases vseq.len() - vit@.0,
         {
             if let Some(v) = vit.next() {
-                uf.insert(v.clone());
+                uf.insert(v.clone_view());
             } else {
                 break;
             }
@@ -219,7 +232,7 @@ pub mod KruskalStEph {
             decreases eseq.len() - eit@.0,
         {
             if let Some(e) = eit.next() {
-                edges_vec.push(e.clone());
+                edges_vec.push(e.clone_view());
             } else {
                 break;
             }
@@ -247,9 +260,9 @@ pub mod KruskalStEph {
                 spec_labgraphview_wf(graph@),
             decreases edges_vec@.len() - i,
         {
-            let edge = edges_vec[i].clone();
-            let u = edge.0.clone();
-            let v = edge.1.clone();
+            let edge = edges_vec[i].clone_view();
+            let u = edge.0.clone_view();
+            let v = edge.1.clone_view();
 
             // Prove edge endpoints are in UF via graph wf.
             // edge was in pre_sort, which equals eseq, whose views map to graph@.A.
@@ -283,7 +296,6 @@ pub mod KruskalStEph {
     /// Compute total MST weight.
     /// - APAS: (no cost stated) — utility function
     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
-    #[verifier::external_body]
     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, WrappedF64>>) -> (total: WrappedF64)
         requires mst_edges.spec_setsteph_wf(),
         ensures mst_edges@.len() == 0 ==> total@ == 0.0f64,
@@ -298,12 +310,13 @@ pub mod KruskalStEph {
             invariant
                 it@.0 <= le_seq.len(),
                 it@.1 == le_seq,
+                mst_edges@.len() > 0,
             decreases le_seq.len() - it@.0,
         {
             match it.next() {
                 None => return total,
                 Some(edge) => {
-                    total = WrappedF64 { val: total.val + edge.2.val };
+                    total = total.dist_add(&edge.2);
                 },
             }
         }
