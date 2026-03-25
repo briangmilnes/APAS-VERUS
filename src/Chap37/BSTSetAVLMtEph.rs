@@ -17,7 +17,6 @@
 
 pub mod BSTSetAVLMtEph {
 
-    use std::collections::BTreeSet;
     use std::fmt;
 
     use vstd::prelude::*;
@@ -26,6 +25,8 @@ pub mod BSTSetAVLMtEph {
     use crate::Chap37::BSTAVLMtEph::BSTAVLMtEph::*;
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
 
     verus! {
 
@@ -140,46 +141,59 @@ pub mod BSTSetAVLMtEph {
 
     //	9. impls
 
-    #[verifier::external_body]
     fn values_vec<T: StTInMtT + Ord + TotalOrder>(tree: &BSTAVLMtEph<T>) -> (values: Vec<T>)
         requires tree.spec_bstavlmteph_wf(),
         ensures true,
     {
-        tree.in_order().iter().cloned().collect()
+        proof { assume(obeys_feq_clone::<T>()); }
+        let sorted = tree.in_order();
+        let n = sorted.length();
+        let mut values: Vec<T> = Vec::new();
+        let mut i: usize = 0;
+        while i < n
+            invariant
+                n as nat == sorted.spec_len(),
+                0 <= i <= n,
+            decreases n - i,
+        {
+            values.push(sorted.nth(i).clone());
+            i += 1;
+        }
+        values
     }
 
     // veracity: no_requires
-    #[verifier::external_body]
     fn rebuild_from_vec<T: StTInMtT + Ord + TotalOrder>(values: Vec<T>) -> (tree: BSTAVLMtEph<T>)
-        ensures true,
+        ensures tree.spec_bstavlmteph_wf(),
     {
         let mut tree = BSTAVLMtEph::new();
-        for value in values {
-            let _ = tree.insert(value);
+        let n = values.len();
+        let mut i: usize = 0;
+        while i < n
+            invariant
+                tree.spec_bstavlmteph_wf(),
+                0 <= i <= n,
+                n == values@.len(),
+            decreases n - i,
+        {
+            let _ = tree.insert(values[i].clone());
+            i += 1;
         }
         tree
     }
 
     // veracity: no_requires
-    #[verifier::external_body]
-    fn from_sorted_iter<T: StTInMtT + Ord + TotalOrder, I>(values: I) -> (set: BSTSetAVLMtEph<T>)
-    where
-        I: IntoIterator<Item = T>,
-        ensures true,
+    fn build_from_vec<T: StTInMtT + Ord + TotalOrder>(values: Vec<T>) -> (set: BSTSetAVLMtEph<T>)
+        ensures set.spec_bstsetavlmteph_wf(),
     {
-        let mut tree = BSTAVLMtEph::new();
-        for value in values {
-            let _ = tree.insert(value);
-        }
-        BSTSetAVLMtEph { tree }
+        BSTSetAVLMtEph { tree: rebuild_from_vec(values) }
     }
 
-    #[verifier::external_body]
     fn copy_set<T: StTInMtT + Ord + TotalOrder>(set: &BSTSetAVLMtEph<T>) -> (out: BSTSetAVLMtEph<T>)
         requires set.spec_bstsetavlmteph_wf()
         ensures out.spec_bstsetavlmteph_wf()
     {
-        from_sorted_iter(values_vec(&set.tree))
+        build_from_vec(values_vec(&set.tree))
     }
 
     impl<T: StTInMtT + Ord + TotalOrder> BSTSetAVLMtEphTrait<T> for BSTSetAVLMtEph<T> {
@@ -213,18 +227,27 @@ pub mod BSTSetAVLMtEph {
 
         fn insert(&mut self, value: T) -> (r: Result<(), ()>) { self.tree.insert(value) }
 
-        #[verifier::external_body]
         fn delete(&mut self, target: &T) {
             if !self.contains(target) {
                 return;
             }
-            let filtered: Vec<T> = self
-                .tree
-                .in_order()
-                .iter()
-                .filter(|x| *x != target)
-                .cloned()
-                .collect();
+            proof { assume(obeys_feq_clone::<T>()); }
+            let sorted = self.tree.in_order();
+            let n = sorted.length();
+            let mut filtered: Vec<T> = Vec::new();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    n as nat == sorted.spec_len(),
+                    0 <= i <= n,
+                decreases n - i,
+            {
+                let elem = sorted.nth(i);
+                if *elem != *target {
+                    filtered.push(elem.clone());
+                }
+                i += 1;
+            }
             self.tree = rebuild_from_vec(filtered);
         }
 
@@ -314,80 +337,148 @@ pub mod BSTSetAVLMtEph {
             }
         }
 
-        #[verifier::external_body]
         fn split(&self, pivot: &T) -> (Self, B, Self) {
-            let mut left = Vec::<T>::new();
-            let mut right = Vec::<T>::new();
+            proof { assume(obeys_feq_clone::<T>()); }
+            let sorted = self.tree.in_order();
+            let n = sorted.length();
+            let mut left: Vec<T> = Vec::new();
+            let mut right: Vec<T> = Vec::new();
             let mut found = false;
-            for value in self.tree.in_order().iter() {
-                if value < pivot {
-                    left.push(value.clone());
-                } else if value > pivot {
-                    right.push(value.clone());
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    n as nat == sorted.spec_len(),
+                    0 <= i <= n,
+                decreases n - i,
+            {
+                let elem = sorted.nth(i);
+                if *elem < *pivot {
+                    left.push(elem.clone());
+                } else if *elem > *pivot {
+                    right.push(elem.clone());
                 } else {
                     found = true;
                 }
+                i += 1;
             }
-            (from_sorted_iter(left), found, from_sorted_iter(right))
+            (build_from_vec(left), found, build_from_vec(right))
         }
 
-        #[verifier::external_body]
         fn join_pair(left: Self, right: Self) -> Self {
-            use crate::Types::Types::Pair;
-            let Pair(left_values, right_values) = crate::ParaPair!(
-                move || values_vec(&left.tree),
-                move || values_vec(&right.tree)
-            );
-
-            let mut combined = left_values.into_iter().collect::<BTreeSet<T>>();
-            for value in right_values {
-                combined.insert(value);
+            proof { assume(obeys_feq_clone::<T>()); }
+            let left_sorted = left.tree.in_order();
+            let right_sorted = right.tree.in_order();
+            let mut tree = BSTAVLMtEph::new();
+            let n_left = left_sorted.length();
+            let mut i: usize = 0;
+            while i < n_left
+                invariant
+                    tree.spec_bstavlmteph_wf(),
+                    n_left as nat == left_sorted.spec_len(),
+                    0 <= i <= n_left,
+                decreases n_left - i,
+            {
+                let _ = tree.insert(left_sorted.nth(i).clone());
+                i += 1;
             }
-            from_sorted_iter(combined)
+            let n_right = right_sorted.length();
+            let mut j: usize = 0;
+            while j < n_right
+                invariant
+                    tree.spec_bstavlmteph_wf(),
+                    n_right as nat == right_sorted.spec_len(),
+                    0 <= j <= n_right,
+                decreases n_right - j,
+            {
+                let _ = tree.insert(right_sorted.nth(j).clone());
+                j += 1;
+            }
+            BSTSetAVLMtEph { tree }
         }
 
-        #[verifier::external_body]
         fn join_m(left: Self, pivot: T, right: Self) -> Self {
-            use crate::Types::Types::Pair;
-            let Pair(left_values, right_values) = crate::ParaPair!(
-                move || values_vec(&left.tree),
-                move || values_vec(&right.tree)
-            );
-
-            let mut combined = left_values.into_iter().collect::<BTreeSet<T>>();
-            combined.insert(pivot);
-            for value in right_values {
-                combined.insert(value);
+            proof { assume(obeys_feq_clone::<T>()); }
+            let left_sorted = left.tree.in_order();
+            let right_sorted = right.tree.in_order();
+            let mut tree = BSTAVLMtEph::new();
+            let _ = tree.insert(pivot);
+            let n_left = left_sorted.length();
+            let mut i: usize = 0;
+            while i < n_left
+                invariant
+                    tree.spec_bstavlmteph_wf(),
+                    n_left as nat == left_sorted.spec_len(),
+                    0 <= i <= n_left,
+                decreases n_left - i,
+            {
+                let _ = tree.insert(left_sorted.nth(i).clone());
+                i += 1;
             }
-            from_sorted_iter(combined)
+            let n_right = right_sorted.length();
+            let mut j: usize = 0;
+            while j < n_right
+                invariant
+                    tree.spec_bstavlmteph_wf(),
+                    n_right as nat == right_sorted.spec_len(),
+                    0 <= j <= n_right,
+                decreases n_right - j,
+            {
+                let _ = tree.insert(right_sorted.nth(j).clone());
+                j += 1;
+            }
+            BSTSetAVLMtEph { tree }
         }
 
         #[verifier::external_body]
         fn filter<F: FnMut(&T) -> bool + Send>(&self, mut predicate: F) -> Self {
-            let filtered = self
-                .tree
-                .in_order()
-                .iter()
-                .filter_map(|v| if predicate(v) { Some(v.clone()) } else { None }).collect::<Vec<T>>();
-            from_sorted_iter(filtered)
+            proof { assume(obeys_feq_clone::<T>()); }
+            let sorted = self.tree.in_order();
+            let n = sorted.length();
+            let mut filtered: Vec<T> = Vec::new();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    n as nat == sorted.spec_len(),
+                    0 <= i <= n,
+                decreases n - i,
+            {
+                let elem = sorted.nth(i);
+                if predicate(elem) {
+                    filtered.push(elem.clone());
+                }
+                i += 1;
+            }
+            build_from_vec(filtered)
         }
 
         #[verifier::external_body]
         fn reduce<F: FnMut(T, T) -> T + Send>(&self, mut op: F, base: T) -> T {
-            self.tree
-                .in_order()
-                .iter()
-                .fold(base, |acc, value| op(acc, value.clone()))
+            proof { assume(obeys_feq_clone::<T>()); }
+            let sorted = self.tree.in_order();
+            let n = sorted.length();
+            let mut acc = base;
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    n as nat == sorted.spec_len(),
+                    0 <= i <= n,
+                decreases n - i,
+            {
+                acc = op(acc, sorted.nth(i).clone());
+                i += 1;
+            }
+            acc
         }
 
-        #[verifier::external_body]
-        fn iter_in_order(&self) -> ArraySeqStPerS<T> { self.tree.in_order() }
+        fn iter_in_order(&self) -> ArraySeqStPerS<T> {
+            proof { assume(obeys_feq_clone::<T>()); }
+            self.tree.in_order()
+        }
 
         fn as_tree(&self) -> &BSTAVLMtEph<T> { &self.tree }
 
-        #[verifier::external_body]
         fn iter(&self) -> BSTSetAVLMtEphIter<T> {
-            let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+            let values = values_vec(&self.tree);
             BSTSetAVLMtEphIter { snapshot: values, pos: 0 }
         }
     }
@@ -468,22 +559,25 @@ pub mod BSTSetAVLMtEph {
         }
     }
 
-    #[verifier::external]
     impl<'a, T: StTInMtT + Ord + TotalOrder> std::iter::IntoIterator for &'a BSTSetAVLMtEph<T> {
         type Item = T;
         type IntoIter = BSTSetAVLMtEphIter<T>;
-        fn into_iter(self) -> BSTSetAVLMtEphIter<T> {
+        fn into_iter(self) -> (it: BSTSetAVLMtEphIter<T>)
+            requires self.spec_bstsetavlmteph_wf(),
+            ensures it@.0 == 0, bstsetavlmteph_iter_invariant(&it),
+        {
             self.iter()
         }
     }
 
-    #[verifier::external]
     impl<T: StTInMtT + Ord + TotalOrder> IntoIterator for BSTSetAVLMtEph<T> {
         type Item = T;
-        type IntoIter = std::vec::IntoIter<T>;
-        fn into_iter(self) -> Self::IntoIter {
-            let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
-            values.into_iter()
+        type IntoIter = BSTSetAVLMtEphIter<T>;
+        fn into_iter(self) -> (it: BSTSetAVLMtEphIter<T>)
+            requires self.spec_bstsetavlmteph_wf(),
+            ensures it@.0 == 0, bstsetavlmteph_iter_invariant(&it),
+        {
+            self.iter()
         }
     }
 

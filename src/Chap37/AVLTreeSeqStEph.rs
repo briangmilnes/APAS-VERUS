@@ -931,7 +931,6 @@ pub mod AVLTreeSeqStEph {
             ArraySeqStEphS::from_vec(vals)
         }
 
-        #[verifier::external_body] // veracity: accept — iterator boundary
         fn iter<'a>(&'a self) -> (it: AVLTreeSeqIterStEph<'a, T>)
         {
             let mut it = AVLTreeSeqIterStEph {
@@ -1100,7 +1099,9 @@ pub mod AVLTreeSeqStEph {
 
     // veracity: no_requires
     fn push_left_iter<'a, T: StT>(it: &mut AVLTreeSeqIterStEph<'a, T>, link: &'a Link<T>)
-        ensures true,
+        ensures
+            it@.0 == old(it)@.0,
+            it@.1 == old(it)@.1,
         decreases *link,
     {
         if let Some(node) = link {
@@ -1190,8 +1191,8 @@ pub mod AVLTreeSeqStEph {
         type Item = &'a T;
         type IntoIter = AVLTreeSeqIterStEph<'a, T>;
 
-        #[verifier::external_body] // veracity: accept — iterator boundary
         fn into_iter(self) -> (it: AVLTreeSeqIterStEph<'a, T>)
+            requires self.spec_avltreeseqsteph_wf(),
             ensures
                 it@.0 == 0,
                 it@.1 == spec_inorder(self.root),

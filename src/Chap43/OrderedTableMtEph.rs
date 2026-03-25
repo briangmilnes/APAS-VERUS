@@ -668,17 +668,25 @@ broadcast use {
             (from_st(left), from_st(right))
         }
 
-        #[verifier::external_body] // veracity: accept — iterator boundary
         fn iter<'a>(&'a self) -> (it: OrderedTableMtEphIter<'a, K, V>)
         {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
+            proof { assume(inner.spec_orderedtablesteph_wf()); }
             let sorted = inner.tree.in_order();
             let n = sorted.length();
             let mut snapshot: Vec<Pair<K, V>> = Vec::new();
-            for i in 0..n {
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    n as nat == sorted.spec_len(),
+                    0 <= i <= n,
+                    snapshot@.len() == i as int,
+                decreases n - i,
+            {
                 let e = sorted.nth(i);
                 snapshot.push(Pair(e.0.clone(), e.1.clone()));
+                i += 1;
             }
             read_handle.release_read();
             OrderedTableMtEphIter { snapshot, pos: 0, _phantom: core::marker::PhantomData }
@@ -804,8 +812,8 @@ broadcast use {
         type Item = Pair<K, V>;
         type IntoIter = OrderedTableMtEphIter<'a, K, V>;
 
-        #[verifier::external_body] // veracity: accept — iterator boundary
         fn into_iter(self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+            requires self.spec_orderedtablemteph_wf(),
             ensures
                 it@.0 == 0,
                 iter_invariant(&it),
