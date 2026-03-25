@@ -21,44 +21,44 @@ Table of Contents:
 =================================================================
 
 ℹ DirGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:939: info: structural_false_positive RWLOCK_GHOST vertices — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:948: info: structural_false_positive RWLOCK_GHOST arcs — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:957: info: structural_false_positive RWLOCK_GHOST sizeV — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:966: info: structural_false_positive RWLOCK_GHOST sizeA — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:975: info: structural_false_positive RWLOCK_GHOST neighbor — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:984: info: structural_false_positive RWLOCK_GHOST n_plus — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:993: info: structural_false_positive RWLOCK_GHOST n_minus — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1002: info: structural_false_positive RWLOCK_GHOST ng — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1011: info: structural_false_positive RWLOCK_GHOST n_plus_of_vertices — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1020: info: structural_false_positive RWLOCK_GHOST n_minus_of_vertices — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1029: info: structural_false_positive RWLOCK_GHOST ng_of_vertices — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:939: info: structural_false_positive RWLOCK_GHOST vertices — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:948: info: structural_false_positive RWLOCK_GHOST arcs — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:957: info: structural_false_positive RWLOCK_GHOST sizeV — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:966: info: structural_false_positive RWLOCK_GHOST sizeA — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:975: info: structural_false_positive RWLOCK_GHOST neighbor — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:984: info: structural_false_positive RWLOCK_GHOST n_plus — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:993: info: structural_false_positive RWLOCK_GHOST n_minus — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:1002: info: structural_false_positive RWLOCK_GHOST ng — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:1011: info: structural_false_positive RWLOCK_GHOST n_plus_of_vertices — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:1020: info: structural_false_positive RWLOCK_GHOST n_minus_of_vertices — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/DirGraphMtEph.rs:1029: info: structural_false_positive RWLOCK_GHOST ng_of_vertices — proof { assume(inner@ == self@); } [medium]
    Info: 11 × structural_false_positive
 ✓ DirGraphStEph.rs
 ℹ LabDirGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:816: info: structural_false_positive RWLOCK_GHOST add_vertex — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:826: info: structural_false_positive RWLOCK_GHOST add_labeled_arc — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:837: info: structural_false_positive RWLOCK_GHOST n_plus — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:846: info: structural_false_positive RWLOCK_GHOST n_minus — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabDirGraphMtEph.rs:816: info: structural_false_positive RWLOCK_GHOST add_vertex — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabDirGraphMtEph.rs:826: info: structural_false_positive RWLOCK_GHOST add_labeled_arc — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabDirGraphMtEph.rs:837: info: structural_false_positive RWLOCK_GHOST n_plus — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabDirGraphMtEph.rs:846: info: structural_false_positive RWLOCK_GHOST n_minus — proof { assume(inner@ == self@); } [medium]
    Info: 4 × structural_false_positive
 ✓ LabDirGraphStEph.rs
 ℹ LabUnDirGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:764: info: structural_false_positive RWLOCK_GHOST vertices — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:773: info: structural_false_positive RWLOCK_GHOST labeled_edges — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:782: info: structural_false_positive RWLOCK_GHOST edges — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:791: info: structural_false_positive RWLOCK_GHOST has_edge — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:800: info: structural_false_positive RWLOCK_GHOST ng — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:808: info: structural_false_positive RWLOCK_GHOST add_vertex — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:818: info: structural_false_positive RWLOCK_GHOST add_labeled_edge — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabUnDirGraphMtEph.rs:764: info: structural_false_positive RWLOCK_GHOST vertices — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabUnDirGraphMtEph.rs:773: info: structural_false_positive RWLOCK_GHOST labeled_edges — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabUnDirGraphMtEph.rs:782: info: structural_false_positive RWLOCK_GHOST edges — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabUnDirGraphMtEph.rs:791: info: structural_false_positive RWLOCK_GHOST has_edge — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabUnDirGraphMtEph.rs:800: info: structural_false_positive RWLOCK_GHOST ng — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabUnDirGraphMtEph.rs:808: info: structural_false_positive RWLOCK_GHOST add_vertex — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/LabUnDirGraphMtEph.rs:818: info: structural_false_positive RWLOCK_GHOST add_labeled_edge — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
    Info: 7 × structural_false_positive
 ✓ LabUnDirGraphStEph.rs
 ℹ UnDirGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:662: info: structural_false_positive RWLOCK_GHOST vertices — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:671: info: structural_false_positive RWLOCK_GHOST edges — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:680: info: structural_false_positive RWLOCK_GHOST sizeV — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:689: info: structural_false_positive RWLOCK_GHOST sizeE — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:698: info: structural_false_positive RWLOCK_GHOST neighbor — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:707: info: structural_false_positive RWLOCK_GHOST ng — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:716: info: structural_false_positive RWLOCK_GHOST ng_of_vertices — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/UnDirGraphMtEph.rs:662: info: structural_false_positive RWLOCK_GHOST vertices — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/UnDirGraphMtEph.rs:671: info: structural_false_positive RWLOCK_GHOST edges — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/UnDirGraphMtEph.rs:680: info: structural_false_positive RWLOCK_GHOST sizeV — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/UnDirGraphMtEph.rs:689: info: structural_false_positive RWLOCK_GHOST sizeE — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/UnDirGraphMtEph.rs:698: info: structural_false_positive RWLOCK_GHOST neighbor — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/UnDirGraphMtEph.rs:707: info: structural_false_positive RWLOCK_GHOST ng — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap06/UnDirGraphMtEph.rs:716: info: structural_false_positive RWLOCK_GHOST ng_of_vertices — proof { assume(inner@ == self@); } [medium]
    Info: 7 × structural_false_positive
 ✓ UnDirGraphStEph.rs
 ✓ WeightedDirGraphStEphF64.rs
@@ -165,15 +165,15 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-25 09:44:29 -07:00
-Ended:     2026-03-25 09:44:29 -07:00
-Duration:  141ms
+Started:   2026-03-25 10:02:06 -07:00
+Ended:     2026-03-25 10:02:07 -07:00
+Duration:  284ms
 
 Full output: src/Chap06/analyses/veracity-review-verus-proof-holes.log
-======================================
+=====================================
 
-Started:   2026-03-25 09:44:29 -07:00
-Ended:     2026-03-25 09:44:29 -07:00
-Duration:  141ms
+Started:   2026-03-25 10:02:06 -07:00
+Ended:     2026-03-25 10:02:07 -07:00
+Duration:  284ms
 
 Full output: src/Chap06/analyses/veracity-review-verus-proof-holes.log
