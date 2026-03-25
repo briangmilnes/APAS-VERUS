@@ -261,16 +261,14 @@ pub mod BSTSetBBAlphaMtEph {
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
 
+            let f1 = move || -> (r: Self)
+                ensures r.spec_bstsetbbalphamteph_wf()
+            { self_left.union(&other_left) };
+            let f2 = move || -> (r: Self)
+                ensures r.spec_bstsetbbalphamteph_wf()
+            { self_right.union(&other_right) };
             use crate::Types::Types::Pair;
-            let Pair(left_union, right_union) = crate::ParaPair!(
-                move || self_left.union(&other_left),
-                move || self_right.union(&other_right)
-            );
-
-            proof {
-                assume(left_union.spec_bstsetbbalphamteph_wf());   // thread boundary
-                assume(right_union.spec_bstsetbbalphamteph_wf());  // thread boundary
-            }
+            let Pair(left_union, right_union) = crate::ParaPair!(f1, f2);
 
             if found_self || found_other {
                 Self::join_m(left_union, pivot, right_union)
@@ -293,16 +291,14 @@ pub mod BSTSetBBAlphaMtEph {
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
 
+            let f1 = move || -> (r: Self)
+                ensures r.spec_bstsetbbalphamteph_wf()
+            { self_left.intersection(&other_left) };
+            let f2 = move || -> (r: Self)
+                ensures r.spec_bstsetbbalphamteph_wf()
+            { self_right.intersection(&other_right) };
             use crate::Types::Types::Pair;
-            let Pair(left_inter, right_inter) = crate::ParaPair!(
-                move || self_left.intersection(&other_left),
-                move || self_right.intersection(&other_right)
-            );
-
-            proof {
-                assume(left_inter.spec_bstsetbbalphamteph_wf());   // thread boundary
-                assume(right_inter.spec_bstsetbbalphamteph_wf());  // thread boundary
-            }
+            let Pair(left_inter, right_inter) = crate::ParaPair!(f1, f2);
 
             if found_self && found_other {
                 Self::join_m(left_inter, pivot, right_inter)
@@ -328,16 +324,14 @@ pub mod BSTSetBBAlphaMtEph {
             let (self_left, _found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
 
+            let f1 = move || -> (r: Self)
+                ensures r.spec_bstsetbbalphamteph_wf()
+            { self_left.difference(&other_left) };
+            let f2 = move || -> (r: Self)
+                ensures r.spec_bstsetbbalphamteph_wf()
+            { self_right.difference(&other_right) };
             use crate::Types::Types::Pair;
-            let Pair(left_diff, right_diff) = crate::ParaPair!(
-                move || self_left.difference(&other_left),
-                move || self_right.difference(&other_right)
-            );
-
-            proof {
-                assume(left_diff.spec_bstsetbbalphamteph_wf());   // thread boundary
-                assume(right_diff.spec_bstsetbbalphamteph_wf());  // thread boundary
-            }
+            let Pair(left_diff, right_diff) = crate::ParaPair!(f1, f2);
 
             if found_other {
                 Self::join_pair(left_diff, right_diff)

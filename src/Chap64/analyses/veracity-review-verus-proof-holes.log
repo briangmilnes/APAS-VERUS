@@ -22,20 +22,20 @@ Table of Contents:
 
 ✓ SpanTreeMtEph.rs
 ❌ SpanTreeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:53: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/SpanTreeStEph.rs:53: error: external_body - #[verifier::external_body]
         54 |     pub fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (result: SetStEph<Edge<V>>)
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:149: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/SpanTreeStEph.rs:149: error: external_body - #[verifier::external_body]
        150 |     pub fn verify_spanning_tree<V: HashOrd>(
    Holes: 2 total
       2 × external_body
 ❌ TSPApproxStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:89: error: external_body [blocked_by: euler_tour_dfs] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/TSPApproxStEph.rs:89: error: external_body [blocked_by: euler_tour_dfs] - #[verifier::external_body]
         90 |     pub fn euler_tour<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:111: error: external_body [blocked_by: get_neighbors] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/TSPApproxStEph.rs:111: error: external_body [blocked_by: get_neighbors] - #[verifier::external_body]
        112 |     fn euler_tour_dfs<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:294: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/TSPApproxStEph.rs:294: error: external_body - #[verifier::external_body]
        295 |     fn get_neighbors<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>, v: &V) -> (ng: SetStEph<V>)
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:304: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/TSPApproxStEph.rs:304: error: external_body - #[verifier::external_body]
        305 |     fn get_edge_weight<V: HashOrd>(
    Holes: 4 total
       4 × external_body
@@ -94,9 +94,12 @@ Real Proof Targets: 6 (all actionable)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-24 19:54:31 -07:00
-Ended:     2026-03-24 19:54:31 -07:00
-Duration:  5ms
+Started:   2026-03-24 20:47:37 -07:00
+Ended:     2026-03-24 20:47:37 -07:00
+Duration:  6ms
 
 Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
-/veracity-review-verus-proof-holes.log
+
+Duration:  6ms
+
+Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
