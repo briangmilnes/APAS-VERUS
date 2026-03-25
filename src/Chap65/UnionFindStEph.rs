@@ -23,6 +23,8 @@ pub mod UnionFindStEph {
     use vstd::std_specs::hash::obeys_key_model;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full;
+    #[cfg(verus_keep_ghost)]
+    use vstd::pervasive::strictly_cloned;
 
     verus! {
 
@@ -62,6 +64,25 @@ pub mod UnionFindStEph {
     // 6. spec fns
 
     // (spec_unionfindsteph_wf moved to trait abstract + open impl)
+
+    // 7. proof fns
+
+    /// Helper: prove that 3 cloned values are spec-equal to the original.
+    /// Isolated from the wf context to keep solver budget low.
+    proof fn lemma_three_clones_eq<V: StT + Hash>(
+        v: V, v1: V, v2: V, v3: V,
+    )
+        requires
+            obeys_feq_full::<V>(),
+            strictly_cloned(v, v1),
+            strictly_cloned(v, v2),
+            strictly_cloned(v, v3),
+        ensures
+            v1 == v,
+            v2 == v,
+            v3 == v,
+    {
+    }
 
     // 8. traits
 

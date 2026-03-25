@@ -340,6 +340,14 @@ scripts/rtt.sh               # run time tests (cargo nextest)
   output contains the error messages you need to read to fix proofs. If the output is large,
   you may use `head -20` to see the first errors, but never filter or discard output.
 - **Read the verification output.** If you don't read the error, you can't fix the proof.
+- **Reading logs instead of re-running.** All three scripts log to `logs/` with timestamped
+  filenames. If validate.sh (or rtt.sh, ptt.sh) just ran, read the log instead of re-running:
+  ```bash
+  ls -t logs/validate.*.log | head -1 | xargs cat   # last validate
+  ls -t logs/rtt.*.log | head -1 | xargs cat         # last RTT
+  ls -t logs/ptt.*.log | head -1 | xargs cat         # last PTT
+  ```
+  This avoids burning another 2+ minutes of CPU and RAM on a redundant run.
 - Always show full output in response text as a markdown code block.
 - **Run validate, rtt, and ptt sequentially, not in parallel.** They compete for CPU and
   memory. Verus holds large dependency graphs in memory; running concurrent builds can

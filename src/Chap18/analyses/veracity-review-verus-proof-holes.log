@@ -21,89 +21,89 @@ Table of Contents:
 =================================================================
 
 ⚠ ArraySeq.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1621: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap18/ArraySeq.rs:1621: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1617 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1619 |         {
       1620 |             let equal = self.seq == other.seq;
       1622 |             equal
       1623 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1462: info: external_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeq.rs:1594: info: external_accept_hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap18/ArraySeq.rs:1462: info: external_accept_hole
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap18/ArraySeq.rs:1594: info: external_accept_hole
    Info: 2 total
 ⚠ ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:1585: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap18/ArraySeqMtEph.rs:1585: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1581 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1583 |         {
       1584 |             let equal = self.seq == other.seq;
       1586 |             equal
       1587 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:528: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap18/ArraySeqMtEph.rs:528: info: trivial_spec_wf
    Info: 1 total
 ⚠ ArraySeqMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1190: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap18/ArraySeqMtPer.rs:1190: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1186 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1188 |         {
       1189 |             let equal = self.seq == other.seq;
       1191 |             equal
       1192 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:322: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap18/ArraySeqMtPer.rs:322: info: trivial_spec_wf
    Info: 1 total
 ⚠ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1054: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap18/ArraySeqStEph.rs:1054: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1050 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1052 |         {
       1053 |             let equal = self.seq == other.seq;
       1055 |             equal
       1056 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:353: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap18/ArraySeqStEph.rs:353: info: trivial_spec_wf
    Info: 1 total
 ⚠ ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1020: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap18/ArraySeqStPer.rs:1020: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1016 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1018 |         {
       1019 |             let equal = self.seq == other.seq;
       1021 |             equal
       1022 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:347: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap18/ArraySeqStPer.rs:347: info: trivial_spec_wf
    Info: 1 total
 ⚠ LinkedListStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:877: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap18/LinkedListStEph.rs:877: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        873 |         fn clone(&self) -> (cloned: Self)
             ...
        875 |         {
        876 |             let cloned = LinkedListStEphS { seq: self.seq.clone() };
        878 |             cloned
        879 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:891: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap18/LinkedListStEph.rs:891: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        887 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        889 |         {
        890 |             let equal = self.seq == other.seq;
        892 |             equal
        893 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStEph.rs:296: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap18/LinkedListStEph.rs:296: info: trivial_spec_wf
    Info: 1 total
 ⚠ LinkedListStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:860: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap18/LinkedListStPer.rs:860: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        856 |         fn clone(&self) -> (cloned: Self)
             ...
        858 |         {
        859 |             let cloned = LinkedListStPerS { seq: self.seq.clone() };
        861 |             cloned
        862 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:874: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap18/LinkedListStPer.rs:874: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        870 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        872 |         {
        873 |             let equal = self.seq == other.seq;
        875 |             equal
        876 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap18/LinkedListStPer.rs:288: info: trivial_spec_wf
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap18/LinkedListStPer.rs:288: info: trivial_spec_wf
    Info: 1 total
 
 =================================================================
@@ -172,12 +172,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-25 10:29:56 -07:00
-Ended:     2026-03-25 10:29:57 -07:00
-Duration:  98ms
+Started:   2026-03-25 10:31:15 -07:00
+Ended:     2026-03-25 10:31:15 -07:00
+Duration:  95ms
 
 Full output: src/Chap18/analyses/veracity-review-verus-proof-holes.log
-
-Duration:  98ms
-
-Full output: src/Chap18/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap18/analyses/veracity-review-verus-proof-holes.log
