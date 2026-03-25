@@ -47,7 +47,9 @@ pub mod TSPApproxStEph {
             start: &V,
             tree_edges: &SetStEph<LabEdge<V, WrappedF64>>,
         ) -> Vec<V>
-            requires Self::spec_tspapproxsteph_wf(graph);
+            requires
+                Self::spec_tspapproxsteph_wf(graph),
+                valid_key_type_LabEdge::<V, WrappedF64>();
 
         /// Shortcut Euler tour to avoid revisiting vertices.
         /// APAS: Work O(|V|), Span O(|V|)
@@ -59,7 +61,9 @@ pub mod TSPApproxStEph {
             graph: &LabUnDirGraphStEph<V, WrappedF64>,
             tour: &[V],
         ) -> WrappedF64
-            requires Self::spec_tspapproxsteph_wf(graph);
+            requires
+                Self::spec_tspapproxsteph_wf(graph),
+                valid_key_type_LabEdge::<V, WrappedF64>();
 
         /// 2-approximation algorithm for metric TSP.
         /// APAS: Work O(|V|² log |V|), Span O(|V|² log |V|)
@@ -68,7 +72,10 @@ pub mod TSPApproxStEph {
             spanning_tree: &SetStEph<LabEdge<V, WrappedF64>>,
             start: &V,
         ) -> (Vec<V>, WrappedF64)
-            requires Self::spec_tspapproxsteph_wf(graph);
+            requires
+                Self::spec_tspapproxsteph_wf(graph),
+                valid_key_type::<V>(),
+                valid_key_type_LabEdge::<V, WrappedF64>();
     }
 
     /// Euler Tour of a Tree
@@ -92,7 +99,9 @@ pub mod TSPApproxStEph {
         start: &V,
         tree_edges: &SetStEph<LabEdge<V, WrappedF64>>,
     ) -> (tour: Vec<V>)
-        requires spec_labgraphview_wf(graph@),
+        requires
+            spec_labgraphview_wf(graph@),
+            valid_key_type_LabEdge::<V, WrappedF64>(),
         ensures true,
     {
         let mut tour = Vec::new();
@@ -118,7 +127,9 @@ pub mod TSPApproxStEph {
         visited_edges: &mut HashSetWithViewPlus<(V, V)>,
         fuel: usize,
     )
-        requires spec_labgraphview_wf(graph@),
+        requires
+            spec_labgraphview_wf(graph@),
+            valid_key_type_LabEdge::<V, WrappedF64>(),
         ensures true,
         decreases fuel,
     {
@@ -256,7 +267,9 @@ pub mod TSPApproxStEph {
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         tour: &[V],
     ) -> (total: WrappedF64)
-        requires spec_labgraphview_wf(graph@),
+        requires
+            spec_labgraphview_wf(graph@),
+            valid_key_type_LabEdge::<V, WrappedF64>(),
         ensures tour@.len() <= 1 ==> total@ == 0.0f64,
     {
         let mut total = zero_dist();
@@ -291,9 +304,10 @@ pub mod TSPApproxStEph {
 
     /// - APAS: N/A — internal helper, delegates to LabUnDirGraphStEph::ng.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — delegates to ng().
-    #[verifier::external_body]
     fn get_neighbors<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>, v: &V) -> (ng: SetStEph<V>)
-        requires spec_labgraphview_wf(graph@),
+        requires
+            spec_labgraphview_wf(graph@),
+            valid_key_type_LabEdge::<V, WrappedF64>(),
         ensures ng@ == graph.spec_ng(v@),
     {
         graph.ng(v)
@@ -301,13 +315,14 @@ pub mod TSPApproxStEph {
 
     /// - APAS: N/A — internal helper, delegates to LabUnDirGraphStEph::get_edge_label.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — delegates to get_edge_label().
-    #[verifier::external_body]
     fn get_edge_weight<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         u: &V,
         v: &V,
     ) -> (weight: Option<WrappedF64>)
-        requires spec_labgraphview_wf(graph@),
+        requires
+            spec_labgraphview_wf(graph@),
+            valid_key_type_LabEdge::<V, WrappedF64>(),
         ensures
             weight.is_some() == (exists |l: f64|
                 graph@.A.contains((u@, v@, l)) || graph@.A.contains((v@, u@, l))),
@@ -346,6 +361,7 @@ pub mod TSPApproxStEph {
         requires
             spec_labgraphview_wf(graph@),
             valid_key_type::<V>(),
+            valid_key_type_LabEdge::<V, WrappedF64>(),
         ensures result.0@.len() <= 1 ==> result.1@ == 0.0f64,
     {
         let euler = euler_tour(graph, start, spanning_tree);
