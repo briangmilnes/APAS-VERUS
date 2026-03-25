@@ -67,7 +67,7 @@ fn test_avltreeseq_set_method() {
     assert_eq!(*single.nth(0), 99);
 }
 
-// #[test]  // failing atm
+// #[test]  // set() panics on out-of-bounds instead of returning Err
 // fn test_avltreeseq_set_out_of_bounds_error() {
 //     let mut single: AVLTreeS<N> = <AVLTreeS<N> as AVLTreeSeq<N>>::singleton(42);
 //     let result = single.set(1, 99);
