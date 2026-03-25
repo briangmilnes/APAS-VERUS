@@ -81,6 +81,7 @@ pub mod TSPApproxStEph {
     }
 
     /// Linear scan for edge pair in visited-edges vector.
+    // veracity: no_requires
     fn vec_contains_pair<V: HashOrd>(v: &Vec<(V, V)>, key: &(V, V)) -> (found: bool)
         ensures true,
     {
