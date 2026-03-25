@@ -18,7 +18,7 @@ pub mod BSTSetPlainMtEph {
 
     #[verifier::reject_recursive_types(T)]
     pub struct BSTSetPlainMtEph<T: StTInMtT + Ord + TotalOrder> {
-        pub(crate) tree: BSTPlainMtEph<T>,
+        pub tree: BSTPlainMtEph<T>,
     }
 
     pub type BSTSetPlainMt<T> = BSTSetPlainMtEph<T>;
@@ -61,8 +61,10 @@ pub mod BSTSetPlainMtEph {
         spec fn spec_bstsetplainmteph_wf(&self) -> bool;
 
         fn empty() -> (set: Self)
+            requires obeys_feq_clone::<T>()
             ensures set.spec_bstsetplainmteph_wf();
         fn singleton(value: T) -> (set: Self)
+            requires obeys_feq_clone::<T>()
             ensures set.spec_bstsetplainmteph_wf();
         fn size(&self) -> (n: N)
             requires self.spec_bstsetplainmteph_wf()
@@ -86,46 +88,44 @@ pub mod BSTSetPlainMtEph {
             requires old(self).spec_bstsetplainmteph_wf()
             ensures self.spec_bstsetplainmteph_wf();
         fn delete(&mut self, target: &T)
-            requires old(self).spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+            requires old(self).spec_bstsetplainmteph_wf()
             ensures self.spec_bstsetplainmteph_wf();
         fn union(&self, other: &Self) -> (combined: Self)
-            requires self.spec_bstsetplainmteph_wf(), other.spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+            requires self.spec_bstsetplainmteph_wf(), other.spec_bstsetplainmteph_wf()
             ensures combined.spec_bstsetplainmteph_wf();
         fn intersection(&self, other: &Self) -> (common: Self)
-            requires self.spec_bstsetplainmteph_wf(), other.spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+            requires self.spec_bstsetplainmteph_wf(), other.spec_bstsetplainmteph_wf()
             ensures common.spec_bstsetplainmteph_wf();
         fn difference(&self, other: &Self) -> (diff: Self)
-            requires self.spec_bstsetplainmteph_wf(), other.spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+            requires self.spec_bstsetplainmteph_wf(), other.spec_bstsetplainmteph_wf()
             ensures diff.spec_bstsetplainmteph_wf();
         fn split(&self, pivot: &T) -> (parts: (Self, B, Self))
-            requires self.spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+            requires self.spec_bstsetplainmteph_wf()
             ensures parts.0.spec_bstsetplainmteph_wf(), parts.2.spec_bstsetplainmteph_wf();
         fn join_pair(left: Self, right: Self) -> (joined: Self)
-            requires left.spec_bstsetplainmteph_wf(), right.spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+            requires left.spec_bstsetplainmteph_wf(), right.spec_bstsetplainmteph_wf()
             ensures joined.spec_bstsetplainmteph_wf();
         fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self)
-            requires left.spec_bstsetplainmteph_wf(), right.spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+            requires left.spec_bstsetplainmteph_wf(), right.spec_bstsetplainmteph_wf()
             ensures joined.spec_bstsetplainmteph_wf();
         fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> (filtered: Self)
             requires
                 self.spec_bstsetplainmteph_wf(),
-                obeys_feq_clone::<T>(),
                 forall|t: &T| #[trigger] predicate.requires((t,)),
             ensures filtered.spec_bstsetplainmteph_wf();
         fn reduce<F: FnMut(T, T) -> T + Send>(&self, op: F, base: T) -> (reduced: T)
             requires
                 self.spec_bstsetplainmteph_wf(),
-                obeys_feq_clone::<T>(),
                 forall|a: T, b: T| #[trigger] op.requires((a, b)),
             ensures true;
         fn iter_in_order(&self) -> (seq: ArraySeqStPerS<T>)
-            requires self.spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+            requires self.spec_bstsetplainmteph_wf()
             ensures true;
         fn as_tree(&self) -> (tree: &BSTPlainMtEph<T>)
             requires self.spec_bstsetplainmteph_wf()
             ensures true;
         fn iter(&self) -> (it: BSTSetPlainMtEphIter<T>)
-            requires self.spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+            requires self.spec_bstsetplainmteph_wf()
             ensures it@.0 == 0, bstsetplainmteph_iter_invariant(&it);
     }
 
@@ -166,8 +166,8 @@ pub mod BSTSetPlainMtEph {
         tree
     }
 
-    // veracity: no_requires
     fn from_vec<T: StTInMtT + Ord + TotalOrder>(values: Vec<T>) -> (set: BSTSetPlainMtEph<T>)
+        requires obeys_feq_clone::<T>(),
         ensures set.spec_bstsetplainmteph_wf(),
     {
         let mut tree = BSTPlainMtEph::new();
@@ -185,15 +185,15 @@ pub mod BSTSetPlainMtEph {
     }
 
     fn copy_set<T: StTInMtT + Ord + TotalOrder>(set: &BSTSetPlainMtEph<T>) -> (out: BSTSetPlainMtEph<T>)
-        requires set.spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+        requires set.spec_bstsetplainmteph_wf()
         ensures out.spec_bstsetplainmteph_wf()
     {
         from_vec(values_vec(&set.tree))
     }
 
     impl<T: StTInMtT + Ord + TotalOrder + 'static> BSTSetPlainMtEphTrait<T> for BSTSetPlainMtEph<T> {
-        closed spec fn spec_bstsetplainmteph_wf(&self) -> bool {
-            self.tree.spec_bstplainmteph_wf()
+        open spec fn spec_bstsetplainmteph_wf(&self) -> bool {
+            self.tree.spec_bstplainmteph_wf() && obeys_feq_clone::<T>()
         }
 
         fn empty() -> Self {
@@ -526,7 +526,7 @@ pub mod BSTSetPlainMtEph {
         type Item = T;
         type IntoIter = BSTSetPlainMtEphIter<T>;
         fn into_iter(self) -> (it: BSTSetPlainMtEphIter<T>)
-            requires self.spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+            requires self.spec_bstsetplainmteph_wf()
             ensures it@.0 == 0, bstsetplainmteph_iter_invariant(&it),
         {
             self.iter()
@@ -537,7 +537,7 @@ pub mod BSTSetPlainMtEph {
         type Item = T;
         type IntoIter = std::vec::IntoIter<T>;
         fn into_iter(self) -> (it: Self::IntoIter)
-            requires self.spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+            requires self.spec_bstsetplainmteph_wf()
         {
             values_vec(&self.tree).into_iter()
         }

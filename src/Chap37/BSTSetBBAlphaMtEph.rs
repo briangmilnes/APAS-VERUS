@@ -18,7 +18,7 @@ pub mod BSTSetBBAlphaMtEph {
 
     #[verifier::reject_recursive_types(T)]
     pub struct BSTSetBBAlphaMtEph<T: StTInMtT + Ord + TotalOrder> {
-        pub(crate) tree: BSTBBAlphaMtEph<T>,
+        pub tree: BSTBBAlphaMtEph<T>,
     }
 
     pub type BSTSetBBAlphaMt<T> = BSTSetBBAlphaMtEph<T>;
@@ -61,8 +61,10 @@ pub mod BSTSetBBAlphaMtEph {
         spec fn spec_bstsetbbalphamteph_wf(&self) -> bool;
 
         fn empty() -> (set: Self)
+            requires obeys_feq_clone::<T>()
             ensures set.spec_bstsetbbalphamteph_wf();
         fn singleton(value: T) -> (set: Self)
+            requires obeys_feq_clone::<T>()
             ensures set.spec_bstsetbbalphamteph_wf();
         fn size(&self) -> (n: N)
             requires self.spec_bstsetbbalphamteph_wf()
@@ -86,46 +88,44 @@ pub mod BSTSetBBAlphaMtEph {
             requires old(self).spec_bstsetbbalphamteph_wf()
             ensures self.spec_bstsetbbalphamteph_wf();
         fn delete(&mut self, target: &T)
-            requires old(self).spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
+            requires old(self).spec_bstsetbbalphamteph_wf()
             ensures self.spec_bstsetbbalphamteph_wf();
         fn union(&self, other: &Self) -> (combined: Self)
-            requires self.spec_bstsetbbalphamteph_wf(), other.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
+            requires self.spec_bstsetbbalphamteph_wf(), other.spec_bstsetbbalphamteph_wf()
             ensures combined.spec_bstsetbbalphamteph_wf();
         fn intersection(&self, other: &Self) -> (common: Self)
-            requires self.spec_bstsetbbalphamteph_wf(), other.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
+            requires self.spec_bstsetbbalphamteph_wf(), other.spec_bstsetbbalphamteph_wf()
             ensures common.spec_bstsetbbalphamteph_wf();
         fn difference(&self, other: &Self) -> (diff: Self)
-            requires self.spec_bstsetbbalphamteph_wf(), other.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
+            requires self.spec_bstsetbbalphamteph_wf(), other.spec_bstsetbbalphamteph_wf()
             ensures diff.spec_bstsetbbalphamteph_wf();
         fn split(&self, pivot: &T) -> (parts: (Self, B, Self))
-            requires self.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
+            requires self.spec_bstsetbbalphamteph_wf()
             ensures parts.0.spec_bstsetbbalphamteph_wf(), parts.2.spec_bstsetbbalphamteph_wf();
         fn join_pair(left: Self, right: Self) -> (joined: Self)
-            requires left.spec_bstsetbbalphamteph_wf(), right.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
+            requires left.spec_bstsetbbalphamteph_wf(), right.spec_bstsetbbalphamteph_wf()
             ensures joined.spec_bstsetbbalphamteph_wf();
         fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self)
-            requires left.spec_bstsetbbalphamteph_wf(), right.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
+            requires left.spec_bstsetbbalphamteph_wf(), right.spec_bstsetbbalphamteph_wf()
             ensures joined.spec_bstsetbbalphamteph_wf();
         fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> (filtered: Self)
             requires
                 self.spec_bstsetbbalphamteph_wf(),
-                obeys_feq_clone::<T>(),
                 forall|t: &T| #[trigger] predicate.requires((t,)),
             ensures filtered.spec_bstsetbbalphamteph_wf();
         fn reduce<F: FnMut(T, T) -> T + Send>(&self, op: F, base: T) -> (reduced: T)
             requires
                 self.spec_bstsetbbalphamteph_wf(),
-                obeys_feq_clone::<T>(),
                 forall|a: T, b: T| #[trigger] op.requires((a, b)),
             ensures true;
         fn iter_in_order(&self) -> (seq: ArraySeqStPerS<T>)
-            requires self.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
+            requires self.spec_bstsetbbalphamteph_wf()
             ensures true;
         fn as_tree(&self) -> (tree: &BSTBBAlphaMtEph<T>)
             requires self.spec_bstsetbbalphamteph_wf()
             ensures true;
         fn iter(&self) -> (it: BSTSetBBAlphaMtEphIter<T>)
-            requires self.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
+            requires self.spec_bstsetbbalphamteph_wf()
             ensures it@.0 == 0, bstsetbbalphamteph_iter_invariant(&it);
     }
 
@@ -166,8 +166,8 @@ pub mod BSTSetBBAlphaMtEph {
         tree
     }
 
-    // veracity: no_requires
     fn from_vec<T: StTInMtT + Ord + TotalOrder>(values: Vec<T>) -> (set: BSTSetBBAlphaMtEph<T>)
+        requires obeys_feq_clone::<T>(),
         ensures set.spec_bstsetbbalphamteph_wf(),
     {
         let mut tree = BSTBBAlphaMtEph::new();
@@ -185,15 +185,15 @@ pub mod BSTSetBBAlphaMtEph {
     }
 
     fn copy_set<T: StTInMtT + Ord + TotalOrder>(set: &BSTSetBBAlphaMtEph<T>) -> (out: BSTSetBBAlphaMtEph<T>)
-        requires set.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
+        requires set.spec_bstsetbbalphamteph_wf()
         ensures out.spec_bstsetbbalphamteph_wf()
     {
         from_vec(values_vec(&set.tree))
     }
 
     impl<T: StTInMtT + Ord + TotalOrder + 'static> BSTSetBBAlphaMtEphTrait<T> for BSTSetBBAlphaMtEph<T> {
-        closed spec fn spec_bstsetbbalphamteph_wf(&self) -> bool {
-            self.tree.spec_bstbbalphamteph_wf()
+        open spec fn spec_bstsetbbalphamteph_wf(&self) -> bool {
+            self.tree.spec_bstbbalphamteph_wf() && obeys_feq_clone::<T>()
         }
 
         fn empty() -> Self {
@@ -526,7 +526,7 @@ pub mod BSTSetBBAlphaMtEph {
         type Item = T;
         type IntoIter = BSTSetBBAlphaMtEphIter<T>;
         fn into_iter(self) -> (it: BSTSetBBAlphaMtEphIter<T>)
-            requires self.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
+            requires self.spec_bstsetbbalphamteph_wf()
             ensures it@.0 == 0, bstsetbbalphamteph_iter_invariant(&it),
         {
             self.iter()
@@ -537,7 +537,7 @@ pub mod BSTSetBBAlphaMtEph {
         type Item = T;
         type IntoIter = std::vec::IntoIter<T>;
         fn into_iter(self) -> (it: Self::IntoIter)
-            requires self.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
+            requires self.spec_bstsetbbalphamteph_wf()
         {
             values_vec(&self.tree).into_iter()
         }
