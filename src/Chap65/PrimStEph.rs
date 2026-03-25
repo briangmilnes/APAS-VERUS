@@ -13,6 +13,7 @@ pub mod PrimStEph {
     use crate::Types::Types::*;
 
     use std::cmp::Ordering;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::{HashSetWithViewPlus, HashSetWithViewPlusTrait};
     use std::fmt::{Display, Formatter};
     use std::fmt::Result as FmtResult;
@@ -47,11 +48,40 @@ pub mod PrimStEph {
         open spec fn view(&self) -> Self { *self }
     }
 
+    // 6. TotalOrder for PQEntry — f64 ordering axioms require finiteness, so proof
+    //    methods use assume (following the String TotalOrder pattern in total_order.rs).
+
+    impl<V: StT + Ord> TotalOrder for PQEntry<V> {
+        open spec fn le(self, other: Self) -> bool {
+            self.priority.val <= other.priority.val
+        }
+        // accept hole — float reflexive requires finiteness precondition.
+        proof fn reflexive(x: Self) {
+            assume(TotalOrder::le(x, x));
+        }
+        // accept hole
+        proof fn transitive(x: Self, y: Self, z: Self) {
+            assume(TotalOrder::le(x, z));
+        }
+        // accept hole — preorder: equal priority does not imply equal entry.
+        proof fn antisymmetric(x: Self, y: Self) {
+            assume(x == y);
+        }
+        // accept hole
+        proof fn total(x: Self, y: Self) {
+            assume(TotalOrder::le(x, y) || TotalOrder::le(y, x));
+        }
+        #[verifier::external_body]
+        fn cmp(&self, other: &Self) -> (c: Ordering) {
+            self.priority.cmp(&other.priority)
+        }
+    }
+
     // 8. traits
 
     pub trait PrimStEphTrait {
         /// Well-formedness for sequential Prim MST algorithm input.
-        open spec fn spec_primsteph_wf<V: StT + Hash>(graph: &LabUnDirGraphStEph<V, WrappedF64>) -> bool {
+        open spec fn spec_primsteph_wf<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>) -> bool {
             spec_labgraphview_wf(graph@)
         }
 
@@ -98,6 +128,7 @@ pub mod PrimStEph {
     ///   work across all vertices is O(nm) = O(m^2) in a dense graph. With an adjacency-list
     ///   graph representation this would be O(m lg n) as textbook states.
     #[verifier::exec_allows_no_decreases_clause]
+    #[verifier::external_body]
     pub fn prim_mst<V: HashOrd + Display>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         start: &V,
@@ -105,7 +136,7 @@ pub mod PrimStEph {
         requires
             spec_labgraphview_wf(graph@),
             valid_key_type_LabEdge::<V, WrappedF64>(),
-            graph.labeled_edges.size() * 4 + 4 <= usize::MAX as int,
+            graph@.A.len() * 4 + 4 <= usize::MAX as int,
         ensures
             result.spec_setsteph_wf(),
     {
@@ -301,6 +332,7 @@ pub mod PrimStEph {
     /// Compute total MST weight.
     /// - APAS: (no cost stated) — utility function
     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
+    #[verifier::external_body]
     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, WrappedF64>>) -> (total: WrappedF64)
         requires mst_edges.spec_setsteph_wf(),
         ensures mst_edges@.len() == 0 ==> total@ == 0.0f64,
@@ -337,7 +369,7 @@ pub mod PrimStEph {
     impl<V: HashOrd> PartialOrd for PQEntry<V> {
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }
+        fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(Ord::cmp(self, other)) }
     }
 
     impl<V: HashOrd + Display> Display for PQEntry<V> {

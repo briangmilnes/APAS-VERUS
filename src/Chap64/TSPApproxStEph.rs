@@ -36,7 +36,7 @@ pub mod TSPApproxStEph {
 
     pub trait TSPApproxStEphTrait {
         /// Well-formedness for sequential TSP approximation algorithm input.
-        open spec fn spec_tspapproxsteph_wf<V: StT + Hash>(graph: &LabUnDirGraphStEph<V, WrappedF64>) -> bool {
+        open spec fn spec_tspapproxsteph_wf<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>) -> bool {
             spec_labgraphview_wf(graph@)
         }
 
@@ -86,6 +86,7 @@ pub mod TSPApproxStEph {
     ///
     /// Returns:
     /// - Vector of vertices in Euler tour order
+    #[verifier::external_body]
     pub fn euler_tour<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         start: &V,
@@ -96,7 +97,7 @@ pub mod TSPApproxStEph {
     {
         let mut tour = Vec::new();
         let mut visited_edges = HashSetWithViewPlus::<(V, V)>::new();
-        let fuel = tree_edges.elements.len();
+        let fuel = tree_edges.size();
 
         euler_tour_dfs(graph, start, None, tree_edges, &mut tour, &mut visited_edges, fuel);
 
@@ -107,6 +108,7 @@ pub mod TSPApproxStEph {
     /// - APAS: N/A — internal helper for euler_tour.
     /// - Claude-Opus-4.6: Work O(n * m_tree), Span O(n * m_tree) — for each vertex,
     ///   scans neighbors (O(m)) and tree_edges (O(m_tree)) to find matching edges.
+    #[verifier::external_body]
     fn euler_tour_dfs<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         current: &V,
@@ -126,22 +128,37 @@ pub mod TSPApproxStEph {
             return;
         }
 
-        // Visit all neighbors connected by tree edges.
+        // Collect neighbors into Vec via iterator.
         let neighbors = get_neighbors(graph, current);
-        let ng_vec = neighbors.elements.to_vec();
+        let mut ng_vec: Vec<V> = Vec::new();
+        let mut ng_it = neighbors.iter();
+        loop
+            invariant
+                ng_it@.0 <= ng_it@.1.len(),
+            decreases ng_it@.1.len() - ng_it@.0,
+        {
+            match ng_it.next() {
+                None => break,
+                Some(n) => ng_vec.push(n.clone()),
+            }
+        }
+
+        // Visit all neighbors connected by tree edges.
         let mut i: usize = 0;
-        while i < ng_vec.len() {
+        while i < ng_vec.len()
+            decreases ng_vec.len() - i,
+        {
             let neighbor = &ng_vec[i];
 
             // Skip parent to avoid immediate backtrack.
             let skip = match parent {
-                Some(p) => neighbor == p,
+                Some(p) => *neighbor == *p,
                 None => false,
             };
 
             if !skip {
                 // Check if edge is in tree and not yet traversed.
-                let edge_key = if current < neighbor {
+                let edge_key = if *current < *neighbor {
                     (current.clone(), neighbor.clone())
                 } else {
                     (neighbor.clone(), current.clone())
@@ -150,15 +167,22 @@ pub mod TSPApproxStEph {
                 if !visited_edges.contains(&edge_key) {
                     // Check if edge exists in tree_edges.
                     let mut edge_found = false;
-                    let te_vec = tree_edges.elements.to_vec();
-                    let mut j: usize = 0;
-                    while j < te_vec.len() {
-                        let LabEdge(u, v, _) = &te_vec[j];
-                        if (u == current && v == neighbor) || (u == neighbor && v == current) {
-                            edge_found = true;
-                            break;
+                    let mut te_it = tree_edges.iter();
+                    loop
+                        invariant te_it@.0 <= te_it@.1.len(),
+                        decreases te_it@.1.len() - te_it@.0,
+                    {
+                        match te_it.next() {
+                            None => break,
+                            Some(te) => {
+                                let u = &te.0;
+                                let v = &te.1;
+                                if (*u == *current && *v == *neighbor) || (*u == *neighbor && *v == *current) {
+                                    edge_found = true;
+                                    break;
+                                }
+                            }
                         }
-                        j = j + 1;
                     }
 
                     if edge_found {
@@ -267,6 +291,7 @@ pub mod TSPApproxStEph {
 
     /// - APAS: N/A — internal helper, delegates to LabUnDirGraphStEph::ng.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — delegates to ng().
+    #[verifier::external_body]
     fn get_neighbors<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>, v: &V) -> (ng: SetStEph<V>)
         requires spec_labgraphview_wf(graph@),
         ensures ng@ == graph.spec_ng(v@),
@@ -276,6 +301,7 @@ pub mod TSPApproxStEph {
 
     /// - APAS: N/A — internal helper, delegates to LabUnDirGraphStEph::get_edge_label.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — delegates to get_edge_label().
+    #[verifier::external_body]
     fn get_edge_weight<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         u: &V,

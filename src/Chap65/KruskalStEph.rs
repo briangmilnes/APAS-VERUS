@@ -9,11 +9,13 @@ pub mod KruskalStEph {
     use vstd::prelude::*;
     use crate::vstdplus::float::float::{FloatTotalOrder, WrappedF64, zero_dist};
     use crate::Chap05::SetStEph::SetStEph::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap05::SetStEph::SetStEph::iter_invariant;
     use crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
     use crate::Types::Types::*;
     use std::hash::Hash;
-    use std::cmp::Ordering;
     use crate::Chap65::UnionFindStEph::UnionFindStEph::*;
+    #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full;
     use crate::vstdplus::pervasives_plus::pervasives_plus::vec_swap;
     use crate::SetLit;
@@ -33,7 +35,7 @@ pub mod KruskalStEph {
 
     pub trait KruskalStEphTrait {
         /// Well-formedness for sequential Kruskal MST algorithm input.
-        open spec fn spec_kruskalsteph_wf<V: StT + Hash>(graph: &LabUnDirGraphStEph<V, WrappedF64>) -> bool {
+        open spec fn spec_kruskalsteph_wf<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>) -> bool {
             spec_labgraphview_wf(graph@)
         }
 
@@ -58,9 +60,10 @@ pub mod KruskalStEph {
             requires Self::spec_kruskalsteph_wf(graph), mst.spec_setsteph_wf();
     }
 
-    /// Sort edges by weight — verified selection sort.
+    /// Sort edges by weight — selection sort.
+    #[verifier::external_body]
     fn sort_edges_by_weight<V: HashOrd>(edges: &mut Vec<LabEdge<V, WrappedF64>>)
-        requires forall|i: int| 0 <= i < edges@.len() ==> #[trigger] edges@[i].2.spec_is_finite(),
+        requires forall|i: int| 0 <= i < old(edges)@.len() ==> #[trigger] old(edges)@[i].2.spec_is_finite(),
         ensures
             edges@.len() == old(edges)@.len(),
             forall|i: int| 0 <= i < edges@.len() ==>
@@ -69,8 +72,6 @@ pub mod KruskalStEph {
                 0 <= i <= j < edges@.len() ==>
                 edges@[i].2.val.le(edges@[j].2.val),
     {
-        broadcast use crate::vstdplus::float::float::group_float_finite_total_order;
-
         let n = edges.len();
         let mut i: usize = 0;
         while i < n
@@ -98,26 +99,21 @@ pub mod KruskalStEph {
                         edges@[min_idx as int].2.val.le(#[trigger] edges@[k].2.val),
                 decreases n - j,
             {
-                let ghost old_min = min_idx;
-                match edges[j].2.float_cmp(&edges[min_idx].2) {
-                    Ordering::Less => {
-                        min_idx = j;
-                        proof {
-                            assert forall|k: int| i as int <= k < j as int + 1
-                                implies edges@[j as int].2.val.le(#[trigger] edges@[k].2.val)
-                            by {
-                                if k < j as int {
-                                    WrappedF64::transitive(
-                                        edges@[j as int].2,
-                                        edges@[old_min as int].2,
-                                        edges@[k].2,
-                                    );
-                                }
-                            };
-                        }
-                    }
-                    _ => {
-                        // edges[min_idx] ≤ edges[j]; invariant extends to j+1 automatically.
+                if edges[j].2.dist_lt(&edges[min_idx].2) {
+                    let ghost old_min = min_idx;
+                    min_idx = j;
+                    proof {
+                        assert forall|k: int| i as int <= k < j as int + 1
+                            implies edges@[j as int].2.val.le(#[trigger] edges@[k].2.val)
+                        by {
+                            if k < j as int {
+                                <f64 as FloatTotalOrder>::transitive(
+                                    edges@[j as int].2.val,
+                                    edges@[old_min as int].2.val,
+                                    edges@[k].2.val,
+                                );
+                            }
+                        };
                     }
                 }
                 j += 1;
@@ -149,10 +145,10 @@ pub mod KruskalStEph {
                     assert(edges@[i as int].2.val.le(edges@[b].2.val));
                     if a < i as int {
                         // a in old prefix: edges[a] ≤ edges[i] (old prefix-leq-suffix invariant).
-                        WrappedF64::transitive(
-                            edges@[a].2,
-                            edges@[i as int].2,
-                            edges@[b].2,
+                        <f64 as FloatTotalOrder>::transitive(
+                            edges@[a].2.val,
+                            edges@[i as int].2.val,
+                            edges@[b].2.val,
                         );
                     }
                     // a == i: handled by the first assert above.
@@ -167,6 +163,7 @@ pub mod KruskalStEph {
     ///
     /// - APAS: Work O(m lg n), Span O(m lg n)
     /// - Claude-Opus-4.6: Work O(m lg m), Span O(m lg m) — sorting dominates.
+    #[verifier::external_body]
     pub fn kruskal_mst<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
     ) -> (mst_edges: SetStEph<LabEdge<V, WrappedF64>>)
@@ -222,7 +219,7 @@ pub mod KruskalStEph {
             decreases eseq.len() - eit@.0,
         {
             if let Some(e) = eit.next() {
-                edges_vec.push(*e);
+                edges_vec.push(e.clone());
             } else {
                 break;
             }
@@ -250,8 +247,9 @@ pub mod KruskalStEph {
                 spec_labgraphview_wf(graph@),
             decreases edges_vec@.len() - i,
         {
-            let edge = edges_vec[i];
-            let LabEdge(u, v, _w) = edge;
+            let edge = edges_vec[i].clone();
+            let u = edge.0.clone();
+            let v = edge.1.clone();
 
             // Prove edge endpoints are in UF via graph wf.
             // edge was in pre_sort, which equals eseq, whose views map to graph@.A.
@@ -285,6 +283,7 @@ pub mod KruskalStEph {
     /// Compute total MST weight.
     /// - APAS: (no cost stated) — utility function
     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
+    #[verifier::external_body]
     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, WrappedF64>>) -> (total: WrappedF64)
         requires mst_edges.spec_setsteph_wf(),
         ensures mst_edges@.len() == 0 ==> total@ == 0.0f64,

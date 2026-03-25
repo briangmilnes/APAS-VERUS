@@ -21,8 +21,26 @@ Table of Contents:
 =================================================================
 
 ✓ SpanTreeMtEph.rs
-✓ SpanTreeStEph.rs
-✓ TSPApproxStEph.rs
+❌ SpanTreeStEph.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:53: error: external_body - #[verifier::external_body]
+        54 |     pub fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (result: SetStEph<Edge<V>>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/SpanTreeStEph.rs:149: error: external_body - #[verifier::external_body]
+       150 |     pub fn verify_spanning_tree<V: HashOrd>(
+   Holes: 2 total
+      2 × external_body
+❌ TSPApproxStEph.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:89: error: external_body [blocked_by: euler_tour_dfs] - #[verifier::external_body]
+        90 |     pub fn euler_tour<V: HashOrd>(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:111: error: external_body [blocked_by: get_neighbors] - #[verifier::external_body]
+       112 |     fn euler_tour_dfs<V: HashOrd>(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:294: error: external_body - #[verifier::external_body]
+       295 |     fn get_neighbors<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>, v: &V) -> (ng: SetStEph<V>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap64/TSPApproxStEph.rs:304: error: external_body - #[verifier::external_body]
+       305 |     fn get_edge_weight<V: HashOrd>(
+   Holes: 4 total
+      4 × external_body
+         2 × root cause
+         2 × downstream (blocked by root causes)
 
 =================================================================
 2. Depends Upon
@@ -49,8 +67,8 @@ TSPApproxStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   3 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   1 clean (no holes, no errors; 33%)
+   2 holed (holes or errors, 66%)
    3 total
 
 Proof Functions:
@@ -66,18 +84,18 @@ Function Specs:
    22 total fns
 
 
-Holes Found: 0 (actionable)
-Real Proof Targets: 0 (all actionable)
-
-No proof holes or warnings found! All proofs are complete.
+Holes Found: 6 (actionable)
+   6 × external_body (100%)
+      4 × root cause
+      2 × downstream (blocked by root causes)
+Real Proof Targets: 6 (all actionable)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-24 15:20:14 -07:00
-Ended:     2026-03-24 15:20:14 -07:00
-Duration:  6ms
+Started:   2026-03-24 18:42:22 -07:00
+Ended:     2026-03-24 18:42:22 -07:00
+Duration:  5ms
 
-Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
 Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log

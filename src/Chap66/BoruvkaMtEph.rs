@@ -9,12 +9,17 @@ pub mod BoruvkaMtEph {
     use vstd::prelude::*;
     use crate::vstdplus::float::float::{WrappedF64, zero_dist};
     use crate::Chap05::SetStEph::SetStEph::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap05::SetStEph::SetStEph::iter_invariant;
     use crate::Types::Types::*;
 
     use std::hash::Hash;
     use std::sync::Arc;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::hash::obeys_key_model;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::{ParaPair, SetLit};
+    use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
 
     verus! {
 
@@ -36,20 +41,15 @@ pub mod BoruvkaMtEph {
     impl<V: Copy> Copy for LabeledEdge<V> {}
 
     impl<V: Copy> Clone for LabeledEdge<V> {
-        fn clone(&self) -> (s: Self)
-            ensures s@ == self@
-        {
+        fn clone(&self) -> (s: Self) {
             *self
         }
     }
 
+    #[verifier::external]
     impl<V: PartialEq + Copy> PartialEq for LabeledEdge<V> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
-        {
-            let r = self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3;
-            proof { assume(r == (self@ == other@)); }
-            r
+        fn eq(&self, other: &Self) -> bool {
+            self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3
         }
     }
 
@@ -65,15 +65,15 @@ pub mod BoruvkaMtEph {
     // 6. spec fns
 
     /// All edge weights are finite.
-    pub open spec fn spec_all_weights_finite<V: View<V = V> + Copy>(edges: Set<LabeledEdge<V>>) -> bool {
-        forall|e: LabeledEdge<V>| edges.contains(e) ==> e.2.spec_is_finite()
+    pub open spec fn spec_all_weights_finite<V: Copy>(edges: Set<LabeledEdge<V>>) -> bool {
+        forall|e: LabeledEdge<V>| #[trigger] edges.contains(e) ==> e.2.spec_is_finite()
     }
 
     // 8. traits
 
     pub trait BoruvkaMtEphTrait {
         /// Well-formedness for parallel Borůvka MST algorithm input.
-        open spec fn spec_boruvkamteph_wf<V: View<V = V> + Copy>(
+        open spec fn spec_boruvkamteph_wf<V: Copy>(
             edges: Set<LabeledEdge<V>>,
         ) -> bool {
             spec_all_weights_finite(edges)
@@ -81,7 +81,7 @@ pub mod BoruvkaMtEph {
 
         /// Find vertex bridges for parallel Borůvka's algorithm.
         /// APAS: Work O(|E|), Span O(lg |E|)
-        fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + 'static>(
+        fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
             edges: Arc<Vec<LabeledEdge<V>>>,
             start: usize,
             end: usize,
@@ -93,7 +93,7 @@ pub mod BoruvkaMtEph {
 
         /// Parallel bridge-based star partition.
         /// APAS: Work O(|V| + |E|), Span O(lg |V|)
-        fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(
+        fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
             vertices_vec: Vec<V>,
             bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
             seed: u64,
@@ -106,7 +106,7 @@ pub mod BoruvkaMtEph {
 
         /// Parallel Borůvka's MST algorithm.
         /// APAS: Work O(m log n), Span O(log² n)
-        fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + 'static>(
+        fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
             vertices_vec: Vec<V>,
             edges_vec: Vec<LabeledEdge<V>>,
             mst_labels: SetStEph<usize>,
@@ -121,7 +121,7 @@ pub mod BoruvkaMtEph {
 
         /// Parallel Borůvka's MST with random seed.
         /// APAS: Work O(m log n), Span O(log² n)
-        fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(
+        fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + Copy + 'static>(
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
             seed: u64,
@@ -136,10 +136,13 @@ pub mod BoruvkaMtEph {
 
         /// Compute total weight of MST.
         /// APAS: Work O(m), Span O(1)
-        fn mst_weight<V: StT + Hash>(
+        fn mst_weight<V: StTInMtT + Hash + Ord + Copy + 'static>(
             edges: &SetStEph<LabeledEdge<V>>,
             mst_labels: &SetStEph<usize>,
-        ) -> WrappedF64;
+        ) -> WrappedF64
+            requires
+                edges.spec_setsteph_wf(),
+                mst_labels.spec_setsteph_wf();
     }
 
     // 9. impls
@@ -160,8 +163,8 @@ pub mod BoruvkaMtEph {
     /// Parallel coin flip generation using divide-and-conquer.
     ///
     /// - Work O(n), Span O(log n) — parallel hash-based coin generation via ParaPair!.
-    #[verifier::exec_allows_no_decreases_clause]
-    fn hash_coin_flips_mt<V: StTInMtT + Hash + Ord + 'static>(
+    #[verifier::external_body]
+    fn hash_coin_flips_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices: Arc<Vec<V>>,
         seed: u64,
         round: usize,
@@ -178,8 +181,9 @@ pub mod BoruvkaMtEph {
             return HashMapWithViewPlus::new();
         }
         if size == 1 {
+            let verts = arc_deref(&vertices);
             let mut coins = HashMapWithViewPlus::new();
-            coins.insert(vertices[start].clone(), hash_coin(seed, round, start));
+            coins.insert(verts[start].clone(), hash_coin(seed, round, start));
             return coins;
         }
 
@@ -212,7 +216,7 @@ pub mod BoruvkaMtEph {
         let ghost it_seq = it@.1;
         loop
             invariant
-                iter_invariant(&it),
+                it@.0 <= it@.1.len(),
                 it_seq == it@.1,
             decreases it_seq.len() - it@.0,
         {
@@ -228,8 +232,8 @@ pub mod BoruvkaMtEph {
     /// Parallel remaining-vertex filter using divide-and-conquer.
     ///
     /// - Work O(n), Span O(log n) — parallel filter via ParaPair!.
-    #[verifier::exec_allows_no_decreases_clause]
-    fn compute_remaining_mt<V: StTInMtT + Hash + Ord + 'static>(
+    #[verifier::external_body]
+    fn compute_remaining_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices: Arc<Vec<V>>,
         partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
         start: usize,
@@ -242,7 +246,8 @@ pub mod BoruvkaMtEph {
             return Vec::new();
         }
         if size == 1 {
-            let v = &vertices[start];
+            let verts = arc_deref(&vertices);
+            let v = &verts[start];
             if !partition.contains_key(v) {
                 let mut result = Vec::new();
                 result.push(v.clone());
@@ -287,8 +292,8 @@ pub mod BoruvkaMtEph {
     /// Parallel MST label collection using divide-and-conquer.
     ///
     /// - Work O(n), Span O(log n) — parallel label extraction via ParaPair!.
-    #[verifier::exec_allows_no_decreases_clause]
-    fn collect_mst_labels_mt<V: StTInMtT + Hash + Ord + 'static>(
+    #[verifier::external_body]
+    fn collect_mst_labels_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         keys: Arc<Vec<V>>,
         partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
         start: usize,
@@ -301,7 +306,8 @@ pub mod BoruvkaMtEph {
             return Vec::new();
         }
         if size == 1 {
-            if let Some((_, _, label)) = partition.get(&keys[start]) {
+            let ks = arc_deref(&keys);
+            if let Some((_, _, label)) = partition.get(&ks[start]) {
                 let mut result = Vec::new();
                 result.push(*label);
                 return result;
@@ -346,8 +352,8 @@ pub mod BoruvkaMtEph {
     /// Maps tails->heads from partition, remaining->identity.
     ///
     /// - Work O(n), Span O(log n) — parallel map building via ParaPair!.
-    #[verifier::exec_allows_no_decreases_clause]
-    fn build_partition_map_mt<V: StTInMtT + Hash + Ord + 'static>(
+    #[verifier::external_body]
+    fn build_partition_map_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices: Arc<Vec<V>>,
         partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
         start: usize,
@@ -363,7 +369,8 @@ pub mod BoruvkaMtEph {
             return HashMapWithViewPlus::new();
         }
         if size == 1 {
-            let v = &vertices[start];
+            let verts = arc_deref(&vertices);
+            let v = &verts[start];
             let mut heads: HashMapWithViewPlus<V, V> = HashMapWithViewPlus::new();
             if let Some((head, _, _)) = partition.get(v) {
                 heads.insert(v.clone(), head.clone());
@@ -404,7 +411,7 @@ pub mod BoruvkaMtEph {
         let ghost it_seq = it@.1;
         loop
             invariant
-                iter_invariant(&it),
+                it@.0 <= it@.1.len(),
                 it_seq == it@.1,
             decreases it_seq.len() - it@.0,
         {
@@ -424,8 +431,8 @@ pub mod BoruvkaMtEph {
     ///
     /// - APAS: Work O(m), Span O(log m)
     /// - Claude-Opus-4.6: Work O(m), Span O(log m) — agrees with APAS; parallel divide-and-conquer via ParaPair!.
-    #[verifier::exec_allows_no_decreases_clause]
-    pub fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + 'static>(
+    #[verifier::external_body]
+    pub fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         edges: Arc<Vec<LabeledEdge<V>>>,
         start: usize,
         end: usize,
@@ -441,7 +448,8 @@ pub mod BoruvkaMtEph {
         }
 
         if size == 1 {
-            let LabeledEdge(u, v, w, label) = edges[start];
+            let es = arc_deref(&edges);
+            let LabeledEdge(u, v, w, label) = es[start];
             let mut min_edges: HashMapWithViewPlus<V, (V, WrappedF64, usize)> = HashMapWithViewPlus::new();
             min_edges.insert(u.clone(), (v.clone(), w, label));
             min_edges.insert(v.clone(), (u.clone(), w, label));
@@ -478,7 +486,7 @@ pub mod BoruvkaMtEph {
         let ghost it_seq = it@.1;
         loop
             invariant
-                iter_invariant(&it),
+                it@.0 <= it@.1.len(),
                 it_seq == it@.1,
             decreases it_seq.len() - it@.0,
         {
@@ -509,7 +517,8 @@ pub mod BoruvkaMtEph {
     ///
     /// - APAS: Work O(n), Span O(log n)
     /// - Claude-Opus-4.6: Work O(n), Span O(log n) — coin flips, filter, and remaining all O(log n) via ParaPair!.
-    pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + 'static>(
+    #[verifier::external_body]
+    pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices_vec: Vec<V>,
         bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
         seed: u64,
@@ -557,7 +566,7 @@ pub mod BoruvkaMtEph {
         let ghost pit_seq = pit@.1;
         loop
             invariant
-                iter_invariant(&pit),
+                pit@.0 <= pit@.1.len(),
                 pit_seq == pit@.1,
             decreases pit_seq.len() - pit@.0,
         {
@@ -574,8 +583,8 @@ pub mod BoruvkaMtEph {
     /// Parallel filter: find edges from Tail->Head.
     ///
     /// - Claude-Opus-4.6: Work O(n), Span O(log n) — parallel divide-and-conquer via ParaPair!.
-    #[verifier::exec_allows_no_decreases_clause]
-    fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + 'static>(
+    #[verifier::external_body]
+    fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices: Arc<Vec<V>>,
         bridges: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
         coin_flips: Arc<HashMapWithViewPlus<V, bool>>,
@@ -593,7 +602,8 @@ pub mod BoruvkaMtEph {
         }
 
         if size == 1 {
-            let u = &vertices[start];
+            let verts = arc_deref(&vertices);
+            let u = &verts[start];
             if let Some((v, w, label)) = bridges.get(u) {
                 let u_heads = match coin_flips.get(u) {
                     Some(b) => *b,
@@ -647,7 +657,7 @@ pub mod BoruvkaMtEph {
         let ghost it_seq = it@.1;
         loop
             invariant
-                iter_invariant(&it),
+                it@.0 <= it@.1.len(),
                 it_seq == it@.1,
             decreases it_seq.len() - it@.0,
         {
@@ -668,8 +678,8 @@ pub mod BoruvkaMtEph {
     ///
     /// - APAS: Work O(m log n), Span O(log² n)
     /// - Claude-Opus-4.6: Work O(m log n), Span O(log² n) — each round is O(log n) span (bridges O(log m), partition O(log n), reroute O(log m)); O(log n) rounds total.
-    #[verifier::exec_allows_no_decreases_clause]
-    pub fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + 'static>(
+    #[verifier::external_body]
+    pub fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices_vec: Vec<V>,
         edges_vec: Vec<LabeledEdge<V>>,
         mst_labels: SetStEph<usize>,
@@ -703,7 +713,7 @@ pub mod BoruvkaMtEph {
             let ghost pit_seq = pit@.1;
             loop
                 invariant
-                    iter_invariant(&pit),
+                    pit@.0 <= pit@.1.len(),
                     pit_seq == pit@.1,
                 decreases pit_seq.len() - pit@.0,
             {
@@ -760,7 +770,7 @@ pub mod BoruvkaMtEph {
             let ghost pit2_seq = pit2@.1;
             loop
                 invariant
-                    iter_invariant(&pit2),
+                    pit2@.0 <= pit2@.1.len(),
                     pit2_seq == pit2@.1,
                 decreases pit2_seq.len() - pit2@.0,
             {
@@ -788,8 +798,8 @@ pub mod BoruvkaMtEph {
     /// Parallel edge re-routing: map edges to new endpoints and remove self-edges.
     ///
     /// - Claude-Opus-4.6: Work O(m), Span O(log m) — parallel divide-and-conquer via ParaPair!.
-    #[verifier::exec_allows_no_decreases_clause]
-    fn reroute_edges_mt<V: StTInMtT + Hash + Ord + 'static>(
+    #[verifier::external_body]
+    fn reroute_edges_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         edges: Arc<Vec<LabeledEdge<V>>>,
         partition: Arc<HashMapWithViewPlus<V, V>>,
         start: usize,
@@ -806,7 +816,8 @@ pub mod BoruvkaMtEph {
         }
 
         if size == 1 {
-            let LabeledEdge(u, v, w, label) = edges[start];
+            let es = arc_deref(&edges);
+            let LabeledEdge(u, v, w, label) = es[start];
             let new_u = match partition.get(&u) {
                 Some(mapped) => mapped.clone(),
                 None => u,
@@ -869,7 +880,8 @@ pub mod BoruvkaMtEph {
     ///
     /// - APAS: Work O(m log n), Span O(log² n)
     /// - Claude-Opus-4.6: Work O(m log n), Span O(log² n) — delegates to boruvka_mst_mt which achieves O(log n) span per round.
-    pub fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + 'static>(
+    #[verifier::external_body]
+    pub fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices: &SetStEph<V>,
         edges: &SetStEph<LabeledEdge<V>>,
         seed: u64,
@@ -922,7 +934,8 @@ pub mod BoruvkaMtEph {
     ///
     /// - APAS: N/A — utility function, not in prose.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential scan of edges.
-    pub fn mst_weight<V: StT + Hash>(
+    #[verifier::external_body]
+    pub fn mst_weight<V: StTInMtT + Hash + Ord + Copy + 'static>(
         edges: &SetStEph<LabeledEdge<V>>,
         mst_labels: &SetStEph<usize>,
     ) -> (total: WrappedF64)
@@ -960,13 +973,11 @@ pub mod BoruvkaMtEph {
 
     // 14. derive impls outside verus!
 
-    #[cfg(not(verus_keep_ghost))]
     impl<V: Clone + Copy + PartialEq + Eq + PartialOrd + Ord + std::hash::Hash> PartialOrd for LabeledEdge<V> {
         fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
             Some(self.cmp(other))
         }
     }
-    #[cfg(not(verus_keep_ghost))]
     impl<V: Clone + Copy + PartialEq + Eq + PartialOrd + Ord + std::hash::Hash> Ord for LabeledEdge<V> {
         fn cmp(&self, other: &Self) -> std::cmp::Ordering {
             self.0.cmp(&other.0)
@@ -975,7 +986,6 @@ pub mod BoruvkaMtEph {
                 .then_with(|| self.3.cmp(&other.3))
         }
     }
-    #[cfg(not(verus_keep_ghost))]
     impl<V: std::hash::Hash> std::hash::Hash for LabeledEdge<V> {
         fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
             self.0.hash(state);
@@ -984,13 +994,11 @@ pub mod BoruvkaMtEph {
             self.3.hash(state);
         }
     }
-    #[cfg(not(verus_keep_ghost))]
     impl<V: std::fmt::Debug> std::fmt::Debug for LabeledEdge<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_tuple("LabeledEdge").field(&self.0).field(&self.1).field(&self.2.val).field(&self.3).finish()
         }
     }
-    #[cfg(not(verus_keep_ghost))]
     impl<V: std::fmt::Display> std::fmt::Display for LabeledEdge<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "({}, {}, {}, {})", self.0, self.1, self.2, self.3)

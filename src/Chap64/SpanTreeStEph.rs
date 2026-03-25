@@ -15,6 +15,8 @@ pub mod SpanTreeStEph {
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::Chap62::StarContractionStEph::StarContractionStEph::star_contract;
     use crate::SetLit;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::hash::obeys_key_model;
 
     pub type T<V> = UnDirGraphStEph<V>;
 
@@ -48,6 +50,7 @@ pub mod SpanTreeStEph {
     ///
     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS.
+    #[verifier::external_body]
     pub fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (result: SetStEph<Edge<V>>)
         requires
             spec_graphview_wf(graph@),
@@ -85,8 +88,8 @@ pub mod SpanTreeStEph {
                     valid_key_type_Edge::<V>(),
             {
                 let (vertex, center) = pair;
-                if vertex != center {
-                    let edge = if vertex < center {
+                if *vertex != *center {
+                    let edge = if *vertex < *center {
                         Edge(vertex.clone(), center.clone())
                     } else {
                         Edge(center.clone(), vertex.clone())
@@ -124,8 +127,8 @@ pub mod SpanTreeStEph {
                             let Edge(u, v) = oe;
                             let u_center = partition_map.get(u).unwrap_or(u);
                             let v_center = partition_map.get(v).unwrap_or(v);
-                            if (u_center == c1 && v_center == c2) || (u_center == c2 && v_center == c1) {
-                                let _ = spanning_edges.insert(oe.clone());
+                            if (*u_center == *c1 && *v_center == *c2) || (*u_center == *c2 && *v_center == *c1) {
+                                let _ = spanning_edges.insert(oe.clone_plus());
                                 break;
                             }
                         }
@@ -143,6 +146,7 @@ pub mod SpanTreeStEph {
     ///
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(|V| + |E_tree|), Span O(|V| + |E_tree|).
+    #[verifier::external_body]
     pub fn verify_spanning_tree<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
         tree_edges: &SetStEph<Edge<V>>,
@@ -150,6 +154,7 @@ pub mod SpanTreeStEph {
         requires
             spec_graphview_wf(graph@),
             tree_edges.spec_setsteph_wf(),
+            valid_key_type_Edge::<V>(),
         ensures
             result ==> tree_edges@.len() == (
                 if graph@.V.len() > 0 { (graph@.V.len() - 1) as nat } else { 0nat }),

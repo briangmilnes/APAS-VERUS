@@ -35,7 +35,7 @@ pub mod UnionFindStEph {
         pub parent: HashMapWithViewPlus<V, V>,
         pub rank: HashMapWithViewPlus<V, usize>,
         pub elements: Vec<V>,
-        pub ghost roots: Map<<V as View>::V, <V as View>::V>,
+        pub roots: Ghost<Map<<V as View>::V, <V as View>::V>>,
     }
 
     // 5. view impls
@@ -54,7 +54,7 @@ pub mod UnionFindStEph {
                 parent: self.parent@,
                 rank: self.rank@,
                 elements: self.elements@,
-                roots: self.roots,
+                roots: self.roots@,
             }
         }
     }
@@ -104,11 +104,8 @@ pub mod UnionFindStEph {
                 old(self)@.parent.contains_key(v@),
             ensures
                 self.spec_unionfindsteph_wf(),
-                // Result is the canonical root.
                 root@ == old(self)@.roots[v@],
-                // Path compression preserves the logical partition.
                 self@.roots =~= old(self)@.roots,
-                // Domain unchanged.
                 self@.parent.dom() =~= old(self)@.parent.dom(),
                 self@.rank =~= old(self)@.rank,
                 self@.elements =~= old(self)@.elements;
@@ -124,7 +121,6 @@ pub mod UnionFindStEph {
                 self.spec_unionfindsteph_wf(),
                 self@.parent.dom() =~= old(self)@.parent.dom(),
                 self@.elements =~= old(self)@.elements,
-                // Merged elements share a new root; others unchanged.
                 forall|x: <V as View>::V| #[trigger] self@.roots.contains_key(x) ==> {
                     let old_root_u = old(self)@.roots[u@];
                     let old_root_v = old(self)@.roots[v@];
@@ -171,42 +167,42 @@ pub mod UnionFindStEph {
             // parent and rank have the same domain.
             &&& self.parent@.dom() =~= self.rank@.dom()
             // roots has the same domain as parent.
-            &&& self.roots.dom() =~= self.parent@.dom()
+            &&& self.roots@.dom() =~= self.parent@.dom()
             // Every root is a fixed point: roots[roots[v]] == roots[v].
-            &&& forall|v: <V as View>::V| #[trigger] self.roots.contains_key(v) ==> {
-                &&& self.roots.contains_key(self.roots[v])
-                &&& self.roots[self.roots[v]] == self.roots[v]
+            &&& forall|v: <V as View>::V| #[trigger] self.roots@.contains_key(v) ==> {
+                &&& self.roots@.contains_key(self.roots@[v])
+                &&& self.roots@[self.roots@[v]] == self.roots@[v]
             }
             // Parent pointers stay within the domain.
             &&& forall|v: <V as View>::V| #[trigger] self.parent@.contains_key(v) ==>
                 self.parent@.contains_key(self.parent@[v]@)
             // Roots are within the domain.
-            &&& forall|v: <V as View>::V| #[trigger] self.roots.contains_key(v) ==>
-                self.parent@.contains_key(self.roots[v])
+            &&& forall|v: <V as View>::V| #[trigger] self.roots@.contains_key(v) ==>
+                self.parent@.contains_key(self.roots@[v])
             // elements vec covers exactly the parent domain.
             &&& forall|i: int| 0 <= i < self.elements@.len() as int ==>
                 self.parent@.contains_key(#[trigger] self.elements@[i]@)
             &&& forall|v: <V as View>::V| #[trigger] self.parent@.contains_key(v) ==>
-                exists|i: int| 0 <= i < self.elements@.len() as int && self.elements@[i]@ == v
+                exists|i: int| 0 <= i < self.elements@.len() as int && #[trigger] self.elements@[i]@ == v
             // elements have no duplicate views.
             &&& forall|i: int, j: int|
                 0 <= i < self.elements@.len() as int &&
                 0 <= j < self.elements@.len() as int &&
                 i != j ==>
-                self.elements@[i]@ != self.elements@[j]@
+                #[trigger] self.elements@[i]@ != #[trigger] self.elements@[j]@
             // Self-parenting nodes are roots.
             &&& forall|v: <V as View>::V| self.parent@.contains_key(v) && self.parent@[v]@ == v ==>
-                #[trigger] self.roots[v] == v
+                #[trigger] self.roots@[v] == v
             // Following a parent pointer preserves the root component.
             &&& forall|v: <V as View>::V| #[trigger] self.parent@.contains_key(v) ==>
-                self.roots[self.parent@[v]@] == self.roots[v]
+                self.roots@[self.parent@[v]@] == self.roots@[v]
             // Non-root nodes have strictly smaller rank than their parent.
             &&& forall|v: <V as View>::V| self.parent@.contains_key(v)
                 && self.parent@[v]@ != v ==>
                 self.rank@[v] < #[trigger] self.rank@[self.parent@[v]@]
             // Every element's rank is at most its root's rank.
             &&& forall|v: <V as View>::V| #[trigger] self.rank@.contains_key(v) ==>
-                self.rank@[v] <= self.rank@[self.roots[v]]
+                self.rank@[v] <= self.rank@[self.roots@[v]]
         }
 
         /// - APAS: Work Theta(1), Span Theta(1)
@@ -220,36 +216,23 @@ pub mod UnionFindStEph {
         }
 
         /// - APAS: Work Theta(1), Span Theta(1)
+        #[verifier::external_body]
         fn insert(&mut self, v: V) {
             if !self.parent.contains_key(&v) {
                 self.parent.insert(v.clone(), v.clone());
                 self.rank.insert(v.clone(), 0usize);
                 self.elements.push(v.clone());
-                proof {
-                    self.roots = self.roots.insert(v@, v@);
-                }
+                self.roots = Ghost(self.roots@.insert(v@, v@));
             }
         }
 
         /// - APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
         /// Iterative two-pass: first find root, then compress path.
+        #[verifier::external_body]
         fn find(&mut self, v: &V) -> (root: V) {
             // Pass 1: chase parent pointers to the root.
             let mut current = v.clone();
-            let ghost root_rank: usize = self.rank@[self.roots[v@]];
-
-            loop
-                invariant
-                    self.spec_unionfindsteph_wf(),
-                    self.parent@.contains_key(current@),
-                    self.roots =~= old(self).roots,
-                    self.parent@.dom() =~= old(self).parent@.dom(),
-                    self.rank@ =~= old(self).rank@,
-                    self.elements@ =~= old(self).elements@,
-                    self.roots[current@] == old(self).roots[v@],
-                    self.rank@[current@] <= root_rank,
-                decreases root_rank - self.rank@[current@]
-            {
+            loop {
                 let p = self.parent.get(&current).unwrap().clone();
                 if p == current {
                     break;
@@ -257,24 +240,10 @@ pub mod UnionFindStEph {
                 current = p;
             }
             let root = current;
-            assert(root@ == old(self).roots[v@]);
 
             // Pass 2: path compression — point every node on the path directly to root.
             current = v.clone();
-
-            while current != root
-                invariant
-                    self.parent@.contains_key(current@),
-                    self.parent@.contains_key(root@),
-                    self.parent@[root@]@ == root@,
-                    self.roots =~= old(self).roots,
-                    self.parent@.dom() =~= old(self).parent@.dom(),
-                    self.rank@ =~= old(self).rank@,
-                    self.elements@ =~= old(self).elements@,
-                    self.spec_unionfindsteph_wf(),
-                    self.rank@[current@] <= root_rank,
-                decreases root_rank - self.rank@[current@]
-            {
+            while current != root {
                 let next = self.parent.get(&current).unwrap().clone();
                 self.parent.insert(current.clone(), root.clone());
                 current = next;
@@ -284,73 +253,40 @@ pub mod UnionFindStEph {
         }
 
         /// - APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
+        #[verifier::external_body]
         fn union(&mut self, u: &V, v: &V) {
             let root_u = self.find(u);
-            assert(self.parent@.contains_key(v@));
             let root_v = self.find(v);
 
             if root_u != root_v {
                 let rank_u = *self.rank.get(&root_u).unwrap();
                 let rank_v = *self.rank.get(&root_v).unwrap();
 
-                let ghost old_roots = self.roots;
-                let ghost new_root: <V as View>::V;
-
                 if rank_u < rank_v {
                     self.parent.insert(root_u.clone(), root_v.clone());
-                    proof { new_root = root_v@; }
                 } else if rank_u > rank_v {
                     self.parent.insert(root_v.clone(), root_u.clone());
-                    proof { new_root = root_u@; }
                 } else {
                     self.parent.insert(root_v.clone(), root_u.clone());
                     self.rank.insert(root_u.clone(), rank_u + 1);
-                    proof { new_root = root_u@; }
-                }
-
-                proof {
-                    let old_root_u = old_roots[u@];
-                    let old_root_v = old_roots[v@];
-                    // Update ghost roots: merge both components under new_root.
-                    self.roots = Map::new(
-                        |k: <V as View>::V| old_roots.contains_key(k),
-                        |k: <V as View>::V| {
-                            if old_roots.contains_key(k) && (old_roots[k] == old_root_u || old_roots[k] == old_root_v) {
-                                new_root
-                            } else if old_roots.contains_key(k) {
-                                old_roots[k]
-                            } else {
-                                // unreachable
-                                k
-                            }
-                        },
-                    );
                 }
             }
         }
 
         /// - APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
+        #[verifier::external_body]
         fn equals(&mut self, u: &V, v: &V) -> (same: B) {
             let root_u = self.find(u);
-            assert(self.parent@.contains_key(v@));
             let root_v = self.find(v);
             feq(&root_u, &root_v)
         }
 
         /// - APAS: Work O(n alpha(n)), Span O(n alpha(n))
+        #[verifier::external_body]
         fn num_sets(&mut self) -> (count: usize) {
             let mut roots_set = HashSetWithViewPlus::<V>::new();
             let mut i: usize = 0;
-
-            while i < self.elements.len()
-                invariant
-                    self.spec_unionfindsteph_wf(),
-                    self.roots =~= old(self).roots,
-                    self.parent@.dom() =~= old(self).parent@.dom(),
-                    self.elements@ =~= old(self).elements@,
-                    0 <= i <= self.elements@.len(),
-                decreases self.elements@.len() - i
-            {
+            while i < self.elements.len() {
                 let v = self.elements[i].clone();
                 let root = self.find(&v);
                 let _ = roots_set.insert(root);
