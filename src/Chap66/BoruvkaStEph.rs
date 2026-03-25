@@ -35,6 +35,8 @@ pub mod BoruvkaStEph {
     use std::hash::Hash;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
     verus! {
 
@@ -61,14 +63,16 @@ pub mod BoruvkaStEph {
         }
     }
 
-    #[verifier::external]
-    impl<V: PartialEq + Copy> PartialEq for LabeledEdge<V> {
-        fn eq(&self, other: &Self) -> bool {
+    impl<V: StT + Ord + Copy> PartialEq for LabeledEdge<V> {
+        #[verifier::external_body]
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@),
+        {
             self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3
         }
     }
 
-    impl<V: Eq + Copy> Eq for LabeledEdge<V> {}
+    impl<V: StT + Ord + Copy> Eq for LabeledEdge<V> {}
 
     //		5. view impls
 
@@ -189,6 +193,12 @@ pub mod BoruvkaStEph {
 
     //		9. impls
 
+    #[cfg(verus_keep_ghost)]
+    impl<V: StT + Ord + Copy> PartialEqSpecImpl for LabeledEdge<V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
     impl BoruvkaStEphTrait for BoruvkaStEph {
         /// Algorithm 66.3: Find vertex bridges.
         ///
@@ -264,7 +274,6 @@ pub mod BoruvkaStEph {
         ///
         /// - APAS: Work O(n), Span O(log n)
         /// - Sequential: Work O(n), Span O(n) — sequential iteration over vertices.
-        #[verifier::external_body]
         fn bridge_star_partition<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,
             bridges: &HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
@@ -464,7 +473,6 @@ pub mod BoruvkaStEph {
         ///
         /// - APAS: Work O(m log n), Span O(log^2 n)
         /// - Sequential: Work O(m log n), Span O(m log n) — delegates to sequential boruvka_mst.
-        #[verifier::external_body]
         fn boruvka_mst_with_seed<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
@@ -477,7 +485,6 @@ pub mod BoruvkaStEph {
         ///
         /// - APAS: N/A — utility function, not in prose.
         /// - Sequential: Work O(m), Span O(m) — sequential scan of edges.
-        #[verifier::external_body]
         fn mst_weight<V: StT + Hash + Ord + Copy>(
             edges: &SetStEph<LabeledEdge<V>>,
             mst_labels: &SetStEph<usize>,
@@ -490,6 +497,7 @@ pub mod BoruvkaStEph {
                 invariant
                     iter_invariant(&it),
                     iter_seq == it@.1,
+                    mst_labels.spec_setsteph_wf(),
                 decreases iter_seq.len() - it@.0,
             {
                 if let Some(edge) = it.next() {
@@ -511,12 +519,12 @@ pub mod BoruvkaStEph {
 
     //		13. derive impls outside verus!
 
-    impl<V: Clone + Copy + PartialEq + Eq + PartialOrd + Ord + std::hash::Hash> PartialOrd for LabeledEdge<V> {
+    impl<V: StT + Ord + Copy + std::hash::Hash> PartialOrd for LabeledEdge<V> {
         fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
             Some(self.cmp(other))
         }
     }
-    impl<V: Clone + Copy + PartialEq + Eq + PartialOrd + Ord + std::hash::Hash> Ord for LabeledEdge<V> {
+    impl<V: StT + Ord + Copy + std::hash::Hash> Ord for LabeledEdge<V> {
         fn cmp(&self, other: &Self) -> std::cmp::Ordering {
             self.0.cmp(&other.0)
                 .then_with(|| self.1.cmp(&other.1))
