@@ -717,16 +717,22 @@ pub mod Chap63 {
     // pub mod ConnectivityMtEph;  // depends on StarPartitionMtEph
 }
 
-// pub mod Chap64 — broken: never cargo-compiled
-//     pub mod SpanTreeStEph;
-//     pub mod SpanTreeMtEph;
-//     pub mod TSPApproxStEph;
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
+pub mod Chap64 {
+    pub mod SpanTreeStEph;
+    // pub mod SpanTreeMtEph;  // depends on StarContractionMtEph (commented out)
+    pub mod TSPApproxStEph;
+}
 
-// pub mod Chap65 — broken: never cargo-compiled
-//     pub mod UnionFindStEph;
-//     pub mod KruskalStEph;
-//     pub mod PrimStEph;
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
+pub mod Chap65 {
+    pub mod UnionFindStEph;
+    pub mod KruskalStEph;
+    pub mod PrimStEph;
+}
 
-// pub mod Chap66 — broken: never cargo-compiled
-//     pub mod BoruvkaStEph;
-//     pub mod BoruvkaMtEph;
+#[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
+pub mod Chap66 {
+    pub mod BoruvkaStEph;
+    pub mod BoruvkaMtEph;
+}

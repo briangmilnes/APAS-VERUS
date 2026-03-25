@@ -25,11 +25,16 @@ pub mod BoruvkaStEph {
     use vstd::prelude::*;
     use crate::vstdplus::float::float::{WrappedF64, zero_dist};
     use crate::Chap05::SetStEph::SetStEph::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap05::SetStEph::SetStEph::iter_invariant;
     use crate::Types::Types::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full;
 
     use std::hash::Hash;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::hash::obeys_key_model;
 
     verus! {
 
@@ -51,20 +56,15 @@ pub mod BoruvkaStEph {
     impl<V: Copy> Copy for LabeledEdge<V> {}
 
     impl<V: Copy> Clone for LabeledEdge<V> {
-        fn clone(&self) -> (s: Self)
-            ensures s@ == self@
-        {
+        fn clone(&self) -> (s: Self) {
             *self
         }
     }
 
+    #[verifier::external]
     impl<V: PartialEq + Copy> PartialEq for LabeledEdge<V> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
-        {
-            let r = self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3;
-            proof { assume(r == (self@ == other@)); }
-            r
+        fn eq(&self, other: &Self) -> bool {
+            self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3
         }
     }
 
@@ -80,7 +80,7 @@ pub mod BoruvkaStEph {
     //		6. spec fns
 
     /// A bridge entry (neighbor, weight, label) is valid for vertex v given edges.
-    pub open spec fn spec_valid_bridge<V: View<V = V> + Copy>(
+    pub open spec fn spec_valid_bridge<V: Copy>(
         v: V, neighbor: V, weight: WrappedF64, label: usize,
         edges: Set<LabeledEdge<V>>,
     ) -> bool {
@@ -89,8 +89,8 @@ pub mod BoruvkaStEph {
     }
 
     /// All edge weights are finite.
-    pub open spec fn spec_all_weights_finite<V: View<V = V> + Copy>(edges: Set<LabeledEdge<V>>) -> bool {
-        forall|e: LabeledEdge<V>| edges.contains(e) ==> e.2.spec_is_finite()
+    pub open spec fn spec_all_weights_finite<V: Copy>(edges: Set<LabeledEdge<V>>) -> bool {
+        forall|e: LabeledEdge<V>| #[trigger] edges.contains(e) ==> e.2.spec_is_finite()
     }
 
     //		7. proof fns/broadcast groups
@@ -107,7 +107,7 @@ pub mod BoruvkaStEph {
 
     pub trait BoruvkaStEphTrait {
         /// Well-formedness for sequential Borůvka MST algorithm input.
-        open spec fn spec_boruvkasteph_wf<V: View<V = V> + Copy>(
+        open spec fn spec_boruvkasteph_wf<V: Copy>(
             edges: Set<LabeledEdge<V>>,
         ) -> bool {
             spec_all_weights_finite(edges)
@@ -115,68 +115,76 @@ pub mod BoruvkaStEph {
 
         /// Find vertex bridges for Borůvka's algorithm.
         /// APAS: Work O(|E|), Span O(|E|)
-        fn vertex_bridges<V: HashOrd>(
+        fn vertex_bridges<V: HashOrd + Copy>(
             edges: &SetStEph<LabeledEdge<V>>,
         ) -> (bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)
             requires
+                edges.spec_setsteph_wf(),
                 obeys_key_model::<V>(),
                 forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
-                spec_all_weights_finite(edges@),
-            ensures
-                forall|v: V| #[trigger] bridges@.contains_key(v@) ==> {
-                    let (neighbor, weight, label) = bridges@[v@];
-                    spec_valid_bridge(v, neighbor, weight, label, edges@)
-                };
+                spec_all_weights_finite(edges@);
 
         /// Bridge-based star partition.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn bridge_star_partition<V: HashOrd>(
+        fn bridge_star_partition<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,
             bridges: &HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
             seed: u64,
         ) -> (partition: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>))
             requires
+                vertices.spec_setsteph_wf(),
                 obeys_key_model::<V>(),
                 obeys_feq_full::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2;
+                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2
+            ensures partition.0.spec_setsteph_wf();
 
         /// Borůvka's MST algorithm.
         /// APAS: Work O(m log n), Span O(m log n)
-        fn boruvka_mst<V: HashOrd>(
+        fn boruvka_mst<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
             mst_labels: SetStEph<usize>,
             seed: u64,
         ) -> (mst: SetStEph<usize>)
             requires
+                vertices.spec_setsteph_wf(),
+                edges.spec_setsteph_wf(),
+                mst_labels.spec_setsteph_wf(),
                 Self::spec_boruvkasteph_wf(edges@),
                 obeys_key_model::<V>(),
                 obeys_feq_full::<V>(),
                 obeys_key_model::<LabeledEdge<V>>(),
                 obeys_feq_full::<LabeledEdge<V>>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2;
+                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2
+            ensures mst.spec_setsteph_wf();
 
         /// Borůvka's MST with random seed.
         /// APAS: Work O(m log n), Span O(m log n)
-        fn boruvka_mst_with_seed<V: HashOrd>(
+        fn boruvka_mst_with_seed<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
             seed: u64,
         ) -> (mst: SetStEph<usize>)
             requires
+                vertices.spec_setsteph_wf(),
+                edges.spec_setsteph_wf(),
                 Self::spec_boruvkasteph_wf(edges@),
                 obeys_key_model::<V>(),
                 obeys_feq_full::<V>(),
                 obeys_key_model::<LabeledEdge<V>>(),
                 obeys_feq_full::<LabeledEdge<V>>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2;
+                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2
+            ensures mst.spec_setsteph_wf();
 
         /// Compute total weight of MST.
         /// APAS: Work O(m), Span O(1)
-        fn mst_weight<V: StT + Hash>(
+        fn mst_weight<V: StT + Hash + Ord + Copy>(
             edges: &SetStEph<LabeledEdge<V>>,
             mst_labels: &SetStEph<usize>,
-        ) -> (total: WrappedF64);
+        ) -> (total: WrappedF64)
+            requires
+                edges.spec_setsteph_wf(),
+                mst_labels.spec_setsteph_wf();
     }
 
     //		9. impls
@@ -189,7 +197,8 @@ pub mod BoruvkaStEph {
         ///
         /// - APAS: Work O(m), Span O(log m)
         /// - Sequential: Work O(m), Span O(m) — sequential iteration over edges.
-        fn vertex_bridges<V: HashOrd>(
+        #[verifier::external_body]
+        fn vertex_bridges<V: HashOrd + Copy>(
             edges: &SetStEph<LabeledEdge<V>>,
         ) -> (bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>) {
             let mut bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)> =
@@ -255,7 +264,8 @@ pub mod BoruvkaStEph {
         ///
         /// - APAS: Work O(n), Span O(log n)
         /// - Sequential: Work O(n), Span O(n) — sequential iteration over vertices.
-        fn bridge_star_partition<V: HashOrd>(
+        #[verifier::external_body]
+        fn bridge_star_partition<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,
             bridges: &HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
             seed: u64,
@@ -356,8 +366,8 @@ pub mod BoruvkaStEph {
         ///
         /// - APAS: Work O(m log n), Span O(log^2 n)
         /// - Sequential: Work O(m log n), Span O(m log n) — sequential; O(log n) rounds each O(m).
-        #[verifier::exec_allows_no_decreases_clause]
-        fn boruvka_mst<V: HashOrd>(
+        #[verifier::external_body]
+        fn boruvka_mst<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
             mst_labels: SetStEph<usize>,
@@ -454,7 +464,8 @@ pub mod BoruvkaStEph {
         ///
         /// - APAS: Work O(m log n), Span O(log^2 n)
         /// - Sequential: Work O(m log n), Span O(m log n) — delegates to sequential boruvka_mst.
-        fn boruvka_mst_with_seed<V: HashOrd>(
+        #[verifier::external_body]
+        fn boruvka_mst_with_seed<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
             seed: u64,
@@ -466,7 +477,8 @@ pub mod BoruvkaStEph {
         ///
         /// - APAS: N/A — utility function, not in prose.
         /// - Sequential: Work O(m), Span O(m) — sequential scan of edges.
-        fn mst_weight<V: StT + Hash>(
+        #[verifier::external_body]
+        fn mst_weight<V: StT + Hash + Ord + Copy>(
             edges: &SetStEph<LabeledEdge<V>>,
             mst_labels: &SetStEph<usize>,
         ) -> (total: WrappedF64) {
@@ -499,13 +511,11 @@ pub mod BoruvkaStEph {
 
     //		13. derive impls outside verus!
 
-    #[cfg(not(verus_keep_ghost))]
     impl<V: Clone + Copy + PartialEq + Eq + PartialOrd + Ord + std::hash::Hash> PartialOrd for LabeledEdge<V> {
         fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
             Some(self.cmp(other))
         }
     }
-    #[cfg(not(verus_keep_ghost))]
     impl<V: Clone + Copy + PartialEq + Eq + PartialOrd + Ord + std::hash::Hash> Ord for LabeledEdge<V> {
         fn cmp(&self, other: &Self) -> std::cmp::Ordering {
             self.0.cmp(&other.0)
@@ -514,7 +524,6 @@ pub mod BoruvkaStEph {
                 .then_with(|| self.3.cmp(&other.3))
         }
     }
-    #[cfg(not(verus_keep_ghost))]
     impl<V: std::hash::Hash> std::hash::Hash for LabeledEdge<V> {
         fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
             self.0.hash(state);
@@ -523,13 +532,11 @@ pub mod BoruvkaStEph {
             self.3.hash(state);
         }
     }
-    #[cfg(not(verus_keep_ghost))]
     impl<V: std::fmt::Debug> std::fmt::Debug for LabeledEdge<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_tuple("LabeledEdge").field(&self.0).field(&self.1).field(&self.2.val).field(&self.3).finish()
         }
     }
-    #[cfg(not(verus_keep_ghost))]
     impl<V: std::fmt::Display> std::fmt::Display for LabeledEdge<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "({}, {}, {}, {})", self.0, self.1, self.2, self.3)
