@@ -24,14 +24,14 @@ Table of Contents:
    3 clean proof functions
 ✓ DivConReduceStPer.rs
 ⚠ ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:623: error: fn_missing_requires - fn point_distance — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap26/ETSPMtEph.rs:623: error: fn_missing_requires - fn point_distance — exec fn should have requires
        619 |         fn distance(&self, other: &Point) -> (d: f64)
             ...
        621 |     }
        622 | 
        624 |         ensures d == spec_point_distance(*a, *b),
        625 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:641: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap26/ETSPMtEph.rs:641: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
 ✓ ETSPStEph.rs
    3 clean proof functions
 ✓ MergeSortMtPer.rs
@@ -110,9 +110,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-25 09:44:29 -07:00
-Ended:     2026-03-25 09:44:29 -07:00
-Duration:  36ms
+Started:   2026-03-25 09:26:22 -07:00
+Ended:     2026-03-25 09:26:22 -07:00
+Duration:  39ms
 
 Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
-/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
