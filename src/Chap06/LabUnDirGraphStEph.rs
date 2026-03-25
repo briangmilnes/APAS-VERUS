@@ -135,7 +135,7 @@ verus! {
         /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — sequential filter
         fn ng(&self, v: &V) -> (ng: SetStEph<V>)
             requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
-            ensures ng@ == self.spec_ng(v@);
+            ensures ng@ == self.spec_ng(v@), ng.spec_setsteph_wf();
     }
 
     impl<V: HashOrd, L: StT + Hash> LabUnDirGraphStEphTrait<V, L> for LabUnDirGraphStEph<V, L> {
@@ -319,11 +319,12 @@ verus! {
             loop
                 invariant
                     valid_key_type_LabEdge::<V, L>(),
+                    ng.spec_setsteph_wf(),
                     it@.0 <= le_seq.len(),
                     it@.1 == le_seq,
                     le_seq.map(|i: int, e: LabEdge<V, L>| e@).to_set() == le_view,
-                    ng@ == Set::new(|w: V::V| 
-                        exists |i: int| #![trigger le_seq[i]] 0 <= i < it@.0 && 
+                    ng@ == Set::new(|w: V::V|
+                        exists |i: int| #![trigger le_seq[i]] 0 <= i < it@.0 &&
                             ((le_seq[i]@.0 == v_view && le_seq[i]@.1 == w) ||
                              (le_seq[i]@.1 == v_view && le_seq[i]@.0 == w))),
                 decreases le_seq.len() - it@.0,
