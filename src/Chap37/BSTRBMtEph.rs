@@ -796,49 +796,57 @@ pub mod BSTRBMtEph {
         Some(node)
     }
 
-    #[verifier::external_body]
     fn filter_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, predicate: &Arc<F>) -> (result: Vec<T>)
         where
             F: Fn(&T) -> bool + Send + Sync,
-        requires link_spec_size(*link) <= usize::MAX as nat,
+        requires
+            link_spec_size(*link) <= usize::MAX as nat,
+            forall|t: &T| #[trigger] predicate.requires((t,)),
         ensures true,
         decreases *link,
     {
         match link {
             | None => Vec::new(),
             | Some(node) => {
-                let pred_left = Arc::clone(predicate);
-                let pred_right = Arc::clone(predicate);
-                let left_vals = filter_parallel(&node.left, &pred_left);
-                let right_vals = filter_parallel(&node.right, &pred_right);
+                proof {
+                    reveal_with_fuel(link_spec_size, 2);
+                    assert(link_spec_size(node.left) <= usize::MAX as nat);
+                    assert(link_spec_size(node.right) <= usize::MAX as nat);
+                }
+                let left_vals = filter_parallel(&node.left, predicate);
+                let mut right_vals = filter_parallel(&node.right, predicate);
                 let mut result = left_vals;
-                if predicate(&node.key) {
+                if (**predicate)(&node.key) {
                     result.push(node.key.clone());
                 }
-                result.extend(right_vals);
+                result.append(&mut right_vals);
                 result
             }
         }
     }
 
-    #[verifier::external_body]
     fn reduce_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (result: T)
         where
             F: Fn(T, T) -> T + Send + Sync,
-        requires link_spec_size(*link) <= usize::MAX as nat,
+        requires
+            link_spec_size(*link) <= usize::MAX as nat,
+            forall|a: T, b: T| #[trigger] op.requires((a, b)),
         ensures true,
         decreases *link,
     {
         match link {
             | None => identity,
             | Some(node) => {
-                let op_left = Arc::clone(op);
-                let op_right = Arc::clone(op);
+                proof {
+                    reveal_with_fuel(link_spec_size, 2);
+                    assert(link_spec_size(node.left) <= usize::MAX as nat);
+                    assert(link_spec_size(node.right) <= usize::MAX as nat);
+                }
                 let id_left = identity.clone();
-                let left_acc = reduce_parallel(&node.left, &op_left, id_left);
-                let right_acc = reduce_parallel(&node.right, &op_right, identity);
-                let with_key = op(left_acc, node.key.clone());
-                op(with_key, right_acc)
+                let left_acc = reduce_parallel(&node.left, op, id_left);
+                let right_acc = reduce_parallel(&node.right, op, identity);
+                let with_key = (**op)(left_acc, node.key.clone());
+                (**op)(with_key, right_acc)
             }
         }
     }
@@ -961,10 +969,16 @@ pub mod BSTRBMtEph {
         fn filter<F>(&self, predicate: F) -> (seq: ArraySeqStPerS<T>)
         where
             F: Fn(&T) -> bool + Send + Sync
+            requires
+                self.spec_bstrbmteph_wf(),
+                forall|t: &T| #[trigger] predicate.requires((t,)),
             ensures true;
         fn reduce<F>(&self, op: F, identity: T) -> (accumulated: T)
         where
             F: Fn(T, T) -> T + Send + Sync
+            requires
+                self.spec_bstrbmteph_wf(),
+                forall|a: T, b: T| #[trigger] op.requires((a, b)),
             ensures true;
     }
 
