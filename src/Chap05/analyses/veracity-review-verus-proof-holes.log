@@ -23,7 +23,7 @@ Table of Contents:
 ✓ KleeneStPer.rs
    9 clean proof functions
 ⚠ MappingStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/MappingStEph.rs:620: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap05/MappingStEph.rs:620: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        609 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        618 |             }
@@ -32,19 +32,19 @@ Table of Contents:
        622 |         }
 ✓ RelationStEph.rs
 ⚠ SetMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1094: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap05/SetMtEph.rs:1094: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1090 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1092 |         {
       1093 |             let equal = self.elements == other.elements;
       1095 |             equal
       1096 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1040: info: structural_false_positive RWLOCK_GHOST size — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1049: info: structural_false_positive RWLOCK_GHOST mem — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1057: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_locked_set@ == locked_val@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetMtEph.rs:1068: info: structural_false_positive RWLOCK_GHOST choose — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap05/SetMtEph.rs:1040: info: structural_false_positive RWLOCK_GHOST size — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap05/SetMtEph.rs:1049: info: structural_false_positive RWLOCK_GHOST mem — proof { assume(inner@ == self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap05/SetMtEph.rs:1057: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_locked_set@ == locked_val@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap05/SetMtEph.rs:1068: info: structural_false_positive RWLOCK_GHOST choose — proof { assume(inner@ == self@); } [medium]
 ⚠ SetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap05/SetStEph.rs:914: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap05/SetStEph.rs:914: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        909 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        912 |             let equal = self.elements == other.elements;
@@ -113,15 +113,15 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-25 10:02:06 -07:00
-Ended:     2026-03-25 10:02:06 -07:00
-Duration:  96ms
+Started:   2026-03-25 10:02:35 -07:00
+Ended:     2026-03-25 10:02:35 -07:00
+Duration:  48ms
 
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log
-===
+=
 
-Started:   2026-03-25 10:02:06 -07:00
-Ended:     2026-03-25 10:02:06 -07:00
-Duration:  96ms
+Started:   2026-03-25 10:02:35 -07:00
+Ended:     2026-03-25 10:02:35 -07:00
+Duration:  48ms
 
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log
