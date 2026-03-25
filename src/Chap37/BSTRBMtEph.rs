@@ -26,6 +26,7 @@ pub mod BSTRBMtEph {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    use vstd::slice::slice_subrange;
 
     verus! {
 
@@ -104,6 +105,22 @@ pub mod BSTRBMtEph {
                     TotalOrder::le(x, node.key) && x != node.key)
                 && (forall|x: T| (#[trigger] link_contains(node.right, x)) ==>
                     TotalOrder::le(node.key, x) && x != node.key)
+            }
+        }
+    }
+
+    // 7. proof fns
+
+    /// Height is bounded by structural node count.
+    proof fn lemma_height_le_size<T: StTInMtT + Ord + TotalOrder>(link: Link<T>)
+        ensures link_height(link) <= link_spec_size(link),
+        decreases link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_height_le_size::<T>(node.left);
+                lemma_height_le_size::<T>(node.right);
             }
         }
     }
@@ -683,46 +700,25 @@ pub mod BSTRBMtEph {
         }
     }
 
-    #[verifier::external_body]
     fn in_order_parallel<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (result: Vec<T>)
         requires link_spec_size(*link) <= usize::MAX as nat,
         ensures true,
-        decreases *link,
     {
-        match link {
-            | None => Vec::new(),
-            | Some(node) => {
-                let left_vec = in_order_parallel(&node.left);
-                let right_vec = in_order_parallel(&node.right);
-                let mut result = left_vec;
-                result.push(node.key.clone());
-                result.extend(right_vec);
-                result
-            }
-        }
+        let mut out = Vec::new();
+        in_order_collect(link, &mut out);
+        out
     }
 
-    #[verifier::external_body]
     fn pre_order_parallel<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (result: Vec<T>)
         requires link_spec_size(*link) <= usize::MAX as nat,
         ensures true,
-        decreases *link,
     {
-        match link {
-            | None => Vec::new(),
-            | Some(node) => {
-                let left_vec = pre_order_parallel(&node.left);
-                let right_vec = pre_order_parallel(&node.right);
-                let mut result = vec![node.key.clone()];
-                result.extend(left_vec);
-                result.extend(right_vec);
-                result
-            }
-        }
+        let mut out = Vec::new();
+        pre_order_collect(link, &mut out);
+        out
     }
 
     // veracity: no_requires
-    #[verifier::external_body]
     fn build_balanced<T: StTInMtT + Ord + TotalOrder>(values: &[T]) -> (link: Link<T>)
         ensures link_spec_size(link) <= values@.len(),
         decreases values.len(),
@@ -731,13 +727,20 @@ pub mod BSTRBMtEph {
             return None;
         }
         let mid = values.len() / 2;
-        let left = build_balanced(&values[..mid]);
-        let right = build_balanced(&values[mid + 1..]);
+        let left_slice = slice_subrange(values, 0, mid);
+        let right_slice = slice_subrange(values, mid + 1, values.len());
+        let left = build_balanced(left_slice);
+        let right = build_balanced(right_slice);
         let mut node = Box::new(new_node(values[mid].clone()));
         node.left = left;
         node.right = right;
         node.color = Color::Black;
         update(&mut node);
+        proof {
+            reveal_with_fuel(link_spec_size, 2);
+            assert(link_spec_size(node.left) <= mid as nat);
+            assert(link_spec_size(node.right) <= (values@.len() - mid - 1) as nat);
+        }
         Some(node)
     }
 
@@ -823,6 +826,7 @@ pub mod BSTRBMtEph {
     impl<T: StTInMtT + Ord + TotalOrder> RwLockPredicate<Link<T>> for BSTRBMtEphInv {
         open spec fn inv(self, v: Link<T>) -> bool {
             link_spec_size(v) <= usize::MAX
+            && spec_is_bst_link(v)
         }
     }
 
@@ -838,6 +842,7 @@ pub mod BSTRBMtEph {
         #[verifier::type_invariant]
         spec fn wf(self) -> bool {
             link_spec_size(self.ghost_root@) <= usize::MAX
+            && spec_is_bst_link(self.ghost_root@)
         }
 
         pub closed spec fn spec_ghost_root(self) -> Link<T> {
@@ -918,10 +923,14 @@ pub mod BSTRBMtEph {
         }
 
         fn from_sorted_slice(values: &[T]) -> Self {
+            let vlen = values.len();
             let link = build_balanced(values);
             let ghost ghost_link = link;
             proof {
-                assume(link_spec_size(ghost_link) <= usize::MAX as nat);
+                // build_balanced ensures link_spec_size(link) <= values@.len().
+                // vlen: usize = values.len(), so values@.len() <= usize::MAX.
+                assert(link_spec_size(ghost_link) <= vlen as nat);
+                // spec_is_bst_link requires sorted input — cannot prove here.
                 assume(spec_is_bst_link(ghost_link));
             }
             BSTRBMtEph {
@@ -936,7 +945,7 @@ pub mod BSTRBMtEph {
             proof { assume(self.ghost_root@ == current); }
             let sz = compute_link_spec_size(&current);
             if sz < usize::MAX {
-                proof { assume(spec_is_bst_link(current)); }
+                // spec_is_bst_link(current) from lock predicate via acquire_write.
                 insert_link(&mut current, value);
                 let temp = current.take();
                 if let Some(mut node) = temp {
@@ -956,22 +965,22 @@ pub mod BSTRBMtEph {
             }
         }
 
-        // Reader: assume ghost == inner, assume BST invariant, assume return matches ghost.
+        // Reader: spec_is_bst_link from lock predicate, assume return matches ghost.
         fn contains(&self, target: &T) -> (found: B) {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
-            proof { assume(spec_is_bst_link(*data)); }
+            // spec_is_bst_link(*data) from lock predicate via acquire_read.
             let found = find_link(data, target).is_some();
             proof { assume(found == link_contains(self@, *target)); }
             handle.release_read();
             found
         }
 
-        // Reader: assume ghost == inner, assume return matches ghost.
+        // Reader: link_spec_size from lock predicate, assume return matches ghost.
         fn size(&self) -> (n: N) {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
-            proof { assume(link_spec_size(*data) <= usize::MAX as nat); }
+            // link_spec_size(*data) <= usize::MAX from lock predicate via acquire_read.
             let n = size_link(data);
             proof { assume(n as nat == link_spec_size(self@)); }
             handle.release_read();
@@ -1001,7 +1010,7 @@ pub mod BSTRBMtEph {
         fn find(&self, target: &T) -> Option<T> {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
-            proof { assume(spec_is_bst_link(*data)); }
+            // spec_is_bst_link(*data) from lock predicate via acquire_read.
             let found = find_link(data, target).cloned();
             handle.release_read();
             found
@@ -1010,7 +1019,7 @@ pub mod BSTRBMtEph {
         fn minimum(&self) -> Option<T> {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
-            proof { assume(spec_is_bst_link(*data)); }
+            // spec_is_bst_link(*data) from lock predicate via acquire_read.
             let min = min_link(data).cloned();
             handle.release_read();
             min
@@ -1019,7 +1028,7 @@ pub mod BSTRBMtEph {
         fn maximum(&self) -> Option<T> {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
-            proof { assume(spec_is_bst_link(*data)); }
+            // spec_is_bst_link(*data) from lock predicate via acquire_read.
             let max = max_link(data).cloned();
             handle.release_read();
             max
@@ -1028,7 +1037,7 @@ pub mod BSTRBMtEph {
         fn in_order(&self) -> ArraySeqStPerS<T> {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
-            proof { assume(link_spec_size(*data) <= usize::MAX as nat); }
+            // link_spec_size(*data) <= usize::MAX from lock predicate via acquire_read.
             let out = in_order_parallel(data);
             handle.release_read();
             ArraySeqStPerS::from_vec(out)
@@ -1037,7 +1046,7 @@ pub mod BSTRBMtEph {
         fn pre_order(&self) -> ArraySeqStPerS<T> {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
-            proof { assume(link_spec_size(*data) <= usize::MAX as nat); }
+            // link_spec_size(*data) <= usize::MAX from lock predicate via acquire_read.
             let out = pre_order_parallel(data);
             handle.release_read();
             ArraySeqStPerS::from_vec(out)
@@ -1050,7 +1059,7 @@ pub mod BSTRBMtEph {
             let handle = self.root.acquire_read();
             let predicate = Arc::new(predicate);
             let data = handle.borrow();
-            proof { assume(link_spec_size(*data) <= usize::MAX as nat); }
+            // link_spec_size(*data) <= usize::MAX from lock predicate via acquire_read.
             let out = filter_parallel(data, &predicate);
             handle.release_read();
             ArraySeqStPerS::from_vec(out)
@@ -1063,7 +1072,7 @@ pub mod BSTRBMtEph {
             let handle = self.root.acquire_read();
             let op = Arc::new(op);
             let data = handle.borrow();
-            proof { assume(link_spec_size(*data) <= usize::MAX as nat); }
+            // link_spec_size(*data) <= usize::MAX from lock predicate via acquire_read.
             let accumulated = reduce_parallel(data, &op, identity);
             handle.release_read();
             accumulated
