@@ -25,7 +25,9 @@ pub mod OrderedTableMtPer {
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, obeys_view_eq_trigger};
+    use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full, obeys_feq_full_trigger, obeys_view_eq_trigger};
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     #[cfg(verus_keep_ghost)]
     use vstd::laws_eq::obeys_view_eq;
 
@@ -107,11 +109,24 @@ pub mod OrderedTableMtPer {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- constructs empty StPer + RwLock
         fn empty() -> (empty: Self)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                view_ord_consistent::<Pair<K, V>>(),
+                spec_pair_key_determines_order::<K, V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                view_ord_consistent::<K>(),
             ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_orderedtablemtper_wf();
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- wraps StPer.singleton + RwLock
         fn singleton(k: K, v: V) -> (tree: Self)
+            requires
+                obeys_feq_clone::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                view_ord_consistent::<Pair<K, V>>(),
+                spec_pair_key_determines_order::<K, V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                view_ord_consistent::<K>(),
             ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree.spec_orderedtablemtper_wf();
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
@@ -256,7 +271,6 @@ pub mod OrderedTableMtPer {
         }
 
         fn singleton(k: K, v: V) -> (tree: Self) {
-            proof { assert(obeys_feq_full_trigger::<Pair<K, V>>()); }
             let inner = OrderedTableStPer::singleton(k, v);
             let ghost view = inner@;
             OrderedTableMtPer {

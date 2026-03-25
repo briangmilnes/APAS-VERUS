@@ -12,6 +12,8 @@ pub mod AdjTableGraphStPer {
     use crate::Chap43::OrderedTableStPer::OrderedTableStPer::*;
     use crate::Chap52::AdjTableGraphStEph::AdjTableGraphStEph::spec_sum_adj_sizes;
     use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
 
     verus! {
 
@@ -56,6 +58,12 @@ broadcast use {
 
         /// Work Theta(1), Span Theta(1)
         fn empty() -> (out: Self)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<V, AVLTreeSetStPer<V>>>(),
+                view_ord_consistent::<Pair<V, AVLTreeSetStPer<V>>>(),
+                spec_pair_key_determines_order::<V, AVLTreeSetStPer<V>>(),
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
             ensures out.spec_adjtablegraphstper_wf();
         /// Work Theta(1), Span Theta(1)
         fn from_table(table: OrderedTableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self)
