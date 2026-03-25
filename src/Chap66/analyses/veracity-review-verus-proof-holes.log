@@ -21,31 +21,31 @@ Table of Contents:
 =================================================================
 
 ❌ BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaMtEph.rs:49: error: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:49: error: external - #[verifier::external]
         50 |     impl<V: PartialEq + Copy> PartialEq for LabeledEdge<V> {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaMtEph.rs:166: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:166: error: external_body - #[verifier::external_body]
        167 |     fn hash_coin_flips_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaMtEph.rs:235: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:235: error: external_body - #[verifier::external_body]
        236 |     fn compute_remaining_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaMtEph.rs:295: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:295: error: external_body - #[verifier::external_body]
        296 |     fn collect_mst_labels_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaMtEph.rs:355: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:355: error: external_body - #[verifier::external_body]
        356 |     fn build_partition_map_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaMtEph.rs:434: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:434: error: external_body - #[verifier::external_body]
        435 |     pub fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaMtEph.rs:520: error: external_body [blocked_by: hash_coin_flips_mt] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:520: error: external_body [blocked_by: hash_coin_flips_mt] - #[verifier::external_body]
        521 |     pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaMtEph.rs:586: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:586: error: external_body - #[verifier::external_body]
        587 |     fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaMtEph.rs:681: error: external_body [blocked_by: vertex_bridges_mt] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:681: error: external_body [blocked_by: bridge_star_partition_mt] - #[verifier::external_body]
        682 |     pub fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaMtEph.rs:801: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:801: error: external_body - #[verifier::external_body]
        802 |     fn reroute_edges_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaMtEph.rs:883: error: external_body [blocked_by: boruvka_mst_mt] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:883: error: external_body [blocked_by: boruvka_mst_mt] - #[verifier::external_body]
        884 |     pub fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + Copy + 'static>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaMtEph.rs:937: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:937: error: external_body - #[verifier::external_body]
        938 |     pub fn mst_weight<V: StTInMtT + Hash + Ord + Copy + 'static>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaMtEph.rs:152: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:152: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
    Holes: 12 total
       11 × external_body
          8 × root cause
@@ -54,17 +54,17 @@ Table of Contents:
    Info: 1 × structural_false_positive
       1 × OPAQUE_EXTERNAL
 ❌ BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaStEph.rs:64: error: external - #[verifier::external]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaStEph.rs:64: error: external - #[verifier::external]
         65 |     impl<V: PartialEq + Copy> PartialEq for LabeledEdge<V> {
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaStEph.rs:200: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaStEph.rs:200: error: external_body - #[verifier::external_body]
        201 |         fn vertex_bridges<V: HashOrd + Copy>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaStEph.rs:267: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaStEph.rs:267: error: external_body - #[verifier::external_body]
        268 |         fn bridge_star_partition<V: HashOrd + Copy>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaStEph.rs:369: error: external_body [blocked_by: bridge_star_partition] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaStEph.rs:369: error: external_body [blocked_by: vertex_bridges] - #[verifier::external_body]
        370 |         fn boruvka_mst<V: HashOrd + Copy>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaStEph.rs:467: error: external_body [blocked_by: boruvka_mst] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaStEph.rs:467: error: external_body [blocked_by: boruvka_mst] - #[verifier::external_body]
        468 |         fn boruvka_mst_with_seed<V: HashOrd + Copy>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap66/BoruvkaStEph.rs:480: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaStEph.rs:480: error: external_body - #[verifier::external_body]
        481 |         fn mst_weight<V: StT + Hash + Ord + Copy>(
    Holes: 6 total
       5 × external_body
@@ -126,13 +126,9 @@ Structural (info only): 1
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-24 20:41:37 -07:00
-Ended:     2026-03-24 20:41:37 -07:00
-Duration:  13ms
+Started:   2026-03-24 20:47:37 -07:00
+Ended:     2026-03-24 20:47:37 -07:00
+Duration:  15ms
 
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
-03-24 20:41:37 -07:00
-Ended:     2026-03-24 20:41:37 -07:00
-Duration:  13ms
-
-Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap66/analyses/veracity-review-verus-proof-holes.log

@@ -116,6 +116,9 @@ broadcast use {
             ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_avltreesetmtper_wf();
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(log n), Parallelism Θ(n)
         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures constructed.spec_avltreesetmtper_wf();
         /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
         /// - claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
@@ -150,7 +153,10 @@ broadcast use {
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn find(&self, x: &T) -> (found: B)
-            requires self.spec_avltreesetmtper_wf(),
+            requires
+                self.spec_avltreesetmtper_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures found == self@.contains(x@);
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
@@ -234,19 +240,26 @@ broadcast use {
             let vals = seq.values_in_order();
             let n = vals.len();
             let mut st = AVLTreeSetStPer::empty();
+            if n > usize::MAX - 2 {
+                // Capacity guard: AVLTreeSetStPer::insert requires st@.len() + 1 < usize::MAX.
+                assert(AVLTreeSetMtPerInv.inv(st));
+                return AVLTreeSetMtPer {
+                    locked_set: new_arc_rwlock(st, Ghost(AVLTreeSetMtPerInv)),
+                    ghost_set_view: Ghost(st@),
+                };
+            }
             let mut i: usize = 0;
             while i < n
                 invariant
                     st.spec_avltreesetstper_wf(),
                     i <= n,
                     n == vals@.len(),
+                    n <= usize::MAX - 2,
+                    st@.len() <= i as nat,
+                    vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                    view_ord_consistent::<T>(),
                 decreases n - i,
             {
-                proof {
-                    assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-                    assume(view_ord_consistent::<T>());
-                    assume(st@.len() + 1 < usize::MAX as nat);
-                }
                 st = st.insert(vals[i].clone());
                 i += 1;
             }
@@ -362,10 +375,6 @@ broadcast use {
         fn find(&self, x: &T) -> (found: B)
         {
             let handle = self.locked_set.acquire_read();
-            proof {
-                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-                assume(view_ord_consistent::<T>());
-            }
             let found = handle.borrow().find(x);
             proof {
                 // Reader accept: inner find result matches ghost shadow.
