@@ -49,7 +49,8 @@ pub mod TSPApproxStEph {
         ) -> Vec<V>
             requires
                 Self::spec_tspapproxsteph_wf(graph),
-                valid_key_type_LabEdge::<V, WrappedF64>();
+                valid_key_type_LabEdge::<V, WrappedF64>(),
+                tree_edges.spec_setsteph_wf();
 
         /// Shortcut Euler tour to avoid revisiting vertices.
         /// APAS: Work O(|V|), Span O(|V|)
@@ -75,7 +76,25 @@ pub mod TSPApproxStEph {
             requires
                 Self::spec_tspapproxsteph_wf(graph),
                 valid_key_type::<V>(),
-                valid_key_type_LabEdge::<V, WrappedF64>();
+                valid_key_type_LabEdge::<V, WrappedF64>(),
+                spanning_tree.spec_setsteph_wf();
+    }
+
+    /// Linear scan for edge pair in visited-edges vector.
+    fn vec_contains_pair<V: HashOrd>(v: &Vec<(V, V)>, key: &(V, V)) -> (found: bool)
+        ensures true,
+    {
+        let mut i: usize = 0;
+        while i < v.len()
+            invariant 0 <= i <= v@.len(),
+            decreases v.len() - i,
+        {
+            if v[i].0 == key.0 && v[i].1 == key.1 {
+                return true;
+            }
+            i = i + 1;
+        }
+        false
     }
 
     /// Euler Tour of a Tree
@@ -93,7 +112,6 @@ pub mod TSPApproxStEph {
     ///
     /// Returns:
     /// - Vector of vertices in Euler tour order
-    #[verifier::external_body]
     pub fn euler_tour<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         start: &V,
@@ -102,10 +120,11 @@ pub mod TSPApproxStEph {
         requires
             spec_labgraphview_wf(graph@),
             valid_key_type_LabEdge::<V, WrappedF64>(),
+            tree_edges.spec_setsteph_wf(),
         ensures true,
     {
         let mut tour = Vec::new();
-        let mut visited_edges = HashSetWithViewPlus::<(V, V)>::new();
+        let mut visited_edges: Vec<(V, V)> = Vec::new();
         let fuel = tree_edges.size();
 
         euler_tour_dfs(graph, start, None, tree_edges, &mut tour, &mut visited_edges, fuel);
@@ -117,19 +136,19 @@ pub mod TSPApproxStEph {
     /// - APAS: N/A — internal helper for euler_tour.
     /// - Claude-Opus-4.6: Work O(n * m_tree), Span O(n * m_tree) — for each vertex,
     ///   scans neighbors (O(m)) and tree_edges (O(m_tree)) to find matching edges.
-    #[verifier::external_body]
     fn euler_tour_dfs<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         current: &V,
         parent: Option<&V>,
         tree_edges: &SetStEph<LabEdge<V, WrappedF64>>,
         tour: &mut Vec<V>,
-        visited_edges: &mut HashSetWithViewPlus<(V, V)>,
+        visited_edges: &mut Vec<(V, V)>,
         fuel: usize,
     )
         requires
             spec_labgraphview_wf(graph@),
             valid_key_type_LabEdge::<V, WrappedF64>(),
+            tree_edges.spec_setsteph_wf(),
         ensures true,
         decreases fuel,
     {
@@ -156,7 +175,13 @@ pub mod TSPApproxStEph {
 
         // Visit all neighbors connected by tree edges.
         let mut i: usize = 0;
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
         while i < ng_vec.len()
+            invariant
+                0 <= i <= ng_vec@.len(),
+                spec_labgraphview_wf(graph@),
+                valid_key_type_LabEdge::<V, WrappedF64>(),
+                tree_edges.spec_setsteph_wf(),
             decreases ng_vec.len() - i,
         {
             let neighbor = &ng_vec[i];
@@ -175,7 +200,7 @@ pub mod TSPApproxStEph {
                     (neighbor.clone(), current.clone())
                 };
 
-                if !visited_edges.contains(&edge_key) {
+                if !vec_contains_pair(visited_edges, &edge_key) {
                     // Check if edge exists in tree_edges.
                     let mut edge_found = false;
                     let mut te_it = tree_edges.iter();
@@ -197,7 +222,7 @@ pub mod TSPApproxStEph {
                     }
 
                     if edge_found {
-                        visited_edges.insert(edge_key);
+                        visited_edges.push(edge_key);
                         euler_tour_dfs(graph, neighbor, Some(current), tree_edges, tour, visited_edges, fuel - 1);
                         tour.push(current.clone());
                     }
@@ -308,7 +333,7 @@ pub mod TSPApproxStEph {
         requires
             spec_labgraphview_wf(graph@),
             valid_key_type_LabEdge::<V, WrappedF64>(),
-        ensures ng@ == graph.spec_ng(v@),
+        ensures ng@ == graph.spec_ng(v@), ng.spec_setsteph_wf(),
     {
         graph.ng(v)
     }
@@ -362,6 +387,7 @@ pub mod TSPApproxStEph {
             spec_labgraphview_wf(graph@),
             valid_key_type::<V>(),
             valid_key_type_LabEdge::<V, WrappedF64>(),
+            spanning_tree.spec_setsteph_wf(),
         ensures result.0@.len() <= 1 ==> result.1@ == 0.0f64,
     {
         let euler = euler_tour(graph, start, spanning_tree);

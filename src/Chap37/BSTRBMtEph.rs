@@ -844,13 +844,20 @@ pub mod BSTRBMtEph {
     }
 
     fn height_rec<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (h: N)
-        requires link_height(*link) < usize::MAX as nat,
+        requires link_height(*link) <= usize::MAX as nat,
         ensures h as nat == link_height(*link),
         decreases *link,
     {
         match link {
             | None => 0,
-            | Some(node) => 1 + height_rec(&node.left).max(height_rec(&node.right)),
+            | Some(node) => {
+                proof {
+                    // link_height = 1 + max(left, right), so children have height < usize::MAX.
+                    assert(link_height(node.left) < usize::MAX as nat);
+                    assert(link_height(node.right) < usize::MAX as nat);
+                }
+                1 + height_rec(&node.left).max(height_rec(&node.right))
+            }
         }
     }
 
@@ -1048,11 +1055,15 @@ pub mod BSTRBMtEph {
             b
         }
 
-        // Reader: assume return matches ghost.
+        // Reader: height bounded by size from lock predicate.
         fn height(&self) -> (h: N) {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
-            proof { assume(link_height(*data) < usize::MAX as nat); }
+            proof {
+                // Lock predicate gives link_spec_size(*data) <= usize::MAX.
+                // Lemma gives link_height <= link_spec_size.
+                lemma_height_le_size::<T>(*data);
+            }
             let h = height_rec(data);
             proof { assume(h as nat == link_height(self@)); }
             handle.release_read();
