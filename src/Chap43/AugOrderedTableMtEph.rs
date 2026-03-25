@@ -145,7 +145,13 @@ broadcast use {
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- constructs singleton base table with reducer/identity
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
-            requires forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2))
+            requires
+                forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                view_ord_consistent::<Pair<K, V>>(),
+                spec_pair_key_determines_order::<K, V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                view_ord_consistent::<K>(),
             ensures tree.spec_augorderedtablemteph_wf();
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- delegates to TableMtEph which uses linear scan

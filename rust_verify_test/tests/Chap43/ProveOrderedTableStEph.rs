@@ -18,10 +18,18 @@ test_verify_one_file! {
         use apas_verus::Types::Types::*;
         use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::*;
         use apas_verus::vstdplus::feq::feq::*;
+        use apas_verus::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
         use vstd::laws_eq::obeys_view_eq;
 
         fn test_loop_borrow_iter()
-            requires obeys_feq_clone::<Pair<u64, u64>>(), obeys_view_eq::<u64>(),
+            requires
+                obeys_feq_clone::<Pair<u64, u64>>(),
+                obeys_view_eq::<u64>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<u64, u64>>(),
+                view_ord_consistent::<Pair<u64, u64>>(),
+                spec_pair_key_determines_order::<u64, u64>(),
+                vstd::laws_cmp::obeys_cmp_spec::<u64>(),
+                view_ord_consistent::<u64>(),
         {
             let mut t = OrderedTableStEph::singleton(1u64, 10u64);
             t.insert(2u64, 20u64, |_v1: &u64, v2: &u64| -> (r: u64) { *v2 });
@@ -60,10 +68,18 @@ test_verify_one_file! {
         use apas_verus::Types::Types::*;
         use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::*;
         use apas_verus::vstdplus::feq::feq::*;
+        use apas_verus::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
         use vstd::laws_eq::obeys_view_eq;
 
         fn test_loop_borrow_into()
-            requires obeys_feq_clone::<Pair<u64, u64>>(), obeys_view_eq::<u64>(),
+            requires
+                obeys_feq_clone::<Pair<u64, u64>>(),
+                obeys_view_eq::<u64>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<u64, u64>>(),
+                view_ord_consistent::<Pair<u64, u64>>(),
+                spec_pair_key_determines_order::<u64, u64>(),
+                vstd::laws_cmp::obeys_cmp_spec::<u64>(),
+                view_ord_consistent::<u64>(),
         {
             let mut t = OrderedTableStEph::singleton(1u64, 10u64);
             t.insert(2u64, 20u64, |_v1: &u64, v2: &u64| -> (r: u64) { *v2 });
@@ -102,10 +118,18 @@ test_verify_one_file! {
         use apas_verus::Types::Types::*;
         use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::*;
         use apas_verus::vstdplus::feq::feq::*;
+        use apas_verus::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
         use vstd::laws_eq::obeys_view_eq;
 
         fn test_for_borrow_iter()
-            requires obeys_feq_clone::<Pair<u64, u64>>(), obeys_view_eq::<u64>(),
+            requires
+                obeys_feq_clone::<Pair<u64, u64>>(),
+                obeys_view_eq::<u64>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<u64, u64>>(),
+                view_ord_consistent::<Pair<u64, u64>>(),
+                spec_pair_key_determines_order::<u64, u64>(),
+                vstd::laws_cmp::obeys_cmp_spec::<u64>(),
+                view_ord_consistent::<u64>(),
         {
             let mut t = OrderedTableStEph::singleton(1u64, 10u64);
             t.insert(2u64, 20u64, |_v1: &u64, v2: &u64| -> (r: u64) { *v2 });
@@ -136,10 +160,18 @@ test_verify_one_file! {
         use apas_verus::Types::Types::*;
         use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::*;
         use apas_verus::vstdplus::feq::feq::*;
+        use apas_verus::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
         use vstd::laws_eq::obeys_view_eq;
 
         fn test_for_borrow_into()
-            requires obeys_feq_clone::<Pair<u64, u64>>(), obeys_view_eq::<u64>(),
+            requires
+                obeys_feq_clone::<Pair<u64, u64>>(),
+                obeys_view_eq::<u64>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<u64, u64>>(),
+                view_ord_consistent::<Pair<u64, u64>>(),
+                spec_pair_key_determines_order::<u64, u64>(),
+                vstd::laws_cmp::obeys_cmp_spec::<u64>(),
+                view_ord_consistent::<u64>(),
         {
             let mut t = OrderedTableStEph::singleton(1u64, 10u64);
             t.insert(2u64, 20u64, |_v1: &u64, v2: &u64| -> (r: u64) { *v2 });
