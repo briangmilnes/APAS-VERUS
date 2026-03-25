@@ -58,7 +58,9 @@ pub mod BoruvkaStEph {
     impl<V: Copy> Copy for LabeledEdge<V> {}
 
     impl<V: Copy> Clone for LabeledEdge<V> {
-        fn clone(&self) -> (s: Self) {
+        fn clone(&self) -> (s: Self)
+            ensures s == *self,
+        {
             *self
         }
     }
@@ -207,7 +209,6 @@ pub mod BoruvkaStEph {
         ///
         /// - APAS: Work O(m), Span O(log m)
         /// - Sequential: Work O(m), Span O(m) — sequential iteration over edges.
-        #[verifier::external_body]
         fn vertex_bridges<V: HashOrd + Copy>(
             edges: &SetStEph<LabeledEdge<V>>,
         ) -> (bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>) {
@@ -219,14 +220,11 @@ pub mod BoruvkaStEph {
 
             loop
                 invariant
-                    forall|v: V| #[trigger] bridges@.contains_key(v@) ==> {
-                        let (neighbor, weight, label) = bridges@[v@];
-                        spec_valid_bridge(v, neighbor, weight, label, edges@)
-                    },
                     iter_invariant(&it),
                     iter_seq == it@.1,
-                    iter_seq.map(|i: int, k: LabeledEdge<V>| k@).to_set() == edges@,
+                    forall|j: int| 0 <= j < iter_seq.len() ==> edges@.contains(#[trigger] iter_seq[j]@),
                     spec_all_weights_finite(edges@),
+                    forall|k: V::V| #[trigger] bridges@.contains_key(k) ==> bridges@[k].1.spec_is_finite(),
                     obeys_key_model::<V>(),
                     forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
                 decreases iter_seq.len() - it@.0,
@@ -234,8 +232,10 @@ pub mod BoruvkaStEph {
                 if let Some(edge) = it.next() {
                     let LabeledEdge(u, v, w, label) = edge.clone();
 
-                    // The edge is in edges@.
-                    assert(edges@.contains(LabeledEdge(u, v, w, label)));
+                    // Prove edge is in edges@ and weight is finite.
+                    assert(edges@.contains(iter_seq[it@.0 - 1]@));
+                    assert(LabeledEdge(u, v, w, label) == *edge);
+                    assert(w.spec_is_finite());
 
                     // Update bridge for u.
                     match bridges.get(&u) {
@@ -375,7 +375,7 @@ pub mod BoruvkaStEph {
         ///
         /// - APAS: Work O(m log n), Span O(log^2 n)
         /// - Sequential: Work O(m log n), Span O(m log n) — sequential; O(log n) rounds each O(m).
-        #[verifier::external_body]
+        #[verifier::exec_allows_no_decreases_clause]
         fn boruvka_mst<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
@@ -445,10 +445,20 @@ pub mod BoruvkaStEph {
                     eit_seq == eit@.1,
                     new_edges.spec_setsteph_wf(),
                     spec_all_weights_finite(edges@),
+                    spec_all_weights_finite(new_edges@),
+                    forall|j: int| 0 <= j < eit_seq.len() ==> edges@.contains(#[trigger] eit_seq[j]@),
                 decreases eit_seq.len() - eit@.0,
             {
                 if let Some(edge) = eit.next() {
+                    let ghost old_idx = eit@.0 - 1;
                     let LabeledEdge(u, v, w, label) = edge.clone();
+
+                    // edge == eit_seq[old_idx], and View is identity.
+                    assert(edges@.contains(eit_seq[old_idx]@));
+                    assert(*edge == eit_seq[old_idx]);
+                    assert(LabeledEdge(u, v, w, label) == *edge);
+                    assert(w.spec_is_finite());
+
                     let new_u = match full_partition.get(&u) {
                         Some(mapped) => mapped.clone(),
                         None => u,
@@ -458,7 +468,15 @@ pub mod BoruvkaStEph {
                         None => v,
                     };
                     if new_u != new_v {
-                        let _ = new_edges.insert(LabeledEdge(new_u, new_v, w, label));
+                        // New edge preserves weight, so finiteness is maintained.
+                        let new_edge = LabeledEdge(new_u, new_v, w, label);
+                        assert(new_edge.2.spec_is_finite());
+                        let _ = new_edges.insert(new_edge);
+
+                        // After insert, all edges in new_edges@ are still finite.
+                        assert forall|e: LabeledEdge<V>| #[trigger] new_edges@.contains(e) implies e.2.spec_is_finite() by {
+                            // e was either already in new_edges@ (old invariant) or is new_edge.
+                        };
                     }
                 } else {
                     break;

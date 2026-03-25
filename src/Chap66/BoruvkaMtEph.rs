@@ -101,11 +101,14 @@ pub mod BoruvkaMtEph {
             edges: Arc<Vec<LabeledEdge<V>>>,
             start: usize,
             end: usize,
-        ) -> HashMapWithViewPlus<V, (V, WrappedF64, usize)>
+        ) -> (bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)
             requires
                 start <= end, end <= edges@.len(),
+                spec_all_weights_finite_seq(edges@),
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2;
+                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            ensures
+                forall|k: V::V| #[trigger] bridges@.contains_key(k) ==> bridges@[k].1.spec_is_finite();
 
         /// Parallel bridge-based star partition.
         /// APAS: Work O(|V| + |E|), Span O(lg |V|)
@@ -134,6 +137,7 @@ pub mod BoruvkaMtEph {
                 obeys_key_model::<V>(),
                 forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
                 mst_labels.spec_setsteph_wf(),
+                spec_all_weights_finite_seq(edges_vec@),
                 SetStEph::<V>::spec_valid_key_type(),
             ensures mst.spec_setsteph_wf();
 
@@ -455,11 +459,14 @@ pub mod BoruvkaMtEph {
         edges: Arc<Vec<LabeledEdge<V>>>,
         start: usize,
         end: usize,
-    ) -> HashMapWithViewPlus<V, (V, WrappedF64, usize)>
+    ) -> (bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)
         requires
             start <= end, end <= edges@.len(),
+            spec_all_weights_finite_seq(edges@),
             obeys_key_model::<V>(),
             forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+        ensures
+            forall|k: V::V| #[trigger] bridges@.contains_key(k) ==> bridges@[k].1.spec_is_finite(),
         decreases end - start,
     {
         let size = end - start;
@@ -470,6 +477,7 @@ pub mod BoruvkaMtEph {
         if size == 1 {
             let es = arc_deref(&edges);
             let LabeledEdge(u, v, w, label) = es[start];
+            assert(w.spec_is_finite());
             let mut min_edges: HashMapWithViewPlus<V, (V, WrappedF64, usize)> = HashMapWithViewPlus::new();
             min_edges.insert(u.clone(), (v.clone(), w, label));
             min_edges.insert(v.clone(), (u.clone(), w, label));
@@ -484,8 +492,11 @@ pub mod BoruvkaMtEph {
         let f1 = move || -> (r: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)
             requires
                 start <= mid, mid <= edges1@.len(),
+                spec_all_weights_finite_seq(edges1@),
                 obeys_key_model::<V>(),
                 forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            ensures
+                forall|k: V::V| #[trigger] r@.contains_key(k) ==> r@[k].1.spec_is_finite(),
         {
             vertex_bridges_mt(edges1, start, mid)
         };
@@ -493,8 +504,11 @@ pub mod BoruvkaMtEph {
         let f2 = move || -> (r: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)
             requires
                 mid <= end, end <= edges2@.len(),
+                spec_all_weights_finite_seq(edges2@),
                 obeys_key_model::<V>(),
                 forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            ensures
+                forall|k: V::V| #[trigger] r@.contains_key(k) ==> r@[k].1.spec_is_finite(),
         {
             vertex_bridges_mt(edges2, mid, end)
         };
@@ -502,22 +516,33 @@ pub mod BoruvkaMtEph {
         let Pair(mut merged, right_bridges) = crate::ParaPair!(f1, f2);
 
         // Merge: for each vertex, keep the minimum weight edge.
+        // Both merged and right_bridges have finite weights from their ensures.
         let mut it = right_bridges.iter();
         let ghost it_seq = it@.1;
         loop
             invariant
                 it@.0 <= it@.1.len(),
                 it_seq == it@.1,
+                forall|k: V::V| #[trigger] merged@.contains_key(k) ==> merged@[k].1.spec_is_finite(),
+                forall|kv: (V, (V, WrappedF64, usize))| #[trigger] it_seq.to_set().contains(kv)
+                    ==> right_bridges@.contains_key(kv.0@) && right_bridges@[kv.0@] == kv.1,
+                forall|k: V::V| #[trigger] right_bridges@.contains_key(k) ==> right_bridges@[k].1.spec_is_finite(),
+                obeys_key_model::<V>(),
             decreases it_seq.len() - it@.0,
         {
             if let Some((v, entry)) = it.next() {
                 let (neighbor, w, label) = entry;
+                // From iterator: (*v, *entry) is in it_seq.to_set(), so right_bridges has the entry.
+                assert(it_seq.to_set().contains((*v, *entry)));
+                assert(right_bridges@.contains_key(v@));
+                assert(right_bridges@[v@] == *entry);
+                assert(w.spec_is_finite());
                 match merged.get(v) {
                     None => {
                         merged.insert(v.clone(), (neighbor.clone(), *w, *label));
                     }
                     Some((_, existing_w, _)) => {
-                        proof { assume(w.spec_is_finite() && existing_w.spec_is_finite()); }
+                        assert(existing_w.spec_is_finite());
                         if w.dist_lt(existing_w) {
                             merged.insert(v.clone(), (neighbor.clone(), *w, *label));
                         }
@@ -711,6 +736,7 @@ pub mod BoruvkaMtEph {
             obeys_key_model::<V>(),
             forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
             mst_labels.spec_setsteph_wf(),
+            spec_all_weights_finite_seq(edges_vec@),
             SetStEph::<V>::spec_valid_key_type(),
         ensures mst.spec_setsteph_wf(),
     {
@@ -724,6 +750,7 @@ pub mod BoruvkaMtEph {
                 obeys_key_model::<V>(),
                 forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
                 mst_labels.spec_setsteph_wf(),
+                spec_all_weights_finite_seq(edges_vec@),
                 SetStEph::<V>::spec_valid_key_type(),
         {
             // Base case: no edges remaining.
@@ -841,11 +868,14 @@ pub mod BoruvkaMtEph {
         partition: Arc<HashMapWithViewPlus<V, V>>,
         start: usize,
         end: usize,
-    ) -> Vec<LabeledEdge<V>>
+    ) -> (result: Vec<LabeledEdge<V>>)
         requires
             start <= end, end <= edges@.len(),
+            spec_all_weights_finite_seq(edges@),
             obeys_key_model::<V>(),
             forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+        ensures
+            spec_all_weights_finite_seq(result@),
         decreases end - start,
     {
         let size = end - start;
@@ -883,8 +913,11 @@ pub mod BoruvkaMtEph {
         let f1 = move || -> (r: Vec<LabeledEdge<V>>)
             requires
                 start <= mid, mid <= edges1@.len(),
+                spec_all_weights_finite_seq(edges1@),
                 obeys_key_model::<V>(),
                 forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            ensures
+                spec_all_weights_finite_seq(r@),
         {
             reroute_edges_mt(edges1, part1, start, mid)
         };
@@ -892,8 +925,11 @@ pub mod BoruvkaMtEph {
         let f2 = move || -> (r: Vec<LabeledEdge<V>>)
             requires
                 mid <= end, end <= edges2@.len(),
+                spec_all_weights_finite_seq(edges2@),
                 obeys_key_model::<V>(),
                 forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            ensures
+                spec_all_weights_finite_seq(r@),
         {
             reroute_edges_mt(edges2, part2, mid, end)
         };
@@ -905,6 +941,8 @@ pub mod BoruvkaMtEph {
         while i < right_result.len()
             invariant
                 0 <= i <= right_result@.len(),
+                spec_all_weights_finite_seq(left_result@),
+                spec_all_weights_finite_seq(right_result@),
             decreases right_result@.len() - i,
         {
             left_result.push(right_result[i]);
@@ -958,9 +996,15 @@ pub mod BoruvkaMtEph {
             invariant
                 iter_invariant(&eit),
                 eseq == eit@.1,
+                spec_all_weights_finite_seq(edges_vec@),
+                forall|j: int| 0 <= j < eseq.len() ==> edges@.contains(#[trigger] eseq[j]@),
+                spec_all_weights_finite(edges@),
             decreases eseq.len() - eit@.0,
         {
             if let Some(e) = eit.next() {
+                // e is from edges@, so its weight is finite.
+                assert(edges@.contains(eseq[eit@.0 - 1]@));
+                assert((*e).2.spec_is_finite());
                 edges_vec.push(*e);
             } else {
                 break;
