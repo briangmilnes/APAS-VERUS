@@ -125,10 +125,14 @@ pub mod BSTSetAVLMtEph {
             requires left.spec_bstsetavlmteph_wf(), right.spec_bstsetavlmteph_wf()
             ensures joined.spec_bstsetavlmteph_wf();
         fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> (filtered: Self)
-            requires self.spec_bstsetavlmteph_wf()
+            requires
+                self.spec_bstsetavlmteph_wf(),
+                forall|t: &T| #[trigger] predicate.requires((t,)),
             ensures filtered.spec_bstsetavlmteph_wf();
         fn reduce<F: FnMut(T, T) -> T + Send>(&self, op: F, base: T) -> (reduced: T)
-            requires self.spec_bstsetavlmteph_wf()
+            requires
+                self.spec_bstsetavlmteph_wf(),
+                forall|a: T, b: T| #[trigger] op.requires((a, b)),
             ensures true;
         fn iter_in_order(&self) -> (seq: ArraySeqStPerS<T>)
             requires self.spec_bstsetavlmteph_wf()
@@ -251,7 +255,7 @@ pub mod BSTSetAVLMtEph {
             self.tree = rebuild_from_vec(filtered);
         }
 
-        #[verifier::external_body]
+        #[verifier::exec_allows_no_decreases_clause]
         fn union(&self, other: &Self) -> Self {
             if self.is_empty() {
                 return copy_set(other);
@@ -261,19 +265,28 @@ pub mod BSTSetAVLMtEph {
             }
 
             let pivot = if self.size() <= other.size() {
-                self.tree.minimum().unwrap()
+                match self.tree.minimum() {
+                    Some(v) => v,
+                    None => { return copy_set(other); }
+                }
             } else {
-                other.tree.minimum().unwrap()
+                match other.tree.minimum() {
+                    Some(v) => v,
+                    None => { return copy_set(self); }
+                }
             };
 
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
 
+            let f1 = move || -> (r: Self)
+                ensures r.spec_bstsetavlmteph_wf()
+            { self_left.union(&other_left) };
+            let f2 = move || -> (r: Self)
+                ensures r.spec_bstsetavlmteph_wf()
+            { self_right.union(&other_right) };
             use crate::Types::Types::Pair;
-            let Pair(left_union, right_union) = crate::ParaPair!(
-                move || self_left.union(&other_left),
-                move || self_right.union(&other_right)
-            );
+            let Pair(left_union, right_union) = crate::ParaPair!(f1, f2);
 
             if found_self || found_other {
                 Self::join_m(left_union, pivot, right_union)
@@ -282,26 +295,35 @@ pub mod BSTSetAVLMtEph {
             }
         }
 
-        #[verifier::external_body]
+        #[verifier::exec_allows_no_decreases_clause]
         fn intersection(&self, other: &Self) -> Self {
             if self.is_empty() || other.is_empty() {
                 return Self::empty();
             }
 
             let pivot = if self.size() <= other.size() {
-                self.tree.minimum().unwrap()
+                match self.tree.minimum() {
+                    Some(v) => v,
+                    None => { return Self::empty(); }
+                }
             } else {
-                other.tree.minimum().unwrap()
+                match other.tree.minimum() {
+                    Some(v) => v,
+                    None => { return Self::empty(); }
+                }
             };
 
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
 
+            let f1 = move || -> (r: Self)
+                ensures r.spec_bstsetavlmteph_wf()
+            { self_left.intersection(&other_left) };
+            let f2 = move || -> (r: Self)
+                ensures r.spec_bstsetavlmteph_wf()
+            { self_right.intersection(&other_right) };
             use crate::Types::Types::Pair;
-            let Pair(left_inter, right_inter) = crate::ParaPair!(
-                move || self_left.intersection(&other_left),
-                move || self_right.intersection(&other_right)
-            );
+            let Pair(left_inter, right_inter) = crate::ParaPair!(f1, f2);
 
             if found_self && found_other {
                 Self::join_m(left_inter, pivot, right_inter)
@@ -310,7 +332,7 @@ pub mod BSTSetAVLMtEph {
             }
         }
 
-        #[verifier::external_body]
+        #[verifier::exec_allows_no_decreases_clause]
         fn difference(&self, other: &Self) -> Self {
             if self.is_empty() {
                 return Self::empty();
@@ -319,16 +341,22 @@ pub mod BSTSetAVLMtEph {
                 return copy_set(self);
             }
 
-            let pivot = self.tree.minimum().unwrap();
+            let pivot = match self.tree.minimum() {
+                Some(v) => v,
+                None => { return Self::empty(); }
+            };
 
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
 
+            let f1 = move || -> (r: Self)
+                ensures r.spec_bstsetavlmteph_wf()
+            { self_left.difference(&other_left) };
+            let f2 = move || -> (r: Self)
+                ensures r.spec_bstsetavlmteph_wf()
+            { self_right.difference(&other_right) };
             use crate::Types::Types::Pair;
-            let Pair(left_diff, right_diff) = crate::ParaPair!(
-                move || self_left.difference(&other_left),
-                move || self_right.difference(&other_right)
-            );
+            let Pair(left_diff, right_diff) = crate::ParaPair!(f1, f2);
 
             if found_self && !found_other {
                 Self::join_m(left_diff, pivot, right_diff)
@@ -426,16 +454,19 @@ pub mod BSTSetAVLMtEph {
             BSTSetAVLMtEph { tree }
         }
 
-        #[verifier::external_body]
-        fn filter<F: FnMut(&T) -> bool + Send>(&self, mut predicate: F) -> Self {
+        fn filter<F>(&self, mut predicate: F) -> Self
+        where
+            F: FnMut(&T) -> bool,
+        {
             let sorted = self.tree.in_order();
             let n = sorted.length();
             let mut filtered: Vec<T> = Vec::new();
             let mut i: usize = 0;
             while i < n
                 invariant
-                    n as nat == sorted.spec_len(),
-                    0 <= i <= n,
+                    i <= n,
+                    n as int == sorted.spec_len(),
+                    forall|t: &T| #[trigger] predicate.requires((t,)),
                 decreases n - i,
             {
                 let elem = sorted.nth(i);
@@ -447,16 +478,19 @@ pub mod BSTSetAVLMtEph {
             build_from_vec(filtered)
         }
 
-        #[verifier::external_body]
-        fn reduce<F: FnMut(T, T) -> T + Send>(&self, mut op: F, base: T) -> T {
+        fn reduce<F>(&self, mut op: F, base: T) -> T
+        where
+            F: FnMut(T, T) -> T,
+        {
             let sorted = self.tree.in_order();
             let n = sorted.length();
             let mut acc = base;
             let mut i: usize = 0;
             while i < n
                 invariant
-                    n as nat == sorted.spec_len(),
-                    0 <= i <= n,
+                    i <= n,
+                    n as int == sorted.spec_len(),
+                    forall|a: T, b: T| #[trigger] op.requires((a, b)),
                 decreases n - i,
             {
                 acc = op(acc, sorted.nth(i).clone());
