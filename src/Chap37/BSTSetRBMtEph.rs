@@ -217,15 +217,15 @@ pub mod BSTSetRBMtEph {
                 other.tree.minimum().unwrap()
             };
 
-            // Split both trees at pivot
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
 
-            // Recursive union on left and right subtrees
-            let left_union = self_left.union(&other_left);
-            let right_union = self_right.union(&other_right);
+            use crate::Types::Types::Pair;
+            let Pair(left_union, right_union) = crate::ParaPair!(
+                move || self_left.union(&other_left),
+                move || self_right.union(&other_right)
+            );
 
-            // Join results: include pivot if found in either tree
             if found_self || found_other {
                 Self::join_m(left_union, pivot, right_union)
             } else {
@@ -235,30 +235,25 @@ pub mod BSTSetRBMtEph {
 
         #[verifier::external_body]
         fn intersection(&self, other: &Self) -> Self {
-            // Algorithm: Parallel divide-and-conquer using split/join primitives
-            // Work: O(m log(n/m)), Span: O(log n × log m)
-
-            // Base cases
             if self.is_empty() || other.is_empty() {
                 return Self::empty();
             }
 
-            // Pick pivot from smaller tree
             let pivot = if self.size() <= other.size() {
                 self.tree.minimum().unwrap()
             } else {
                 other.tree.minimum().unwrap()
             };
 
-            // Split both trees at pivot
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
 
-            // Recursive intersection on left and right subtrees
-            let left_inter = self_left.intersection(&other_left);
-            let right_inter = self_right.intersection(&other_right);
+            use crate::Types::Types::Pair;
+            let Pair(left_inter, right_inter) = crate::ParaPair!(
+                move || self_left.intersection(&other_left),
+                move || self_right.intersection(&other_right)
+            );
 
-            // Join results: include pivot only if found in BOTH trees
             if found_self && found_other {
                 Self::join_m(left_inter, pivot, right_inter)
             } else {
@@ -268,29 +263,24 @@ pub mod BSTSetRBMtEph {
 
         #[verifier::external_body]
         fn difference(&self, other: &Self) -> Self {
-            // Algorithm: Parallel divide-and-conquer using split/join primitives
-            // Work: O(m log(n/m)), Span: O(log n × log m)
-
-            // Base cases
             if self.is_empty() {
                 return Self::empty();
             }
             if other.is_empty() {
                 return copy_set(self);
             }
-            
-            // Pick pivot from self (the set we're subtracting from)
+
             let pivot = self.tree.minimum().unwrap();
-            
-            // Split both trees at pivot
+
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
-            
-            // Recursive difference on left and right subtrees
-            let left_diff = self_left.difference(&other_left);
-            let right_diff = self_right.difference(&other_right);
-            
-            // Join results: include pivot only if found in self but NOT in other
+
+            use crate::Types::Types::Pair;
+            let Pair(left_diff, right_diff) = crate::ParaPair!(
+                move || self_left.difference(&other_left),
+                move || self_right.difference(&other_right)
+            );
+
             if found_self && !found_other {
                 Self::join_m(left_diff, pivot, right_diff)
             } else {
@@ -317,8 +307,12 @@ pub mod BSTSetRBMtEph {
 
         #[verifier::external_body]
         fn join_pair(left: Self, right: Self) -> Self {
-            let left_values = values_vec(&left.tree);
-            let right_values = values_vec(&right.tree);
+            use crate::Types::Types::Pair;
+            let Pair(left_values, right_values) = crate::ParaPair!(
+                move || values_vec(&left.tree),
+                move || values_vec(&right.tree)
+            );
+
             let mut combined = left_values.into_iter().collect::<BTreeSet<T>>();
             for value in right_values {
                 combined.insert(value);
@@ -328,9 +322,12 @@ pub mod BSTSetRBMtEph {
 
         #[verifier::external_body]
         fn join_m(left: Self, pivot: T, right: Self) -> Self {
-            // Parallel extraction of values from both trees
-            let left_values = values_vec(&left.tree);
-            let right_values = values_vec(&right.tree);
+            use crate::Types::Types::Pair;
+            let Pair(left_values, right_values) = crate::ParaPair!(
+                move || values_vec(&left.tree),
+                move || values_vec(&right.tree)
+            );
+
             let mut combined = left_values.into_iter().collect::<BTreeSet<T>>();
             combined.insert(pivot);
             for value in right_values {

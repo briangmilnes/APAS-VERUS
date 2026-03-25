@@ -307,7 +307,7 @@ leaf-first. Section 11 appears once. Sections 12-14 repeat per type, bottom-up.
 - No `verus_keep_ghost` in lib.rs (sole exception: `allocator_api` feature gate for Arc).
 - Every chapter gets one unconditional `pub mod ChapNN` block.
 - Files incompatible with Verus are **commented out** with a reason, not hidden behind cfg gates.
-- Allowed cfg gates: `experiments_only`, `dev_only`, `all_chapters`.
+- Allowed cfg gates: `experiments_only`.
 - See `.cursor/rules/apas-verus/lib-rs-structure.mdc` for full details.
 
 ---

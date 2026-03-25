@@ -689,9 +689,17 @@ pub mod BSTRBMtEph {
         ensures true,
         decreases *link,
     {
-        let mut result = Vec::new();
-        in_order_collect(link, &mut result);
-        result
+        match link {
+            | None => Vec::new(),
+            | Some(node) => {
+                let left_vec = in_order_parallel(&node.left);
+                let right_vec = in_order_parallel(&node.right);
+                let mut result = left_vec;
+                result.push(node.key.clone());
+                result.extend(right_vec);
+                result
+            }
+        }
     }
 
     #[verifier::external_body]
@@ -700,9 +708,17 @@ pub mod BSTRBMtEph {
         ensures true,
         decreases *link,
     {
-        let mut result = Vec::new();
-        pre_order_collect(link, &mut result);
-        result
+        match link {
+            | None => Vec::new(),
+            | Some(node) => {
+                let left_vec = pre_order_parallel(&node.left);
+                let right_vec = pre_order_parallel(&node.right);
+                let mut result = vec![node.key.clone()];
+                result.extend(left_vec);
+                result.extend(right_vec);
+                result
+            }
+        }
     }
 
     // veracity: no_requires
@@ -715,11 +731,8 @@ pub mod BSTRBMtEph {
             return None;
         }
         let mid = values.len() / 2;
-        let left_slice = &values[..mid];
-        let right_slice = &values[mid + 1..];
-        let left = build_balanced(left_slice);
-        let right = build_balanced(right_slice);
-
+        let left = build_balanced(&values[..mid]);
+        let right = build_balanced(&values[mid + 1..]);
         let mut node = Box::new(new_node(values[mid].clone()));
         node.left = left;
         node.right = right;
@@ -739,11 +752,14 @@ pub mod BSTRBMtEph {
         match link {
             | None => Vec::new(),
             | Some(node) => {
-                let mut result = filter_parallel(&node.left, predicate);
+                let pred_left = Arc::clone(predicate);
+                let pred_right = Arc::clone(predicate);
+                let left_vals = filter_parallel(&node.left, &pred_left);
+                let right_vals = filter_parallel(&node.right, &pred_right);
+                let mut result = left_vals;
                 if predicate(&node.key) {
                     result.push(node.key.clone());
                 }
-                let right_vals = filter_parallel(&node.right, predicate);
                 result.extend(right_vals);
                 result
             }
@@ -761,8 +777,11 @@ pub mod BSTRBMtEph {
         match link {
             | None => identity,
             | Some(node) => {
-                let left_acc = reduce_parallel(&node.left, op, identity.clone());
-                let right_acc = reduce_parallel(&node.right, op, identity);
+                let op_left = Arc::clone(op);
+                let op_right = Arc::clone(op);
+                let id_left = identity.clone();
+                let left_acc = reduce_parallel(&node.left, &op_left, id_left);
+                let right_acc = reduce_parallel(&node.right, &op_right, identity);
                 let with_key = op(left_acc, node.key.clone());
                 op(with_key, right_acc)
             }

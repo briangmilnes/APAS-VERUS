@@ -246,8 +246,11 @@ pub mod BSTSetAVLMtEph {
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
 
-            let left_union = self_left.union(&other_left);
-            let right_union = self_right.union(&other_right);
+            use crate::Types::Types::Pair;
+            let Pair(left_union, right_union) = crate::ParaPair!(
+                move || self_left.union(&other_left),
+                move || self_right.union(&other_right)
+            );
 
             if found_self || found_other {
                 Self::join_m(left_union, pivot, right_union)
@@ -271,8 +274,11 @@ pub mod BSTSetAVLMtEph {
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
 
-            let left_inter = self_left.intersection(&other_left);
-            let right_inter = self_right.intersection(&other_right);
+            use crate::Types::Types::Pair;
+            let Pair(left_inter, right_inter) = crate::ParaPair!(
+                move || self_left.intersection(&other_left),
+                move || self_right.intersection(&other_right)
+            );
 
             if found_self && found_other {
                 Self::join_m(left_inter, pivot, right_inter)
@@ -295,8 +301,11 @@ pub mod BSTSetAVLMtEph {
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
 
-            let left_diff = self_left.difference(&other_left);
-            let right_diff = self_right.difference(&other_right);
+            use crate::Types::Types::Pair;
+            let Pair(left_diff, right_diff) = crate::ParaPair!(
+                move || self_left.difference(&other_left),
+                move || self_right.difference(&other_right)
+            );
 
             if found_self && !found_other {
                 Self::join_m(left_diff, pivot, right_diff)
@@ -324,8 +333,12 @@ pub mod BSTSetAVLMtEph {
 
         #[verifier::external_body]
         fn join_pair(left: Self, right: Self) -> Self {
-            let left_values = values_vec(&left.tree);
-            let right_values = values_vec(&right.tree);
+            use crate::Types::Types::Pair;
+            let Pair(left_values, right_values) = crate::ParaPair!(
+                move || values_vec(&left.tree),
+                move || values_vec(&right.tree)
+            );
+
             let mut combined = left_values.into_iter().collect::<BTreeSet<T>>();
             for value in right_values {
                 combined.insert(value);
@@ -335,8 +348,11 @@ pub mod BSTSetAVLMtEph {
 
         #[verifier::external_body]
         fn join_m(left: Self, pivot: T, right: Self) -> Self {
-            let left_values = values_vec(&left.tree);
-            let right_values = values_vec(&right.tree);
+            use crate::Types::Types::Pair;
+            let Pair(left_values, right_values) = crate::ParaPair!(
+                move || values_vec(&left.tree),
+                move || values_vec(&right.tree)
+            );
 
             let mut combined = left_values.into_iter().collect::<BTreeSet<T>>();
             combined.insert(pivot);

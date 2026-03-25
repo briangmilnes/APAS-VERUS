@@ -25,7 +25,7 @@ pub mod Concurrency {
     verus! {
 
     /// Single-threaded friendly elements that can be shared across threads (StT + Send + Sync).
-    pub trait StTInMtT: StT + Send + Sync {}
+    pub trait StTInMtT: StT + Send + Sync + 'static {}
 
     /// Multi-threaded friendly elements: Sized + Send + Sync.
     pub trait MtT: Sized + Send + Sync {}
@@ -43,7 +43,7 @@ pub mod Concurrency {
     pub trait Pred<T>: Fn(&T) -> B + Send + Sync + 'static {}
 
     // Blanket implementations
-    impl<T> StTInMtT for T where T: StT + Send + Sync {}
+    impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
     impl<T> MtT for T where T: Sized + Send + Sync {}
     impl<T> MtKey for T where T: StTInMtT + Ord + 'static {}
     impl<T> MtVal for T where T: StTInMtT + 'static {}

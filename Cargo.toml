@@ -10,12 +10,6 @@ verify = true
 default = []
 # Build only experiments (skip chapter modules)
 experiments_only = []
-# Dev mode: skip chapters gated with dev_only (edit lib.rs to control which)
-dev_only = []
-# Include all APAS-AI chapters (not yet fully adapted for APAS-VERUS)
-all_chapters = []
-# WF sweep: only foundation + Chap02-05 (skip Chap06+)
-wf = []
 
 [dependencies]
 vstd = "0.0.0-2025-08-12-1837"
