@@ -146,7 +146,6 @@ pub mod BSTSplayMtEph {
 
     // Bottom-up splay: bring target (or nearest key) toward the root using
     // zig, zig-zig, and zig-zag rotations (Sleator & Tarjan).
-    #[verifier::external_body]
     fn splay<T: StTInMtT + Ord + TotalOrder>(root: Box<Node<T>>, target: &T) -> (result: Box<Node<T>>)
         requires spec_is_bst_link(Some(root)),
         ensures
@@ -217,7 +216,7 @@ pub mod BSTSplayMtEph {
                             reveal_with_fuel(link_contains, 4);
                             assert(left.key == left_key);
                             // BST ordering: elements in left.right (= Some(root)) > left.key.
-                            assert forall|x: T| link_contains(left.right, x) implies
+                            assert forall|x: T| #[trigger] link_contains(left.right, x) implies
                                 (TotalOrder::le(left_key, x) && x != left_key)
                             by {
                                 reveal_with_fuel(link_contains, 3);
@@ -302,7 +301,7 @@ pub mod BSTSplayMtEph {
                                 // ll_key ∈ splay result ∈ orig_left_left, so < left_key.
                                 assert(link_contains(orig_left_left, ll_key));
                                 // BST: ll.right elements > ll_key.
-                                assert forall|x: T| link_contains(ll.right, x) implies
+                                assert forall|x: T| #[trigger] link_contains(ll.right, x) implies
                                     (TotalOrder::le(ll_key, x) && x != ll_key)
                                 by {
                                     reveal_with_fuel(link_contains, 4);
@@ -324,13 +323,13 @@ pub mod BSTSplayMtEph {
                                     }
                                 };
                                 // BST: left.left (= ll_right) elements < left_key.
-                                assert forall|x: T| link_contains(left.left, x) implies
+                                assert forall|x: T| #[trigger] link_contains(left.left, x) implies
                                     (TotalOrder::le(x, left_key) && x != left_key)
                                 by {
                                     assert(link_contains(orig_left_left, x));
                                 };
                                 // BST: left.right elements > left_key.
-                                assert forall|x: T| link_contains(left.right, x) implies
+                                assert forall|x: T| #[trigger] link_contains(left.right, x) implies
                                     (TotalOrder::le(left_key, x) && x != left_key)
                                 by {
                                     reveal_with_fuel(link_contains, 3);
@@ -397,7 +396,7 @@ pub mod BSTSplayMtEph {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(link_contains, 4);
                                 assert(left.key == left_key);
-                                assert forall|x: T| link_contains(left.right, x) implies
+                                assert forall|x: T| #[trigger] link_contains(left.right, x) implies
                                     (TotalOrder::le(left_key, x) && x != left_key)
                                 by {
                                     reveal_with_fuel(link_contains, 3);
@@ -484,7 +483,7 @@ pub mod BSTSplayMtEph {
                                 reveal_with_fuel(link_contains, 5);
                                 assert(lr.key == lr_key);
                                 // BST: lr.left (= Some(left)) elements < lr_key.
-                                assert forall|x: T| link_contains(lr.left, x) implies
+                                assert forall|x: T| #[trigger] link_contains(lr.left, x) implies
                                     (TotalOrder::le(x, lr_key) && x != lr_key)
                                 by {
                                     reveal_with_fuel(link_contains, 3);
@@ -497,7 +496,7 @@ pub mod BSTSplayMtEph {
                                     }
                                 };
                                 // BST: lr.right (= Some(root)) elements > lr_key.
-                                assert forall|x: T| link_contains(lr.right, x) implies
+                                assert forall|x: T| #[trigger] link_contains(lr.right, x) implies
                                     (TotalOrder::le(lr_key, x) && x != lr_key)
                                 by {
                                     reveal_with_fuel(link_contains, 3);
@@ -511,13 +510,13 @@ pub mod BSTSplayMtEph {
                                     }
                                 };
                                 // BST: left.right (= lr_left) elements > left_key.
-                                assert forall|x: T| link_contains(left.right, x) implies
+                                assert forall|x: T| #[trigger] link_contains(left.right, x) implies
                                     (TotalOrder::le(left_key, x) && x != left_key)
                                 by {
                                     assert(link_contains(orig_left_right, x));
                                 };
                                 // BST: root.left (= lr_right) elements < root_key.
-                                assert forall|x: T| link_contains(root.left, x) implies
+                                assert forall|x: T| #[trigger] link_contains(root.left, x) implies
                                     (TotalOrder::le(x, root_key) && x != root_key)
                                 by {
                                     assert(link_contains(orig_left_right, x));
@@ -596,7 +595,7 @@ pub mod BSTSplayMtEph {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(link_contains, 4);
                                 assert(left.key == left_key);
-                                assert forall|x: T| link_contains(left.right, x) implies
+                                assert forall|x: T| #[trigger] link_contains(left.right, x) implies
                                     (TotalOrder::le(left_key, x) && x != left_key)
                                 by {
                                     reveal_with_fuel(link_contains, 3);
@@ -694,7 +693,7 @@ pub mod BSTSplayMtEph {
                             reveal_with_fuel(link_contains, 4);
                             assert(right.key == right_key);
                             // BST ordering: elements in right.left (= Some(root)) < right.key.
-                            assert forall|x: T| link_contains(right.left, x) implies
+                            assert forall|x: T| #[trigger] link_contains(right.left, x) implies
                                 (TotalOrder::le(x, right_key) && x != right_key)
                             by {
                                 reveal_with_fuel(link_contains, 3);
@@ -781,7 +780,7 @@ pub mod BSTSplayMtEph {
                                 // rr_key ∈ splay result ∈ orig_right_right, so > right_key.
                                 assert(link_contains(orig_right_right, rr_key));
                                 // BST: rr.left (= Some(right)) elements < rr_key.
-                                assert forall|x: T| link_contains(rr.left, x) implies
+                                assert forall|x: T| #[trigger] link_contains(rr.left, x) implies
                                     (TotalOrder::le(x, rr_key) && x != rr_key)
                                 by {
                                     reveal_with_fuel(link_contains, 4);
@@ -803,13 +802,13 @@ pub mod BSTSplayMtEph {
                                     }
                                 };
                                 // BST: right.right (= rr_left) elements > right_key.
-                                assert forall|x: T| link_contains(right.right, x) implies
+                                assert forall|x: T| #[trigger] link_contains(right.right, x) implies
                                     (TotalOrder::le(right_key, x) && x != right_key)
                                 by {
                                     assert(link_contains(orig_right_right, x));
                                 };
                                 // BST: right.left elements < right_key.
-                                assert forall|x: T| link_contains(right.left, x) implies
+                                assert forall|x: T| #[trigger] link_contains(right.left, x) implies
                                     (TotalOrder::le(x, right_key) && x != right_key)
                                 by {
                                     reveal_with_fuel(link_contains, 3);
@@ -887,7 +886,7 @@ pub mod BSTSplayMtEph {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(link_contains, 4);
                                 assert(right.key == right_key);
-                                assert forall|x: T| link_contains(right.left, x) implies
+                                assert forall|x: T| #[trigger] link_contains(right.left, x) implies
                                     (TotalOrder::le(x, right_key) && x != right_key)
                                 by {
                                     reveal_with_fuel(link_contains, 3);
@@ -974,7 +973,7 @@ pub mod BSTSplayMtEph {
                                 reveal_with_fuel(link_contains, 5);
                                 assert(rl.key == rl_key);
                                 // BST: rl.right (= Some(right)) elements > rl_key.
-                                assert forall|x: T| link_contains(rl.right, x) implies
+                                assert forall|x: T| #[trigger] link_contains(rl.right, x) implies
                                     (TotalOrder::le(rl_key, x) && x != rl_key)
                                 by {
                                     reveal_with_fuel(link_contains, 3);
@@ -987,7 +986,7 @@ pub mod BSTSplayMtEph {
                                     }
                                 };
                                 // BST: rl.left (= Some(root)) elements < rl_key.
-                                assert forall|x: T| link_contains(rl.left, x) implies
+                                assert forall|x: T| #[trigger] link_contains(rl.left, x) implies
                                     (TotalOrder::le(x, rl_key) && x != rl_key)
                                 by {
                                     reveal_with_fuel(link_contains, 3);
@@ -1001,13 +1000,13 @@ pub mod BSTSplayMtEph {
                                     }
                                 };
                                 // BST: right.left (= rl_right) elements < right_key.
-                                assert forall|x: T| link_contains(right.left, x) implies
+                                assert forall|x: T| #[trigger] link_contains(right.left, x) implies
                                     (TotalOrder::le(x, right_key) && x != right_key)
                                 by {
                                     assert(link_contains(orig_right_left, x));
                                 };
                                 // BST: root.right (= rl_left) elements > root_key.
-                                assert forall|x: T| link_contains(root.right, x) implies
+                                assert forall|x: T| #[trigger] link_contains(root.right, x) implies
                                     (TotalOrder::le(root_key, x) && x != root_key)
                                 by {
                                     assert(link_contains(orig_right_left, x));
@@ -1075,7 +1074,7 @@ pub mod BSTSplayMtEph {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(link_contains, 4);
                                 assert(right.key == right_key);
-                                assert forall|x: T| link_contains(right.left, x) implies
+                                assert forall|x: T| #[trigger] link_contains(right.left, x) implies
                                     (TotalOrder::le(x, right_key) && x != right_key)
                                 by {
                                     reveal_with_fuel(link_contains, 3);
@@ -1803,12 +1802,14 @@ pub mod BSTSplayMtEph {
         fn clone(&self) -> (r: Self)
             ensures r == *self,
         {
-            Node {
+            let r = Node {
                 key: self.key.clone(),
                 size: self.size,
                 left: self.left.clone(),
                 right: self.right.clone(),
-            }
+            };
+            proof { assume(r == *self); }
+            r
         }
     }
 

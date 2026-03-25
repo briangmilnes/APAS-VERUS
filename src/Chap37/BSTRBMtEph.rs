@@ -147,7 +147,6 @@ pub mod BSTRBMtEph {
     }
 
     fn is_red<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (red: bool)
-        requires link_spec_size(*link) <= usize::MAX as nat,
         ensures
             (link is None) ==> !red,
     {
@@ -158,7 +157,6 @@ pub mod BSTRBMtEph {
     }
 
     fn size_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (size: N)
-        requires link_spec_size(*link) <= usize::MAX as nat,
         ensures
             (link is None) ==> size == 0,
     {
@@ -169,7 +167,6 @@ pub mod BSTRBMtEph {
     }
 
     fn update<T: StTInMtT + Ord + TotalOrder>(node: &mut Node<T>)
-        requires 1 + link_spec_size(old(node).left) + link_spec_size(old(node).right) <= usize::MAX as nat,
         ensures
             node.left == old(node).left,
             node.right == old(node).right,
@@ -183,7 +180,6 @@ pub mod BSTRBMtEph {
         }
     }
 
-    #[verifier::external_body]
     fn rotate_left<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>)
         requires spec_is_bst_link(*old(link)),
         ensures
@@ -226,9 +222,6 @@ pub mod BSTRBMtEph {
                 x.color = h.color;
                 h.color = Color::Red;
                 x.left = Some(h);
-                if let Some(left) = x.left.as_mut() {
-                    update(left);
-                }
                 update(&mut x);
                 *link = Some(x);
                 proof {
@@ -239,7 +232,7 @@ pub mod BSTRBMtEph {
                     assert(spec_is_bst_link(old_h_left));
                     assert(spec_is_bst_link(old_x_left));
                     assert(spec_is_bst_link(old_x_right));
-                    assert forall|z: T| link_contains(Some(h), z) implies
+                    assert forall|z: T| #[trigger] link_contains(x.left, z) implies
                         (TotalOrder::le(z, x_key) && z != x_key)
                     by {
                         reveal_with_fuel(link_contains, 2);
@@ -251,7 +244,7 @@ pub mod BSTRBMtEph {
                             assert(link_contains(old_x_left, z));
                         }
                     };
-                    assert(spec_is_bst_link(Some(h))) by {
+                    assert(spec_is_bst_link(x.left)) by {
                         reveal_with_fuel(spec_is_bst_link, 2);
                     };
                     assert(spec_is_bst_link(*link)) by {
@@ -267,7 +260,6 @@ pub mod BSTRBMtEph {
         }
     }
 
-    #[verifier::external_body]
     fn rotate_right<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>)
         requires spec_is_bst_link(*old(link)),
         ensures
@@ -310,9 +302,6 @@ pub mod BSTRBMtEph {
                 x.color = h.color;
                 h.color = Color::Red;
                 x.right = Some(h);
-                if let Some(right) = x.right.as_mut() {
-                    update(right);
-                }
                 update(&mut x);
                 *link = Some(x);
                 proof {
@@ -323,7 +312,7 @@ pub mod BSTRBMtEph {
                     assert(spec_is_bst_link(old_h_right));
                     assert(spec_is_bst_link(old_x_left));
                     assert(spec_is_bst_link(old_x_right));
-                    assert forall|z: T| link_contains(Some(h), z) implies
+                    assert forall|z: T| #[trigger] link_contains(x.right, z) implies
                         (TotalOrder::le(x_key, z) && z != x_key)
                     by {
                         reveal_with_fuel(link_contains, 2);
@@ -335,7 +324,7 @@ pub mod BSTRBMtEph {
                             assert(link_contains(old_x_right, z));
                         }
                     };
-                    assert(spec_is_bst_link(Some(h))) by {
+                    assert(spec_is_bst_link(x.right)) by {
                         reveal_with_fuel(spec_is_bst_link, 2);
                     };
                     assert(spec_is_bst_link(*link)) by {
@@ -351,76 +340,136 @@ pub mod BSTRBMtEph {
         }
     }
 
-    #[verifier::external_body]
     fn flip_colors<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>)
         requires spec_is_bst_link(*old(link)),
         ensures
             spec_is_bst_link(*link),
             forall|z: T| link_contains(*link, z) <==> link_contains(*old(link), z),
     {
-        if let Some(node) = link.as_mut() {
+        let ghost old_link = *link;
+        if let Some(mut node) = link.take() {
+            let ghost node_key = node.key;
+            let ghost orig_left = node.left;
+            let ghost orig_right = node.right;
+            proof {
+                reveal_with_fuel(spec_is_bst_link, 2);
+                assert(spec_is_bst_link(orig_left));
+                assert(spec_is_bst_link(orig_right));
+            }
             node.color = match node.color {
                 | Color::Red => Color::Black,
                 | Color::Black => Color::Red,
             };
-            if let Some(left) = node.left.as_mut() {
+            if let Some(mut left) = node.left.take() {
                 left.color = match left.color {
                     | Color::Red => Color::Black,
                     | Color::Black => Color::Red,
                 };
+                node.left = Some(left);
             }
-            if let Some(right) = node.right.as_mut() {
+            if let Some(mut right) = node.right.take() {
                 right.color = match right.color {
                     | Color::Red => Color::Black,
                     | Color::Black => Color::Red,
+                };
+                node.right = Some(right);
+            }
+            *link = Some(node);
+            proof {
+                reveal_with_fuel(spec_is_bst_link, 3);
+                reveal_with_fuel(link_contains, 3);
+                // Children's key/left/right unchanged (only color modified).
+                assert forall|z: T| #[trigger] link_contains(node.left, z) <==> link_contains(orig_left, z) by {
+                    reveal_with_fuel(link_contains, 3);
+                };
+                assert forall|z: T| #[trigger] link_contains(node.right, z) <==> link_contains(orig_right, z) by {
+                    reveal_with_fuel(link_contains, 3);
+                };
+                assert forall|z: T| #[trigger] link_contains(node.left, z) implies
+                    (TotalOrder::le(z, node_key) && z != node_key) by {
+                    assert(link_contains(orig_left, z));
+                };
+                assert forall|z: T| #[trigger] link_contains(node.right, z) implies
+                    (TotalOrder::le(node_key, z) && z != node_key) by {
+                    assert(link_contains(orig_right, z));
+                };
+                assert(spec_is_bst_link(*link));
+                assert forall|z: T| link_contains(*link, z) <==> link_contains(old_link, z) by {
+                    reveal_with_fuel(link_contains, 3);
                 };
             }
         }
     }
 
-    #[verifier::external_body]
     fn fix_up<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>)
         requires spec_is_bst_link(*old(link)),
         ensures
             spec_is_bst_link(*link),
             forall|z: T| link_contains(*link, z) <==> link_contains(*old(link), z),
     {
-        let rotate_left_needed = match link {
+        let ghost old_link = *link;
+
+        // Check rotate_left condition via take/read/put-back.
+        let tmp = link.take();
+        let rotate_left_needed = match &tmp {
             | Some(node) => is_red(&node.right) && !is_red(&node.left),
             | None => false,
         };
+        *link = tmp;
         if rotate_left_needed {
             rotate_left(link);
         }
+        let ghost after_rl = *link;
 
-        let rotate_right_needed = match link {
+        // Check rotate_right condition.
+        let tmp = link.take();
+        let rotate_right_needed = match &tmp {
             | Some(node) => {
-                if let Some(left) = node.left.as_ref() {
-                    is_red(&node.left) && is_red(&left.left)
-                } else {
-                    false
+                match &node.left {
+                    | Some(left) => is_red(&node.left) && is_red(&left.left),
+                    | None => false,
                 }
             }
             | None => false,
         };
+        *link = tmp;
         if rotate_right_needed {
             rotate_right(link);
         }
+        let ghost after_rr = *link;
 
-        let flip_needed = match link {
+        // Check flip condition.
+        let tmp = link.take();
+        let flip_needed = match &tmp {
             | Some(node) => is_red(&node.left) && is_red(&node.right),
             | None => false,
         };
+        *link = tmp;
         if flip_needed {
             flip_colors(link);
         }
+        let ghost after_fl = *link;
 
-        if let Some(node) = link.as_mut() {
-            update(node);
+        // Update size via take/put-back.
+        if let Some(mut node) = link.take() {
+            update(&mut node);
+            *link = Some(node);
+        }
+
+        proof {
+            reveal_with_fuel(spec_is_bst_link, 2);
+            reveal_with_fuel(link_contains, 2);
+            // Chain containment equivalences through each step.
+            assert forall|z: T| link_contains(*link, z) <==> link_contains(old_link, z) by {
+                assert(link_contains(after_rl, z) <==> link_contains(old_link, z));
+                assert(link_contains(after_rr, z) <==> link_contains(after_rl, z));
+                assert(link_contains(after_fl, z) <==> link_contains(after_rr, z));
+                // update only changes size, not key/left/right, so containment is preserved.
+                reveal_with_fuel(link_contains, 2);
+            };
         }
     }
 
-    #[verifier::external_body]
     fn insert_link<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>, value: T)
         requires spec_is_bst_link(*old(link)),
         ensures
@@ -585,7 +634,7 @@ pub mod BSTRBMtEph {
         ensures
             link.is_some() ==> min.is_some(),
             min.is_some() ==> link_contains(*link, *min.unwrap()),
-            min.is_some() ==> forall|x: T| link_contains(*link, x) ==> TotalOrder::le(*min.unwrap(), x),
+            min.is_some() ==> forall|x: T| #[trigger] link_contains(*link, x) ==> TotalOrder::le(*min.unwrap(), x),
         decreases *link,
     {
         match link {
@@ -593,7 +642,7 @@ pub mod BSTRBMtEph {
             | Some(node) => match node.left {
                 | None => {
                     proof {
-                        assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(node.key, x) by {
+                        assert forall|x: T| #[trigger] link_contains(*link, x) implies TotalOrder::le(node.key, x) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
                             if x == node.key {
@@ -611,7 +660,7 @@ pub mod BSTRBMtEph {
                         reveal_with_fuel(spec_is_bst_link, 2);
                         reveal_with_fuel(link_contains, 2);
                         assert(link_contains(node.left, *min.unwrap()));
-                        assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(*min.unwrap(), x) by {
+                        assert forall|x: T| #[trigger] link_contains(*link, x) implies TotalOrder::le(*min.unwrap(), x) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
                             if link_contains(node.left, x) {
@@ -633,7 +682,7 @@ pub mod BSTRBMtEph {
         ensures
             link.is_some() ==> max.is_some(),
             max.is_some() ==> link_contains(*link, *max.unwrap()),
-            max.is_some() ==> forall|x: T| link_contains(*link, x) ==> TotalOrder::le(x, *max.unwrap()),
+            max.is_some() ==> forall|x: T| #[trigger] link_contains(*link, x) ==> TotalOrder::le(x, *max.unwrap()),
         decreases *link,
     {
         match link {
@@ -641,7 +690,7 @@ pub mod BSTRBMtEph {
             | Some(node) => match node.right {
                 | None => {
                     proof {
-                        assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, node.key) by {
+                        assert forall|x: T| #[trigger] link_contains(*link, x) implies TotalOrder::le(x, node.key) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
                             if x == node.key {
@@ -659,7 +708,7 @@ pub mod BSTRBMtEph {
                         reveal_with_fuel(spec_is_bst_link, 2);
                         reveal_with_fuel(link_contains, 2);
                         assert(link_contains(node.right, *max.unwrap()));
-                        assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, *max.unwrap()) by {
+                        assert forall|x: T| #[trigger] link_contains(*link, x) implies TotalOrder::le(x, *max.unwrap()) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
                             if link_contains(node.right, x) {
