@@ -24,6 +24,8 @@ pub mod UnionFindStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full;
     #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
+    #[cfg(verus_keep_ghost)]
     use vstd::pervasive::strictly_cloned;
 
     verus! {
@@ -82,6 +84,92 @@ pub mod UnionFindStEph {
             v2 == v,
             v3 == v,
     {
+    }
+
+    /// Prove wf preservation after insert: frame lemma + new element properties.
+    #[verifier::rlimit(50)]
+    proof fn lemma_insert_preserves_wf<V: StT + Hash>(
+        uf: UnionFindStEph<V>,
+        old_uf: UnionFindStEph<V>,
+        v: V,
+    )
+        requires
+            old_uf.spec_unionfindsteph_wf(),
+            !old_uf.parent@.contains_key(v@),
+            uf.parent@ =~= old_uf.parent@.insert(v@, v),
+            uf.rank@ =~= old_uf.rank@.insert(v@, 0usize),
+            uf.elements@ =~= old_uf.elements@.push(v),
+            uf.roots@ =~= old_uf.roots@.insert(v@, v@),
+        ensures
+            uf.spec_unionfindsteph_wf(),
+    {
+        let old_p = old_uf.parent@;
+        let old_r = old_uf.rank@;
+        let old_e = old_uf.elements@;
+        let old_rt = old_uf.roots@;
+
+        // Frame: for existing keys w != v@, old maps are preserved, and old_rt[w] != v@.
+        assert forall|w: <V as View>::V| #[trigger] old_p.contains_key(w) implies {
+            &&& uf.parent@[w] == old_p[w]
+            &&& uf.rank@[w] == old_r[w]
+            &&& uf.roots@[w] == old_rt[w]
+            &&& old_rt[w] != v@
+        } by {
+            // old_rt[w] is in old_p domain (wf conjunct), so != v@
+            assert(old_p.contains_key(old_rt[w]));
+        };
+
+        // New element v@ is a self-parent singleton root with rank 0.
+        assert(uf.parent@[v@] == v);
+        assert(uf.parent@[v@]@ == v@);
+        assert(uf.rank@[v@] == 0usize);
+        assert(uf.roots@[v@] == v@);
+
+        // Elements backward: v@ is at the new last index.
+        assert forall|w: <V as View>::V| #[trigger] uf.parent@.contains_key(w) implies
+            exists|i: int| 0 <= i < uf.elements@.len() as int && #[trigger] uf.elements@[i]@ == w
+        by {
+            if w == v@ {
+                assert(uf.elements@[old_e.len() as int]@ == v@);
+            } else {
+                let i = choose|i: int| 0 <= i < old_e.len() as int && #[trigger] old_e[i]@ == w;
+                assert(uf.elements@[i]@ == w);
+            }
+        };
+
+        // Elements no duplicates: v@ is not in old_p domain, but old elements are.
+        assert forall|i: int, j: int|
+            0 <= i < uf.elements@.len() as int &&
+            0 <= j < uf.elements@.len() as int &&
+            i != j implies
+            #[trigger] uf.elements@[i]@ != #[trigger] uf.elements@[j]@
+        by {
+            let n = old_e.len() as int;
+            if i == n && j < n {
+                assert(old_p.contains_key(uf.elements@[j]@));
+            } else if j == n && i < n {
+                assert(old_p.contains_key(uf.elements@[i]@));
+            }
+        };
+
+        // Roots idempotent: for w != v@, old_rt is preserved and old_rt[w] != v@.
+        assert forall|w: <V as View>::V| #[trigger] uf.roots@.contains_key(w) implies
+            uf.roots@.contains_key(uf.roots@[w]) && uf.roots@[uf.roots@[w]] == uf.roots@[w]
+        by {
+            if w != v@ {
+                assert(old_p.contains_key(old_rt[w]));
+            }
+        };
+
+        // Parent preserves root component: for w != v@, parent[w]@ != v@.
+        assert forall|w: <V as View>::V| #[trigger] uf.parent@.contains_key(w) implies
+            uf.roots@[uf.parent@[w]@] == uf.roots@[w]
+        by {
+            if w != v@ {
+                let pw = old_p[w]@;
+                assert(old_p.contains_key(pw));
+            }
+        };
     }
 
     // 8. traits
@@ -237,13 +325,25 @@ pub mod UnionFindStEph {
         }
 
         /// - APAS: Work Theta(1), Span Theta(1)
-        #[verifier::external_body]
         fn insert(&mut self, v: V) {
             if !self.parent.contains_key(&v) {
-                self.parent.insert(v.clone(), v.clone());
-                self.rank.insert(v.clone(), 0usize);
-                self.elements.push(v.clone());
-                self.roots = Ghost(self.roots@.insert(v@, v@));
+                // Capture v@ before v is consumed by push.
+                let ghost v_view = v@;
+
+                // 3 clones for parent key, parent value, rank key.
+                let v1 = v.clone();
+                let v2 = v.clone();
+                let v3 = v.clone();
+
+                proof { lemma_three_clones_eq(v, v1, v2, v3); }
+
+                self.parent.insert(v1, v2);
+                self.rank.insert(v3, 0usize);
+                // Use original v for push — no 4th clone needed.
+                self.elements.push(v);
+                self.roots = Ghost(self.roots@.insert(v_view, v_view));
+
+                proof { lemma_insert_preserves_wf(*self, *old(self), v); }
             }
         }
 
