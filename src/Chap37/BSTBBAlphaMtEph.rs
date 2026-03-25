@@ -28,10 +28,10 @@ pub mod BSTBBAlphaMtEph {
 
     // 2. imports
 
-    use crate::Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph::{tree_is_bb, weight_balanced};
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
 
     // 9. impls
 
@@ -68,10 +68,10 @@ pub mod BSTBBAlphaMtEph {
                             assert(new_left.tree_is_bst());
                             assert(old_right.tree_is_bst());
                             assert forall|x: T| new_left.tree_contains(x) implies
-                                T::le(x, node_val) && x != node_val
+                                #[trigger] T::le(x, node_val) && x != node_val
                             by { if old_left.tree_contains(x) {} else { assert(x == value); } };
                             assert forall|x: T| old_right.tree_contains(x) implies
-                                T::le(node_val, x) && x != node_val by {};
+                                #[trigger] T::le(node_val, x) && x != node_val by {};
                             assert forall|x: T| r.tree_contains(x) ==
                                 (node.tree_contains(x) || x == value)
                             by {
@@ -92,9 +92,9 @@ pub mod BSTBBAlphaMtEph {
                             assert(old_left.tree_is_bst());
                             assert(new_right.tree_is_bst());
                             assert forall|x: T| old_left.tree_contains(x) implies
-                                T::le(x, node_val) && x != node_val by {};
+                                #[trigger] T::le(x, node_val) && x != node_val by {};
                             assert forall|x: T| new_right.tree_contains(x) implies
-                                T::le(node_val, x) && x != node_val
+                                #[trigger] T::le(node_val, x) && x != node_val
                             by { if old_right.tree_contains(x) {} else { assert(x == value); } };
                             assert forall|x: T| r.tree_contains(x) ==
                                 (node.tree_contains(x) || x == value)
@@ -216,7 +216,7 @@ pub mod BSTBBAlphaMtEph {
     // 11. top level coarse locking
 
     /// Lock predicate: the inner tree satisfies BST ordering and fits in usize.
-    struct BSTBBAlphaMtEphInv<T> {
+    pub struct BSTBBAlphaMtEphInv<T> {
         _phantom: PhantomData<T>,
     }
 
@@ -257,7 +257,7 @@ pub mod BSTBBAlphaMtEph {
 
         fn new() -> (tree: Self)
             ensures tree.spec_bstbbalphamteph_wf(),
-                    tree@.is_leaf();
+                    tree@.spec_is_leaf();
 
         fn insert(&mut self, value: T) -> (r: Result<(), ()>)
             requires old(self).spec_bstbbalphamteph_wf(),
@@ -292,8 +292,10 @@ pub mod BSTBBAlphaMtEph {
         fn maximum(&self) -> (max: Option<T>) where T: Clone + Eq
             ensures true;
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>) where T: Clone + Eq
+            requires self.spec_bstbbalphamteph_wf(), obeys_feq_clone::<T>(),
             ensures true;
         fn pre_order(&self) -> (seq: ArraySeqStPerS<T>) where T: Clone + Eq
+            requires self.spec_bstbbalphamteph_wf(), obeys_feq_clone::<T>(),
             ensures true;
     }
 

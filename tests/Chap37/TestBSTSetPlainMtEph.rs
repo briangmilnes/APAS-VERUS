@@ -1,8 +1,9 @@
-#![cfg(feature = "all_chapters")]
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for BSTSetPlainMtEph.
 
 use apas_verus::BSTSetPlainMtEphLit;
+use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::*;
+use apas_verus::Chap37::BSTPlainMtEph::BSTPlainMtEph::*;
 use apas_verus::Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::*;
 use apas_verus::Types::Types::*;
 

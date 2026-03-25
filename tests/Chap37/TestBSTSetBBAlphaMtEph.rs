@@ -1,9 +1,8 @@
-#![cfg(feature = "all_chapters")]
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for BSTSetBBAlphaMtEph.
 
 use apas_verus::BSTSetBBAlphaMtEphLit;
-use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::*;
 use apas_verus::Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::*;
 use apas_verus::Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::*;
 use apas_verus::Types::Types::*;

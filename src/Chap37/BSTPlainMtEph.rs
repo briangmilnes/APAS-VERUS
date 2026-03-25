@@ -31,6 +31,7 @@ pub mod BSTPlainMtEph {
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
 
     // 9. impls
 
@@ -67,10 +68,10 @@ pub mod BSTPlainMtEph {
                             assert(new_left.tree_is_bst());
                             assert(old_right.tree_is_bst());
                             assert forall|x: T| new_left.tree_contains(x) implies
-                                T::le(x, node_val) && x != node_val
+                                #[trigger] T::le(x, node_val) && x != node_val
                             by { if old_left.tree_contains(x) {} else { assert(x == value); } };
                             assert forall|x: T| old_right.tree_contains(x) implies
-                                T::le(node_val, x) && x != node_val by {};
+                                #[trigger] T::le(node_val, x) && x != node_val by {};
                             assert forall|x: T| r.tree_contains(x) ==
                                 (node.tree_contains(x) || x == value)
                             by {
@@ -91,9 +92,9 @@ pub mod BSTPlainMtEph {
                             assert(old_left.tree_is_bst());
                             assert(new_right.tree_is_bst());
                             assert forall|x: T| old_left.tree_contains(x) implies
-                                T::le(x, node_val) && x != node_val by {};
+                                #[trigger] T::le(x, node_val) && x != node_val by {};
                             assert forall|x: T| new_right.tree_contains(x) implies
-                                T::le(node_val, x) && x != node_val
+                                #[trigger] T::le(node_val, x) && x != node_val
                             by { if old_right.tree_contains(x) {} else { assert(x == value); } };
                             assert forall|x: T| r.tree_contains(x) ==
                                 (node.tree_contains(x) || x == value)
@@ -256,7 +257,7 @@ pub mod BSTPlainMtEph {
 
         fn new() -> (tree: Self)
             ensures tree.spec_bstplainmteph_wf(),
-                    tree@.is_leaf();
+                    tree@.spec_is_leaf();
 
         fn insert(&mut self, value: T) -> (r: Result<(), ()>)
             requires old(self).spec_bstplainmteph_wf(),
@@ -291,8 +292,10 @@ pub mod BSTPlainMtEph {
         fn maximum(&self) -> (max: Option<T>) where T: Clone + Eq
             ensures true;
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>) where T: Clone + Eq
+            requires self.spec_bstplainmteph_wf(), obeys_feq_clone::<T>(),
             ensures true;
         fn pre_order(&self) -> (seq: ArraySeqStPerS<T>) where T: Clone + Eq
+            requires self.spec_bstplainmteph_wf(), obeys_feq_clone::<T>(),
             ensures true;
     }
 

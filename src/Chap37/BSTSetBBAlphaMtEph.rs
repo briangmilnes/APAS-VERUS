@@ -3,7 +3,6 @@
 
 pub mod BSTSetBBAlphaMtEph {
 
-    use std::collections::BTreeSet;
     use std::fmt;
 
     use vstd::prelude::*;
@@ -14,8 +13,12 @@ pub mod BSTSetBBAlphaMtEph {
 
     verus! {
 
-    pub struct BSTSetBBAlphaMtEph<T: StTInMtT + Ord> {
-        tree: BSTBBAlphaMtEph<T>,
+    use crate::vstdplus::total_order::total_order::TotalOrder;
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTSetBBAlphaMtEph<T: StTInMtT + Ord + TotalOrder> {
+        pub(crate) tree: BSTBBAlphaMtEph<T>,
     }
 
     pub type BSTSetBBAlphaMt<T> = BSTSetBBAlphaMtEph<T>;
@@ -23,38 +26,38 @@ pub mod BSTSetBBAlphaMtEph {
     // 4. type definitions
 
     #[verifier::reject_recursive_types(T)]
-    pub struct BSTSetBBAlphaMtEphIter<T: StTInMtT + Ord> {
+    pub struct BSTSetBBAlphaMtEphIter<T: StTInMtT + Ord + TotalOrder> {
         pub snapshot: Vec<T>,
         pub pos: usize,
     }
 
     #[verifier::reject_recursive_types(T)]
-    pub struct BSTSetBBAlphaMtEphGhostIter<T: StTInMtT + Ord> {
+    pub struct BSTSetBBAlphaMtEphGhostIter<T: StTInMtT + Ord + TotalOrder> {
         pub pos: int,
         pub elements: Seq<T>,
     }
 
     // 5. view impls
 
-    impl<T: StTInMtT + Ord> View for BSTSetBBAlphaMtEphIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetBBAlphaMtEphIter<T> {
         type V = (int, Seq<T>);
         open spec fn view(&self) -> (int, Seq<T>) {
             (self.pos as int, self.snapshot@)
         }
     }
 
-    impl<T: StTInMtT + Ord> View for BSTSetBBAlphaMtEphGhostIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetBBAlphaMtEphGhostIter<T> {
         type V = Seq<T>;
         open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
     }
 
     // 6. spec fns
 
-    pub open spec fn bstsetbbalphamteph_iter_invariant<T: StTInMtT + Ord>(it: &BSTSetBBAlphaMtEphIter<T>) -> bool {
+    pub open spec fn bstsetbbalphamteph_iter_invariant<T: StTInMtT + Ord + TotalOrder>(it: &BSTSetBBAlphaMtEphIter<T>) -> bool {
         0 <= it@.0 <= it@.1.len()
     }
 
-    pub trait BSTSetBBAlphaMtEphTrait<T: StTInMtT + Ord>: Sized {
+    pub trait BSTSetBBAlphaMtEphTrait<T: StTInMtT + Ord + TotalOrder>: Sized {
         spec fn spec_bstsetbbalphamteph_wf(&self) -> bool;
 
         fn empty() -> (set: Self)
@@ -83,82 +86,113 @@ pub mod BSTSetBBAlphaMtEph {
             requires old(self).spec_bstsetbbalphamteph_wf()
             ensures self.spec_bstsetbbalphamteph_wf();
         fn delete(&mut self, target: &T)
-            requires old(self).spec_bstsetbbalphamteph_wf()
+            requires old(self).spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
             ensures self.spec_bstsetbbalphamteph_wf();
         fn union(&self, other: &Self) -> (combined: Self)
-            requires self.spec_bstsetbbalphamteph_wf(), other.spec_bstsetbbalphamteph_wf()
+            requires self.spec_bstsetbbalphamteph_wf(), other.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
             ensures combined.spec_bstsetbbalphamteph_wf();
         fn intersection(&self, other: &Self) -> (common: Self)
-            requires self.spec_bstsetbbalphamteph_wf(), other.spec_bstsetbbalphamteph_wf()
+            requires self.spec_bstsetbbalphamteph_wf(), other.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
             ensures common.spec_bstsetbbalphamteph_wf();
         fn difference(&self, other: &Self) -> (diff: Self)
-            requires self.spec_bstsetbbalphamteph_wf(), other.spec_bstsetbbalphamteph_wf()
+            requires self.spec_bstsetbbalphamteph_wf(), other.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
             ensures diff.spec_bstsetbbalphamteph_wf();
         fn split(&self, pivot: &T) -> (parts: (Self, B, Self))
-            requires self.spec_bstsetbbalphamteph_wf()
+            requires self.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
             ensures parts.0.spec_bstsetbbalphamteph_wf(), parts.2.spec_bstsetbbalphamteph_wf();
         fn join_pair(left: Self, right: Self) -> (joined: Self)
-            requires left.spec_bstsetbbalphamteph_wf(), right.spec_bstsetbbalphamteph_wf()
+            requires left.spec_bstsetbbalphamteph_wf(), right.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
             ensures joined.spec_bstsetbbalphamteph_wf();
         fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self)
-            requires left.spec_bstsetbbalphamteph_wf(), right.spec_bstsetbbalphamteph_wf()
+            requires left.spec_bstsetbbalphamteph_wf(), right.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
             ensures joined.spec_bstsetbbalphamteph_wf();
         fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> (filtered: Self)
-            requires self.spec_bstsetbbalphamteph_wf()
+            requires
+                self.spec_bstsetbbalphamteph_wf(),
+                obeys_feq_clone::<T>(),
+                forall|t: &T| #[trigger] predicate.requires((t,)),
             ensures filtered.spec_bstsetbbalphamteph_wf();
         fn reduce<F: FnMut(T, T) -> T + Send>(&self, op: F, base: T) -> (reduced: T)
-            requires self.spec_bstsetbbalphamteph_wf()
+            requires
+                self.spec_bstsetbbalphamteph_wf(),
+                obeys_feq_clone::<T>(),
+                forall|a: T, b: T| #[trigger] op.requires((a, b)),
             ensures true;
         fn iter_in_order(&self) -> (seq: ArraySeqStPerS<T>)
-            requires self.spec_bstsetbbalphamteph_wf()
+            requires self.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
             ensures true;
         fn as_tree(&self) -> (tree: &BSTBBAlphaMtEph<T>)
             requires self.spec_bstsetbbalphamteph_wf()
             ensures true;
         fn iter(&self) -> (it: BSTSetBBAlphaMtEphIter<T>)
-            requires self.spec_bstsetbbalphamteph_wf()
+            requires self.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
             ensures it@.0 == 0, bstsetbbalphamteph_iter_invariant(&it);
     }
 
-    fn values_vec<T: StTInMtT + Ord>(tree: &BSTBBAlphaMtEph<T>) -> (values: Vec<T>)
-        requires tree.spec_bstbbalphamteph_wf(),
+    fn values_vec<T: StTInMtT + Ord + TotalOrder>(tree: &BSTBBAlphaMtEph<T>) -> (values: Vec<T>)
+        requires tree.spec_bstbbalphamteph_wf(), obeys_feq_clone::<T>(),
         ensures true,
     {
-        tree.in_order().iter().cloned().collect()
+        let seq = tree.in_order();
+        let n = seq.length();
+        let mut out = Vec::<T>::new();
+        let mut i: usize = 0;
+        while i < n
+            invariant
+                i <= n,
+                n as int == seq.spec_len(),
+            decreases n - i,
+        {
+            out.push(seq.nth(i).clone());
+            i = i + 1;
+        }
+        out
     }
     // veracity: no_requires
-    fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTBBAlphaMtEph<T>)
-        ensures true,
+    fn rebuild_from_vec<T: StTInMtT + Ord + TotalOrder>(values: Vec<T>) -> (tree: BSTBBAlphaMtEph<T>)
+        ensures tree.spec_bstbbalphamteph_wf(),
     {
         let mut tree = BSTBBAlphaMtEph::new();
-        for value in values {
+        let mut i: usize = 0;
+        while i < values.len()
+            invariant tree.spec_bstbbalphamteph_wf(),
+                i <= values.len(),
+            decreases values.len() - i,
+        {
+            let value = values[i].clone();
             let _ = tree.insert(value);
+            i = i + 1;
         }
         tree
     }
 
     // veracity: no_requires
-    fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> (set: BSTSetBBAlphaMtEph<T>)
-    where
-        I: IntoIterator<Item = T>,
-        ensures true,
+    fn from_vec<T: StTInMtT + Ord + TotalOrder>(values: Vec<T>) -> (set: BSTSetBBAlphaMtEph<T>)
+        ensures set.spec_bstsetbbalphamteph_wf(),
     {
         let mut tree = BSTBBAlphaMtEph::new();
-        for value in values {
+        let mut i: usize = 0;
+        while i < values.len()
+            invariant tree.spec_bstbbalphamteph_wf(),
+                i <= values.len(),
+            decreases values.len() - i,
+        {
+            let value = values[i].clone();
             let _ = tree.insert(value);
+            i = i + 1;
         }
         BSTSetBBAlphaMtEph { tree }
     }
 
-    fn copy_set<T: StTInMtT + Ord>(set: &BSTSetBBAlphaMtEph<T>) -> (out: BSTSetBBAlphaMtEph<T>)
-        requires set.spec_bstsetbbalphamteph_wf()
+    fn copy_set<T: StTInMtT + Ord + TotalOrder>(set: &BSTSetBBAlphaMtEph<T>) -> (out: BSTSetBBAlphaMtEph<T>)
+        requires set.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
         ensures out.spec_bstsetbbalphamteph_wf()
     {
-        from_sorted_iter(values_vec(&set.tree))
+        from_vec(values_vec(&set.tree))
     }
 
-    impl<T: StTInMtT + Ord> BSTSetBBAlphaMtEphTrait<T> for BSTSetBBAlphaMtEph<T> {
-        open spec fn spec_bstsetbbalphamteph_wf(&self) -> bool {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> BSTSetBBAlphaMtEphTrait<T> for BSTSetBBAlphaMtEph<T> {
+        closed spec fn spec_bstsetbbalphamteph_wf(&self) -> bool {
             self.tree.spec_bstbbalphamteph_wf()
         }
 
@@ -192,103 +226,221 @@ pub mod BSTSetBBAlphaMtEph {
             if !self.contains(target) {
                 return;
             }
-            let filtered: Vec<T> = self
-                .tree
-                .in_order()
-                .iter()
-                .filter(|x| x != target)
-                .cloned()
-                .collect();
+            let seq = self.tree.in_order();
+            let n = seq.length();
+            let mut filtered = Vec::<T>::new();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    i <= n,
+                    n as int == seq.spec_len(),
+                decreases n - i,
+            {
+                if *seq.nth(i) != *target {
+                    filtered.push(seq.nth(i).clone());
+                }
+                i = i + 1;
+            }
             self.tree = rebuild_from_vec(filtered);
         }
 
+        #[verifier::exec_allows_no_decreases_clause]
         fn union(&self, other: &Self) -> Self {
-            let mut merged = values_vec(&self.tree).into_iter().collect::<BTreeSet<T>>();
-            for value in values_vec(&other.tree) {
-                merged.insert(value);
+            if self.is_empty() {
+                return copy_set(other);
             }
-            from_sorted_iter(merged)
+            if other.is_empty() {
+                return copy_set(self);
+            }
+
+            let pivot = match self.tree.minimum() {
+                Some(v) => v,
+                None => { return copy_set(other); }
+            };
+
+            let (self_left, found_self, self_right) = self.split(&pivot);
+            let (other_left, found_other, other_right) = other.split(&pivot);
+
+            use crate::Types::Types::Pair;
+            let Pair(left_union, right_union) = crate::ParaPair!(
+                move || self_left.union(&other_left),
+                move || self_right.union(&other_right)
+            );
+
+            proof {
+                assume(left_union.spec_bstsetbbalphamteph_wf());   // thread boundary
+                assume(right_union.spec_bstsetbbalphamteph_wf());  // thread boundary
+            }
+
+            if found_self || found_other {
+                Self::join_m(left_union, pivot, right_union)
+            } else {
+                Self::join_pair(left_union, right_union)
+            }
         }
 
+        #[verifier::exec_allows_no_decreases_clause]
         fn intersection(&self, other: &Self) -> Self {
-            let other_values = values_vec(&other.tree).into_iter().collect::<BTreeSet<T>>();
-            let filtered = self
-                .tree
-                .in_order()
-                .iter()
-                .filter_map(|v| {
-                    if other_values.contains(v) {
-                        Some(v.clone())
-                    } else {
-                        None
-                    }
-                }).collect::<Vec<T>>();
-            from_sorted_iter(filtered)
+            if self.is_empty() || other.is_empty() {
+                return Self::empty();
+            }
+
+            let pivot = match self.tree.minimum() {
+                Some(v) => v,
+                None => { return Self::empty(); }
+            };
+
+            let (self_left, found_self, self_right) = self.split(&pivot);
+            let (other_left, found_other, other_right) = other.split(&pivot);
+
+            use crate::Types::Types::Pair;
+            let Pair(left_inter, right_inter) = crate::ParaPair!(
+                move || self_left.intersection(&other_left),
+                move || self_right.intersection(&other_right)
+            );
+
+            proof {
+                assume(left_inter.spec_bstsetbbalphamteph_wf());   // thread boundary
+                assume(right_inter.spec_bstsetbbalphamteph_wf());  // thread boundary
+            }
+
+            if found_self && found_other {
+                Self::join_m(left_inter, pivot, right_inter)
+            } else {
+                Self::join_pair(left_inter, right_inter)
+            }
         }
 
+        #[verifier::exec_allows_no_decreases_clause]
         fn difference(&self, other: &Self) -> Self {
-            let other_values = values_vec(&other.tree).into_iter().collect::<BTreeSet<T>>();
-            let filtered = self
-                .tree
-                .in_order()
-                .iter()
-                .filter_map(|v| {
-                    if !other_values.contains(v) {
-                        Some(v.clone())
-                    } else {
-                        None
-                    }
-                }).collect::<Vec<T>>();
-            from_sorted_iter(filtered)
+            if self.is_empty() {
+                return Self::empty();
+            }
+            if other.is_empty() {
+                return copy_set(self);
+            }
+
+            let pivot = match self.tree.minimum() {
+                Some(v) => v,
+                None => { return Self::empty(); }
+            };
+
+            let (self_left, _found_self, self_right) = self.split(&pivot);
+            let (other_left, found_other, other_right) = other.split(&pivot);
+
+            use crate::Types::Types::Pair;
+            let Pair(left_diff, right_diff) = crate::ParaPair!(
+                move || self_left.difference(&other_left),
+                move || self_right.difference(&other_right)
+            );
+
+            proof {
+                assume(left_diff.spec_bstsetbbalphamteph_wf());   // thread boundary
+                assume(right_diff.spec_bstsetbbalphamteph_wf());  // thread boundary
+            }
+
+            if found_other {
+                Self::join_pair(left_diff, right_diff)
+            } else {
+                Self::join_m(left_diff, pivot, right_diff)
+            }
         }
 
         fn split(&self, pivot: &T) -> (Self, B, Self) {
+            let seq = self.tree.in_order();
+            let n = seq.length();
             let mut left = Vec::<T>::new();
             let mut right = Vec::<T>::new();
             let mut found = false;
-            for value in self.tree.in_order().iter() {
-                if value < pivot {
-                    left.push(value.clone());
-                } else if value > pivot {
-                    right.push(value.clone());
-                } else {
-                    found = true;
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    i <= n,
+                    n as int == seq.spec_len(),
+                decreases n - i,
+            {
+                let value = seq.nth(i);
+                match TotalOrder::cmp(value, pivot) {
+                    core::cmp::Ordering::Less => { left.push(value.clone()); }
+                    core::cmp::Ordering::Greater => { right.push(value.clone()); }
+                    core::cmp::Ordering::Equal => { found = true; }
                 }
+                i = i + 1;
             }
-            (from_sorted_iter(left), found, from_sorted_iter(right))
+            (from_vec(left), found, from_vec(right))
         }
 
         fn join_pair(left: Self, right: Self) -> Self {
-            let mut combined = values_vec(&left.tree).into_iter().collect::<BTreeSet<T>>();
-            for value in values_vec(&right.tree) {
-                combined.insert(value);
+            let mut combined = values_vec(&left.tree);
+            let right_vals = values_vec(&right.tree);
+            let mut i: usize = 0;
+            while i < right_vals.len()
+                invariant i <= right_vals.len(),
+                decreases right_vals.len() - i,
+            {
+                combined.push(right_vals[i].clone());
+                i = i + 1;
             }
-            from_sorted_iter(combined)
+            from_vec(combined)
         }
 
         fn join_m(left: Self, pivot: T, right: Self) -> Self {
-            let mut combined = values_vec(&left.tree).into_iter().collect::<BTreeSet<T>>();
-            combined.insert(pivot);
-            for value in values_vec(&right.tree) {
-                combined.insert(value);
+            let mut combined = values_vec(&left.tree);
+            combined.push(pivot);
+            let right_vals = values_vec(&right.tree);
+            let mut i: usize = 0;
+            while i < right_vals.len()
+                invariant i <= right_vals.len(),
+                decreases right_vals.len() - i,
+            {
+                combined.push(right_vals[i].clone());
+                i = i + 1;
             }
-            from_sorted_iter(combined)
+            from_vec(combined)
         }
 
-        fn filter<F: FnMut(&T) -> bool + Send>(&self, mut predicate: F) -> Self {
-            let filtered = self
-                .tree
-                .in_order()
-                .iter()
-                .filter_map(|v| if predicate(v) { Some(v.clone()) } else { None }).collect::<Vec<T>>();
-            from_sorted_iter(filtered)
+        fn filter<F>(&self, mut predicate: F) -> Self
+        where
+            F: FnMut(&T) -> bool,
+        {
+            let seq = self.tree.in_order();
+            let n = seq.length();
+            let mut filtered = Vec::<T>::new();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    i <= n,
+                    n as int == seq.spec_len(),
+                    forall|t: &T| #[trigger] predicate.requires((t,)),
+                decreases n - i,
+            {
+                if predicate(seq.nth(i)) {
+                    filtered.push(seq.nth(i).clone());
+                }
+                i = i + 1;
+            }
+            from_vec(filtered)
         }
 
-        fn reduce<F: FnMut(T, T) -> T + Send>(&self, mut op: F, base: T) -> T {
-            self.tree
-                .in_order()
-                .iter()
-                .fold(base, |acc, value| op(acc, value.clone()))
+        fn reduce<F>(&self, mut op: F, base: T) -> T
+        where
+            F: FnMut(T, T) -> T,
+        {
+            let seq = self.tree.in_order();
+            let n = seq.length();
+            let mut acc = base;
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    i <= n,
+                    n as int == seq.spec_len(),
+                    forall|a: T, b: T| #[trigger] op.requires((a, b)),
+                decreases n - i,
+            {
+                acc = op(acc, seq.nth(i).clone());
+                i = i + 1;
+            }
+            acc
         }
 
         fn iter_in_order(&self) -> ArraySeqStPerS<T> { self.tree.in_order() }
@@ -296,14 +448,13 @@ pub mod BSTSetBBAlphaMtEph {
         fn as_tree(&self) -> &BSTBBAlphaMtEph<T> { &self.tree }
 
         fn iter(&self) -> BSTSetBBAlphaMtEphIter<T> {
-            let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
-            BSTSetBBAlphaMtEphIter { snapshot: values, pos: 0 }
+            BSTSetBBAlphaMtEphIter { snapshot: values_vec(&self.tree), pos: 0 }
         }
     }
 
     // 10. iterators
 
-    impl<T: StTInMtT + Ord> std::iter::Iterator for BSTSetBBAlphaMtEphIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::iter::Iterator for BSTSetBBAlphaMtEphIter<T> {
         type Item = T;
 
         fn next(&mut self) -> (next: Option<T>)
@@ -328,21 +479,21 @@ pub mod BSTSetBBAlphaMtEph {
                 None
             } else {
                 let item = self.snapshot[self.pos].clone();
-                self.pos += 1;
+                self.pos = self.pos + 1;
                 proof { assume(item == old(self)@.1[old(self)@.0]); }  // accept hole: Clone preserves value
                 Some(item)
             }
         }
     }
 
-    impl<T: StTInMtT + Ord> vstd::pervasive::ForLoopGhostIteratorNew for BSTSetBBAlphaMtEphIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> vstd::pervasive::ForLoopGhostIteratorNew for BSTSetBBAlphaMtEphIter<T> {
         type GhostIter = BSTSetBBAlphaMtEphGhostIter<T>;
         open spec fn ghost_iter(&self) -> BSTSetBBAlphaMtEphGhostIter<T> {
             BSTSetBBAlphaMtEphGhostIter { pos: self@.0, elements: self@.1 }
         }
     }
 
-    impl<T: StTInMtT + Ord> vstd::pervasive::ForLoopGhostIterator for BSTSetBBAlphaMtEphGhostIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> vstd::pervasive::ForLoopGhostIterator for BSTSetBBAlphaMtEphGhostIter<T> {
         type ExecIter = BSTSetBBAlphaMtEphIter<T>;
         type Item = T;
         type Decrease = int;
@@ -377,61 +528,60 @@ pub mod BSTSetBBAlphaMtEph {
         }
     }
 
-    impl<'a, T: StTInMtT + Ord> std::iter::IntoIterator for &'a BSTSetBBAlphaMtEph<T> {
+    impl<'a, T: StTInMtT + Ord + TotalOrder + 'static> std::iter::IntoIterator for &'a BSTSetBBAlphaMtEph<T> {
         type Item = T;
         type IntoIter = BSTSetBBAlphaMtEphIter<T>;
         fn into_iter(self) -> (it: BSTSetBBAlphaMtEphIter<T>)
-            requires self.spec_bstsetbbalphamteph_wf()
+            requires self.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
             ensures it@.0 == 0, bstsetbbalphamteph_iter_invariant(&it),
         {
             self.iter()
         }
     }
 
-    impl<T: StTInMtT + Ord> IntoIterator for BSTSetBBAlphaMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> IntoIterator for BSTSetBBAlphaMtEph<T> {
         type Item = T;
         type IntoIter = std::vec::IntoIter<T>;
         fn into_iter(self) -> (it: Self::IntoIter)
-    
+            requires self.spec_bstsetbbalphamteph_wf(), obeys_feq_clone::<T>(),
         {
-            let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
-            values.into_iter()
+            values_vec(&self.tree).into_iter()
         }
     }
 
     } // verus!
 
-    impl<T: StTInMtT + Ord + fmt::Debug> fmt::Debug for BSTSetBBAlphaMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + fmt::Debug> fmt::Debug for BSTSetBBAlphaMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             f.debug_struct("BSTSetBBAlphaMtEph").field("tree", &self.tree).finish()
         }
     }
 
-    impl<T: StTInMtT + Ord> fmt::Display for BSTSetBBAlphaMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Display for BSTSetBBAlphaMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "BSTSetBBAlphaMtEph(size={})", self.size())
         }
     }
 
-    impl<T: StTInMtT + Ord> std::fmt::Debug for BSTSetBBAlphaMtEphIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Debug for BSTSetBBAlphaMtEphIter<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BSTSetBBAlphaMtEphIter").field("pos", &self.pos).finish()
         }
     }
 
-    impl<T: StTInMtT + Ord> std::fmt::Display for BSTSetBBAlphaMtEphIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Display for BSTSetBBAlphaMtEphIter<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "BSTSetBBAlphaMtEphIter(pos={})", self.pos)
         }
     }
 
-    impl<T: StTInMtT + Ord> std::fmt::Debug for BSTSetBBAlphaMtEphGhostIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Debug for BSTSetBBAlphaMtEphGhostIter<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BSTSetBBAlphaMtEphGhostIter").finish()
         }
     }
 
-    impl<T: StTInMtT + Ord> std::fmt::Display for BSTSetBBAlphaMtEphGhostIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Display for BSTSetBBAlphaMtEphGhostIter<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "BSTSetBBAlphaMtEphGhostIter")
         }

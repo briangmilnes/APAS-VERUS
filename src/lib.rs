@@ -466,7 +466,7 @@ pub mod Chap37 {
     pub mod AVLTreeSeqStPer;
     // pub mod AVLTreeSeqMtPer;  // broken: stale imports, never cargo-compiled
     pub mod BSTPlainStEph;
-    // pub mod BSTPlainMtEph;  // broken: stale imports, never cargo-compiled
+    pub mod BSTPlainMtEph;
     pub mod BSTAVLStEph;
     // pub mod BSTAVLMtEph;  // broken: stale imports, never cargo-compiled
     pub mod BSTRBStEph;
@@ -474,12 +474,12 @@ pub mod Chap37 {
     pub mod BSTSplayStEph;
     // pub mod BSTSplayMtEph;  // broken: compile errors, never cargo-compiled
     pub mod BSTBBAlphaStEph;
-    // pub mod BSTBBAlphaMtEph;  // broken: stale imports, never cargo-compiled
-    // pub mod BSTSetPlainMtEph;  // broken: depends on BSTPlainMtEph
+    pub mod BSTBBAlphaMtEph;
+    pub mod BSTSetPlainMtEph;
     // pub mod BSTSetAVLMtEph;  // broken: depends on BSTAVLMtEph
     // pub mod BSTSetRBMtEph;  // broken: depends on BSTRBMtEph
     // pub mod BSTSetSplayMtEph;  // broken: depends on BSTSplayMtEph
-    // pub mod BSTSetBBAlphaMtEph;  // broken: depends on BSTBBAlphaMtEph
+    pub mod BSTSetBBAlphaMtEph;
 }
 
 #[cfg(not(any(feature = "experiments_only", feature = "dev_only", feature = "wf")))]
