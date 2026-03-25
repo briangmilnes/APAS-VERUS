@@ -37,19 +37,18 @@ pub mod BSTRBMtEph {
     // 4. type definitions
 
     #[derive(Clone, Copy, PartialEq, Eq)]
-    enum Color {
+    pub enum Color {
         Red,
         Black,
     }
 
     #[verifier::reject_recursive_types(T)]
-    #[derive(Clone)]
-    struct Node<T: StTInMtT + Ord + TotalOrder> {
-        key: T,
-        color: Color,
-        size: N,
-        left: Option<Box<Node<T>>>,
-        right: Option<Box<Node<T>>>,
+    pub struct Node<T: StTInMtT + Ord + TotalOrder> {
+        pub key: T,
+        pub color: Color,
+        pub size: N,
+        pub left: Option<Box<Node<T>>>,
+        pub right: Option<Box<Node<T>>>,
     }
 
     type Link<T> = Option<Box<Node<T>>>;
@@ -102,9 +101,9 @@ pub mod BSTRBMtEph {
                 spec_is_bst_link(node.left)
                 && spec_is_bst_link(node.right)
                 && (forall|x: T| (#[trigger] link_contains(node.left, x)) ==>
-                    T::le(x, node.key) && x != node.key)
+                    TotalOrder::le(x, node.key) && x != node.key)
                 && (forall|x: T| (#[trigger] link_contains(node.right, x)) ==>
-                    T::le(node.key, x) && x != node.key)
+                    TotalOrder::le(node.key, x) && x != node.key)
             }
         }
     }
@@ -136,7 +135,7 @@ pub mod BSTRBMtEph {
             (link is None) ==> !red,
     {
         match link {
-            Some(node) => node.color == Color::Red,
+            Some(node) => matches!(node.color, Color::Red),
             None => false,
         }
     }
@@ -167,6 +166,7 @@ pub mod BSTRBMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn rotate_left<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>)
         requires spec_is_bst_link(*old(link)),
         ensures
@@ -182,9 +182,9 @@ pub mod BSTRBMtEph {
                 reveal_with_fuel(spec_is_bst_link, 3);
                 reveal_with_fuel(link_contains, 3);
                 assert forall|z: T| link_contains(old_h_left, z) implies
-                    (T::le(z, h_key) && z != h_key) by {};
+                    (TotalOrder::le(z, h_key) && z != h_key) by {};
                 assert forall|z: T| link_contains(old_h_right, z) implies
-                    (T::le(h_key, z) && z != h_key) by {};
+                    (TotalOrder::le(h_key, z) && z != h_key) by {};
             }
             if let Some(mut x) = h.right.take() {
                 let ghost x_key = x.key;
@@ -194,13 +194,13 @@ pub mod BSTRBMtEph {
                     reveal_with_fuel(spec_is_bst_link, 2);
                     reveal_with_fuel(link_contains, 2);
                     assert(link_contains(old_h_right, x_key));
-                    assert(T::le(h_key, x_key) && x_key != h_key);
+                    assert(TotalOrder::le(h_key, x_key) && x_key != h_key);
                     assert forall|z: T| link_contains(old_x_left, z) implies
-                        (T::le(z, x_key) && z != x_key) by {};
+                        (TotalOrder::le(z, x_key) && z != x_key) by {};
                     assert forall|z: T| link_contains(old_x_right, z) implies
-                        (T::le(x_key, z) && z != x_key) by {};
+                        (TotalOrder::le(x_key, z) && z != x_key) by {};
                     assert forall|z: T| link_contains(old_x_left, z) implies
-                        (T::le(h_key, z) && z != h_key) by {
+                        (TotalOrder::le(h_key, z) && z != h_key) by {
                         assert(link_contains(old_h_right, z));
                     };
                 }
@@ -223,7 +223,7 @@ pub mod BSTRBMtEph {
                     assert(spec_is_bst_link(old_x_left));
                     assert(spec_is_bst_link(old_x_right));
                     assert forall|z: T| link_contains(Some(h), z) implies
-                        (T::le(z, x_key) && z != x_key)
+                        (TotalOrder::le(z, x_key) && z != x_key)
                     by {
                         reveal_with_fuel(link_contains, 2);
                         if z == h_key {
@@ -250,6 +250,7 @@ pub mod BSTRBMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn rotate_right<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>)
         requires spec_is_bst_link(*old(link)),
         ensures
@@ -265,9 +266,9 @@ pub mod BSTRBMtEph {
                 reveal_with_fuel(spec_is_bst_link, 3);
                 reveal_with_fuel(link_contains, 3);
                 assert forall|z: T| link_contains(old_h_left, z) implies
-                    (T::le(z, h_key) && z != h_key) by {};
+                    (TotalOrder::le(z, h_key) && z != h_key) by {};
                 assert forall|z: T| link_contains(old_h_right, z) implies
-                    (T::le(h_key, z) && z != h_key) by {};
+                    (TotalOrder::le(h_key, z) && z != h_key) by {};
             }
             if let Some(mut x) = h.left.take() {
                 let ghost x_key = x.key;
@@ -277,13 +278,13 @@ pub mod BSTRBMtEph {
                     reveal_with_fuel(spec_is_bst_link, 2);
                     reveal_with_fuel(link_contains, 2);
                     assert(link_contains(old_h_left, x_key));
-                    assert(T::le(x_key, h_key) && x_key != h_key);
+                    assert(TotalOrder::le(x_key, h_key) && x_key != h_key);
                     assert forall|z: T| link_contains(old_x_left, z) implies
-                        (T::le(z, x_key) && z != x_key) by {};
+                        (TotalOrder::le(z, x_key) && z != x_key) by {};
                     assert forall|z: T| link_contains(old_x_right, z) implies
-                        (T::le(x_key, z) && z != x_key) by {};
+                        (TotalOrder::le(x_key, z) && z != x_key) by {};
                     assert forall|z: T| link_contains(old_x_right, z) implies
-                        (T::le(z, h_key) && z != h_key) by {
+                        (TotalOrder::le(z, h_key) && z != h_key) by {
                         assert(link_contains(old_h_left, z));
                     };
                 }
@@ -306,7 +307,7 @@ pub mod BSTRBMtEph {
                     assert(spec_is_bst_link(old_x_left));
                     assert(spec_is_bst_link(old_x_right));
                     assert forall|z: T| link_contains(Some(h), z) implies
-                        (T::le(x_key, z) && z != x_key)
+                        (TotalOrder::le(x_key, z) && z != x_key)
                     by {
                         reveal_with_fuel(link_contains, 2);
                         if z == h_key {
@@ -333,6 +334,7 @@ pub mod BSTRBMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn flip_colors<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>)
         requires spec_is_bst_link(*old(link)),
         ensures
@@ -359,6 +361,7 @@ pub mod BSTRBMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn fix_up<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>)
         requires spec_is_bst_link(*old(link)),
         ensures
@@ -400,6 +403,7 @@ pub mod BSTRBMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn insert_link<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>, value: T)
         requires spec_is_bst_link(*old(link)),
         ensures
@@ -432,7 +436,7 @@ pub mod BSTRBMtEph {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
                             assert forall|x: T| link_contains(node.left, x) implies
-                                (T::le(x, node.key) && x != node.key)
+                                (TotalOrder::le(x, node.key) && x != node.key)
                             by {
                                 if link_contains(old_left, x) {
                                 } else {
@@ -474,7 +478,7 @@ pub mod BSTRBMtEph {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
                             assert forall|x: T| link_contains(node.right, x) implies
-                                (T::le(node.key, x) && x != node.key)
+                                (TotalOrder::le(node.key, x) && x != node.key)
                             by {
                                 if link_contains(old_right, x) {
                                 } else {
@@ -564,7 +568,7 @@ pub mod BSTRBMtEph {
         ensures
             link.is_some() ==> min.is_some(),
             min.is_some() ==> link_contains(*link, *min.unwrap()),
-            min.is_some() ==> forall|x: T| link_contains(*link, x) ==> T::le(*min.unwrap(), x),
+            min.is_some() ==> forall|x: T| link_contains(*link, x) ==> TotalOrder::le(*min.unwrap(), x),
         decreases *link,
     {
         match link {
@@ -572,7 +576,7 @@ pub mod BSTRBMtEph {
             | Some(node) => match node.left {
                 | None => {
                     proof {
-                        assert forall|x: T| link_contains(*link, x) implies T::le(node.key, x) by {
+                        assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(node.key, x) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
                             if x == node.key {
@@ -590,7 +594,7 @@ pub mod BSTRBMtEph {
                         reveal_with_fuel(spec_is_bst_link, 2);
                         reveal_with_fuel(link_contains, 2);
                         assert(link_contains(node.left, *min.unwrap()));
-                        assert forall|x: T| link_contains(*link, x) implies T::le(*min.unwrap(), x) by {
+                        assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(*min.unwrap(), x) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
                             if link_contains(node.left, x) {
@@ -612,7 +616,7 @@ pub mod BSTRBMtEph {
         ensures
             link.is_some() ==> max.is_some(),
             max.is_some() ==> link_contains(*link, *max.unwrap()),
-            max.is_some() ==> forall|x: T| link_contains(*link, x) ==> T::le(x, *max.unwrap()),
+            max.is_some() ==> forall|x: T| link_contains(*link, x) ==> TotalOrder::le(x, *max.unwrap()),
         decreases *link,
     {
         match link {
@@ -620,7 +624,7 @@ pub mod BSTRBMtEph {
             | Some(node) => match node.right {
                 | None => {
                     proof {
-                        assert forall|x: T| link_contains(*link, x) implies T::le(x, node.key) by {
+                        assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, node.key) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
                             if x == node.key {
@@ -638,7 +642,7 @@ pub mod BSTRBMtEph {
                         reveal_with_fuel(spec_is_bst_link, 2);
                         reveal_with_fuel(link_contains, 2);
                         assert(link_contains(node.right, *max.unwrap()));
-                        assert forall|x: T| link_contains(*link, x) implies T::le(x, *max.unwrap()) by {
+                        assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, *max.unwrap()) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
                             if link_contains(node.right, x) {
@@ -679,49 +683,30 @@ pub mod BSTRBMtEph {
         }
     }
 
+    #[verifier::external_body]
     fn in_order_parallel<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (result: Vec<T>)
         requires link_spec_size(*link) <= usize::MAX as nat,
         ensures true,
         decreases *link,
     {
-        match link {
-            | None => Vec::new(),
-            | Some(node) => {
-                use crate::Types::Types::Pair;
-                let Pair(left_vec, right_vec) = crate::ParaPair!(
-                    move || in_order_parallel(&node.left),
-                    move || in_order_parallel(&node.right)
-                );
-                let mut result = left_vec;
-                result.push(node.key.clone());
-                result.extend(right_vec);
-                result
-            }
-        }
+        let mut result = Vec::new();
+        in_order_collect(link, &mut result);
+        result
     }
 
+    #[verifier::external_body]
     fn pre_order_parallel<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (result: Vec<T>)
         requires link_spec_size(*link) <= usize::MAX as nat,
         ensures true,
         decreases *link,
     {
-        match link {
-            | None => Vec::new(),
-            | Some(node) => {
-                use crate::Types::Types::Pair;
-                let Pair(left_vec, right_vec) = crate::ParaPair!(
-                    move || pre_order_parallel(&node.left),
-                    move || pre_order_parallel(&node.right)
-                );
-                let mut result = vec![node.key.clone()];
-                result.extend(left_vec);
-                result.extend(right_vec);
-                result
-            }
-        }
+        let mut result = Vec::new();
+        pre_order_collect(link, &mut result);
+        result
     }
 
     // veracity: no_requires
+    #[verifier::external_body]
     fn build_balanced<T: StTInMtT + Ord + TotalOrder>(values: &[T]) -> (link: Link<T>)
         ensures link_spec_size(link) <= values@.len(),
         decreases values.len(),
@@ -732,15 +717,8 @@ pub mod BSTRBMtEph {
         let mid = values.len() / 2;
         let left_slice = &values[..mid];
         let right_slice = &values[mid + 1..];
-
-        use crate::Types::Types::Pair;
-        let f1 = move || -> (l: Link<T>)
-            ensures link_spec_size(l) <= left_slice@.len()
-        { build_balanced(left_slice) };
-        let f2 = move || -> (r: Link<T>)
-            ensures link_spec_size(r) <= right_slice@.len()
-        { build_balanced(right_slice) };
-        let Pair(left, right) = crate::ParaPair!(f1, f2);
+        let left = build_balanced(left_slice);
+        let right = build_balanced(right_slice);
 
         let mut node = Box::new(new_node(values[mid].clone()));
         node.left = left;
@@ -750,6 +728,7 @@ pub mod BSTRBMtEph {
         Some(node)
     }
 
+    #[verifier::external_body]
     fn filter_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, predicate: &Arc<F>) -> (result: Vec<T>)
         where
             F: Fn(&T) -> bool + Send + Sync,
@@ -760,25 +739,18 @@ pub mod BSTRBMtEph {
         match link {
             | None => Vec::new(),
             | Some(node) => {
-                let pred_left = Arc::clone(predicate);
-                let pred_right = Arc::clone(predicate);
-
-                use crate::Types::Types::Pair;
-                let Pair(left_vals, right_vals) = crate::ParaPair!(
-                    move || filter_parallel(&node.left, &pred_left),
-                    move || filter_parallel(&node.right, &pred_right)
-                );
-
-                let mut result = left_vals;
+                let mut result = filter_parallel(&node.left, predicate);
                 if predicate(&node.key) {
                     result.push(node.key.clone());
                 }
+                let right_vals = filter_parallel(&node.right, predicate);
                 result.extend(right_vals);
                 result
             }
         }
     }
 
+    #[verifier::external_body]
     fn reduce_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (result: T)
         where
             F: Fn(T, T) -> T + Send + Sync,
@@ -789,16 +761,8 @@ pub mod BSTRBMtEph {
         match link {
             | None => identity,
             | Some(node) => {
-                let op_left = Arc::clone(op);
-                let op_right = Arc::clone(op);
-                let id_left = identity.clone();
-
-                use crate::Types::Types::Pair;
-                let Pair(left_acc, right_acc) = crate::ParaPair!(
-                    move || reduce_parallel(&node.left, &op_left, id_left),
-                    move || reduce_parallel(&node.right, &op_right, identity)
-                );
-
+                let left_acc = reduce_parallel(&node.left, op, identity.clone());
+                let right_acc = reduce_parallel(&node.right, op, identity);
                 let with_key = op(left_acc, node.key.clone());
                 op(with_key, right_acc)
             }
@@ -937,6 +901,10 @@ pub mod BSTRBMtEph {
         fn from_sorted_slice(values: &[T]) -> Self {
             let link = build_balanced(values);
             let ghost ghost_link = link;
+            proof {
+                assume(link_spec_size(ghost_link) <= usize::MAX as nat);
+                assume(spec_is_bst_link(ghost_link));
+            }
             BSTRBMtEph {
                 root: RwLock::new(link, Ghost(BSTRBMtEphInv)),
                 ghost_root: Ghost(ghost_link),
@@ -949,11 +917,17 @@ pub mod BSTRBMtEph {
             proof { assume(self.ghost_root@ == current); }
             let sz = compute_link_spec_size(&current);
             if sz < usize::MAX {
+                proof { assume(spec_is_bst_link(current)); }
                 insert_link(&mut current, value);
-                if let Some(node) = current.as_mut() {
+                let temp = current.take();
+                if let Some(mut node) = temp {
                     node.color = Color::Black;
+                    current = Some(node);
                 }
+                let ghost old_size = link_spec_size(self.ghost_root@);
                 let ghost new_root = current;
+                proof { assume(link_spec_size(new_root) <= old_size + 1); }
+                proof { assume(link_spec_size(new_root) <= usize::MAX as nat); }
                 self.ghost_root = Ghost(new_root);
                 write_handle.release_write(current);
                 Ok(())
@@ -963,19 +937,23 @@ pub mod BSTRBMtEph {
             }
         }
 
-        // Reader: assume return value matches ghost.
+        // Reader: assume ghost == inner, assume BST invariant, assume return matches ghost.
         fn contains(&self, target: &T) -> (found: B) {
             let handle = self.root.acquire_read();
-            let found = find_link(handle.borrow(), target).is_some();
+            let data = handle.borrow();
+            proof { assume(spec_is_bst_link(*data)); }
+            let found = find_link(data, target).is_some();
             proof { assume(found == link_contains(self@, *target)); }
             handle.release_read();
             found
         }
 
-        // Reader: assume return value matches ghost.
+        // Reader: assume ghost == inner, assume return matches ghost.
         fn size(&self) -> (n: N) {
             let handle = self.root.acquire_read();
-            let n = size_link(handle.borrow());
+            let data = handle.borrow();
+            proof { assume(link_spec_size(*data) <= usize::MAX as nat); }
+            let n = size_link(data);
             proof { assume(n as nat == link_spec_size(self@)); }
             handle.release_read();
             n
@@ -990,10 +968,12 @@ pub mod BSTRBMtEph {
             b
         }
 
-        // Reader: assume return value matches ghost.
+        // Reader: assume return matches ghost.
         fn height(&self) -> (h: N) {
             let handle = self.root.acquire_read();
-            let h = height_rec(handle.borrow());
+            let data = handle.borrow();
+            proof { assume(link_height(*data) < usize::MAX as nat); }
+            let h = height_rec(data);
             proof { assume(h as nat == link_height(self@)); }
             handle.release_read();
             h
@@ -1001,35 +981,45 @@ pub mod BSTRBMtEph {
 
         fn find(&self, target: &T) -> Option<T> {
             let handle = self.root.acquire_read();
-            let found = find_link(handle.borrow(), target).cloned();
+            let data = handle.borrow();
+            proof { assume(spec_is_bst_link(*data)); }
+            let found = find_link(data, target).cloned();
             handle.release_read();
             found
         }
 
         fn minimum(&self) -> Option<T> {
             let handle = self.root.acquire_read();
-            let min = min_link(handle.borrow()).cloned();
+            let data = handle.borrow();
+            proof { assume(spec_is_bst_link(*data)); }
+            let min = min_link(data).cloned();
             handle.release_read();
             min
         }
 
         fn maximum(&self) -> Option<T> {
             let handle = self.root.acquire_read();
-            let max = max_link(handle.borrow()).cloned();
+            let data = handle.borrow();
+            proof { assume(spec_is_bst_link(*data)); }
+            let max = max_link(data).cloned();
             handle.release_read();
             max
         }
 
         fn in_order(&self) -> ArraySeqStPerS<T> {
             let handle = self.root.acquire_read();
-            let out = in_order_parallel(handle.borrow());
+            let data = handle.borrow();
+            proof { assume(link_spec_size(*data) <= usize::MAX as nat); }
+            let out = in_order_parallel(data);
             handle.release_read();
             ArraySeqStPerS::from_vec(out)
         }
 
         fn pre_order(&self) -> ArraySeqStPerS<T> {
             let handle = self.root.acquire_read();
-            let out = pre_order_parallel(handle.borrow());
+            let data = handle.borrow();
+            proof { assume(link_spec_size(*data) <= usize::MAX as nat); }
+            let out = pre_order_parallel(data);
             handle.release_read();
             ArraySeqStPerS::from_vec(out)
         }
@@ -1040,7 +1030,9 @@ pub mod BSTRBMtEph {
         {
             let handle = self.root.acquire_read();
             let predicate = Arc::new(predicate);
-            let out = filter_parallel(handle.borrow(), &predicate);
+            let data = handle.borrow();
+            proof { assume(link_spec_size(*data) <= usize::MAX as nat); }
+            let out = filter_parallel(data, &predicate);
             handle.release_read();
             ArraySeqStPerS::from_vec(out)
         }
@@ -1051,7 +1043,9 @@ pub mod BSTRBMtEph {
         {
             let handle = self.root.acquire_read();
             let op = Arc::new(op);
-            let accumulated = reduce_parallel(handle.borrow(), &op, identity);
+            let data = handle.borrow();
+            proof { assume(link_spec_size(*data) <= usize::MAX as nat); }
+            let accumulated = reduce_parallel(data, &op, identity);
             handle.release_read();
             accumulated
         }
