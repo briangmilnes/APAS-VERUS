@@ -22,14 +22,14 @@ Table of Contents:
 
 ✓ SpanTreeMtEph.rs
 ❌ SpanTreeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:53: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/SpanTreeStEph.rs:53: error: external_body - #[verifier::external_body]
         54 |     pub fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (result: SetStEph<Edge<V>>)
    Holes: 1 total
       1 × external_body
 ❌ TSPApproxStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:96: error: external_body [blocked_by: euler_tour_dfs] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/TSPApproxStEph.rs:96: error: external_body [blocked_by: euler_tour_dfs] - #[verifier::external_body]
         97 |     pub fn euler_tour<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:120: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/TSPApproxStEph.rs:120: error: external_body - #[verifier::external_body]
        121 |     fn euler_tour_dfs<V: HashOrd>(
    Holes: 2 total
       2 × external_body
@@ -88,9 +88,11 @@ Real Proof Targets: 3 (all actionable)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-25 10:39:12 -07:00
-Ended:     2026-03-25 10:39:12 -07:00
-Duration:  5ms
+Started:   2026-03-25 11:07:40 -07:00
+Ended:     2026-03-25 11:07:40 -07:00
+Duration:  11ms
 
 Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
+Duration:  11ms
+
 Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
