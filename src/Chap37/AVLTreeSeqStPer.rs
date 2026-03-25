@@ -801,7 +801,6 @@ pub mod AVLTreeSeqStPer {
             ArraySeqStPerS::from_vec(v)
         }
 
-        #[verifier::external_body] // veracity: accept — iterator boundary
         fn iter<'a>(&'a self) -> (it: AVLTreeSeqStPerIter<'a, T>)
         {
             let current = match &self.root {
@@ -825,7 +824,9 @@ pub mod AVLTreeSeqStPer {
 
     // veracity: no_requires
     fn push_left_iter_stper<'a, T: StT>(it: &mut AVLTreeSeqStPerIter<'a, T>, cur: Option<&'a Node<T>>)
-        ensures true,
+        ensures
+            it@.0 == old(it)@.0,
+            it@.1 == old(it)@.1,
         decreases cur,
     {
         if let Some(n) = cur {
@@ -927,8 +928,8 @@ pub mod AVLTreeSeqStPer {
         type Item = &'a T;
         type IntoIter = AVLTreeSeqStPerIter<'a, T>;
 
-        #[verifier::external_body] // veracity: accept — iterator boundary
         fn into_iter(self) -> (it: AVLTreeSeqStPerIter<'a, T>)
+            requires self.spec_avltreeseqstper_wf(),
             ensures
                 it@.0 == 0,
                 it@.1 == spec_inorder(self.root),
