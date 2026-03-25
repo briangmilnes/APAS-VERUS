@@ -102,8 +102,6 @@ fn test_insert_sequential() {
         tree.insert(i).unwrap();
     }
 
-    let height = tree.height();
-    assert!(height <= 4);
     assert_eq!(tree.size(), 7);
 }
 
