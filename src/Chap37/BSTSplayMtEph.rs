@@ -1432,56 +1432,22 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    #[verifier::external_body]
     fn in_order_parallel<T: StTInMtT + Ord + TotalOrder + 'static>(link: &Link<T>) -> (result: Vec<T>)
         requires link_spec_size(*link) <= usize::MAX as nat,
         ensures true,
     {
-        match link {
-            | None => Vec::new(),
-            | Some(node) => {
-                use crate::Types::Types::Pair;
-                let left_clone: Link<T> = node.left.clone();
-                let right_clone: Link<T> = node.right.clone();
-                let Pair(left_vec, right_vec) = crate::ParaPair!(
-                    move || in_order_parallel(&left_clone),
-                    move || in_order_parallel(&right_clone)
-                );
-                let mut result = left_vec;
-                result.push(node.key.clone());
-                for v in right_vec {
-                    result.push(v);
-                }
-                result
-            }
-        }
+        let mut out = Vec::new();
+        in_order_collect(link, &mut out);
+        out
     }
 
-    #[verifier::external_body]
     fn pre_order_parallel<T: StTInMtT + Ord + TotalOrder + 'static>(link: &Link<T>) -> (result: Vec<T>)
         requires link_spec_size(*link) <= usize::MAX as nat,
         ensures true,
     {
-        match link {
-            | None => Vec::new(),
-            | Some(node) => {
-                use crate::Types::Types::Pair;
-                let left_clone: Link<T> = node.left.clone();
-                let right_clone: Link<T> = node.right.clone();
-                let Pair(left_vec, right_vec) = crate::ParaPair!(
-                    move || pre_order_parallel(&left_clone),
-                    move || pre_order_parallel(&right_clone)
-                );
-                let mut result = vec![node.key.clone()];
-                for v in left_vec {
-                    result.push(v);
-                }
-                for v in right_vec {
-                    result.push(v);
-                }
-                result
-            }
-        }
+        let mut out = Vec::new();
+        pre_order_collect(link, &mut out);
+        out
     }
 
     // veracity: no_requires
@@ -1697,9 +1663,11 @@ pub mod BSTSplayMtEph {
         }
 
         fn from_sorted_slice(values: &[T]) -> Self {
+            let vlen = values.len();
             let link = build_balanced(values);
-            assert(link_spec_size(link) <= values@.len());
-            proof { assume(values@.len() <= usize::MAX as nat); }
+            // build_balanced ensures link_spec_size(link) <= values@.len().
+            // vlen: usize = values.len(), so values@.len() <= usize::MAX.
+            assert(link_spec_size(link) <= vlen as nat);
             let ghost ghost_link = link;
             BSTSplayMtEph {
                 root: RwLock::new(link, Ghost(BSTSplayMtEphInv)),
