@@ -240,8 +240,8 @@ Warnings: 10 total
 
 Structural (info only): 68
    64 × RWLOCK_GHOST
-   2 × STD_TRAIT_IMPL
    2 × UNSAFE_SEND_SYNC
+   2 × STD_TRAIT_IMPL
 
 No proof holes found! All proofs are complete.
 
@@ -249,15 +249,15 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-25 07:44:25 -07:00
-Ended:     2026-03-25 07:44:26 -07:00
-Duration:  228ms
+Started:   2026-03-25 08:22:39 -07:00
+Ended:     2026-03-25 08:22:40 -07:00
+Duration:  178ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
-=================================
+=======================================================
 
-Started:   2026-03-25 07:44:25 -07:00
-Ended:     2026-03-25 07:44:26 -07:00
-Duration:  228ms
+Started:   2026-03-25 08:22:39 -07:00
+Ended:     2026-03-25 08:22:40 -07:00
+Duration:  178ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log

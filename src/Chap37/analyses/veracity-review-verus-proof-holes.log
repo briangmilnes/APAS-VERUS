@@ -290,13 +290,13 @@ Table of Contents:
        134 |     fn copy_set<T: StTInMtT + Ord + TotalOrder>(set: &BSTSetRBMtEph<T>) -> (out: BSTSetRBMtEph<T>)
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:143: error: external_body - #[verifier::external_body]
        144 |     fn from_sorted_iter<T: StTInMtT + Ord + TotalOrder, I: IntoIterator<Item = T>>(values: I) -> (set: BSTSetRBMtEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:185: error: external_body [blocked_by: iter] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:185: error: external_body [blocked_by: filter] - #[verifier::external_body]
        186 |         fn delete(&mut self, target: &T) {
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:200: error: external_body [blocked_by: join_m] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:200: error: external_body [blocked_by: copy_set] - #[verifier::external_body]
        201 |         fn union(&self, other: &Self) -> Self {
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:236: error: external_body [blocked_by: join_m] - #[verifier::external_body]
        237 |         fn intersection(&self, other: &Self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:264: error: external_body [blocked_by: join_m] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:264: error: external_body [blocked_by: copy_set] - #[verifier::external_body]
        265 |         fn difference(&self, other: &Self) -> Self {
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:291: error: external_body [blocked_by: from_sorted_iter] - #[verifier::external_body]
        292 |         fn split(&self, pivot: &T) -> (Self, B, Self) {
@@ -328,13 +328,13 @@ Table of Contents:
        144 |     fn values_vec<T: StTInMtT + Ord + TotalOrder + 'static>(tree: &BSTSplayMtEph<T>) -> (values: Vec<T>)
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:152: error: external_body - #[verifier::external_body]
        153 |     fn rebuild_from_vec<T: StTInMtT + Ord + TotalOrder + 'static>(values: Vec<T>) -> (tree: BSTSplayMtEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:208: error: external_body [blocked_by: filter] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:208: error: external_body [blocked_by: rebuild_from_vec] - #[verifier::external_body]
        209 |         fn delete(&mut self, target: &T) {
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:223: error: external_body [blocked_by: join_m] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:223: error: external_body [blocked_by: join_pair] - #[verifier::external_body]
        224 |         fn union(&self, other: &Self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:254: error: external_body [blocked_by: join_m] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:254: error: external_body [blocked_by: join_pair] - #[verifier::external_body]
        255 |         fn intersection(&self, other: &Self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:282: error: external_body [blocked_by: join_m] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:282: error: external_body [blocked_by: join_pair] - #[verifier::external_body]
        283 |         fn difference(&self, other: &Self) -> Self {
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:309: error: external_body [blocked_by: iter] - #[verifier::external_body]
        310 |         fn split(&self, pivot: &T) -> (Self, B, Self) {
@@ -508,13 +508,15 @@ Structural (info only): 35
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-25 07:44:25 -07:00
-Ended:     2026-03-25 07:44:25 -07:00
-Duration:  192ms
+Started:   2026-03-25 08:22:39 -07:00
+Ended:     2026-03-25 08:22:39 -07:00
+Duration:  156ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
-:   2026-03-25 07:44:25 -07:00
-Ended:     2026-03-25 07:44:25 -07:00
-Duration:  192ms
+================
+
+Started:   2026-03-25 08:22:39 -07:00
+Ended:     2026-03-25 08:22:39 -07:00
+Duration:  156ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log

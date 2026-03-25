@@ -33,11 +33,11 @@ Table of Contents:
        356 |     fn build_partition_map_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:434: error: external_body - #[verifier::external_body]
        435 |     pub fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:520: error: external_body [blocked_by: hash_coin_flips_mt] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:520: error: external_body [blocked_by: compute_remaining_mt] - #[verifier::external_body]
        521 |     pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:586: error: external_body - #[verifier::external_body]
        587 |     fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:681: error: external_body [blocked_by: reroute_edges_mt] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:681: error: external_body [blocked_by: build_partition_map_mt] - #[verifier::external_body]
        682 |     pub fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:801: error: external_body - #[verifier::external_body]
        802 |     fn reroute_edges_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
@@ -114,16 +114,19 @@ Holes Found: 14 (actionable)
 Real Proof Targets: 14 (all actionable)
 
 Structural (info only): 2
-   1 × OPAQUE_EXTERNAL
    1 × STD_TRAIT_IMPL
+   1 × OPAQUE_EXTERNAL
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-25 07:44:26 -07:00
-Ended:     2026-03-25 07:44:26 -07:00
-Duration:  19ms
+Started:   2026-03-25 08:22:40 -07:00
+Ended:     2026-03-25 08:22:40 -07:00
+Duration:  11ms
 
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
+2026-03-25 08:22:40 -07:00
+Duration:  11ms
+
+Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log

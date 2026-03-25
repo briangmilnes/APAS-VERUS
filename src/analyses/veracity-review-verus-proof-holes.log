@@ -704,25 +704,25 @@ Table of Contents:
 ❌ src/Chap37/BSTSetRBMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:125: error: external_body [blocked_by: iter] - #[verifier::external_body]
        126 |     fn values_vec<T: StTInMtT + Ord + TotalOrder>(tree: &BSTRBMtEph<T>) -> (values: Vec<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:133: error: external_body [blocked_by: values_vec] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:133: error: external_body [blocked_by: iter] - #[verifier::external_body]
        134 |     fn copy_set<T: StTInMtT + Ord + TotalOrder>(set: &BSTSetRBMtEph<T>) -> (out: BSTSetRBMtEph<T>)
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:143: error: external_body - #[verifier::external_body]
        144 |     fn from_sorted_iter<T: StTInMtT + Ord + TotalOrder, I: IntoIterator<Item = T>>(values: I) -> (set: BSTSetRBMtEph<T>)
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:185: error: external_body [blocked_by: filter] - #[verifier::external_body]
        186 |         fn delete(&mut self, target: &T) {
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:200: error: external_body [blocked_by: split] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:200: error: external_body [blocked_by: copy_set] - #[verifier::external_body]
        201 |         fn union(&self, other: &Self) -> Self {
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:236: error: external_body [blocked_by: split] - #[verifier::external_body]
        237 |         fn intersection(&self, other: &Self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:264: error: external_body [blocked_by: split] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:264: error: external_body [blocked_by: copy_set] - #[verifier::external_body]
        265 |         fn difference(&self, other: &Self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:291: error: external_body [blocked_by: from_sorted_iter] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:291: error: external_body [blocked_by: iter] - #[verifier::external_body]
        292 |         fn split(&self, pivot: &T) -> (Self, B, Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:308: error: external_body [blocked_by: values_vec] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:308: error: external_body [blocked_by: iter] - #[verifier::external_body]
        309 |         fn join_pair(left: Self, right: Self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:323: error: external_body [blocked_by: values_vec] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:323: error: external_body [blocked_by: iter] - #[verifier::external_body]
        324 |         fn join_m(left: Self, pivot: T, right: Self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:339: error: external_body [blocked_by: from_sorted_iter] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:339: error: external_body [blocked_by: iter] - #[verifier::external_body]
        340 |         fn filter<F: FnMut(&T) -> bool + Send>(&self, mut predicate: F) -> Self {
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:351: error: external_body [blocked_by: iter] - #[verifier::external_body]
        352 |         fn reduce<F: FnMut(T, T) -> T + Send>(&self, mut op: F, base: T) -> T {
@@ -746,7 +746,7 @@ Table of Contents:
        144 |     fn values_vec<T: StTInMtT + Ord + TotalOrder + 'static>(tree: &BSTSplayMtEph<T>) -> (values: Vec<T>)
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:152: error: external_body - #[verifier::external_body]
        153 |     fn rebuild_from_vec<T: StTInMtT + Ord + TotalOrder + 'static>(values: Vec<T>) -> (tree: BSTSplayMtEph<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:208: error: external_body [blocked_by: filter] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:208: error: external_body [blocked_by: rebuild_from_vec] - #[verifier::external_body]
        209 |         fn delete(&mut self, target: &T) {
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:223: error: external_body [blocked_by: join_pair] - #[verifier::external_body]
        224 |         fn union(&self, other: &Self) -> Self {
@@ -756,9 +756,9 @@ Table of Contents:
        283 |         fn difference(&self, other: &Self) -> Self {
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:309: error: external_body [blocked_by: iter] - #[verifier::external_body]
        310 |         fn split(&self, pivot: &T) -> (Self, B, Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:326: error: external_body [blocked_by: iter] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:326: error: external_body [blocked_by: into_iter] - #[verifier::external_body]
        327 |         fn join_pair(left: Self, right: Self) -> Self {
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:341: error: external_body [blocked_by: iter] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:341: error: external_body [blocked_by: into_iter] - #[verifier::external_body]
        342 |         fn join_m(left: Self, pivot: T, right: Self) -> Self {
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:357: error: external_body [blocked_by: iter] - #[verifier::external_body]
        358 |         fn filter<F: FnMut(&T) -> bool + Send>(&self, mut predicate: F) -> Self {
@@ -1985,16 +1985,10 @@ Table of Contents:
          1 × root cause
          1 × downstream (blocked by root causes)
 ❌ src/Chap65/KruskalStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:64: error: external_body - #[verifier::external_body]
-        65 |     fn sort_edges_by_weight<V: HashOrd>(edges: &mut Vec<LabEdge<V, WrappedF64>>)
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:166: error: external_body [blocked_by: sort_edges_by_weight] - #[verifier::external_body]
-       167 |     pub fn kruskal_mst<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:286: error: external_body - #[verifier::external_body]
-       287 |     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, WrappedF64>>) -> (total: WrappedF64)
-   Holes: 3 total
-      3 × external_body
-         2 × root cause
-         1 × downstream (blocked by root causes)
+/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:178: error: external_body - #[verifier::external_body]
+       179 |     pub fn kruskal_mst<V: HashOrd>(
+   Holes: 1 total
+      1 × external_body
 ❌ src/Chap65/PrimStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:72: error: assume() [algorithmic] - assume(TotalOrder::le(x, y) || TotalOrder::le(y, x));
         70 |         // accept hole
@@ -2003,8 +1997,6 @@ Table of Contents:
         74 |         #[verifier::external_body]
 /home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:74: error: external_body - #[verifier::external_body]
         75 |         fn cmp(&self, other: &Self) -> (c: Ordering) {
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:335: error: external_body - #[verifier::external_body]
-       336 |     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, WrappedF64>>) -> (total: WrappedF64)
 /home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:59: error: proof_fn_with_holes - proof fn reflexive — contains assume/external_body/admit, needs proof
         55 |         open spec fn le(self, other: Self) -> bool {
             ...
@@ -2037,9 +2029,9 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:64: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:68: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:131: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
-   Holes: 3 total
+   Holes: 2 total
       1 × assume()
-      2 × external_body
+      1 × external_body
    Info: 1 × structural_false_positive
       1 × OPAQUE_EXTERNAL
    Info: 3 total
@@ -2076,7 +2068,7 @@ Table of Contents:
        521 |     pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:586: error: external_body - #[verifier::external_body]
        587 |     fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:681: error: external_body [blocked_by: build_partition_map_mt] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:681: error: external_body [blocked_by: vertex_bridges_mt] - #[verifier::external_body]
        682 |     pub fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:801: error: external_body - #[verifier::external_body]
        802 |     fn reroute_edges_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
@@ -2633,16 +2625,16 @@ Function Specs:
    7753 total fns
 
 
-Holes Found: 79 (actionable)
-   11 × assume() [algorithmic] (13%)
-   65 × external_body (82%)
-      30 × root cause
-      35 × downstream (blocked by root causes)
+Holes Found: 76 (actionable)
+   11 × assume() [algorithmic] (14%)
+   62 × external_body (81%)
+      28 × root cause
+      34 × downstream (blocked by root causes)
    3 × external (3%)
-Real Proof Targets: 79 (all actionable)
+Real Proof Targets: 76 (all actionable)
 
 Per-Chapter Holes:
-  Chap37: 50  Chap64:  4  Chap65: 11
+  Chap37: 50  Chap64:  4  Chap65:  8
   Chap66: 14
 
 Warnings: 169 total
@@ -2657,9 +2649,9 @@ Accepted (reviewed): 65 total
    10 × trivial_spec_wf
    4 × unsafe_block_accept_hole
    3 × external_accept_hole
-   1 × enum_outside_verus_accept_hole
-   1 × external_type_specification_accept_hole
    1 × struct_outside_verus_accept_hole
+   1 × external_type_specification_accept_hole
+   1 × enum_outside_verus_accept_hole
 
 Accepted by Chapter:
   Chap02:  6  Chap11:  6  Chap12: 19
@@ -2686,50 +2678,50 @@ Structural (info only): 220
 
    1  Chap37  (50 holes, 19 files)
    2  Chap66  (14 holes, 2 files)
-   3  Chap65  (11 holes, 3 files)
+   3  Chap65  (8 holes, 3 files)
    4  Chap64  (4 holes, 3 files)
-   5  Chap27  (0 holes, 4 files)
-   6  Chap55  (0 holes, 8 files)
-   7  Chap57  (0 holes, 3 files)
-   8  Chap62  (0 holes, 4 files)
-   9  Chap41  (0 holes, 6 files)
-   10  Chap47  (0 holes, 9 files)
-   11  Chap30  (0 holes, 1 files)
-   12  Chap43  (0 holes, 10 files)
-   13  Chap53  (0 holes, 5 files)
-   14  ParaPairs  (0 holes, 1 files)
-   15  Chap59  (0 holes, 4 files)
-   16  Chap35  (0 holes, 4 files)
-   17  Chap28  (0 holes, 11 files)
+   5  Chap42  (0 holes, 3 files)
+   6  Chap51  (0 holes, 8 files)
+   7  Chap02  (0 holes, 2 files)
+   8  Chap12  (0 holes, 3 files)
+   9  Chap26  (0 holes, 8 files)
+   10  Chap43  (0 holes, 10 files)
+   11  Chap44  (0 holes, 1 files)
+   12  Chap11  (0 holes, 5 files)
+   13  Chap05  (0 holes, 5 files)
+   14  Chap35  (0 holes, 4 files)
+   15  Chap56  (0 holes, 10 files)
+   16  Chap21  (0 holes, 5 files)
+   17  Chap38  (0 holes, 2 files)
    18  Chap54  (0 holes, 4 files)
-   19  Chap49  (0 holes, 8 files)
-   20  Chap18  (0 holes, 7 files)
-   21  Chap50  (0 holes, 8 files)
-   22  Chap26  (0 holes, 8 files)
-   23  Chap39  (0 holes, 4 files)
-   24  Chap21  (0 holes, 5 files)
-   25  Chap36  (0 holes, 3 files)
-   26  Chap56  (0 holes, 10 files)
-   27  Chap19  (0 holes, 4 files)
-   28  Chap51  (0 holes, 8 files)
-   29  Chap05  (0 holes, 5 files)
-   30  Chap52  (0 holes, 14 files)
-   31  Chap44  (0 holes, 1 files)
-   32  Concurrency  (0 holes, 1 files)
-   33  Chap02  (0 holes, 2 files)
-   34  Chap03  (0 holes, 1 files)
-   35  Chap12  (0 holes, 3 files)
-   36  Chap17  (0 holes, 1 files)
-   37  Chap11  (0 holes, 5 files)
-   38  Chap42  (0 holes, 3 files)
-   39  Chap58  (0 holes, 2 files)
-   40  Chap06  (0 holes, 21 files)
-   41  Chap63  (0 holes, 2 files)
-   42  Chap45  (0 holes, 6 files)
-   43  Chap40  (0 holes, 3 files)
-   44  Chap38  (0 holes, 2 files)
-   45  Chap23  (0 holes, 2 files)
-   46  Chap61  (0 holes, 4 files)
+   19  Chap62  (0 holes, 4 files)
+   20  Chap50  (0 holes, 8 files)
+   21  Chap58  (0 holes, 2 files)
+   22  Chap36  (0 holes, 3 files)
+   23  Concurrency  (0 holes, 1 files)
+   24  Chap40  (0 holes, 3 files)
+   25  Chap18  (0 holes, 7 files)
+   26  Chap19  (0 holes, 4 files)
+   27  Chap61  (0 holes, 4 files)
+   28  Chap47  (0 holes, 9 files)
+   29  Chap27  (0 holes, 4 files)
+   30  Chap41  (0 holes, 6 files)
+   31  Chap59  (0 holes, 4 files)
+   32  Chap39  (0 holes, 4 files)
+   33  Chap53  (0 holes, 5 files)
+   34  Chap30  (0 holes, 1 files)
+   35  Chap45  (0 holes, 6 files)
+   36  Chap49  (0 holes, 8 files)
+   37  Chap57  (0 holes, 3 files)
+   38  Chap23  (0 holes, 2 files)
+   39  ParaPairs  (0 holes, 1 files)
+   40  Chap28  (0 holes, 11 files)
+   41  Chap52  (0 holes, 14 files)
+   42  Chap55  (0 holes, 8 files)
+   43  Chap63  (0 holes, 2 files)
+   44  Chap06  (0 holes, 21 files)
+   45  Chap17  (0 holes, 1 files)
+   46  Chap03  (0 holes, 1 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
@@ -2740,10 +2732,10 @@ Structural (info only): 220
    3  src/Chap65/UnionFindStEph.rs  (5 holes)
    4  src/Chap37/BSTSplayMtEph.rs  (5 holes)
    5  src/Chap37/BSTRBMtEph.rs  (3 holes)
-   6  src/Chap65/PrimStEph.rs  (3 holes)
-   7  src/Chap64/SpanTreeStEph.rs  (2 holes)
-   8  src/Chap64/TSPApproxStEph.rs  (2 holes)
-   9  src/Chap66/BoruvkaStEph.rs  (2 holes)
+   6  src/Chap64/SpanTreeStEph.rs  (2 holes)
+   7  src/Chap66/BoruvkaStEph.rs  (2 holes)
+   8  src/Chap65/PrimStEph.rs  (2 holes)
+   9  src/Chap64/TSPApproxStEph.rs  (2 holes)
 
 =================================================================
 4.3. Next Target Directories
@@ -2768,7 +2760,7 @@ Structural (info only): 220
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 42 clean, 4 holed, 79 holes (global), 244 modules
+Chapter Status — 46 chapters, 42 clean, 4 holed, 76 holes (global), 244 modules
 
 CLEAN CHAPTERS (42)
   Chapter        Files
@@ -2816,12 +2808,12 @@ CLEAN CHAPTERS (42)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (4) — 79 holes
+HOLED CHAPTERS (4) — 76 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
   Chap37            50    19  internal  Chap37::BSTSplayMtEph, Chap37::BSTRBMtEph
   Chap64             4     3  YES       
-  Chap65            11     3  internal  Chap65::UnionFindStEph
+  Chap65             8     3  internal  Chap65::UnionFindStEph
   Chap66            14     2  YES       
 
 DEPENDENCY CHAIN (chapter-level, external only)
@@ -2832,8 +2824,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-25 07:44:26 -07:00
-Ended:     2026-03-25 07:44:28 -07:00
-Duration:  1918ms
+Started:   2026-03-25 08:22:40 -07:00
+Ended:     2026-03-25 08:22:42 -07:00
+Duration:  1536ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log
