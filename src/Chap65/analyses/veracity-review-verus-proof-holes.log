@@ -61,6 +61,13 @@ Table of Contents:
         70 |         // accept hole
         72 |             assume(TotalOrder::le(x, y) || TotalOrder::le(y, x));
         73 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:368: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       364 |         fn clone(&self) -> (result: Self)
+            ...
+       366 |         {
+       367 |             let result = PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() };
+       369 |             result
+       370 |         }
 /home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:60: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:64: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:68: info: accept()
@@ -123,11 +130,11 @@ Proof Functions:
    4 total
 
 Function Specs:
-   25 exec fns with complete spec (requires+ensures) (69%)
+   26 exec fns with complete spec (requires+ensures) (70%)
    0 exec fns missing spec (0%)
-   7 proof/spec fns clean (19%)
-   4 proof/spec fns with holes (11%)
-   36 total fns
+   7 proof/spec fns clean (18%)
+   4 proof/spec fns with holes (10%)
+   37 total fns
 
 
 Holes Found: 8 (actionable)
@@ -136,6 +143,9 @@ Holes Found: 8 (actionable)
       3 × root cause
       4 × downstream (blocked by root causes)
 Real Proof Targets: 8 (all actionable)
+
+Warnings: 1 total
+   1 × assume_eq_clone_workaround
 
 Accepted (reviewed): 3 total
    3 × accept()
@@ -147,13 +157,8 @@ Structural (info only): 1
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-25 08:22:40 -07:00
-Ended:     2026-03-25 08:22:40 -07:00
-Duration:  11ms
-
-Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-40 -07:00
-Ended:     2026-03-25 08:22:40 -07:00
-Duration:  11ms
+Started:   2026-03-25 08:41:47 -07:00
+Ended:     2026-03-25 08:41:47 -07:00
+Duration:  14ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log

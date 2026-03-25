@@ -1,66 +1,68 @@
-# R75 Restart Prompt
+# R75 Restart Prompt (post-merge)
 
-## State at end of R74 merge session
+## State after R75 merge session
 
 ### Verified baseline
-- **4742 verified, 0 errors, 130 warnings**
+- **4794 verified, 0 errors, 0 warnings**
 - **2619 RTT passed, 157 PTT passed**
-- Main at commit after R74 merge
-- All 5 agent worktrees rebased and clean
+- Main at commit `57542019b`
+- All agent worktrees need rebase (not yet done — user must approve)
 
 ### What was done this session
 
-1. **Merged all 4 R74 agent branches** into main (agents 1-4 clean; agent 5 never started).
-2. **R74 results**: -66 holes (169→103), 41 clean chapters (up from 40), Chap41 now clean.
-3. **Regenerated hole analysis**: 103 holes across 5 chapters.
-4. **Wrote R75 prompts** for 5 agents targeting 74 of the 103 holes.
+1. **Merged 4 R75 agent branches** into main (agents 1, 2, 4, 5; agent 3 had no changes — stalled on /tmp writes).
+2. **R75 results**: -27 holes (103→76), 42 clean chapters (up from 41), Chap43 now clean.
+3. **Fixed agent1 merge**: reverted UnionFindStEph ClonePreservesView bound changes (union find work was broken), ungated ClonePreservesView import in KruskalStEph (exec trait, not spec-only).
+4. **Eliminated last Verus warning**: replaced `derive(Clone)` on PQEntry in PrimStEph.rs with manual Clone impl following eq/clone standard.
+5. **Regenerated hole analysis**: 76 holes across 4 chapters.
 
-### Hole report (103 total)
+### Agent results
+
+| Agent | Files | Delta | Key work |
+|-------|-------|-------|----------|
+| 1 | KruskalStEph, PrimStEph, float.rs | -3 | sort_edges_by_weight, 2x mst_weight proved; ClonePreservesView for WrappedF64 |
+| 2 | TSPApproxStEph, BoruvkaStEph | -6 | get_neighbors, get_edge_weight, bridge_star_partition, boruvka_mst_with_seed, mst_weight, PartialEq fix |
+| 3 | (no changes) | 0 | Stalled on /tmp write permissions |
+| 4 | BSTRBMtEph, BSTSplayMtEph, BSTAVLMtEph | -6 | rotate_left/right, flip_colors, fix_up, insert_link, splay; 32 trigger annotations |
+| 5 | AVLTreeSeqSt*, OrderedTableMtEph, AugOrderedTableMtEph, BSTSetAVLMtEph | -12 | Iterator external_body removal (4 files clean), BSTSetAVLMtEph BTreeSet removal |
+
+### Hole report (76 total across 4 chapters)
 
 | # | Chap | File | Holes | Type |
 |---|------|------|-------|------|
-| 1 | 37 | AVLTreeSeqStEph.rs | 2 | 2 external_body (iterator) |
-| 2 | 37 | AVLTreeSeqStPer.rs | 2 | 2 external_body (iterator) |
-| 3 | 37 | BSTRBMtEph.rs | 8 | 7 external_body + 1 assume |
-| 4 | 37 | BSTSetAVLMtEph.rs | 17 | 15 external_body + 2 external |
-| 5 | 37 | BSTSetRBMtEph.rs | 16 | 14 external_body + 2 external |
-| 6 | 37 | BSTSetSplayMtEph.rs | 13 | 13 external_body |
-| 7 | 37 | BSTSplayMtEph.rs | 6 | 5 external_body + 1 assume |
-| 8 | 43 | AugOrderedTableMtEph.rs | 2 | 2 external_body (iterator) |
-| 9 | 43 | OrderedTableMtEph.rs | 2 | 2 external_body (iterator) |
-| 10 | 64 | SpanTreeStEph.rs | 2 | 2 external_body |
-| 11 | 64 | TSPApproxStEph.rs | 4 | 4 external_body |
-| 12 | 65 | KruskalStEph.rs | 3 | 3 external_body |
-| 13 | 65 | PrimStEph.rs | 3 | 2 external_body + 1 assume (float TotalOrder) |
-| 14 | 65 | UnionFindStEph.rs | 5 | 5 external_body |
-| 15 | 66 | BoruvkaMtEph.rs | 12 | 11 external_body + 1 external |
-| 16 | 66 | BoruvkaStEph.rs | 6 | 5 external_body + 1 external |
+| 1 | 37 | BSTRBMtEph.rs | 3 | 2 external_body (filter/reduce_parallel) + 1 assume (height) |
+| 2 | 37 | BSTSplayMtEph.rs | 5 | 4 external_body (clone, build_balanced, filter/reduce_parallel) + 1 assume (height) |
+| 3 | 37 | BSTSetAVLMtEph.rs | 13 | 8 assume (obeys_feq_clone) + 2 external_body (filter, reduce) + 3 external_body (union, intersection, difference) |
+| 4 | 37 | BSTSetRBMtEph.rs | 16 | Same iterator/BTreeSet pattern as BSTSetAVLMtEph — needs same rewrite |
+| 5 | 37 | BSTSetSplayMtEph.rs | 13 | Same iterator/BTreeSet pattern as BSTSetAVLMtEph — needs same rewrite |
+| 6 | 64 | SpanTreeStEph.rs | 2 | star_contract closure interface + edges() missing wf ensures |
+| 7 | 64 | TSPApproxStEph.rs | 2 | euler_tour_dfs (mutable visited set) + euler_tour (blocked by it) |
+| 8 | 65 | UnionFindStEph.rs | 5 | 5 external_body |
+| 9 | 65 | KruskalStEph.rs | 1 | 1 external_body (kruskal_mst — depends on UnionFind) |
+| 10 | 65 | PrimStEph.rs | 2 | 1 external_body + 1 assume (float TotalOrder) |
+| 11 | 66 | BoruvkaMtEph.rs | 12 | 11 external_body + 1 external |
+| 12 | 66 | BoruvkaStEph.rs | 2 | vertex_bridges (iterator finiteness) + boruvka_mst (termination proof) |
 
-### R75 agent assignments
+### Notes for R76 planning
 
-| Agent | Target | Holes | Files |
-|-------|--------|-------|-------|
-| 1 | Chap65 MST + Union-Find | 11 | UnionFindStEph, KruskalStEph, PrimStEph |
-| 2 | Chap64 graphs + Chap66 BoruvkaStEph | 12 | SpanTreeStEph, TSPApproxStEph, BoruvkaStEph |
-| 3 | Chap66 BoruvkaMtEph | 12 | BoruvkaMtEph |
-| 4 | Chap37 BSTRBMtEph + BSTSplayMtEph | 14 | BSTRBMtEph, BSTSplayMtEph |
-| 5 | Chap37 BSTSetAVLMtEph + iterators | 25 | BSTSetAVLMtEph, AVLTreeSeqSt*, OrderedTableMtEph, AugOrderedTableMtEph |
+- **BSTSetRBMtEph (16) and BSTSetSplayMtEph (13)** need the same BTreeSet removal rewrite that Agent 5 did for BSTSetAVLMtEph. Agent 5's report says it "pioneers the pattern."
+- **UnionFindStEph (5)** — Agent 1 tried ClonePreservesView approach and failed. We have at least one clean UnionFind file elsewhere that may provide patterns.
+- **BoruvkaMtEph (12)** — Agent 3 stalled on /tmp permissions. Largest single-file hole count remaining. Needs a fresh attempt.
+- **Chap37 has 50 of 76 holes** — most are structural (eq/clone assumes, thread-spawn boundaries, recursive Clone cycle errors in Verus).
+- **Agents need rebase** before R76 can start. User must approve.
 
-Prompts are at `plans/r75-agent{1-5}-prompt.md`.
+### R75 session commits (oldest to newest)
 
-### Remaining 29 holes NOT assigned to R75 agents
-
-- BSTSetRBMtEph.rs (16 holes) — same iterator pattern as BSTSetAVLMtEph, deferred to R76
-- BSTSetSplayMtEph.rs (13 holes) — same iterator pattern, deferred to R76
-
-### What to do when agents finish
-
-1. Read reports: `plans/agent{1-5}-round75-report.md`
-2. Check agent status: `scripts/survey-agents.sh`
-3. Merge sequentially: `scripts/merge-agent.sh agent1/ready`, validate, repeat
-4. After all merges: `scripts/all-holes-by-chap.sh` to refresh analysis
-5. Commit, push, then ask user before rebasing agents
-6. Update daily proof table
+```
+084476d4b R75: Chap37 BSTRBMtEph -5 holes, BSTSplayMtEph -1 hole, trigger fixes (agent4 FF)
+8f9d46a7a Merge branch 'agent5/ready'
+98988dd3f Merge branch 'agent2/ready'
+f5b4217e0 R75 merge: 3 agents, -24 holes (103→79), 42 clean chapters
+e3d24e6e5 Merge branch 'agent1/ready'
+cfd7ca59b Fix agent1 merge: revert UnionFind ClonePreservesView bounds, ungate KruskalStEph import
+c68744aa0 R75 final: 4 agents merged, -27 holes (103→76), 42 clean chapters
+57542019b Replace derive(Clone) with manual Clone impl for PQEntry, eliminating last warning
+```
 
 ### Daily proof table
 
@@ -68,3 +70,10 @@ Prompts are at `plans/r75-agent{1-5}-prompt.md`.
 |-------|-------------|-----------|-------|-------------|-------------|----------|
 | R73   | —           | 169       | —     | 40          | 6           | 4735     |
 | R74   | 169         | 103       | -66   | 41          | 5           | 4742     |
+| R75   | 103         | 76        | -27   | 42          | 4           | 4794     |
+
+### What to do next
+
+1. Rebase agents: `scripts/rebase-agents.sh` (user must approve — agents may have stale state)
+2. Write R76 prompts targeting remaining 76 holes
+3. Priority targets: BSTSetRBMtEph/BSTSetSplayMtEph (BTreeSet rewrite), UnionFindStEph, BoruvkaMtEph
