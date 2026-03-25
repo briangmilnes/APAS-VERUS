@@ -18,7 +18,6 @@ pub mod KruskalStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full;
     use crate::vstdplus::pervasives_plus::pervasives_plus::vec_swap;
-    #[cfg(verus_keep_ghost)]
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
     use crate::SetLit;
     #[cfg(verus_keep_ghost)]

@@ -18,8 +18,6 @@ pub mod UnionFindStEph {
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::*;
     use crate::vstdplus::feq::feq::feq;
     use std::hash::Hash;
-    #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
 
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
@@ -33,7 +31,7 @@ pub mod UnionFindStEph {
     // 4. type definitions
 
     #[verifier::reject_recursive_types(V)]
-    pub struct UnionFindStEph<V: StT + Hash + ClonePreservesView> {
+    pub struct UnionFindStEph<V: StT + Hash> {
         pub parent: HashMapWithViewPlus<V, V>,
         pub rank: HashMapWithViewPlus<V, usize>,
         pub elements: Vec<V>,
@@ -49,7 +47,7 @@ pub mod UnionFindStEph {
         pub roots: Map<<V as View>::V, <V as View>::V>,
     }
 
-    impl<V: StT + Hash + ClonePreservesView> View for UnionFindStEph<V> {
+    impl<V: StT + Hash> View for UnionFindStEph<V> {
         type V = UnionFindStEphV<V>;
         open spec fn view(&self) -> Self::V {
             UnionFindStEphV {
@@ -67,7 +65,7 @@ pub mod UnionFindStEph {
 
     // 8. traits
 
-    pub trait UnionFindStEphTrait<V: StT + Hash + ClonePreservesView>: Sized + View<V = UnionFindStEphV<V>> {
+    pub trait UnionFindStEphTrait<V: StT + Hash>: Sized + View<V = UnionFindStEphV<V>> {
         spec fn spec_unionfindsteph_wf(&self) -> bool;
 
         /// Create a new empty Union-Find structure.
@@ -159,7 +157,7 @@ pub mod UnionFindStEph {
 
     // 9. impls
 
-    impl<V: StT + Hash + ClonePreservesView> UnionFindStEphTrait<V> for UnionFindStEph<V> {
+    impl<V: StT + Hash> UnionFindStEphTrait<V> for UnionFindStEph<V> {
         /// Well-formedness invariant for the Union-Find structure.
         open spec fn spec_unionfindsteph_wf(&self) -> bool {
             // Key model requirements for hash collections.
@@ -221,12 +219,10 @@ pub mod UnionFindStEph {
         #[verifier::external_body]
         fn insert(&mut self, v: V) {
             if !self.parent.contains_key(&v) {
-                let v1 = v.clone_view();
-                let v2 = v.clone_view();
-                let v3 = v.clone_view();
-                self.parent.insert(v1, v2);
-                self.rank.insert(v3, 0usize);
-                self.elements.push(v);
+                self.parent.insert(v.clone(), v.clone());
+                self.rank.insert(v.clone(), 0usize);
+                self.elements.push(v.clone());
+                self.roots = Ghost(self.roots@.insert(v@, v@));
             }
         }
 
