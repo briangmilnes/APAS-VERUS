@@ -34,7 +34,7 @@ pub mod PrimStEph {
     pub struct PrimStEph;
 
     /// Priority queue entry for Prim's algorithm.
-    #[derive(Clone, PartialEq, Eq)]
+    #[derive(PartialEq, Eq)]
     pub struct PQEntry<V: StT + Ord + Clone> {
         pub priority: WrappedF64,
         pub vertex: V,
@@ -355,6 +355,18 @@ pub mod PrimStEph {
                     total = total.dist_add(&edge.2);
                 },
             }
+        }
+    }
+
+    // 12. derive impls in verus!
+
+    impl<V: StT + Ord + Clone> Clone for PQEntry<V> {
+        fn clone(&self) -> (result: Self)
+            ensures result@ == self@,
+        {
+            let result = PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() };
+            proof { assume(result@ == self@); }
+            result
         }
     }
 
