@@ -20,53 +20,51 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-⚠ BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:62: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        58 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-        60 |         {
-        61 |             let equal = self.0 == other.0 && self.1 == other.1 && self.2.eq(&other.2) && self.3 == other.3;
-        63 |             equal
-        64 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:190: error: fn_missing_ensures - fn hash_coin_flips_mt — exec fn should have ensures
-       177 |     fn hash_coin(seed: u64, round: usize, index: usize) -> bool {
-            ...
-       188 |     ///
-       189 |     /// - Work O(n), Span O(log n) — parallel hash-based coin generation via ParaPair!.
-       191 |         vertices: Arc<Vec<V>>,
-       192 |         seed: u64,
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:259: error: fn_missing_ensures - fn compute_remaining_mt — exec fn should have ensures
-       190 |     fn hash_coin_flips_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
-            ...
-       257 |     ///
-       258 |     /// - Work O(n), Span O(log n) — parallel filter via ParaPair!.
-       260 |         vertices: Arc<Vec<V>>,
-       261 |         partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:319: error: fn_missing_ensures - fn collect_mst_labels_mt — exec fn should have ensures
-       259 |     fn compute_remaining_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
-            ...
-       317 |     ///
-       318 |     /// - Work O(n), Span O(log n) — parallel label extraction via ParaPair!.
-       320 |         keys: Arc<Vec<V>>,
-       321 |         partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:379: error: fn_missing_ensures - fn build_partition_map_mt — exec fn should have ensures
-       319 |     fn collect_mst_labels_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
-            ...
-       377 |     ///
-       378 |     /// - Work O(n), Span O(log n) — parallel map building via ParaPair!.
-       380 |         vertices: Arc<Vec<V>>,
-       381 |         partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:632: error: fn_missing_ensures - fn filter_tail_to_head_mt — exec fn should have ensures
-       566 |     pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
-            ...
-       630 |     ///
-       631 |     /// - Claude-Opus-4.6: Work O(n), Span O(log n) — parallel divide-and-conquer via ParaPair!.
-       633 |         vertices: Arc<Vec<V>>,
-       634 |         bridges: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:176: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
-ℹ BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:69: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
+❌ BoruvkaMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaMtEph.rs:49: error: external - #[verifier::external]
+        50 |     impl<V: PartialEq + Copy> PartialEq for LabeledEdge<V> {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaMtEph.rs:166: error: external_body - #[verifier::external_body]
+       167 |     fn hash_coin_flips_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaMtEph.rs:235: error: external_body - #[verifier::external_body]
+       236 |     fn compute_remaining_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaMtEph.rs:295: error: external_body - #[verifier::external_body]
+       296 |     fn collect_mst_labels_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaMtEph.rs:355: error: external_body - #[verifier::external_body]
+       356 |     fn build_partition_map_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaMtEph.rs:434: error: external_body - #[verifier::external_body]
+       435 |     pub fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaMtEph.rs:520: error: external_body [blocked_by: filter_tail_to_head_mt] - #[verifier::external_body]
+       521 |     pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaMtEph.rs:586: error: external_body - #[verifier::external_body]
+       587 |     fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaMtEph.rs:681: error: external_body [blocked_by: reroute_edges_mt] - #[verifier::external_body]
+       682 |     pub fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaMtEph.rs:801: error: external_body - #[verifier::external_body]
+       802 |     fn reroute_edges_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaMtEph.rs:883: error: external_body [blocked_by: boruvka_mst_mt] - #[verifier::external_body]
+       884 |     pub fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + Copy + 'static>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaMtEph.rs:937: error: external_body - #[verifier::external_body]
+       938 |     pub fn mst_weight<V: StTInMtT + Hash + Ord + Copy + 'static>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaMtEph.rs:152: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
+   Holes: 12 total
+      11 × external_body
+         8 × root cause
+         3 × downstream (blocked by root causes)
+      1 × external
    Info: 1 × structural_false_positive
+      1 × OPAQUE_EXTERNAL
+❌ BoruvkaStEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaStEph.rs:210: error: external_body - #[verifier::external_body]
+       211 |         fn vertex_bridges<V: HashOrd + Copy>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaStEph.rs:378: error: external_body [blocked_by: vertex_bridges] - #[verifier::external_body]
+       379 |         fn boruvka_mst<V: HashOrd + Copy>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaStEph.rs:67: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
+   Holes: 2 total
+      2 × external_body
+         1 × root cause
+         1 × downstream (blocked by root causes)
+   Info: 1 × structural_false_positive
+      1 × STD_TRAIT_IMPL
 
 =================================================================
 2. Depends Upon
@@ -91,8 +89,8 @@ BoruvkaStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   1 clean (no holes, no errors; 50%)
-   1 holed (holes or errors, 50%)
+   0 clean (no holes, no errors; 0%)
+   2 holed (holes or errors, 100%)
    2 total
 
 Proof Functions:
@@ -101,33 +99,35 @@ Proof Functions:
    0 total
 
 Function Specs:
-   26 exec fns with complete spec (requires+ensures) (59%)
-   6 exec fns missing spec (13%)
-   12 proof/spec fns clean (27%)
+   31 exec fns with complete spec (requires+ensures) (75%)
+   1 exec fns missing spec (2%)
+   9 proof/spec fns clean (21%)
    0 proof/spec fns with holes (0%)
-   44 total fns
+   41 total fns
 
 
-Holes Found: 0 (actionable)
-Real Proof Targets: 0 (all actionable)
-
-Warnings: 6 total
-   5 × fn_missing_ensures
-   1 × assume_eq_clone_workaround
+Holes Found: 14 (actionable)
+   13 × external_body (92%)
+      9 × root cause
+      4 × downstream (blocked by root causes)
+   1 × external (7%)
+Real Proof Targets: 14 (all actionable)
 
 Structural (info only): 2
    1 × STD_TRAIT_IMPL
    1 × OPAQUE_EXTERNAL
 
-No proof holes found! All proofs are complete.
-
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-25 10:10:07 -07:00
-Ended:     2026-03-25 10:10:07 -07:00
-Duration:  15ms
+Started:   2026-03-25 10:02:10 -07:00
+Ended:     2026-03-25 10:02:10 -07:00
+Duration:  28ms
 
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
-c/Chap66/analyses/veracity-review-verus-proof-holes.log
+26-03-25 10:02:10 -07:00
+Ended:     2026-03-25 10:02:10 -07:00
+Duration:  28ms
+
+Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log

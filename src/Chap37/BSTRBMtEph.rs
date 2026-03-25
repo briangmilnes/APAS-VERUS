@@ -146,6 +146,7 @@ pub mod BSTRBMtEph {
         }
     }
 
+    // veracity: no_requires
     fn is_red<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (red: bool)
         ensures
             (link is None) ==> !red,
@@ -156,6 +157,7 @@ pub mod BSTRBMtEph {
         }
     }
 
+    // veracity: no_requires
     fn size_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (size: N)
         ensures
             (link is None) ==> size == 0,
@@ -166,6 +168,7 @@ pub mod BSTRBMtEph {
         }
     }
 
+    // veracity: no_requires
     fn update<T: StTInMtT + Ord + TotalOrder>(node: &mut Node<T>)
         ensures
             node.left == old(node).left,
