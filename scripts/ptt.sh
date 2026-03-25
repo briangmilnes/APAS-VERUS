@@ -7,7 +7,7 @@ set -uo pipefail
 
 # Wait for 5GB free RAM before running. Poll every 5s, give up after 120s.
 wait_for_ram() {
-    local need_kb=$((6 * 1024 * 1024))
+    local need_kb=$((9 * 1024 * 1024))
     local waited=0
     while true; do
         local avail_kb
@@ -16,10 +16,10 @@ wait_for_ram() {
             return 0
         fi
         if [ "$waited" -ge 120 ]; then
-            echo "ERROR: only $((avail_kb / 1024))MB free after 120s (need 6GB). Aborting."
+            echo "ERROR: only $((avail_kb / 1024))MB free after 120s (need 9GB). Aborting."
             exit 1
         fi
-        echo "Waiting for RAM: $((avail_kb / 1024))MB free, need 6144MB (${waited}s elapsed)..."
+        echo "Waiting for RAM: $((avail_kb / 1024))MB free, need 9216MB (${waited}s elapsed)..."
         sleep 5
         waited=$((waited + 5))
     done
