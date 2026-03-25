@@ -29,9 +29,11 @@ pub mod BSTAVLMtEph {
 
     // 2. imports
 
+    #[cfg(verus_keep_ghost)]
     use crate::Chap37::BSTAVLStEph::BSTAVLStEph::{avl_balanced, tree_is_avl};
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
     // 7. proof fns/broadcast groups
@@ -401,7 +403,7 @@ pub mod BSTAVLMtEph {
     // 11. top level coarse locking
 
     /// Lock predicate: the inner tree satisfies BST ordering and fits in usize.
-    struct BSTAVLMtEphInv<T> {
+    pub(crate) struct BSTAVLMtEphInv<T> {
         _phantom: PhantomData<T>,
     }
 
@@ -442,7 +444,7 @@ pub mod BSTAVLMtEph {
 
         fn new() -> (tree: Self)
             ensures tree.spec_bstavlmteph_wf(),
-                    tree@.is_leaf();
+                    tree@ is Leaf;
 
         fn insert(&mut self, value: T) -> (r: Result<(), ()>)
             requires old(self).spec_bstavlmteph_wf(),
@@ -477,8 +479,10 @@ pub mod BSTAVLMtEph {
         fn maximum(&self) -> (max: Option<T>) where T: Clone + Eq
             ensures true;
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>) where T: Clone + Eq
+            requires self.spec_bstavlmteph_wf(), obeys_feq_clone::<T>(),
             ensures true;
         fn pre_order(&self) -> (seq: ArraySeqStPerS<T>) where T: Clone + Eq
+            requires self.spec_bstavlmteph_wf(), obeys_feq_clone::<T>(),
             ensures true;
     }
 

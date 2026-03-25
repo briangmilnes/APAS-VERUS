@@ -468,16 +468,16 @@ pub mod Chap37 {
     pub mod BSTPlainStEph;
     pub mod BSTPlainMtEph;
     pub mod BSTAVLStEph;
-    // pub mod BSTAVLMtEph;  // broken: stale imports, never cargo-compiled
+    pub mod BSTAVLMtEph;
     pub mod BSTRBStEph;
-    // pub mod BSTRBMtEph;  // broken: compile errors, never cargo-compiled
+    pub mod BSTRBMtEph;
     pub mod BSTSplayStEph;
     pub mod BSTSplayMtEph;
     pub mod BSTBBAlphaStEph;
     pub mod BSTBBAlphaMtEph;
     pub mod BSTSetPlainMtEph;
-    // pub mod BSTSetAVLMtEph;  // broken: depends on BSTAVLMtEph
-    // pub mod BSTSetRBMtEph;  // broken: depends on BSTRBMtEph
+    pub mod BSTSetAVLMtEph;
+    pub mod BSTSetRBMtEph;
     pub mod BSTSetSplayMtEph;
     pub mod BSTSetBBAlphaMtEph;
 }

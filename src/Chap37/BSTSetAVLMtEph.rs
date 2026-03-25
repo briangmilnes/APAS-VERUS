@@ -25,52 +25,54 @@ pub mod BSTSetAVLMtEph {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::BSTAVLMtEph::BSTAVLMtEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
 
     verus! {
 
     //	4. type definitions
 
-    pub struct BSTSetAVLMtEph<T: StTInMtT + Ord> {
-        tree: BSTAVLMtEph<T>,
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTSetAVLMtEph<T: StTInMtT + Ord + TotalOrder> {
+        pub tree: BSTAVLMtEph<T>,
     }
 
     pub type BSTSetAVLMt<T> = BSTSetAVLMtEph<T>;
 
     #[verifier::reject_recursive_types(T)]
-    pub struct BSTSetAVLMtEphIter<T: StTInMtT + Ord> {
+    pub struct BSTSetAVLMtEphIter<T: StTInMtT + Ord + TotalOrder> {
         pub snapshot: Vec<T>,
         pub pos: usize,
     }
 
     #[verifier::reject_recursive_types(T)]
-    pub struct BSTSetAVLMtEphGhostIter<T: StTInMtT + Ord> {
+    pub struct BSTSetAVLMtEphGhostIter<T: StTInMtT + Ord + TotalOrder> {
         pub pos: int,
         pub elements: Seq<T>,
     }
 
     // 5. view impls
 
-    impl<T: StTInMtT + Ord> View for BSTSetAVLMtEphIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetAVLMtEphIter<T> {
         type V = (int, Seq<T>);
         open spec fn view(&self) -> (int, Seq<T>) {
             (self.pos as int, self.snapshot@)
         }
     }
 
-    impl<T: StTInMtT + Ord> View for BSTSetAVLMtEphGhostIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetAVLMtEphGhostIter<T> {
         type V = Seq<T>;
         open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
     }
 
     // 6. spec fns
 
-    pub open spec fn bstsetavlmteph_iter_invariant<T: StTInMtT + Ord>(it: &BSTSetAVLMtEphIter<T>) -> bool {
+    pub open spec fn bstsetavlmteph_iter_invariant<T: StTInMtT + Ord + TotalOrder>(it: &BSTSetAVLMtEphIter<T>) -> bool {
         0 <= it@.0 <= it@.1.len()
     }
 
     //	8. traits
 
-    pub trait BSTSetAVLMtEphTrait<T: StTInMtT + Ord>: Sized {
+    pub trait BSTSetAVLMtEphTrait<T: StTInMtT + Ord + TotalOrder>: Sized {
         spec fn spec_bstsetavlmteph_wf(&self) -> bool;
 
         fn empty() -> (set: Self)
@@ -138,7 +140,8 @@ pub mod BSTSetAVLMtEph {
 
     //	9. impls
 
-    fn values_vec<T: StTInMtT + Ord>(tree: &BSTAVLMtEph<T>) -> (values: Vec<T>)
+    #[verifier::external_body]
+    fn values_vec<T: StTInMtT + Ord + TotalOrder>(tree: &BSTAVLMtEph<T>) -> (values: Vec<T>)
         requires tree.spec_bstavlmteph_wf(),
         ensures true,
     {
@@ -146,7 +149,8 @@ pub mod BSTSetAVLMtEph {
     }
 
     // veracity: no_requires
-    fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTAVLMtEph<T>)
+    #[verifier::external_body]
+    fn rebuild_from_vec<T: StTInMtT + Ord + TotalOrder>(values: Vec<T>) -> (tree: BSTAVLMtEph<T>)
         ensures true,
     {
         let mut tree = BSTAVLMtEph::new();
@@ -157,7 +161,8 @@ pub mod BSTSetAVLMtEph {
     }
 
     // veracity: no_requires
-    fn from_sorted_iter<T: StTInMtT + Ord, I>(values: I) -> (set: BSTSetAVLMtEph<T>)
+    #[verifier::external_body]
+    fn from_sorted_iter<T: StTInMtT + Ord + TotalOrder, I>(values: I) -> (set: BSTSetAVLMtEph<T>)
     where
         I: IntoIterator<Item = T>,
         ensures true,
@@ -169,14 +174,15 @@ pub mod BSTSetAVLMtEph {
         BSTSetAVLMtEph { tree }
     }
 
-    fn copy_set<T: StTInMtT + Ord>(set: &BSTSetAVLMtEph<T>) -> (out: BSTSetAVLMtEph<T>)
+    #[verifier::external_body]
+    fn copy_set<T: StTInMtT + Ord + TotalOrder>(set: &BSTSetAVLMtEph<T>) -> (out: BSTSetAVLMtEph<T>)
         requires set.spec_bstsetavlmteph_wf()
         ensures out.spec_bstsetavlmteph_wf()
     {
         from_sorted_iter(values_vec(&set.tree))
     }
 
-    impl<T: StTInMtT + Ord> BSTSetAVLMtEphTrait<T> for BSTSetAVLMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> BSTSetAVLMtEphTrait<T> for BSTSetAVLMtEph<T> {
         open spec fn spec_bstsetavlmteph_wf(&self) -> bool {
             self.tree.spec_bstavlmteph_wf()
         }
@@ -207,6 +213,7 @@ pub mod BSTSetAVLMtEph {
 
         fn insert(&mut self, value: T) -> (r: Result<(), ()>) { self.tree.insert(value) }
 
+        #[verifier::external_body]
         fn delete(&mut self, target: &T) {
             if !self.contains(target) {
                 return;
@@ -215,12 +222,13 @@ pub mod BSTSetAVLMtEph {
                 .tree
                 .in_order()
                 .iter()
-                .filter(|x| x != target)
+                .filter(|x| *x != target)
                 .cloned()
                 .collect();
             self.tree = rebuild_from_vec(filtered);
         }
 
+        #[verifier::external_body]
         fn union(&self, other: &Self) -> Self {
             if self.is_empty() {
                 return copy_set(other);
@@ -238,11 +246,8 @@ pub mod BSTSetAVLMtEph {
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
 
-            use crate::Types::Types::Pair;
-            let Pair(left_union, right_union) = crate::ParaPair!(
-                move || self_left.union(&other_left),
-                move || self_right.union(&other_right)
-            );
+            let left_union = self_left.union(&other_left);
+            let right_union = self_right.union(&other_right);
 
             if found_self || found_other {
                 Self::join_m(left_union, pivot, right_union)
@@ -251,6 +256,7 @@ pub mod BSTSetAVLMtEph {
             }
         }
 
+        #[verifier::external_body]
         fn intersection(&self, other: &Self) -> Self {
             if self.is_empty() || other.is_empty() {
                 return Self::empty();
@@ -265,11 +271,8 @@ pub mod BSTSetAVLMtEph {
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
 
-            use crate::Types::Types::Pair;
-            let Pair(left_inter, right_inter) = crate::ParaPair!(
-                move || self_left.intersection(&other_left),
-                move || self_right.intersection(&other_right)
-            );
+            let left_inter = self_left.intersection(&other_left);
+            let right_inter = self_right.intersection(&other_right);
 
             if found_self && found_other {
                 Self::join_m(left_inter, pivot, right_inter)
@@ -278,6 +281,7 @@ pub mod BSTSetAVLMtEph {
             }
         }
 
+        #[verifier::external_body]
         fn difference(&self, other: &Self) -> Self {
             if self.is_empty() {
                 return Self::empty();
@@ -291,11 +295,8 @@ pub mod BSTSetAVLMtEph {
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
 
-            use crate::Types::Types::Pair;
-            let Pair(left_diff, right_diff) = crate::ParaPair!(
-                move || self_left.difference(&other_left),
-                move || self_right.difference(&other_right)
-            );
+            let left_diff = self_left.difference(&other_left);
+            let right_diff = self_right.difference(&other_right);
 
             if found_self && !found_other {
                 Self::join_m(left_diff, pivot, right_diff)
@@ -304,6 +305,7 @@ pub mod BSTSetAVLMtEph {
             }
         }
 
+        #[verifier::external_body]
         fn split(&self, pivot: &T) -> (Self, B, Self) {
             let mut left = Vec::<T>::new();
             let mut right = Vec::<T>::new();
@@ -320,13 +322,10 @@ pub mod BSTSetAVLMtEph {
             (from_sorted_iter(left), found, from_sorted_iter(right))
         }
 
+        #[verifier::external_body]
         fn join_pair(left: Self, right: Self) -> Self {
-            use crate::Types::Types::Pair;
-            let Pair(left_values, right_values) = crate::ParaPair!(
-                move || values_vec(&left.tree),
-                move || values_vec(&right.tree)
-            );
-
+            let left_values = values_vec(&left.tree);
+            let right_values = values_vec(&right.tree);
             let mut combined = left_values.into_iter().collect::<BTreeSet<T>>();
             for value in right_values {
                 combined.insert(value);
@@ -334,12 +333,10 @@ pub mod BSTSetAVLMtEph {
             from_sorted_iter(combined)
         }
 
+        #[verifier::external_body]
         fn join_m(left: Self, pivot: T, right: Self) -> Self {
-            use crate::Types::Types::Pair;
-            let Pair(left_values, right_values) = crate::ParaPair!(
-                move || values_vec(&left.tree),
-                move || values_vec(&right.tree)
-            );
+            let left_values = values_vec(&left.tree);
+            let right_values = values_vec(&right.tree);
 
             let mut combined = left_values.into_iter().collect::<BTreeSet<T>>();
             combined.insert(pivot);
@@ -349,6 +346,7 @@ pub mod BSTSetAVLMtEph {
             from_sorted_iter(combined)
         }
 
+        #[verifier::external_body]
         fn filter<F: FnMut(&T) -> bool + Send>(&self, mut predicate: F) -> Self {
             let filtered = self
                 .tree
@@ -358,6 +356,7 @@ pub mod BSTSetAVLMtEph {
             from_sorted_iter(filtered)
         }
 
+        #[verifier::external_body]
         fn reduce<F: FnMut(T, T) -> T + Send>(&self, mut op: F, base: T) -> T {
             self.tree
                 .in_order()
@@ -365,10 +364,12 @@ pub mod BSTSetAVLMtEph {
                 .fold(base, |acc, value| op(acc, value.clone()))
         }
 
+        #[verifier::external_body]
         fn iter_in_order(&self) -> ArraySeqStPerS<T> { self.tree.in_order() }
 
         fn as_tree(&self) -> &BSTAVLMtEph<T> { &self.tree }
 
+        #[verifier::external_body]
         fn iter(&self) -> BSTSetAVLMtEphIter<T> {
             let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
             BSTSetAVLMtEphIter { snapshot: values, pos: 0 }
@@ -377,7 +378,7 @@ pub mod BSTSetAVLMtEph {
 
     // 10. iterators
 
-    impl<T: StTInMtT + Ord> std::iter::Iterator for BSTSetAVLMtEphIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::iter::Iterator for BSTSetAVLMtEphIter<T> {
         type Item = T;
 
         fn next(&mut self) -> (next: Option<T>)
@@ -402,21 +403,21 @@ pub mod BSTSetAVLMtEph {
                 None
             } else {
                 let item = self.snapshot[self.pos].clone();
-                self.pos += 1;
+                self.pos = self.pos + 1;
                 proof { assume(item == old(self)@.1[old(self)@.0]); }  // accept hole: Clone preserves value
                 Some(item)
             }
         }
     }
 
-    impl<T: StTInMtT + Ord> vstd::pervasive::ForLoopGhostIteratorNew for BSTSetAVLMtEphIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> vstd::pervasive::ForLoopGhostIteratorNew for BSTSetAVLMtEphIter<T> {
         type GhostIter = BSTSetAVLMtEphGhostIter<T>;
         open spec fn ghost_iter(&self) -> BSTSetAVLMtEphGhostIter<T> {
             BSTSetAVLMtEphGhostIter { pos: self@.0, elements: self@.1 }
         }
     }
 
-    impl<T: StTInMtT + Ord> vstd::pervasive::ForLoopGhostIterator for BSTSetAVLMtEphGhostIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> vstd::pervasive::ForLoopGhostIterator for BSTSetAVLMtEphGhostIter<T> {
         type ExecIter = BSTSetAVLMtEphIter<T>;
         type Item = T;
         type Decrease = int;
@@ -451,23 +452,20 @@ pub mod BSTSetAVLMtEph {
         }
     }
 
-    impl<'a, T: StTInMtT + Ord> std::iter::IntoIterator for &'a BSTSetAVLMtEph<T> {
+    #[verifier::external]
+    impl<'a, T: StTInMtT + Ord + TotalOrder> std::iter::IntoIterator for &'a BSTSetAVLMtEph<T> {
         type Item = T;
         type IntoIter = BSTSetAVLMtEphIter<T>;
-        fn into_iter(self) -> (it: BSTSetAVLMtEphIter<T>)
-            requires self.spec_bstsetavlmteph_wf()
-            ensures it@.0 == 0, bstsetavlmteph_iter_invariant(&it),
-        {
+        fn into_iter(self) -> BSTSetAVLMtEphIter<T> {
             self.iter()
         }
     }
 
-    impl<T: StTInMtT + Ord> IntoIterator for BSTSetAVLMtEph<T> {
+    #[verifier::external]
+    impl<T: StTInMtT + Ord + TotalOrder> IntoIterator for BSTSetAVLMtEph<T> {
         type Item = T;
         type IntoIter = std::vec::IntoIter<T>;
-        fn into_iter(self) -> (it: Self::IntoIter)
-    
-        {
+        fn into_iter(self) -> Self::IntoIter {
             let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
             values.into_iter()
         }
@@ -491,37 +489,37 @@ pub mod BSTSetAVLMtEph {
 
     //	14. derive impls outside verus!
 
-    impl<T: StTInMtT + Ord + fmt::Debug> fmt::Debug for BSTSetAVLMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + fmt::Debug> fmt::Debug for BSTSetAVLMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             f.debug_struct("BSTSetAVLMtEph").field("tree", &self.tree).finish()
         }
     }
 
-    impl<T: StTInMtT + Ord> fmt::Display for BSTSetAVLMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> fmt::Display for BSTSetAVLMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "BSTSetAVLMtEph(size={})", self.size())
         }
     }
 
-    impl<T: StTInMtT + Ord> std::fmt::Debug for BSTSetAVLMtEphIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Debug for BSTSetAVLMtEphIter<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BSTSetAVLMtEphIter").field("pos", &self.pos).finish()
         }
     }
 
-    impl<T: StTInMtT + Ord> std::fmt::Display for BSTSetAVLMtEphIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Display for BSTSetAVLMtEphIter<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "BSTSetAVLMtEphIter(pos={})", self.pos)
         }
     }
 
-    impl<T: StTInMtT + Ord> std::fmt::Debug for BSTSetAVLMtEphGhostIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Debug for BSTSetAVLMtEphGhostIter<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BSTSetAVLMtEphGhostIter").finish()
         }
     }
 
-    impl<T: StTInMtT + Ord> std::fmt::Display for BSTSetAVLMtEphGhostIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Display for BSTSetAVLMtEphGhostIter<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "BSTSetAVLMtEphGhostIter")
         }

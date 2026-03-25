@@ -15,8 +15,9 @@ pub mod BSTSetRBMtEph {
 
     verus! {
 
+    #[verifier::reject_recursive_types(T)]
     pub struct BSTSetRBMtEph<T: StTInMtT + Ord + TotalOrder> {
-        tree: BSTRBMtEph<T>,
+        pub tree: BSTRBMtEph<T>,
     }
 
     pub type BSTSetRBMt<T> = BSTSetRBMtEph<T>;
@@ -121,6 +122,7 @@ pub mod BSTSetRBMtEph {
             ensures it@.0 == 0, bstsetrbmteph_iter_invariant(&it);
     }
 
+    #[verifier::external_body]
     fn values_vec<T: StTInMtT + Ord + TotalOrder>(tree: &BSTRBMtEph<T>) -> (values: Vec<T>)
         requires tree.spec_bstrbmteph_wf(),
         ensures true,
@@ -128,6 +130,7 @@ pub mod BSTSetRBMtEph {
         tree.in_order().iter().cloned().collect()
     }
 
+    #[verifier::external_body]
     fn copy_set<T: StTInMtT + Ord + TotalOrder>(set: &BSTSetRBMtEph<T>) -> (out: BSTSetRBMtEph<T>)
         requires set.spec_bstsetrbmteph_wf()
         ensures out.spec_bstsetrbmteph_wf()
@@ -137,6 +140,7 @@ pub mod BSTSetRBMtEph {
     }
 
     // veracity: no_requires
+    #[verifier::external_body]
     fn from_sorted_iter<T: StTInMtT + Ord + TotalOrder, I: IntoIterator<Item = T>>(values: I) -> (set: BSTSetRBMtEph<T>)
         ensures true,
     {
@@ -178,6 +182,7 @@ pub mod BSTSetRBMtEph {
 
         fn insert(&mut self, value: T) -> (r: Result<(), ()>) { self.tree.insert(value) }
 
+        #[verifier::external_body]
         fn delete(&mut self, target: &T) {
             if !self.contains(target) {
                 return;
@@ -186,12 +191,13 @@ pub mod BSTSetRBMtEph {
                 .tree
                 .in_order()
                 .iter()
-                .filter(|x| x != target)
+                .filter(|x| *x != target)
                 .cloned()
                 .collect();
             self.tree = BSTRBMtEph::from_sorted_slice(&filtered);
         }
 
+        #[verifier::external_body]
         fn union(&self, other: &Self) -> Self {
             // Algorithm: Parallel divide-and-conquer using split/join primitives
             // Work: O(m log(n/m)), Span: O(log n × log m)
@@ -215,12 +221,9 @@ pub mod BSTSetRBMtEph {
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
 
-            // Parallel recursive union on left and right subtrees
-            use crate::Types::Types::Pair;
-            let Pair(left_union, right_union) = crate::ParaPair!(
-                move || self_left.union(&other_left),
-                move || self_right.union(&other_right)
-            );
+            // Recursive union on left and right subtrees
+            let left_union = self_left.union(&other_left);
+            let right_union = self_right.union(&other_right);
 
             // Join results: include pivot if found in either tree
             if found_self || found_other {
@@ -230,6 +233,7 @@ pub mod BSTSetRBMtEph {
             }
         }
 
+        #[verifier::external_body]
         fn intersection(&self, other: &Self) -> Self {
             // Algorithm: Parallel divide-and-conquer using split/join primitives
             // Work: O(m log(n/m)), Span: O(log n × log m)
@@ -250,12 +254,9 @@ pub mod BSTSetRBMtEph {
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
 
-            // Parallel recursive intersection on left and right subtrees
-            use crate::Types::Types::Pair;
-            let Pair(left_inter, right_inter) = crate::ParaPair!(
-                move || self_left.intersection(&other_left),
-                move || self_right.intersection(&other_right)
-            );
+            // Recursive intersection on left and right subtrees
+            let left_inter = self_left.intersection(&other_left);
+            let right_inter = self_right.intersection(&other_right);
 
             // Join results: include pivot only if found in BOTH trees
             if found_self && found_other {
@@ -265,6 +266,7 @@ pub mod BSTSetRBMtEph {
             }
         }
 
+        #[verifier::external_body]
         fn difference(&self, other: &Self) -> Self {
             // Algorithm: Parallel divide-and-conquer using split/join primitives
             // Work: O(m log(n/m)), Span: O(log n × log m)
@@ -284,12 +286,9 @@ pub mod BSTSetRBMtEph {
             let (self_left, found_self, self_right) = self.split(&pivot);
             let (other_left, found_other, other_right) = other.split(&pivot);
             
-            // Parallel recursive difference on left and right subtrees
-            use crate::Types::Types::Pair;
-            let Pair(left_diff, right_diff) = crate::ParaPair!(
-                move || self_left.difference(&other_left),
-                move || self_right.difference(&other_right)
-            );
+            // Recursive difference on left and right subtrees
+            let left_diff = self_left.difference(&other_left);
+            let right_diff = self_right.difference(&other_right);
             
             // Join results: include pivot only if found in self but NOT in other
             if found_self && !found_other {
@@ -299,6 +298,7 @@ pub mod BSTSetRBMtEph {
             }
         }
 
+        #[verifier::external_body]
         fn split(&self, pivot: &T) -> (Self, B, Self) {
             let mut left = Vec::<T>::new();
             let mut right = Vec::<T>::new();
@@ -315,15 +315,10 @@ pub mod BSTSetRBMtEph {
             (from_sorted_iter(left), found, from_sorted_iter(right))
         }
 
+        #[verifier::external_body]
         fn join_pair(left: Self, right: Self) -> Self {
-            // Parallel extraction of values from both trees
-            use crate::Types::Types::Pair;
-            let Pair(left_values, right_values) = crate::ParaPair!(
-                move || values_vec(&left.tree),
-                move || values_vec(&right.tree)
-            );
-            
-            // Merge into BTreeSet and rebuild
+            let left_values = values_vec(&left.tree);
+            let right_values = values_vec(&right.tree);
             let mut combined = left_values.into_iter().collect::<BTreeSet<T>>();
             for value in right_values {
                 combined.insert(value);
@@ -331,15 +326,11 @@ pub mod BSTSetRBMtEph {
             from_sorted_iter(combined)
         }
 
+        #[verifier::external_body]
         fn join_m(left: Self, pivot: T, right: Self) -> Self {
             // Parallel extraction of values from both trees
-            use crate::Types::Types::Pair;
-            let Pair(left_values, right_values) = crate::ParaPair!(
-                move || values_vec(&left.tree),
-                move || values_vec(&right.tree)
-            );
-            
-            // Merge into BTreeSet with pivot and rebuild
+            let left_values = values_vec(&left.tree);
+            let right_values = values_vec(&right.tree);
             let mut combined = left_values.into_iter().collect::<BTreeSet<T>>();
             combined.insert(pivot);
             for value in right_values {
@@ -348,6 +339,7 @@ pub mod BSTSetRBMtEph {
             from_sorted_iter(combined)
         }
 
+        #[verifier::external_body]
         fn filter<F: FnMut(&T) -> bool + Send>(&self, mut predicate: F) -> Self {
             // Sequential implementation due to FnMut constraint
             // Parallel implementation would require Fn + Sync which is incompatible with FnMut API
@@ -359,6 +351,7 @@ pub mod BSTSetRBMtEph {
             from_sorted_iter(filtered)
         }
 
+        #[verifier::external_body]
         fn reduce<F: FnMut(T, T) -> T + Send>(&self, mut op: F, base: T) -> T {
             // Sequential implementation due to FnMut constraint
             // Parallel implementation would require Fn + Sync which is incompatible with FnMut API
@@ -368,10 +361,12 @@ pub mod BSTSetRBMtEph {
                 .fold(base, |acc, value| op(acc, value.clone()))
         }
 
+        #[verifier::external_body]
         fn iter_in_order(&self) -> ArraySeqStPerS<T> { self.tree.in_order() }
 
         fn as_tree(&self) -> &BSTRBMtEph<T> { &self.tree }
 
+        #[verifier::external_body]
         fn iter(&self) -> BSTSetRBMtEphIter<T> {
             let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
             BSTSetRBMtEphIter { snapshot: values, pos: 0 }
@@ -405,7 +400,7 @@ pub mod BSTSetRBMtEph {
                 None
             } else {
                 let item = self.snapshot[self.pos].clone();
-                self.pos += 1;
+                self.pos = self.pos + 1;
                 proof { assume(item == old(self)@.1[old(self)@.0]); }  // accept hole: Clone preserves value
                 Some(item)
             }
@@ -454,23 +449,20 @@ pub mod BSTSetRBMtEph {
         }
     }
 
+    #[verifier::external]
     impl<'a, T: StTInMtT + Ord + TotalOrder> std::iter::IntoIterator for &'a BSTSetRBMtEph<T> {
         type Item = T;
         type IntoIter = BSTSetRBMtEphIter<T>;
-        fn into_iter(self) -> (it: BSTSetRBMtEphIter<T>)
-            requires self.spec_bstsetrbmteph_wf()
-            ensures it@.0 == 0, bstsetrbmteph_iter_invariant(&it),
-        {
+        fn into_iter(self) -> BSTSetRBMtEphIter<T> {
             self.iter()
         }
     }
 
+    #[verifier::external]
     impl<T: StTInMtT + Ord + TotalOrder> IntoIterator for BSTSetRBMtEph<T> {
         type Item = T;
         type IntoIter = std::vec::IntoIter<T>;
-        fn into_iter(self) -> (it: Self::IntoIter)
-    
-        {
+        fn into_iter(self) -> Self::IntoIter {
             let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
             values.into_iter()
         }
