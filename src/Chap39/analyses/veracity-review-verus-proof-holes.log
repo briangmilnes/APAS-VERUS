@@ -21,39 +21,39 @@ Table of Contents:
 =================================================================
 
 ⚠ BSTParaTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:2166: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:2166: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       2135 |         fn clone(&self) -> (cloned: Self)
             ...
       2164 |                         };
       2165 |                         // Clone bridge: structural copy inherits BST ordering and size bound.
       2167 |                         assume(forall|t: T| (#[trigger] rv.contains(t@)) ==> t.cmp_spec(&key) == Greater);
       2168 |                         assume(lv.len() + rv.len() < usize::MAX as nat);
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:2167: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:2167: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       2135 |         fn clone(&self) -> (cloned: Self)
             ...
       2165 |                         // Clone bridge: structural copy inherits BST ordering and size bound.
       2166 |                         assume(forall|t: T| (#[trigger] lv.contains(t@)) ==> t.cmp_spec(&key) == Less);
       2168 |                         assume(lv.len() + rv.len() < usize::MAX as nat);
       2169 |                     }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:2168: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:2168: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       2135 |         fn clone(&self) -> (cloned: Self)
             ...
       2166 |                         assume(forall|t: T| (#[trigger] lv.contains(t@)) ==> t.cmp_spec(&key) == Less);
       2167 |                         assume(forall|t: T| (#[trigger] rv.contains(t@)) ==> t.cmp_spec(&key) == Greater);
       2169 |                     }
       2170 |                     new_param_treap(
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:2176: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:2176: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       2135 |         fn clone(&self) -> (cloned: Self)
             ...
       2174 |                 }
       2175 |             };
       2177 |             cloned
       2178 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:411: info: structural_false_positive OPAQUE_EXTERNAL priority_for — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:2226: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Send for ParamTreap<T> {} [high]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTParaTreapMtEph.rs:2227: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Sync for ParamTreap<T> {} [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:411: info: structural_false_positive OPAQUE_EXTERNAL priority_for — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:2226: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Send for ParamTreap<T> {} [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTParaTreapMtEph.rs:2227: info: structural_false_positive UNSAFE_SEND_SYNC ParamTreap — unsafe impl<T: MtKey> Sync for ParamTreap<T> {} [high]
 ⚠ BSTSetTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTSetTreapMtEph.rs:374: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTSetTreapMtEph.rs:374: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        370 |         fn clone(&self) -> (cloned: Self)
             ...
        372 |         {
@@ -61,73 +61,73 @@ Table of Contents:
        375 |             cloned
        376 |         }
 ⚠ BSTTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:362: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:362: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        352 |     fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
             ...
        360 |             None => {
        361 |                 let c = None;
        363 |                 c
        364 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:375: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:375: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        352 |     fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
             ...
        373 |                     right,
        374 |                 }));
        376 |                 c
        377 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1161: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:1161: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1157 |         fn clone(&self) -> (cloned: Self)
             ...
       1159 |         {
       1160 |             proof {
       1162 |                 assume(Lnk::spec_link_size_wf(&self.right));
       1163 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1162: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:1162: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1157 |         fn clone(&self) -> (cloned: Self)
             ...
       1160 |             proof {
       1161 |                 assume(Lnk::spec_link_size_wf(&self.left));
       1163 |             }
       1164 |             let cloned = Node {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1171: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:1171: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1157 |         fn clone(&self) -> (cloned: Self)
             ...
       1169 |                 right: clone_link(&self.right),
       1170 |             };
       1172 |             cloned
       1173 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1184: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:1184: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1177 |         fn clone(&self) -> (cloned: Self)
             ...
       1182 |             handle.release_read();
       1183 |             proof {
       1185 |                 assume(self.ghost_locked_root@.finite());
       1186 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1185: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:1185: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1177 |         fn clone(&self) -> (cloned: Self)
             ...
       1183 |             proof {
       1184 |                 assume(spec_bsttreapmteph_link_wf(&inner_clone));
       1186 |             }
       1187 |             let cloned = BSTTreapMtEph {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1191: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:1191: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1177 |         fn clone(&self) -> (cloned: Self)
             ...
       1189 |                 ghost_locked_root: Ghost(self.ghost_locked_root@),
       1190 |             };
       1192 |             cloned
       1193 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1069: info: structural_false_positive RWLOCK_GHOST find — proof { assume(result.is_some() <==> self@.contains(target@) [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1086: info: structural_false_positive RWLOCK_GHOST size — proof { assume(result as nat == self@.len()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1110: info: structural_false_positive RWLOCK_GHOST minimum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1120: info: structural_false_positive RWLOCK_GHOST maximum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1132: info: structural_false_positive RWLOCK_GHOST in_order — proof { assume(ordered@.len() == self@.len()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapMtEph.rs:1144: info: structural_false_positive RWLOCK_GHOST pre_order — proof { assume(preordered@.len() == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:1069: info: structural_false_positive RWLOCK_GHOST find — proof { assume(result.is_some() <==> self@.contains(target@) [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:1086: info: structural_false_positive RWLOCK_GHOST size — proof { assume(result as nat == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:1110: info: structural_false_positive RWLOCK_GHOST minimum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:1120: info: structural_false_positive RWLOCK_GHOST maximum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:1132: info: structural_false_positive RWLOCK_GHOST in_order — proof { assume(ordered@.len() == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapMtEph.rs:1144: info: structural_false_positive RWLOCK_GHOST pre_order — proof { assume(preordered@.len() == self@.len()); } [medium]
 ℹ BSTTreapStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:149: info: accept()
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:160: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapStEph.rs:149: info: accept()
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapStEph.rs:160: info: accept()
    Info: 2 total
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap39/BSTTreapStEph.rs:402: info: structural_false_positive OPAQUE_EXTERNAL priority_for_st — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap39/BSTTreapStEph.rs:402: info: structural_false_positive OPAQUE_EXTERNAL priority_for_st — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
    29 clean proof functions
 
@@ -186,8 +186,8 @@ Accepted (reviewed): 2 total
 
 Structural (info only): 10
    6 × RWLOCK_GHOST
-   2 × UNSAFE_SEND_SYNC
    2 × OPAQUE_EXTERNAL
+   2 × UNSAFE_SEND_SYNC
 
 No proof holes found! All proofs are complete.
 
@@ -195,15 +195,15 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-25 09:12:12 -07:00
-Ended:     2026-03-25 09:12:12 -07:00
-Duration:  189ms
+Started:   2026-03-25 09:13:42 -07:00
+Ended:     2026-03-25 09:13:42 -07:00
+Duration:  118ms
 
 Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log
-==================================
+===========================
 
-Started:   2026-03-25 09:12:12 -07:00
-Ended:     2026-03-25 09:12:12 -07:00
-Duration:  189ms
+Started:   2026-03-25 09:13:42 -07:00
+Ended:     2026-03-25 09:13:42 -07:00
+Duration:  118ms
 
 Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log

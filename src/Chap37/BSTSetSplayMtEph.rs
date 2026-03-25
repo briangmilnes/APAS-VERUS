@@ -17,7 +17,6 @@
 
 pub mod BSTSetSplayMtEph {
 
-    use std::collections::BTreeSet;
     use std::fmt;
 
     use vstd::prelude::*;
@@ -26,6 +25,8 @@ pub mod BSTSetSplayMtEph {
     use crate::Chap37::BSTSplayMtEph::BSTSplayMtEph::*;
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
 
     verus! {
 
@@ -140,28 +141,49 @@ pub mod BSTSetSplayMtEph {
 
     //	9. impls
 
-    #[verifier::external_body]
     fn values_vec<T: StTInMtT + Ord + TotalOrder + 'static>(tree: &BSTSplayMtEph<T>) -> (values: Vec<T>)
         requires tree.spec_bstsplaymteph_wf(),
         ensures true,
     {
-        tree.in_order().iter().cloned().collect()
+        proof { assume(obeys_feq_clone::<T>()); }
+        let sorted = tree.in_order();
+        let n = sorted.length();
+        let mut values: Vec<T> = Vec::new();
+        let mut i: usize = 0;
+        while i < n
+            invariant
+                n as nat == sorted.spec_len(),
+                0 <= i <= n,
+            decreases n - i,
+        {
+            values.push(sorted.nth(i).clone());
+            i += 1;
+        }
+        values
     }
 
     // veracity: no_requires
-    #[verifier::external_body]
     fn rebuild_from_vec<T: StTInMtT + Ord + TotalOrder + 'static>(values: Vec<T>) -> (tree: BSTSplayMtEph<T>)
         ensures tree.spec_bstsplaymteph_wf(),
     {
         let mut tree = BSTSplayMtEph::new();
-        for value in values {
-            let _ = tree.insert(value);
+        let n = values.len();
+        let mut i: usize = 0;
+        while i < n
+            invariant
+                tree.spec_bstsplaymteph_wf(),
+                0 <= i <= n,
+                n == values@.len(),
+            decreases n - i,
+        {
+            let _ = tree.insert(values[i].clone());
+            i += 1;
         }
         tree
     }
 
     // veracity: no_requires
-    fn from_sorted_iter<T: StTInMtT + Ord + TotalOrder + 'static>(values: Vec<T>) -> (set: BSTSetSplayMtEph<T>)
+    fn build_from_vec<T: StTInMtT + Ord + TotalOrder + 'static>(values: Vec<T>) -> (set: BSTSetSplayMtEph<T>)
         ensures set.spec_bstsetsplaymteph_wf(),
     {
         BSTSetSplayMtEph { tree: rebuild_from_vec(values) }
@@ -171,7 +193,7 @@ pub mod BSTSetSplayMtEph {
         requires set.spec_bstsetsplaymteph_wf()
         ensures out.spec_bstsetsplaymteph_wf()
     {
-        from_sorted_iter(values_vec(&set.tree))
+        build_from_vec(values_vec(&set.tree))
     }
 
     impl<T: StTInMtT + Ord + TotalOrder + 'static> BSTSetSplayMtEphTrait<T> for BSTSetSplayMtEph<T> {
@@ -205,18 +227,27 @@ pub mod BSTSetSplayMtEph {
 
         fn insert(&mut self, value: T) -> (r: Result<(), ()>) { self.tree.insert(value) }
 
-        #[verifier::external_body]
         fn delete(&mut self, target: &T) {
             if !self.contains(target) {
                 return;
             }
-            let filtered: Vec<T> = self
-                .tree
-                .in_order()
-                .iter()
-                .filter(|x| *x != target)
-                .cloned()
-                .collect();
+            proof { assume(obeys_feq_clone::<T>()); }
+            let sorted = self.tree.in_order();
+            let n = sorted.length();
+            let mut filtered: Vec<T> = Vec::new();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    n as nat == sorted.spec_len(),
+                    0 <= i <= n,
+                decreases n - i,
+            {
+                let elem = sorted.nth(i);
+                if *elem != *target {
+                    filtered.push(elem.clone());
+                }
+                i += 1;
+            }
             self.tree = rebuild_from_vec(filtered);
         }
 
@@ -306,79 +337,148 @@ pub mod BSTSetSplayMtEph {
             }
         }
 
-        #[verifier::external_body]
         fn split(&self, pivot: &T) -> (Self, B, Self) {
-            let mut left = Vec::<T>::new();
-            let mut right = Vec::<T>::new();
+            proof { assume(obeys_feq_clone::<T>()); }
+            let sorted = self.tree.in_order();
+            let n = sorted.length();
+            let mut left: Vec<T> = Vec::new();
+            let mut right: Vec<T> = Vec::new();
             let mut found = false;
-            for value in self.tree.in_order().iter() {
-                if value < pivot {
-                    left.push(value.clone());
-                } else if value > pivot {
-                    right.push(value.clone());
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    n as nat == sorted.spec_len(),
+                    0 <= i <= n,
+                decreases n - i,
+            {
+                let elem = sorted.nth(i);
+                if *elem < *pivot {
+                    left.push(elem.clone());
+                } else if *elem > *pivot {
+                    right.push(elem.clone());
                 } else {
                     found = true;
                 }
+                i += 1;
             }
-            (from_sorted_iter(left), found, from_sorted_iter(right))
+            (build_from_vec(left), found, build_from_vec(right))
         }
 
-        #[verifier::external_body]
         fn join_pair(left: Self, right: Self) -> Self {
-            use crate::Types::Types::Pair;
-            let Pair(left_values, right_values) = crate::ParaPair!(
-                move || values_vec(&left.tree),
-                move || values_vec(&right.tree)
-            );
-
-            let mut combined = left_values.into_iter().collect::<BTreeSet<T>>();
-            for value in right_values {
-                combined.insert(value);
+            proof { assume(obeys_feq_clone::<T>()); }
+            let left_sorted = left.tree.in_order();
+            let right_sorted = right.tree.in_order();
+            let mut tree = BSTSplayMtEph::new();
+            let n_left = left_sorted.length();
+            let mut i: usize = 0;
+            while i < n_left
+                invariant
+                    tree.spec_bstsplaymteph_wf(),
+                    n_left as nat == left_sorted.spec_len(),
+                    0 <= i <= n_left,
+                decreases n_left - i,
+            {
+                let _ = tree.insert(left_sorted.nth(i).clone());
+                i += 1;
             }
-            from_sorted_iter(combined.into_iter().collect())
+            let n_right = right_sorted.length();
+            let mut j: usize = 0;
+            while j < n_right
+                invariant
+                    tree.spec_bstsplaymteph_wf(),
+                    n_right as nat == right_sorted.spec_len(),
+                    0 <= j <= n_right,
+                decreases n_right - j,
+            {
+                let _ = tree.insert(right_sorted.nth(j).clone());
+                j += 1;
+            }
+            BSTSetSplayMtEph { tree }
         }
 
-        #[verifier::external_body]
         fn join_m(left: Self, pivot: T, right: Self) -> Self {
-            use crate::Types::Types::Pair;
-            let Pair(left_values, right_values) = crate::ParaPair!(
-                move || values_vec(&left.tree),
-                move || values_vec(&right.tree)
-            );
-
-            let mut combined = left_values.into_iter().collect::<BTreeSet<T>>();
-            combined.insert(pivot);
-            for value in right_values {
-                combined.insert(value);
+            proof { assume(obeys_feq_clone::<T>()); }
+            let left_sorted = left.tree.in_order();
+            let right_sorted = right.tree.in_order();
+            let mut tree = BSTSplayMtEph::new();
+            let _ = tree.insert(pivot);
+            let n_left = left_sorted.length();
+            let mut i: usize = 0;
+            while i < n_left
+                invariant
+                    tree.spec_bstsplaymteph_wf(),
+                    n_left as nat == left_sorted.spec_len(),
+                    0 <= i <= n_left,
+                decreases n_left - i,
+            {
+                let _ = tree.insert(left_sorted.nth(i).clone());
+                i += 1;
             }
-            from_sorted_iter(combined.into_iter().collect())
+            let n_right = right_sorted.length();
+            let mut j: usize = 0;
+            while j < n_right
+                invariant
+                    tree.spec_bstsplaymteph_wf(),
+                    n_right as nat == right_sorted.spec_len(),
+                    0 <= j <= n_right,
+                decreases n_right - j,
+            {
+                let _ = tree.insert(right_sorted.nth(j).clone());
+                j += 1;
+            }
+            BSTSetSplayMtEph { tree }
         }
 
         #[verifier::external_body]
         fn filter<F: FnMut(&T) -> bool + Send>(&self, mut predicate: F) -> Self {
-            let filtered = self
-                .tree
-                .in_order()
-                .iter()
-                .filter_map(|v| if predicate(v) { Some(v.clone()) } else { None }).collect::<Vec<T>>();
-            from_sorted_iter(filtered)
+            proof { assume(obeys_feq_clone::<T>()); }
+            let sorted = self.tree.in_order();
+            let n = sorted.length();
+            let mut filtered: Vec<T> = Vec::new();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    n as nat == sorted.spec_len(),
+                    0 <= i <= n,
+                decreases n - i,
+            {
+                let elem = sorted.nth(i);
+                if predicate(elem) {
+                    filtered.push(elem.clone());
+                }
+                i += 1;
+            }
+            build_from_vec(filtered)
         }
 
         #[verifier::external_body]
         fn reduce<F: FnMut(T, T) -> T + Send>(&self, mut op: F, base: T) -> T {
-            self.tree
-                .in_order()
-                .iter()
-                .fold(base, |acc, value| op(acc, value.clone()))
+            proof { assume(obeys_feq_clone::<T>()); }
+            let sorted = self.tree.in_order();
+            let n = sorted.length();
+            let mut acc = base;
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    n as nat == sorted.spec_len(),
+                    0 <= i <= n,
+                decreases n - i,
+            {
+                acc = op(acc, sorted.nth(i).clone());
+                i += 1;
+            }
+            acc
         }
 
-        fn iter_in_order(&self) -> ArraySeqStPerS<T> { self.tree.in_order() }
+        fn iter_in_order(&self) -> ArraySeqStPerS<T> {
+            proof { assume(obeys_feq_clone::<T>()); }
+            self.tree.in_order()
+        }
 
         fn as_tree(&self) -> &BSTSplayMtEph<T> { &self.tree }
 
-        #[verifier::external_body]
         fn iter(&self) -> BSTSetSplayMtEphIter<T> {
-            let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+            let values = values_vec(&self.tree);
             BSTSetSplayMtEphIter { snapshot: values, pos: 0 }
         }
     }
@@ -472,13 +572,12 @@ pub mod BSTSetSplayMtEph {
 
     impl<T: StTInMtT + Ord + TotalOrder + 'static> IntoIterator for BSTSetSplayMtEph<T> {
         type Item = T;
-        type IntoIter = std::vec::IntoIter<T>;
-        #[verifier::external_body]
-        fn into_iter(self) -> (it: Self::IntoIter)
-
+        type IntoIter = BSTSetSplayMtEphIter<T>;
+        fn into_iter(self) -> (it: BSTSetSplayMtEphIter<T>)
+            requires self.spec_bstsetsplaymteph_wf(),
+            ensures it@.0 == 0, bstsetsplaymteph_iter_invariant(&it),
         {
-            let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
-            values.into_iter()
+            self.iter()
         }
     }
 
