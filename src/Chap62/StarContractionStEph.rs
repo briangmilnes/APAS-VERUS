@@ -41,7 +41,10 @@ pub mod StarContractionStEph {
 
         /// Sequential star contraction higher-order function.
         /// APAS: Work O((n + m) lg n), Span O((n + m) lg n)
-        fn star_contract<V, R, F, G>(graph: &UnDirGraphStEph<V>, base: &F, expand: &G) -> R
+        fn star_contract<V, R, F, G>(
+            graph: &UnDirGraphStEph<V>, base: &F, expand: &G,
+            Ghost(r_inv): Ghost<spec_fn(R) -> bool>,
+        ) -> (result: R)
         where
             V: HashOrd,
             F: Fn(&SetStEph<V>) -> R,
@@ -50,8 +53,13 @@ pub mod StarContractionStEph {
             Self::spec_starcontractionsteph_wf(graph),
             valid_key_type_Edge::<V>(),
             forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),
+            forall|s: &SetStEph<V>, r: R| s.spec_setsteph_wf() && base.ensures((s,), r) ==> r_inv(r),
             forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|
-                #[trigger] expand.requires((v, e, c, p, r));
+                v.spec_setsteph_wf() && e.spec_setsteph_wf() && c.spec_setsteph_wf() && r_inv(r)
+                ==> #[trigger] expand.requires((v, e, c, p, r)),
+            forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R, out: R|
+                #[trigger] expand.ensures((v, e, c, p, r), out) ==> r_inv(out),
+        ensures r_inv(result);
 
         /// Contract graph to just vertices (no edges).
         /// APAS: Work O((n + m) lg n), Span O((n + m) lg n)
@@ -66,6 +74,7 @@ pub mod StarContractionStEph {
     /// Inner recursive star contraction with fuel for termination.
     fn star_contract_fuel<V, R, F, G>(
         graph: &UnDirGraphStEph<V>, base: &F, expand: &G, fuel: usize,
+        Ghost(r_inv): Ghost<spec_fn(R) -> bool>,
     ) -> (result: R)
     where
         V: HashOrd,
@@ -75,9 +84,14 @@ pub mod StarContractionStEph {
         spec_graphview_wf(graph@),
         valid_key_type_Edge::<V>(),
         forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),
+        forall|s: &SetStEph<V>, r: R| s.spec_setsteph_wf() && base.ensures((s,), r) ==> r_inv(r),
         forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|
-            #[trigger] expand.requires((v, e, c, p, r)),
+            v.spec_setsteph_wf() && e.spec_setsteph_wf() && c.spec_setsteph_wf() && r_inv(r)
+            ==> #[trigger] expand.requires((v, e, c, p, r)),
+        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R, out: R|
+            #[trigger] expand.ensures((v, e, c, p, r), out) ==> r_inv(out),
     ensures
+        r_inv(result),
         (graph@.A.is_empty() || fuel == 0) ==>
             exists|s: &SetStEph<V>| s@ == graph@.V && #[trigger] s.spec_setsteph_wf() && base.ensures((s,), result),
     decreases fuel,
@@ -92,6 +106,8 @@ pub mod StarContractionStEph {
             let result = base(verts);
             proof {
                 assert(base.ensures((verts,), result));
+                assert(verts.spec_setsteph_wf() && base.ensures((verts,), result));
+                assert(r_inv(result));
                 assert(verts@ == graph@.V && verts.spec_setsteph_wf() && base.ensures((verts,), result));
             }
             return result;
@@ -105,9 +121,25 @@ pub mod StarContractionStEph {
 
         let quotient_graph = build_quotient_graph(graph, &centers, &partition_map);
 
-        let r = star_contract_fuel(&quotient_graph, base, expand, fuel - 1);
+        let r = star_contract_fuel(&quotient_graph, base, expand, fuel - 1, Ghost(r_inv));
 
-        expand(graph.vertices(), graph.edges(), &centers, &partition_map, r)
+        // Prove expand's guarded requires: v, e, c are wf; r_inv(r) from induction.
+        let verts = graph.vertices();
+        let eds = graph.edges();
+        proof {
+            assert(verts@.finite());
+            assert(verts.spec_setsteph_wf());
+            assert(eds@.finite());
+            assert(eds.spec_setsteph_wf());
+            assert(centers.spec_setsteph_wf());
+            assert(r_inv(r));
+        }
+        let result = expand(verts, eds, &centers, &partition_map, r);
+        proof {
+            assert(expand.ensures((verts, eds, &centers, &partition_map, r), result));
+            assert(r_inv(result));
+        }
+        result
     }
 
     /// Algorithm 62.5: Star Contraction (Sequential)
@@ -126,7 +158,10 @@ pub mod StarContractionStEph {
     ///
     /// Returns:
     /// - Result of type R as computed by base and expand functions
-    pub fn star_contract<V, R, F, G>(graph: &UnDirGraphStEph<V>, base: &F, expand: &G) -> (result: R)
+    pub fn star_contract<V, R, F, G>(
+        graph: &UnDirGraphStEph<V>, base: &F, expand: &G,
+        Ghost(r_inv): Ghost<spec_fn(R) -> bool>,
+    ) -> (result: R)
     where
         V: HashOrd,
         F: Fn(&SetStEph<V>) -> R,
@@ -135,17 +170,21 @@ pub mod StarContractionStEph {
         spec_graphview_wf(graph@),
         valid_key_type_Edge::<V>(),
         forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),
+        forall|s: &SetStEph<V>, r: R| s.spec_setsteph_wf() && base.ensures((s,), r) ==> r_inv(r),
         forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|
-            #[trigger] expand.requires((v, e, c, p, r)),
+            v.spec_setsteph_wf() && e.spec_setsteph_wf() && c.spec_setsteph_wf() && r_inv(r)
+            ==> #[trigger] expand.requires((v, e, c, p, r)),
+        forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R, out: R|
+            #[trigger] expand.ensures((v, e, c, p, r), out) ==> r_inv(out),
     ensures
+        r_inv(result),
         graph@.A.is_empty() ==>
             exists|s: &SetStEph<V>| s@ == graph@.V && #[trigger] s.spec_setsteph_wf() && base.ensures((s,), result),
     {
         let fuel = graph.sizeV();
-        let result = star_contract_fuel(graph, base, expand, fuel);
+        let result = star_contract_fuel(graph, base, expand, fuel, Ghost(r_inv));
         proof {
             if graph@.A.is_empty() {
-                // Callee's antecedent (graph@.A.is_empty() || fuel == 0) holds.
                 assert(graph@.A.is_empty() || fuel == 0);
             }
         }
@@ -284,6 +323,7 @@ pub mod StarContractionStEph {
             graph,
             &|vertices: &SetStEph<V>| -> (r: SetStEph<V>) { vertices.clone() },
             &|_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, result: SetStEph<V>| -> (r: SetStEph<V>) { result },
+            Ghost(|r: SetStEph<V>| true),
         )
     }
 

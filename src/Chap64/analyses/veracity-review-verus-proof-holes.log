@@ -21,13 +21,9 @@ Table of Contents:
 =================================================================
 
 ✓ SpanTreeMtEph.rs
-❌ SpanTreeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeStEph.rs:53: error: external_body - #[verifier::external_body]
-        54 |     pub fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (result: SetStEph<Edge<V>>)
-   Holes: 1 total
-      1 × external_body
+✓ SpanTreeStEph.rs
 ⚠ TSPApproxStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/TSPApproxStEph.rs:84: error: fn_missing_requires - fn vec_contains_pair — exec fn should have requires
+/home/milnes/projects/APAS-VERUS-agent5/src/Chap64/TSPApproxStEph.rs:84: error: fn_missing_requires - fn vec_contains_pair — exec fn should have requires
         71 |         fn approx_metric_tsp<V: HashOrd>(
             ...
         82 | 
@@ -60,8 +56,8 @@ TSPApproxStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   1 clean (no holes, no errors; 33%)
-   2 holed (holes or errors, 66%)
+   2 clean (no holes, no errors; 66%)
+   1 holed (holes or errors, 33%)
    3 total
 
 Proof Functions:
@@ -77,19 +73,22 @@ Function Specs:
    23 total fns
 
 
-Holes Found: 1 (actionable)
-   1 × external_body (100%)
-Real Proof Targets: 1 (all actionable)
+Holes Found: 0 (actionable)
+Real Proof Targets: 0 (all actionable)
 
 Warnings: 1 total
    1 × fn_missing_requires
+
+No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-25 15:46:50 -07:00
-Ended:     2026-03-25 15:46:50 -07:00
-Duration:  10ms
+Started:   2026-03-25 16:28:13 -07:00
+Ended:     2026-03-25 16:28:13 -07:00
+Duration:  9ms
+
+Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
 
 Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
