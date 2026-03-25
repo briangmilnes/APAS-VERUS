@@ -77,8 +77,10 @@ pub mod BSTSetAVLMtEph {
         spec fn spec_bstsetavlmteph_wf(&self) -> bool;
 
         fn empty() -> (set: Self)
+            requires obeys_feq_clone::<T>()
             ensures set.spec_bstsetavlmteph_wf();
         fn singleton(value: T) -> (set: Self)
+            requires obeys_feq_clone::<T>()
             ensures set.spec_bstsetavlmteph_wf();
         fn size(&self) -> (n: N)
             requires self.spec_bstsetavlmteph_wf()
@@ -201,14 +203,12 @@ pub mod BSTSetAVLMtEph {
         }
 
         fn empty() -> Self {
-            proof { assume(obeys_feq_clone::<T>()); }
             Self {
                 tree: BSTAVLMtEph::new(),
             }
         }
 
         fn singleton(value: T) -> Self {
-            proof { assume(obeys_feq_clone::<T>()); }
             let mut tree = BSTAVLMtEph::new();
             let _ = tree.insert(value);
             Self { tree }

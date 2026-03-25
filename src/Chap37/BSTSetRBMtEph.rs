@@ -76,8 +76,10 @@ pub mod BSTSetRBMtEph {
         spec fn spec_bstsetrbmteph_wf(&self) -> bool;
 
         fn empty() -> (set: Self)
+            requires obeys_feq_clone::<T>()
             ensures set.spec_bstsetrbmteph_wf();
         fn singleton(value: T) -> (set: Self)
+            requires obeys_feq_clone::<T>()
             ensures set.spec_bstsetrbmteph_wf();
         fn size(&self) -> (n: N)
             requires self.spec_bstsetrbmteph_wf()
@@ -200,14 +202,12 @@ pub mod BSTSetRBMtEph {
         }
 
         fn empty() -> Self {
-            proof { assume(obeys_feq_clone::<T>()); }
             Self {
                 tree: BSTRBMtEph::new(),
             }
         }
 
         fn singleton(value: T) -> Self {
-            proof { assume(obeys_feq_clone::<T>()); }
             let mut tree = BSTRBMtEph::new();
             let _ = tree.insert(value);
             Self { tree }

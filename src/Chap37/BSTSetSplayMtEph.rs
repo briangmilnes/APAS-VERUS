@@ -77,8 +77,10 @@ pub mod BSTSetSplayMtEph {
         spec fn spec_bstsetsplaymteph_wf(&self) -> bool;
 
         fn empty() -> (set: Self)
+            requires obeys_feq_clone::<T>()
             ensures set.spec_bstsetsplaymteph_wf();
         fn singleton(value: T) -> (set: Self)
+            requires obeys_feq_clone::<T>()
             ensures set.spec_bstsetsplaymteph_wf();
         fn size(&self) -> (n: N)
             requires self.spec_bstsetsplaymteph_wf()
@@ -201,14 +203,12 @@ pub mod BSTSetSplayMtEph {
         }
 
         fn empty() -> Self {
-            proof { assume(obeys_feq_clone::<T>()); }
             Self {
                 tree: BSTSplayMtEph::new(),
             }
         }
 
         fn singleton(value: T) -> Self {
-            proof { assume(obeys_feq_clone::<T>()); }
             let mut tree = BSTSplayMtEph::new();
             let _ = tree.insert(value);
             Self { tree }
