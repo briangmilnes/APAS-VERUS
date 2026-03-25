@@ -3,6 +3,8 @@
 
 use apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
 
+use vstd::prelude::Ghost;
+
 use apas_verus::Chap05::SetStEph::SetStEph::*;
 use apas_verus::Chap06::UnDirGraphStEph::UnDirGraphStEph::*;
 use apas_verus::Chap62::StarContractionStEph::StarContractionStEph::*;
@@ -43,7 +45,7 @@ fn test_contract_with_base_expand() {
     // Expand function that just returns the recursive result
     let expand = |_v: &SetStEph<N>, _e: &SetStEph<Edge<N>>, _centers: &SetStEph<N>, _part: &HashMapWithViewPlus<N, N>, r: N| r;
 
-    let result = star_contract(&graph, &base, &expand);
+    let result = star_contract(&graph, &base, &expand, Ghost::assume_new());
 
     // Should eventually contract to some number of isolated vertices
     assert!(result > 0);

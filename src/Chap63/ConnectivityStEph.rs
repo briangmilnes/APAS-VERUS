@@ -177,7 +177,7 @@ pub mod ConnectivityStEph {
 
         let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, r: N| -> (result: N) { r };
 
-        star_contract(graph, &base, &expand)
+        star_contract(graph, &base, &expand, Ghost(|r: N| true))
     }
 
     /// Exercise 63.2: Connected Components using star_contract higher-order function
@@ -238,7 +238,7 @@ pub mod ConnectivityStEph {
             (reps, result_map)
         };
 
-        star_contract(graph, &base, &expand)
+        star_contract(graph, &base, &expand, Ghost(|r: (SetStEph<V>, HashMapWithViewPlus<V, V>)| true))
     }
 
     } // verus!

@@ -13,6 +13,7 @@ pub mod SpanTreeStEph {
     use std::hash::Hash;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
     use crate::Chap62::StarContractionStEph::StarContractionStEph::star_contract;
     use crate::SetLit;
     #[cfg(verus_keep_ghost)]
@@ -50,7 +51,6 @@ pub mod SpanTreeStEph {
     ///
     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS.
-    #[verifier::external_body]
     pub fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (result: SetStEph<Edge<V>>)
         requires
             spec_graphview_wf(graph@),
@@ -60,11 +60,14 @@ pub mod SpanTreeStEph {
         // Base: no edges means no spanning tree edges (isolated vertices).
         let base = |_vertices: &SetStEph<V>| -> (result: SetStEph<Edge<V>>)
             requires valid_key_type_Edge::<V>()
+            ensures result.spec_setsteph_wf()
         {
             SetLit![]
         };
 
         // Expand: add star partition edges and map quotient tree edges back.
+        // Uses elements.iter() (HashSetWithViewPlus iter, no wf required) instead
+        // of SetStEph::iter() so the closure has only type-level requires.
         let expand = |_v: &SetStEph<V>,
                       original_edges: &SetStEph<Edge<V>>,
                       _centers: &SetStEph<V>,
@@ -74,12 +77,11 @@ pub mod SpanTreeStEph {
             requires
                 valid_key_type_Edge::<V>(),
                 obeys_key_model::<V>(),
-                original_edges.spec_setsteph_wf(),
-                quotient_tree.spec_setsteph_wf(),
+            ensures result.spec_setsteph_wf()
         {
             let mut spanning_edges: SetStEph<Edge<V>> = SetLit![];
 
-            // Part 1: Collect edges from partition map (vertex → center edges).
+            // Part 1: Collect edges from partition map (vertex -> center edges).
             let it_pm = partition_map.iter();
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             for pair in iter: it_pm
@@ -99,7 +101,8 @@ pub mod SpanTreeStEph {
             }
 
             // Part 2: Map quotient tree edges back to original edges.
-            let it_qt = quotient_tree.iter();
+            // Use elements.iter() to avoid needing quotient_tree.spec_setsteph_wf().
+            let it_qt = quotient_tree.elements.iter();
             let ghost qt_seq = it_qt@.1;
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             for qe in iter: it_qt
@@ -108,10 +111,10 @@ pub mod SpanTreeStEph {
                     spanning_edges.spec_setsteph_wf(),
                     valid_key_type_Edge::<V>(),
                     obeys_key_model::<V>(),
-                    original_edges.spec_setsteph_wf(),
             {
                 let Edge(c1, c2) = qe;
-                let mut it_oe = original_edges.iter();
+                // Use elements.iter() to avoid needing original_edges.spec_setsteph_wf().
+                let mut it_oe = original_edges.elements.iter();
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 loop
                     invariant
@@ -128,7 +131,8 @@ pub mod SpanTreeStEph {
                             let u_center = partition_map.get(u).unwrap_or(u);
                             let v_center = partition_map.get(v).unwrap_or(v);
                             if (*u_center == *c1 && *v_center == *c2) || (*u_center == *c2 && *v_center == *c1) {
-                                let _ = spanning_edges.insert(oe.clone_plus());
+                                let owned_edge = Edge(u.clone(), v.clone());
+                                let _ = spanning_edges.insert(owned_edge);
                                 break;
                             }
                         }
@@ -139,7 +143,7 @@ pub mod SpanTreeStEph {
             spanning_edges
         };
 
-        star_contract(graph, &base, &expand)
+        star_contract(graph, &base, &expand, Ghost(|r: SetStEph<Edge<V>>| r.spec_setsteph_wf()))
     }
 
     /// Verify that result is a valid spanning tree.
