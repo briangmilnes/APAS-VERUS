@@ -197,8 +197,10 @@ pub mod AVLTreeSeqMtPer {
         match link {
             None => {},
             Some(node) => {
-                lemma_inorder_values_maps_to_inorder::<T>(node.left);
-                lemma_inorder_values_maps_to_inorder::<T>(node.right);
+                let ghost left: Link<T> = node.left;
+                let ghost right: Link<T> = node.right;
+                lemma_inorder_values_maps_to_inorder::<T>(left);
+                lemma_inorder_values_maps_to_inorder::<T>(right);
             }
         }
     }
@@ -610,7 +612,7 @@ pub mod AVLTreeSeqMtPer {
         true
     }
 
-    impl<T: StTInMtT> AVLTreeSeqMtPerTrait<T> for AVLTreeSeqMtPerS<T> {
+    impl<T: StTInMtT + 'static> AVLTreeSeqMtPerTrait<T> for AVLTreeSeqMtPerS<T> {
         open spec fn spec_seq(&self) -> Seq<T::V> {
             spec_inorder(self.root)
         }
@@ -715,13 +717,13 @@ pub mod AVLTreeSeqMtPer {
         }
     }
 
-    impl<T: StTInMtT> Default for AVLTreeSeqMtPerS<T> {
+    impl<T: StTInMtT + 'static> Default for AVLTreeSeqMtPerS<T> {
         fn default() -> Self { Self::empty() }
     }
 
     // 10. iterators
 
-    impl<'a, T: StTInMtT> std::iter::Iterator for AVLTreeSeqMtPerBorrowIter<'a, T> {
+    impl<'a, T: StTInMtT + 'static> std::iter::Iterator for AVLTreeSeqMtPerBorrowIter<'a, T> {
         type Item = &'a T;
 
         #[verifier::external_body]
@@ -795,7 +797,7 @@ pub mod AVLTreeSeqMtPer {
         }
     }
 
-    impl<'a, T: StTInMtT> std::iter::IntoIterator for &'a AVLTreeSeqMtPerS<T> {
+    impl<'a, T: StTInMtT + 'static> std::iter::IntoIterator for &'a AVLTreeSeqMtPerS<T> {
         type Item = &'a T;
         type IntoIter = AVLTreeSeqMtPerBorrowIter<'a, T>;
         fn into_iter(self) -> (it: Self::IntoIter)
@@ -826,7 +828,7 @@ pub mod AVLTreeSeqMtPer {
         }
     }
 
-    impl<T: StTInMtT> IntoIterator for AVLTreeSeqMtPerS<T> {
+    impl<T: StTInMtT + 'static> IntoIterator for AVLTreeSeqMtPerS<T> {
         type Item = T;
         type IntoIter = AVLTreeSeqMtPerIter<T>;
         fn into_iter(self) -> (it: Self::IntoIter)

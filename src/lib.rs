@@ -464,7 +464,7 @@ pub mod Chap37 {
     pub mod AVLTreeSeq;
     pub mod AVLTreeSeqStEph;
     pub mod AVLTreeSeqStPer;
-    // pub mod AVLTreeSeqMtPer;  // broken: stale imports, never cargo-compiled
+    pub mod AVLTreeSeqMtPer;
     pub mod BSTPlainStEph;
     pub mod BSTPlainMtEph;
     pub mod BSTAVLStEph;
@@ -472,13 +472,13 @@ pub mod Chap37 {
     pub mod BSTRBStEph;
     // pub mod BSTRBMtEph;  // broken: compile errors, never cargo-compiled
     pub mod BSTSplayStEph;
-    // pub mod BSTSplayMtEph;  // broken: compile errors, never cargo-compiled
+    pub mod BSTSplayMtEph;
     pub mod BSTBBAlphaStEph;
     pub mod BSTBBAlphaMtEph;
     pub mod BSTSetPlainMtEph;
     // pub mod BSTSetAVLMtEph;  // broken: depends on BSTAVLMtEph
     // pub mod BSTSetRBMtEph;  // broken: depends on BSTRBMtEph
-    // pub mod BSTSetSplayMtEph;  // broken: depends on BSTSplayMtEph
+    pub mod BSTSetSplayMtEph;
     pub mod BSTSetBBAlphaMtEph;
 }
 
@@ -510,7 +510,7 @@ pub mod Chap41 {
     pub mod AVLTreeSetStEph;
     pub mod AVLTreeSetStPer;
     pub mod AVLTreeSetMtEph;
-    // pub mod AVLTreeSetMtPer;  // broken: never cargo-compiled
+    pub mod AVLTreeSetMtPer;
     pub mod Example41_3;
 }
 

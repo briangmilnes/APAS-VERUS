@@ -27,6 +27,9 @@ pub mod AVLTreeSetMtPer {
     use std::sync::Arc;
 
     use vstd::prelude::*;
+    use crate::Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     use vstd::rwlock::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
@@ -59,6 +62,7 @@ broadcast use {
 
     pub struct AVLTreeSetMtPerInv;
 
+    #[verifier::reject_recursive_types(T)]
     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + 'static> {
         pub locked_set: Arc<RwLock<AVLTreeSetStPer<T>, AVLTreeSetMtPerInv>>,
         pub ghost_set_view: Ghost<Set<<T as View>::V>>,
@@ -85,7 +89,9 @@ broadcast use {
 
     // 8. traits
 
-    pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static> {
+    pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + View<V = Set<<T as View>::V>> {
+        spec fn spec_avltreesetmtper_wf(&self) -> bool;
+
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
@@ -165,6 +171,10 @@ broadcast use {
     }
 
     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+        open spec fn spec_avltreesetmtper_wf(&self) -> bool {
+            self.ghost_set_view@.finite()
+        }
+
         fn size(&self) -> (count: usize)
         {
             let handle = self.locked_set.acquire_read();
@@ -232,6 +242,11 @@ broadcast use {
                     n == vals@.len(),
                 decreases n - i,
             {
+                proof {
+                    assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
+                    assume(view_ord_consistent::<T>());
+                    assume(st@.len() + 1 < usize::MAX as nat);
+                }
                 st = st.insert(vals[i].clone());
                 i += 1;
             }
@@ -250,6 +265,10 @@ broadcast use {
         ) -> (filtered: Self)
         {
             let handle = self.locked_set.acquire_read();
+            proof {
+                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
+                assume(view_ord_consistent::<T>());
+            }
             let inner_filtered = handle.borrow().filter(f, Ghost(spec_pred));
             handle.release_read();
             assert(AVLTreeSetMtPerInv.inv(inner_filtered));
@@ -272,6 +291,10 @@ broadcast use {
         {
             let self_handle = self.locked_set.acquire_read();
             let other_handle = other.locked_set.acquire_read();
+            proof {
+                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
+                assume(view_ord_consistent::<T>());
+            }
             let common_st = self_handle.borrow().intersection(other_handle.borrow());
             self_handle.release_read();
             other_handle.release_read();
@@ -291,6 +314,10 @@ broadcast use {
         {
             let self_handle = self.locked_set.acquire_read();
             let other_handle = other.locked_set.acquire_read();
+            proof {
+                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
+                assume(view_ord_consistent::<T>());
+            }
             let remaining_st = self_handle.borrow().difference(other_handle.borrow());
             self_handle.release_read();
             other_handle.release_read();
@@ -310,7 +337,14 @@ broadcast use {
         {
             let self_handle = self.locked_set.acquire_read();
             let other_handle = other.locked_set.acquire_read();
-            let combined_st = self_handle.borrow().union(other_handle.borrow());
+            let self_st: &AVLTreeSetStPer<T> = self_handle.borrow();
+            let other_st: &AVLTreeSetStPer<T> = other_handle.borrow();
+            proof {
+                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
+                assume(view_ord_consistent::<T>());
+                assume(self_st@.len() + other_st@.len() < usize::MAX as nat);
+            }
+            let combined_st = self_st.union(other_st);
             self_handle.release_read();
             other_handle.release_read();
             assert(AVLTreeSetMtPerInv.inv(combined_st));
@@ -328,6 +362,10 @@ broadcast use {
         fn find(&self, x: &T) -> (found: B)
         {
             let handle = self.locked_set.acquire_read();
+            proof {
+                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
+                assume(view_ord_consistent::<T>());
+            }
             let found = handle.borrow().find(x);
             proof {
                 // Reader accept: inner find result matches ghost shadow.
@@ -340,6 +378,10 @@ broadcast use {
         fn delete(&self, x: &T) -> (updated: Self)
         {
             let handle = self.locked_set.acquire_read();
+            proof {
+                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
+                assume(view_ord_consistent::<T>());
+            }
             let updated_st = handle.borrow().delete(x);
             handle.release_read();
             assert(AVLTreeSetMtPerInv.inv(updated_st));
@@ -357,7 +399,13 @@ broadcast use {
         fn insert(&self, x: T) -> (updated: Self)
         {
             let handle = self.locked_set.acquire_read();
-            let updated_st = handle.borrow().insert(x);
+            let st: &AVLTreeSetStPer<T> = handle.borrow();
+            proof {
+                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
+                assume(view_ord_consistent::<T>());
+                assume(st@.len() + 1 < usize::MAX as nat);
+            }
+            let updated_st = st.insert(x);
             handle.release_read();
             assert(AVLTreeSetMtPerInv.inv(updated_st));
             let updated = AVLTreeSetMtPer {
@@ -392,7 +440,9 @@ broadcast use {
         {
             let self_handle = self.locked_set.acquire_read();
             let other_handle = other.locked_set.acquire_read();
-            let equal = self_handle.borrow() == other_handle.borrow();
+            let s: &AVLTreeSetStPer<T> = self_handle.borrow();
+            let o: &AVLTreeSetStPer<T> = other_handle.borrow();
+            let equal = s.eq(o);
             self_handle.release_read();
             other_handle.release_read();
             proof { assume(equal == (self@ == other@)); }
@@ -401,6 +451,7 @@ broadcast use {
     }
 
     impl<T: StTInMtT + Ord + 'static> PartialOrd for AVLTreeSetMtPer<T> {
+        #[verifier::external_body]
         fn partial_cmp(&self, other: &Self) -> (ord: Option<Ordering>) {
             let ord = Some(self.cmp(other));
             ord
@@ -413,7 +464,7 @@ broadcast use {
         {
             let self_handle = self.locked_set.acquire_read();
             let other_handle = other.locked_set.acquire_read();
-            let mut self_seq = Vec::new();
+            let mut self_seq: Vec<T> = Vec::new();
             self_handle.borrow().tree.collect_in_order(&mut self_seq);
             let mut other_seq = Vec::new();
             other_handle.borrow().tree.collect_in_order(&mut other_seq);
