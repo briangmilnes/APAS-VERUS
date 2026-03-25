@@ -120,6 +120,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
+    // veracity: no_requires
     fn size_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (size: N)
         ensures size as nat == link_spec_size(*link),
     {
@@ -130,6 +131,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
+    // veracity: no_requires
     fn update<T: StTInMtT + Ord + TotalOrder>(node: &mut Node<T>)
         ensures
             node.left == old(node).left,

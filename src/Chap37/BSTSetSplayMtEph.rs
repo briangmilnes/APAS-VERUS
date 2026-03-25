@@ -142,10 +142,9 @@ pub mod BSTSetSplayMtEph {
     //	9. impls
 
     fn values_vec<T: StTInMtT + Ord + TotalOrder + 'static>(tree: &BSTSplayMtEph<T>) -> (values: Vec<T>)
-        requires tree.spec_bstsplaymteph_wf(),
+        requires tree.spec_bstsplaymteph_wf(), obeys_feq_clone::<T>(),
         ensures true,
     {
-        proof { assume(obeys_feq_clone::<T>()); }
         let sorted = tree.in_order();
         let n = sorted.length();
         let mut values: Vec<T> = Vec::new();
@@ -182,8 +181,8 @@ pub mod BSTSetSplayMtEph {
         tree
     }
 
-    // veracity: no_requires
     fn build_from_vec<T: StTInMtT + Ord + TotalOrder + 'static>(values: Vec<T>) -> (set: BSTSetSplayMtEph<T>)
+        requires obeys_feq_clone::<T>(),
         ensures set.spec_bstsetsplaymteph_wf(),
     {
         BSTSetSplayMtEph { tree: rebuild_from_vec(values) }
@@ -198,16 +197,18 @@ pub mod BSTSetSplayMtEph {
 
     impl<T: StTInMtT + Ord + TotalOrder + 'static> BSTSetSplayMtEphTrait<T> for BSTSetSplayMtEph<T> {
         open spec fn spec_bstsetsplaymteph_wf(&self) -> bool {
-            self.tree.spec_bstsplaymteph_wf()
+            self.tree.spec_bstsplaymteph_wf() && obeys_feq_clone::<T>()
         }
 
         fn empty() -> Self {
+            proof { assume(obeys_feq_clone::<T>()); }
             Self {
                 tree: BSTSplayMtEph::new(),
             }
         }
 
         fn singleton(value: T) -> Self {
+            proof { assume(obeys_feq_clone::<T>()); }
             let mut tree = BSTSplayMtEph::new();
             let _ = tree.insert(value);
             Self { tree }
@@ -231,7 +232,6 @@ pub mod BSTSetSplayMtEph {
             if !self.contains(target) {
                 return;
             }
-            proof { assume(obeys_feq_clone::<T>()); }
             let sorted = self.tree.in_order();
             let n = sorted.length();
             let mut filtered: Vec<T> = Vec::new();
@@ -338,7 +338,6 @@ pub mod BSTSetSplayMtEph {
         }
 
         fn split(&self, pivot: &T) -> (Self, B, Self) {
-            proof { assume(obeys_feq_clone::<T>()); }
             let sorted = self.tree.in_order();
             let n = sorted.length();
             let mut left: Vec<T> = Vec::new();
@@ -365,7 +364,6 @@ pub mod BSTSetSplayMtEph {
         }
 
         fn join_pair(left: Self, right: Self) -> Self {
-            proof { assume(obeys_feq_clone::<T>()); }
             let left_sorted = left.tree.in_order();
             let right_sorted = right.tree.in_order();
             let mut tree = BSTSplayMtEph::new();
@@ -397,7 +395,6 @@ pub mod BSTSetSplayMtEph {
         }
 
         fn join_m(left: Self, pivot: T, right: Self) -> Self {
-            proof { assume(obeys_feq_clone::<T>()); }
             let left_sorted = left.tree.in_order();
             let right_sorted = right.tree.in_order();
             let mut tree = BSTSplayMtEph::new();
@@ -431,7 +428,6 @@ pub mod BSTSetSplayMtEph {
 
         #[verifier::external_body]
         fn filter<F: FnMut(&T) -> bool + Send>(&self, mut predicate: F) -> Self {
-            proof { assume(obeys_feq_clone::<T>()); }
             let sorted = self.tree.in_order();
             let n = sorted.length();
             let mut filtered: Vec<T> = Vec::new();
@@ -453,7 +449,6 @@ pub mod BSTSetSplayMtEph {
 
         #[verifier::external_body]
         fn reduce<F: FnMut(T, T) -> T + Send>(&self, mut op: F, base: T) -> T {
-            proof { assume(obeys_feq_clone::<T>()); }
             let sorted = self.tree.in_order();
             let n = sorted.length();
             let mut acc = base;
@@ -471,7 +466,6 @@ pub mod BSTSetSplayMtEph {
         }
 
         fn iter_in_order(&self) -> ArraySeqStPerS<T> {
-            proof { assume(obeys_feq_clone::<T>()); }
             self.tree.in_order()
         }
 
