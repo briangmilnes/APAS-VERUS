@@ -101,6 +101,12 @@ broadcast use {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- wraps StEph.singleton + RwLock
         fn singleton(k: K, v: V) -> (tree: Self)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                view_ord_consistent::<Pair<K, V>>(),
+                spec_pair_key_determines_order::<K, V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                view_ord_consistent::<K>(),
             ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablemteph_wf();
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
@@ -815,9 +821,9 @@ broadcast use {
         requires inner@.dom().finite()
         ensures s@ =~= inner@, s@.dom().finite(), s.spec_orderedtablemteph_wf()
     {
-              assert(obeys_feq_full_trigger::<K>());
-       assert(obeys_feq_full_trigger::<V>());
-       assert(obeys_feq_full_trigger::<Pair<K, V>>());
+        assert(obeys_feq_full_trigger::<K>());
+        assert(obeys_feq_full_trigger::<V>());
+        assert(obeys_feq_full_trigger::<Pair<K, V>>());
         let ghost view = inner@;
         proof { assume(inner.spec_orderedtablesteph_wf()); }
         OrderedTableMtEph {
@@ -835,10 +841,15 @@ broadcast use {
             entries@.len() < usize::MAX as nat,
             vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
             view_ord_consistent::<Pair<K, V>>(),
+            spec_pair_key_determines_order::<K, V>(),
+            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            view_ord_consistent::<K>(),
+            forall|ii: int, jj: int| 0 <= ii < jj < entries@.len()
+                ==> (#[trigger] entries@[ii]).0 != (#[trigger] entries@[jj]).0,
         ensures constructed@.dom().finite(), constructed.spec_orderedtablemteph_wf()
     {
-              assert(obeys_feq_full_trigger::<K>());
-       assert(obeys_feq_full_trigger::<V>());
+        assert(obeys_feq_full_trigger::<K>());
+        assert(obeys_feq_full_trigger::<V>());
         assert(obeys_feq_full_trigger::<Pair<K, V>>());
         let inner = crate::Chap43::OrderedTableStEph::OrderedTableStEph::from_sorted_entries(entries);
         from_st(inner)

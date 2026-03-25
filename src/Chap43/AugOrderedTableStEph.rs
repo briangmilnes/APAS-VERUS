@@ -134,7 +134,13 @@ broadcast use {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- wraps OrderedTableStEph.singleton
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
-            requires obeys_feq_clone::<Pair<K, V>>()
+            requires
+                obeys_feq_clone::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                view_ord_consistent::<Pair<K, V>>(),
+                spec_pair_key_determines_order::<K, V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                view_ord_consistent::<K>(),
             ensures tree@.dom().finite();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to OrderedTableStEph.find (linear scan)
