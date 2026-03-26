@@ -221,4 +221,4 @@
 //!    - Do NOT declare TotalOrder "blocked" because the trait doesn't have it yet.
 //!      Add the bound. That is the fix.
 
-// No code body — this is a documentation-only standard file.
+pub mod total_order_standard {}

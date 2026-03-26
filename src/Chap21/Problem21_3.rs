@@ -82,6 +82,20 @@ pub mod Problem21_3 {
                 decreases n + 1 - y,
             {
                 let ghost v_len_mid = v@.len();
+                proof {
+                    // v_len_mid == v_len_before + (y-1)*n, v_len_before == x*nn, nn == n*n, nnn == nn*n
+                    // x <= n-1, y <= n, so v_len_mid <= (n-1)*n*n + (n-1)*n = n*n*n - n < nnn
+                    assert(v_len_mid <= nnn as int) by (nonlinear_arith)
+                        requires
+                            v_len_mid == v_len_before + (y as int - 1) * n as int,
+                            v_len_before == x as int * nn as int,
+                            nn == n as int * n as int,
+                            nnn == nn as int * n as int,
+                            x as int + 1 <= n as int,
+                            1 <= y as int,
+                            y as int <= n as int,
+                            n as int > 0;
+                }
                 let mut z: usize = 2;
                 while z <= n + 1
                     invariant
@@ -99,10 +113,38 @@ pub mod Problem21_3 {
                             && 2 <= v@[k].1.1 && v@[k].1.1 <= n + 1,
                     decreases n + 2 - z,
                 {
+                    proof {
+                        // v.len() < nnn so push won't overflow capacity
+                        assert(v_len_mid + (z as int - 2) + 1 <= nnn as int) by (nonlinear_arith)
+                            requires
+                                v_len_mid == v_len_before + (y as int - 1) * n as int,
+                                v_len_before == x as int * nn as int,
+                                nn == n as int * n as int,
+                                nnn == nn as int * n as int,
+                                x as int + 1 <= n as int,
+                                y as int <= n as int,
+                                z as int <= n as int + 1,
+                                n as int > 0;
+                    }
                     v.push(Pair(x, Pair(y, z)));
                     z = z + 1;
                 }
                 // After inner: added n elements, v.len() == v_len_mid + n
+                proof {
+                    assert(v@.len() == v_len_mid + n as int);
+                    assert(v_len_mid == v_len_before + (y as int - 1) * n as int);
+                    // (y - 1) * n + n == y * n
+                    assert((y as int - 1) * n as int + n as int == y as int * n as int)
+                        by (nonlinear_arith);
+                    assert(v@.len() == v_len_before + y as int * n as int);
+                    // Overflow: v.len() <= nnn
+                    assert(y as int * n as int <= n as int * n as int)
+                        by (nonlinear_arith)
+                        requires y as int <= n as int, n as int >= 0;
+                    assert(v_len_before + n as int * n as int <= (x as int + 1) * nn as int)
+                        by (nonlinear_arith)
+                        requires v_len_before == x as int * nn as int, nn == n as int * n as int;
+                }
                 y = y + 1;
             }
             // After middle: v.len() == v_len_before + n * n == (x+1) * nn
@@ -112,6 +154,12 @@ pub mod Problem21_3 {
                     by (nonlinear_arith);
             }
             x = x + 1;
+        }
+        proof {
+            assert(v@.len() == n as int * nn as int);
+            assert(n as int * nn as int == n as int * n as int * n as int)
+                by (nonlinear_arith)
+                requires nn == n as int * n as int;
         }
         ArraySeqStPerS { seq: v }
     }

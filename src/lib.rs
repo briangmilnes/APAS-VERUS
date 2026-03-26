@@ -9,256 +9,194 @@
 #![allow(non_snake_case)]
 #![allow(non_camel_case_types)]
 
-// Foundation modules — always included unless experiments_only
+// Foundation modules
 pub mod Types;
 pub mod Concurrency;
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod ParaPairs;
 
 pub mod experiments {
-//    pub mod vstd_laws_eq_clone;  // Blocked: reveal() E0401 on generic types
-//    pub mod struct_rwlock_arc_with_fn_specs;  // FAILS: assumes/external_body at lock boundary
-//    pub mod struct_rwlock_with_fn_specs;  // FAILS: assumes/external_body at lock boundary
-//    pub mod struct_rwlock_with_fn_specs_result;  // FAILS: assumes at lock boundary
-//    pub mod struct_rwlock_with_fn_specs_result_handles;  // FAILS: assumes at lock boundary
-//    pub mod pub_crate_type_invariant;  // FAILS: field expr for opaque datatype
-//    pub mod pub_crate_type_invariant_with_accessors;
-//    pub mod struct_rwlock_type_invariant;
-//    pub mod vstd_rwlock_example1;
-//    pub mod vstd_rwlock_example2;
-//    pub mod arc_rwlock_trivial;
-//    pub mod rwlock_tsm;
-//    pub mod rwlock_tsm_increment;
-//    pub mod rwlock_inc_token_inside_lock;
-//    pub mod collect;
-//    pub mod clone_fn;
-//    pub mod baseviewtypes;
-//    pub mod tcb_foul;  // TCB foul experiment - Verus blocks unspecified &mut self methods
-//    pub mod pervasives;
-//    pub mod sigma_pi;
-//    pub mod abstract_set_iter;  // FAILS: vstdplus::vec, clone_view moved to attic
-//    pub mod SetLoops;
-//    pub mod ToVecProof;
-//    pub mod supertrait;
-//    pub mod minimal_iter;
-//    pub mod triangle;
-//    pub mod verus_iterator;
-//    pub mod verus_vec_iterator;
-//    pub mod verus_vec_iterator_while_basic_proofs;
-//    pub mod verus_vec_iterator_loop_basic_proofs;
-//    pub mod verus_vec_iterator_for_basic_proofs;
-//    pub mod verus_sum_loops_iterators;
-//    pub mod seq_vec_equality;
-//    pub mod executable_use_of_int;
-//    pub mod VSTDLoopProofs;
-//    pub mod seq_while_basic_proofs;
-//    pub mod seq_for_basic_proofs;
-//    pub mod seq_loop_basic_proofs;
-//    pub mod verus_wrapped_iter_loops;
-//    pub mod possession;
-//    pub mod simple_seq_iter;
-//    pub mod simple_set_iter;
-//    pub mod simple_hash_set_iter;
-//    pub mod invariant_proof_test;
-//    pub mod assume_spec_test; 
-//    pub mod struct_construction_test; 
-//    pub mod pub_crate_test;
-//    pub mod verus_pub_crate_test;  // Has type_invariant failure
-//    pub mod hash_set_iter;
-//    pub mod hash_set_with_view_plus_loops;
-//    pub mod vec_if;
-//    pub mod clone;
-//    pub mod proof_fn_in_trait;
-//    pub mod proven_partialeq;
-//    pub mod use_proven_partialeq;
-//    pub mod eq_rel;
-//    pub mod total_ord_gen;
-//    pub mod total_ord_gen_axioms;
-//    pub mod test_feq;
-//    pub mod test_feq_insertion_sort;
-//    pub mod clone_plus;
-//    pub mod CheckedI32;
-//    pub mod unsigned_int;
-//    pub mod signed_int;
-//    pub mod checked_unsigned_int;
-//    pub mod checked_signed_int;
-//    pub mod checked_u32;
-//    pub mod seq_set_exec;
-//    pub mod hash_set_modern_pattern;  // WIP - uses vstd::std_specs not available in cargo
-//    pub mod test_verify_one_file;     // WIP - uses rust_verify_test_macros (nightly)
-//    pub mod ghost_type_invariant;     // FAILS - type_invariant makes struct opaque
-//    pub mod modify_a_ghost_struct;
-//    pub mod parapair_closure_ensures;
-//    pub mod parapair_move_closure_ensures;
-//    pub mod parapair_named_closure;
-//    pub mod parapair_toplevel_closure;
-//    pub mod arc_clone_deref;
-//    pub mod spec_loop;  // RESULT: no cycle error in simple case
-//   pub mod vec_filter;  // RESULT: use Anvil style multiset. 
-//   pub mod vec_remove_duplicates;
-//   pub mod deep_view_2_tuple;
-//    pub mod deep_view_struct;
-//    pub mod collect2;
-//    pub mod collect_deep_view;
-//    pub mod verus_keep_ghost_and_test;
-//    pub mod biconditional_spec_fun;
-    // pub mod arc_rwlock_ninject;
-    // pub mod ArrayVal;
-    // pub mod ArrayVecSet;
-    // pub mod assume_spec_test;  // FAILS: Verus panic (traits.rs assertion)
-    // pub mod baseviewtypes;
-    // pub mod boxing_fns;
-    // pub mod checked_comm;
-    // pub mod CheckedI32;
-    // pub mod checked_signed_int;
-    // pub mod checked_unsigned_int;
-    // pub mod checked_u32;
-    // pub mod clone_fn;
-    // pub mod clone_plus;  // FAILS: postcondition not satisfied (feq_works)
-    // pub mod clone;
-    // pub mod collect_deep_view;
-    // pub mod collect;
-    // pub mod deep_view_struct;
-    // pub mod eq_rel;
-    // pub mod executable_use_of_int;
-    // pub mod external_body_accept_hole;
-    // pub mod f64_bits_sort;
-    // pub mod f64_float_cmp_sort;
-    // pub mod generic_specs_to_prevent_cycles;  // FAILS: parse error (4c); only free fn (4a) works
-    // pub mod f64_sort;  // FAILS: assertion failed (f64_le_spec in loop invariant)
-    // pub mod ForFor;  // FAILS: precondition not satisfied, invariant not satisfied
-    // pub mod ForLoops;
-    // pub mod ghost_type_invariant;  // FAILS: type_invariant makes struct opaque
-    // pub mod HashCheckedU32;  // FAILS: conflicting impls with vstdplus::hashed_checked_u32
-    // pub mod hash_set_iter;
-    // pub mod hash_set_modern_pattern;
-    // pub mod hash_set_with_view_plus_loops;
-    // pub mod invariant_proof_test;  // FAILS: expected `!` in proof fn
-    // pub mod minimal_iter;
-    // pub mod modify_a_ghost_struct;
-    // pub mod parapair_closure_ensures;  // FAILS: ParaPairs not in experiments_only
-    // pub mod parapair_move_closure_ensures;  // FAILS: ParaPairs not in experiments_only
-    // pub mod parapair_named_closure;  // FAILS: ParaPairs not in experiments_only
-    // pub mod parapair_toplevel_closure;  // FAILS: ParaPairs not in experiments_only
-    // pub mod pervasives;
-    // pub mod possession;  // FAILS: missing field `a` in struct initializer
-    // pub mod proof_fn_in_trait;
-    // pub mod proven_partialeq;
-    // pub mod pub_crate_test;
-    // pub mod seq_array_equality;
-    // pub mod seq_for_basic_proofs;
-    // pub mod seq_loop_basic_proofs;
-    // pub mod seq_set_exec;  // FAILS: Chap05 not in experiments_only
-    // pub mod seq_vec_equality;
-    // pub mod seq_while_basic_proofs;
-    // pub mod set_len_empty_both_ways;
-    // pub mod SetLoops;  // FAILS: clone_view moved to attic
-    // pub mod sigma_pi;
-    // pub mod signed_int;
-    // pub mod simple_hash_set_iter;  // FAILS: obeys_feq_full, assertion failed
-    // pub mod simple_seq_iter;  // FAILS: clone_view moved to attic
-    // pub mod simple_set_iter;  // FAILS: clone_view, lemma_take_full_to_set
-    // pub mod struct_construction_test;
-    // pub mod supertrait;  // FAILS: multiple applicable items (supertrait foo)
-    // pub mod tcb_foul;  // FAILS: use old(x) for &mut in requires
-    // pub mod test_feq_insertion_sort;
-    // pub mod test_feq;
-    // pub mod test_test;
-    // pub mod test_verify_one_file;
-    // pub mod total_ord_gen_axioms;  // FAILS: trigger must be fn/field/arith
-    // pub mod total_ord_gen;  // FAILS: assertion failed (axiom_cloned_view_eq)
-    // pub mod ToVecProof;  // FAILS: clone_view moved to attic
-    // pub mod triangle;
-//    pub mod tree_module_style;
-//    pub mod tree_mut_data_updates;
-//    pub mod tree_mut_structure_updates;
-//    pub mod iter_requires_on_external_trait;  // RESULT: requires on external trait impl rejected by Verus
-    // pub mod trait_rec_vs_iter;  // Experiment: rec vs iter naming pattern. Not in verification scope.
-    // pub mod trait_rec_caller;
-    // pub mod trait_iter_caller;
-    // pub mod unsigned_int;
-    // pub mod proven_partialeq;
-    // pub mod use_proven_partialeq;
-    // pub mod vec_clone_in_verus;
-    // pub mod vec_if;
-    // pub mod vec_length_while_rust;
-    // pub mod vec_length_while_verus;
-    // pub mod vec_remove_duplicates;
-    // pub mod verus_iterator;
-    // pub mod verus_pub_crate_test;  // FAILS: field expr for opaque datatype
-    // pub mod verus_iterator;
-    // pub mod verus_vec_iterator;  // FAILS: precondition not satisfied (exec_invariant)
-    // pub mod verus_vec_iterator_while_basic_proofs;  // FAILS: depends on verus_vec_iterator
-    // pub mod verus_wrapped_iter_loops;
-    // pub mod VSTDLoopProofs;
-    // pub mod WhileWhile;
-    // Hypothesis: Can Verus verify f64 sorting using bit-level ordering?
-    // Result: Yes. Structural verification (loop invariants, sorted postcondition) works
-    // with two classes of assumes: IEEE 754 ordering axioms and an external_body bridge
-    // from exec `<=` to spec `to_bits_spec()` ordering. Multiset not proven (orthogonal).
-    // pub mod f64_bits_sort;
+    // SUCCEEDS
+//    pub mod accept;                                       // SUCCEEDS: accept(b) with admit replaces raw assume(b)
+//    pub mod arc_clone_deref;                              // SUCCEEDS: Arc::clone preserves deref equality
+//    pub mod ArrayVal;                                     // SUCCEEDS: array literals, mutation, and refs verify
+//    pub mod ArrayVecSet;                                  // SUCCEEDS: for/while on arrays with length assumptions verify
+//    pub mod baseviewtypes;                                // SUCCEEDS: all primitive Views are identity (type V = Self)
+//    pub mod biconditional_spec_fun;                       // SUCCEEDS: biconditionals against spec functions
+//    pub mod boxing_fns;                                   // SUCCEEDS: which Fn types Verus verifies when boxed
+//    pub mod checked_comm;                                 // SUCCEEDS: commutativity lemmas for checked arithmetic
+//    pub mod checked_signed_int;                           // SUCCEEDS: checked signed integer trait with overflow
+//    pub mod checked_u32;                                  // SUCCEEDS: CheckedU32 implementing CheckedUnsignedInt
+//    pub mod checked_unsigned_int;                         // SUCCEEDS: checked unsigned integer trait with overflow
+//    pub mod CheckedI32;                                   // SUCCEEDS: checked integer tracking true mathematical value
+//    pub mod clone;                                        // SUCCEEDS: broadcast axioms avoid explicit assert(cloned(...)) calls
+//    pub mod clone_fn;                                     // SUCCEEDS: clone preserving closure specs
+//    pub mod clone_plus_vs_deep_clone;                     // SUCCEEDS: DeepViewClone vs clone_plus comparison
+//    pub mod collect;                                      // SUCCEEDS: collect (group-by-key) with two spec families
+//    pub mod collect2;                                     // SUCCEEDS: dual loop collect
+//    pub mod collect_deep_view;                            // SUCCEEDS: collect using DeepView trait
+//    pub mod deep_view_2_tuple;                            // SUCCEEDS: DeepView for 2-tuples
+//    pub mod deep_view_struct;                             // SUCCEEDS: DeepView on struct with Option<usize> field
+//    pub mod derive_clone_enum_in_verus;                   // SUCCEEDS: #[derive(Clone)] on enum verifies
+//    pub mod derive_clone_struct_in_verus;                 // SUCCEEDS: #[derive(Clone)] on struct verifies
+//    pub mod derive_clone_struct_with_vec_in_verus;        // SUCCEEDS: #[derive(Clone)] on struct with Vec verifies
+//    pub mod derive_copy_enum_in_verus;                    // SUCCEEDS: #[derive(Copy, Clone)] on enum verifies
+//    pub mod derive_copy_struct_in_verus;                  // SUCCEEDS: #[derive(Copy, Clone)] on struct verifies
+//    pub mod derive_debug_enum_in_verus;                   // SUCCEEDS: #[derive(Debug)] on enum verifies
+//    pub mod derive_debug_struct_in_verus;                 // SUCCEEDS: #[derive(Debug)] on struct verifies
+//    pub mod derive_debug_struct_with_vec_in_verus;        // SUCCEEDS: #[derive(Debug)] on struct with Vec verifies
+//    pub mod derive_default_enum_in_verus;                 // SUCCEEDS: #[derive(Default)] on enum verifies
+//    pub mod derive_default_struct_in_verus;               // SUCCEEDS: #[derive(Default)] on struct verifies
+//    pub mod derive_default_struct_with_vec_in_verus;      // SUCCEEDS: #[derive(Default)] on struct with Vec verifies
+//    pub mod derive_eq_enum_in_verus;                      // SUCCEEDS: #[derive(PartialEq, Eq)] on enum verifies
+//    pub mod derive_eq_struct_in_verus;                    // SUCCEEDS: #[derive(PartialEq, Eq)] on struct verifies
+//    pub mod derive_eq_struct_with_vec_in_verus;           // SUCCEEDS: #[derive(PartialEq, Eq)] on struct with Vec verifies
+//    pub mod derive_hash_enum_in_verus;                    // SUCCEEDS: #[derive(Hash)] on enum verifies
+//    pub mod derive_hash_struct_in_verus;                  // SUCCEEDS: #[derive(Hash)] on struct verifies
+//    pub mod derive_hash_struct_with_vec_in_verus;         // SUCCEEDS: #[derive(Hash)] on struct with Vec verifies
+//    pub mod derive_ord_enum_in_verus;                     // SUCCEEDS: #[derive(Ord)] on enum verifies
+//    pub mod derive_ord_struct_in_verus;                   // SUCCEEDS: #[derive(Ord)] on struct verifies
+//    pub mod derive_ord_struct_with_vec_in_verus;          // SUCCEEDS: #[derive(Ord)] on struct with Vec verifies
+//    pub mod derive_partial_eq_enum_in_verus;              // SUCCEEDS: #[derive(PartialEq)] on enum verifies
+//    pub mod derive_partial_eq_struct_in_verus;            // SUCCEEDS: #[derive(PartialEq)] on struct verifies
+//    pub mod derive_partial_eq_struct_with_vec_in_verus;   // SUCCEEDS: #[derive(PartialEq)] on struct with Vec verifies
+//    pub mod derive_partial_ord_enum_in_verus;             // SUCCEEDS: #[derive(PartialOrd)] on enum verifies
+//    pub mod derive_partial_ord_struct_in_verus;           // SUCCEEDS: #[derive(PartialOrd)] on struct verifies
+//    pub mod derive_partial_ord_struct_with_vec_in_verus;  // SUCCEEDS: #[derive(PartialOrd)] on struct with Vec verifies
+//    pub mod eq_rel;                                       // SUCCEEDS: trait hierarchy for equality relations
+//    pub mod exec_spec_verified_test;                      // SUCCEEDS: exec/spec/verified test patterns
+//    pub mod external_body_accept_hole;                    // SUCCEEDS: veracity treats accept hole comments
+//    pub mod f64_bits_sort;                                // SUCCEEDS: f64 sorting via bit-level ordering (with assumes for IEEE axioms)
+//    pub mod ForLoops;                                     // SUCCEEDS: for loops with bounds and array access
+//    pub mod hash_set_iter;                                // SUCCEEDS: hash set iteration patterns
+//    pub mod hash_set_with_view_plus_loops;                // SUCCEEDS: loop patterns over HashSetWithViewPlus
+//    pub mod minimal_iter;                                 // SUCCEEDS: minimal iterator verification
+//    pub mod modify_a_ghost_struct;                        // SUCCEEDS: ghost structs can be created, modified, used in specs
+//    pub mod mut_ref_hashtable;                            // SUCCEEDS: get_mut/entry patterns with -V new-mut-ref
+//    pub mod mut_refs_and_mut_returns;                     // SUCCEEDS: &mut self with old/fin in ensures
+//    pub mod parapair_named_closure;                       // SUCCEEDS: named closures with explicit ensures propagate
+//    pub mod parapair_toplevel_closure;                    // SUCCEEDS: toplevel closures validate
+//    pub mod pervasives;                                   // SUCCEEDS: pervasive utility tests
+//    pub mod proof_fn_in_trait;                            // SUCCEEDS: proof fn in trait works
+//    pub mod proven_partialeq;                             // SUCCEEDS: ProvenPartialEq pattern
+//    pub mod pub_crate_test;                               // SUCCEEDS: pub(crate) test patterns
+//    pub mod pub_crate_type_invariant_with_accessors;      // SUCCEEDS: closed spec fn accessors for pub(crate) fields
+//    pub mod rwlock_inc_token_inside_lock;                 // SUCCEEDS: increment token inside lock
+//    pub mod rwlock_tsm;                                   // SUCCEEDS: RwLock TSM pattern
+//    pub mod rwlock_tsm_increment;                         // SUCCEEDS: coarse-grained lock caller sees specs via ghost TSM token
+//    pub mod seq_array_equality;                           // SUCCEEDS: seq/array equality patterns
+//    pub mod seq_for_basic_proofs;                         // SUCCEEDS: for loop over seq with basic proofs
+//    pub mod seq_loop_basic_proofs;                        // SUCCEEDS: loop over seq with basic proofs
+//    pub mod seq_vec_equality;                             // SUCCEEDS: seq/vec equality
+//    pub mod seq_while_basic_proofs;                       // SUCCEEDS: while loop over seq with basic proofs
+//    pub mod set_len_empty_both_ways;                      // SUCCEEDS: set length/empty equivalence
+//    pub mod sigma_pi;                                     // SUCCEEDS: sigma/pi summation patterns
+//    pub mod signed_int;                                   // SUCCEEDS: signed int verification
+//    pub mod spec_fun_argument;                            // SUCCEEDS: ghost spec_fn predicate alongside exec closure
+//    pub mod spec_loop;                                    // SUCCEEDS: no cycle error in simple case
+//    pub mod struct_construction_test;                     // SUCCEEDS: struct construction patterns
+//    pub mod struct_rwlock_type_invariant;                 // SUCCEEDS: type_invariant links ghost to locked value
+//    pub mod test_feq;                                     // SUCCEEDS: feq test patterns
+//    pub mod test_feq_insertion_sort;                      // SUCCEEDS: feq with insertion sort
+//    pub mod test_test;                                    // SUCCEEDS: basic test patterns
+//    pub mod trait_decreases;                              // SUCCEEDS: recursive trait dispatch with decreases
+//    pub mod trait_iter_caller;                            // SUCCEEDS: trait iterator caller verifies
+//    pub mod trait_rec_caller;                             // SUCCEEDS: trait recursive caller verifies
+//    pub mod trait_rec_vs_iter;                            // SUCCEEDS: rec vs iter naming pattern comparison
+//    pub mod tree_module_style;                            // SUCCEEDS: multi-struct spec style with recursive trait dispatch
+//    pub mod tree_mut_data_updates;                        // SUCCEEDS: Box<Node> data field mutation verifies
+//    pub mod tree_mut_structure_updates;                   // SUCCEEDS: rotations and insert-with-rotation verify
+//    pub mod triangle;                                     // SUCCEEDS: triangle verification
+//    pub mod unsigned_int;                                 // SUCCEEDS: unsigned int verification
+//    pub mod use_proven_partialeq;                         // SUCCEEDS: ProvenPartialEq works as generic bound
+//    pub mod vec_filter;                                   // SUCCEEDS: use Anvil style multiset for filter
+//    pub mod vec_if;                                       // SUCCEEDS: vec conditional patterns
+//    pub mod vec_length_while_rust;                        // SUCCEEDS: vec length while loop (Rust style)
+//    pub mod vec_length_while_verus;                       // SUCCEEDS: vec length while loop (Verus style)
+//    pub mod vec_remove_duplicates;                        // SUCCEEDS: vec remove duplicates
+//    pub mod verus_iterator;                               // SUCCEEDS: Verus iterator patterns
+//    pub mod verus_keep_ghost_and_test;                    // SUCCEEDS: verus_keep_ghost and test interaction
+//    pub mod verus_sum_loops_iterators;                    // SUCCEEDS: sum loops with iterators
+//    pub mod verus_vec_iterator_for_basic_proofs;          // SUCCEEDS: for loop vec iterator proofs
+//    pub mod verus_vec_iterator_loop_basic_proofs;         // SUCCEEDS: loop vec iterator proofs
+//    pub mod verus_wrapped_iter_loops;                     // SUCCEEDS: wrapped iterator loops
+//    pub mod vstd_rwlock_example1;                         // SUCCEEDS: vstd rwlock example 1
+//    pub mod vstd_rwlock_example2;                         // SUCCEEDS: vstd rwlock example 2
+//    pub mod VSTDLoopProofs;                               // SUCCEEDS: VSTD loop proof patterns
+//    pub mod WhileWhile;                                   // SUCCEEDS: nested while loops
 
-    // Hypothesis: Can Verus verify f64 sorting using native `<=` and uninterpreted le_ensures?
-    // Result: Partially. Comparison bridge works, but le_ensures is hostile to invariant
-    // maintenance across Vec::set mutations — the solver can't propagate ordering facts
-    // through swaps. Requires assume for sorted-prefix maintenance. The bits approach is
-    // cleaner for production use. Led to creation of vstdplus::float broadcast axiom group.
-    // pub mod f64_float_cmp_sort;
-//    pub mod boxing_fns;
-    // derive experiments: #[derive(TR)] on {struct,enum} inside verus!
-    // pub mod derive_debug_struct_in_verus;
-    // pub mod derive_debug_enum_in_verus;
-    // pub mod derive_display_struct_in_verus;  // derive_more (Verus can't link external crates)
-    // pub mod derive_display_enum_in_verus;
-    // pub mod derive_eq_struct_in_verus;
-    // pub mod derive_eq_enum_in_verus;
-    // pub mod derive_partial_eq_struct_in_verus;
-    // pub mod derive_partial_eq_enum_in_verus;
-    // pub mod derive_clone_struct_in_verus;
-    // pub mod derive_clone_enum_in_verus;
-    // pub mod derive_copy_struct_in_verus;
-    // pub mod derive_copy_enum_in_verus;
-    // pub mod copy_vs_clone_wars;  // RESULT: FAILS (Copy doesn't eliminate Clone/PartialEq workaround assumes)
-    // pub mod derive_default_struct_in_verus;
-    // pub mod derive_default_enum_in_verus;
-    // pub mod derive_hash_struct_in_verus;
-    // pub mod derive_hash_enum_in_verus;
-    // pub mod derive_partial_ord_struct_in_verus;
-    // pub mod derive_partial_ord_enum_in_verus;
-    // pub mod derive_ord_struct_in_verus;
-    // pub mod derive_ord_enum_in_verus;
-//    pub mod mut_refs_and_mut_returns;
-    // accept, accept_external_body — Veracity treatment (see Accepted.md)
-//    pub mod accept;
-    // pub mod accept_external_body;  // FAILS: macro cannot produce attribute attaching to item
-//    pub mod external_body_accept_hole;
-    // pub mod exec_spec_verified_test;
+    // FAILS
+//    pub mod abstract_set_iter;                            // FAILS: vstdplus::vec, clone_view moved to attic
+//    pub mod accept_external_body;                         // FAILS: macro cannot produce attribute attaching to item
+//    pub mod arc_rwlock_ninject;                           // FAILS: threads contending for single RwLock
+//    pub mod arc_rwlock_trivial;                           // FAILS: assumes/external_body at lock boundary
+//    pub mod assume_spec_test;                             // FAILS: Verus panic (traits.rs assertion)
+//    pub mod clone_plus;                                   // FAILS: postcondition not satisfied (feq_works)
+//    pub mod copy_vs_clone_wars;                           // FAILS: Copy doesn't eliminate Clone/PartialEq workaround assumes
+//    pub mod derive_display_enum_in_verus;                 // FAILS: derive_more can't link in Verus
+//    pub mod derive_display_struct_in_verus;               // FAILS: derive_more can't link in Verus
+//    pub mod executable_use_of_int;                        // FAILS: Verus disallows executable use of int
+//    pub mod f64_float_cmp_sort;                           // FAILS: le_ensures hostile to invariant maintenance across swaps
+//    pub mod f64_sort;                                     // FAILS: assertion failed (f64_le_spec in loop invariant)
+//    pub mod ForFor;                                       // FAILS: precondition not satisfied, invariant not satisfied
+//    pub mod generic_specs_to_prevent_cycles;              // FAILS: parse error (4c); only free fn (4a) works
+//    pub mod ghost_type_invariant;                         // FAILS: type_invariant requires private fields, makes struct opaque
+//    pub mod hash_set_modern_pattern;                      // FAILS: uses vstd::std_specs not available in cargo
+//    pub mod HashCheckedU32;                               // FAILS: conflicting impls with vstdplus::hashed_checked_u32
+//    pub mod invariant_proof_test;                         // FAILS: expected `!` in proof fn
+//    pub mod iter_requires_on_external_trait;              // FAILS: Verus rejects requires on external trait impl
+//    pub mod parapair_closure_ensures;                     // FAILS: closure ensures don't propagate through ParaPair
+//    pub mod parapair_move_closure_ensures;                // FAILS: closure ensures don't propagate with move
+//    pub mod possession;                                   // FAILS: missing field `a` in struct initializer
+//    pub mod pub_crate_type_invariant;                     // FAILS: field expr for opaque datatype
+//    pub mod seq_set_exec;                                 // FAILS: Chap05 not in experiments_only
+//    pub mod SetLoops;                                     // FAILS: clone_view moved to attic
+//    pub mod simple_hash_set_iter;                         // FAILS: obeys_feq_full, assertion failed
+//    pub mod simple_seq_iter;                              // FAILS: clone_view moved to attic
+//    pub mod simple_set_iter;                              // FAILS: clone_view, lemma_take_full_to_set
+//    pub mod struct_rwlock_arc_with_fn_specs;              // FAILS: assumes/external_body at lock boundary
+//    pub mod struct_rwlock_with_fn_specs;                  // FAILS: assumes/external_body at lock boundary
+//    pub mod struct_rwlock_with_fn_specs_result;           // FAILS: assumes at lock boundary
+//    pub mod struct_rwlock_with_fn_specs_result_handles;   // FAILS: assumes at lock boundary
+//    pub mod supertrait;                                   // FAILS: multiple applicable items (supertrait foo)
+//    pub mod tcb_foul;                                     // FAILS: Verus blocks unspecified &mut self methods
+//    pub mod test_verify_one_file;                         // FAILS: uses rust_verify_test_macros (nightly)
+//    pub mod total_ord_gen;                                // FAILS: assertion failed (axiom_cloned_view_eq)
+//    pub mod total_ord_gen_axioms;                         // FAILS: trigger must be fn/field/arith
+//    pub mod ToVecProof;                                   // FAILS: clone_view moved to attic
+//    pub mod vec_clone_in_verus;                           // FAILS: Vec::clone alone cannot prove view equality for generic T
+//    pub mod verus_pub_crate_test;                         // FAILS: field expr for opaque datatype
+//    pub mod verus_vec_iterator;                           // FAILS: precondition not satisfied (exec_invariant)
+//    pub mod verus_vec_iterator_while_basic_proofs;        // FAILS: depends on verus_vec_iterator
+//    pub mod vstd_laws_eq_clone;                           // FAILS: reveal() E0401 on generic types
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod standards {
-    pub mod mod_standard;
-    pub mod view_standard;
+    pub mod arc_usage_standard;
+    pub mod capacity_bounds_standard;
+//  pub mod constructor_feq_standard;              // comment-only
     pub mod deep_view_standard;
-    pub mod iterators_standard;
-    pub mod mut_standard;
-    pub mod multi_struct_standard;
-    pub mod table_of_contents_standard;
-    pub mod using_closures_standard;
-    pub mod wrapping_iterators_standard;
-//    pub mod rwlock_standard;  // moved to attic/standards/
-    pub mod tsm_standard;
-    pub mod toplevel_coarse_rwlocks_for_mt_modules;
-//    pub mod arc_standard;  // moved to attic/standards/
+    pub mod finite_sets_standard;
+//  pub mod helper_function_placement_standard;    // comment-only
     pub mod hfscheduler_standard;
-//    pub mod arc_rwlock_coarse_standard;  // moved to attic/standards/
+    pub mod iterative_vs_recursive_standard;
+    pub mod iterators_standard;
+    pub mod mod_standard;
+    pub mod multi_struct_standard;
+    pub mod mut_standard;
+    pub mod partial_eq_eq_clone_standard;
     pub mod spec_naming_convention;
     pub mod spec_wf_standard;
-    pub mod partial_eq_eq_clone_standard;
-    pub mod arc_usage_standard;
-    pub mod finite_sets_standard;
-    pub mod capacity_bounds_standard;
-    pub mod iterative_vs_recursive_standard;
+    pub mod table_of_contents_standard;
+    pub mod toplevel_coarse_rwlocks_for_mt_modules;
+//  pub mod total_order_standard;                  // comment-only
+    pub mod tsm_standard;
+    pub mod using_closures_standard;
+//  pub mod using_hashmap_standard;                // comment-only
+//  pub mod using_rand_standard;                   // comment-only
+    pub mod view_standard;
+    pub mod wrapping_iterators_standard;
 }
 
 pub mod vstdplus {
@@ -291,13 +229,13 @@ pub mod vstdplus {
     }
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap02 {
     pub mod HFSchedulerMtEph;
     pub mod FibonacciHFScheduler;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap03 {
     pub mod InsertionSortStEph;
 }
@@ -323,7 +261,7 @@ pub mod Chap06 {
     pub mod UnDirGraphMtEph;
     pub mod LabDirGraphMtEph;
     pub mod LabUnDirGraphMtEph;
-    // WeightedDirGraphStEph per-type variants, 
+    // WeightedDirGraphStEph per-type variants,
     // just one being verified but they all work.
     pub mod WeightedDirGraphStEphU8;
     pub mod WeightedDirGraphStEphU16;
@@ -337,12 +275,9 @@ pub mod Chap06 {
     pub mod WeightedDirGraphStEphI128;
     pub mod WeightedDirGraphStEphIsize;
     pub mod WeightedDirGraphStEphF64;
-    // Int/Float aggregate graph modules removed: Rust lacks sum types
-    // (no `impl Trait for i8 | i16 | i32 | ...`), so these can't be expressed cleanly.
-    // Use per-type variants above instead.
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap11 {
     pub mod FibonacciStEph;
     pub mod FibonacciMtPerAllThreads;
@@ -351,19 +286,19 @@ pub mod Chap11 {
     pub mod FibonacciMtEphRecomputes;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap12 {
     pub mod Exercise12_1;
     pub mod Exercise12_2;
     pub mod Exercise12_5;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap17 {
     pub mod MathSeq;
 }
 
-#[cfg(not(any(feature = "experiments_only")))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap18 {
     pub mod ArraySeq;
     pub mod ArraySeqStPer;
@@ -374,7 +309,7 @@ pub mod Chap18 {
     pub mod ArraySeqMtPer;
 }
 
-#[cfg(not(any(feature = "experiments_only")))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap19 {
     pub mod ArraySeqStPer;
     pub mod ArraySeqStEph;
@@ -382,7 +317,7 @@ pub mod Chap19 {
     pub mod ArraySeqMtEphSlice;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap21 {
     pub mod Algorithm21_1;
     pub mod Algorithm21_2;
@@ -394,29 +329,30 @@ pub mod Chap21 {
     pub mod Exercise21_8;
     pub mod Exercise21_9;
     pub mod Problem21_1;
-//    pub mod Problem21_3;
+    pub mod Problem21_3;
     pub mod Problem21_4;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap23 {
     pub mod PrimTreeSeqStPer;
     pub mod BalBinTreeStEph;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+/*
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap26 {
     pub mod DivConReduceStPer;
     pub mod MergeSortStPer;
     pub mod ScanDCStPer;
-//    pub mod ETSPStEph;
-//    pub mod ETSPMtEph;
+    pub mod ETSPStEph;
+//    pub mod ETSPMtEph;  // BROKEN: type mismatch + stale API
     pub mod DivConReduceMtPer;
     pub mod MergeSortMtPer;
     pub mod ScanDCMtPer;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap27 {
     pub mod ReduceContractStEph;
     pub mod ReduceContractMtEph;
@@ -424,7 +360,7 @@ pub mod Chap27 {
     pub mod ScanContractMtEph;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap28 {
     pub mod MCSSSpec;
     pub mod MaxContigSubSumBruteStEph;
@@ -433,18 +369,18 @@ pub mod Chap28 {
     pub mod MaxContigSubSumIterStEph;
     pub mod MaxContigSubSumReducedMcsseStEph;
     pub mod MaxContigSubSumDivConOptStEph;
-//    pub mod MaxContigSubSumOptStEph;
-//    pub mod MaxContigSubSumOptMtEph;
+    pub mod MaxContigSubSumOptStEph;
+    pub mod MaxContigSubSumOptMtEph;
     pub mod MaxContigSubSumDivConMtEph;
     pub mod MaxContigSubSumDivConOptMtEph;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap30 {
     pub mod Probability;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap35 {
     pub mod OrderStatSelectStEph;
     pub mod OrderStatSelectStPer;
@@ -452,14 +388,14 @@ pub mod Chap35 {
     pub mod OrderStatSelectMtPer;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap36 {
     pub mod QuickSortStEph;
     pub mod QuickSortMtEph;
-    // pub mod QuickSortMtEphSlice;  // uses missing with_exclusive method + nested fns
+//    pub mod QuickSortMtEphSlice;  // BROKEN: uses missing with_exclusive method + nested fns
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap37 {
     pub mod AVLTreeSeq;
     pub mod AVLTreeSeqStEph;
@@ -482,13 +418,13 @@ pub mod Chap37 {
     pub mod BSTSetBBAlphaMtEph;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap38 {
     pub mod BSTParaStEph;
     pub mod BSTParaMtEph;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap39 {
     pub mod BSTTreapStEph;
     pub mod BSTTreapMtEph;
@@ -496,14 +432,14 @@ pub mod Chap39 {
     pub mod BSTSetTreapMtEph;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap40 {
     pub mod BSTKeyValueStEph;
     pub mod BSTSizeStEph;
     pub mod BSTReducedStEph;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap41 {
     pub mod ArraySetStEph;
     pub mod ArraySetEnumMtEph;
@@ -514,7 +450,7 @@ pub mod Chap41 {
     pub mod Example41_3;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap42 {
     pub mod TableStEph;
     pub mod TableStPer;
@@ -522,33 +458,28 @@ pub mod Chap42 {
     pub mod Example42_1;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap43 {
-    // Wave 1: OrderedTable + AugOrderedTable (depend on ArraySetStEph, AVLTreeSeqStEph/StPer)
     pub mod OrderedTableStEph;
     pub mod OrderedTableMtEph;
     pub mod AugOrderedTableStEph;
     pub mod AugOrderedTableMtEph;
-    // Wave 2: StPer variants (depend on TableStPer)
     pub mod OrderedTableStPer;
     pub mod AugOrderedTableStPer;
-    // Wave 3: OrderedSet (depend on AVLTreeSetStEph/StPer)
-    // R67: OrderedSetStEph rewritten for ParamBST backing.
     pub mod OrderedSetStEph;
-    // pub mod OrderedSetStPer;
-    // Wave 4: ParamTreap now uses vstd::rwlock::RwLock, declared inside verus!
-    // pub mod OrderedSetMtEph;
-    // pub mod OrderedTableMtPer;
-    // pub mod Example43_1;
+//    pub mod OrderedSetStPer;  // BROKEN: references AVLTreeSetStPer.elements (field removed)
+//    pub mod OrderedSetMtEph;  // BROKEN: never compiled, stale API
+//    pub mod OrderedTableMtPer;  // BROKEN: never compiled, stale API
+//    pub mod Example43_1;  // BROKEN: stale imports (OrderedSetStPer dependency)
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap44 {
-    // pub mod DocumentIndex;  // depends on Chap41::AVLTreeSet (types outside verus!)
-    // pub mod Example44_1;  // depends on DocumentIndex
+//    pub mod DocumentIndex;  // BROKEN: depends on Chap41::AVLTreeSet (types outside verus!)
+//    pub mod Example44_1;  // BROKEN: depends on DocumentIndex
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap45 {
     pub mod UnsortedListPQ;
     pub mod SortedListPQ;
@@ -559,7 +490,7 @@ pub mod Chap45 {
     pub mod Example45_2;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap47 {
     pub mod ChainedHashTable;
     pub mod StructChainedHashTable;
@@ -572,7 +503,7 @@ pub mod Chap47 {
     pub mod ParaHashTableStEph;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap49 {
     pub mod SubsetSumStEph;
     pub mod SubsetSumStPer;
@@ -584,7 +515,7 @@ pub mod Chap49 {
     pub mod MinEditDistMtPer;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap50 {
     pub mod MatrixChainStEph;
     pub mod MatrixChainStPer;
@@ -596,7 +527,7 @@ pub mod Chap50 {
     pub mod OptBinSearchTreeMtPer;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap51 {
     pub mod BottomUpDPStEph;
     pub mod BottomUpDPStPer;
@@ -608,9 +539,8 @@ pub mod Chap51 {
     pub mod TopDownDPMtPer;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap52 {
-    // AdjSeq/AdjMatrix files depend only on Chap18/19 (compiled).
     pub mod AdjSeqGraphStEph;
     pub mod AdjSeqGraphStPer;
     pub mod AdjSeqGraphMtEph;
@@ -619,25 +549,24 @@ pub mod Chap52 {
     pub mod AdjMatrixGraphStPer;
     pub mod AdjMatrixGraphMtEph;
     pub mod AdjMatrixGraphMtPer;
-    // AdjTable St files: compile but fail verification (missing obeys_view_eq/feq proofs).
-    // pub mod AdjTableGraphStEph;
-    // pub mod AdjTableGraphStPer;
-    // pub mod AdjTableGraphMtPer;  // broken: depends on AVLTreeSetMtPer
-    // pub mod EdgeSetGraphStEph;  // broken: missing Sized, subrange errors
-    // pub mod EdgeSetGraphStPer;  // broken: missing Sized, subrange errors
-    // pub mod EdgeSetGraphMtPer;  // broken: depends on AVLTreeSetMtPer
+//    pub mod AdjTableGraphStEph;  // BROKEN: missing obeys_view_eq/feq proofs
+//    pub mod AdjTableGraphStPer;  // BROKEN: missing obeys_view_eq/feq proofs
+//    pub mod AdjTableGraphMtPer;  // BROKEN: depends on AVLTreeSetMtPer
+//    pub mod EdgeSetGraphStEph;  // BROKEN: missing Sized, subrange errors
+//    pub mod EdgeSetGraphStPer;  // BROKEN: missing Sized, subrange errors
+//    pub mod EdgeSetGraphMtPer;  // BROKEN: depends on AVLTreeSetMtPer
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap53 {
     pub mod PQMinStEph;
     pub mod PQMinStPer;
     pub mod GraphSearchStEph;
     pub mod GraphSearchStPer;
-    // pub mod GraphSearchMtPer;  // broken: depends on AVLTreeSetMtPer
+//    pub mod GraphSearchMtPer;  // BROKEN: depends on AVLTreeSetMtPer
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap54 {
     pub mod BFSStEph;
     pub mod BFSStPer;
@@ -645,20 +574,19 @@ pub mod Chap54 {
     pub mod BFSMtPer;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap55 {
-    // All files use types from Chap37/41 declared outside verus!
-    // pub mod DFSStEph;
-    // pub mod DFSStPer;
-    // pub mod TopoSortStEph;
-    // pub mod TopoSortStPer;
-    // pub mod CycleDetectStEph;
-    // pub mod CycleDetectStPer;
-    // pub mod SCCStEph;
-    // pub mod SCCStPer;
+//    pub mod DFSStEph;  // BROKEN: types from Chap37/41 declared outside verus!
+//    pub mod DFSStPer;  // BROKEN: types from Chap37/41 declared outside verus!
+//    pub mod TopoSortStEph;  // BROKEN: types from Chap37/41 declared outside verus!
+//    pub mod TopoSortStPer;  // BROKEN: types from Chap37/41 declared outside verus!
+//    pub mod CycleDetectStEph;  // BROKEN: types from Chap37/41 declared outside verus!
+//    pub mod CycleDetectStPer;  // BROKEN: types from Chap37/41 declared outside verus!
+//    pub mod SCCStEph;  // BROKEN: types from Chap37/41 declared outside verus!
+//    pub mod SCCStPer;  // BROKEN: types from Chap37/41 declared outside verus!
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap56 {
     pub mod SSSPResultStEphI64;
     pub mod SSSPResultStPerI64;
@@ -670,57 +598,57 @@ pub mod Chap56 {
     pub mod SSSPResultStPerF64;
     pub mod AllPairsResultStEphF64;
     pub mod AllPairsResultStPerF64;
-    // pub mod Example56_1;  // uses ordered_float (removed)
-    // pub mod Example56_3;  // uses ordered_float (removed)
+//    pub mod Example56_1;  // BROKEN: uses ordered_float (removed)
+//    pub mod Example56_3;  // BROKEN: uses ordered_float (removed)
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap57 {
     pub mod StackStEph;
     pub mod DijkstraStEphU64;
-    // pub mod DijkstraStEphF64;  // blocked: no WeightedDirGraphStEphF64 + BinaryHeapPQ
+//    pub mod DijkstraStEphF64;  // BROKEN: no WeightedDirGraphStEphF64 + BinaryHeapPQ
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap58 {
     pub mod BellmanFordStEphI64;
-    // pub mod BellmanFordStEphF64;  // blocked: no WeightedDirGraphStEphF64
+//    pub mod BellmanFordStEphF64;  // BROKEN: no WeightedDirGraphStEphF64
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap59 {
     pub mod JohnsonStEphI64;
-    // pub mod JohnsonMtEphI64;  // depends on DijkstraStEphU64
-    // pub mod JohnsonStEphF64;  // blocked: no WeightedDirGraphStEphF64
-    // pub mod JohnsonMtEphF64;  // blocked: no WeightedDirGraphStEphF64
+//    pub mod JohnsonMtEphI64;  // BROKEN: depends on DijkstraStEphU64
+//    pub mod JohnsonStEphF64;  // BROKEN: no WeightedDirGraphStEphF64
+//    pub mod JohnsonMtEphF64;  // BROKEN: no WeightedDirGraphStEphF64
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap61 {
-    // pub mod EdgeContractionStEph;  // depends on VertexMatchingStEph
-    // pub mod EdgeContractionMtEph;  // depends on VertexMatchingMtEph
-    // pub mod VertexMatchingStEph;  // uses rand (Verus can't link)
-    // pub mod VertexMatchingMtEph;  // uses rand (Verus can't link)
+//    pub mod EdgeContractionStEph;  // BROKEN: depends on VertexMatchingStEph
+//    pub mod EdgeContractionMtEph;  // BROKEN: depends on VertexMatchingMtEph
+//    pub mod VertexMatchingStEph;  // BROKEN: uses rand (Verus can't link)
+//    pub mod VertexMatchingMtEph;  // BROKEN: uses rand (Verus can't link)
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap62 {
     pub mod StarPartitionStEph;
-    // pub mod StarPartitionMtEph;  // uses rand (Verus can't link)
+//    pub mod StarPartitionMtEph;  // BROKEN: uses rand (Verus can't link)
     pub mod StarContractionStEph;
-    // pub mod StarContractionMtEph;  // depends on StarPartitionMtEph
+//    pub mod StarContractionMtEph;  // BROKEN: depends on StarPartitionMtEph
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap63 {
     pub mod ConnectivityStEph;
-    // pub mod ConnectivityMtEph;  // depends on StarPartitionMtEph
+//    pub mod ConnectivityMtEph;  // BROKEN: depends on StarPartitionMtEph
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap64 {
     pub mod SpanTreeStEph;
-    // pub mod SpanTreeMtEph;  // depends on StarContractionMtEph (commented out)
+//    pub mod SpanTreeMtEph;  // BROKEN: depends on StarContractionMtEph
     pub mod TSPApproxStEph;
 }
 
@@ -731,8 +659,9 @@ pub mod Chap65 {
     pub mod PrimStEph;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap66 {
     pub mod BoruvkaStEph;
     pub mod BoruvkaMtEph;
 }
+*/

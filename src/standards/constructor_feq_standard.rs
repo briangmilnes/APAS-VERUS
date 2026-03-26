@@ -88,3 +88,5 @@
 //!   rather than assuming it.
 //! - Clone body assumes (`assume(obeys_feq_clone)` inside `fn clone()`) are a different
 //!   pattern and remain correct per Standard 7.
+
+pub mod constructor_feq_standard {}

@@ -10,6 +10,8 @@ verify = true
 default = []
 # Build only experiments (skip chapter modules)
 experiments_only = []
+# Isolate Chap65 (UnionFind/Kruskal/Prim) for focused development
+union_find = []
 
 [dependencies]
 vstd = "0.0.0-2025-08-12-1837"

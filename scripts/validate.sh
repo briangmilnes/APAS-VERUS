@@ -37,11 +37,15 @@ for arg in "$@"; do
 done
 
 case "$MODE" in
-    full)     CFG_FLAG=() ;;
-    dev_only) CFG_FLAG=(--cfg 'feature="dev_only"') ;;
-    exp)      CFG_FLAG=(--cfg 'feature="experiments_only"') ;;
-    wf)       CFG_FLAG=(--cfg 'feature="wf"') ;;
-    *)        echo "Usage: validate.sh [full|dev_only|exp|wf] [--time]"; exit 1 ;;
+    full)         CFG_FLAG=() ;;
+    dev_only)     CFG_FLAG=(--cfg 'feature="dev_only"') ;;
+    exp)          CFG_FLAG=(--cfg 'feature="experiments_only"') ;;
+    wf)           CFG_FLAG=(--cfg 'feature="wf"') ;;
+    union_find)   CFG_FLAG=(--cfg 'feature="union_find"') ;;
+    *)
+        echo "WARNING: unknown mode '$MODE' — treating as Cargo feature name"
+        CFG_FLAG=(--cfg "feature=\"$MODE\"")
+        ;;
 esac
 
 TIME_FLAG=()

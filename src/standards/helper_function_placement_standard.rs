@@ -139,11 +139,4 @@
 //! | 5 | 50 | MatrixChainMtEph.rs | `matrix_chain_rec` | Trait | Needs `&self` for memo table |
 //! | 6 | 42 | TableStEph.rs | (none — inline) | In impl | Simple loops, no delegation needed |
 
-use crate::prelude_verus::*;
-
-verus! {
-
-// This file is a standard — it contains no executable code.
-// The documentation above defines the placement conventions.
-
-} // verus!
+pub mod helper_function_placement_standard {}

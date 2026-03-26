@@ -4,6 +4,30 @@
 
 Remove `external_body` from `union` in `src/Chap65/UnionFindStEph.rs:532` and prove it.
 
+## ISOLATION — CRITICAL
+
+To save memory and allow other agents to validate in parallel, **comment out all
+chapters except Chap65's dependencies in lib.rs** before your first validate. UnionFindStEph's
+transitive closure is small:
+
+**Keep uncommented:**
+- `Types` (line 13)
+- `Concurrency` (line 14)
+- `vstdplus` block (lines 264-292) — entire block, it's all foundation
+- `Chap65` block (lines 728-732)
+
+**Comment out everything else** (with `// R81-ISOLATED:` prefix so it's easy to undo):
+- `ParaPairs` (line 16)
+- `experiments` block (lines 18-236)
+- `standards` block (lines 239-262)
+- All chapter blocks: Chap02 through Chap44, Chap45 through Chap64, Chap66
+
+This cuts validation from 4915 functions / 8 GB to ~200 functions / <2 GB. You MUST
+do this before your first `scripts/validate.sh` run.
+
+**Before pushing to agent1/ready, UNCOMMENT EVERYTHING.** Restore lib.rs to its original
+state. Run a full `scripts/validate.sh` to confirm 4915 verified, then push.
+
 ## Context
 
 The body (lines 533-550) is already written and correct:
@@ -67,8 +91,9 @@ At most 20 edit/verify iterations. Then stop and report.
 
 ## Validation
 
-Run `scripts/validate.sh`, then `scripts/rtt.sh`, then `scripts/ptt.sh`.
-Push to `agent1/ready`.
+During development: run `scripts/validate.sh` with isolated lib.rs (fast, low memory).
+Before pushing: restore full lib.rs, run `scripts/validate.sh` (expect 4915), then
+`scripts/rtt.sh`, then `scripts/ptt.sh`. Push to `agent1/ready`.
 
 ## Report
 
