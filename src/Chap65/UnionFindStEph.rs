@@ -657,7 +657,7 @@ pub mod UnionFindStEph {
     }
 
     /// Merge two components: mutate parent/rank/roots, prove wf.
-    #[verifier::rlimit(120)]
+    #[verifier::rlimit(80)]
     fn union_merge<V: StT + Hash>(
         uf: &mut UnionFindStEph<V>,
         root_u: V,
@@ -940,7 +940,7 @@ pub mod UnionFindStEph {
         }
 
         /// - APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
-        #[verifier::rlimit(80)]
+        #[verifier::rlimit(50)]
         fn union(&mut self, u: &V, v: &V) {
             let root_u = self.find(u);
             let root_v = self.find(v);
