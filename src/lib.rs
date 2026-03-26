@@ -469,9 +469,9 @@ pub mod Chap43 {
     pub mod AugOrderedTableStPer;
     pub mod OrderedSetStEph;
 //    pub mod OrderedSetMtEph;   // BROKEN
-//    pub mod OrderedSetStPer;   // BROKEN
+    pub mod OrderedSetStPer;
 //    pub mod OrderedTableMtPer; // BROKEN
-//    pub mod Example43_1;       // BROKEN
+    pub mod Example43_1;
 }
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
