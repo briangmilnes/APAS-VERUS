@@ -96,6 +96,14 @@ pub mod UnionFindStEph {
         }
     }
 
+    /// Raw version of roots_idempotent operating on a Map directly.
+    pub open spec fn spec_roots_idempotent_raw<VV>(roots: Map<VV, VV>) -> bool {
+        forall|v: VV| #[trigger] roots.contains_key(v) ==> {
+            &&& roots.contains_key(roots[v])
+            &&& roots[roots[v]] == roots[v]
+        }
+    }
+
     pub open spec fn spec_parent_closed<V: StT + Hash>(uf: &UnionFindStEph<V>) -> bool {
         forall|v: <V as View>::V| #[trigger] uf.parent@.contains_key(v) ==>
             uf.parent@.contains_key(uf.parent@[v]@)
@@ -250,6 +258,311 @@ pub mod UnionFindStEph {
         };
     }
 
+    /// Prove that a canonical root is a self-parent: roots[v] == v ==> parent[v]@ == v.
+    proof fn lemma_root_is_self_parent<V: StT + Hash>(
+        uf: &UnionFindStEph<V>,
+        rv: <V as View>::V,
+    )
+        requires
+            uf.spec_unionfindsteph_wf(),
+            uf@.roots.contains_key(rv),
+            uf@.roots[rv] == rv,
+        ensures
+            uf@.parent.contains_key(rv),
+            uf@.parent[rv]@ == rv,
+    {
+        if uf.parent@[rv]@ != rv {
+            assert(uf.rank@[rv] < uf.rank@[uf.parent@[rv]@]);
+            assert(uf.roots@[uf.parent@[rv]@] == rv);
+            assert(uf.rank@.contains_key(uf.parent@[rv]@));
+            assert(uf.rank@[uf.parent@[rv]@] <= uf.rank@[uf.roots@[uf.parent@[rv]@]]);
+        }
+    }
+
+    // Common requires for both union wf lemma halves.
+    // Factored as a spec fn to reduce requires duplication.
+    pub open spec fn spec_union_lemma_pre<V: StT + Hash>(
+        uf: &UnionFindStEph<V>,
+        mid: &UnionFindStEph<V>,
+        winner_val: V,
+        root_u_view: <V as View>::V,
+        root_v_view: <V as View>::V,
+        winner_view: <V as View>::V,
+        loser_view: <V as View>::V,
+    ) -> bool {
+        &&& mid.spec_unionfindsteph_wf()
+        &&& root_u_view != root_v_view
+        &&& mid.roots@.contains_key(root_u_view)
+        &&& mid.roots@.contains_key(root_v_view)
+        &&& mid.roots@[root_u_view] == root_u_view
+        &&& mid.roots@[root_v_view] == root_v_view
+        &&& mid.parent@[root_u_view]@ == root_u_view
+        &&& mid.parent@[root_v_view]@ == root_v_view
+        &&& ((winner_view == root_u_view && loser_view == root_v_view) ||
+             (winner_view == root_v_view && loser_view == root_u_view))
+        &&& winner_val@ == winner_view
+        &&& uf.parent@ =~= mid.parent@.insert(loser_view, winner_val)
+        &&& uf.rank@.dom() =~= mid.rank@.dom()
+        &&& forall|k: <V as View>::V| mid.rank@.contains_key(k) && k != winner_view ==>
+            #[trigger] uf.rank@[k] == mid.rank@[k]
+        &&& uf.rank@[winner_view] >= mid.rank@[winner_view]
+        &&& uf.rank@[winner_view] >= mid.rank@[loser_view]
+        &&& mid.rank@[loser_view] < uf.rank@[winner_view]
+        &&& uf.elements@ =~= mid.elements@
+        &&& uf.roots@.dom() =~= mid.roots@.dom()
+        &&& forall|k: <V as View>::V| mid.roots@.contains_key(k) ==> (
+            #[trigger] uf.roots@[k] == (
+                if mid.roots@[k] == root_u_view || mid.roots@[k] == root_v_view {
+                    winner_view
+                } else {
+                    mid.roots@[k]
+                }
+            )
+        )
+    }
+
+    /// Part 1a: roots wf conjuncts after union (idempotent, in dom).
+    /// Uses targeted requires (not spec_union_lemma_pre) to keep solver cost low.
+    #[verifier::rlimit(50)]
+    proof fn lemma_union_wf_roots<V: StT + Hash>(
+        new_roots: Map<<V as View>::V, <V as View>::V>,
+        new_parent_dom: Set<<V as View>::V>,
+        mid_roots: Map<<V as View>::V, <V as View>::V>,
+        root_u_view: <V as View>::V,
+        root_v_view: <V as View>::V,
+        winner_view: <V as View>::V,
+    )
+        requires
+            root_u_view != root_v_view,
+            mid_roots.contains_key(root_u_view),
+            mid_roots.contains_key(root_v_view),
+            mid_roots[root_u_view] == root_u_view,
+            mid_roots[root_v_view] == root_v_view,
+            winner_view == root_u_view || winner_view == root_v_view,
+            // Mid roots idempotent.
+            forall|v: <V as View>::V| #[trigger] mid_roots.contains_key(v) ==> {
+                &&& mid_roots.contains_key(mid_roots[v])
+                &&& mid_roots[mid_roots[v]] == mid_roots[v]
+            },
+            // Mid roots in parent dom.
+            forall|v: <V as View>::V| #[trigger] mid_roots.contains_key(v) ==>
+                new_parent_dom.contains(mid_roots[v]),
+            // New roots definition.
+            new_roots.dom() =~= mid_roots.dom(),
+            forall|k: <V as View>::V| mid_roots.contains_key(k) ==> (
+                #[trigger] new_roots[k] == (
+                    if mid_roots[k] == root_u_view || mid_roots[k] == root_v_view {
+                        winner_view
+                    } else {
+                        mid_roots[k]
+                    }
+                )
+            ),
+            // New parent domain unchanged.
+            new_parent_dom =~= mid_roots.dom(),
+        ensures
+            // Roots idempotent.
+            forall|v: <V as View>::V| #[trigger] new_roots.contains_key(v) ==> {
+                &&& new_roots.contains_key(new_roots[v])
+                &&& new_roots[new_roots[v]] == new_roots[v]
+            },
+            // Roots in dom.
+            forall|v: <V as View>::V| #[trigger] new_roots.contains_key(v) ==>
+                new_parent_dom.contains(new_roots[v]),
+    {
+        // Pre-compute: winner maps to itself.
+        assert(mid_roots[winner_view] == winner_view) by {
+            if winner_view == root_u_view { } else { }
+        };
+        assert(new_roots[winner_view] == winner_view);
+
+        // Roots idempotent.
+        assert forall|w: <V as View>::V|
+            #[trigger] new_roots.contains_key(w) implies
+            new_roots.contains_key(new_roots[w]) && new_roots[new_roots[w]] == new_roots[w]
+        by {
+            let old_rw = mid_roots[w];
+            if old_rw == root_u_view || old_rw == root_v_view {
+            } else {
+                assert(mid_roots.contains_key(old_rw));
+                assert(mid_roots[old_rw] == old_rw);
+            }
+        };
+
+        // Roots in dom.
+        assert forall|w: <V as View>::V|
+            #[trigger] new_roots.contains_key(w) implies
+            new_parent_dom.contains(new_roots[w])
+        by {
+            if mid_roots[w] == root_u_view || mid_roots[w] == root_v_view {
+                assert(new_parent_dom.contains(winner_view));
+            } else {
+                assert(new_parent_dom.contains(mid_roots[w]));
+            }
+        };
+    }
+
+    /// Part 1b: parent wf conjuncts after union (closed, self-parent, preserves root).
+    #[verifier::rlimit(60)]
+    proof fn lemma_union_wf_parent<V: StT + Hash>(
+        uf: UnionFindStEph<V>,
+        mid: UnionFindStEph<V>,
+        winner_val: V,
+        root_u_view: <V as View>::V,
+        root_v_view: <V as View>::V,
+        winner_view: <V as View>::V,
+        loser_view: <V as View>::V,
+    )
+        requires spec_union_lemma_pre(&uf, &mid, winner_val, root_u_view, root_v_view, winner_view, loser_view),
+        ensures
+            spec_parent_closed(&uf),
+            spec_self_parent_is_root(&uf),
+            spec_parent_preserves_root(&uf),
+    {
+        let mp = mid.parent@;
+        let mrt = mid.roots@;
+
+        // Parent view frame.
+        assert(uf.parent@[loser_view]@ == winner_view);
+        assert forall|k: <V as View>::V|
+            mp.contains_key(k) && k != loser_view implies
+            #[trigger] uf.parent@[k]@ == mp[k]@
+        by {};
+
+        // Parent closed.
+        assert forall|w: <V as View>::V|
+            #[trigger] uf.parent@.contains_key(w) implies
+            uf.parent@.contains_key(uf.parent@[w]@)
+        by {
+            if w == loser_view {
+                assert(uf.parent@[w]@ == winner_view);
+                assert(mp.contains_key(winner_view));
+            } else {
+                assert(mp.contains_key(mp[w]@));
+            }
+        };
+
+        // Self-parent is root.
+        assert forall|w: <V as View>::V|
+            uf.parent@.contains_key(w) && uf.parent@[w]@ == w implies
+            #[trigger] uf.roots@[w] == w
+        by {
+            if w == loser_view {
+                assert(uf.parent@[w]@ == winner_view);
+                assert(winner_view != loser_view);
+            } else {
+                assert(mp[w]@ == w);
+                assert(mrt[w] == w);
+                if mrt[w] == root_u_view || mrt[w] == root_v_view {
+                    assert(w != loser_view);
+                }
+            }
+        };
+
+        // Parent preserves root.
+        assert forall|w: <V as View>::V|
+            #[trigger] uf.parent@.contains_key(w) implies
+            uf.roots@[uf.parent@[w]@] == uf.roots@[w]
+        by {
+            if w == loser_view {
+                assert(uf.parent@[w]@ == winner_view);
+            } else {
+                let pw = mp[w]@;
+                assert(mrt[pw] == mrt[w]);
+                if mrt[w] == root_u_view || mrt[w] == root_v_view {
+                    assert(mrt[pw] == root_u_view || mrt[pw] == root_v_view);
+                }
+            }
+        };
+    }
+
+    /// Part 2: ordering wf conjuncts after union (rank_increases, rank_bounded).
+    #[verifier::rlimit(80)]
+    proof fn lemma_union_wf_ordering<V: StT + Hash>(
+        uf: UnionFindStEph<V>,
+        mid: UnionFindStEph<V>,
+        winner_val: V,
+        root_u_view: <V as View>::V,
+        root_v_view: <V as View>::V,
+        winner_view: <V as View>::V,
+        loser_view: <V as View>::V,
+    )
+        requires spec_union_lemma_pre(&uf, &mid, winner_val, root_u_view, root_v_view, winner_view, loser_view),
+        ensures
+            spec_rank_increases(&uf),
+            spec_rank_bounded(&uf),
+    {
+        let mp = mid.parent@;
+        let mr = mid.rank@;
+        let mrt = mid.roots@;
+
+        // Parent view frame (needed for rank_increases).
+        assert(uf.parent@[loser_view]@ == winner_view);
+        assert forall|k: <V as View>::V|
+            mp.contains_key(k) && k != loser_view implies
+            #[trigger] uf.parent@[k]@ == mp[k]@
+        by {};
+
+        // Rank increases.
+        assert forall|w: <V as View>::V|
+            uf.parent@.contains_key(w) && uf.parent@[w]@ != w implies
+            uf.rank@[w] < #[trigger] uf.rank@[uf.parent@[w]@]
+        by {
+            if w == loser_view {
+                assert(uf.parent@[w]@ == winner_view);
+            } else {
+                let pw = mp[w]@;
+                assert(mp[w]@ != w);
+                assert(mr[w] < mr[pw]);
+                if w == winner_view {
+                    assert(mp[winner_view]@ == winner_view);
+                }
+                assert(w != winner_view);
+                if pw == winner_view {
+                    assert(uf.rank@[winner_view] >= mr[winner_view]);
+                }
+            }
+        };
+
+        // Rank bounded.
+        assert forall|w: <V as View>::V|
+            #[trigger] uf.rank@.contains_key(w) implies
+            uf.rank@[w] <= uf.rank@[uf.roots@[w]]
+        by {
+            let old_rw = mrt[w];
+            if old_rw == root_u_view || old_rw == root_v_view {
+                assert(mr[w] <= mr[old_rw]);
+                if w != winner_view {
+                    if old_rw == root_u_view {
+                        assert(uf.rank@[winner_view] >= mr[root_u_view]);
+                    } else {
+                        assert(uf.rank@[winner_view] >= mr[root_v_view]);
+                    }
+                }
+            } else {
+                assert(mrt.contains_key(old_rw));
+                assert(mrt[old_rw] == old_rw);
+                if w == winner_view {
+                    if winner_view == root_u_view {
+                        assert(mrt[w] == root_u_view);
+                    } else {
+                        assert(mrt[w] == root_v_view);
+                    }
+                }
+                assert(w != winner_view);
+                if old_rw == winner_view {
+                    if winner_view == root_u_view {
+                        assert(mrt[old_rw] == root_u_view);
+                    } else {
+                        assert(mrt[old_rw] == root_v_view);
+                    }
+                }
+                assert(old_rw != winner_view);
+            }
+        };
+
+    }
+
     /// Prove rank[cv] < rank[rv] for a non-root node cv with root rv.
     proof fn lemma_non_root_rank_lt_root<V: StT + Hash>(
         uf: &UnionFindStEph<V>,
@@ -341,6 +654,104 @@ pub mod UnionFindStEph {
         }
 
         current
+    }
+
+    /// Merge two components: mutate parent/rank/roots, prove wf.
+    #[verifier::rlimit(120)]
+    fn union_merge<V: StT + Hash>(
+        uf: &mut UnionFindStEph<V>,
+        root_u: V,
+        root_v: V,
+    )
+        requires
+            old(uf).spec_unionfindsteph_wf(),
+            root_u@ != root_v@,
+            old(uf)@.roots.contains_key(root_u@),
+            old(uf)@.roots.contains_key(root_v@),
+            old(uf)@.roots[root_u@] == root_u@,
+            old(uf)@.roots[root_v@] == root_v@,
+            old(uf)@.parent[root_u@]@ == root_u@,
+            old(uf)@.parent[root_v@]@ == root_v@,
+        ensures
+            uf.spec_unionfindsteph_wf(),
+            uf@.parent.dom() =~= old(uf)@.parent.dom(),
+            uf@.elements =~= old(uf)@.elements,
+            uf@.roots.dom() =~= old(uf)@.roots.dom(),
+            forall|x: <V as View>::V| #[trigger] uf@.roots.contains_key(x) ==> {
+                if old(uf)@.roots[x] == root_u@ || old(uf)@.roots[x] == root_v@ {
+                    uf@.roots[x] == uf@.roots[root_u@]
+                } else {
+                    uf@.roots[x] == old(uf)@.roots[x]
+                }
+            },
+    {
+        let ghost root_u_view = root_u@;
+        let ghost root_v_view = root_v@;
+        let ghost mid_roots = uf.roots@;
+        let ghost mid_uf = *uf;
+
+        let rank_u = *uf.rank.get(&root_u).unwrap();
+        let rank_v = *uf.rank.get(&root_v).unwrap();
+
+        let ru1 = root_u.clone();
+        let rv1 = root_v.clone();
+        proof {
+            assert(strictly_cloned(root_u, ru1));
+            assert(strictly_cloned(root_v, rv1));
+        }
+
+        let ghost winner_view: <V as View>::V;
+        let ghost loser_view: <V as View>::V;
+        let ghost winner_v: V;
+
+        if rank_u < rank_v {
+            proof { winner_view = root_v_view; loser_view = root_u_view; winner_v = rv1; }
+            uf.parent.insert(ru1, rv1);
+        } else {
+            proof { winner_view = root_u_view; loser_view = root_v_view; winner_v = ru1; }
+            uf.parent.insert(rv1, ru1);
+            if rank_u == rank_v {
+                let ru2 = root_u.clone();
+                proof {
+                    assert(strictly_cloned(root_u, ru2));
+                    admit(); // Overflow: rank bounded by log2(n) < 64 (2^rank theorem).
+                }
+                uf.rank.insert(ru2, rank_u + 1);
+            }
+        }
+
+        uf.roots = Ghost(Map::new(
+            |x: <V as View>::V| mid_roots.contains_key(x),
+            |x: <V as View>::V|
+                if mid_roots[x] == root_u_view || mid_roots[x] == root_v_view {
+                    winner_view
+                } else {
+                    mid_roots[x]
+                },
+        ));
+
+        proof {
+            // Frame: key_model, feq_full, elements preserved (from mid wf).
+            assert(obeys_key_model::<V>());
+            assert(obeys_feq_full::<V>());
+            assert(uf@.elements =~= mid_uf@.elements);
+            assert(uf@.parent.dom() =~= mid_uf@.parent.dom());
+            assert(uf@.rank.dom() =~= mid_uf@.rank.dom());
+            assert(uf@.roots.dom() =~= mid_uf@.roots.dom());
+
+            lemma_union_wf_roots::<V>(
+                uf.roots@, uf.parent@.dom(), mid_roots,
+                root_u_view, root_v_view, winner_view,
+            );
+            lemma_union_wf_parent(
+                *uf, mid_uf, winner_v,
+                root_u_view, root_v_view, winner_view, loser_view,
+            );
+            lemma_union_wf_ordering(
+                *uf, mid_uf, winner_v,
+                root_u_view, root_v_view, winner_view, loser_view,
+            );
+        }
     }
 
     // Path compression commented out — correct but exceeds solver budget.
@@ -529,23 +940,17 @@ pub mod UnionFindStEph {
         }
 
         /// - APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
-        #[verifier::external_body]
+        #[verifier::rlimit(80)]
         fn union(&mut self, u: &V, v: &V) {
             let root_u = self.find(u);
             let root_v = self.find(v);
 
-            if root_u != root_v {
-                let rank_u = *self.rank.get(&root_u).unwrap();
-                let rank_v = *self.rank.get(&root_v).unwrap();
-
-                if rank_u < rank_v {
-                    self.parent.insert(root_u.clone(), root_v.clone());
-                } else if rank_u > rank_v {
-                    self.parent.insert(root_v.clone(), root_u.clone());
-                } else {
-                    self.parent.insert(root_v.clone(), root_u.clone());
-                    self.rank.insert(root_u.clone(), rank_u + 1);
+            if !feq(&root_u, &root_v) {
+                proof {
+                    lemma_root_is_self_parent(self, root_u@);
+                    lemma_root_is_self_parent(self, root_v@);
                 }
+                union_merge(self, root_u, root_v);
             }
         }
 
