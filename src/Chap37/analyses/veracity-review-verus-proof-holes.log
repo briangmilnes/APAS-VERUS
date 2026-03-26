@@ -21,224 +21,224 @@ Table of Contents:
 =================================================================
 
 ⚠ AVLTreeSeq.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeq.rs:1245: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1245: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1241 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1243 |         {
       1244 |             proof {
       1246 |                 assume(spec_avltreeseq_wf(other.root));
       1247 |                 assume(obeys_feq_full::<T>());
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeq.rs:1246: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1246: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1241 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1244 |             proof {
       1245 |                 assume(spec_avltreeseq_wf(self.root));
       1247 |                 assume(obeys_feq_full::<T>());
       1248 |             }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeq.rs:1247: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1247: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1241 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1245 |                 assume(spec_avltreeseq_wf(self.root));
       1246 |                 assume(spec_avltreeseq_wf(other.root));
       1248 |             }
       1249 |             // Per-node size bound in wf gives cached_size < usize::MAX.
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeq.rs:1270: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1270: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1256 |         fn clone(&self) -> (copy: Self)
             ...
       1268 |                 // So copy@ == self@
       1269 |             }
       1271 |             copy
       1272 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeq.rs:1122: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1122: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
 ⚠ AVLTreeSeqMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:859: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:859: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        855 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        857 |         {
        858 |             proof {
        860 |                 assume(spec_avltreeseqmtper_wf(other.root));
        861 |                 assume(obeys_feq_full::<T>());
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:860: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:860: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        855 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        858 |             proof {
        859 |                 assume(spec_avltreeseqmtper_wf(self.root));
        861 |                 assume(obeys_feq_full::<T>());
        862 |             }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:861: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:861: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        855 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        859 |                 assume(spec_avltreeseqmtper_wf(self.root));
        860 |                 assume(spec_avltreeseqmtper_wf(other.root));
        862 |             }
        863 |             compare_trees(&self.root, &other.root)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:874: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:874: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        868 |         fn clone(&self) -> (copy: Self)
             ...
        872 |                 root: self.root.clone(),
        873 |             };
        875 |             copy
        876 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:667: info: structural_false_positive OPAQUE_EXTERNAL subseq_copy — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:729: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:667: info: structural_false_positive OPAQUE_EXTERNAL subseq_copy — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:729: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
 ⚠ AVLTreeSeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStEph.rs:743: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:743: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        728 |     fn clone_link<T: StT>(link: &Link<T>) -> (copy: Link<T>)
             ...
        741 |                 let right = clone_link(&node.right);
        742 |                 let new_value = node.value.clone_plus();
        744 |                 Some(Box::new(AVLTreeNode {
        745 |                     value: new_value,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStEph.rs:1239: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:1239: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1235 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1237 |         {
       1238 |             proof {
       1240 |                 assume(spec_avltreeseqsteph_wf(other.root));
       1241 |                 assume(obeys_feq_full::<T>());
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStEph.rs:1240: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:1240: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1235 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1238 |             proof {
       1239 |                 assume(spec_avltreeseqsteph_wf(self.root));
       1241 |                 assume(obeys_feq_full::<T>());
       1242 |             }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStEph.rs:1241: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:1241: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1235 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1239 |                 assume(spec_avltreeseqsteph_wf(self.root));
       1240 |                 assume(spec_avltreeseqsteph_wf(other.root));
       1242 |             }
       1243 |             compare_trees(&self.root, &other.root)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStEph.rs:1116: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:1116: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
 ⚠ AVLTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStPer.rs:957: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:957: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        953 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        955 |         {
        956 |             proof {
        958 |                 assume(spec_avltreeseqstper_wf(other.root));
        959 |                 assume(obeys_feq_full::<T>());
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStPer.rs:958: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:958: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        953 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        956 |             proof {
        957 |                 assume(spec_avltreeseqstper_wf(self.root));
        959 |                 assume(obeys_feq_full::<T>());
        960 |             }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStPer.rs:959: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:959: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        953 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        957 |                 assume(spec_avltreeseqstper_wf(self.root));
        958 |                 assume(spec_avltreeseqstper_wf(other.root));
        960 |             }
        961 |             compare_trees(&self.root, &other.root)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStPer.rs:975: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:975: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        966 |         fn clone(&self) -> (copy: Self)
             ...
        973 |                 root: self.root.clone(),
        974 |             };
        976 |             copy
        977 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStPer.rs:845: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStPer.rs:845: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
 ℹ BSTAVLMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTAVLMtEph.rs:509: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == tree); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTAVLMtEph.rs:533: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTAVLMtEph.rs:544: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTAVLMtEph.rs:554: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTAVLMtEph.rs:565: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:509: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == tree); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:533: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:544: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:554: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTAVLMtEph.rs:565: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
    Info: 5 × structural_false_positive
    1 clean proof function
 ✓ BSTAVLStEph.rs
    2 clean proof functions
 ℹ BSTBBAlphaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTBBAlphaMtEph.rs:322: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == tree); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTBBAlphaMtEph.rs:346: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTBBAlphaMtEph.rs:357: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTBBAlphaMtEph.rs:367: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTBBAlphaMtEph.rs:378: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:322: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == tree); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:346: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:357: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:367: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTBBAlphaMtEph.rs:378: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
    Info: 5 × structural_false_positive
 ✓ BSTBBAlphaStEph.rs
 ℹ BSTPlainMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTPlainMtEph.rs:322: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == tree); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTPlainMtEph.rs:346: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTPlainMtEph.rs:357: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTPlainMtEph.rs:367: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTPlainMtEph.rs:378: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:322: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == tree); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:346: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:357: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:367: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTPlainMtEph.rs:378: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
    Info: 5 × structural_false_positive
 ✓ BSTPlainStEph.rs
    3 clean proof functions
 ℹ BSTRBMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTRBMtEph.rs:1007: info: structural_false_positive RWLOCK_GHOST from_sorted_slice — assume(spec_is_bst_link(ghost_link)); [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTRBMtEph.rs:1018: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == current); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTRBMtEph.rs:1030: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(link_spec_size(new_root) <= old_size + 1); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTRBMtEph.rs:1031: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(link_spec_size(new_root) <= usize::MAX as nat [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTRBMtEph.rs:1047: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == link_contains(self@, *target)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTRBMtEph.rs:1058: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == link_spec_size(self@)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTRBMtEph.rs:1067: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is None)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTRBMtEph.rs:1082: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == link_height(self@)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1007: info: structural_false_positive RWLOCK_GHOST from_sorted_slice — assume(spec_is_bst_link(ghost_link)); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1018: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == current); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1030: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(link_spec_size(new_root) <= old_size + 1); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1031: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(link_spec_size(new_root) <= usize::MAX as nat [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1047: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == link_contains(self@, *target)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1058: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == link_spec_size(self@)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1067: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is None)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTRBMtEph.rs:1082: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == link_height(self@)); } [medium]
    Info: 8 × structural_false_positive
    1 clean proof function
 ✓ BSTRBStEph.rs
    1 clean proof function
 ℹ BSTSetAVLMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTSetAVLMtEph.rs:542: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetAVLMtEph.rs:542: info: accept()
    Info: 1 total
 ℹ BSTSetBBAlphaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTSetBBAlphaMtEph.rs:477: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetBBAlphaMtEph.rs:477: info: accept()
    Info: 1 total
 ℹ BSTSetPlainMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTSetPlainMtEph.rs:477: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetPlainMtEph.rs:477: info: accept()
    Info: 1 total
 ℹ BSTSetRBMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTSetRBMtEph.rs:541: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetRBMtEph.rs:541: info: accept()
    Info: 1 total
 ℹ BSTSetSplayMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTSetSplayMtEph.rs:542: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:542: info: accept()
    Info: 1 total
 ❌ BSTSplayMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTSplayMtEph.rs:1540: error: assume() [algorithmic] - assume(spec_is_bst_link(Some(node)));
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1540: error: assume() [algorithmic] - assume(spec_is_bst_link(Some(node)));
       1509 |     fn build_balanced<T: StTInMtT + Ord + TotalOrder>(values: &[T]) -> (link: Link<T>)
             ...
       1538 |             // Therefore node.size == 1 + left_size + right_size via update ensures.
       1539 |             assert(node.size as nat == 1 + link_spec_size(node.left) + link_spec_size(node.right));
       1541 |         }
       1542 |         Some(node)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTSplayMtEph.rs:1483: error: fn_missing_requires - fn clone_link — exec fn should have requires
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1483: error: fn_missing_requires - fn clone_link — exec fn should have requires
       1473 |     fn pre_order_parallel<T: StTInMtT + Ord + TotalOrder + 'static>(link: &Link<T>) -> (result: Vec<T>)
             ...
       1481 | 
       1482 |     /// Recursive deep clone of a Link, bypassing derived Clone for Box/Option.
       1484 |         ensures c == *link,
       1485 |         decreases *link,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTSplayMtEph.rs:1490: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1490: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1483 |     fn clone_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (c: Link<T>)
             ...
       1488 |             None => {
       1489 |                 let c: Link<T> = None;
       1491 |                 c
       1492 |             }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTSplayMtEph.rs:1502: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1502: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1483 |     fn clone_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (c: Link<T>)
             ...
       1500 |                     right,
       1501 |                 }));
       1503 |                 c
       1504 |             }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTSplayMtEph.rs:1886: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1886: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1875 |         fn clone(&self) -> (r: Self)
             ...
       1884 |                 right,
       1885 |             };
       1887 |             r
       1888 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTSplayMtEph.rs:1750: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == current); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTSplayMtEph.rs:1755: info: structural_false_positive RWLOCK_GHOST insert — assume(link_node_count(current) <= usize::MAX as nat); [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTSplayMtEph.rs:1756: info: structural_false_positive RWLOCK_GHOST insert — assume(link_spec_size(current) <= link_spec_size(old(self)@) [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTSplayMtEph.rs:1772: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == link_contains(self@, *target)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTSplayMtEph.rs:1781: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == link_spec_size(self@)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTSplayMtEph.rs:1790: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is None)); } [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/BSTSplayMtEph.rs:1803: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == link_height(self@)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1750: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == current); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1755: info: structural_false_positive RWLOCK_GHOST insert — assume(link_node_count(current) <= usize::MAX as nat); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1756: info: structural_false_positive RWLOCK_GHOST insert — assume(link_spec_size(current) <= link_spec_size(old(self)@) [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1772: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == link_contains(self@, *target)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1781: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == link_spec_size(self@)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1790: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is None)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1803: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == link_height(self@)); } [medium]
    Holes: 1 total
       1 × assume()
    Info: 7 × structural_false_positive
@@ -341,9 +341,11 @@ Structural (info only): 35
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-25 17:32:27 -07:00
-Ended:     2026-03-25 17:32:27 -07:00
-Duration:  221ms
+Started:   2026-03-25 17:37:35 -07:00
+Ended:     2026-03-25 17:37:35 -07:00
+Duration:  182ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
-l output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
+ation:  182ms
+
+Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log

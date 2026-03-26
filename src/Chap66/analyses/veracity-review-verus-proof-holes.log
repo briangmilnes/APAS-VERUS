@@ -21,51 +21,51 @@ Table of Contents:
 =================================================================
 
 ⚠ BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:62: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:62: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         58 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
         60 |         {
         61 |             let equal = self.0 == other.0 && self.1 == other.1 && self.2.eq(&other.2) && self.3 == other.3;
         63 |             equal
         64 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:190: error: fn_missing_ensures - fn hash_coin_flips_mt — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:190: error: fn_missing_ensures - fn hash_coin_flips_mt — exec fn should have ensures
        177 |     fn hash_coin(seed: u64, round: usize, index: usize) -> bool {
             ...
        188 |     ///
        189 |     /// - Work O(n), Span O(log n) — parallel hash-based coin generation via ParaPair!.
        191 |         vertices: Arc<Vec<V>>,
        192 |         seed: u64,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:259: error: fn_missing_ensures - fn compute_remaining_mt — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:259: error: fn_missing_ensures - fn compute_remaining_mt — exec fn should have ensures
        190 |     fn hash_coin_flips_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
             ...
        257 |     ///
        258 |     /// - Work O(n), Span O(log n) — parallel filter via ParaPair!.
        260 |         vertices: Arc<Vec<V>>,
        261 |         partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:319: error: fn_missing_ensures - fn collect_mst_labels_mt — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:319: error: fn_missing_ensures - fn collect_mst_labels_mt — exec fn should have ensures
        259 |     fn compute_remaining_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
             ...
        317 |     ///
        318 |     /// - Work O(n), Span O(log n) — parallel label extraction via ParaPair!.
        320 |         keys: Arc<Vec<V>>,
        321 |         partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:379: error: fn_missing_ensures - fn build_partition_map_mt — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:379: error: fn_missing_ensures - fn build_partition_map_mt — exec fn should have ensures
        319 |     fn collect_mst_labels_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
             ...
        377 |     ///
        378 |     /// - Work O(n), Span O(log n) — parallel map building via ParaPair!.
        380 |         vertices: Arc<Vec<V>>,
        381 |         partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:632: error: fn_missing_ensures - fn filter_tail_to_head_mt — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:632: error: fn_missing_ensures - fn filter_tail_to_head_mt — exec fn should have ensures
        566 |     pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
             ...
        630 |     ///
        631 |     /// - Claude-Opus-4.6: Work O(n), Span O(log n) — parallel divide-and-conquer via ParaPair!.
        633 |         vertices: Arc<Vec<V>>,
        634 |         bridges: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:176: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:176: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
 ℹ BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaStEph.rs:69: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaStEph.rs:69: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
    Info: 1 × structural_false_positive
 
 =================================================================
@@ -125,9 +125,13 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-25 17:32:29 -07:00
-Ended:     2026-03-25 17:32:29 -07:00
-Duration:  20ms
+Started:   2026-03-25 17:37:36 -07:00
+Ended:     2026-03-25 17:37:36 -07:00
+Duration:  16ms
 
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
+3-25 17:37:36 -07:00
+Ended:     2026-03-25 17:37:36 -07:00
+Duration:  16ms
+
+Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
