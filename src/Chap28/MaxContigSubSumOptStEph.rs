@@ -87,6 +87,7 @@ broadcast use {
     }
 
     impl MaxContigSubSumOptTrait for ArraySeqStEphS<i32> {
+        #[verifier::rlimit(30)]
         fn max_contig_sub_sum_opt(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>) {
             let n = a.length();
 

@@ -339,13 +339,12 @@ pub mod Chap23 {
     pub mod BalBinTreeStEph;
 }
 
-/*
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap26 {
     pub mod DivConReduceStPer;
     pub mod MergeSortStPer;
     pub mod ScanDCStPer;
-    pub mod ETSPStEph;
+//    pub mod ETSPStEph;  // FIX: rlimit — matching loop on spec_edges_form_cycle trigger
 //    pub mod ETSPMtEph;  // BROKEN: type mismatch + stale API
     pub mod DivConReduceMtPer;
     pub mod MergeSortMtPer;
@@ -392,7 +391,7 @@ pub mod Chap35 {
 pub mod Chap36 {
     pub mod QuickSortStEph;
     pub mod QuickSortMtEph;
-//    pub mod QuickSortMtEphSlice;  // BROKEN: uses missing with_exclusive method + nested fns
+//    pub mod QuickSortMtEphSlice;  // FIX: waiting for -V new-mut-ref migration + vstd split_at_mut
 }
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
@@ -424,6 +423,7 @@ pub mod Chap38 {
     pub mod BSTParaMtEph;
 }
 
+
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap39 {
     pub mod BSTTreapStEph;
@@ -450,6 +450,7 @@ pub mod Chap41 {
     pub mod Example41_3;
 }
 
+
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap42 {
     pub mod TableStEph;
@@ -467,16 +468,16 @@ pub mod Chap43 {
     pub mod OrderedTableStPer;
     pub mod AugOrderedTableStPer;
     pub mod OrderedSetStEph;
-//    pub mod OrderedSetStPer;  // BROKEN: references AVLTreeSetStPer.elements (field removed)
-//    pub mod OrderedSetMtEph;  // BROKEN: never compiled, stale API
-//    pub mod OrderedTableMtPer;  // BROKEN: never compiled, stale API
-//    pub mod Example43_1;  // BROKEN: stale imports (OrderedSetStPer dependency)
+//    pub mod OrderedSetMtEph;   // BROKEN
+//    pub mod OrderedSetStPer;   // BROKEN
+//    pub mod OrderedTableMtPer; // BROKEN
+//    pub mod Example43_1;       // BROKEN
 }
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap44 {
-//    pub mod DocumentIndex;  // BROKEN: depends on Chap41::AVLTreeSet (types outside verus!)
-//    pub mod Example44_1;  // BROKEN: depends on DocumentIndex
+//    pub mod DocumentIndex; // BROKEN
+//    pub mod Example44_1;  // BROKEN 
 }
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
@@ -539,6 +540,7 @@ pub mod Chap51 {
     pub mod TopDownDPMtPer;
 }
 
+
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap52 {
     pub mod AdjSeqGraphStEph;
@@ -549,12 +551,12 @@ pub mod Chap52 {
     pub mod AdjMatrixGraphStPer;
     pub mod AdjMatrixGraphMtEph;
     pub mod AdjMatrixGraphMtPer;
-//    pub mod AdjTableGraphStEph;  // BROKEN: missing obeys_view_eq/feq proofs
-//    pub mod AdjTableGraphStPer;  // BROKEN: missing obeys_view_eq/feq proofs
-//    pub mod AdjTableGraphMtPer;  // BROKEN: depends on AVLTreeSetMtPer
-//    pub mod EdgeSetGraphStEph;  // BROKEN: missing Sized, subrange errors
-//    pub mod EdgeSetGraphStPer;  // BROKEN: missing Sized, subrange errors
-//    pub mod EdgeSetGraphMtPer;  // BROKEN: depends on AVLTreeSetMtPer
+//    pub mod AdjTableGraphStEph;  // BROKEN: AVLTreeSet Ord/Sized/elements refactor needed
+//    pub mod AdjTableGraphStPer;  // BROKEN: same
+//    pub mod AdjTableGraphMtPer;  // BROKEN: same + AVLTreeSetMtPer chain
+//    pub mod EdgeSetGraphStEph;   // BROKEN: AVLTreeSet Ord/Sized refactor needed
+//    pub mod EdgeSetGraphStPer;   // BROKEN: same
+//    pub mod EdgeSetGraphMtPer;   // BROKEN: same + AVLTreeSetMtPer chain
 }
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
@@ -563,7 +565,7 @@ pub mod Chap53 {
     pub mod PQMinStPer;
     pub mod GraphSearchStEph;
     pub mod GraphSearchStPer;
-//    pub mod GraphSearchMtPer;  // BROKEN: depends on AVLTreeSetMtPer
+//    pub mod GraphSearchMtPer;   // BROKEN: AVLTreeSetMtPer .elements field gone
 }
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
@@ -576,16 +578,17 @@ pub mod Chap54 {
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap55 {
-//    pub mod DFSStEph;  // BROKEN: types from Chap37/41 declared outside verus!
-//    pub mod DFSStPer;  // BROKEN: types from Chap37/41 declared outside verus!
-//    pub mod TopoSortStEph;  // BROKEN: types from Chap37/41 declared outside verus!
-//    pub mod TopoSortStPer;  // BROKEN: types from Chap37/41 declared outside verus!
-//    pub mod CycleDetectStEph;  // BROKEN: types from Chap37/41 declared outside verus!
-//    pub mod CycleDetectStPer;  // BROKEN: types from Chap37/41 declared outside verus!
-//    pub mod SCCStEph;  // BROKEN: types from Chap37/41 declared outside verus!
-//    pub mod SCCStPer;  // BROKEN: types from Chap37/41 declared outside verus!
+//    pub mod DFSStEph;          // FIX: 48× .view() on Seq (mechanical) + 1 pub visibility
+//    pub mod DFSStPer;          // FIX: same
+//    pub mod TopoSortStEph;     // FIX: same (has the pub fix too)
+//    pub mod TopoSortStPer;     // FIX: same
+//    pub mod CycleDetectStEph;  // FIX: same
+//    pub mod CycleDetectStPer;  // FIX: same
+//    pub mod SCCStEph;          // FIX: same
+//    pub mod SCCStPer;          // FIX: same
 }
 
+/*
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap56 {
     pub mod SSSPResultStEphI64;
@@ -606,49 +609,49 @@ pub mod Chap56 {
 pub mod Chap57 {
     pub mod StackStEph;
     pub mod DijkstraStEphU64;
-//    pub mod DijkstraStEphF64;  // BROKEN: no WeightedDirGraphStEphF64 + BinaryHeapPQ
+//    pub mod DijkstraStEphF64;  // BROKEN
 }
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap58 {
     pub mod BellmanFordStEphI64;
-//    pub mod BellmanFordStEphF64;  // BROKEN: no WeightedDirGraphStEphF64
+//    pub mod BellmanFordStEphF64;  // BROKEN
 }
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap59 {
     pub mod JohnsonStEphI64;
-//    pub mod JohnsonMtEphI64;  // BROKEN: depends on DijkstraStEphU64
-//    pub mod JohnsonStEphF64;  // BROKEN: no WeightedDirGraphStEphF64
-//    pub mod JohnsonMtEphF64;  // BROKEN: no WeightedDirGraphStEphF64
+//    pub mod JohnsonMtEphI64;  // BROKEN
+//    pub mod JohnsonStEphF64;  // BROKEN
+//    pub mod JohnsonMtEphF64;  // BROKEN
 }
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap61 {
-//    pub mod EdgeContractionStEph;  // BROKEN: depends on VertexMatchingStEph
-//    pub mod EdgeContractionMtEph;  // BROKEN: depends on VertexMatchingMtEph
-//    pub mod VertexMatchingStEph;  // BROKEN: uses rand (Verus can't link)
-//    pub mod VertexMatchingMtEph;  // BROKEN: uses rand (Verus can't link)
+//    pub mod EdgeContractionStEph;  // BROKEN
+//    pub mod EdgeContractionMtEph;  // BROKEN
+//    pub mod VertexMatchingStEph;  // BROKEN
+//    pub mod VertexMatchingMtEph;  // BROKEN
 }
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap62 {
     pub mod StarPartitionStEph;
-//    pub mod StarPartitionMtEph;  // BROKEN: uses rand (Verus can't link)
+//    pub mod StarPartitionMtEph;  // BROKEN
     pub mod StarContractionStEph;
-//    pub mod StarContractionMtEph;  // BROKEN: depends on StarPartitionMtEph
+//    pub mod StarContractionMtEph;  // BROKEN
 }
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap63 {
     pub mod ConnectivityStEph;
-//    pub mod ConnectivityMtEph;  // BROKEN: depends on StarPartitionMtEph
+//    pub mod ConnectivityMtEph;  // BROKEN
 }
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap64 {
     pub mod SpanTreeStEph;
-//    pub mod SpanTreeMtEph;  // BROKEN: depends on StarContractionMtEph
+//    pub mod SpanTreeMtEph;  // BROKEN
     pub mod TSPApproxStEph;
 }
 

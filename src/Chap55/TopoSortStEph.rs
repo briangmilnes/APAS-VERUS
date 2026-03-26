@@ -116,7 +116,7 @@ broadcast use {
     // 7. proof fns
 
     /// Setting a false entry to true strictly decreases the count of false entries.
-    proof fn lemma_set_true_decreases_num_false(s: Seq<bool>, idx: int)
+    pub proof fn lemma_set_true_decreases_num_false(s: Seq<bool>, idx: int)
         requires
             0 <= idx < s.len(),
             !s[idx],

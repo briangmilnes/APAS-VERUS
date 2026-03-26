@@ -1,5 +1,5 @@
 #!/bin/bash
-# Verus verification. Usage: validate.sh [full|dev_only|exp] [--time]
+# Verus verification. Usage: validate.sh [full|dev_only|exp|union_find] [--time] [--profile]
 
 set -uo pipefail
 
@@ -32,8 +32,10 @@ MODE="${1:-full}"
 shift 2>/dev/null || true
 
 USE_TIME=false
+USE_PROFILE=false
 for arg in "$@"; do
     if [ "$arg" = "--time" ]; then USE_TIME=true; fi
+    if [ "$arg" = "--profile" ]; then USE_PROFILE=true; fi
 done
 
 case "$MODE" in
@@ -53,6 +55,11 @@ if $USE_TIME; then
     TIME_FLAG=(--time)
 fi
 
+PROFILE_FLAG=()
+if $USE_PROFILE; then
+    PROFILE_FLAG=(--profile)
+fi
+
 LOGDIR="$PROJECT_ROOT/logs"
 mkdir -p "$LOGDIR"
 LOGFILE="$LOGDIR/validate.$(date +%Y%m%d-%H%M%S).log"
@@ -60,11 +67,57 @@ LOGFILE="$LOGDIR/validate.$(date +%Y%m%d-%H%M%S).log"
 cd "$PROJECT_ROOT"
 START_SEC=$(date +%s)
 echo "Starting verification at $(date '+%H:%M:%S')"
+
+# Memory monitor: sample peak RSS of rust_verify and z3 children every 2s.
+# Writes peaks to a temp file so the parent can read them after verus exits.
+MEM_STATS=$(mktemp)
+echo "0 0 $(awk '/MemAvailable/ {print $2}' /proc/meminfo) 0 0" > "$MEM_STATS"
+CLK_TCK=$(getconf CLK_TCK)
+(
+    peak_rv=0; peak_z3=0; rv_cpu=0; z3_cpu=0
+    min_free=$(awk '/MemAvailable/ {print $2}' /proc/meminfo)
+    while true; do
+        sleep 2
+        rv_kb=0; z3_kb=0; rv_ticks=0; z3_ticks=0
+        for pid in $(pgrep -f rust_verify 2>/dev/null); do
+            rss=$(awk '/^VmRSS:/ {print $2}' /proc/$pid/status 2>/dev/null || echo 0)
+            rv_kb=$((rv_kb + rss))
+            # fields 14+15 = own utime+stime; 16+17 = children's cumulative utime+stime
+            ticks=$(awk '{print $14 + $15}' /proc/$pid/stat 2>/dev/null || echo 0)
+            rv_ticks=$((rv_ticks + ticks))
+            child_ticks=$(awk '{print $16 + $17}' /proc/$pid/stat 2>/dev/null || echo 0)
+            z3_ticks=$((z3_ticks + child_ticks))
+        done
+        for pid in $(pgrep -f 'z3 -smt2' 2>/dev/null); do
+            rss=$(awk '/^VmRSS:/ {print $2}' /proc/$pid/status 2>/dev/null || echo 0)
+            z3_kb=$((z3_kb + rss))
+        done
+        free_kb=$(awk '/MemAvailable/ {print $2}' /proc/meminfo)
+        [ "$rv_kb" -gt "$peak_rv" ] && peak_rv=$rv_kb
+        [ "$z3_kb" -gt "$peak_z3" ] && peak_z3=$z3_kb
+        [ "$free_kb" -lt "$min_free" ] && min_free=$free_kb
+        [ "$rv_ticks" -gt "$rv_cpu" ] && rv_cpu=$rv_ticks
+        [ "$z3_ticks" -gt "$z3_cpu" ] && z3_cpu=$z3_ticks
+        echo "$peak_rv $peak_z3 $min_free $rv_cpu $z3_cpu" > "$MEM_STATS"
+    done
+) &
+MONITOR_PID=$!
+
 # Limit parallelism to 8 threads (default is num_cpus-1, can lock machine)
 timeout 300 "$VERUS" --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors \
     --num-threads 8 \
-    "${CFG_FLAG[@]}" "${TIME_FLAG[@]}" 2>&1 | sed 's/\x1b\[[0-9;]*m//g' | tee "$LOGFILE"
+    "${CFG_FLAG[@]}" "${TIME_FLAG[@]}" "${PROFILE_FLAG[@]}" 2>&1 | sed 's/\x1b\[[0-9;]*m//g' | tee "$LOGFILE"
 RC=${PIPESTATUS[0]}
+
+kill "$MONITOR_PID" 2>/dev/null; wait "$MONITOR_PID" 2>/dev/null
+
+read PEAK_RV_KB PEAK_Z3_KB MIN_FREE_KB RV_TICKS Z3_TICKS < "$MEM_STATS"
+rm -f "$MEM_STATS"
+
 ELAPSED=$(( $(date +%s) - START_SEC ))
+RV_CPU=$((RV_TICKS / CLK_TCK))
+Z3_CPU=$((Z3_TICKS / CLK_TCK))
 echo "Elapsed: ${ELAPSED}s" | tee -a "$LOGFILE"
+echo "Sampled Memory Usage: peak rust_verify RSS: $((PEAK_RV_KB / 1024))MB, peak z3 RSS: $((PEAK_Z3_KB / 1024))MB, min free: $((MIN_FREE_KB / 1024))MB" | tee -a "$LOGFILE"
+echo "Sampled CPU Usage: rust_verify: ${RV_CPU}s, z3 children: ${Z3_CPU}s" | tee -a "$LOGFILE"
 exit $RC

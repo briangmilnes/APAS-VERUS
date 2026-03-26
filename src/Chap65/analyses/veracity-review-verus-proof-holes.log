@@ -21,16 +21,147 @@ Table of Contents:
 =================================================================
 
 ❌ KruskalStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/KruskalStEph.rs:178: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:178: error: external_body - #[verifier::external_body]
        179 |     pub fn kruskal_mst<V: HashOrd>(
    Holes: 1 total
       1 × external_body
 ❌ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:72: error: assume() [algorithmic] - assume(TotalOrder::le(x, y) || TotalOrder::le(y, x));
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:72: error: assume() [algorithmic] - assume(TotalOrder::le(x, y) || TotalOrder::le(y, x));
         70 |         // accept hole
         71 |         proof fn total(x: Self, y: Self) {
         73 |         }
         74 |         #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:74: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:74: error: external_body - #[verifier::external_body]
         75 |         fn cmp(&self, other: &Self) -> (c: Ordering) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:59: error: proof_fn_with_holes - proof fn reflexive — contains assume/external_body/admit, needs proof
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:59: error: proof_fn_with_holes - proof fn reflexive — contains assume/external_body/admit, needs proof
+        55 |         open spec fn le(self, other: Self) -> bool {
+            ...
+        57 |         }
+        58 |         // accept hole — float reflexive requires finiteness precondition.
+        60 |             assume(TotalOrder::le(x, x));
+        61 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:63: error: proof_fn_with_holes - proof fn transitive — contains assume/external_body/admit, needs proof
+        59 |         proof fn reflexive(x: Self) {
+            ...
+        61 |         }
+        62 |         // accept hole
+        64 |             assume(TotalOrder::le(x, z));
+        65 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:67: error: proof_fn_with_holes - proof fn antisymmetric — contains assume/external_body/admit, needs proof
+        63 |         proof fn transitive(x: Self, y: Self, z: Self) {
+            ...
+        65 |         }
+        66 |         // accept hole — preorder: equal priority does not imply equal entry.
+        68 |             assume(x == y);
+        69 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:71: error: proof_fn_with_holes - proof fn total — contains assume/external_body/admit, needs proof
+        67 |         proof fn antisymmetric(x: Self, y: Self) {
+            ...
+        69 |         }
+        70 |         // accept hole
+        72 |             assume(TotalOrder::le(x, y) || TotalOrder::le(y, x));
+        73 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:368: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       364 |         fn clone(&self) -> (result: Self)
+            ...
+       366 |         {
+       367 |             let result = PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() };
+       369 |             result
+       370 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:60: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:64: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:68: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:131: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
+   Holes: 2 total
+      1 × assume()
+      1 × external_body
+   Info: 1 × structural_false_positive
+      1 × OPAQUE_EXTERNAL
+   Info: 3 total
+   Proof functions: 4 total (0 clean, 4 holed)
+❌ UnionFindStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:717: error: admit() - admit(); // Overflow: rank bounded by log2(n) < 64 (2^rank t
+       661 |     fn union_merge<V: StT + Hash>(
+            ...
+       715 |                 proof {
+       716 |                     assert(strictly_cloned(root_u, ru2));
+       718 |                 }
+       719 |                 uf.rank.insert(ru2, rank_u + 1);
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:661: error: fn_missing_wf_requires - fn union_merge — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
+       595 |     fn find_root_loop<V: StT + Hash>(uf: &UnionFindStEph<V>, v: &V) -> (root: V)
+            ...
+       659 |     /// Merge two components: mutate parent/rank/roots, prove wf.
+       660 |     #[verifier::rlimit(80)]
+       662 |         uf: &mut UnionFindStEph<V>,
+       663 |         root_u: V,
+   Holes: 1 total
+      1 × admit()
+   Proof functions: 7 total (7 clean, 0 holed)
+
+=================================================================
+2. Depends Upon
+=================================================================
+
+=================================================================
+2.1. By Module
+=================================================================
+
+KruskalStEph  depends upon only clean modules
+PrimStEph  depends upon only clean modules
+UnionFindStEph  depends upon only clean modules
+
+=================================================================
+2.2. By File
+=================================================================
+
+KruskalStEph.rs  depends upon only clean modules
+PrimStEph.rs  depends upon only clean modules
+UnionFindStEph.rs  depends upon only clean modules
+
+=================================================================
+3. Summary of Holes
+=================================================================
+
+Modules:
+   0 clean (no holes, no errors; 0%)
+   3 holed (holes or errors, 100%)
+   3 total
+
+Proof Functions:
+   7 clean (63%)
+   4 holed (36%)
+   11 total
+
+Function Specs:
+   28 exec fns with complete spec (requires+ensures) (45%)
+   0 exec fns missing spec (0%)
+   30 proof/spec fns clean (48%)
+   4 proof/spec fns with holes (6%)
+   62 total fns
+
+
+Holes Found: 4 (actionable)
+   1 × assume() [algorithmic] (25%)
+   1 × admit() (25%)
+   2 × external_body (50%)
+Real Proof Targets: 4 (all actionable)
+
+Warnings: 2 total
+   1 × fn_missing_wf_requires
+   1 × assume_eq_clone_workaround
+
+Accepted (reviewed): 3 total
+   3 × accept()
+
+Structural (info only): 1
+   1 × OPAQUE_EXTERNAL
+
+=================================================================
+5. Started/Ended/Duration
+=================================================================
+
+Started:   2026-03-26 07:24:18 -07:00
+Ended:     2026-03-26 07:24:18 -07:00
+Duration:  19ms
+
+Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
