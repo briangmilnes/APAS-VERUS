@@ -554,9 +554,9 @@ pub mod Chap52 {
 //    pub mod AdjTableGraphStEph;  // BROKEN: AVLTreeSet Ord/Sized/elements refactor needed
 //    pub mod AdjTableGraphStPer;  // BROKEN: same
 //    pub mod AdjTableGraphMtPer;  // BROKEN: same + AVLTreeSetMtPer chain
-//    pub mod EdgeSetGraphStEph;   // BROKEN: AVLTreeSet Ord/Sized refactor needed
-//    pub mod EdgeSetGraphStPer;   // BROKEN: same
-//    pub mod EdgeSetGraphMtPer;   // BROKEN: same + AVLTreeSetMtPer chain
+    pub mod EdgeSetGraphStEph;
+    pub mod EdgeSetGraphStPer;
+//    pub mod EdgeSetGraphMtPer;   // BROKEN: depends on AVLTreeSetMtPer chain
 }
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap53")))]
@@ -565,7 +565,7 @@ pub mod Chap53 {
     pub mod PQMinStPer;
     pub mod GraphSearchStEph;
     pub mod GraphSearchStPer;
-//    pub mod GraphSearchMtPer;   // BROKEN: AVLTreeSetMtPer .elements field gone
+    pub mod GraphSearchMtPer;
 }
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap54")))]

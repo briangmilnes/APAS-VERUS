@@ -8,6 +8,8 @@ pub mod EdgeSetGraphStEph {
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeSeqStEphTrait;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
 
     verus! {
 
@@ -30,9 +32,10 @@ broadcast use {
     // 4. type definitions
 
     #[derive(Clone)]
+    #[verifier::reject_recursive_types(V)]
     pub struct EdgeSetGraphStEph<V: StT + Ord> {
-        vertices: AVLTreeSetStEph<V>,
-        edges: AVLTreeSetStEph<Pair<V, V>>,
+        pub vertices: AVLTreeSetStEph<V>,
+        pub edges: AVLTreeSetStEph<Pair<V, V>>,
     }
 
     // 5. view impls
@@ -44,7 +47,7 @@ broadcast use {
 
     // 8. traits
 
-    pub trait EdgeSetGraphStEphTrait<V: StT + Ord> {
+    pub trait EdgeSetGraphStEphTrait<V: StT + Ord>: Sized {
         spec fn spec_edgesetgraphsteph_wf(&self) -> bool;
         spec fn spec_vertices(&self) -> Set<<V as View>::V>;
         spec fn spec_edges(&self) -> Set<(<V as View>::V, <V as View>::V)>;
@@ -53,6 +56,11 @@ broadcast use {
         /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.1]
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; creates empty sets.
         fn empty() -> (out: Self)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<V, V>>(),
+                view_ord_consistent::<Pair<V, V>>(),
             ensures out.spec_edgesetgraphsteph_wf();
         /// - APAS: Work Theta(1), Span Theta(1)
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — wraps existing sets.
@@ -60,6 +68,10 @@ broadcast use {
             requires
                 v.spec_avltreesetsteph_wf(),
                 e.spec_avltreesetsteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<V, V>>(),
+                view_ord_consistent::<Pair<V, V>>(),
                 forall|u: <V as View>::V, w: <V as View>::V|
                     #[trigger] e@.contains((u, w))
                     ==> v@.contains(u) && v@.contains(w),
@@ -88,7 +100,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Theta(m lg n), Span Theta(m lg n) — agrees; filter edges + build set.
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
             requires self.spec_edgesetgraphsteph_wf()
-            ensures neighbors@ == self.spec_out_neighbors(u@);
+            ensures neighbors@ == self.spec_out_neighbors(u@), neighbors.spec_avltreesetsteph_wf();
         /// - APAS: Work Theta(m), Span Theta(m) [Cost Spec 52.1]
         /// - Claude-Opus-4.6: Work Theta(m lg n), Span Theta(m lg n) — delegates to out_neighbors.
         fn out_degree(&self, u: &V) -> N
@@ -96,7 +108,9 @@ broadcast use {
         /// - APAS: Work Theta(lg n), Span Theta(lg n) [Cost Spec 52.1]
         /// - Claude-Opus-4.6: Work Theta(lg n), Span Theta(lg n) — agrees; AVL set insert.
         fn insert_vertex(&mut self, v: V)
-            requires old(self).spec_edgesetgraphsteph_wf()
+            requires
+                old(self).spec_edgesetgraphsteph_wf(),
+                old(self).spec_vertices().len() + 1 < usize::MAX as nat,
             ensures self.spec_edgesetgraphsteph_wf();
         /// - APAS: Work Theta(m lg m), Span Theta(m lg m) [Cost Spec 52.1]
         /// - Claude-Opus-4.6: Work Theta(m lg m), Span Theta(m lg m) — agrees; filter and rebuild edge set.
@@ -106,7 +120,10 @@ broadcast use {
         /// - APAS: Work Theta(lg n + lg m), Span Theta(lg n + lg m) [Cost Spec 52.1]
         /// - Claude-Opus-4.6: Work Theta(lg n + lg m), Span Theta(lg n + lg m) — agrees; vertex insert + edge insert.
         fn insert_edge(&mut self, u: V, v: V)
-            requires old(self).spec_edgesetgraphsteph_wf()
+            requires
+                old(self).spec_edgesetgraphsteph_wf(),
+                old(self).spec_vertices().len() + 2 < usize::MAX as nat,
+                old(self).spec_edges().len() + 1 < usize::MAX as nat,
             ensures self.spec_edgesetgraphsteph_wf();
         /// - APAS: Work Theta(lg m), Span Theta(lg m) [Cost Spec 52.1]
         /// - Claude-Opus-4.6: Work Theta(lg m), Span Theta(lg m) — agrees; AVL set delete.
@@ -121,6 +138,10 @@ broadcast use {
         open spec fn spec_edgesetgraphsteph_wf(&self) -> bool {
             self.vertices.spec_avltreesetsteph_wf()
             && self.edges.spec_avltreesetsteph_wf()
+            && vstd::laws_cmp::obeys_cmp_spec::<V>()
+            && view_ord_consistent::<V>()
+            && vstd::laws_cmp::obeys_cmp_spec::<Pair<V, V>>()
+            && view_ord_consistent::<Pair<V, V>>()
             && forall|u: <V as View>::V, v: <V as View>::V|
                 #[trigger] self.spec_edges().contains((u, v))
                 ==> self.spec_vertices().contains(u) && self.spec_vertices().contains(v)
@@ -192,7 +213,8 @@ broadcast use {
                         #[trigger] neighbors@.contains(seq@[j].1),
                 decreases n - i
             {
-                let Pair(_, v) = seq.nth(i).clone();
+                let pair_ref = seq.nth(i);
+                let v = pair_ref.1.clone();
                 proof {
                     assert(seq@.to_set().contains(seq@[i as int]));
                     assert(filtered_view.contains(seq@[i as int]));
@@ -231,16 +253,21 @@ broadcast use {
             let v_clone = v.clone();
             self.vertices.delete(&v_clone);
             let seq = self.edges.to_seq();
+            let seq_len = seq.length();
             let mut to_remove: Vec<Pair<V, V>> = Vec::new();
             let mut i: usize = 0;
-            while i < seq.length()
-                invariant i <= seq.length()
-                decreases seq.length() - i
+            while i < seq_len
+                invariant
+                    i <= seq_len,
+                    seq_len as nat == seq@.len(),
+                    seq.spec_avltreeseqsteph_wf(),
+                decreases seq_len - i
             {
-                let edge = seq.nth(i).clone();
-                let Pair(u, w) = edge;
+                let edge_ref = seq.nth(i);
+                let u = edge_ref.0.clone();
+                let w = edge_ref.1.clone();
                 if u == v_clone || w == v_clone {
-                    to_remove.push(edge);
+                    to_remove.push(Pair(u, w));
                 }
                 i += 1;
             }
@@ -250,6 +277,8 @@ broadcast use {
                     j <= to_remove.len(),
                     !self.spec_vertices().contains(v@),
                     self.edges.spec_avltreesetsteph_wf(),
+                    vstd::laws_cmp::obeys_cmp_spec::<Pair<V, V>>(),
+                    view_ord_consistent::<Pair<V, V>>(),
                 decreases to_remove.len() - j
             {
                 self.edges.delete(&to_remove[j]);
