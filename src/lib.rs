@@ -468,9 +468,9 @@ pub mod Chap43 {
     pub mod OrderedTableStPer;
     pub mod AugOrderedTableStPer;
     pub mod OrderedSetStEph;
-//    pub mod OrderedSetMtEph;   // BROKEN
+//    pub mod OrderedSetMtEph;   // FIX: postcondition failures after OrderedSetStPer rewrite
     pub mod OrderedSetStPer;
-//    pub mod OrderedTableMtPer; // BROKEN
+//    pub mod OrderedTableMtPer; // FIX: postcondition failures after OrderedSetStPer rewrite
     pub mod Example43_1;
 }
 

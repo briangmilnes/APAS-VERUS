@@ -53,9 +53,8 @@ Table of Contents:
    Info: 17 × structural_false_positive
 ✓ OrderedSetStEph.rs
    3 clean proof functions
-ℹ OrderedSetStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedSetStPer.rs:1475: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
-   Info: 1 × structural_false_positive
+✓ OrderedSetStPer.rs
+   3 clean proof functions
 ⚠ OrderedTableMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:874: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        869 |         fn clone(&self) -> (cloned: Self)
@@ -219,16 +218,16 @@ Modules:
    10 total
 
 Proof Functions:
-   32 clean (100%)
+   35 clean (100%)
    0 holed (0%)
-   32 total
+   35 total
 
 Function Specs:
-   647 exec fns with complete spec (requires+ensures) (82%)
+   648 exec fns with complete spec (requires+ensures) (82%)
    0 exec fns missing spec (0%)
-   138 proof/spec fns clean (17%)
+   139 proof/spec fns clean (17%)
    0 proof/spec fns with holes (0%)
-   785 total fns
+   787 total fns
 
 
 Holes Found: 0 (actionable)
@@ -238,10 +237,10 @@ Warnings: 10 total
    1 × fn_missing_wf_ensures
    9 × assume_eq_clone_workaround
 
-Structural (info only): 68
+Structural (info only): 67
    64 × RWLOCK_GHOST
-   2 × STD_TRAIT_IMPL
    2 × UNSAFE_SEND_SYNC
+   1 × STD_TRAIT_IMPL
 
 No proof holes found! All proofs are complete.
 
@@ -249,15 +248,15 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-25 19:52:20 -07:00
-Ended:     2026-03-25 19:52:20 -07:00
-Duration:  193ms
+Started:   2026-03-26 08:30:17 -07:00
+Ended:     2026-03-26 08:30:17 -07:00
+Duration:  189ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
-=================================
+========================
 
-Started:   2026-03-25 19:52:20 -07:00
-Ended:     2026-03-25 19:52:20 -07:00
-Duration:  193ms
+Started:   2026-03-26 08:30:17 -07:00
+Ended:     2026-03-26 08:30:17 -07:00
+Duration:  189ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
