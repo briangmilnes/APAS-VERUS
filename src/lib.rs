@@ -551,8 +551,8 @@ pub mod Chap52 {
     pub mod AdjMatrixGraphStPer;
     pub mod AdjMatrixGraphMtEph;
     pub mod AdjMatrixGraphMtPer;
-    pub mod AdjTableGraphStEph;   // FIX: 26 errors — Verus sst_to_air bug + Table wf gap
-    pub mod AdjTableGraphStPer;   // FIX: same
+//    pub mod AdjTableGraphStEph;  // FIX: switched to Table but Verus sst_to_air bug + Table wf gap
+//    pub mod AdjTableGraphStPer;  // FIX: same
 //    pub mod AdjTableGraphMtPer;  // BROKEN: AVLTreeSetMtPer chain
     pub mod EdgeSetGraphStEph;
     pub mod EdgeSetGraphStPer;

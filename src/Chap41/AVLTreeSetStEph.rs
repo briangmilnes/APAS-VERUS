@@ -802,33 +802,6 @@ broadcast use {
 
     // 13. derive impls outside verus!
 
-    impl<T: StT + Ord> PartialOrd for AVLTreeSetStEph<T> {
-        fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-            Some(self.cmp(other))
-        }
-    }
-
-    impl<T: StT + Ord> Ord for AVLTreeSetStEph<T> {
-        fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-            let mut self_seq: Vec<T> = Vec::new();
-            self.tree.collect_in_order(&mut self_seq);
-            let mut other_seq: Vec<T> = Vec::new();
-            other.tree.collect_in_order(&mut other_seq);
-            let n_self = self_seq.len();
-            let n_other = other_seq.len();
-            let min_n = if n_self < n_other { n_self } else { n_other };
-            let mut i: usize = 0;
-            while i < min_n {
-                let c = self_seq[i].cmp(&other_seq[i]);
-                if c != std::cmp::Ordering::Equal {
-                    return c;
-                }
-                i += 1;
-            }
-            std::cmp::Ord::cmp(&n_self, &n_other)
-        }
-    }
-
     impl<T: StT + Ord> fmt::Debug for AVLTreeSetStEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             let mut v: Vec<T> = Vec::new();
