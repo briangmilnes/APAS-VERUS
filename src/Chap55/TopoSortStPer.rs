@@ -150,6 +150,8 @@ pub mod TopoSortStPer {
             vertex < old(visited)@.len(),
             old(visited)@.len() == graph@.len(),
             spec_toposortstper_wf(graph),
+            forall|k: int| 0 <= k < old(finish_order)@.len()
+                ==> (#[trigger] old(finish_order)@[k] as int) < graph@.len(),
         ensures
             visited@.len() == graph@.len(),
             forall|j: int|
@@ -158,6 +160,10 @@ pub mod TopoSortStPer {
             spec_num_false(visited@) <= spec_num_false(old(visited)@),
             finish_order@.len() + spec_num_false(visited@)
                 == old(finish_order)@.len() + spec_num_false(old(visited)@),
+            visited@[vertex as int],
+            forall|k: int| 0 <= k < finish_order@.len()
+                ==> (#[trigger] finish_order@[k] as int) < graph@.len(),
+            finish_order@.len() >= old(finish_order)@.len(),
         decreases spec_num_false(old(visited)@),
     {
         assert(vertex < visited.len());
@@ -190,6 +196,9 @@ pub mod TopoSortStPer {
         proof { lemma_graph_per_view_bridge(graph, neighbors, vertex as int); }
         assert(neighbors@ =~= graph@[vertex as int]);
 
+        // After set: visited@[vertex as int] is true.
+        assert(visited@[vertex as int]);
+
         let mut i: usize = 0;
         while i < neighbors_len
             invariant
@@ -207,6 +216,10 @@ pub mod TopoSortStPer {
                 spec_num_false(visited@) < spec_num_false(old(visited)@),
                 finish_order@.len() + spec_num_false(visited@) + 1
                     == old(finish_order)@.len() + spec_num_false(old(visited)@),
+                visited@[vertex as int],
+                forall|k: int| 0 <= k < finish_order@.len()
+                    ==> (#[trigger] finish_order@[k] as int) < graph@.len(),
+                finish_order@.len() >= old(finish_order)@.len(),
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
@@ -218,6 +231,7 @@ pub mod TopoSortStPer {
             dfs_finish_order(graph, visited, finish_order, neighbor);
             i = i + 1;
         }
+        // vertex < graph@.len(), so pushing it maintains the bound.
         finish_order.push(vertex);
     }
 
@@ -339,6 +353,8 @@ pub mod TopoSortStPer {
                 j <= n,
                 visited@.len() == j as int,
                 rec_stack@.len() == j as int,
+                forall|k: int| 0 <= k < visited@.len() ==> !#[trigger] visited@[k],
+                forall|k: int| 0 <= k < rec_stack@.len() ==> !#[trigger] rec_stack@[k],
             decreases n - j,
         {
             visited.push(false);
@@ -347,7 +363,6 @@ pub mod TopoSortStPer {
         }
 
         proof {
-            assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {}
             lemma_all_false_num_false_eq_len(visited@);
         }
 
@@ -394,7 +409,7 @@ pub mod TopoSortStPer {
     impl TopoSortStPerTrait for TopoSortStPer {
         /// Returns sequence of vertices in topological order.
         #[verifier::external_body]
-        fn topo_sort(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<N>
+        fn topo_sort(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (order: AVLTreeSeqStPerS<N>)
         {
             let n = graph.length();
             let mut visited: Vec<bool> = Vec::new();
@@ -404,6 +419,7 @@ pub mod TopoSortStPer {
                 invariant
                     j <= n,
                     visited@.len() == j as int,
+                    forall|k: int| 0 <= k < visited@.len() ==> !#[trigger] visited@[k],
                 decreases n - j,
             {
                 visited.push(false);
@@ -411,7 +427,6 @@ pub mod TopoSortStPer {
             }
 
             proof {
-                assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {}
                 lemma_all_false_num_false_eq_len(visited@);
             }
 
@@ -423,15 +438,35 @@ pub mod TopoSortStPer {
                     n < usize::MAX,
                     visited@.len() == n,
                     spec_toposortstper_wf(graph),
-                    finish_order@.len() + spec_num_false(visited@) <= n,
+                    finish_order@.len() + spec_num_false(visited@) == n,
+                    forall|j: int| #![trigger visited@[j]] 0 <= j < start ==> visited@[j],
+                    forall|k: int| 0 <= k < finish_order@.len()
+                        ==> (#[trigger] finish_order@[k] as int) < graph@.len(),
                 decreases n - start,
             {
                 if !visited[start] {
+                    let ghost old_visited = visited@;
                     dfs_finish_order(graph, &mut visited, &mut finish_order, start);
+                    // dfs_finish_order ensures visited@[start] and monotonicity.
+                    proof {
+                        assert forall|j: int| #![trigger visited@[j]] 0 <= j < start + 1 implies visited@[j] by {
+                            if j < start as int {
+                                // Before the call, loop invariant gave visited@[j] (i.e., old_visited[j]).
+                                assert(old_visited[j]);
+                                // Monotonicity: old_visited[j] ==> visited@[j].
+                            }
+                            // j == start: dfs_finish_order ensures visited@[start as int].
+                        };
+                    }
+                } else {
+                    assert(visited@[start as int]);
                 }
                 start = start + 1;
             }
-            assert(finish_order@.len() <= n);
+            proof {
+                lemma_all_true_num_false_zero(visited@);
+            }
+            assert(finish_order@.len() == n);
             assert(finish_order@.len() < usize::MAX);
             let result_len = finish_order.len();
             let mut reversed: Vec<N> = Vec::new();

@@ -485,13 +485,16 @@ broadcast use {
             topo_order.is_some() ==> spec_is_topo_order(graph, topo_order.unwrap()@),
     {
         let n = graph.length();
-        let mut visited = ArraySeqStEphS::tabulate(&|_x| false, n);
-        let mut rec_stack = ArraySeqStEphS::tabulate(&|_x| false, n);
+        let f_false = |_x: usize| -> (r: bool) ensures !r { false };
+        let mut visited = ArraySeqStEphS::tabulate(&f_false, n);
+        let mut rec_stack = ArraySeqStEphS::tabulate(&f_false, n);
         let mut finish_order: Vec<N> = Vec::new();
 
         proof {
             assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {
-                assert(visited.seq@[j] == false);
+                // tabulate ensures: f_false.ensures((j as usize,), visited.seq@[j])
+                // f_false.ensures(_, r) <==> !r, so visited.seq@[j] == false.
+                assert(!visited.seq@[j]);
                 assert(visited@[j] == visited.seq@[j]@);
             }
             lemma_all_false_num_false_eq_len(visited@);
@@ -543,18 +546,16 @@ broadcast use {
     impl TopoSortStEphTrait for TopoSortStEph {
         /// Returns sequence of vertices in topological order.
         #[verifier::external_body]
-        fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<N>
+        fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (order: AVLTreeSeqStEphS<N>)
         {
             let n = graph.length();
-            let mut visited = ArraySeqStEphS::tabulate(&|_x| false, n);
+            let f_false = |_x: usize| -> (r: bool) ensures !r { false };
+            let mut visited = ArraySeqStEphS::tabulate(&f_false, n);
             let mut finish_order: Vec<N> = Vec::new();
 
             proof {
                 assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {
-                    // tabulate ensures: visited.seq@[j] == false (trigger: visited.seq@[j])
-                    assert(visited.seq@[j] == false);
-                    // view: visited@[j] = visited.seq@.map(|_i, t: bool| t@)[j] = visited.seq@[j]@
-                    // bool view is identity: false@ = false
+                    assert(!visited.seq@[j]);
                     assert(visited@[j] == visited.seq@[j]@);
                 }
                 lemma_all_false_num_false_eq_len(visited@);
@@ -572,11 +573,24 @@ broadcast use {
                     forall|k: int| 0 <= k < finish_order@.len()
                         ==> (#[trigger] finish_order@[k] as int) < graph@.len(),
                     finish_order@.len() + spec_num_false(visited@) == n,
+                    forall|j: int| #![trigger visited@[j]] 0 <= j < start ==> visited@[j],
                 decreases n - start,
             {
                 assert(start < visited.spec_len());
+                proof { lemma_bool_view_eq_spec_index(&visited); }
                 if !*visited.nth(start) {
+                    let ghost old_visited = visited@;
                     dfs_finish_order(graph, &mut visited, &mut finish_order, start);
+                    // Monotonicity preserves prior visited entries.
+                    proof {
+                        assert forall|j: int| #![trigger visited@[j]] 0 <= j < start + 1 implies visited@[j] by {
+                            if j < start as int {
+                                assert(old_visited[j]);
+                            }
+                        };
+                    }
+                } else {
+                    assert(visited@[start as int]);
                 }
                 start = start + 1;
             }
