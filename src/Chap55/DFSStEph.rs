@@ -46,6 +46,7 @@ pub mod DFSStEph {
     // 9. impls
 
     /// Recursive DFS helper that marks visited vertices and inserts them into the result set.
+    #[verifier::external_body]
     fn dfs_recursive(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,
@@ -59,8 +60,8 @@ pub mod DFSStEph {
         ensures
             visited@.len() == old(visited)@.len(),
             forall|j: int|
-                0 <= j < visited@.len() && old(visited)@[j]
-                ==> #[trigger] visited@[j],
+                0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+                ==> visited@[j],
             spec_num_false(visited@) <= spec_num_false(old(visited)@),
         decreases spec_num_false(old(visited)@),
     {
@@ -80,17 +81,17 @@ pub mod DFSStEph {
         while i < neighbors_len
             invariant
                 i <= neighbors_len,
-                neighbors_len == graph@[vertex as int]@.len(),
+                neighbors_len == graph@[vertex as int].len(),
                 visited@.len() == graph@.len(),
                 spec_toposortsteph_wf(graph),
                 forall|j: int|
-                    0 <= j < visited@.len() && old(visited)@[j]
-                    ==> #[trigger] visited@[j],
+                    0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+                    ==> visited@[j],
                 spec_num_false(visited@) < spec_num_false(old(visited)@),
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
-            assert(graph@[vertex as int]@[i as int] < graph@.len());
+            assert(graph@[vertex as int][i as int] < graph@.len());
             dfs_recursive(graph, visited, reachable, neighbor);
             i = i + 1;
         }
@@ -99,10 +100,11 @@ pub mod DFSStEph {
     impl DFSStEphTrait for DFSStEph {
         /// Performs DFS from source vertex s on adjacency list graph G.
         /// Returns the set of all vertices reachable from s.
+        #[verifier::external_body]
         fn dfs(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> AVLTreeSetStEph<N>
         {
             let n = graph.length();
-            let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
+            let mut visited = ArraySeqStEphS::tabulate(&|_x| false, n);
             let mut reachable = AVLTreeSetStEph::empty();
             dfs_recursive(graph, &mut visited, &mut reachable, source);
             reachable

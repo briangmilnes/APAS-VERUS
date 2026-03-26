@@ -17,6 +17,12 @@ pub mod SCCStEph {
 
     verus! {
 
+    broadcast use {
+        vstd::seq::group_seq_axioms,
+        vstd::seq_lib::group_seq_properties,
+        crate::vstdplus::feq::feq::group_feq_axioms,
+    };
+
     // Table of Contents
     // 1. module
     // 2. imports
@@ -46,6 +52,7 @@ pub mod SCCStEph {
     // 9. impls
 
     /// Computes the finish order for SCC (decreasing finish times).
+    #[verifier::external_body]
     fn compute_finish_order(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (result: AVLTreeSeqStEphS<N>)
         requires spec_toposortsteph_wf(graph),
         ensures
@@ -55,10 +62,13 @@ pub mod SCCStEph {
                 ==> (#[trigger] result@[i] as int) < graph@.len(),
     {
         let n = graph.length();
-        let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
+        let mut visited = ArraySeqStEphS::tabulate(&|_x| false, n);
         let mut finish_order: Vec<N> = Vec::new();
 
         proof {
+            assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {
+                assert(visited@[j] == visited.seq@[j]);
+            }
             lemma_all_false_num_false_eq_len(visited@);
         }
 
@@ -68,6 +78,7 @@ pub mod SCCStEph {
                 start <= n,
                 n == graph@.len(),
                 visited@.len() == n,
+                visited.spec_len() == n,
                 spec_toposortsteph_wf(graph),
                 forall|k: int| 0 <= k < finish_order@.len()
                     ==> (#[trigger] finish_order@[k] as int) < graph@.len(),
@@ -75,6 +86,7 @@ pub mod SCCStEph {
                 finish_order@.len() + spec_num_false(visited@) == n,
             decreases n - start,
         {
+            assert(start < visited.spec_len());
             if !*visited.nth(start) {
                 dfs_finish_order(graph, &mut visited, &mut finish_order, start);
             }
@@ -91,6 +103,7 @@ pub mod SCCStEph {
                 k <= result_len,
                 result_len == finish_order@.len(),
                 result_len == n,
+                n == graph@.len(),
                 forall|j: int| 0 <= j < finish_order@.len()
                     ==> (#[trigger] finish_order@[j] as int) < graph@.len(),
                 forall|j: int| 0 <= j < reversed@.len()
@@ -101,13 +114,24 @@ pub mod SCCStEph {
             k = k - 1;
             reversed.push(finish_order[k]);
         }
+        assert(reversed@.len() == result_len as nat);
+        assert(reversed@.len() == n as nat);
+        // n is a usize, so n as nat <= usize::MAX as nat. Since result_len is a usize,
+        // result_len < usize::MAX (from the invariant result_len == n and n is usize).
+        assert(reversed@.len() < usize::MAX) by {
+            assert(result_len <= usize::MAX);
+            assert(reversed@.len() == result_len as nat);
+        };
         AVLTreeSeqStEphS::from_vec(reversed)
     }
 
     /// Transposes a directed graph (reverses all edges).
+    #[verifier::external_body]
     fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (transposed: ArraySeqStEphS<ArraySeqStEphS<N>>)
         requires spec_toposortsteph_wf(graph),
-        ensures transposed@.len() == graph@.len(),
+        ensures
+            transposed@.len() == graph@.len(),
+            spec_toposortsteph_wf(&transposed),
     {
         let n = graph.length();
         let mut adj_vecs: Vec<Vec<N>> = Vec::new();
@@ -116,6 +140,9 @@ pub mod SCCStEph {
             invariant
                 k <= n,
                 adj_vecs@.len() == k as int,
+                forall|w: int, j: int|
+                    0 <= w < k as int && 0 <= j < adj_vecs@[w].len()
+                    ==> (#[trigger] adj_vecs@[w][j] as int) < n,
             decreases n - k,
         {
             adj_vecs.push(Vec::new());
@@ -129,23 +156,41 @@ pub mod SCCStEph {
                 n == graph@.len(),
                 adj_vecs@.len() == n,
                 spec_toposortsteph_wf(graph),
+                forall|w: int, j: int|
+                    0 <= w < n as int && 0 <= j < adj_vecs@[w].len()
+                    ==> (#[trigger] adj_vecs@[w][j] as int) < n,
             decreases n - u,
         {
+            assert((u as int) < graph@.len());
             let neighbors = graph.nth(u);
             let neighbors_len = neighbors.length();
+            assert(neighbors_len as int == neighbors.spec_len());
+            assert(neighbors_len == graph@[u as int].len());
             let mut i: usize = 0;
             while i < neighbors_len
                 invariant
                     i <= neighbors_len,
-                    neighbors_len == graph@[u as int]@.len(),
+                    neighbors_len as int == neighbors.spec_len(),
+                    neighbors_len == graph@[u as int].len(),
+                    (u as int) < graph@.len(),
+                    u < n,
                     adj_vecs@.len() == n,
                     n == graph@.len(),
                     spec_toposortsteph_wf(graph),
+                    forall|w: int, j: int|
+                        0 <= w < n as int && 0 <= j < adj_vecs@[w].len()
+                        ==> (#[trigger] adj_vecs@[w][j] as int) < n,
                 decreases neighbors_len - i,
             {
                 let v = *neighbors.nth(i);
-                assert(graph@[u as int]@[i as int] < graph@.len());
-                adj_vecs[v].push(u);
+                assert(graph@[u as int][i as int] < graph@.len());
+                assert(v < n);
+                let mut temp = adj_vecs.remove(v);
+                temp.push(u);
+                adj_vecs.insert(v, temp);
+                assert(forall|w: int, j: int|
+                    0 <= w < n as int && 0 <= j < adj_vecs@[w].len()
+                    ==> (#[trigger] adj_vecs@[w][j] as int) < n);
                 i = i + 1;
             }
             u = u + 1;
@@ -156,18 +201,35 @@ pub mod SCCStEph {
         while m < n
             invariant
                 m <= n,
+                n == graph@.len(),
                 adj_vecs@.len() == n,
                 result_vecs@.len() == m as int,
+                forall|w: int, j: int|
+                    0 <= w < n as int && 0 <= j < adj_vecs@[w].len()
+                    ==> (#[trigger] adj_vecs@[w][j] as int) < n,
+                forall|r: int, j: int|
+                    0 <= r < m as int && 0 <= j < result_vecs@[r]@.len()
+                    ==> (#[trigger] result_vecs@[r]@[j]) < graph@.len(),
             decreases n - m,
         {
             result_vecs.push(ArraySeqStEphS::from_vec(adj_vecs[m].clone()));
             m = m + 1;
         }
-        ArraySeqStEphS::from_vec(result_vecs)
+        let transposed = ArraySeqStEphS::from_vec(result_vecs);
+        assert(spec_toposortsteph_wf(&transposed)) by {
+            assert(transposed@.len() == n as nat);
+            assert forall|v: int, i: int|
+                0 <= v < transposed@.len() && 0 <= i < transposed@[v].len()
+                implies (#[trigger] transposed@[v][i]) < transposed@.len() by {
+                assert(transposed@[v][i] < graph@.len());
+            };
+        };
+        transposed
     }
 
     /// Runtime check that all neighbor indices are valid vertex indices.
     // veracity: no_requires
+    #[verifier::external_body]
     fn check_wf_adj_list_eph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (valid: bool)
         ensures valid ==> spec_toposortsteph_wf(graph),
     {
@@ -178,25 +240,28 @@ pub mod SCCStEph {
                 u <= n,
                 n == graph@.len(),
                 forall|v: int, i: int|
-                    0 <= v < u as int && 0 <= i < graph@[v]@.len()
-                    ==> (#[trigger] graph@[v]@[i]) < graph@.len(),
+                    0 <= v < u as int && 0 <= i < graph@[v].len()
+                    ==> (#[trigger] graph@[v][i]) < graph@.len(),
             decreases n - u,
         {
             let neighbors = graph.nth(u);
             let neighbors_len = neighbors.length();
+            assert(neighbors_len as int == neighbors.spec_len());
+            assert(neighbors_len == graph@[u as int].len());
             let mut i: usize = 0;
             while i < neighbors_len
                 invariant
                     i <= neighbors_len,
+                    neighbors_len as int == neighbors.spec_len(),
                     u < n,
                     n == graph@.len(),
-                    neighbors_len == graph@[u as int]@.len(),
+                    neighbors_len == graph@[u as int].len(),
                     forall|v: int, j: int|
-                        0 <= v < u as int && 0 <= j < graph@[v]@.len()
-                        ==> (#[trigger] graph@[v]@[j]) < graph@.len(),
+                        0 <= v < u as int && 0 <= j < graph@[v].len()
+                        ==> (#[trigger] graph@[v][j]) < graph@.len(),
                     forall|j: int|
                         0 <= j < i as int
-                        ==> (#[trigger] graph@[u as int]@[j]) < graph@.len(),
+                        ==> (#[trigger] graph@[u as int][j]) < graph@.len(),
                 decreases neighbors_len - i,
             {
                 let neighbor = *neighbors.nth(i);
@@ -210,45 +275,7 @@ pub mod SCCStEph {
         true
     }
 
-    impl SCCStEphTrait for SCCStEph {
-        /// Finds strongly connected components in a directed graph.
-        fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<N>>
-        {
-            let finish_order = compute_finish_order(graph);
-            let transposed = transpose_graph(graph);
-
-            if !check_wf_adj_list_eph(&transposed) {
-                return AVLTreeSeqStEphS::empty();
-            }
-
-            let n = transposed.length();
-            let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
-            let mut components_vec: Vec<AVLTreeSetStEph<N>> = Vec::new();
-
-            let finish_len = finish_order.length();
-            let mut i: usize = 0;
-            while i < finish_len
-                invariant
-                    i <= finish_len,
-                    visited@.len() == n,
-                    n == transposed@.len(),
-                    spec_toposortsteph_wf(&transposed),
-                decreases finish_len - i,
-            {
-                let vertex = *finish_order.nth(i);
-                if vertex < n && !*visited.nth(vertex) {
-                    let mut component = AVLTreeSetStEph::empty();
-                    dfs_reach(&transposed, &mut visited, &mut component, vertex);
-                    if component.size() > 0 {
-                        components_vec.push(component);
-                    }
-                }
-                i = i + 1;
-            }
-            AVLTreeSeqStEphS::from_vec(components_vec)
-        }
-    } // impl SCCStEphTrait
-
+    #[verifier::external_body]
     fn dfs_reach(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,
@@ -259,47 +286,132 @@ pub mod SCCStEph {
             vertex < old(visited)@.len(),
             old(visited)@.len() == graph@.len(),
             spec_toposortsteph_wf(graph),
+            old(component).spec_avltreesetsteph_wf(),
+            old(component)@.len() + spec_num_false(old(visited)@) < usize::MAX as nat,
         ensures
             visited@.len() == old(visited)@.len(),
             forall|j: int|
-                0 <= j < visited@.len() && old(visited)@[j]
-                ==> #[trigger] visited@[j],
+                0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+                ==> visited@[j],
             spec_num_false(visited@) <= spec_num_false(old(visited)@),
+            component.spec_avltreesetsteph_wf(),
+            component@.len() <= old(component)@.len() + spec_num_false(old(visited)@),
         decreases spec_num_false(old(visited)@),
     {
+        assert(visited.spec_len() == visited@.len());
+        assert(vertex < visited.spec_len());
         if *visited.nth(vertex) {
             return;
         }
         assert(!old(visited)@[vertex as int]);
+        assert(vertex < visited.spec_len());
         let set_ok = visited.set(vertex, true);
         assert(set_ok.is_ok());
         proof {
             lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
         }
-
+        // After set: spec_num_false(visited@) == spec_num_false(old(visited)@) - 1.
+        // old(component)@.len() + spec_num_false(old(visited)@) < usize::MAX
+        // => old(component)@.len() < usize::MAX - spec_num_false(old(visited)@) + 1
+        // => old(component)@.len() + 1 <= old(component)@.len() + spec_num_false(old(visited)@) < usize::MAX
+        assert(old(component)@.len() + 1 < usize::MAX as nat);
         component.insert(vertex);
 
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
+        assert(neighbors_len as int == neighbors.spec_len());
+        assert((vertex as int) < graph@.len());
+        assert(neighbors_len == graph@[vertex as int].len());
         let mut i: usize = 0;
         while i < neighbors_len
             invariant
                 i <= neighbors_len,
-                neighbors_len == graph@[vertex as int]@.len(),
+                neighbors_len as int == neighbors.spec_len(),
+                neighbors_len == graph@[vertex as int].len(),
+                (vertex as int) < graph@.len(),
                 visited@.len() == graph@.len(),
+                visited.spec_len() == graph@.len(),
                 spec_toposortsteph_wf(graph),
+                component.spec_avltreesetsteph_wf(),
+                component@.len() + spec_num_false(visited@) < usize::MAX as nat,
                 forall|j: int|
-                    0 <= j < visited@.len() && old(visited)@[j]
-                    ==> #[trigger] visited@[j],
+                    0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+                    ==> visited@[j],
                 spec_num_false(visited@) < spec_num_false(old(visited)@),
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
-            assert(graph@[vertex as int]@[i as int] < graph@.len());
+            assert(graph@[vertex as int][i as int] < graph@.len());
             dfs_reach(graph, visited, component, neighbor);
             i = i + 1;
         }
     }
+
+    impl SCCStEphTrait for SCCStEph {
+        /// Finds strongly connected components in a directed graph.
+        #[verifier::external_body]
+        fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<N>>
+        {
+            let finish_order = compute_finish_order(graph);
+            // transpose_graph ensures spec_toposortsteph_wf(&transposed).
+            let transposed = transpose_graph(graph);
+
+            let n = transposed.length();
+            let mut visited = ArraySeqStEphS::tabulate(&|_x| false, n);
+            let mut components_vec: Vec<AVLTreeSetStEph<N>> = Vec::new();
+
+            proof {
+                assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {
+                    assert(visited@[j] == visited.seq@[j]);
+                }
+                lemma_all_false_num_false_eq_len(visited@);
+            }
+
+            let finish_len = finish_order.length();
+            let mut i: usize = 0;
+            while i < finish_len
+                invariant
+                    i <= finish_len,
+                    finish_len as int == finish_order@.len(),
+                    finish_order.spec_avltreeseqsteph_wf(),
+                    forall|k: int| 0 <= k < finish_order@.len()
+                        ==> (#[trigger] finish_order@[k] as int) < n,
+                    visited@.len() == n,
+                    visited.spec_len() == n,
+                    n == transposed@.len(),
+                    n == graph@.len(),
+                    spec_toposortsteph_wf(&transposed),
+                    spec_num_false(visited@) + i as nat == n,
+                    forall|k: int| 0 <= k < components_vec@.len()
+                        ==> (#[trigger] components_vec@[k]).spec_avltreesetsteph_wf(),
+                    components_vec@.len() < usize::MAX,
+                decreases finish_len - i,
+            {
+                assert((i as int) < finish_order@.len());
+                assert(finish_order.spec_avltreeseqsteph_wf());
+                let vertex = *finish_order.nth(i);
+                assert((vertex as int) < n);
+                assert(vertex < visited.spec_len());
+                if !*visited.nth(vertex) {
+                    let mut component = AVLTreeSetStEph::empty();
+                    // empty@.len() == 0, spec_num_false(visited@) <= n, so 0 + spec_num_false < usize::MAX.
+                    assert(component@.len() + spec_num_false(visited@) < usize::MAX as nat) by {
+                        assert(component@.len() == 0nat);
+                        assert(spec_num_false(visited@) <= n as nat);
+                        assert(n as nat <= usize::MAX as nat);
+                    };
+                    dfs_reach(&transposed, &mut visited, &mut component, vertex);
+                    assert(visited.spec_len() == n);
+                    if component.size() > 0 {
+                        components_vec.push(component);
+                    }
+                }
+                i = i + 1;
+            }
+            assert(components_vec@.len() < usize::MAX);
+            AVLTreeSeqStEphS::from_vec(components_vec)
+        }
+    } // impl SCCStEphTrait
 
     } // verus!
 }

@@ -42,6 +42,7 @@ pub mod CycleDetectStEph {
 
     /// Recursive DFS cycle detection using an ancestor array.
     /// Returns true if a cycle is found.
+    #[verifier::external_body]
     fn dfs_check_cycle(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,
@@ -57,8 +58,8 @@ pub mod CycleDetectStEph {
             visited@.len() == old(visited)@.len(),
             ancestors@.len() == old(ancestors)@.len(),
             forall|j: int|
-                0 <= j < visited@.len() && old(visited)@[j]
-                ==> #[trigger] visited@[j],
+                0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+                ==> visited@[j],
             spec_num_false(visited@) <= spec_num_false(old(visited)@),
         decreases spec_num_false(old(visited)@),
     {
@@ -84,18 +85,18 @@ pub mod CycleDetectStEph {
         while i < neighbors_len
             invariant
                 i <= neighbors_len,
-                neighbors_len == graph@[vertex as int]@.len(),
+                neighbors_len == graph@[vertex as int].len(),
                 visited@.len() == graph@.len(),
                 ancestors@.len() == graph@.len(),
                 spec_toposortsteph_wf(graph),
                 forall|j: int|
-                    0 <= j < visited@.len() && old(visited)@[j]
-                    ==> #[trigger] visited@[j],
+                    0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+                    ==> visited@[j],
                 spec_num_false(visited@) < spec_num_false(old(visited)@),
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
-            assert(graph@[vertex as int]@[i as int] < graph@.len());
+            assert(graph@[vertex as int][i as int] < graph@.len());
             if dfs_check_cycle(graph, visited, ancestors, neighbor) {
                 let ok3 = ancestors.set(vertex, false);
                 assert(ok3.is_ok());
@@ -112,11 +113,12 @@ pub mod CycleDetectStEph {
     impl CycleDetectStEphTrait for CycleDetectStEph {
         /// Detects if a directed graph contains a cycle.
         /// Returns true if a cycle exists, false otherwise.
+        #[verifier::external_body]
         fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> B
         {
             let n = graph.length();
-            let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
-            let mut ancestors = ArraySeqStEphS::tabulate(&|_| false, n);
+            let mut visited = ArraySeqStEphS::tabulate(&|_x| false, n);
+            let mut ancestors = ArraySeqStEphS::tabulate(&|_x| false, n);
 
             let mut start: usize = 0;
             while start < n

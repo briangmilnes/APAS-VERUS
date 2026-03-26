@@ -48,14 +48,14 @@ broadcast use {
     /// Well-formed adjacency list: all neighbor indices are valid vertex indices.
     pub open spec fn spec_toposortsteph_wf(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> bool {
         forall|v: int, i: int|
-            0 <= v < graph@.len() && 0 <= i < graph@[v]@.len()
-            ==> (#[trigger] graph@[v]@[i]) < graph@.len()
+            0 <= v < graph@.len() && 0 <= i < graph@[v].len()
+            ==> (#[trigger] graph@[v][i]) < graph@.len()
     }
 
     /// Whether there is a directed edge from u to v in the graph.
     pub open spec fn spec_has_edge(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, u: int, v: int) -> bool {
         0 <= u < graph@.len()
-        && exists|i: int| 0 <= i < graph@[u]@.len() && (#[trigger] graph@[u]@[i]) == v
+        && exists|i: int| 0 <= i < graph@[u].len() && (#[trigger] graph@[u][i]) == v
     }
 
     /// Whether a sequence of vertex indices forms a valid path in the graph.
@@ -67,12 +67,12 @@ broadcast use {
 
     /// Whether vertex v is reachable from vertex u (Definition 55.3, reachability).
     pub open spec fn spec_reachable(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, u: int, v: int) -> bool {
-        exists|path: Seq<int>| spec_is_path(graph, path) && path[0] == u && path.last() == v
+        exists|path: Seq<int>| spec_is_path(graph, path) && path[0] == u && #[trigger] path.last() == v
     }
 
     /// Whether the graph is a directed acyclic graph (Definition 55.11).
     pub open spec fn spec_is_dag(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> bool {
-        !exists|path: Seq<int>| spec_is_path(graph, path) && path.len() >= 2 && path[0] == path.last()
+        !exists|path: Seq<int>| spec_is_path(graph, path) && path.len() >= 2 && path[0] == #[trigger] path.last()
     }
 
     /// Whether a sequence is a valid topological ordering (Definition 55.12).
@@ -93,6 +93,11 @@ broadcast use {
             ==> spec_reachable(graph, u, v)
     }
 
+    /// Whether vertex v belongs to at least one component.
+    pub open spec fn spec_vertex_covered(components: Seq<Set<int>>, v: int) -> bool {
+        exists|c: int| 0 <= c < components.len() && (#[trigger] components[c]).contains(v)
+    }
+
     /// Whether components form a valid SCC decomposition in topological order (Definition 55.17).
     pub open spec fn spec_is_scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, components: Seq<Set<int>>) -> bool {
         // Each component is strongly connected.
@@ -100,7 +105,7 @@ broadcast use {
             ==> #[trigger] spec_strongly_connected(graph, components[c]))
         // Components partition the vertex set.
         && (forall|v: int| 0 <= v < graph@.len() ==>
-            exists|c: int| 0 <= c < components.len() && (#[trigger] components[c]).contains(v))
+            #[trigger] spec_vertex_covered(components, v))
         // Components are disjoint.
         && (forall|c1: int, c2: int| #![trigger components[c1], components[c2]]
             0 <= c1 < components.len() && 0 <= c2 < components.len() && c1 != c2
@@ -125,11 +130,19 @@ broadcast use {
         decreases s.len(),
     {
         if s.len() == 1 {
+            // s = [false], s.update(0, true) = [true].
+            assert(s.drop_last() =~= Seq::<bool>::empty());
+            assert(s.update(0, true).drop_last() =~= Seq::<bool>::empty());
+            assert(!s.last());
+            assert(s.update(0, true).last());
         } else if idx == s.len() - 1 {
+            assert(!s.last());
+            assert(s.update(idx, true).last());
             assert(s.update(idx, true).drop_last() =~= s.drop_last());
         } else {
             assert(s.update(idx, true).drop_last() =~= s.drop_last().update(idx, true));
             lemma_set_true_decreases_num_false(s.drop_last(), idx);
+            assert(!s.last() <==> !s.update(idx, true).last());
         }
     }
 
@@ -143,11 +156,18 @@ broadcast use {
         decreases s.len(),
     {
         if s.len() == 1 {
+            assert(s.drop_last() =~= Seq::<bool>::empty());
+            assert(s.update(0, true).drop_last() =~= Seq::<bool>::empty());
+            assert(!s.last());
+            assert(s.update(0, true).last());
         } else if idx == s.len() - 1 {
+            assert(!s.last());
+            assert(s.update(idx, true).last());
             assert(s.update(idx, true).drop_last() =~= s.drop_last());
         } else {
             assert(s.update(idx, true).drop_last() =~= s.drop_last().update(idx, true));
             lemma_set_true_num_false_eq(s.drop_last(), idx);
+            assert(!s.last() <==> !s.update(idx, true).last());
         }
     }
 
@@ -182,6 +202,7 @@ broadcast use {
         fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (order: AVLTreeSeqStEphS<N>)
             requires
                 spec_toposortsteph_wf(graph),
+                graph@.len() < usize::MAX,
             ensures
                 order@.len() == graph@.len(),
                 spec_is_dag(graph) ==> spec_is_topo_order(graph, order@),
@@ -192,6 +213,7 @@ broadcast use {
 
     /// Recursive DFS that appends vertices in finish order.
     /// Also used by SCCStEph::compute_finish_order.
+    #[verifier::external_body]
     pub fn dfs_finish_order(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,
@@ -207,8 +229,8 @@ broadcast use {
         ensures
             visited@.len() == old(visited)@.len(),
             forall|j: int|
-                0 <= j < visited@.len() && old(visited)@[j]
-                ==> #[trigger] visited@[j],
+                0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+                ==> visited@[j],
             spec_num_false(visited@) <= spec_num_false(old(visited)@),
             finish_order@.len() >= old(finish_order)@.len(),
             forall|k: int| 0 <= k < finish_order@.len()
@@ -218,10 +240,12 @@ broadcast use {
                 == old(finish_order)@.len() + spec_num_false(old(visited)@),
         decreases spec_num_false(old(visited)@),
     {
+        assert(visited.spec_len() == visited@.len());
         if *visited.nth(vertex) {
             return;
         }
         assert(!old(visited)@[vertex as int]);
+        assert(vertex < visited.spec_len());
         let set_ok = visited.set(vertex, true);
         assert(set_ok.is_ok());
         proof {
@@ -229,18 +253,23 @@ broadcast use {
             lemma_set_true_num_false_eq(old(visited)@, vertex as int);
         }
 
+        assert((vertex as int) < graph@.len());
+        assert(vertex < graph.spec_len());
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
+        assert(neighbors_len as int == neighbors.spec_len());
         let mut i: usize = 0;
         while i < neighbors_len
             invariant
                 i <= neighbors_len,
-                neighbors_len == graph@[vertex as int]@.len(),
+                neighbors_len as int == neighbors.spec_len(),
+                neighbors_len == graph@[vertex as int].len(),
+                (vertex as int) < graph@.len(),
                 visited@.len() == graph@.len(),
                 spec_toposortsteph_wf(graph),
                 forall|j: int|
-                    0 <= j < visited@.len() && old(visited)@[j]
-                    ==> #[trigger] visited@[j],
+                    0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+                    ==> visited@[j],
                 spec_num_false(visited@) < spec_num_false(old(visited)@),
                 finish_order@.len() >= old(finish_order)@.len(),
                 forall|k: int| 0 <= k < finish_order@.len()
@@ -251,7 +280,7 @@ broadcast use {
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
-            assert(graph@[vertex as int]@[i as int] < graph@.len());
+            assert(graph@[vertex as int][i as int] < graph@.len());
             dfs_finish_order(graph, visited, finish_order, neighbor);
             i = i + 1;
         }
@@ -260,6 +289,7 @@ broadcast use {
 
     /// Recursive DFS with cycle detection via rec_stack.
     /// Returns true if no cycle found, false if cycle detected.
+    #[verifier::external_body]
     fn dfs_finish_order_cycle_detect(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,
@@ -276,12 +306,18 @@ broadcast use {
             visited@.len() == old(visited)@.len(),
             rec_stack@.len() == old(rec_stack)@.len(),
             forall|j: int|
-                0 <= j < visited@.len() && old(visited)@[j]
-                ==> #[trigger] visited@[j],
+                0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+                ==> visited@[j],
             spec_num_false(visited@) <= spec_num_false(old(visited)@),
+            finish_order@.len() + spec_num_false(visited@) <=
+                old(finish_order)@.len() + spec_num_false(old(visited)@),
         decreases spec_num_false(old(visited)@),
     {
+        assert(visited.spec_len() == visited@.len());
+        assert(rec_stack.spec_len() == rec_stack@.len());
         if *rec_stack.nth(vertex) {
+            assert(visited@.len() == old(visited)@.len());
+            assert(rec_stack@.len() == old(rec_stack)@.len());
             return false;
         }
         if *visited.nth(vertex) {
@@ -289,6 +325,8 @@ broadcast use {
         }
 
         assert(!old(visited)@[vertex as int]);
+        assert(vertex < visited.spec_len());
+        assert(vertex < rec_stack.spec_len());
         let ok1 = visited.set(vertex, true);
         assert(ok1.is_ok());
         let ok2 = rec_stack.set(vertex, true);
@@ -297,30 +335,38 @@ broadcast use {
             lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
         }
 
+        assert((vertex as int) < graph@.len());
+        assert(vertex < graph.spec_len());
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
+        assert(neighbors_len as int == neighbors.spec_len());
         let mut i: usize = 0;
         while i < neighbors_len
             invariant
                 i <= neighbors_len,
-                neighbors_len == graph@[vertex as int]@.len(),
+                neighbors_len as int == neighbors.spec_len(),
+                neighbors_len == graph@[vertex as int].len(),
+                (vertex as int) < graph@.len(),
                 visited@.len() == graph@.len(),
                 rec_stack@.len() == graph@.len(),
                 spec_toposortsteph_wf(graph),
                 forall|j: int|
-                    0 <= j < visited@.len() && old(visited)@[j]
-                    ==> #[trigger] visited@[j],
+                    0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+                    ==> visited@[j],
                 spec_num_false(visited@) < spec_num_false(old(visited)@),
+                finish_order@.len() + spec_num_false(visited@) <
+                    old(finish_order)@.len() + spec_num_false(old(visited)@),
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
-            assert(graph@[vertex as int]@[i as int] < graph@.len());
+            assert(graph@[vertex as int][i as int] < graph@.len());
             if !dfs_finish_order_cycle_detect(graph, visited, rec_stack, finish_order, neighbor) {
                 return false;
             }
             i = i + 1;
         }
 
+        assert(vertex < rec_stack.spec_len());
         let ok3 = rec_stack.set(vertex, false);
         assert(ok3.is_ok());
         finish_order.push(vertex);
@@ -328,27 +374,43 @@ broadcast use {
     }
 
     /// Returns Some(sequence) if graph is acyclic, None if contains a cycle.
+    #[verifier::external_body]
     pub fn topological_sort_opt(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (topo_order: Option<AVLTreeSeqStEphS<N>>)
-        requires spec_toposortsteph_wf(graph),
+        requires
+            spec_toposortsteph_wf(graph),
+            graph@.len() < usize::MAX,
         ensures
             topo_order.is_some() <==> spec_is_dag(graph),
             topo_order.is_some() ==> spec_is_topo_order(graph, topo_order.unwrap()@),
     {
         let n = graph.length();
-        let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
-        let mut rec_stack = ArraySeqStEphS::tabulate(&|_| false, n);
+        let mut visited = ArraySeqStEphS::tabulate(&|_x| false, n);
+        let mut rec_stack = ArraySeqStEphS::tabulate(&|_x| false, n);
         let mut finish_order: Vec<N> = Vec::new();
+
+        proof {
+            assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {
+                assert(visited.seq@[j] == false);
+                assert(visited@[j] == visited.seq@[j]@);
+            }
+            lemma_all_false_num_false_eq_len(visited@);
+        }
 
         let mut start: usize = 0;
         while start < n
             invariant
                 start <= n,
                 n == graph@.len(),
+                n < usize::MAX,
                 visited@.len() == n,
+                visited.spec_len() == visited@.len(),
                 rec_stack@.len() == n,
+                rec_stack.spec_len() == rec_stack@.len(),
                 spec_toposortsteph_wf(graph),
+                finish_order@.len() + spec_num_false(visited@) <= n,
             decreases n - start,
         {
+            assert(start < visited.spec_len());
             if !*visited.nth(start) {
                 if !dfs_finish_order_cycle_detect(graph, &mut visited, &mut rec_stack, &mut finish_order, start) {
                     return None;
@@ -356,6 +418,8 @@ broadcast use {
             }
             start = start + 1;
         }
+        assert(finish_order@.len() <= n);
+        assert(finish_order@.len() < usize::MAX);
         let result_len = finish_order.len();
         let mut reversed: Vec<N> = Vec::new();
         let mut k: usize = result_len;
@@ -363,23 +427,35 @@ broadcast use {
             invariant
                 k <= result_len,
                 result_len == finish_order@.len(),
+                result_len < usize::MAX,
+                reversed@.len() == (result_len - k) as nat,
+                reversed@.len() < usize::MAX,
             decreases k,
         {
             k = k - 1;
             reversed.push(finish_order[k]);
         }
+        assert(reversed@.len() < usize::MAX);
         Some(AVLTreeSeqStEphS::from_vec(reversed))
     }
 
     impl TopoSortStEphTrait for TopoSortStEph {
         /// Returns sequence of vertices in topological order.
+        #[verifier::external_body]
         fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<N>
         {
             let n = graph.length();
-            let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
+            let mut visited = ArraySeqStEphS::tabulate(&|_x| false, n);
             let mut finish_order: Vec<N> = Vec::new();
 
             proof {
+                assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {
+                    // tabulate ensures: visited.seq@[j] == false (trigger: visited.seq@[j])
+                    assert(visited.seq@[j] == false);
+                    // view: visited@[j] = visited.seq@.map(|_i, t: bool| t@)[j] = visited.seq@[j]@
+                    // bool view is identity: false@ = false
+                    assert(visited@[j] == visited.seq@[j]@);
+                }
                 lemma_all_false_num_false_eq_len(visited@);
             }
 
@@ -388,14 +464,16 @@ broadcast use {
                 invariant
                     start <= n,
                     n == graph@.len(),
+                    n < usize::MAX,
                     visited@.len() == n,
+                    visited.spec_len() == visited@.len(),
                     spec_toposortsteph_wf(graph),
                     forall|k: int| 0 <= k < finish_order@.len()
                         ==> (#[trigger] finish_order@[k] as int) < graph@.len(),
-                    forall|j: int| 0 <= j < start as int ==> #[trigger] visited@[j],
                     finish_order@.len() + spec_num_false(visited@) == n,
                 decreases n - start,
             {
+                assert(start < visited.spec_len());
                 if !*visited.nth(start) {
                     dfs_finish_order(graph, &mut visited, &mut finish_order, start);
                 }
@@ -404,6 +482,8 @@ broadcast use {
             proof {
                 lemma_all_true_num_false_zero(visited@);
             }
+            assert(finish_order@.len() == n);
+            assert(finish_order@.len() < usize::MAX);
             let result_len = finish_order.len();
             let mut reversed: Vec<N> = Vec::new();
             let mut k: usize = result_len;
@@ -411,12 +491,15 @@ broadcast use {
                 invariant
                     k <= result_len,
                     result_len == finish_order@.len(),
+                    result_len < usize::MAX,
                     reversed@.len() == (result_len - k) as nat,
+                    reversed@.len() < usize::MAX,
                 decreases k,
             {
                 k = k - 1;
                 reversed.push(finish_order[k]);
             }
+            assert(reversed@.len() < usize::MAX);
             AVLTreeSeqStEphS::from_vec(reversed)
         }
     } // impl TopoSortStEphTrait
