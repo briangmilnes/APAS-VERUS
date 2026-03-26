@@ -1,4 +1,4 @@
-# veracity-compare-parallelism-mutability: St/Mt × Eph/Per Variant Alignment
+# veracity-compare-par-mut: St/Mt × Eph/Per Variant Alignment
 
 ## Goal
 
