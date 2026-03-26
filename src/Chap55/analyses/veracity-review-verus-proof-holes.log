@@ -21,65 +21,37 @@ Table of Contents:
 =================================================================
 
 ❌ CycleDetectStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStEph.rs:214: error: external_body - #[verifier::external_body]
-       215 |         fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> B
+/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStEph.rs:389: error: external_body - #[verifier::external_body]
+       390 |         fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (has_cycle: B)
    Holes: 1 total
       1 × external_body
-   Proof functions: 3 total (3 clean, 0 holed)
+   Proof functions: 4 total (4 clean, 0 holed)
 ❌ CycleDetectStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/CycleDetectStPer.rs:170: error: external_body - #[verifier::external_body]
-       171 |         fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> B
-   Holes: 1 total
-      1 × external_body
-   Proof functions: 2 total (2 clean, 0 holed)
-❌ DFSStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStEph.rs:214: error: external_body - #[verifier::external_body]
-       215 |         fn dfs(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> AVLTreeSetStEph<N>
+/home/milnes/projects/APAS-VERUS/src/Chap55/CycleDetectStPer.rs:297: error: external_body - #[verifier::external_body]
+       298 |         fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> B
    Holes: 1 total
       1 × external_body
    Proof functions: 3 total (3 clean, 0 holed)
-❌ DFSStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/DFSStPer.rs:179: error: external_body - #[verifier::external_body]
-       180 |         fn dfs(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> AVLTreeSetStPer<N>
-   Holes: 1 total
-      1 × external_body
-   Proof functions: 2 total (2 clean, 0 holed)
-❌ SCCStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:86: error: external_body - #[verifier::external_body]
-        87 |     fn compute_finish_order(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (result: AVLTreeSeqStEphS<N>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:160: error: external_body - #[verifier::external_body]
-       161 |     fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (transposed: ArraySeqStEphS<ArraySeqStEphS<N>>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStEph.rs:435: error: external_body [blocked_by: transpose_graph] - #[verifier::external_body]
-       436 |         fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<N>>
-   Holes: 3 total
-      3 × external_body
-         2 × root cause
-         1 × downstream (blocked by root causes)
-   Proof functions: 3 total (3 clean, 0 holed)
-❌ SCCStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:172: error: external_body - #[verifier::external_body]
-       173 |     fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (result: AVLTreeSeqStPerS<N>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:248: error: external_body - #[verifier::external_body]
-       249 |     fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (transposed: ArraySeqStPerS<ArraySeqStPerS<N>>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/SCCStPer.rs:498: error: external_body [blocked_by: transpose_graph] - #[verifier::external_body]
-       499 |         fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<N>>
-   Holes: 3 total
-      3 × external_body
-         2 × root cause
-         1 × downstream (blocked by root causes)
-   Proof functions: 2 total (2 clean, 0 holed)
+✓ DFSStEph.rs
+   7 clean proof functions
+✓ DFSStPer.rs
+   6 clean proof functions
+✓ SCCStEph.rs
+   3 clean proof functions
+✓ SCCStPer.rs
+   2 clean proof functions
 ❌ TopoSortStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:478: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:478: error: external_body - #[verifier::external_body]
        479 |     pub fn topological_sort_opt(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (topo_order: Option<AVLTreeSeqStEphS<N>>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStEph.rs:548: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:548: error: external_body - #[verifier::external_body]
        549 |         fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (order: AVLTreeSeqStEphS<N>)
    Holes: 2 total
       2 × external_body
    Proof functions: 7 total (7 clean, 0 holed)
 ❌ TopoSortStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:337: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:337: error: external_body - #[verifier::external_body]
        338 |     pub fn topological_sort_opt(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (topo_order: Option<AVLTreeSeqStPerS<N>>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap55/TopoSortStPer.rs:411: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:411: error: external_body - #[verifier::external_body]
        412 |         fn topo_sort(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (order: AVLTreeSeqStPerS<N>)
    Holes: 2 total
       2 × external_body
@@ -120,35 +92,34 @@ TopoSortStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   0 clean (no holes, no errors; 0%)
-   8 holed (holes or errors, 100%)
+   4 clean (no holes, no errors; 50%)
+   4 holed (holes or errors, 50%)
    8 total
 
 Proof Functions:
-   24 clean (100%)
+   34 clean (100%)
    0 holed (0%)
-   24 total
+   34 total
 
 Function Specs:
-   33 exec fns with complete spec (requires+ensures) (41%)
+   33 exec fns with complete spec (requires+ensures) (36%)
    2 exec fns missing spec (2%)
-   44 proof/spec fns clean (55%)
+   55 proof/spec fns clean (61%)
    0 proof/spec fns with holes (0%)
-   79 total fns
+   90 total fns
 
 
-Holes Found: 14 (actionable)
-   14 × external_body (100%)
-      12 × root cause
-      2 × downstream (blocked by root causes)
-Real Proof Targets: 14 (all actionable)
+Holes Found: 6 (actionable)
+   6 × external_body (100%)
+Real Proof Targets: 6 (all actionable)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-26 14:12:47 -07:00
-Ended:     2026-03-26 14:12:47 -07:00
-Duration:  37ms
+Started:   2026-03-26 15:50:23 -07:00
+Ended:     2026-03-26 15:50:23 -07:00
+Duration:  34ms
 
+Full output: src/Chap55/analyses/veracity-review-verus-proof-holes.log
 Full output: src/Chap55/analyses/veracity-review-verus-proof-holes.log
