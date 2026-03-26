@@ -7,7 +7,7 @@ pub mod CycleDetectStEph {
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
-    use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, spec_toposortsteph_wf, spec_is_dag, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq};
+    use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, spec_toposortsteph_wf, spec_is_dag, spec_has_edge, spec_is_path, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq};
     use crate::Types::Types::*;
 
     verus! {
@@ -19,6 +19,7 @@ broadcast use vstd::seq::group_seq_axioms;
     // 2. imports
     // 4. type definitions
     // 6. spec fns
+    // 7. proof fns
     // 8. traits
     // 9. impls
 
@@ -28,6 +29,11 @@ broadcast use vstd::seq::group_seq_axioms;
     pub struct CycleDetectStEph;
 
     // 6. spec fns
+
+    /// Whether a value appears in a ghost integer sequence.
+    pub open spec fn spec_in_path(path: Seq<int>, v: int) -> bool {
+        exists|k: int| 0 <= k < path.len() && path[k] == v
+    }
 
     /// Bridge: for ArraySeqStEphS<bool>, view index equals spec_index.
     proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<B>)
@@ -57,6 +63,56 @@ broadcast use vstd::seq::group_seq_axioms;
     {
     }
 
+    // 7. proof fns
+
+    /// If a path has a repeated vertex, the graph is not a DAG.
+    proof fn lemma_cycle_not_dag(
+        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
+        dfs_path: Seq<int>,
+        vertex: int,
+    )
+        requires
+            // dfs_path is a valid sequence of vertices with edges.
+            forall|k: int| 0 <= k < dfs_path.len()
+                ==> 0 <= #[trigger] dfs_path[k] < graph@.len(),
+            forall|k: int| 0 <= k < dfs_path.len() - 1
+                ==> #[trigger] spec_has_edge(graph, dfs_path[k], dfs_path[k + 1]),
+            dfs_path.len() > 0 ==> spec_has_edge(graph, dfs_path.last(), vertex as int),
+            // vertex appears in dfs_path (back edge).
+            spec_in_path(dfs_path, vertex),
+            0 <= vertex < graph@.len(),
+        ensures
+            !spec_is_dag(graph),
+    {
+        let i = choose|i: int| 0 <= i < dfs_path.len() && dfs_path[i] == vertex;
+        let cycle = dfs_path.subrange(i, dfs_path.len() as int).push(vertex);
+        // cycle[0] == dfs_path[i] == vertex, cycle.last() == vertex.
+        assert(cycle[0] == vertex);
+        assert(cycle.last() == vertex);
+        assert(cycle.len() >= 2);
+        // All vertices are valid graph vertices.
+        assert forall|k: int| 0 <= k < cycle.len()
+            implies 0 <= #[trigger] cycle[k] < graph@.len() by {
+            if k < cycle.len() - 1 {
+                assert(cycle[k] == dfs_path[i + k]);
+            }
+        };
+        // Consecutive edges exist.
+        assert forall|k: int| 0 <= k < cycle.len() - 1
+            implies #[trigger] spec_has_edge(graph, cycle[k], cycle[k + 1]) by {
+            if k < cycle.len() - 2 {
+                assert(cycle[k] == dfs_path[i + k]);
+                assert(cycle[k + 1] == dfs_path[i + k + 1]);
+                assert(i + k >= 0 && i + k < dfs_path.len() - 1);
+            } else {
+                // Last edge: dfs_path.last() → vertex.
+                assert(cycle[k] == dfs_path[dfs_path.len() - 1]);
+                assert(cycle[k + 1] == vertex);
+            }
+        };
+        assert(spec_is_path(graph, cycle));
+    }
+
     // 8. traits
 
     pub trait CycleDetectStEphTrait {
@@ -75,17 +131,29 @@ broadcast use vstd::seq::group_seq_axioms;
 
     /// Recursive DFS cycle detection using an ancestor array.
     /// Returns true if a cycle is found.
+    /// Ghost parameter dfs_path tracks the DFS call stack for the cycle witness.
     fn dfs_check_cycle(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,
         ancestors: &mut ArraySeqStEphS<B>,
         vertex: N,
+        Ghost(dfs_path): Ghost<Seq<int>>,
     ) -> (has_cycle: B)
         requires
             vertex < old(visited)@.len(),
             old(visited)@.len() == graph@.len(),
             old(ancestors)@.len() == graph@.len(),
             spec_toposortsteph_wf(graph),
+            // Ghost DFS path structure:
+            forall|k: int| 0 <= k < dfs_path.len()
+                ==> 0 <= #[trigger] dfs_path[k] < graph@.len(),
+            forall|k: int| 0 <= k < dfs_path.len() - 1
+                ==> #[trigger] spec_has_edge(graph, dfs_path[k], dfs_path[k + 1]),
+            dfs_path.len() > 0 ==> spec_has_edge(graph, dfs_path.last(), vertex as int),
+            // Ancestors biconditional: true iff on the DFS path.
+            forall|v: int| 0 <= v < old(ancestors)@.len() ==> (
+                #[trigger] old(ancestors)@[v] == spec_in_path(dfs_path, v)
+            ),
         ensures
             visited@.len() == graph@.len(),
             ancestors@.len() == graph@.len(),
@@ -93,6 +161,8 @@ broadcast use vstd::seq::group_seq_axioms;
                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
                 ==> visited@[j],
             spec_num_false(visited@) <= spec_num_false(old(visited)@),
+            has_cycle ==> !spec_is_dag(graph),
+            !has_cycle ==> ancestors@ =~= old(ancestors)@,
         decreases spec_num_false(old(visited)@),
     {
         proof { lemma_bool_view_eq_spec_index(visited); }
@@ -100,13 +170,22 @@ broadcast use vstd::seq::group_seq_axioms;
         assert(ancestors.spec_len() == ancestors@.len());
 
         if *ancestors.nth(vertex) {
+            // ancestors[vertex] is true → vertex is in dfs_path → cycle exists.
+            proof {
+                assert(old(ancestors)@[vertex as int]);
+                assert(spec_in_path(dfs_path, vertex as int));
+                lemma_cycle_not_dag(graph, dfs_path, vertex as int);
+            }
             return true;
         }
         if *visited.nth(vertex) {
             return false;
         }
 
+        // vertex is not an ancestor and not visited.
         assert(!old(visited)@[vertex as int]);
+        assert(!old(ancestors)@[vertex as int]);
+        assert(!spec_in_path(dfs_path, vertex as int));
         assert(vertex < visited.spec_len());
         assert(vertex < ancestors.spec_len());
         let ok1 = visited.set(vertex, true);
@@ -119,15 +198,9 @@ broadcast use vstd::seq::group_seq_axioms;
         }
 
         // Establish visited@ == old(visited)@.update(vertex, true) after BOTH sets.
-        // visited was set first, then ancestors was set (on a different array).
-        // The visited set changed visited, not ancestors. The ancestors set changed ancestors, not visited.
-        // So visited@ is still as it was after visited.set(vertex, true).
         proof { lemma_bool_view_eq_spec_index(visited); }
         assert(visited@.len() == old(visited)@.len());
         assert(ancestors@.len() == old(ancestors)@.len());
-
-        // After both sets: visited still has the same length and spec_index as after visited.set.
-        // ancestors.set does NOT affect visited (non-aliasing &mut).
         assert(visited.spec_len() == old(visited).spec_len());
         assert(ancestors.spec_len() == old(ancestors).spec_len());
 
@@ -147,6 +220,57 @@ broadcast use vstd::seq::group_seq_axioms;
         // Monotonicity.
         assert forall|j: int| 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
             implies visited@[j] by {};
+
+        // Bridge ancestors@ after set.
+        proof { lemma_bool_view_eq_spec_index(ancestors); }
+        assert forall|j: int| 0 <= j < ancestors@.len()
+            implies #[trigger] ancestors@[j] == old(ancestors)@.update(vertex as int, true)[j] by {
+            assert(ancestors@[j] == ancestors.spec_index(j));
+            if j == vertex as int {
+                assert(ancestors.spec_index(j) == true);
+            } else {
+                assert(ancestors.spec_index(j) == old(ancestors).spec_index(j));
+            }
+        };
+        assert(ancestors@ =~= old(ancestors)@.update(vertex as int, true));
+
+        // Ghost: extended path includes vertex.
+        let ghost ext_path = dfs_path.push(vertex as int);
+
+        // Prove ancestors <==> ext_path.
+        proof {
+            assert forall|v: int| 0 <= v < ancestors@.len()
+                implies #[trigger] ancestors@[v] == spec_in_path(ext_path, v) by {
+                if v == vertex as int {
+                    // ancestors@[vertex] == true, and vertex is at ext_path[dfs_path.len()].
+                    assert(ext_path[dfs_path.len() as int] == vertex as int);
+                    assert(spec_in_path(ext_path, vertex as int));
+                } else {
+                    // ancestors@[v] == old(ancestors)@[v] == spec_in_path(dfs_path, v).
+                    // spec_in_path(ext_path, v) == spec_in_path(dfs_path, v) since the push only adds vertex != v.
+                    assert(ancestors@[v] == old(ancestors)@[v]);
+                    assert(old(ancestors)@[v] == spec_in_path(dfs_path, v));
+                    // ext_path = dfs_path.push(vertex). For v != vertex:
+                    // spec_in_path(ext_path, v) <==> spec_in_path(dfs_path, v).
+                    if spec_in_path(dfs_path, v) {
+                        let k = choose|k: int| 0 <= k < dfs_path.len() && dfs_path[k] == v;
+                        assert(ext_path[k] == v);
+                        assert(spec_in_path(ext_path, v));
+                    }
+                    if spec_in_path(ext_path, v) {
+                        let k = choose|k: int| 0 <= k < ext_path.len() && ext_path[k] == v;
+                        if k < dfs_path.len() {
+                            assert(dfs_path[k] == v);
+                            assert(spec_in_path(dfs_path, v));
+                        } else {
+                            // k == dfs_path.len(), ext_path[k] == vertex != v, contradiction.
+                            assert(ext_path[k] == vertex as int);
+                            assert(false);
+                        }
+                    }
+                }
+            };
+        }
 
         assert((vertex as int) < graph@.len());
         assert(vertex < graph.spec_len());
@@ -178,6 +302,17 @@ broadcast use vstd::seq::group_seq_axioms;
                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
                     ==> visited@[j],
                 spec_num_false(visited@) < spec_num_false(old(visited)@),
+                // Ghost path definition and invariants for recursive calls.
+                ext_path =~= dfs_path.push(vertex as int),
+                forall|k: int| 0 <= k < ext_path.len()
+                    ==> 0 <= #[trigger] ext_path[k] < graph@.len(),
+                forall|k: int| 0 <= k < ext_path.len() - 1
+                    ==> #[trigger] spec_has_edge(graph, ext_path[k], ext_path[k + 1]),
+                forall|v: int| 0 <= v < ancestors@.len() ==> (
+                    #[trigger] ancestors@[v] == spec_in_path(ext_path, v)
+                ),
+                // ancestors matches old_ancestors.update(vertex, true).
+                ancestors@ =~= old(ancestors)@.update(vertex as int, true),
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
@@ -186,25 +321,65 @@ broadcast use vstd::seq::group_seq_axioms;
             assert(neighbor == graph@[vertex as int][i as int]);
             assert(graph@[vertex as int][i as int] < graph@.len());
             assert(neighbor < graph@.len());
-            if dfs_check_cycle(graph, visited, ancestors, neighbor) {
-                // After recursive call: length preserved via loop invariant chain.
+            // Edge vertex → neighbor for ghost path last-to-vertex requires.
+            proof {
+                assert(spec_has_edge(graph, vertex as int, neighbor as int));
+                // ext_path = dfs_path.push(vertex). Its last element is vertex.
+                assert(ext_path.len() == dfs_path.len() + 1);
+                assert(ext_path[ext_path.len() - 1] == vertex as int);
+            }
+            if dfs_check_cycle(graph, visited, ancestors, neighbor, Ghost(ext_path)) {
+                // Cycle found. dfs_check_cycle ensures !spec_is_dag(graph).
                 assert(visited@.len() == graph@.len());
                 assert(ancestors@.len() == graph@.len());
                 assert(vertex < ancestors.spec_len());
                 let ok3 = ancestors.set(vertex, false);
                 assert(ok3.is_ok());
-                // After set: spec_len preserved, bridge to @.len().
                 assert(ancestors@.len() == ancestors.spec_len());
                 assert(ancestors@.len() == graph@.len());
                 assert(visited@.len() == graph@.len());
                 return true;
             }
+            // dfs_check_cycle returned false: ancestors restored.
+            assert(ancestors@ =~= old(ancestors)@.update(vertex as int, true));
             i = i + 1;
         }
 
+        // After loop: no cycle found. Restore ancestors[vertex] = false.
         assert(vertex < ancestors.spec_len());
+        // Loop invariant: ancestors@ =~= old(ancestors)@.update(vertex, true).
+        // Establish per-element spec_index values BEFORE the set.
+        proof {
+            lemma_bool_view_eq_spec_index(ancestors);
+            // For j != vertex: ancestors@[j] == old(ancestors)@[j] since update only changes vertex.
+            assert forall|j: int| 0 <= j < ancestors@.len() && j != vertex as int
+                implies #[trigger] ancestors.spec_index(j) == #[trigger] old(ancestors)@[j] by {
+                assert(ancestors.spec_index(j) == ancestors@[j]);
+            };
+        }
+        let ghost pre_set_view = ancestors@;
         let ok3 = ancestors.set(vertex, false);
         assert(ok3.is_ok());
+        // After set: prove per-element equality through pre_set_view.
+        proof {
+            lemma_bool_view_eq_spec_index(ancestors);
+            assert forall|j: int| 0 <= j < ancestors@.len()
+                implies #[trigger] ancestors@[j] == old(ancestors)@[j] by {
+                assert(ancestors@[j] == ancestors.spec_index(j));
+                if j == vertex as int {
+                    assert(ancestors.spec_index(j as int) == false);
+                    assert(!old(ancestors)@[vertex as int]);
+                } else {
+                    // pre_set_view == old(ancestors)@.update(vertex, true).
+                    // For j != vertex: pre_set_view[j] == old(ancestors)@[j].
+                    assert(pre_set_view[j] == old(ancestors)@[j]);
+                    // set preserves spec_index(j): post-set == pre-set.
+                    // Bridge before set connected pre_set_view[j] to spec_index(j).
+                    // So post-set spec_index(j) == pre_set_view[j] == old(ancestors)@[j].
+                }
+            };
+        }
+        assert(ancestors@ =~= old(ancestors)@);
         false
     }
 
@@ -212,11 +387,20 @@ broadcast use vstd::seq::group_seq_axioms;
         /// Detects if a directed graph contains a cycle.
         /// Returns true if a cycle exists, false otherwise.
         #[verifier::external_body]
-        fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> B
+        fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (has_cycle: B)
         {
             let n = graph.length();
-            let mut visited = ArraySeqStEphS::tabulate(&|_x| false, n);
-            let mut ancestors = ArraySeqStEphS::tabulate(&|_x| false, n);
+            let f_false = |_x: usize| -> (r: bool) ensures !r { false };
+            let mut visited = ArraySeqStEphS::tabulate(&f_false, n);
+            let mut ancestors = ArraySeqStEphS::tabulate(&f_false, n);
+
+            // Prove ancestors are all false initially.
+            proof {
+                assert forall|j: int| 0 <= j < ancestors@.len() implies !#[trigger] ancestors@[j] by {
+                    assert(!ancestors.seq@[j]);
+                    assert(ancestors@[j] == ancestors.seq@[j]@);
+                };
+            }
 
             let mut start: usize = 0;
             while start < n
@@ -226,12 +410,24 @@ broadcast use vstd::seq::group_seq_axioms;
                     visited@.len() == n,
                     ancestors@.len() == n,
                     spec_toposortsteph_wf(graph),
+                    // Ancestors are all false at each iteration start.
+                    forall|j: int| 0 <= j < ancestors@.len() ==> !#[trigger] ancestors@[j],
                 decreases n - start,
             {
+                proof { lemma_bool_view_eq_spec_index(&visited); }
                 if !*visited.nth(start) {
-                    if dfs_check_cycle(graph, &mut visited, &mut ancestors, start) {
+                    // Prove ghost path requires for empty path.
+                    proof {
+                        assert forall|v: int| 0 <= v < ancestors@.len()
+                            implies #[trigger] ancestors@[v] == spec_in_path(Seq::<int>::empty(), v) by {
+                            assert(!ancestors@[v]);
+                            assert(!spec_in_path(Seq::<int>::empty(), v));
+                        };
+                    }
+                    if dfs_check_cycle(graph, &mut visited, &mut ancestors, start, Ghost(Seq::empty())) {
                         return true;
                     }
+                    // dfs_check_cycle returned false: ancestors restored to pre-call state (all false).
                 }
                 start = start + 1;
             }
