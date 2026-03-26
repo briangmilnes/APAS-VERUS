@@ -80,22 +80,29 @@ Table of Contents:
    Info: 3 total
    Proof functions: 4 total (0 clean, 4 holed)
 ❌ UnionFindStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:717: error: admit() - admit(); // Overflow: rank bounded by log2(n) < 64 (2^rank t
-       661 |     fn union_merge<V: StT + Hash>(
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:661: error: external_body - #[verifier::external_body]
+       662 |     fn union_merge<V: StT + Hash>(
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:718: error: admit() - admit(); // Overflow: rank bounded by log2(n) < 64 (2^rank t
+       662 |     fn union_merge<V: StT + Hash>(
             ...
-       715 |                 proof {
-       716 |                     assert(strictly_cloned(root_u, ru2));
-       718 |                 }
-       719 |                 uf.rank.insert(ru2, rank_u + 1);
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:661: error: fn_missing_wf_requires - fn union_merge — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
+       716 |                 proof {
+       717 |                     assert(strictly_cloned(root_u, ru2));
+       719 |                 }
+       720 |                 uf.rank.insert(ru2, rank_u + 1);
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:945: error: external_body [blocked_by: union_merge] - #[verifier::external_body]
+       946 |         fn union(&mut self, u: &V, v: &V) {
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:662: error: fn_missing_wf_requires - fn union_merge — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
        595 |     fn find_root_loop<V: StT + Hash>(uf: &UnionFindStEph<V>, v: &V) -> (root: V)
             ...
-       659 |     /// Merge two components: mutate parent/rank/roots, prove wf.
-       660 |     #[verifier::rlimit(80)]
-       662 |         uf: &mut UnionFindStEph<V>,
-       663 |         root_u: V,
-   Holes: 1 total
+       660 |     // BYPASSED: rlimit exceeded, Z3 crashes above ~120. Proof architecture sound (3 sub-lemmas verified).
+       661 |     #[verifier::external_body]
+       663 |         uf: &mut UnionFindStEph<V>,
+       664 |         root_u: V,
+   Holes: 3 total
       1 × admit()
+      2 × external_body
+         1 × root cause
+         1 × downstream (blocked by root causes)
    Proof functions: 7 total (7 clean, 0 holed)
 
 =================================================================
@@ -140,11 +147,13 @@ Function Specs:
    62 total fns
 
 
-Holes Found: 4 (actionable)
-   1 × assume() [algorithmic] (25%)
-   1 × admit() (25%)
-   2 × external_body (50%)
-Real Proof Targets: 4 (all actionable)
+Holes Found: 6 (actionable)
+   1 × assume() [algorithmic] (16%)
+   1 × admit() (16%)
+   4 × external_body (66%)
+      3 × root cause
+      1 × downstream (blocked by root causes)
+Real Proof Targets: 6 (all actionable)
 
 Warnings: 2 total
    1 × fn_missing_wf_requires
@@ -160,9 +169,8 @@ Structural (info only): 1
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-26 12:59:34 -07:00
-Ended:     2026-03-26 12:59:34 -07:00
-Duration:  18ms
+Started:   2026-03-26 13:16:30 -07:00
+Ended:     2026-03-26 13:16:30 -07:00
+Duration:  20ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-nalyses/veracity-review-verus-proof-holes.log

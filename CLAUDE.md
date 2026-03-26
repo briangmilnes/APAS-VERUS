@@ -186,11 +186,18 @@ minor). You bring:
 **Merge workflow** (run from main worktree):
 1. `scripts/merge-agent.sh agent1/ready` — merge only
 2. On conflict: resolve with `scripts/resolve-analysis-merge.sh`, commit
-3. Validate each step separately: `scripts/validate.sh`, then `scripts/rtt.sh`, then
+3. **Fix lib.rs after every merge.** Agents may have commented out chapters, used
+   old cfg patterns, or reverted files that other agents fixed. After each merge:
+   - Verify all chapters that should be active ARE uncommented
+   - Verify all chapters that should be commented out ARE commented out
+   - Verify cfg attributes match the current isolate pattern
+   - Revert any agent changes to files outside the agent's assigned chapter
+   This is CRITICAL — agents work on stale branches and routinely break lib.rs.
+4. Validate each step separately: `scripts/validate.sh`, then `scripts/rtt.sh`, then
    `scripts/ptt.sh`. Fix trigger warnings and errors between steps.
-4. Repeat for each agent branch
-5. After all merges: regenerate analyses (`scripts/all-holes-by-chap.sh`, etc.)
-6. Commit, push, then **wait for user to request rebase** (see below).
+5. Repeat for each agent branch
+6. After all merges: regenerate analyses (`scripts/all-holes-by-chap.sh`, etc.)
+7. Commit, push, then **wait for user to request rebase** (see below).
 
 **Do NOT rebase agents without asking.** Agents may be running. Running
 `scripts/rebase-agents.sh` while agents have uncommitted work destroys that work. After

@@ -1794,7 +1794,7 @@ Table of Contents:
        173 |     fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (result: AVLTreeSeqStPerS<N>)
 /home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:248: error: external_body - #[verifier::external_body]
        249 |     fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (transposed: ArraySeqStPerS<ArraySeqStPerS<N>>)
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:498: error: external_body [blocked_by: compute_finish_order] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStPer.rs:498: error: external_body [blocked_by: transpose_graph] - #[verifier::external_body]
        499 |         fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<N>>
    Holes: 3 total
       3 × external_body
@@ -1918,22 +1918,29 @@ Table of Contents:
    Info: 3 total
    Proof functions: 4 total (0 clean, 4 holed)
 ❌ src/Chap65/UnionFindStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:717: error: admit() - admit(); // Overflow: rank bounded by log2(n) < 64 (2^rank t
-       661 |     fn union_merge<V: StT + Hash>(
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:661: error: external_body - #[verifier::external_body]
+       662 |     fn union_merge<V: StT + Hash>(
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:718: error: admit() - admit(); // Overflow: rank bounded by log2(n) < 64 (2^rank t
+       662 |     fn union_merge<V: StT + Hash>(
             ...
-       715 |                 proof {
-       716 |                     assert(strictly_cloned(root_u, ru2));
-       718 |                 }
-       719 |                 uf.rank.insert(ru2, rank_u + 1);
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:661: error: fn_missing_wf_requires - fn union_merge — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
+       716 |                 proof {
+       717 |                     assert(strictly_cloned(root_u, ru2));
+       719 |                 }
+       720 |                 uf.rank.insert(ru2, rank_u + 1);
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:945: error: external_body [blocked_by: union_merge] - #[verifier::external_body]
+       946 |         fn union(&mut self, u: &V, v: &V) {
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:662: error: fn_missing_wf_requires - fn union_merge — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
        595 |     fn find_root_loop<V: StT + Hash>(uf: &UnionFindStEph<V>, v: &V) -> (root: V)
             ...
-       659 |     /// Merge two components: mutate parent/rank/roots, prove wf.
-       660 |     #[verifier::rlimit(80)]
-       662 |         uf: &mut UnionFindStEph<V>,
-       663 |         root_u: V,
-   Holes: 1 total
+       660 |     // BYPASSED: rlimit exceeded, Z3 crashes above ~120. Proof architecture sound (3 sub-lemmas verified).
+       661 |     #[verifier::external_body]
+       663 |         uf: &mut UnionFindStEph<V>,
+       664 |         root_u: V,
+   Holes: 3 total
       1 × admit()
+      2 × external_body
+         1 × root cause
+         1 × downstream (blocked by root causes)
    Proof functions: 7 total (7 clean, 0 holed)
 ⚠ src/Chap66/BoruvkaMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:62: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
@@ -2511,16 +2518,16 @@ Function Specs:
    7817 total fns
 
 
-Holes Found: 18 (actionable)
+Holes Found: 20 (actionable)
    1 × assume() [algorithmic] (5%)
    1 × admit() (5%)
-   16 × external_body (88%)
-      14 × root cause
-      2 × downstream (blocked by root causes)
-Real Proof Targets: 18 (all actionable)
+   18 × external_body (90%)
+      15 × root cause
+      3 × downstream (blocked by root causes)
+Real Proof Targets: 20 (all actionable)
 
 Per-Chapter Holes:
-  Chap55: 14  Chap65:  4
+  Chap55: 14  Chap65:  6
 
 Warnings: 176 total
    2 × fn_missing_requires
@@ -2535,8 +2542,8 @@ Accepted (reviewed): 65 total
    10 × trivial_spec_wf
    4 × unsafe_block_accept_hole
    3 × external_accept_hole
-   1 × enum_outside_verus_accept_hole
    1 × external_type_specification_accept_hole
+   1 × enum_outside_verus_accept_hole
    1 × struct_outside_verus_accept_hole
 
 Accepted by Chapter:
@@ -2563,59 +2570,59 @@ Structural (info only): 220
 =================================================================
 
    1  Chap55  (14 holes, 8 files)
-   2  Chap65  (4 holes, 3 files)
-   3  Chap52  (0 holes, 14 files)
-   4  Chap38  (0 holes, 2 files)
-   5  Chap42  (0 holes, 3 files)
-   6  Chap39  (0 holes, 4 files)
-   7  Chap03  (0 holes, 1 files)
-   8  Chap63  (0 holes, 2 files)
-   9  Chap61  (0 holes, 4 files)
-   10  Chap37  (0 holes, 19 files)
-   11  Chap35  (0 holes, 4 files)
-   12  Chap58  (0 holes, 2 files)
-   13  Chap41  (0 holes, 6 files)
-   14  Chap02  (0 holes, 2 files)
-   15  Chap59  (0 holes, 4 files)
-   16  Chap57  (0 holes, 3 files)
-   17  ParaPairs  (0 holes, 1 files)
-   18  Chap66  (0 holes, 2 files)
-   19  Chap56  (0 holes, 10 files)
-   20  Chap47  (0 holes, 9 files)
-   21  Concurrency  (0 holes, 1 files)
-   22  Chap43  (0 holes, 10 files)
-   23  Chap05  (0 holes, 5 files)
-   24  Chap06  (0 holes, 21 files)
-   25  Chap54  (0 holes, 4 files)
-   26  Chap21  (0 holes, 5 files)
-   27  Chap28  (0 holes, 11 files)
-   28  Chap12  (0 holes, 3 files)
-   29  Chap40  (0 holes, 3 files)
-   30  Chap64  (0 holes, 3 files)
-   31  Chap23  (0 holes, 2 files)
-   32  Chap62  (0 holes, 4 files)
-   33  Chap26  (0 holes, 8 files)
-   34  Chap50  (0 holes, 8 files)
-   35  Chap19  (0 holes, 4 files)
-   36  Chap18  (0 holes, 7 files)
-   37  Chap11  (0 holes, 5 files)
-   38  Chap30  (0 holes, 1 files)
-   39  Chap49  (0 holes, 8 files)
-   40  Chap45  (0 holes, 6 files)
-   41  Chap17  (0 holes, 1 files)
-   42  Chap44  (0 holes, 1 files)
-   43  Chap36  (0 holes, 3 files)
-   44  Chap27  (0 holes, 4 files)
-   45  Chap51  (0 holes, 8 files)
-   46  Chap53  (0 holes, 5 files)
+   2  Chap65  (6 holes, 3 files)
+   3  Chap49  (0 holes, 8 files)
+   4  Chap56  (0 holes, 10 files)
+   5  Chap64  (0 holes, 3 files)
+   6  Chap42  (0 holes, 3 files)
+   7  Chap62  (0 holes, 4 files)
+   8  Chap30  (0 holes, 1 files)
+   9  Chap38  (0 holes, 2 files)
+   10  Chap12  (0 holes, 3 files)
+   11  Chap18  (0 holes, 7 files)
+   12  Chap28  (0 holes, 11 files)
+   13  Chap44  (0 holes, 1 files)
+   14  Chap45  (0 holes, 6 files)
+   15  Chap21  (0 holes, 5 files)
+   16  Chap58  (0 holes, 2 files)
+   17  Chap06  (0 holes, 21 files)
+   18  Chap17  (0 holes, 1 files)
+   19  ParaPairs  (0 holes, 1 files)
+   20  Chap53  (0 holes, 5 files)
+   21  Chap37  (0 holes, 19 files)
+   22  Chap02  (0 holes, 2 files)
+   23  Chap39  (0 holes, 4 files)
+   24  Chap35  (0 holes, 4 files)
+   25  Chap50  (0 holes, 8 files)
+   26  Chap63  (0 holes, 2 files)
+   27  Chap43  (0 holes, 10 files)
+   28  Chap66  (0 holes, 2 files)
+   29  Chap23  (0 holes, 2 files)
+   30  Chap19  (0 holes, 4 files)
+   31  Chap51  (0 holes, 8 files)
+   32  Chap47  (0 holes, 9 files)
+   33  Concurrency  (0 holes, 1 files)
+   34  Chap36  (0 holes, 3 files)
+   35  Chap59  (0 holes, 4 files)
+   36  Chap26  (0 holes, 8 files)
+   37  Chap03  (0 holes, 1 files)
+   38  Chap11  (0 holes, 5 files)
+   39  Chap57  (0 holes, 3 files)
+   40  Chap54  (0 holes, 4 files)
+   41  Chap61  (0 holes, 4 files)
+   42  Chap41  (0 holes, 6 files)
+   43  Chap27  (0 holes, 4 files)
+   44  Chap40  (0 holes, 3 files)
+   45  Chap52  (0 holes, 14 files)
+   46  Chap05  (0 holes, 5 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
 =================================================================
 
-   1  src/Chap55/TopoSortStEph.rs  (2 holes)
-   2  src/Chap65/PrimStEph.rs  (2 holes)
-   3  src/Chap65/UnionFindStEph.rs  (1 holes)
+   1  src/Chap65/UnionFindStEph.rs  (3 holes)
+   2  src/Chap55/TopoSortStEph.rs  (2 holes)
+   3  src/Chap65/PrimStEph.rs  (2 holes)
 
 =================================================================
 4.4. Not Verusified
@@ -2633,7 +2640,7 @@ Structural (info only): 220
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 44 clean, 2 holed, 18 holes (global), 244 modules
+Chapter Status — 46 chapters, 44 clean, 2 holed, 20 holes (global), 244 modules
 
 CLEAN CHAPTERS (44)
   Chapter        Files
@@ -2683,11 +2690,11 @@ CLEAN CHAPTERS (44)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (2) — 18 holes
+HOLED CHAPTERS (2) — 20 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
   Chap55            14     8  internal  Chap55::TopoSortStEph, Chap55::TopoSortStPer
-  Chap65             4     3  internal  Chap65::UnionFindStEph
+  Chap65             6     3  internal  Chap65::UnionFindStEph
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
@@ -2697,8 +2704,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-26 12:59:34 -07:00
-Ended:     2026-03-26 12:59:35 -07:00
-Duration:  1450ms
+Started:   2026-03-26 13:15:46 -07:00
+Ended:     2026-03-26 13:15:47 -07:00
+Duration:  1615ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log
