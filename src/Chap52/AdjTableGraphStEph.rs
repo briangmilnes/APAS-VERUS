@@ -7,7 +7,7 @@ pub mod AdjTableGraphStEph {
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeSeqStEphTrait;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait;
-    use crate::Chap43::OrderedTableStEph::OrderedTableStEph::*;
+    use crate::Chap42::TableStEph::TableStEph::*;
     use crate::Types::Types::*;
 
     verus! {
@@ -36,7 +36,7 @@ broadcast use {
     #[derive(Clone)]
     #[verifier::reject_recursive_types(V)]
     pub struct AdjTableGraphStEph<V: StT + Ord> {
-        pub adj: OrderedTableStEph<V, AVLTreeSetStEph<V>>,
+        pub adj: TableStEph<V, AVLTreeSetStEph<V>>,
     }
 
     // 5. view impls
@@ -90,7 +90,7 @@ broadcast use {
             ensures out.spec_adjtablegraphsteph_wf();
         /// - APAS: Work Theta(1), Span Theta(1)
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — wraps existing table.
-        fn from_table(table: OrderedTableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self)
+        fn from_table(table: TableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self)
             requires
                 forall|u: <V as View>::V, v: <V as View>::V|
                     table@.dom().contains(u)
@@ -170,12 +170,11 @@ broadcast use {
         }
 
         fn empty() -> (out: Self) {
-            AdjTableGraphStEph {
-                adj: OrderedTableStEph::empty(),
-            }
+            let adj: TableStEph<V, AVLTreeSetStEph<V>> = TableStEph::empty();
+            AdjTableGraphStEph { adj }
         }
 
-        fn from_table(table: OrderedTableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self) { AdjTableGraphStEph { adj: table } }
+        fn from_table(table: TableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self) { AdjTableGraphStEph { adj: table } }
 
         fn num_vertices(&self) -> N { self.adj.size() }
 

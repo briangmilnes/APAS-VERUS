@@ -551,8 +551,8 @@ pub mod Chap52 {
     pub mod AdjMatrixGraphStPer;
     pub mod AdjMatrixGraphMtEph;
     pub mod AdjMatrixGraphMtPer;
-//    pub mod AdjTableGraphStEph;  // BROKEN: compiles but 44 verif errors + Z3 diverges with table wf
-//    pub mod AdjTableGraphStPer;  // BROKEN: compiles but 44 verif errors + Z3 diverges with table wf
+    pub mod AdjTableGraphStEph;
+    pub mod AdjTableGraphStPer;
 //    pub mod AdjTableGraphMtPer;  // BROKEN: AVLTreeSetMtPer chain beyond this refactor
     pub mod EdgeSetGraphStEph;
     pub mod EdgeSetGraphStPer;
