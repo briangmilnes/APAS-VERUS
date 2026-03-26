@@ -1,43 +1,20 @@
-# veracity-compare-par-mut fix: resolve type aliases before comparison (Round 4)
+# veracity-compare-par-mut fix: reduce false positives (Round 4)
 
 ## Context
 
-Phase 3b is done. The tool reports 46 errors, but several are false positives caused
-by type alias mismatches. Do NOT re-run phases 1, 2, 3, or 3b. Fix the comparison
-logic only.
+Phase 3b is done. The tool reports 46 errors. Several are false positives.
+Do NOT re-run phases 1, 2, 3, or 3b. Fix the comparison logic only.
 
-## Problem
-
-The project defines type aliases in `src/Types.rs`:
-```rust
-pub type N = usize;
-pub type B = bool;
-```
-
-When comparing return types across variants, the tool sees `N` vs `usize` and
-`B` vs `bool` as different types and reports errors. They are identical.
-
-Similarly, `<T as View>::V` and `T::V` are the same associated type written
-two ways.
-
-## Fix 1: Type alias resolution
-
-Before comparing return types, parameter types, or View types, normalize:
-- `N` → `usize`
-- `B` → `bool`
-
-These are the only two aliases defined in `src/Types.rs` that cause this.
-Hard-code them — don't try to build a general alias resolver.
-
-## Fix 2: Associated type syntax normalization
+## Fix 1: Associated type syntax normalization
 
 Before comparing types, normalize:
 - `< T as View > :: V` → `T :: V`
 - `< V as View > :: V` → `V :: V`
 
 Strip the `< ... as Trait >` wrapper when the result is just `:: AssocType`.
+These are the same type written two ways. Currently reported as errors.
 
-## Fix 3: Reclassify known Mt/St return type differences
+## Fix 2: Reclassify known Mt/St return type differences
 
 These are real differences but expected patterns, not errors. Reclassify from
 `error:` to `info:`:
@@ -53,16 +30,27 @@ iterator struct names across variants is expected, not an error:
 
 Classify as `info: fn foo: Mt returns owned T, St returns &T (RwLock pattern)`.
 
+## Fix 3: Empty supertrait parse failures
+
+Several errors show empty supertrait on one side:
+```
+BSTSplayMtEph: supertrait `Sized + View<V = Link<T>>` but StEph has ``
+AdjTableGraphMtPer: supertrait `` but StPer has `Sized`
+```
+
+The parser is failing to extract the supertrait from one variant. Fix the
+parser to handle these cases. If it can't parse, report `warning:` (parse
+failure), not `error:` (mismatch).
+
 ## What stays as error
 
 - View type mismatches (e.g., `Seq<T>` vs `Set<T::V>`) — real divergence
 - Return type differs and it's NOT an owned/borrowed or iterator pattern
-- Supertrait mismatches (after alias normalization)
+- Supertrait mismatches (after both sides successfully parsed)
 
 ## Output format
 
-Same emacs compilation-mode format. After fixes, the 46 errors should drop
-significantly — the real errors are the View misalignments and genuine API drift.
+Same emacs compilation-mode format.
 
 ## Constraint: No String Hacking
 
