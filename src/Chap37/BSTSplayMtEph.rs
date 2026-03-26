@@ -26,12 +26,17 @@ pub mod BSTSplayMtEph {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
     use vstd::slice::slice_subrange;
 
     verus! {
 
     // 2. imports
 
+    // 3. broadcast use
+
+    broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
     // (Arc kept for filter_parallel/reduce_parallel closure sharing.)
 
@@ -1505,12 +1510,18 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    // veracity: no_requires
     fn build_balanced<T: StTInMtT + Ord + TotalOrder>(values: &[T]) -> (link: Link<T>)
+        requires
+            obeys_feq_clone::<T>(),
+            forall|i: int, j: int| 0 <= i < j < values@.len() ==>
+                TotalOrder::le(#[trigger] values@[i], #[trigger] values@[j])
+                && values@[i] != values@[j],
         ensures
             link_spec_size(link) <= values@.len(),
             link_node_count(link) <= values@.len(),
             spec_is_bst_link(link),
+            forall|x: T| #[trigger] link_contains(link, x) ==>
+                exists|i: int| 0 <= i < values@.len() && values@[i] == x,
         decreases values.len(),
     {
         if values.is_empty() {
@@ -1519,9 +1530,77 @@ pub mod BSTSplayMtEph {
         let mid = values.len() / 2;
         let left_slice = slice_subrange(values, 0, mid);
         let right_slice = slice_subrange(values, mid + 1, values.len());
+        proof {
+            // Sorted sub-slices: left_slice and right_slice are sorted.
+            assert(left_slice@ == values@.subrange(0, mid as int));
+            assert(right_slice@ == values@.subrange(mid as int + 1, values@.len() as int));
+            // Prove left_slice is strictly sorted.
+            assert forall|i: int, j: int| 0 <= i < j < left_slice@.len() implies
+                TotalOrder::le(#[trigger] left_slice@[i], #[trigger] left_slice@[j])
+                && left_slice@[i] != left_slice@[j]
+            by {
+                assert(left_slice@[i] == values@[i]);
+                assert(left_slice@[j] == values@[j]);
+            }
+            // Prove right_slice is strictly sorted.
+            assert forall|i: int, j: int| 0 <= i < j < right_slice@.len() implies
+                TotalOrder::le(#[trigger] right_slice@[i], #[trigger] right_slice@[j])
+                && right_slice@[i] != right_slice@[j]
+            by {
+                assert(right_slice@[i] == values@[mid as int + 1 + i]);
+                assert(right_slice@[j] == values@[mid as int + 1 + j]);
+            }
+        }
         let left = build_balanced(left_slice);
         let right = build_balanced(right_slice);
-        let mut node = Box::new(new_node(values[mid].clone()));
+        let ghost gl = left;
+        let ghost gr = right;
+        let ghost pivot = values@[mid as int];
+        // Prove ordering while left/right are in scope (triggers match directly).
+        proof {
+            // Left elements < pivot.
+            assert forall|x: T| #[trigger] link_contains(left, x) implies
+                TotalOrder::le(x, pivot) && x != pivot
+            by {
+                let i = choose|i: int| 0 <= i < left_slice@.len() && left_slice@[i] == x;
+                assert(left_slice@[i] == values@[i]);
+                assert(TotalOrder::le(values@[i], values@[mid as int]));
+                assert(values@[i] != values@[mid as int]);
+            }
+            // Right elements > pivot.
+            assert forall|x: T| #[trigger] link_contains(right, x) implies
+                TotalOrder::le(pivot, x) && x != pivot
+            by {
+                let j = choose|j: int| 0 <= j < right_slice@.len() && right_slice@[j] == x;
+                assert(right_slice@[j] == values@[mid as int + 1 + j]);
+                assert(TotalOrder::le(values@[mid as int], values@[mid as int + 1 + j]));
+                assert(values@[mid as int] != values@[mid as int + 1 + j]);
+            }
+            // Containment: left elements are in values[0..mid].
+            assert forall|x: T| #[trigger] link_contains(left, x) implies
+                exists|k: int| 0 <= k < values@.len() && values@[k] == x
+            by {
+                let i = choose|i: int| 0 <= i < left_slice@.len() && left_slice@[i] == x;
+                assert(left_slice@[i] == values@[i]);
+                assert(values@[i] == x);
+            }
+            // Containment: right elements are in values[mid+1..].
+            assert forall|x: T| #[trigger] link_contains(right, x) implies
+                exists|k: int| 0 <= k < values@.len() && values@[k] == x
+            by {
+                let j = choose|j: int| 0 <= j < right_slice@.len() && right_slice@[j] == x;
+                assert(right_slice@[j] == values@[mid as int + 1 + j]);
+                assert(values@[mid as int + 1 + j] == x);
+            }
+        }
+        let key = values[mid].clone();
+        let ghost gkey = key;
+        proof {
+            // Introduce cloned trigger for broadcast axiom.
+            assert(cloned(pivot, gkey));
+            // Broadcast axiom_cloned_implies_eq_owned fires: pivot == gkey.
+        }
+        let mut node = Box::new(new_node(key));
         node.left = left;
         node.right = right;
         update(&mut node);
@@ -1530,14 +1609,43 @@ pub mod BSTSplayMtEph {
             assert(link_node_count(node.left) <= mid as nat);
             assert(link_node_count(node.right) <= (values@.len() - mid - 1) as nat);
             assert(link_node_count(Some(node)) == 1 + link_node_count(node.left) + link_node_count(node.right));
-            // link_spec_size reads from recursive call ensures.
             assert(link_spec_size(node.left) <= mid as nat);
             assert(link_spec_size(node.right) <= (values@.len() - mid - 1) as nat);
-            // update ensures: when no overflow, size = 1 + left + right.
             assert(link_spec_size(node.left) + link_spec_size(node.right) < usize::MAX as nat);
-            // Therefore node.size == 1 + left_size + right_size via update ensures.
             assert(node.size as nat == 1 + link_spec_size(node.left) + link_spec_size(node.right));
-            assume(spec_is_bst_link(Some(node)));
+
+            // node.left == gl, node.right == gr via update preserves.
+            assert(node.left == gl);
+            assert(node.right == gr);
+            // node.key == gkey from new_node, gkey == pivot from cloned broadcast.
+            assert(node.key == pivot);
+
+            // Transfer ordering to node fields via ghost equality.
+            assert forall|x: T| #[trigger] link_contains(node.left, x) implies
+                TotalOrder::le(x, node.key) && x != node.key
+            by {
+                assert(link_contains(gl, x));  // gl == node.left
+            }
+            assert forall|x: T| #[trigger] link_contains(node.right, x) implies
+                TotalOrder::le(node.key, x) && x != node.key
+            by {
+                assert(link_contains(gr, x));  // gr == node.right
+            }
+            reveal_with_fuel(spec_is_bst_link, 2);
+
+            // Containment for the full tree.
+            assert forall|x: T| #[trigger] link_contains(Some(node), x) implies
+                exists|k: int| 0 <= k < values@.len() && values@[k] == x
+            by {
+                reveal_with_fuel(link_contains, 2);
+                if node.key == x {
+                    assert(values@[mid as int] == x);
+                } else if link_contains(node.left, x) {
+                    assert(link_contains(gl, x));
+                } else {
+                    assert(link_contains(gr, x));
+                }
+            }
         }
         Some(node)
     }
@@ -1668,6 +1776,11 @@ pub mod BSTSplayMtEph {
                     tree@ is None;
 
         fn from_sorted_slice(values: &[T]) -> (tree: Self)
+            requires
+                obeys_feq_clone::<T>(),
+                forall|i: int, j: int| 0 <= i < j < values@.len() ==>
+                    TotalOrder::le(#[trigger] values@[i], #[trigger] values@[j])
+                    && values@[i] != values@[j],
             ensures tree.spec_bstsplaymteph_wf();
 
         fn insert(&mut self, value: T) -> (r: Result<(), ()>)
