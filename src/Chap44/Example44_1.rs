@@ -43,13 +43,11 @@ pub mod Example44_1 {
         move |word: &Word| index.find(word)
     }
 
-    verus! {
-        /// Demonstrates the example queries from the textbook.
-        /// fw is Box<dyn Fn> — unverifiable; struct is inside verus! for style compliance.
-        pub struct TweetQueryExamples {
-            pub index: DocumentIndex,
-            pub fw: Box<dyn Fn(&Word) -> DocumentSet>,
-        }
+    /// Demonstrates the example queries from the textbook.
+    /// fw is Box<dyn Fn> — not Verus-parseable (dyn with more than one trait).
+    pub struct TweetQueryExamples {
+        pub index: DocumentIndex,
+        pub fw: Box<dyn Fn(&Word) -> DocumentSet>,
     }
 
     impl Default for TweetQueryExamples {

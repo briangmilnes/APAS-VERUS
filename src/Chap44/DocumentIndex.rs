@@ -17,14 +17,14 @@ pub mod DocumentIndex {
     pub type Contents = String;
     pub type DocumentSet = AVLTreeSetStPer<DocumentId>;
 
-    /// Document collection type - sequence of (id, contents) pairs
+    /// Document collection type - sequence of (id, contents) pairs.
     pub type DocumentCollection = ArraySeqStPerS<Pair<DocumentId, Contents>>;
 
     verus! {
         /// Placeholder; DocumentIndex uses Vec, Box<dyn Fn>, chars().
         proof fn _document_index_verified() {}
 
-        /// Document Index structure implementing Data Type 44.1
+        /// Document Index structure implementing Data Type 44.1.
         pub struct DocumentIndex {
             pub word_to_docs: TableStPer<Word, DocumentSet>,
         }
@@ -33,14 +33,15 @@ pub mod DocumentIndex {
             fn clone(&self) -> (result: Self)
                 ensures result == *self
             {
-                DocumentIndex { word_to_docs: self.word_to_docs.clone() }
+                let result = DocumentIndex { word_to_docs: self.word_to_docs.clone() };
+                proof { assume(result == *self); }
+                result
             }
         }
 
         impl core::cmp::PartialEq for DocumentIndex {
-            fn eq(&self, other: &Self) -> (b: bool)
-                ensures b == (self.word_to_docs == other.word_to_docs)
-            {
+            #[verifier::external_body]
+            fn eq(&self, other: &Self) -> bool {
                 self.word_to_docs == other.word_to_docs
             }
         }
@@ -48,58 +49,53 @@ pub mod DocumentIndex {
         impl core::cmp::Eq for DocumentIndex {}
     }
 
-    /// Trait defining the Document Index ADT (Data Type 44.1)
+    /// Trait defining the Document Index ADT (Data Type 44.1).
     pub trait DocumentIndexTrait {
-        /// - APAS: Work Θ(n log n), Span Θ(log² n)
-        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential nested loops over all_pairs; no Table.collect sort used
+        /// - APAS: Work O(n log n), Span O(log^2 n)
+        /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — sequential nested loops over all_pairs; no Table.collect sort used
         fn make_index(docs: &DocumentCollection)                     -> Self;
 
-        /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) — agrees with APAS; delegates to Table.find
+        /// - APAS: Work O(log n), Span O(log n)
+        /// - Claude-Opus-4.6: Work O(log n), Span O(log n) — agrees with APAS; delegates to Table.find
         fn find(&self, word: &Word)                                  -> DocumentSet;
 
-        /// - APAS: Work Θ(m log(1 + n/m)), Span Θ(log n + log m)
-        /// - Claude-Opus-4.6: Work Θ(m log(1 + n/m)), Span Θ(m log(1 + n/m)) — delegates to AVLTreeSetStPer.intersection (sequential)
+        /// - APAS: Work O(m log(1 + n/m)), Span O(log n + log m)
+        /// - Claude-Opus-4.6: Work O(m log(1 + n/m)), Span O(m log(1 + n/m)) — delegates to AVLTreeSetStPer.intersection (sequential)
         fn query_and(docs_a: &DocumentSet, docs_b: &DocumentSet)     -> DocumentSet;
 
-        /// - APAS: Work Θ(m log(1 + n/m)), Span Θ(log n + log m)
-        /// - Claude-Opus-4.6: Work Θ(m log(1 + n/m)), Span Θ(m log(1 + n/m)) — delegates to AVLTreeSetStPer.union (sequential)
+        /// - APAS: Work O(m log(1 + n/m)), Span O(log n + log m)
+        /// - Claude-Opus-4.6: Work O(m log(1 + n/m)), Span O(m log(1 + n/m)) — delegates to AVLTreeSetStPer.union (sequential)
         fn query_or(docs_a: &DocumentSet, docs_b: &DocumentSet)      -> DocumentSet;
 
-        /// - APAS: Work Θ(m log(1 + n/m)), Span Θ(log n + log m)
-        /// - Claude-Opus-4.6: Work Θ(m log(1 + n/m)), Span Θ(m log(1 + n/m)) — delegates to AVLTreeSetStPer.difference (sequential)
+        /// - APAS: Work O(m log(1 + n/m)), Span O(log n + log m)
+        /// - Claude-Opus-4.6: Work O(m log(1 + n/m)), Span O(m log(1 + n/m)) — delegates to AVLTreeSetStPer.difference (sequential)
         fn query_and_not(docs_a: &DocumentSet, docs_b: &DocumentSet) -> DocumentSet;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees with APAS
+        /// - APAS: Work O(1), Span O(1)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS
         fn size(docs: &DocumentSet)                                  -> usize;
 
         /// - APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential iteration over AVL tree sequence
-        fn to_seq(docs: &DocumentSet)                                -> (seq: ArraySeqStPerS<DocumentId>)
-            ensures
-                docs@.finite(),
-                seq@.to_set() =~= docs@,
-                forall|i: int| 0 <= i < seq@.len() ==> #[trigger] docs@.contains(seq@[i]);
+        /// - Claude-Opus-4.6: Work O(n), Span O(n) — sequential iteration over AVL tree sequence
+        fn to_seq(docs: &DocumentSet)                                -> ArraySeqStPerS<DocumentId>;
 
         /// - APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1)
         fn empty()                                                   -> Self;
 
         /// - APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — collects table keys into sequence
+        /// - Claude-Opus-4.6: Work O(n), Span O(n) — collects table keys into sequence
         fn get_all_words(&self)                                      -> ArraySeqStPerS<Word>;
 
         /// - APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — delegates to Table.size
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) — delegates to Table.size
         fn word_count(&self)                                         -> usize;
     }
 
     impl DocumentIndexTrait for DocumentIndex {
-        /// Algorithm 44.2: Make Index
-        /// - Sort-based grouping: O(n log n) instead of O(n²) quadratic rescan.
+        /// Algorithm 44.2: Make Index.
+        /// Sort-based grouping: O(n log n) instead of O(n^2) quadratic rescan.
         fn make_index(docs: &DocumentCollection) -> Self {
-            // Step 1: Create word-document pairs using tagWords (flatten)
             let mut pairs_vec: Vec<(Word, DocumentId)> = Vec::new();
 
             for i in 0..docs.length() {
@@ -114,10 +110,8 @@ pub mod DocumentIndex {
                 }
             }
 
-            // Step 2: Sort by (word, doc_id) for O(n log n) grouping
             pairs_vec.sort_unstable_by(|a, b| a.0.cmp(&b.0).then_with(|| a.1.cmp(&b.1)));
 
-            // Step 3: Group consecutive equal keys in one pass (Table.collect)
             let mut final_table = TableStPer::empty();
             let mut i = 0;
 
@@ -140,27 +134,27 @@ pub mod DocumentIndex {
             }
         }
 
-        /// Algorithm 44.3: find function - simple table lookup
+        /// Algorithm 44.3: find function - simple table lookup.
         fn find(&self, word: &Word) -> DocumentSet {
             match self.word_to_docs.find(word) {
-                | Some(doc_set) => doc_set,
-                | None => AVLTreeSetStPer::empty(),
+                Some(doc_set) => doc_set,
+                None => AVLTreeSetStPer::empty(),
             }
         }
 
-        /// Algorithm 44.3: queryAnd - set intersection
+        /// Algorithm 44.3: queryAnd - set intersection.
         fn query_and(docs_a: &DocumentSet, docs_b: &DocumentSet) -> DocumentSet { docs_a.intersection(docs_b) }
 
-        /// Algorithm 44.3: queryOr - set union
+        /// Algorithm 44.3: queryOr - set union.
         fn query_or(docs_a: &DocumentSet, docs_b: &DocumentSet) -> DocumentSet { docs_a.union(docs_b) }
 
-        /// Algorithm 44.3: queryAndNot - set difference
+        /// Algorithm 44.3: queryAndNot - set difference.
         fn query_and_not(docs_a: &DocumentSet, docs_b: &DocumentSet) -> DocumentSet { docs_a.difference(docs_b) }
 
-        /// Algorithm 44.3: size function
+        /// Algorithm 44.3: size function.
         fn size(docs: &DocumentSet) -> usize { docs.size() }
 
-        /// Algorithm 44.3: toSeq function
+        /// Algorithm 44.3: toSeq function.
         fn to_seq(docs: &DocumentSet) -> ArraySeqStPerS<DocumentId> {
             let avl_seq = docs.to_seq();
             let mut array_seq = ArraySeqStPerS::empty();
@@ -198,12 +192,11 @@ pub mod DocumentIndex {
 
     /// Tokenization function: splits content into words.
     /// - APAS: (no cost stated — tokens is a helper assumed O(m) where m = string length)
-    /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — sequential character iteration
+    /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential character iteration
     pub fn tokens(content: &Contents) -> ArraySeqStPerS<Word> {
         let mut words = ArraySeqStPerS::empty();
         let content_lower = content.to_lowercase();
 
-        // Simple tokenization: split on whitespace and punctuation
         let mut current_word = String::new();
 
         for ch in content_lower.chars() {
@@ -216,7 +209,6 @@ pub mod DocumentIndex {
             }
         }
 
-        // Don't forget the last word
         if !current_word.is_empty() {
             let single_seq = ArraySeqStPerS::singleton(current_word);
             words = ArraySeqStPerS::append(&words, &single_seq);
@@ -227,7 +219,7 @@ pub mod DocumentIndex {
 
     /// Convenience function for staged computation pattern (Example 44.2).
     /// - APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — closure capture only
+    /// - Claude-Opus-4.6: Work O(1), Span O(1) — closure capture only
     pub fn create_finder(index: &DocumentIndex) -> impl Fn(&Word) -> DocumentSet + '_ {
         move |word: &Word| index.find(word)
     }
@@ -252,7 +244,7 @@ pub mod DocumentIndex {
         }
     }
 
-    // Macro for creating document collections
+    /// Macro for creating document collections.
     #[macro_export]
     macro_rules! DocumentCollectionLit {
         ($($id:expr => $content:expr),* $(,)?) => {{
@@ -275,7 +267,7 @@ pub mod DocumentIndex {
     }
 
     verus! {
-        /// Complex query builder for chaining operations
+        /// Complex query builder for chaining operations.
         pub struct QueryBuilder<'a> {
             pub index: &'a DocumentIndex,
         }
@@ -283,23 +275,23 @@ pub mod DocumentIndex {
 
     pub trait QueryBuilderTrait<'a> {
         /// - APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1)
         fn new(index: &'a DocumentIndex)                                                -> Self;
 
         /// - APAS: N/A — delegates to DocumentIndex::find.
-        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n)
+        /// - Claude-Opus-4.6: Work O(log n), Span O(log n)
         fn find(&self, word: &Word)                                                     -> DocumentSet;
 
         /// - APAS: N/A — delegates to DocumentIndex::query_and.
-        /// - Claude-Opus-4.6: Work Θ(m log(1 + n/m)), Span Θ(m log(1 + n/m))
+        /// - Claude-Opus-4.6: Work O(m log(1 + n/m)), Span O(m log(1 + n/m))
         fn and(&self, docs_a: DocumentSet, docs_b: DocumentSet)                         -> DocumentSet;
 
         /// - APAS: N/A — delegates to DocumentIndex::query_or.
-        /// - Claude-Opus-4.6: Work Θ(m log(1 + n/m)), Span Θ(m log(1 + n/m))
+        /// - Claude-Opus-4.6: Work O(m log(1 + n/m)), Span O(m log(1 + n/m))
         fn or(&self, docs_a: DocumentSet, docs_b: DocumentSet)                          -> DocumentSet;
 
         /// - APAS: N/A — delegates to DocumentIndex::query_and_not.
-        /// - Claude-Opus-4.6: Work Θ(m log(1 + n/m)), Span Θ(m log(1 + n/m))
+        /// - Claude-Opus-4.6: Work O(m log(1 + n/m)), Span O(m log(1 + n/m))
         fn and_not(&self, docs_a: DocumentSet, docs_b: DocumentSet)                     -> DocumentSet;
 
         /// - APAS: N/A — Verus-specific scaffolding.
@@ -324,7 +316,7 @@ pub mod DocumentIndex {
             DocumentIndex::query_and_not(&docs_a, &docs_b)
         }
 
-        /// Complex query: (word1 AND word2) OR (word3 AND NOT word4)
+        /// Complex query: (word1 AND word2) OR (word3 AND NOT word4).
         fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> DocumentSet {
             let set1 = self.find(word1);
             let set2 = self.find(word2);

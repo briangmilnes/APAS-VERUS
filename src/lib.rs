@@ -476,8 +476,8 @@ pub mod Chap43 {
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
 pub mod Chap44 {
-//    pub mod DocumentIndex; // BROKEN
-//    pub mod Example44_1;  // BROKEN 
+    pub mod DocumentIndex;
+    pub mod Example44_1;
 }
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]

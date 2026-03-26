@@ -20,8 +20,15 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-✓ DocumentIndex.rs
-   1 clean proof function
+⚠ DocumentIndex.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap44/DocumentIndex.rs:37: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        33 |             fn clone(&self) -> (result: Self)
+            ...
+        35 |             {
+        36 |                 let result = DocumentIndex { word_to_docs: self.word_to_docs.clone() };
+        38 |                 result
+        39 |             }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap44/DocumentIndex.rs:43: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
 
 =================================================================
 2. Depends Upon
@@ -64,18 +71,20 @@ Function Specs:
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
-No proof holes or warnings found! All proofs are complete.
+Warnings: 1 total
+   1 × assume_eq_clone_workaround
+
+Structural (info only): 1
+   1 × STD_TRAIT_IMPL
+
+No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-25 19:52:20 -07:00
-Ended:     2026-03-25 19:52:20 -07:00
-Duration:  4ms
-
-Full output: src/Chap44/analyses/veracity-review-verus-proof-holes.log
-
-Duration:  4ms
+Started:   2026-03-26 08:22:21 -07:00
+Ended:     2026-03-26 08:22:21 -07:00
+Duration:  2ms
 
 Full output: src/Chap44/analyses/veracity-review-verus-proof-holes.log
