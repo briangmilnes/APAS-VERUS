@@ -49,7 +49,7 @@ Table of Contents:
         87 |     fn compute_finish_order(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (result: AVLTreeSeqStEphS<N>)
 /home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:160: error: external_body - #[verifier::external_body]
        161 |     fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (transposed: ArraySeqStEphS<ArraySeqStEphS<N>>)
-/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:435: error: external_body [blocked_by: compute_finish_order] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap55/SCCStEph.rs:435: error: external_body [blocked_by: transpose_graph] - #[verifier::external_body]
        436 |         fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<N>>
    Holes: 3 total
       3 × external_body
@@ -147,8 +147,8 @@ Real Proof Targets: 14 (all actionable)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-26 13:16:24 -07:00
-Ended:     2026-03-26 13:16:24 -07:00
-Duration:  27ms
+Started:   2026-03-26 13:32:42 -07:00
+Ended:     2026-03-26 13:32:42 -07:00
+Duration:  30ms
 
 Full output: src/Chap55/analyses/veracity-review-verus-proof-holes.log
