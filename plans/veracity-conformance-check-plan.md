@@ -6,6 +6,28 @@ Heuristic lint that checks whether the 4 variants of an ADT (StEph, StPer, MtEph
 are consistent with each other. Not a formal subtyping proof — a structural comparison
 that flags gaps and mismatches.
 
+## Output format
+
+Emacs compilation-mode format: `file:line: LEVEL: message`
+
+```
+src/Chap18/ArraySeqStEph.rs:0: info: file group ArraySeq — comparing StEph, StPer, MtEph, MtPer
+src/Chap18/ArraySeqStEph.rs:43: info: struct ArraySeqStEphS<T> { seq: Vec<T> }
+src/Chap18/ArraySeqStPer.rs:43: info: struct ArraySeqStPerS<T> { seq: Vec<T> }
+src/Chap18/ArraySeqMtEph.rs:87: info: struct ArraySeqMtEphS<T> { locked: ... }
+src/Chap18/ArraySeqStEph.rs:50: info: View = Seq<T>
+src/Chap18/ArraySeqStPer.rs:50: info: View = Seq<T>
+src/Chap37/BSTPlainStEph.rs:0: info: file group BSTPlain — comparing StEph, MtEph (no StPer, no MtPer)
+src/Chap65/UnionFindStEph.rs:47: warning: ghost field `roots` has no counterpart in other variants
+src/Chap43/OrderedSetStPer.rs:60: error: View = Set<T::V> but OrderedSetStEph View = Set<T::V> — wait, match
+src/Chap52/AdjTableGraphStEph.rs:30: error: struct field `adj: OrderedTableStEph` but StPer has `adj: TableStPer`
+```
+
+Severity levels:
+- `info:` — each file set being compared, each struct/view/wf identified
+- `warning:` — one variant has ghost fields the others don't, missing wf, missing variant
+- `error:` — view types don't match, struct field types diverge, wf names inconsistent
+
 ## Phase 1: Identify file groups
 
 Each APAS ADT has up to 4 files following the naming convention:
