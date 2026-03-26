@@ -20,15 +20,101 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-✓ CycleDetectStEph.rs
-✓ CycleDetectStPer.rs
-✓ DFSStEph.rs
-✓ DFSStPer.rs
-✓ SCCStEph.rs
-✓ SCCStPer.rs
-✓ TopoSortStEph.rs
-   4 clean proof functions
-✓ TopoSortStPer.rs
+❌ CycleDetectStEph.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/CycleDetectStEph.rs:45: error: external_body - #[verifier::external_body]
+        46 |     fn dfs_check_cycle(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/CycleDetectStEph.rs:116: error: external_body [blocked_by: dfs_check_cycle] - #[verifier::external_body]
+       117 |         fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> B
+   Holes: 2 total
+      2 × external_body
+         1 × root cause
+         1 × downstream (blocked by root causes)
+❌ CycleDetectStPer.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/CycleDetectStPer.rs:54: error: external_body - #[verifier::external_body]
+        55 |     fn dfs_check_cycle(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/CycleDetectStPer.rs:121: error: external_body [blocked_by: dfs_check_cycle] - #[verifier::external_body]
+       122 |         fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> B
+   Holes: 2 total
+      2 × external_body
+         1 × root cause
+         1 × downstream (blocked by root causes)
+❌ DFSStEph.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/DFSStEph.rs:49: error: external_body - #[verifier::external_body]
+        50 |     fn dfs_recursive(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/DFSStEph.rs:103: error: external_body [blocked_by: dfs_recursive] - #[verifier::external_body]
+       104 |         fn dfs(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> AVLTreeSetStEph<N>
+   Holes: 2 total
+      2 × external_body
+         1 × root cause
+         1 × downstream (blocked by root causes)
+❌ DFSStPer.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/DFSStPer.rs:50: error: external_body - #[verifier::external_body]
+        51 |     fn dfs_recursive(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/DFSStPer.rs:106: error: external_body [blocked_by: dfs_recursive] - #[verifier::external_body]
+       107 |         fn dfs(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> AVLTreeSetStPer<N>
+   Holes: 2 total
+      2 × external_body
+         1 × root cause
+         1 × downstream (blocked by root causes)
+❌ SCCStEph.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/SCCStEph.rs:55: error: external_body - #[verifier::external_body]
+        56 |     fn compute_finish_order(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (result: AVLTreeSeqStEphS<N>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/SCCStEph.rs:129: error: external_body - #[verifier::external_body]
+       130 |     fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (transposed: ArraySeqStEphS<ArraySeqStEphS<N>>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/SCCStEph.rs:232: error: external_body - #[verifier::external_body]
+       233 |     fn check_wf_adj_list_eph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (valid: bool)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/SCCStEph.rs:278: error: external_body - #[verifier::external_body]
+       279 |     fn dfs_reach(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/SCCStEph.rs:352: error: external_body [blocked_by: dfs_reach] - #[verifier::external_body]
+       353 |         fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<N>>
+   Holes: 5 total
+      5 × external_body
+         4 × root cause
+         1 × downstream (blocked by root causes)
+❌ SCCStPer.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/SCCStPer.rs:56: error: external_body - #[verifier::external_body]
+        57 |     fn dfs_finish_order(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/SCCStPer.rs:127: error: external_body [blocked_by: dfs_finish_order] - #[verifier::external_body]
+       128 |     fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (result: AVLTreeSeqStPerS<N>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/SCCStPer.rs:203: error: external_body - #[verifier::external_body]
+       204 |     fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (transposed: ArraySeqStPerS<ArraySeqStPerS<N>>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/SCCStPer.rs:305: error: external_body - #[verifier::external_body]
+       306 |     fn check_wf_adj_list_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (valid: bool)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/SCCStPer.rs:353: error: external_body - #[verifier::external_body]
+       354 |     fn dfs_reach(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/SCCStPer.rs:421: error: external_body [blocked_by: compute_finish_order] - #[verifier::external_body]
+       422 |         fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<N>>
+   Holes: 6 total
+      6 × external_body
+         4 × root cause
+         2 × downstream (blocked by root causes)
+❌ TopoSortStEph.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/TopoSortStEph.rs:216: error: external_body - #[verifier::external_body]
+       217 |     pub fn dfs_finish_order(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/TopoSortStEph.rs:292: error: external_body - #[verifier::external_body]
+       293 |     fn dfs_finish_order_cycle_detect(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/TopoSortStEph.rs:377: error: external_body [blocked_by: dfs_finish_order_cycle_detect] - #[verifier::external_body]
+       378 |     pub fn topological_sort_opt(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (topo_order: Option<AVLTreeSeqStEphS<N>>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/TopoSortStEph.rs:444: error: external_body [blocked_by: dfs_finish_order] - #[verifier::external_body]
+       445 |         fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<N>
+   Holes: 4 total
+      4 × external_body
+         2 × root cause
+         2 × downstream (blocked by root causes)
+   Proof functions: 4 total (4 clean, 0 holed)
+❌ TopoSortStPer.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/TopoSortStPer.rs:122: error: external_body - #[verifier::external_body]
+       123 |     fn dfs_finish_order(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/TopoSortStPer.rs:186: error: external_body - #[verifier::external_body]
+       187 |     fn dfs_finish_order_cycle_detect(
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/TopoSortStPer.rs:266: error: external_body [blocked_by: dfs_finish_order_cycle_detect] - #[verifier::external_body]
+       267 |     pub fn topological_sort_opt(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (topo_order: Option<AVLTreeSeqStPerS<N>>)
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap55/TopoSortStPer.rs:339: error: external_body [blocked_by: dfs_finish_order] - #[verifier::external_body]
+       340 |         fn topo_sort(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<N>
+   Holes: 4 total
+      4 × external_body
+         2 × root cause
+         2 × downstream (blocked by root causes)
 
 =================================================================
 2. Depends Upon
@@ -65,8 +151,8 @@ TopoSortStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   8 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   0 clean (no holes, no errors; 0%)
+   8 holed (holes or errors, 100%)
    8 total
 
 Proof Functions:
@@ -75,25 +161,26 @@ Proof Functions:
    4 total
 
 Function Specs:
-   33 exec fns with complete spec (requires+ensures) (57%)
-   2 exec fns missing spec (3%)
-   22 proof/spec fns clean (38%)
+   35 exec fns with complete spec (requires+ensures) (59%)
+   0 exec fns missing spec (0%)
+   24 proof/spec fns clean (40%)
    0 proof/spec fns with holes (0%)
-   57 total fns
+   59 total fns
 
 
-Holes Found: 0 (actionable)
-Real Proof Targets: 0 (all actionable)
-
-No proof holes or warnings found! All proofs are complete.
+Holes Found: 27 (actionable)
+   27 × external_body (100%)
+      16 × root cause
+      11 × downstream (blocked by root causes)
+Real Proof Targets: 27 (all actionable)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-26 08:57:10 -07:00
-Ended:     2026-03-26 08:57:10 -07:00
-Duration:  17ms
+Started:   2026-03-26 10:27:55 -07:00
+Ended:     2026-03-26 10:27:55 -07:00
+Duration:  21ms
 
 Full output: src/Chap55/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap55/analyses/veracity-review-verus-proof-holes.log

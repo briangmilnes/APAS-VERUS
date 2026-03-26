@@ -10,6 +10,9 @@ pub mod EdgeSetGraphStEph {
     use crate::Types::Types::*;
     #[cfg(verus_keep_ghost)]
     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpec;
+    use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
 
     verus! {
 
@@ -23,31 +26,46 @@ broadcast use {
     // Table of Contents
     // 1. module (above)
     // 2. imports (above)
+    // 7. proof fns
     // 4. type definitions
     // 5. view impls
     // 8. traits
     // 9. impls
     // 11. derive impls in verus!
 
+    // 7. proof fns
+
+    /// Bridges PartialEq's eq_spec to View equality via the cmp chain.
+    proof fn lemma_eq_spec_iff_view_eq<V: StT + Ord>()
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            view_ord_consistent::<V>(),
+        ensures
+            forall|a: V, b: V| #[trigger] a.eq_spec(&b) <==> (a@ == b@),
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_partial_ord);
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+    }
+
     // 4. type definitions
 
     #[derive(Clone)]
     #[verifier::reject_recursive_types(V)]
-    pub struct EdgeSetGraphStEph<V: StT + Ord> {
+    pub struct EdgeSetGraphStEph<V: StT + Ord + ClonePreservesView> {
         pub vertices: AVLTreeSetStEph<V>,
         pub edges: AVLTreeSetStEph<Pair<V, V>>,
     }
 
     // 5. view impls
 
-    impl<V: StT + Ord> View for EdgeSetGraphStEph<V> {
+    impl<V: StT + Ord + ClonePreservesView> View for EdgeSetGraphStEph<V> {
         type V = Self;
         open spec fn view(&self) -> Self::V { *self }
     }
 
     // 8. traits
 
-    pub trait EdgeSetGraphStEphTrait<V: StT + Ord>: Sized {
+    pub trait EdgeSetGraphStEphTrait<V: StT + Ord + ClonePreservesView>: Sized {
         spec fn spec_edgesetgraphsteph_wf(&self) -> bool;
         spec fn spec_vertices(&self) -> Set<<V as View>::V>;
         spec fn spec_edges(&self) -> Set<(<V as View>::V, <V as View>::V)>;
@@ -134,7 +152,7 @@ broadcast use {
 
     // 9. impls
 
-    impl<V: StT + Ord> EdgeSetGraphStEphTrait<V> for EdgeSetGraphStEph<V> {
+    impl<V: StT + Ord + ClonePreservesView> EdgeSetGraphStEphTrait<V> for EdgeSetGraphStEph<V> {
         open spec fn spec_edgesetgraphsteph_wf(&self) -> bool {
             self.vertices.spec_avltreesetsteph_wf()
             && self.edges.spec_avltreesetsteph_wf()
@@ -183,9 +201,14 @@ broadcast use {
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
             ensures neighbors@ == self.spec_out_neighbors(u@)
         {
-            let u_clone = u.clone();
+            proof { lemma_eq_spec_iff_view_eq::<V>(); }
+            let pred = |edge: &Pair<V, V>| -> (keep: bool)
+                ensures keep == (edge@.0 == u@)
+            {
+                edge.0 == *u
+            };
             let filtered = self.edges.filter(
-                |edge| edge.0 == u_clone,
+                pred,
                 Ghost(|v: (V::V, V::V)| v.0 == u@),
             );
             let seq = filtered.to_seq();
@@ -200,7 +223,10 @@ broadcast use {
                     n as int == seq@.len(),
                     i <= n,
                     neighbors.spec_avltreesetsteph_wf(),
+                    neighbors@.len() <= i as nat,
+                    filtered.spec_avltreesetsteph_wf(),
                     seq@.to_set() =~= filtered_view,
+                    self.spec_edgesetgraphsteph_wf(),
                     forall|p: (<V as View>::V, <V as View>::V)|
                         #[trigger] filtered_view.contains(p)
                         ==> self.edges@.contains(p) && p.0 == u@,
@@ -214,14 +240,31 @@ broadcast use {
                 decreases n - i
             {
                 let pair_ref = seq.nth(i);
-                let v = pair_ref.1.clone();
+                let v = pair_ref.1.clone_view();
                 proof {
                     assert(seq@.to_set().contains(seq@[i as int]));
                     assert(filtered_view.contains(seq@[i as int]));
-                    assert(self.edges@.contains(seq@[i as int]));
+                    assert(self.spec_edges().contains(seq@[i as int]));
                     assert(seq@[i as int].0 == u@);
+                    assert(self.spec_vertices().contains(v@));
                 }
-                neighbors.insert(v);
+                if !neighbors.find(&v) {
+                    proof {
+                        // v@ not in neighbors, so insert increases len by 1.
+                        // neighbors@.insert(v@) ⊆ vertices.
+                        assert forall|w: <V as View>::V|
+                            #[trigger] neighbors@.insert(v@).contains(w)
+                            implies self.spec_vertices().contains(w) by {
+                            if w != v@ {
+                                assert(neighbors@.contains(w));
+                                assert(self.spec_edges().contains((u@, w)));
+                            }
+                        }
+                        vstd::set_lib::lemma_len_subset(neighbors@.insert(v@), self.spec_vertices());
+                        // neighbors@.insert(v@).len() == neighbors@.len() + 1 <= vertices.len() < usize::MAX.
+                    }
+                    neighbors.insert(v);
+                }
                 i += 1;
             }
 
@@ -245,54 +288,110 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — delegates to out_neighbors which is sequential.
         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
 
-        fn insert_vertex(&mut self, v: V) { self.vertices.insert(v); }
+        fn insert_vertex(&mut self, v: V) {
+            self.vertices.insert(v);
+            proof {
+                assert forall|a: <V as View>::V, b: <V as View>::V|
+                    #[trigger] self.spec_edges().contains((a, b))
+                    implies self.spec_vertices().contains(a) && self.spec_vertices().contains(b) by {
+                    // Trigger old wf: edges unchanged, so (a,b) was in old edges.
+                    assert(old(self).spec_edges().contains((a, b)));
+                    // Old wf gives: a and b in old vertices. New vertices is a superset.
+                }
+            }
+        }
 
         fn delete_vertex(&mut self, v: &V)
             ensures !self.spec_vertices().contains(v@)
         {
-            let v_clone = v.clone();
+            let ghost v_view = v@;
+            let v_clone = v.clone_view();
             self.vertices.delete(&v_clone);
+            // Iterate edges, delete those touching v.
             let seq = self.edges.to_seq();
             let seq_len = seq.length();
-            let mut to_remove: Vec<Pair<V, V>> = Vec::new();
             let mut i: usize = 0;
+
+            proof { lemma_eq_spec_iff_view_eq::<V>(); }
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             while i < seq_len
                 invariant
                     i <= seq_len,
                     seq_len as nat == seq@.len(),
                     seq.spec_avltreeseqsteph_wf(),
+                    self.edges.spec_avltreesetsteph_wf(),
+                    vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                    view_ord_consistent::<V>(),
+                    vstd::laws_cmp::obeys_cmp_spec::<Pair<V, V>>(),
+                    view_ord_consistent::<Pair<V, V>>(),
+                    self.edges@.subset_of(old(self).edges@),
+                    !self.spec_vertices().contains(v_view),
+                    self.vertices.spec_avltreesetsteph_wf(),
+                    self.vertices@ =~= old(self).vertices@.remove(v_view),
+                    old(self).spec_edgesetgraphsteph_wf(),
+                    // All edges touching v from seq[0..i] have been deleted.
+                    forall|j: int| 0 <= j < i && (seq@[j].0 == v_view || seq@[j].1 == v_view) ==>
+                        !self.edges@.contains(#[trigger] seq@[j]),
                 decreases seq_len - i
             {
                 let edge_ref = seq.nth(i);
-                let u = edge_ref.0.clone();
-                let w = edge_ref.1.clone();
-                if u == v_clone || w == v_clone {
-                    to_remove.push(Pair(u, w));
+                if edge_ref.0 == *v || edge_ref.1 == *v {
+                    self.edges.delete(edge_ref);
                 }
                 i += 1;
             }
-            let mut j: usize = 0;
-            while j < to_remove.len()
-                invariant
-                    j <= to_remove.len(),
-                    !self.spec_vertices().contains(v@),
-                    self.edges.spec_avltreesetsteph_wf(),
-                    vstd::laws_cmp::obeys_cmp_spec::<Pair<V, V>>(),
-                    view_ord_consistent::<Pair<V, V>>(),
-                decreases to_remove.len() - j
-            {
-                self.edges.delete(&to_remove[j]);
-                j += 1;
+            proof {
+                assert forall|a: <V as View>::V, b: <V as View>::V|
+                    #[trigger] self.spec_edges().contains((a, b))
+                    implies self.spec_vertices().contains(a) && self.spec_vertices().contains(b) by {
+                    // (a,b) survived deletion, so it was in old edges.
+                    assert(old(self).spec_edges().contains((a, b)));
+                    // Old wf gives: a and b are in old vertices.
+                    assert(old(self).spec_vertices().contains(a));
+                    assert(old(self).spec_vertices().contains(b));
+                    // (a,b) survived, so a != v@ and b != v@.
+                    assert(a != v_view && b != v_view);
+                    // self.vertices@ == old(self).vertices@.remove(v@)
+                    // Set.remove(x) preserves all elements except x.
+                    assert(self.vertices@ =~= old(self).vertices@.remove(v_view));
+                    assert(self.vertices@.contains(a));
+                    assert(self.vertices@.contains(b));
+                }
             }
         }
 
         fn insert_edge(&mut self, u: V, v: V) {
-            self.vertices.insert(u.clone());
-            self.vertices.insert(v.clone());
+            let u_cv = u.clone_view();
+            let v_cv = v.clone_view();
+            self.vertices.insert(u_cv);
+            self.vertices.insert(v_cv);
             self.edges.insert(Pair(u, v));
+            proof {
+                assert forall|a: <V as View>::V, b: <V as View>::V|
+                    #[trigger] self.spec_edges().contains((a, b))
+                    implies self.spec_vertices().contains(a) && self.spec_vertices().contains(b) by {
+                    if !old(self).spec_edges().contains((a, b)) {
+                        // Must be the new edge: (a,b) == (u@, v@). Both are in vertices.
+                    } else {
+                        // Old edge: trigger old wf.
+                        assert(old(self).spec_edges().contains((a, b)));
+                    }
+                }
+            }
         }
 
-        fn delete_edge(&mut self, u: &V, v: &V) { self.edges.delete(&Pair(u.clone(), v.clone())); }
+        fn delete_edge(&mut self, u: &V, v: &V) {
+            self.edges.delete(&Pair(u.clone(), v.clone()));
+            proof {
+                assert forall|a: <V as View>::V, b: <V as View>::V|
+                    #[trigger] self.spec_edges().contains((a, b))
+                    implies self.spec_vertices().contains(a) && self.spec_vertices().contains(b) by {
+                    // Remaining edge was in old edges; trigger old wf.
+                    assert(old(self).spec_edges().contains((a, b)));
+                }
+            }
+        }
     }
 
     } // verus!

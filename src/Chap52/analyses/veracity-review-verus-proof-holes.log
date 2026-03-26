@@ -27,7 +27,7 @@ Table of Contents:
 ✓ AdjMatrixGraphStEph.rs
    3 clean proof functions
 ⚠ AdjMatrixGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:477: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap52/AdjMatrixGraphStPer.rs:477: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        473 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        475 |         {
@@ -41,7 +41,7 @@ Table of Contents:
 ✓ AdjSeqGraphStEph.rs
    2 clean proof functions
 ⚠ AdjSeqGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:513: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap52/AdjSeqGraphStPer.rs:513: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        509 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        511 |         {
@@ -54,7 +54,9 @@ Table of Contents:
 ✓ AdjTableGraphStPer.rs
 ✓ EdgeSetGraphMtPer.rs
 ✓ EdgeSetGraphStEph.rs
+   1 clean proof function
 ✓ EdgeSetGraphStPer.rs
+   1 clean proof function
 
 =================================================================
 2. Depends Upon
@@ -108,16 +110,16 @@ Modules:
    14 total
 
 Proof Functions:
-   21 clean (100%)
+   23 clean (100%)
    0 holed (0%)
-   21 total
+   23 total
 
 Function Specs:
    288 exec fns with complete spec (requires+ensures) (65%)
    0 exec fns missing spec (0%)
-   150 proof/spec fns clean (34%)
+   152 proof/spec fns clean (34%)
    0 proof/spec fns with holes (0%)
-   438 total fns
+   440 total fns
 
 
 Holes Found: 0 (actionable)
@@ -132,8 +134,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-26 08:57:20 -07:00
-Ended:     2026-03-26 08:57:20 -07:00
-Duration:  44ms
+Started:   2026-03-26 10:27:55 -07:00
+Ended:     2026-03-26 10:27:55 -07:00
+Duration:  50ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
