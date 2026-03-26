@@ -9,11 +9,10 @@ pub mod AdjTableGraphStPer {
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
-    use crate::Chap43::OrderedTableStPer::OrderedTableStPer::*;
+    use crate::Chap42::TableStPer::TableStPer::*;
+    #[cfg(verus_keep_ghost)]
     use crate::Chap52::AdjTableGraphStEph::AdjTableGraphStEph::spec_sum_adj_sizes;
     use crate::Types::Types::*;
-    #[cfg(verus_keep_ghost)]
-    use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
 
     verus! {
 
@@ -39,7 +38,7 @@ broadcast use {
     #[derive(Clone)]
     #[verifier::reject_recursive_types(V)]
     pub struct AdjTableGraphStPer<V: StT + Ord> {
-        pub adj: OrderedTableStPer<V, AVLTreeSetStPer<V>>,
+        pub adj: TableStPer<V, AVLTreeSetStPer<V>>,
     }
 
     // 5. view impls
@@ -58,15 +57,9 @@ broadcast use {
 
         /// Work Theta(1), Span Theta(1)
         fn empty() -> (out: Self)
-            requires
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<V, AVLTreeSetStPer<V>>>(),
-                view_ord_consistent::<Pair<V, AVLTreeSetStPer<V>>>(),
-                spec_pair_key_determines_order::<V, AVLTreeSetStPer<V>>(),
-                vstd::laws_cmp::obeys_cmp_spec::<V>(),
-                view_ord_consistent::<V>(),
             ensures out.spec_adjtablegraphstper_wf();
         /// Work Theta(1), Span Theta(1)
-        fn from_table(table: OrderedTableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self)
+        fn from_table(table: TableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self)
             requires
                 forall|u: <V as View>::V, v: <V as View>::V|
                     table@.dom().contains(u)
@@ -141,12 +134,11 @@ broadcast use {
         }
 
         fn empty() -> (out: Self) {
-            AdjTableGraphStPer {
-                adj: OrderedTableStPer::empty(),
-            }
+            let adj: TableStPer<V, AVLTreeSetStPer<V>> = TableStPer::empty();
+            AdjTableGraphStPer { adj }
         }
 
-        fn from_table(table: OrderedTableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self) { AdjTableGraphStPer { adj: table } }
+        fn from_table(table: TableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self) { AdjTableGraphStPer { adj: table } }
 
         fn num_vertices(&self) -> N { self.adj.size() }
 
@@ -216,7 +208,7 @@ broadcast use {
         fn insert_vertex(&self, v: V) -> (updated: Self)
             ensures updated.spec_adj().dom().contains(v@)
         {
-            let new_adj = self.adj.insert(v, AVLTreeSetStPer::empty());
+            let new_adj = self.adj.insert(v, AVLTreeSetStPer::empty(), |old, _new| old.clone());
             AdjTableGraphStPer { adj: new_adj }
         }
 
@@ -237,7 +229,7 @@ broadcast use {
                 let u = seq.nth(i).clone();
                 if let Some(neighbors) = result_adj.find(&u) {
                     let new_neighbors = neighbors.delete(&v_clone);
-                    result_adj = result_adj.insert(u, new_neighbors);
+                    result_adj = result_adj.insert(u, new_neighbors, |_old, new| new.clone());
                 }
                 i += 1;
             }
@@ -254,9 +246,9 @@ broadcast use {
                 Some(ns) => ns.insert(v.clone()),
                 None => AVLTreeSetStPer::singleton(v.clone()),
             };
-            let new_adj = self.adj.insert(u, neighbors);
+            let new_adj = self.adj.insert(u, neighbors, |_old, new| new.clone());
             let final_adj = if new_adj.find(&v).is_none() {
-                new_adj.insert(v, AVLTreeSetStPer::empty())
+                new_adj.insert(v, AVLTreeSetStPer::empty(), |old, _new| old.clone())
             } else {
                 new_adj
             };
@@ -271,7 +263,7 @@ broadcast use {
             match self.adj.find(u) {
                 Some(neighbors) => {
                     let new_neighbors = neighbors.delete(v);
-                    let new_adj = self.adj.insert(u.clone(), new_neighbors);
+                    let new_adj = self.adj.insert(u.clone(), new_neighbors, |_old, new| new.clone());
                     AdjTableGraphStPer { adj: new_adj }
                 }
                 None => self.clone(),

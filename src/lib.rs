@@ -551,12 +551,12 @@ pub mod Chap52 {
     pub mod AdjMatrixGraphStPer;
     pub mod AdjMatrixGraphMtEph;
     pub mod AdjMatrixGraphMtPer;
-//    pub mod AdjTableGraphStEph;  // BROKEN: AVLTreeSet Ord/Sized/elements refactor needed
-//    pub mod AdjTableGraphStPer;  // BROKEN: same
-//    pub mod AdjTableGraphMtPer;  // BROKEN: same + AVLTreeSetMtPer chain
+    pub mod AdjTableGraphStEph;   // FIX: 26 errors — Verus sst_to_air bug + Table wf gap
+    pub mod AdjTableGraphStPer;   // FIX: same
+//    pub mod AdjTableGraphMtPer;  // BROKEN: AVLTreeSetMtPer chain
     pub mod EdgeSetGraphStEph;
     pub mod EdgeSetGraphStPer;
-//    pub mod EdgeSetGraphMtPer;   // BROKEN: depends on AVLTreeSetMtPer chain
+//    pub mod EdgeSetGraphMtPer;   // BROKEN: AVLTreeSetMtPer chain
 }
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap53")))]
