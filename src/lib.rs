@@ -551,12 +551,12 @@ pub mod Chap52 {
     pub mod AdjMatrixGraphStPer;
     pub mod AdjMatrixGraphMtEph;
     pub mod AdjMatrixGraphMtPer;
-//    pub mod AdjTableGraphStEph;  // BROKEN: AVLTreeSet Ord/Sized/elements refactor needed
-//    pub mod AdjTableGraphStPer;  // BROKEN: same
-//    pub mod AdjTableGraphMtPer;  // BROKEN: same + AVLTreeSetMtPer chain
-//    pub mod EdgeSetGraphStEph;   // BROKEN: AVLTreeSet Ord/Sized refactor needed
-//    pub mod EdgeSetGraphStPer;   // BROKEN: same
-//    pub mod EdgeSetGraphMtPer;   // BROKEN: same + AVLTreeSetMtPer chain
+//    pub mod AdjTableGraphStEph;  // BROKEN: compiles but 44 verif errors + Z3 diverges with table wf
+//    pub mod AdjTableGraphStPer;  // BROKEN: compiles but 44 verif errors + Z3 diverges with table wf
+//    pub mod AdjTableGraphMtPer;  // BROKEN: AVLTreeSetMtPer chain beyond this refactor
+    pub mod EdgeSetGraphStEph;
+    pub mod EdgeSetGraphStPer;
+//    pub mod EdgeSetGraphMtPer;   // BROKEN: AVLTreeSetMtPer chain beyond this refactor
 }
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
@@ -565,7 +565,7 @@ pub mod Chap53 {
     pub mod PQMinStPer;
     pub mod GraphSearchStEph;
     pub mod GraphSearchStPer;
-//    pub mod GraphSearchMtPer;   // BROKEN: AVLTreeSetMtPer .elements field gone
+    pub mod GraphSearchMtPer;
 }
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]

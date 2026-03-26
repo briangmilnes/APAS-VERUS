@@ -33,7 +33,7 @@ pub mod GraphSearchMtPer {
     // 8. traits
     pub trait SelectionStrategy<V: StTInMtT + Ord + 'static> {
         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, B))
-            requires obeys_feq_clone::<V>(),
+            requires obeys_feq_clone::<V>(), frontier.spec_avltreesetmtper_wf(),
             ensures selected.0@.subset_of(frontier@);
     }
 
@@ -141,17 +141,19 @@ pub mod GraphSearchMtPer {
             let visited_new = visited.union(&frontier);
 
             let mut new_neighbors = AVLTreeSetMtPer::empty();
-            let nlen = frontier.elements.length();
+            let frontier_seq = frontier.to_seq();
+            let nlen = frontier_seq.length();
             let mut i: usize = 0;
             while i < nlen
                 invariant
                     i <= nlen,
-                    nlen as nat == frontier.elements.spec_seq().len(),
+                    nlen as nat == frontier_seq@.len(),
+                    frontier_seq.spec_avltreeseqmtper_wf(),
                     frontier.spec_avltreesetmtper_wf(),
                     forall|v: &V| #[trigger] graph.requires((v,)),
                 decreases nlen - i,
             {
-                let v = frontier.elements.nth(i);
+                let v = frontier_seq.nth(i);
                 let neighbors = graph(v);
                 new_neighbors = new_neighbors.union(&neighbors);
                 i = i + 1;

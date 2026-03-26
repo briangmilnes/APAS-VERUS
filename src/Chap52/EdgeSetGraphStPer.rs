@@ -11,6 +11,8 @@ pub mod EdgeSetGraphStPer {
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::AVLTreeSeqStPerTrait;
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
     use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
 
     verus! {
 
@@ -34,9 +36,10 @@ broadcast use {
     // 4. type definitions
 
     #[derive(Clone, PartialEq, Eq)]
+    #[verifier::reject_recursive_types(V)]
     pub struct EdgeSetGraphStPer<V: StT + Ord> {
-        vertices: AVLTreeSetStPer<V>,
-        edges: AVLTreeSetStPer<Pair<V, V>>,
+        pub vertices: AVLTreeSetStPer<V>,
+        pub edges: AVLTreeSetStPer<Pair<V, V>>,
     }
 
     // 5. view impls
@@ -48,18 +51,29 @@ broadcast use {
 
     // 8. traits
 
-    pub trait EdgeSetGraphStPerTrait<V: StT + Ord> {
+    pub trait EdgeSetGraphStPerTrait<V: StT + Ord>: Sized {
         spec fn spec_edgesetgraphstper_wf(&self) -> bool;
+        spec fn spec_vertices(&self) -> Set<<V as View>::V>;
+        spec fn spec_edges(&self) -> Set<(<V as View>::V, <V as View>::V)>;
         spec fn spec_out_neighbors(&self, u: <V as View>::V) -> Set<<V as View>::V>;
 
         /// Work Theta(1), Span Theta(1)
         fn empty() -> (out: Self)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<V, V>>(),
+                view_ord_consistent::<Pair<V, V>>(),
             ensures out.spec_edgesetgraphstper_wf();
         /// Work Theta(1), Span Theta(1)
         fn from_vertices_and_edges(v: AVLTreeSetStPer<V>, e: AVLTreeSetStPer<Pair<V, V>>) -> (out: Self)
             requires
                 v.spec_avltreesetstper_wf(),
                 e.spec_avltreesetstper_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<V, V>>(),
+                view_ord_consistent::<Pair<V, V>>(),
                 forall|u: <V as View>::V, w: <V as View>::V|
                     #[trigger] e@.contains((u, w))
                     ==> v@.contains(u) && v@.contains(w),
@@ -82,21 +96,26 @@ broadcast use {
         /// Work Theta(|E| log |V|), Span Theta(|E| log |V|)
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>)
             requires self.spec_edgesetgraphstper_wf()
-            ensures neighbors@ == self.spec_out_neighbors(u@);
+            ensures neighbors@ == self.spec_out_neighbors(u@), neighbors.spec_avltreesetstper_wf();
         /// Work Theta(|E|), Span Theta(|E|)
         fn out_degree(&self, u: &V) -> N
             requires self.spec_edgesetgraphstper_wf();
         /// Work Theta(log |V|), Span Theta(log |V|)
         fn insert_vertex(&self, v: V) -> (updated: Self)
-            requires self.spec_edgesetgraphstper_wf()
+            requires
+                self.spec_edgesetgraphstper_wf(),
+                self.spec_vertices().len() + 1 < usize::MAX as nat,
             ensures updated.spec_edgesetgraphstper_wf();
         /// Work Theta(|E| log |E|), Span Theta(|E| log |E|)
         fn delete_vertex(&self, v: &V) -> (updated: Self)
             requires self.spec_edgesetgraphstper_wf()
-            ensures updated.spec_edgesetgraphstper_wf(), !updated.vertices@.contains(v@);
+            ensures updated.spec_edgesetgraphstper_wf(), !updated.spec_vertices().contains(v@);
         /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
-            requires self.spec_edgesetgraphstper_wf()
+            requires
+                self.spec_edgesetgraphstper_wf(),
+                self.spec_vertices().len() + 2 < usize::MAX as nat,
+                self.spec_edges().len() + 1 < usize::MAX as nat,
             ensures updated.spec_edgesetgraphstper_wf();
         /// Work Theta(log |E|), Span Theta(log |E|)
         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
@@ -110,9 +129,21 @@ broadcast use {
         open spec fn spec_edgesetgraphstper_wf(&self) -> bool {
             self.vertices.spec_avltreesetstper_wf()
             && self.edges.spec_avltreesetstper_wf()
+            && vstd::laws_cmp::obeys_cmp_spec::<V>()
+            && view_ord_consistent::<V>()
+            && vstd::laws_cmp::obeys_cmp_spec::<Pair<V, V>>()
+            && view_ord_consistent::<Pair<V, V>>()
             && forall|u: <V as View>::V, v: <V as View>::V|
                 #[trigger] self.edges@.contains((u, v))
                 ==> self.vertices@.contains(u) && self.vertices@.contains(v)
+        }
+
+        open spec fn spec_vertices(&self) -> Set<<V as View>::V> {
+            self.vertices@
+        }
+
+        open spec fn spec_edges(&self) -> Set<(<V as View>::V, <V as View>::V)> {
+            self.edges@
         }
 
         open spec fn spec_out_neighbors(&self, u: <V as View>::V) -> Set<<V as View>::V> {
@@ -173,7 +204,8 @@ broadcast use {
                         #[trigger] neighbors@.contains(seq@[j].1),
                 decreases n - i
             {
-                let Pair(_, v) = seq.nth(i).clone();
+                let pair_ref = seq.nth(i);
+                let v = pair_ref.1.clone();
                 proof {
                     assert(seq@.to_set().contains(seq@[i as int]));
                     assert(filtered_view.contains(seq@[i as int]));

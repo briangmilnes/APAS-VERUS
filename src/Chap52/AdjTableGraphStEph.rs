@@ -59,6 +59,7 @@ broadcast use {
     /// Sum of neighbor-set sizes over map domain (recursive over dom).
     pub open spec fn spec_sum_adj_sizes<VV>(m: Map<VV, Set<VV>>) -> nat
         decreases m.dom().len()
+        when m.dom().finite()
     {
         if m.dom().is_empty() {
             0
