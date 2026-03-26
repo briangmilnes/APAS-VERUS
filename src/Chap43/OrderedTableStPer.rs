@@ -438,7 +438,7 @@ broadcast use {
     /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1) with persistent semantics.
     pub trait OrderedTableStPerTrait<K: StT + Ord, V: StT + Ord>: Sized + View<V = Map<K::V, V::V>> {
         spec fn spec_orderedtablestper_wf(&self) -> bool;
-        spec fn spec_orderedtablestper_find_wf(&self) -> bool;
+        spec fn spec_orderedtablestper_find_pre(&self) -> bool;
 
         /// - APAS: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
@@ -465,7 +465,7 @@ broadcast use {
             ensures table@ == Map::<K::V, V::V>::empty().insert(k@, v@), table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         fn find(&self, k: &K) -> (found: Option<V>)
-            requires self.spec_orderedtablestper_find_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+            requires self.spec_orderedtablestper_find_pre(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
             ensures
                 match found {
                     Some(v) => self@.contains_key(k@) && self@[k@] == v@,
@@ -701,7 +701,7 @@ broadcast use {
                 parts.0.spec_orderedtablestper_wf(),
                 parts.1.spec_orderedtablestper_wf();
         fn find_iter(&self, k: &K) -> (found: Option<V>)
-            requires self.spec_orderedtablestper_find_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+            requires self.spec_orderedtablestper_find_pre(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
             ensures
                 match found {
                     Some(v) => self@.contains_key(k@) && self@[k@] == v@,
@@ -816,7 +816,7 @@ broadcast use {
             && view_ord_consistent::<K>()
         }
 
-        open spec fn spec_orderedtablestper_find_wf(&self) -> bool {
+        open spec fn spec_orderedtablestper_find_pre(&self) -> bool {
             self.tree.spec_bstparasteph_wf()
             && spec_key_unique_pairs_set(self.tree@)
             && obeys_feq_fulls::<K, V>()
