@@ -17,101 +17,77 @@ Remove `external_body` from 6 functions across 4 Chap55 files:
 | 3 | 55 | TopoSortStEph.rs | 2 | 2 | 0 |
 | 4 | 55 | TopoSortStPer.rs | 2 | 2 | 0 |
 
-**Holes closed: 0.** All 6 external_body remain — the semantic postconditions
-require DFS correctness proofs that are beyond Z3's reliable capacity.
+**Holes closed: 0.** All 6 `external_body` on the target functions remain.
+However, significant proof infrastructure was built and verified.
 
 ## Verification
 
-- Isolate Chap55: 2082 verified, 0 errors
+- Isolate Chap55: 2084 verified, 0 errors
 - Full validate: not run (OOM risk per prompt instructions)
 
-## Structural Improvements Made
+## Major Accomplishment: Ghost DFS Path Proofs
 
-Although no holes were closed, significant proof infrastructure was added:
+Both `dfs_check_cycle` functions (StEph and StPer) now carry a ghost DFS path
+parameter and have two new proved ensures:
+
+1. **Soundness**: `has_cycle ==> !spec_is_dag(graph)` — if the DFS finds a back
+   edge, a cycle provably exists. Proved via ghost cycle witness construction
+   using `dfs_path.subrange(i, end).push(vertex)`.
+
+2. **Ancestors restoration**: `!has_cycle ==> ancestors@ =~= old(ancestors)@` — if
+   no cycle is found, the ancestors array is fully restored to its pre-call state.
+
+### Ghost Path Approach
+
+- `Ghost<Seq<int>>` parameter tracks the DFS call stack
+- Requires: path vertices are valid, consecutive edges exist, last element connects
+  to current vertex, ancestors biconditional with path membership
+- Base case (ancestors[vertex] true): `spec_in_path(dfs_path, vertex)` → invoke
+  `lemma_cycle_not_dag` to construct cycle witness
+- Recursive case: extends path with current vertex, propagates `!spec_is_dag`
+- Loop invariant: `ext_path =~= dfs_path.push(vertex)`, ancestors <==> ext_path
+- StEph: needed pre-set/post-set spec_index bridging for ArraySeqStEphS
+- StPer: simpler bridging with Vec<bool> direct `@.update()` semantics
+
+## Structural Improvements
 
 ### TopoSortStPer `dfs_finish_order`
-- Added `visited@[vertex as int]` ensures (was missing vs StEph)
+- Added `visited@[vertex as int]` ensures
 - Added `forall|k| finish_order@[k] as int < graph@.len()` requires/ensures
 - Added `finish_order@.len() >= old(finish_order)@.len()` ensures
-- Added to inner loop invariant accordingly
 
-### TopoSortStPer `topo_sort` (inside external_body)
-- Push-loop: added `forall|k| !visited@[k]` invariant for all-false initialization
-- DFS loop: strengthened invariant from `<= n` to `== n` (sum preservation)
-- DFS loop: added `forall|j| 0 <= j < start ==> visited@[j]` with explicit
-  ghost monotonicity proof after each dfs_finish_order call
-- Added `lemma_all_true_num_false_zero` with proper precondition proof
+### TopoSort initialization and loop invariants (both files, inside external_body)
+- Named closures for tabulate initialization proofs
+- All-visited DFS loop invariants with explicit ghost monotonicity proofs
+- Sum invariant strengthened to equality
 
-### TopoSortStEph `topo_sort` + `topological_sort_opt` (inside external_body)
-- Named closures (`f_false`) with explicit ensures for tabulate initialization
-- Added all-visited loop invariant with ghost monotonicity proof
-- Both function bodies structurally ready for semantic proof
+## What Remains
 
-## Analysis: Why Semantic Proofs Failed
+### CycleDetect `has_cycle` (both files) — 1 hole each
+**Soundness (proved)**: `return true ==> !spec_is_dag` — via ghost path in `dfs_check_cycle`.
+**Completeness (not proved)**: `return false ==> spec_is_dag` — needs DFS completeness:
+"if all vertices explored without finding a back edge, the graph is a DAG."
 
-### CycleDetect `has_cycle`
-**Ensures:** `has_cycle == !spec_is_dag(graph)` (biconditional)
+Approaches for future rounds:
+- Add visited-set tracking to `dfs_check_cycle` ensures (e.g., "all vertices reachable
+  from vertex through unvisited vertices are now visited")
+- Prove that complete DFS exploration with no back edges implies no cycles
 
-The diagnostic showed:
-- **Completeness** (`!spec_is_dag ==> has_cycle`): Z3 marks ✔ (vacuous at each exit)
-- **Soundness** (`has_cycle ==> !spec_is_dag`): Z3 marks ✘
+### TopoSort (both files) — 2 holes each
+**Semantic postconditions**: `spec_is_dag <==> topo_order.is_some()`,
+`spec_is_topo_order(graph, order@)`.
 
-**Root cause:** `dfs_check_cycle` returns true when `ancestors[vertex]` is on the DFS
-stack, but its ensures don't connect this to `!spec_is_dag(graph)`. Z3 cannot construct
-the cycle witness (a path from vertex through the DFS stack back to vertex).
+Z3 proved these in some validation runs but not others (nondeterminism).
+Real proofs need:
+- DFS finish-order correctness (no_duplicates + edge ordering in reverse finish order)
+- Ghost finish-time tracking through recursive calls
 
-**What's needed:** A ghost parameter `Ghost<Seq<int>>` carrying the DFS path through
-the recursive calls. When `ancestors[vertex]` is true, the cycle witness is
-`dfs_path.subrange(vertex_pos, end).push(vertex)`. I implemented ~80% of this approach
-(ghost parameter, base case proof with cycle construction, extended path for recursive
-calls) but ran out of steps before:
-- Proving the ancestors <==> path invariant before the inner loop
-- Proving ancestors restoration on false return
-- Resolving Z3 flakiness on the recursive call precondition
+## Techniques Used
 
-Also need `!has_cycle ==> ancestors@ =~= old(ancestors)@` in ensures (ancestors fully
-restored when no cycle found) for loop invariant maintenance.
-
-### TopoSort `topological_sort_opt` and `topo_sort`
-**Ensures:** `spec_is_dag <==> topo_order.is_some()` and `spec_is_topo_order(graph, order@)`
-
-**Z3 flakiness:** These postconditions verified in some runs but not others. In one
-validate run, all 4 TopoSort functions passed. In the next (with identical code),
-they failed. This is SMT solver nondeterminism.
-
-`spec_is_topo_order` requires proving:
-1. `order.no_duplicates()` — DFS visits each vertex exactly once
-2. `order[k] < graph@.len()` — trackable through invariants (done)
-3. `spec_has_edge(order[i], order[j]) ==> i < j` — DFS finish-order correctness
-
-**What's needed:** A ghost finish-time tracking scheme that proves:
-- Each vertex is pushed to finish_order exactly once (no_duplicates)
-- For any edge u→v in a DAG, u finishes after v (finish[u] > finish[v])
-- Reversing finish order gives topological order
-
-This requires a DFS timestamp invariant carried through the recursive calls,
-similar to the ghost path approach for CycleDetect.
-
-## Techniques Attempted
-
-1. Removed external_body from all 6 functions simultaneously
-2. Named closures with explicit ensures for tabulate initialization proofs
-3. Strengthened `dfs_finish_order` (StPer) with missing ensures
-4. Added all-visited loop invariants with explicit ghost monotonicity proofs
-5. Attempted ghost DFS path approach for CycleDetect soundness proof
-6. Multiple validate runs to characterize Z3 flakiness
-
-## Recommendation for Future Rounds
-
-1. **CycleDetect ghost path**: Complete the ghost `Seq<int>` DFS path approach.
-   ~80% implemented. Needs: ancestors <==> path invariant proof before inner loop,
-   ancestors restoration ensures, and Z3 flakiness resolution. Estimated: 8-12 more
-   iterations for StEph, then replicate for StPer.
-
-2. **TopoSort DFS correctness**: Needs ghost finish-time scheme or ghost ordering
-   invariant. More complex than CycleDetect because it requires proving both
-   no_duplicates and edge ordering properties. Estimated: 15-20 iterations per file.
-
-3. **Z3 stability**: The semantic proofs are on the boundary of Z3's capacity.
-   Even with explicit proofs, flakiness may persist. Consider rlimit increases
-   or proof decomposition into smaller lemmas.
+1. Ghost `Seq<int>` DFS path parameter for cycle witness construction
+2. `spec_in_path` helper and `lemma_cycle_not_dag` proof lemma
+3. Ancestors <==> path biconditional with `choose` existential extraction
+4. Pre-set/post-set spec_index bridging for ArraySeqStEphS
+5. Vec<bool> Seq::update chain for StPer ancestors restoration
+6. Named closures with explicit ensures for tabulate initialization
+7. Ghost monotonicity proofs for visited array tracking
