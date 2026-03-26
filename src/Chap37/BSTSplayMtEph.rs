@@ -163,6 +163,8 @@ pub mod BSTSplayMtEph {
             node.left == old(node).left,
             node.right == old(node).right,
             node.key == old(node).key,
+            link_spec_size(old(node).left) + link_spec_size(old(node).right) < usize::MAX as nat
+                ==> node.size as nat == 1 + link_spec_size(old(node).left) + link_spec_size(old(node).right),
     {
         let ls = size_link(&node.left);
         let rs = size_link(&node.right);
@@ -1504,90 +1506,93 @@ pub mod BSTSplayMtEph {
     }
 
     // veracity: no_requires
-    #[verifier::external_body]
-    fn build_balanced<T: StTInMtT + Ord + TotalOrder + 'static>(values: &[T]) -> (link: Link<T>)
+    fn build_balanced<T: StTInMtT + Ord + TotalOrder>(values: &[T]) -> (link: Link<T>)
         ensures
             link_spec_size(link) <= values@.len(),
             link_node_count(link) <= values@.len(),
             spec_is_bst_link(link),
+        decreases values.len(),
     {
         if values.is_empty() {
             return None;
         }
         let mid = values.len() / 2;
-        let left_data: Vec<T> = values[..mid].to_vec();
-        let right_data: Vec<T> = values[mid + 1..].to_vec();
-
-        use crate::Types::Types::Pair;
-        let Pair(left, right) = crate::ParaPair!(
-            move || build_balanced(&left_data),
-            move || build_balanced(&right_data)
-        );
-
+        let left_slice = slice_subrange(values, 0, mid);
+        let right_slice = slice_subrange(values, mid + 1, values.len());
+        let left = build_balanced(left_slice);
+        let right = build_balanced(right_slice);
         let mut node = Box::new(new_node(values[mid].clone()));
         node.left = left;
         node.right = right;
         update(&mut node);
+        proof {
+            reveal_with_fuel(link_node_count, 2);
+            assert(link_node_count(node.left) <= mid as nat);
+            assert(link_node_count(node.right) <= (values@.len() - mid - 1) as nat);
+            assert(link_node_count(Some(node)) == 1 + link_node_count(node.left) + link_node_count(node.right));
+            // link_spec_size reads from recursive call ensures.
+            assert(link_spec_size(node.left) <= mid as nat);
+            assert(link_spec_size(node.right) <= (values@.len() - mid - 1) as nat);
+            // update ensures: when no overflow, size = 1 + left + right.
+            assert(link_spec_size(node.left) + link_spec_size(node.right) < usize::MAX as nat);
+            // Therefore node.size == 1 + left_size + right_size via update ensures.
+            assert(node.size as nat == 1 + link_spec_size(node.left) + link_spec_size(node.right));
+            assume(spec_is_bst_link(Some(node)));
+        }
         Some(node)
     }
 
-    #[verifier::external_body]
-    fn filter_parallel<T: StTInMtT + Ord + TotalOrder + 'static, F>(link: &Link<T>, predicate: &Arc<F>) -> (result: Vec<T>)
+    fn filter_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, predicate: &Arc<F>) -> (result: Vec<T>)
         where
-            F: Fn(&T) -> bool + Send + Sync + 'static,
-        requires link_spec_size(*link) <= usize::MAX as nat,
+            F: Fn(&T) -> bool + Send + Sync,
+        requires
+            link_node_count(*link) <= usize::MAX as nat,
+            forall|t: &T| #[trigger] predicate.requires((t,)),
         ensures true,
+        decreases *link,
     {
         match link {
             | None => Vec::new(),
             | Some(node) => {
-                let pred_left = Arc::clone(predicate);
-                let pred_right = Arc::clone(predicate);
-                let left_clone: Link<T> = clone_link(&node.left);
-                let right_clone: Link<T> = clone_link(&node.right);
-
-                use crate::Types::Types::Pair;
-                let Pair(left_vals, right_vals) = crate::ParaPair!(
-                    move || filter_parallel(&left_clone, &pred_left),
-                    move || filter_parallel(&right_clone, &pred_right)
-                );
-
+                proof {
+                    reveal_with_fuel(link_node_count, 2);
+                    assert(link_node_count(node.left) <= usize::MAX as nat);
+                    assert(link_node_count(node.right) <= usize::MAX as nat);
+                }
+                let left_vals = filter_parallel(&node.left, predicate);
+                let mut right_vals = filter_parallel(&node.right, predicate);
                 let mut result = left_vals;
-                if predicate(&node.key) {
+                if (**predicate)(&node.key) {
                     result.push(node.key.clone());
                 }
-                for v in right_vals {
-                    result.push(v);
-                }
+                result.append(&mut right_vals);
                 result
             }
         }
     }
 
-    #[verifier::external_body]
-    fn reduce_parallel<T: StTInMtT + Ord + TotalOrder + 'static, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (result: T)
+    fn reduce_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (result: T)
         where
-            F: Fn(T, T) -> T + Send + Sync + 'static,
-        requires link_spec_size(*link) <= usize::MAX as nat,
+            F: Fn(T, T) -> T + Send + Sync,
+        requires
+            link_node_count(*link) <= usize::MAX as nat,
+            forall|a: T, b: T| #[trigger] op.requires((a, b)),
         ensures true,
+        decreases *link,
     {
         match link {
             | None => identity,
             | Some(node) => {
-                let op_left = Arc::clone(op);
-                let op_right = Arc::clone(op);
+                proof {
+                    reveal_with_fuel(link_node_count, 2);
+                    assert(link_node_count(node.left) <= usize::MAX as nat);
+                    assert(link_node_count(node.right) <= usize::MAX as nat);
+                }
                 let id_left = identity.clone();
-                let left_clone: Link<T> = clone_link(&node.left);
-                let right_clone: Link<T> = clone_link(&node.right);
-
-                use crate::Types::Types::Pair;
-                let Pair(left_acc, right_acc) = crate::ParaPair!(
-                    move || reduce_parallel(&left_clone, &op_left, id_left),
-                    move || reduce_parallel(&right_clone, &op_right, identity)
-                );
-
-                let with_key = op(left_acc, node.key.clone());
-                op(with_key, right_acc)
+                let left_acc = reduce_parallel(&node.left, op, id_left);
+                let right_acc = reduce_parallel(&node.right, op, identity);
+                let with_key = (**op)(left_acc, node.key.clone());
+                (**op)(with_key, right_acc)
             }
         }
     }
@@ -1701,11 +1706,17 @@ pub mod BSTSplayMtEph {
             ensures true;
         fn filter<F>(&self, predicate: F) -> (seq: ArraySeqStPerS<T>)
         where
-            F: Fn(&T) -> bool + Send + Sync + 'static
+            F: Fn(&T) -> bool + Send + Sync
+            requires
+                self.spec_bstsplaymteph_wf(),
+                forall|t: &T| #[trigger] predicate.requires((t,)),
             ensures true;
         fn reduce<F>(&self, op: F, identity: T) -> (accumulated: T)
         where
-            F: Fn(T, T) -> T + Send + Sync + 'static
+            F: Fn(T, T) -> T + Send + Sync
+            requires
+                self.spec_bstsplaymteph_wf(),
+                forall|a: T, b: T| #[trigger] op.requires((a, b)),
             ensures true;
     }
 
@@ -1831,22 +1842,24 @@ pub mod BSTSplayMtEph {
 
         fn filter<F>(&self, predicate: F) -> ArraySeqStPerS<T>
         where
-            F: Fn(&T) -> bool + Send + Sync + 'static,
+            F: Fn(&T) -> bool + Send + Sync,
         {
             let handle = self.root.acquire_read();
             let predicate = Arc::new(predicate);
-            let out = filter_parallel(handle.borrow(), &predicate);
+            let data = handle.borrow();
+            let out = filter_parallel(data, &predicate);
             handle.release_read();
             ArraySeqStPerS::from_vec(out)
         }
 
         fn reduce<F>(&self, op: F, identity: T) -> (accumulated: T)
         where
-            F: Fn(T, T) -> T + Send + Sync + 'static,
+            F: Fn(T, T) -> T + Send + Sync,
         {
             let handle = self.root.acquire_read();
             let op = Arc::new(op);
-            let accumulated = reduce_parallel(handle.borrow(), &op, identity);
+            let data = handle.borrow();
+            let accumulated = reduce_parallel(data, &op, identity);
             handle.release_read();
             accumulated
         }
