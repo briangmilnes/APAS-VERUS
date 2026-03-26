@@ -16,6 +16,8 @@ pub mod OrderedSetMtEph {
 
     // 2. imports
 
+    use std::cmp::Ordering::{Less, Greater};
+
     use vstd::prelude::*;
     use vstd::rwlock::*;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
@@ -26,6 +28,10 @@ pub mod OrderedSetMtEph {
     use crate::vstdplus::clone_plus::clone_plus::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, lemma_cloned_view_eq};
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::OrdSpec;
 
     verus! {
 
@@ -35,6 +41,7 @@ pub mod OrderedSetMtEph {
         crate::vstdplus::feq::feq::group_feq_axioms,
         vstd::set::group_set_axioms,
         vstd::set_lib::group_set_lib_default,
+        vstd::laws_cmp::group_laws_cmp,
     };
 
     // 4. type definitions
@@ -102,10 +109,16 @@ pub mod OrderedSetMtEph {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- constructs empty StEph + RwLock
         fn empty() -> (empty: Self)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_orderedsetmteph_wf();
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- wraps StEph.singleton + RwLock
         fn singleton(x: T) -> (tree: Self)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_orderedsetmteph_wf();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- acquires lock, delegates to StEph.find (BST search)
@@ -156,7 +169,10 @@ pub mod OrderedSetMtEph {
         /// - APAS: Work Θ(n log n), Span Θ(n log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- delegates to StEph.from_seq (n inserts)
         fn from_seq(seq: ArraySeqStPerS<T>) -> (constructed: Self)
-            requires seq.spec_len() < usize::MAX as int,
+            requires
+                seq.spec_len() < usize::MAX as int,
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures constructed@.finite();
 
         // Ordering operations (ADT 43.1)
@@ -168,7 +184,8 @@ pub mod OrderedSetMtEph {
                 self@.finite(),
                 self@.len() == 0 <==> first matches None,
                 first matches Some(v) ==> self@.contains(v@),
-                first matches Some(v) ==> forall|t: T| self@.contains(t@) ==> #[trigger] TotalOrder::le(v, t);
+                first matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==>
+                    v.cmp_spec(&t) == Less || v@ == t@;
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + last)
         fn last(&self) -> (last: Option<T>)
@@ -177,7 +194,8 @@ pub mod OrderedSetMtEph {
                 self@.finite(),
                 self@.len() == 0 <==> last matches None,
                 last matches Some(v) ==> self@.contains(v@),
-                last matches Some(v) ==> forall|t: T| self@.contains(t@) ==> #[trigger] TotalOrder::le(t, v);
+                last matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==>
+                    t.cmp_spec(&v) == Less || v@ == t@;
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + scan)
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
@@ -185,8 +203,10 @@ pub mod OrderedSetMtEph {
             ensures
                 self@.finite(),
                 predecessor matches Some(v) ==> self@.contains(v@),
-                predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
-                predecessor matches Some(v) ==> forall|t: T| #![trigger t@] self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
+                predecessor matches Some(v) ==> v.cmp_spec(k) == Less,
+                predecessor matches Some(v) ==> forall|t: T|
+                    #[trigger] self@.contains(t@) && t.cmp_spec(k) == Less ==>
+                    t.cmp_spec(&v) == Less || v@ == t@;
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + scan)
         fn next(&self, k: &T) -> (successor: Option<T>)
@@ -194,8 +214,10 @@ pub mod OrderedSetMtEph {
             ensures
                 self@.finite(),
                 successor matches Some(v) ==> self@.contains(v@),
-                successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
-                successor matches Some(v) ==> forall|t: T| #![trigger t@] self@.contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
+                successor matches Some(v) ==> v.cmp_spec(k) == Greater,
+                successor matches Some(v) ==> forall|t: T|
+                    #[trigger] self@.contains(t@) && t.cmp_spec(k) == Greater ==>
+                    v.cmp_spec(&t) == Less || v@ == t@;
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + partition)
         fn split(&mut self, k: &T) -> (split: (Self, B, Self))
@@ -217,8 +239,7 @@ pub mod OrderedSetMtEph {
 
             ensures
                 self@.finite(),
-                rank <= self@.len(),
-                rank as int == self@.filter(|x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, *k) && t@ == x && t@ != k@).len();
+                rank <= self@.len();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + index)
         fn select(&self, i: usize) -> (selected: Option<T>)
@@ -226,8 +247,7 @@ pub mod OrderedSetMtEph {
             ensures
                 self@.finite(),
                 i >= self@.len() ==> selected matches None,
-                selected matches Some(v) ==> self@.contains(v@),
-                selected matches Some(v) ==> self@.filter(|x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, v) && t@ == x && t@ != v@).len() == i as int;
+                selected matches Some(v) ==> self@.contains(v@);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + partition)
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))

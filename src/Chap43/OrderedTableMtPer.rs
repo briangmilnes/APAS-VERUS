@@ -302,6 +302,9 @@ pub mod OrderedTableMtPer {
             let result = inner.insert(k, v);
             read_handle.release_read();
             let ghost view = result@;
+            proof {
+                lemma_pair_set_to_map_dom_finite(result.tree@);
+            }
             OrderedTableMtPer {
                 locked_table: RwLock::new(result, Ghost(OrderedTableMtPerInv)),
                 ghost_locked_table: Ghost(view),
@@ -318,6 +321,9 @@ pub mod OrderedTableMtPer {
             let result = inner.delete(k);
             read_handle.release_read();
             let ghost view = result@;
+            proof {
+                lemma_pair_set_to_map_dom_finite(result.tree@);
+            }
             OrderedTableMtPer {
                 locked_table: RwLock::new(result, Ghost(OrderedTableMtPerInv)),
                 ghost_locked_table: Ghost(view),
@@ -512,6 +518,9 @@ pub mod OrderedTableMtPer {
             other_read.release_read();
             self_read.release_read();
             let ghost view = result@;
+            proof {
+                lemma_pair_set_to_map_dom_finite(result.tree@);
+            }
             OrderedTableMtPer {
                 locked_table: RwLock::new(result, Ghost(OrderedTableMtPerInv)),
                 ghost_locked_table: Ghost(view),
@@ -523,6 +532,9 @@ pub mod OrderedTableMtPer {
             let inner = read_handle.borrow();
             let range = inner.get_key_range(k1, k2);
             read_handle.release_read();
+            proof {
+                lemma_pair_set_to_map_dom_finite(range.tree@);
+            }
             from_st_table(range)
         }
 
