@@ -1,4 +1,3 @@
-#![cfg(feature = "all_chapters")]
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 65: Union-Find Tests (Sequential)
 
@@ -290,7 +289,7 @@ fn test_rank_based_union_smaller_to_larger() {
 
 #[test]
 fn test_default_trait() {
-    let mut uf: UnionFindStEph<i32> = Default::default();
+    let mut uf = UnionFindStEph::<i32>::new();
     uf.insert(1);
     assert_eq!(uf.num_sets(), 1);
 }

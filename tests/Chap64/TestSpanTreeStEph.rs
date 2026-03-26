@@ -1,4 +1,3 @@
-#![cfg(feature = "all_chapters")]
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 64: Spanning Tree via Star Contraction Tests (Sequential)
 
@@ -17,7 +16,7 @@ fn create_cycle_graph(n: N) -> UnDirGraphStEph<N> {
     for i in 0..n {
         let _ = edges.insert(Edge(i, (i + 1) % n));
     }
-    <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::FromSets(vertices, edges)
+    <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::from_sets(vertices, edges)
 }
 
 fn create_connected_graph() -> UnDirGraphStEph<N> {
@@ -33,7 +32,7 @@ fn create_connected_graph() -> UnDirGraphStEph<N> {
     let _ = edges.insert(Edge(4, 5));
     let _ = edges.insert(Edge(5, 0));
     let _ = edges.insert(Edge(1, 4));
-    <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::FromSets(vertices, edges)
+    <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::from_sets(vertices, edges)
 }
 
 #[test]
@@ -58,7 +57,7 @@ fn test_spanning_tree_connected() {
 fn test_spanning_tree_empty() {
     let vertices = SetLit![];
     let edges = SetLit![];
-    let graph = <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::FromSets(vertices, edges);
+    let graph = <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::from_sets(vertices, edges);
     let tree = spanning_tree_star_contraction(&graph);
 
     assert_eq!(tree.size(), 0);
@@ -68,7 +67,7 @@ fn test_spanning_tree_empty() {
 fn test_spanning_tree_single_vertex() {
     let vertices = SetLit![0];
     let edges = SetLit![];
-    let graph = <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::FromSets(vertices, edges);
+    let graph = <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::from_sets(vertices, edges);
     let tree = spanning_tree_star_contraction(&graph);
 
     assert_eq!(tree.size(), 0);

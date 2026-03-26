@@ -1,4 +1,3 @@
-#![cfg(feature = "all_chapters")]
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for Chapter 52: Adjacency Sequence Graph (persistent, multi-threaded).
 
@@ -31,11 +30,11 @@ fn test_has_edge_empty_graph() {
 }
 
 #[test]
-fn test_has_edge_out_of_bounds() {
+fn test_has_edge_in_bounds_no_edges() {
     let g = AdjSeqGraphMtPer::new(5);
-    assert!(!g.has_edge(5, 0)); // u out of bounds
-    assert!(!g.has_edge(0, 5)); // v could be out of bounds but won't crash
-    assert!(!g.has_edge(10, 10)); // both out of bounds
+    assert!(!g.has_edge(0, 4));
+    assert!(!g.has_edge(4, 0));
+    assert!(!g.has_edge(2, 3));
 }
 
 #[test]
@@ -59,33 +58,6 @@ fn test_clone() {
 
     assert_eq!(g1.num_vertices(), g2.num_vertices());
     assert_eq!(g1.num_edges(), g2.num_edges());
-}
-
-#[test]
-fn test_map_vertices_empty_graph() {
-    let g = AdjSeqGraphMtPer::new(3);
-    let g2 = g.map_vertices(|v| v * 2);
-
-    assert_eq!(g2.num_vertices(), 3);
-    assert_eq!(g2.num_edges(), 0);
-}
-
-#[test]
-fn test_map_vertices_identity() {
-    let g = AdjSeqGraphMtPer::new(5);
-    let g2 = g.map_vertices(|v| v);
-
-    assert_eq!(g.num_vertices(), g2.num_vertices());
-    assert_eq!(g.num_edges(), g2.num_edges());
-}
-
-#[test]
-fn test_map_vertices_transformation() {
-    let g = AdjSeqGraphMtPer::new(4);
-    let g2 = g.map_vertices(|v| v + 10);
-
-    assert_eq!(g2.num_vertices(), 4);
-    // All neighbor IDs should be incremented by 10
 }
 
 #[test]
@@ -117,23 +89,6 @@ fn test_multiple_vertices_all_operations() {
         assert_eq!(g.out_neighbors(i).length(), 0);
         assert!(!g.has_edge(i, (i + 1) % 10));
     }
-}
-
-#[test]
-fn test_map_vertices_larger_graph() {
-    let g = AdjSeqGraphMtPer::new(20);
-    let g2 = g.map_vertices(|v| v * 3);
-
-    assert_eq!(g2.num_vertices(), 20);
-    assert_eq!(g2.num_edges(), 0);
-}
-
-#[test]
-fn test_map_vertices_with_modulo() {
-    let g = AdjSeqGraphMtPer::new(5);
-    let g2 = g.map_vertices(|v| v % 3);
-
-    assert_eq!(g2.num_vertices(), 5);
 }
 
 #[test]

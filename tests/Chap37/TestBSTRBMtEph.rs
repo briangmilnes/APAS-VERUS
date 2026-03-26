@@ -1,8 +1,8 @@
-#![cfg(feature = "all_chapters")]
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Tests for BSTRBMtEph.
 
 use apas_verus::BSTRBMtEphLit;
+use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
 use apas_verus::Chap37::BSTRBMtEph::BSTRBMtEph::*;
 
 #[test]

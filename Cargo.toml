@@ -498,9 +498,9 @@ path = "tests/Chap35/TestOrderStatSelectStPer.rs"
 name = "TestQuickSortMtEph"
 path = "tests/Chap36/TestQuickSortMtEph.rs"
 
-[[test]]
-name = "TestQuickSortMtEphSlice"
-path = "tests/Chap36/TestQuickSortMtEphSlice.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestQuickSortMtEphSlice"
+# path = "tests/Chap36/TestQuickSortMtEphSlice.rs"
 
 [[test]]
 name = "TestQuickSortStEph"
@@ -558,9 +558,9 @@ path = "tests/Chap37/TestBSTBBAlphaMtEph.rs"
 name = "TestBSTBBAlphaStEph"
 path = "tests/Chap37/TestBSTBBAlphaStEph.rs"
 
-[[test]]
-name = "TestBSTMtEph"
-path = "tests/Chap37/TestBSTMtEph.rs"
+# [[test]]  # module BSTMtEph does not exist
+# name = "TestBSTMtEph"
+# path = "tests/Chap37/TestBSTMtEph.rs"
 
 [[test]]
 name = "TestBSTPlainMtEph"
@@ -918,9 +918,9 @@ path = "tests/Chap52/TestAdjSeqGraphStEph.rs"
 name = "TestAdjSeqGraphStPer"
 path = "tests/Chap52/TestAdjSeqGraphStPer.rs"
 
-[[test]]
-name = "TestAdjTableGraphMtPer"
-path = "tests/Chap52/TestAdjTableGraphMtPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestAdjTableGraphMtPer"
+# path = "tests/Chap52/TestAdjTableGraphMtPer.rs"
 
 # [[test]]  # module commented out in lib.rs
 # name = "TestAdjTableGraphStEph"
@@ -934,9 +934,9 @@ path = "tests/Chap52/TestAdjTableGraphMtPer.rs"
 name = "TestEdgeSetGraphMtEph"
 path = "tests/Chap52/TestEdgeSetGraphMtEph.rs"
 
-[[test]]
-name = "TestEdgeSetGraphMtPer"
-path = "tests/Chap52/TestEdgeSetGraphMtPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestEdgeSetGraphMtPer"
+# path = "tests/Chap52/TestEdgeSetGraphMtPer.rs"
 
 # [[test]]  # module commented out in lib.rs
 # name = "TestEdgeSetGraphStEph"
@@ -946,9 +946,9 @@ path = "tests/Chap52/TestEdgeSetGraphMtPer.rs"
 # name = "TestEdgeSetGraphStPer"
 # path = "tests/Chap52/TestEdgeSetGraphStPer.rs"
 
-[[test]]
-name = "TestGraphSearchMtPer"
-path = "tests/Chap53/TestGraphSearchMtPer.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestGraphSearchMtPer"
+# path = "tests/Chap53/TestGraphSearchMtPer.rs"
 
 [[test]]
 name = "TestGraphSearchStEph"
@@ -1030,13 +1030,13 @@ path = "tests/Chap56/TestAllPairsResultStEphI64.rs"
 name = "TestAllPairsResultStPerI64"
 path = "tests/Chap56/TestAllPairsResultStPerI64.rs"
 
-[[test]]
-name = "TestExample56_1"
-path = "tests/Chap56/TestExample56_1.rs"
+# [[test]]  # module commented out in lib.rs (uses ordered_float)
+# name = "TestExample56_1"
+# path = "tests/Chap56/TestExample56_1.rs"
 
-[[test]]
-name = "TestExample56_3"
-path = "tests/Chap56/TestExample56_3.rs"
+# [[test]]  # module commented out in lib.rs (uses ordered_float)
+# name = "TestExample56_3"
+# path = "tests/Chap56/TestExample56_3.rs"
 
 [[test]]
 name = "TestPathWeightUtilsStEph"
@@ -1062,9 +1062,9 @@ path = "tests/Chap56/TestSSSPResultStEphI64.rs"
 name = "TestSSSPResultStPerI64"
 path = "tests/Chap56/TestSSSPResultStPerI64.rs"
 
-[[test]]
-name = "TestDijkstraStEphF64"
-path = "tests/Chap57/TestDijkstraStEphF64.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestDijkstraStEphF64"
+# path = "tests/Chap57/TestDijkstraStEphF64.rs"
 
 [[test]]
 name = "TestDijkstraStEphU64"
@@ -1074,25 +1074,25 @@ path = "tests/Chap57/TestDijkstraStEphU64.rs"
 name = "TestStackStEph"
 path = "tests/Chap57/TestStackStEph.rs"
 
-[[test]]
-name = "TestBellmanFordStEphF64"
-path = "tests/Chap58/TestBellmanFordStEphF64.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestBellmanFordStEphF64"
+# path = "tests/Chap58/TestBellmanFordStEphF64.rs"
 
 [[test]]
 name = "TestBellmanFordStEphI64"
 path = "tests/Chap58/TestBellmanFordStEphI64.rs"
 
-[[test]]
-name = "TestJohnsonMtEphF64"
-path = "tests/Chap59/TestJohnsonMtEphF64.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestJohnsonMtEphF64"
+# path = "tests/Chap59/TestJohnsonMtEphF64.rs"
 
 # [[test]]  # module commented out in lib.rs
 # name = "TestJohnsonMtEphI64"
 # path = "tests/Chap59/TestJohnsonMtEphI64.rs"
 
-[[test]]
-name = "TestJohnsonStEphF64"
-path = "tests/Chap59/TestJohnsonStEphF64.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestJohnsonStEphF64"
+# path = "tests/Chap59/TestJohnsonStEphF64.rs"
 
 [[test]]
 name = "TestJohnsonStEphI64"
@@ -1138,35 +1138,35 @@ path = "tests/Chap62/TestStarPartitionStEph.rs"
 name = "TestConnectivityStEph"
 path = "tests/Chap63/TestConnectivityStEph.rs"
 
-[[test]]
-name = "TestSpanTreeMtEph"
-path = "tests/Chap64/TestSpanTreeMtEph.rs"
+# [[test]]  # module commented out in lib.rs
+# name = "TestSpanTreeMtEph"
+# path = "tests/Chap64/TestSpanTreeMtEph.rs"
 
 [[test]]
 name = "TestSpanTreeStEph"
 path = "tests/Chap64/TestSpanTreeStEph.rs"
 
-[[test]]
-name = "TestTSPApproxStEph"
-path = "tests/Chap64/TestTSPApproxStEph.rs"
+# [[test]]  # uses ordered_float (removed crate)
+# name = "TestTSPApproxStEph"
+# path = "tests/Chap64/TestTSPApproxStEph.rs"
 
-[[test]]
-name = "TestKruskalStEph"
-path = "tests/Chap65/TestKruskalStEph.rs"
+# [[test]]  # uses ordered_float (removed crate)
+# name = "TestKruskalStEph"
+# path = "tests/Chap65/TestKruskalStEph.rs"
 
-[[test]]
-name = "TestPrimStEph"
-path = "tests/Chap65/TestPrimStEph.rs"
+# [[test]]  # uses ordered_float (removed crate)
+# name = "TestPrimStEph"
+# path = "tests/Chap65/TestPrimStEph.rs"
 
 [[test]]
 name = "TestUnionFindStEph"
 path = "tests/Chap65/TestUnionFindStEph.rs"
 
-[[test]]
-name = "TestBoruvkaMtEph"
-path = "tests/Chap66/TestBoruvkaMtEph.rs"
+# [[test]]  # uses ordered_float (removed crate)
+# name = "TestBoruvkaMtEph"
+# path = "tests/Chap66/TestBoruvkaMtEph.rs"
 
-[[test]]
-name = "TestBoruvkaStEph"
-path = "tests/Chap66/TestBoruvkaStEph.rs"
+# [[test]]  # uses ordered_float (removed crate)
+# name = "TestBoruvkaStEph"
+# path = "tests/Chap66/TestBoruvkaStEph.rs"
 
