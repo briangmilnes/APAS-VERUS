@@ -378,10 +378,36 @@ scripts/rtt.sh               # run time tests (cargo nextest)
 | Command | What it does |
 |---|---|
 | `validate` / `scripts/validate.sh` | Full verification, all modules |
+| `validate isolate ChapNN` / `scripts/validate.sh isolate ChapNN` | Verify only ChapNN + its transitive deps (low memory) |
 | `dev_only_validate` / `dov` | Foundation modules only (Types, Concurrency, vstdplus) |
 | `V1` | Single verification run, show output, stop |
 | `ptt` / `scripts/ptt.sh` | Compile PTT library + run proof time tests |
 | `rtt` / `scripts/rtt.sh` | Run time tests (`cargo nextest run`) |
+
+### Isolated Validation (isolate mode)
+
+When working on a single chapter, use **isolate mode** to reduce memory and time:
+
+```bash
+scripts/validate.sh isolate Chap55      # verify Chap55 + transitive deps only
+scripts/validate.sh isolate Chap43      # verify Chap43 + 8 deps (2.3GB vs 7GB)
+```
+
+How it works:
+- Each chapter has a Cargo feature in `Cargo.toml` with its dependency list.
+- `validate.sh isolate ChapNN` reads the dep table from `Cargo.toml`, computes the
+  transitive closure, and passes `--cfg` flags for `isolate` + each included chapter.
+- Foundation modules (Types, Concurrency, vstdplus) are always included.
+- Standards, experiments, and non-dep chapters are excluded.
+
+When to use:
+- **During development**: always use isolate mode. It's 2-4× faster and uses 2-3 GB
+  instead of 7+ GB. Multiple agents can validate in parallel with isolate.
+- **Before pushing**: run a full `scripts/validate.sh` to confirm the complete crate
+  verifies. Isolate mode can miss cross-chapter regressions.
+
+Agents working on ChapNN should use `scripts/validate.sh isolate ChapNN` for all
+iterative development, then `scripts/validate.sh` once at the end before pushing.
 
 ### Proof Holes
 
