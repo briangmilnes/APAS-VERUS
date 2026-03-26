@@ -45,7 +45,7 @@ pub mod TopoSortStPer {
     pub open spec fn spec_is_path_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, path: Seq<int>) -> bool {
         path.len() >= 1
         && (forall|k: int| 0 <= k < path.len() ==> 0 <= #[trigger] path[k] < graph@.len())
-        && (forall|k: int| 0 <= k < path.len() - 1 ==> #[trigger] spec_has_edge_per(graph, path[k], path[k + 1]))
+        && (forall|k: int| #![trigger path[k]] 0 <= k < path.len() - 1 ==> spec_has_edge_per(graph, path[k], path[k + 1]))
     }
 
     /// Whether vertex v is reachable from vertex u (Definition 55.3, reachability).
