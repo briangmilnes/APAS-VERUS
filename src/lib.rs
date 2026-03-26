@@ -12,7 +12,7 @@
 // Foundation modules
 pub mod Types;
 pub mod Concurrency;
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap02")))]
 pub mod ParaPairs;
 
 pub mod experiments {
@@ -171,7 +171,7 @@ pub mod experiments {
 //    pub mod vstd_laws_eq_clone;                           // FAILS: reveal() E0401 on generic types
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), not(feature = "isolate")))]
 pub mod standards {
     pub mod arc_usage_standard;
     pub mod capacity_bounds_standard;
@@ -229,18 +229,18 @@ pub mod vstdplus {
     }
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap02")))]
 pub mod Chap02 {
     pub mod HFSchedulerMtEph;
     pub mod FibonacciHFScheduler;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap03")))]
 pub mod Chap03 {
     pub mod InsertionSortStEph;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap05")))]
 pub mod Chap05 {
     pub mod SetStEph;
     pub mod SetMtEph;
@@ -249,7 +249,7 @@ pub mod Chap05 {
     pub mod KleeneStPer;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap06")))]
 pub mod Chap06 {
     pub mod DirGraphStEph;
     pub mod UnDirGraphStEph;
@@ -277,7 +277,7 @@ pub mod Chap06 {
     pub mod WeightedDirGraphStEphF64;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap11")))]
 pub mod Chap11 {
     pub mod FibonacciStEph;
     pub mod FibonacciMtPerAllThreads;
@@ -286,19 +286,19 @@ pub mod Chap11 {
     pub mod FibonacciMtEphRecomputes;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap12")))]
 pub mod Chap12 {
     pub mod Exercise12_1;
     pub mod Exercise12_2;
     pub mod Exercise12_5;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap17")))]
 pub mod Chap17 {
     pub mod MathSeq;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap18")))]
 pub mod Chap18 {
     pub mod ArraySeq;
     pub mod ArraySeqStPer;
@@ -309,7 +309,7 @@ pub mod Chap18 {
     pub mod ArraySeqMtPer;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap19")))]
 pub mod Chap19 {
     pub mod ArraySeqStPer;
     pub mod ArraySeqStEph;
@@ -317,7 +317,7 @@ pub mod Chap19 {
     pub mod ArraySeqMtEphSlice;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap21")))]
 pub mod Chap21 {
     pub mod Algorithm21_1;
     pub mod Algorithm21_2;
@@ -333,13 +333,13 @@ pub mod Chap21 {
     pub mod Problem21_4;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap23")))]
 pub mod Chap23 {
     pub mod PrimTreeSeqStPer;
     pub mod BalBinTreeStEph;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap26")))]
 pub mod Chap26 {
     pub mod DivConReduceStPer;
     pub mod MergeSortStPer;
@@ -351,7 +351,7 @@ pub mod Chap26 {
     pub mod ScanDCMtPer;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap27")))]
 pub mod Chap27 {
     pub mod ReduceContractStEph;
     pub mod ReduceContractMtEph;
@@ -359,7 +359,7 @@ pub mod Chap27 {
     pub mod ScanContractMtEph;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap28")))]
 pub mod Chap28 {
     pub mod MCSSSpec;
     pub mod MaxContigSubSumBruteStEph;
@@ -374,12 +374,12 @@ pub mod Chap28 {
     pub mod MaxContigSubSumDivConOptMtEph;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap30")))]
 pub mod Chap30 {
     pub mod Probability;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap35")))]
 pub mod Chap35 {
     pub mod OrderStatSelectStEph;
     pub mod OrderStatSelectStPer;
@@ -387,14 +387,14 @@ pub mod Chap35 {
     pub mod OrderStatSelectMtPer;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap36")))]
 pub mod Chap36 {
     pub mod QuickSortStEph;
     pub mod QuickSortMtEph;
 //    pub mod QuickSortMtEphSlice;  // FIX: waiting for -V new-mut-ref migration + vstd split_at_mut
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap37")))]
 pub mod Chap37 {
     pub mod AVLTreeSeq;
     pub mod AVLTreeSeqStEph;
@@ -417,14 +417,14 @@ pub mod Chap37 {
     pub mod BSTSetBBAlphaMtEph;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap38")))]
 pub mod Chap38 {
     pub mod BSTParaStEph;
     pub mod BSTParaMtEph;
 }
 
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap39")))]
 pub mod Chap39 {
     pub mod BSTTreapStEph;
     pub mod BSTTreapMtEph;
@@ -432,14 +432,14 @@ pub mod Chap39 {
     pub mod BSTSetTreapMtEph;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap40")))]
 pub mod Chap40 {
     pub mod BSTKeyValueStEph;
     pub mod BSTSizeStEph;
     pub mod BSTReducedStEph;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap41")))]
 pub mod Chap41 {
     pub mod ArraySetStEph;
     pub mod ArraySetEnumMtEph;
@@ -451,7 +451,7 @@ pub mod Chap41 {
 }
 
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap42")))]
 pub mod Chap42 {
     pub mod TableStEph;
     pub mod TableStPer;
@@ -459,7 +459,7 @@ pub mod Chap42 {
     pub mod Example42_1;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap43")))]
 pub mod Chap43 {
     pub mod OrderedTableStEph;
     pub mod OrderedTableMtEph;
@@ -474,13 +474,13 @@ pub mod Chap43 {
     pub mod Example43_1;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap44")))]
 pub mod Chap44 {
     pub mod DocumentIndex;
     pub mod Example44_1;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap45")))]
 pub mod Chap45 {
     pub mod UnsortedListPQ;
     pub mod SortedListPQ;
@@ -491,7 +491,7 @@ pub mod Chap45 {
     pub mod Example45_2;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap47")))]
 pub mod Chap47 {
     pub mod ChainedHashTable;
     pub mod StructChainedHashTable;
@@ -504,7 +504,7 @@ pub mod Chap47 {
     pub mod ParaHashTableStEph;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap49")))]
 pub mod Chap49 {
     pub mod SubsetSumStEph;
     pub mod SubsetSumStPer;
@@ -516,7 +516,7 @@ pub mod Chap49 {
     pub mod MinEditDistMtPer;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap50")))]
 pub mod Chap50 {
     pub mod MatrixChainStEph;
     pub mod MatrixChainStPer;
@@ -528,7 +528,7 @@ pub mod Chap50 {
     pub mod OptBinSearchTreeMtPer;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap51")))]
 pub mod Chap51 {
     pub mod BottomUpDPStEph;
     pub mod BottomUpDPStPer;
@@ -541,7 +541,7 @@ pub mod Chap51 {
 }
 
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap52")))]
 pub mod Chap52 {
     pub mod AdjSeqGraphStEph;
     pub mod AdjSeqGraphStPer;
@@ -559,7 +559,7 @@ pub mod Chap52 {
 //    pub mod EdgeSetGraphMtPer;   // BROKEN: same + AVLTreeSetMtPer chain
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap53")))]
 pub mod Chap53 {
     pub mod PQMinStEph;
     pub mod PQMinStPer;
@@ -568,7 +568,7 @@ pub mod Chap53 {
 //    pub mod GraphSearchMtPer;   // BROKEN: AVLTreeSetMtPer .elements field gone
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap54")))]
 pub mod Chap54 {
     pub mod BFSStEph;
     pub mod BFSStPer;
@@ -576,7 +576,7 @@ pub mod Chap54 {
     pub mod BFSMtPer;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap55")))]
 pub mod Chap55 {
 //    pub mod DFSStEph;          // FIX: 48× .view() on Seq (mechanical) + 1 pub visibility
 //    pub mod DFSStPer;          // FIX: same
@@ -589,7 +589,7 @@ pub mod Chap55 {
 }
 
 /*
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap56")))]
 pub mod Chap56 {
     pub mod SSSPResultStEphI64;
     pub mod SSSPResultStPerI64;
@@ -605,20 +605,20 @@ pub mod Chap56 {
 //    pub mod Example56_3;  // BROKEN: uses ordered_float (removed)
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap57")))]
 pub mod Chap57 {
     pub mod StackStEph;
     pub mod DijkstraStEphU64;
 //    pub mod DijkstraStEphF64;  // BROKEN
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap58")))]
 pub mod Chap58 {
     pub mod BellmanFordStEphI64;
 //    pub mod BellmanFordStEphF64;  // BROKEN
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap59")))]
 pub mod Chap59 {
     pub mod JohnsonStEphI64;
 //    pub mod JohnsonMtEphI64;  // BROKEN
@@ -626,7 +626,7 @@ pub mod Chap59 {
 //    pub mod JohnsonMtEphF64;  // BROKEN
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap61")))]
 pub mod Chap61 {
 //    pub mod EdgeContractionStEph;  // BROKEN
 //    pub mod EdgeContractionMtEph;  // BROKEN
@@ -634,7 +634,7 @@ pub mod Chap61 {
 //    pub mod VertexMatchingMtEph;  // BROKEN
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap62")))]
 pub mod Chap62 {
     pub mod StarPartitionStEph;
 //    pub mod StarPartitionMtEph;  // BROKEN
@@ -642,27 +642,27 @@ pub mod Chap62 {
 //    pub mod StarContractionMtEph;  // BROKEN
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap63")))]
 pub mod Chap63 {
     pub mod ConnectivityStEph;
 //    pub mod ConnectivityMtEph;  // BROKEN
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap64")))]
 pub mod Chap64 {
     pub mod SpanTreeStEph;
 //    pub mod SpanTreeMtEph;  // BROKEN
     pub mod TSPApproxStEph;
 }
 
-#[cfg(not(feature = "experiments_only"))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap65")))]
 pub mod Chap65 {
     pub mod UnionFindStEph;
     pub mod KruskalStEph;
     pub mod PrimStEph;
 }
 
-#[cfg(all(not(feature = "experiments_only"), not(feature = "union_find")))]
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap66")))]
 pub mod Chap66 {
     pub mod BoruvkaStEph;
     pub mod BoruvkaMtEph;

@@ -33,17 +33,51 @@ shift 2>/dev/null || true
 
 USE_TIME=false
 USE_PROFILE=false
+EXTRA_FEATURES=()
 for arg in "$@"; do
-    if [ "$arg" = "--time" ]; then USE_TIME=true; fi
-    if [ "$arg" = "--profile" ]; then USE_PROFILE=true; fi
+    if [ "$arg" = "--time" ]; then USE_TIME=true;
+    elif [ "$arg" = "--profile" ]; then USE_PROFILE=true;
+    elif [[ "$arg" == Chap* ]]; then EXTRA_FEATURES+=("$arg");
+    fi
 done
+
+# Resolve Cargo feature dependencies for isolate mode.
+# Reads [features] from Cargo.toml and computes transitive closure.
+resolve_deps() {
+    local -A deps resolved
+    local key vals
+    while IFS='=' read -r key vals; do
+        key=$(echo "$key" | tr -d ' "')
+        vals=$(echo "$vals" | tr -d '[]"' | tr ',' ' ')
+        deps[$key]="$vals"
+    done < <(sed -n '/^\[features\]/,/^\[/p' "$PROJECT_ROOT/Cargo.toml" | grep '^Chap')
+
+    local queue=("$@")
+    while [ ${#queue[@]} -gt 0 ]; do
+        local cur="${queue[0]}"
+        queue=("${queue[@]:1}")
+        [ -n "${resolved[$cur]:-}" ] && continue
+        resolved[$cur]=1
+        for dep in ${deps[$cur]:-}; do
+            [ -z "${resolved[$dep]:-}" ] && queue+=("$dep")
+        done
+    done
+    echo "${!resolved[@]}"
+}
 
 case "$MODE" in
     full)         CFG_FLAG=() ;;
     dev_only)     CFG_FLAG=(--cfg 'feature="dev_only"') ;;
     exp)          CFG_FLAG=(--cfg 'feature="experiments_only"') ;;
     wf)           CFG_FLAG=(--cfg 'feature="wf"') ;;
-    union_find)   CFG_FLAG=(--cfg 'feature="union_find"') ;;
+    isolate)
+        ALL_CHAPS=$(resolve_deps "${EXTRA_FEATURES[@]}")
+        CFG_FLAG=(--cfg 'feature="isolate"')
+        for chap in $ALL_CHAPS; do
+            CFG_FLAG+=(--cfg "feature=\"$chap\"")
+        done
+        echo "Isolate: including $ALL_CHAPS"
+        ;;
     *)
         echo "WARNING: unknown mode '$MODE' — treating as Cargo feature name"
         CFG_FLAG=(--cfg "feature=\"$MODE\"")
