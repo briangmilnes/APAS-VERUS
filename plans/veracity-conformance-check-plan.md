@@ -1,4 +1,4 @@
-# Veracity Conformance Check: St/Mt × Eph/Per Variant Alignment
+# veracity-compare-parallelism-mutability: St/Mt × Eph/Per Variant Alignment
 
 ## Goal
 
