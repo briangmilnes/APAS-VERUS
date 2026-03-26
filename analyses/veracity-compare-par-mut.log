@@ -1,0 +1,1198 @@
+veracity-compare-par-mut
+========================
+Started at: 2026-03-26 16:15:53 -07:00
+Codebase: /home/milnes/projects/APAS-VERUS
+Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-compare-par-mut.log
+
+Phase 1: File groups
+
+src/Chap02/HFSchedulerMtEph.rs:1: info: HFScheduler (Chap2) — only MtEph variant, nothing to compare
+src/Chap03/InsertionSortStEph.rs:1: info: InsertionSort (Chap3) — only StEph variant, nothing to compare
+src/Chap05/KleeneStPer.rs:1: info: Kleene (Chap5) — only StPer variant, nothing to compare
+src/Chap05/MappingStEph.rs:1: info: Mapping (Chap5) — only StEph variant, nothing to compare
+src/Chap05/RelationStEph.rs:1: info: Relation (Chap5) — only StEph variant, nothing to compare
+src/Chap05/SetMtEph.rs:1: info: Set (Chap5) — comparing MtEph (src/Chap05/SetMtEph.rs), StEph (src/Chap05/SetStEph.rs)
+src/Chap06/DirGraphMtEph.rs:1: info: DirGraph (Chap6) — comparing MtEph (src/Chap06/DirGraphMtEph.rs), StEph (src/Chap06/DirGraphStEph.rs)
+src/Chap06/LabDirGraphMtEph.rs:1: info: LabDirGraph (Chap6) — comparing MtEph (src/Chap06/LabDirGraphMtEph.rs), StEph (src/Chap06/LabDirGraphStEph.rs)
+src/Chap06/LabUnDirGraphMtEph.rs:1: info: LabUnDirGraph (Chap6) — comparing MtEph (src/Chap06/LabUnDirGraphMtEph.rs), StEph (src/Chap06/LabUnDirGraphStEph.rs)
+src/Chap06/UnDirGraphMtEph.rs:1: info: UnDirGraph (Chap6) — comparing MtEph (src/Chap06/UnDirGraphMtEph.rs), StEph (src/Chap06/UnDirGraphStEph.rs)
+src/Chap11/FibonacciStEph.rs:1: info: Fibonacci (Chap11) — only StEph variant, nothing to compare
+src/Chap18/ArraySeqMtEph.rs:1: info: ArraySeq (Chap18) — comparing MtEph (src/Chap18/ArraySeqMtEph.rs), StEph (src/Chap18/ArraySeqStEph.rs), MtPer (src/Chap18/ArraySeqMtPer.rs), StPer (src/Chap18/ArraySeqStPer.rs)
+src/Chap18/LinkedListStEph.rs:1: info: LinkedList (Chap18) — comparing StEph (src/Chap18/LinkedListStEph.rs), StPer (src/Chap18/LinkedListStPer.rs)
+src/Chap19/ArraySeqMtEph.rs:1: info: ArraySeq (Chap19) — comparing MtEph (src/Chap19/ArraySeqMtEph.rs), StEph (src/Chap19/ArraySeqStEph.rs), StPer (src/Chap19/ArraySeqStPer.rs)
+src/Chap23/BalBinTreeStEph.rs:1: info: BalBinTree (Chap23) — only StEph variant, nothing to compare
+src/Chap23/PrimTreeSeqStPer.rs:1: info: PrimTreeSeq (Chap23) — only StPer variant, nothing to compare
+src/Chap26/DivConReduceMtPer.rs:1: info: DivConReduce (Chap26) — comparing MtPer (src/Chap26/DivConReduceMtPer.rs), StPer (src/Chap26/DivConReduceStPer.rs)
+src/Chap26/ETSPMtEph.rs:1: info: ETSP (Chap26) — comparing MtEph (src/Chap26/ETSPMtEph.rs), StEph (src/Chap26/ETSPStEph.rs)
+src/Chap26/MergeSortMtPer.rs:1: info: MergeSort (Chap26) — comparing MtPer (src/Chap26/MergeSortMtPer.rs), StPer (src/Chap26/MergeSortStPer.rs)
+src/Chap26/ScanDCMtPer.rs:1: info: ScanDC (Chap26) — comparing MtPer (src/Chap26/ScanDCMtPer.rs), StPer (src/Chap26/ScanDCStPer.rs)
+src/Chap27/ReduceContractMtEph.rs:1: info: ReduceContract (Chap27) — comparing MtEph (src/Chap27/ReduceContractMtEph.rs), StEph (src/Chap27/ReduceContractStEph.rs)
+src/Chap27/ScanContractMtEph.rs:1: info: ScanContract (Chap27) — comparing MtEph (src/Chap27/ScanContractMtEph.rs), StEph (src/Chap27/ScanContractStEph.rs)
+src/Chap28/MaxContigSubSumBruteStEph.rs:1: info: MaxContigSubSumBrute (Chap28) — only StEph variant, nothing to compare
+src/Chap28/MaxContigSubSumDivConMtEph.rs:1: info: MaxContigSubSumDivCon (Chap28) — comparing MtEph (src/Chap28/MaxContigSubSumDivConMtEph.rs), StEph (src/Chap28/MaxContigSubSumDivConStEph.rs)
+src/Chap28/MaxContigSubSumDivConOptMtEph.rs:1: info: MaxContigSubSumDivConOpt (Chap28) — comparing MtEph (src/Chap28/MaxContigSubSumDivConOptMtEph.rs), StEph (src/Chap28/MaxContigSubSumDivConOptStEph.rs)
+src/Chap28/MaxContigSubSumIterStEph.rs:1: info: MaxContigSubSumIter (Chap28) — only StEph variant, nothing to compare
+src/Chap28/MaxContigSubSumOptMtEph.rs:1: info: MaxContigSubSumOpt (Chap28) — comparing MtEph (src/Chap28/MaxContigSubSumOptMtEph.rs), StEph (src/Chap28/MaxContigSubSumOptStEph.rs)
+src/Chap28/MaxContigSubSumReducedStEph.rs:1: info: MaxContigSubSumReduced (Chap28) — only StEph variant, nothing to compare
+src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:1: info: MaxContigSubSumReducedMcsse (Chap28) — only StEph variant, nothing to compare
+src/Chap35/OrderStatSelectMtEph.rs:1: info: OrderStatSelect (Chap35) — comparing MtEph (src/Chap35/OrderStatSelectMtEph.rs), StEph (src/Chap35/OrderStatSelectStEph.rs), MtPer (src/Chap35/OrderStatSelectMtPer.rs), StPer (src/Chap35/OrderStatSelectStPer.rs)
+src/Chap36/QuickSortMtEph.rs:1: info: QuickSort (Chap36) — comparing MtEph (src/Chap36/QuickSortMtEph.rs), StEph (src/Chap36/QuickSortStEph.rs)
+src/Chap37/AVLTreeSeqStEph.rs:1: info: AVLTreeSeq (Chap37) — comparing StEph (src/Chap37/AVLTreeSeqStEph.rs), MtPer (src/Chap37/AVLTreeSeqMtPer.rs), StPer (src/Chap37/AVLTreeSeqStPer.rs)
+src/Chap37/BSTAVLMtEph.rs:1: info: BSTAVL (Chap37) — comparing MtEph (src/Chap37/BSTAVLMtEph.rs), StEph (src/Chap37/BSTAVLStEph.rs)
+src/Chap37/BSTBBAlphaMtEph.rs:1: info: BSTBBAlpha (Chap37) — comparing MtEph (src/Chap37/BSTBBAlphaMtEph.rs), StEph (src/Chap37/BSTBBAlphaStEph.rs)
+src/Chap37/BSTPlainMtEph.rs:1: info: BSTPlain (Chap37) — comparing MtEph (src/Chap37/BSTPlainMtEph.rs), StEph (src/Chap37/BSTPlainStEph.rs)
+src/Chap37/BSTRBMtEph.rs:1: info: BSTRB (Chap37) — comparing MtEph (src/Chap37/BSTRBMtEph.rs), StEph (src/Chap37/BSTRBStEph.rs)
+src/Chap37/BSTSetAVLMtEph.rs:1: info: BSTSetAVL (Chap37) — only MtEph variant, nothing to compare
+src/Chap37/BSTSetBBAlphaMtEph.rs:1: info: BSTSetBBAlpha (Chap37) — only MtEph variant, nothing to compare
+src/Chap37/BSTSetPlainMtEph.rs:1: info: BSTSetPlain (Chap37) — only MtEph variant, nothing to compare
+src/Chap37/BSTSetRBMtEph.rs:1: info: BSTSetRB (Chap37) — only MtEph variant, nothing to compare
+src/Chap37/BSTSetSplayMtEph.rs:1: info: BSTSetSplay (Chap37) — only MtEph variant, nothing to compare
+src/Chap37/BSTSplayMtEph.rs:1: info: BSTSplay (Chap37) — comparing MtEph (src/Chap37/BSTSplayMtEph.rs), StEph (src/Chap37/BSTSplayStEph.rs)
+src/Chap38/BSTParaMtEph.rs:1: info: BSTPara (Chap38) — comparing MtEph (src/Chap38/BSTParaMtEph.rs), StEph (src/Chap38/BSTParaStEph.rs)
+src/Chap39/BSTParaTreapMtEph.rs:1: info: BSTParaTreap (Chap39) — only MtEph variant, nothing to compare
+src/Chap39/BSTSetTreapMtEph.rs:1: info: BSTSetTreap (Chap39) — only MtEph variant, nothing to compare
+src/Chap39/BSTTreapMtEph.rs:1: info: BSTTreap (Chap39) — comparing MtEph (src/Chap39/BSTTreapMtEph.rs), StEph (src/Chap39/BSTTreapStEph.rs)
+src/Chap40/BSTKeyValueStEph.rs:1: info: BSTKeyValue (Chap40) — only StEph variant, nothing to compare
+src/Chap40/BSTReducedStEph.rs:1: info: BSTReduced (Chap40) — only StEph variant, nothing to compare
+src/Chap40/BSTSizeStEph.rs:1: info: BSTSize (Chap40) — only StEph variant, nothing to compare
+src/Chap41/AVLTreeSetMtEph.rs:1: info: AVLTreeSet (Chap41) — comparing MtEph (src/Chap41/AVLTreeSetMtEph.rs), StEph (src/Chap41/AVLTreeSetStEph.rs), MtPer (src/Chap41/AVLTreeSetMtPer.rs), StPer (src/Chap41/AVLTreeSetStPer.rs)
+src/Chap41/ArraySetStEph.rs:1: info: ArraySet (Chap41) — only StEph variant, nothing to compare
+src/Chap41/ArraySetEnumMtEph.rs:1: info: ArraySetEnum (Chap41) — only MtEph variant, nothing to compare
+src/Chap42/TableMtEph.rs:1: info: Table (Chap42) — comparing MtEph (src/Chap42/TableMtEph.rs), StEph (src/Chap42/TableStEph.rs), StPer (src/Chap42/TableStPer.rs)
+src/Chap43/AugOrderedTableMtEph.rs:1: info: AugOrderedTable (Chap43) — comparing MtEph (src/Chap43/AugOrderedTableMtEph.rs), StEph (src/Chap43/AugOrderedTableStEph.rs), StPer (src/Chap43/AugOrderedTableStPer.rs)
+src/Chap43/OrderedSetMtEph.rs:1: info: OrderedSet (Chap43) — comparing MtEph (src/Chap43/OrderedSetMtEph.rs), StEph (src/Chap43/OrderedSetStEph.rs), StPer (src/Chap43/OrderedSetStPer.rs)
+src/Chap43/OrderedTableMtEph.rs:1: info: OrderedTable (Chap43) — comparing MtEph (src/Chap43/OrderedTableMtEph.rs), StEph (src/Chap43/OrderedTableStEph.rs), MtPer (src/Chap43/OrderedTableMtPer.rs), StPer (src/Chap43/OrderedTableStPer.rs)
+src/Chap47/DoubleHashFlatHashTableStEph.rs:1: info: DoubleHashFlatHashTable (Chap47) — only StEph variant, nothing to compare
+src/Chap47/LinProbFlatHashTableStEph.rs:1: info: LinProbFlatHashTable (Chap47) — only StEph variant, nothing to compare
+src/Chap47/LinkedListChainedHashTableStEph.rs:1: info: LinkedListChainedHashTable (Chap47) — only StEph variant, nothing to compare
+src/Chap47/ParaHashTableStEph.rs:1: info: ParaHashTable (Chap47) — only StEph variant, nothing to compare
+src/Chap47/QuadProbFlatHashTableStEph.rs:1: info: QuadProbFlatHashTable (Chap47) — only StEph variant, nothing to compare
+src/Chap47/VecChainedHashTableStEph.rs:1: info: VecChainedHashTable (Chap47) — only StEph variant, nothing to compare
+src/Chap49/MinEditDistMtEph.rs:1: info: MinEditDist (Chap49) — comparing MtEph (src/Chap49/MinEditDistMtEph.rs), StEph (src/Chap49/MinEditDistStEph.rs), MtPer (src/Chap49/MinEditDistMtPer.rs), StPer (src/Chap49/MinEditDistStPer.rs)
+src/Chap49/SubsetSumMtEph.rs:1: info: SubsetSum (Chap49) — comparing MtEph (src/Chap49/SubsetSumMtEph.rs), StEph (src/Chap49/SubsetSumStEph.rs), MtPer (src/Chap49/SubsetSumMtPer.rs), StPer (src/Chap49/SubsetSumStPer.rs)
+src/Chap50/MatrixChainMtEph.rs:1: info: MatrixChain (Chap50) — comparing MtEph (src/Chap50/MatrixChainMtEph.rs), StEph (src/Chap50/MatrixChainStEph.rs), MtPer (src/Chap50/MatrixChainMtPer.rs), StPer (src/Chap50/MatrixChainStPer.rs)
+src/Chap50/OptBinSearchTreeMtEph.rs:1: info: OptBinSearchTree (Chap50) — comparing MtEph (src/Chap50/OptBinSearchTreeMtEph.rs), StEph (src/Chap50/OptBinSearchTreeStEph.rs), MtPer (src/Chap50/OptBinSearchTreeMtPer.rs), StPer (src/Chap50/OptBinSearchTreeStPer.rs)
+src/Chap51/BottomUpDPMtEph.rs:1: info: BottomUpDP (Chap51) — comparing MtEph (src/Chap51/BottomUpDPMtEph.rs), StEph (src/Chap51/BottomUpDPStEph.rs), MtPer (src/Chap51/BottomUpDPMtPer.rs), StPer (src/Chap51/BottomUpDPStPer.rs)
+src/Chap51/TopDownDPMtEph.rs:1: info: TopDownDP (Chap51) — comparing MtEph (src/Chap51/TopDownDPMtEph.rs), StEph (src/Chap51/TopDownDPStEph.rs), MtPer (src/Chap51/TopDownDPMtPer.rs), StPer (src/Chap51/TopDownDPStPer.rs)
+src/Chap52/AdjMatrixGraphMtEph.rs:1: info: AdjMatrixGraph (Chap52) — comparing MtEph (src/Chap52/AdjMatrixGraphMtEph.rs), StEph (src/Chap52/AdjMatrixGraphStEph.rs), MtPer (src/Chap52/AdjMatrixGraphMtPer.rs), StPer (src/Chap52/AdjMatrixGraphStPer.rs)
+src/Chap52/AdjSeqGraphMtEph.rs:1: info: AdjSeqGraph (Chap52) — comparing MtEph (src/Chap52/AdjSeqGraphMtEph.rs), StEph (src/Chap52/AdjSeqGraphStEph.rs), MtPer (src/Chap52/AdjSeqGraphMtPer.rs), StPer (src/Chap52/AdjSeqGraphStPer.rs)
+src/Chap52/AdjTableGraphStEph.rs:1: info: AdjTableGraph (Chap52) — comparing StEph (src/Chap52/AdjTableGraphStEph.rs), MtPer (src/Chap52/AdjTableGraphMtPer.rs), StPer (src/Chap52/AdjTableGraphStPer.rs)
+src/Chap52/EdgeSetGraphStEph.rs:1: info: EdgeSetGraph (Chap52) — comparing StEph (src/Chap52/EdgeSetGraphStEph.rs), MtPer (src/Chap52/EdgeSetGraphMtPer.rs), StPer (src/Chap52/EdgeSetGraphStPer.rs)
+src/Chap53/GraphSearchStEph.rs:1: info: GraphSearch (Chap53) — comparing StEph (src/Chap53/GraphSearchStEph.rs), MtPer (src/Chap53/GraphSearchMtPer.rs), StPer (src/Chap53/GraphSearchStPer.rs)
+src/Chap53/PQMinStEph.rs:1: info: PQMin (Chap53) — comparing StEph (src/Chap53/PQMinStEph.rs), StPer (src/Chap53/PQMinStPer.rs)
+src/Chap54/BFSMtEph.rs:1: info: BFS (Chap54) — comparing MtEph (src/Chap54/BFSMtEph.rs), StEph (src/Chap54/BFSStEph.rs), MtPer (src/Chap54/BFSMtPer.rs), StPer (src/Chap54/BFSStPer.rs)
+src/Chap55/CycleDetectStEph.rs:1: info: CycleDetect (Chap55) — comparing StEph (src/Chap55/CycleDetectStEph.rs), StPer (src/Chap55/CycleDetectStPer.rs)
+src/Chap55/DFSStEph.rs:1: info: DFS (Chap55) — comparing StEph (src/Chap55/DFSStEph.rs), StPer (src/Chap55/DFSStPer.rs)
+src/Chap55/SCCStEph.rs:1: info: SCC (Chap55) — comparing StEph (src/Chap55/SCCStEph.rs), StPer (src/Chap55/SCCStPer.rs)
+src/Chap55/TopoSortStEph.rs:1: info: TopoSort (Chap55) — comparing StEph (src/Chap55/TopoSortStEph.rs), StPer (src/Chap55/TopoSortStPer.rs)
+src/Chap56/PathWeightUtilsStEph.rs:1: info: PathWeightUtils (Chap56) — comparing StEph (src/Chap56/PathWeightUtilsStEph.rs), StPer (src/Chap56/PathWeightUtilsStPer.rs)
+src/Chap57/StackStEph.rs:1: info: Stack (Chap57) — only StEph variant, nothing to compare
+src/Chap61/EdgeContractionMtEph.rs:1: info: EdgeContraction (Chap61) — comparing MtEph (src/Chap61/EdgeContractionMtEph.rs), StEph (src/Chap61/EdgeContractionStEph.rs)
+src/Chap61/VertexMatchingMtEph.rs:1: info: VertexMatching (Chap61) — comparing MtEph (src/Chap61/VertexMatchingMtEph.rs), StEph (src/Chap61/VertexMatchingStEph.rs)
+src/Chap62/StarContractionMtEph.rs:1: info: StarContraction (Chap62) — comparing MtEph (src/Chap62/StarContractionMtEph.rs), StEph (src/Chap62/StarContractionStEph.rs)
+src/Chap62/StarPartitionMtEph.rs:1: info: StarPartition (Chap62) — comparing MtEph (src/Chap62/StarPartitionMtEph.rs), StEph (src/Chap62/StarPartitionStEph.rs)
+src/Chap63/ConnectivityMtEph.rs:1: info: Connectivity (Chap63) — comparing MtEph (src/Chap63/ConnectivityMtEph.rs), StEph (src/Chap63/ConnectivityStEph.rs)
+src/Chap64/SpanTreeMtEph.rs:1: info: SpanTree (Chap64) — comparing MtEph (src/Chap64/SpanTreeMtEph.rs), StEph (src/Chap64/SpanTreeStEph.rs)
+src/Chap64/TSPApproxStEph.rs:1: info: TSPApprox (Chap64) — only StEph variant, nothing to compare
+src/Chap65/KruskalStEph.rs:1: info: Kruskal (Chap65) — only StEph variant, nothing to compare
+src/Chap65/PrimStEph.rs:1: info: Prim (Chap65) — only StEph variant, nothing to compare
+src/Chap65/UnionFindStEph.rs:1: info: UnionFind (Chap65) — only StEph variant, nothing to compare
+src/Chap66/BoruvkaMtEph.rs:1: info: Boruvka (Chap66) — comparing MtEph (src/Chap66/BoruvkaMtEph.rs), StEph (src/Chap66/BoruvkaStEph.rs)
+
+Phase 1 summary: 92 file groups, 183 total variant files
+
+Phase 2: Variant comparison
+
+src/Chap05/SetMtEph.rs:0: info: file group Set — comparing MtEph (src/Chap05/SetMtEph.rs), StEph (src/Chap05/SetStEph.rs)
+src/Chap05/SetStEph.rs:72: info: struct SetStEph { elements: HashSetWithViewPlus < T > }
+src/Chap05/SetStEph.rs:872: info: View = Seq < T >
+src/Chap05/SetStEph.rs:118: info: wf = spec_setsteph_wf
+src/Chap05/SetMtEph.rs:82: info: struct SetMtEph { elements: HashSetWithViewPlus < T > }
+src/Chap05/SetMtEph.rs:996: info: View = Set < < T as View > :: V >
+src/Chap05/SetMtEph.rs:126: info: wf = spec_setmteph_wf
+src/Chap05/SetMtEph.rs:996: error: View = Set < < T as View > :: V > but StEph has View = Seq < T >
+src/Chap05/SetMtEph.rs:1002: info: trait LockedSetMtEphTrait — 5 fns (5 exec, 0 spec), only in MtEph variant
+src/Chap05/SetStEph.rs:116: info: trait SetStEphTrait <T : StT + Hash> : View < V = Set < < T as View > :: V > > + Sized — 20 fns (18 exec, 2 spec)
+src/Chap05/SetMtEph.rs:124: info: trait SetMtEphTrait <T : StT + Hash> : View < V = Set < < T as View > :: V > > + Sized — 20 fns (17 exec, 3 spec)
+src/Chap05/SetMtEph.rs:124: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_setsteph_wf`
+src/Chap05/SetMtEph.rs:124: warning: missing 1 fns present in StEph (SetStEphTrait): `split`
+src/Chap05/SetMtEph.rs:124: info: 2 extra fns not in StEph (SetStEphTrait): `spec_setmteph_wf`, `spec_finite`
+src/Chap05/SetStEph.rs:0: info: SetTrait trait: 18 matched fns across 2 variants
+src/Chap06/DirGraphMtEph.rs:0: info: file group DirGraph — comparing MtEph (src/Chap06/DirGraphMtEph.rs), StEph (src/Chap06/DirGraphStEph.rs)
+src/Chap06/DirGraphStEph.rs:60: info: struct DirGraphStEph { V: SetStEph < V >, A: SetStEph < Edge < V > > }
+src/Chap06/DirGraphStEph.rs:646: info: View = Seq < V >
+src/Chap06/DirGraphMtEph.rs:69: info: struct DirGraphMtEph { V: SetStEph < V >, A: SetStEph < Edge < V > > }
+src/Chap06/DirGraphMtEph.rs:829: info: View = GraphView < < V as View > :: V >
+src/Chap06/DirGraphMtEph.rs:834: info: wf = spec_lockeddirgraphmteph_wf
+src/Chap06/DirGraphMtEph.rs:829: error: View = GraphView < < V as View > :: V > but StEph has View = Seq < V >
+src/Chap06/DirGraphStEph.rs:0: warning: no spec_*_wf predicate found in StEph variant
+src/Chap06/DirGraphMtEph.rs:834: warning: wf name `spec_lockeddirgraphmteph_wf` does not follow expected pattern `spec_dirgraph*_wf`
+src/Chap06/DirGraphStEph.rs:75: info: trait DirGraphStEphTrait <V : StT + Hash> : View < V = GraphView < < V as View > :: V > > + Sized — 24 fns (17 exec, 7 spec)
+src/Chap06/DirGraphMtEph.rs:94: info: trait DirGraphMtEphTrait <V : StTInMtT + Hash + 'static> : View < V = GraphView < < V as View > :: V > > + Sized — 36 fns (22 exec, 14 spec)
+src/Chap06/DirGraphMtEph.rs:94: warning: generic bounds `<V : StTInMtT + Hash + 'static>` but StEph has `<V : StT + Hash>`
+src/Chap06/DirGraphMtEph.rs:94: info: 12 extra fns not in StEph (DirGraphStEphTrait): `spec_vertices`, `spec_arcs`, `spec_n_plus_from_set`, `spec_n_minus_from_set`, `spec_n_plus_of_vertices_from_set`, `spec_n_minus_of_vertices_from_set`, `spec_ng_of_vertices_from_set`, `n_plus_par`, `n_minus_par`, `n_plus_of_vertices_par`, `n_minus_of_vertices_par`, `ng_of_vertices_par`
+src/Chap06/DirGraphMtEph.rs:101: info: `empty` returns `Self` but StEph returns `DirGraphStEph < V >`
+src/Chap06/DirGraphMtEph.rs:110: info: `from_sets` returns `Self` but StEph returns `DirGraphStEph < V >`
+src/Chap06/DirGraphStEph.rs:0: info: DirGraphTrait trait: 24 matched fns across 2 variants
+src/Chap06/DirGraphMtEph.rs:833: info: trait LockedDirGraphMtEphTrait — 13 fns (12 exec, 1 spec), only in MtEph variant
+src/Chap06/LabDirGraphMtEph.rs:0: info: file group LabDirGraph — comparing MtEph (src/Chap06/LabDirGraphMtEph.rs), StEph (src/Chap06/LabDirGraphStEph.rs)
+src/Chap06/LabDirGraphStEph.rs:32: info: struct LabDirGraphStEph { vertices: SetStEph < V >, labeled_arcs: SetStEph < LabEdge < V , L > > }
+src/Chap06/LabDirGraphStEph.rs:498: info: View = Seq < V >
+src/Chap06/LabDirGraphMtEph.rs:67: info: struct LabDirGraphMtEph { vertices: SetStEph < V >, labeled_arcs: SetStEph < LabEdge < V , L > > }
+src/Chap06/LabDirGraphMtEph.rs:743: info: View = LabGraphView < < V as View > :: V , < L as View > :: V >
+src/Chap06/LabDirGraphMtEph.rs:750: info: wf = spec_lockedlabdirgraphmteph_wf
+src/Chap06/LabDirGraphMtEph.rs:743: error: View = LabGraphView < < V as View > :: V , < L as View > :: V > but StEph has View = Seq < V >
+src/Chap06/LabDirGraphStEph.rs:0: warning: no spec_*_wf predicate found in StEph variant
+src/Chap06/LabDirGraphMtEph.rs:750: warning: wf name `spec_lockedlabdirgraphmteph_wf` does not follow expected pattern `spec_labdirgraph*_wf`
+src/Chap06/LabDirGraphStEph.rs:45: info: trait LabDirGraphStEphTrait <V : StT + Hash, L : StT + Hash> : View < V = LabGraphView < < V as View > :: V , < L as View > :: V > > + Sized — 15 fns (11 exec, 4 spec)
+src/Chap06/LabDirGraphMtEph.rs:92: info: trait LabDirGraphMtEphTrait <V : StTInMtT + Hash + 'static, L : StTInMtT + Hash + 'static> : View < V = LabGraphView < < V as View > :: V , < L as View > :: V > > + Sized — 19 fns (13 exec, 6 spec)
+src/Chap06/LabDirGraphMtEph.rs:92: warning: generic bounds `<V : StTInMtT + Hash + 'static, L : StTInMtT + Hash + 'static>` but StEph has `<V : StT + Hash, L : StT + Hash>`
+src/Chap06/LabDirGraphMtEph.rs:92: warning: missing 2 fns present in StEph (LabDirGraphStEphTrait): `spec_finite`, `spec_arcs`
+src/Chap06/LabDirGraphMtEph.rs:92: info: 6 extra fns not in StEph (LabDirGraphStEphTrait): `spec_vertices`, `spec_labeled_arcs`, `spec_n_plus_from_set`, `spec_n_minus_from_set`, `n_plus_par`, `n_minus_par`
+src/Chap06/LabDirGraphMtEph.rs:100: info: `empty` returns `Self` but StEph returns `LabDirGraphStEph < V , L >`
+src/Chap06/LabDirGraphMtEph.rs:109: info: `from_vertices_and_labeled_arcs` returns `Self` but StEph returns `LabDirGraphStEph < V , L >`
+src/Chap06/LabDirGraphStEph.rs:0: info: LabDirGraphTrait trait: 13 matched fns across 2 variants
+src/Chap06/LabDirGraphMtEph.rs:747: info: trait LockedLabDirGraphMtEphTrait — 6 fns (5 exec, 1 spec), only in MtEph variant
+src/Chap06/LabUnDirGraphMtEph.rs:0: info: file group LabUnDirGraph — comparing MtEph (src/Chap06/LabUnDirGraphMtEph.rs), StEph (src/Chap06/LabUnDirGraphStEph.rs)
+src/Chap06/LabUnDirGraphStEph.rs:33: info: struct LabUnDirGraphStEph { vertices: SetStEph < V >, labeled_edges: SetStEph < LabEdge < V , L > > }
+src/Chap06/LabUnDirGraphStEph.rs:469: info: View = Seq < V >
+src/Chap06/LabUnDirGraphMtEph.rs:67: info: struct LabUnDirGraphMtEph { vertices: SetStEph < V >, labeled_edges: SetStEph < LabEdge < V , L > > }
+src/Chap06/LabUnDirGraphMtEph.rs:700: info: View = LabGraphView < < V as View > :: V , < L as View > :: V >
+src/Chap06/LabUnDirGraphMtEph.rs:700: error: View = LabGraphView < < V as View > :: V , < L as View > :: V > but StEph has View = Seq < V >
+src/Chap06/LabUnDirGraphStEph.rs:0: warning: no spec_*_wf predicate found in StEph variant
+src/Chap06/LabUnDirGraphMtEph.rs:0: warning: no spec_*_wf predicate found in MtEph variant
+src/Chap06/LabUnDirGraphStEph.rs:46: info: trait LabUnDirGraphStEphTrait <V : HashOrd, L : StT + Hash> : View < V = LabGraphView < < V as View > :: V , < L as View > :: V > > + Sized — 13 fns (10 exec, 3 spec)
+src/Chap06/LabUnDirGraphMtEph.rs:92: info: trait LabUnDirGraphMtEphTrait <V : StTInMtT + Hash + Ord + 'static, L : StTInMtT + Hash + 'static> : View < V = LabGraphView < < V as View > :: V , < L as View > :: V > > + Sized — 15 fns (11 exec, 4 spec)
+src/Chap06/LabUnDirGraphMtEph.rs:92: warning: generic bounds `<V : StTInMtT + Hash + Ord + 'static, L : StTInMtT + Hash + 'static>` but StEph has `<V : HashOrd, L : StT + Hash>`
+src/Chap06/LabUnDirGraphMtEph.rs:92: warning: missing 2 fns present in StEph (LabUnDirGraphStEphTrait): `spec_finite`, `spec_edges`
+src/Chap06/LabUnDirGraphMtEph.rs:92: info: 4 extra fns not in StEph (LabUnDirGraphStEphTrait): `spec_vertices`, `spec_labeled_edges`, `spec_ng_from_set`, `ng_par`
+src/Chap06/LabUnDirGraphMtEph.rs:108: info: `empty` returns `Self` but StEph returns `LabUnDirGraphStEph < V , L >`
+src/Chap06/LabUnDirGraphMtEph.rs:117: info: `from_vertices_and_labeled_edges` returns `Self` but StEph returns `LabUnDirGraphStEph < V , L >`
+src/Chap06/LabUnDirGraphStEph.rs:0: info: LabUnDirGraphTrait trait: 11 matched fns across 2 variants
+src/Chap06/LabUnDirGraphMtEph.rs:706: info: trait LockedLabUnDirGraphMtEphTrait — 8 fns (8 exec, 0 spec), only in MtEph variant
+src/Chap06/UnDirGraphMtEph.rs:0: info: file group UnDirGraph — comparing MtEph (src/Chap06/UnDirGraphMtEph.rs), StEph (src/Chap06/UnDirGraphStEph.rs)
+src/Chap06/UnDirGraphStEph.rs:55: info: struct UnDirGraphStEph { V: SetStEph < V >, E: SetStEph < Edge < V > > }
+src/Chap06/UnDirGraphStEph.rs:435: info: View = Seq < V >
+src/Chap06/UnDirGraphMtEph.rs:68: info: struct UnDirGraphMtEph { V: SetStEph < V >, E: SetStEph < Edge < V > > }
+src/Chap06/UnDirGraphMtEph.rs:586: info: View = GraphView < < V as View > :: V >
+src/Chap06/UnDirGraphMtEph.rs:591: info: wf = spec_lockedundirgraphmteph_wf
+src/Chap06/UnDirGraphMtEph.rs:586: error: View = GraphView < < V as View > :: V > but StEph has View = Seq < V >
+src/Chap06/UnDirGraphStEph.rs:0: warning: no spec_*_wf predicate found in StEph variant
+src/Chap06/UnDirGraphMtEph.rs:591: warning: wf name `spec_lockedundirgraphmteph_wf` does not follow expected pattern `spec_undirgraph*_wf`
+src/Chap06/UnDirGraphMtEph.rs:590: info: trait LockedUnDirGraphMtEphTrait — 9 fns (8 exec, 1 spec), only in MtEph variant
+src/Chap06/UnDirGraphStEph.rs:74: info: trait UnDirGraphStEphTrait <V : StT + Hash> : View < V = GraphView < < V as View > :: V > > + Sized — 14 fns (11 exec, 3 spec)
+src/Chap06/UnDirGraphMtEph.rs:93: info: trait UnDirGraphMtEphTrait <V : StTInMtT + Hash + 'static> : View < V = GraphView < < V as View > :: V > > + Sized — 19 fns (13 exec, 6 spec)
+src/Chap06/UnDirGraphMtEph.rs:93: warning: generic bounds `<V : StTInMtT + Hash + 'static>` but StEph has `<V : StT + Hash>`
+src/Chap06/UnDirGraphMtEph.rs:93: warning: missing 1 fns present in StEph (UnDirGraphStEphTrait): `spec_degree`
+src/Chap06/UnDirGraphMtEph.rs:93: info: 6 extra fns not in StEph (UnDirGraphStEphTrait): `spec_vertices`, `spec_edges`, `spec_ng_from_set`, `spec_ng_of_vertices_from_set`, `ng_par`, `ng_of_vertices_par`
+src/Chap06/UnDirGraphMtEph.rs:113: info: `empty` returns `Self` but StEph returns `UnDirGraphStEph < V >`
+src/Chap06/UnDirGraphMtEph.rs:122: info: `from_sets` returns `Self` but StEph returns `UnDirGraphStEph < V >`
+src/Chap06/UnDirGraphStEph.rs:0: info: UnDirGraphTrait trait: 13 matched fns across 2 variants
+src/Chap18/ArraySeqMtEph.rs:0: info: file group ArraySeq — comparing MtEph (src/Chap18/ArraySeqMtEph.rs), StEph (src/Chap18/ArraySeqStEph.rs), MtPer (src/Chap18/ArraySeqMtPer.rs), StPer (src/Chap18/ArraySeqStPer.rs)
+src/Chap18/ArraySeqStPer.rs:62: info: struct ArraySeqStPerS { seq: Vec < T > }
+src/Chap18/ArraySeqStPer.rs:947: info: View = Seq < T >
+src/Chap18/ArraySeqStPer.rs:105: info: wf = spec_arrayseqstper_wf
+src/Chap18/ArraySeqMtPer.rs:67: info: struct ArraySeqMtPerS { seq: Vec < T > }
+src/Chap18/ArraySeqMtPer.rs:1098: info: View = Seq < T >
+src/Chap18/ArraySeqMtPer.rs:95: info: wf = spec_arrayseqmtper_wf
+src/Chap18/ArraySeqStEph.rs:61: info: struct ArraySeqStEphS { seq: Vec < T > }
+src/Chap18/ArraySeqStEph.rs:932: info: View = Seq < T >
+src/Chap18/ArraySeqStEph.rs:104: info: wf = spec_arrayseqsteph_wf
+src/Chap18/ArraySeqMtEph.rs:69: info: struct ArraySeqMtEphS { seq: Vec < T > }
+src/Chap18/ArraySeqMtEph.rs:1493: info: View = Seq < T >
+src/Chap18/ArraySeqMtEph.rs:260: info: wf = spec_arrayseqmteph_wf
+src/Chap18/ArraySeqStPer.rs:104: info: trait ArraySeqStPerBaseTrait <T> : Sized — 9 fns (6 exec, 3 spec)
+src/Chap18/ArraySeqMtPer.rs:94: info: trait ArraySeqMtPerBaseTrait <T> : Sized — 9 fns (6 exec, 3 spec)
+src/Chap18/ArraySeqStEph.rs:103: info: trait ArraySeqStEphBaseTrait <T> : Sized — 10 fns (7 exec, 3 spec)
+src/Chap18/ArraySeqMtEph.rs:259: info: trait ArraySeqMtEphBaseTrait <T> : Sized — 10 fns (7 exec, 3 spec)
+src/Chap18/ArraySeqMtPer.rs:94: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_arrayseqstper_wf`
+src/Chap18/ArraySeqMtPer.rs:94: info: 1 extra fns not in StPer (ArraySeqStPerBaseTrait): `spec_arrayseqmtper_wf`
+src/Chap18/ArraySeqStEph.rs:103: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_arrayseqstper_wf`
+src/Chap18/ArraySeqStEph.rs:103: info: 1 mutation fns (&mut self) added by Eph variant: `set`
+src/Chap18/ArraySeqStEph.rs:103: info: 1 extra fns not in StPer (ArraySeqStPerBaseTrait): `spec_arrayseqsteph_wf`
+src/Chap18/ArraySeqMtEph.rs:259: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_arrayseqstper_wf`
+src/Chap18/ArraySeqMtEph.rs:259: info: 1 mutation fns (&mut self) added by Eph variant: `set`
+src/Chap18/ArraySeqMtEph.rs:259: info: 1 extra fns not in StPer (ArraySeqStPerBaseTrait): `spec_arrayseqmteph_wf`
+src/Chap18/ArraySeqStPer.rs:0: info: ArraySeqBaseTrait trait: 8 matched fns across 4 variants
+src/Chap18/ArraySeqStPer.rs:176: info: trait ArraySeqStPerRedefinableTrait <T> : ArraySeqStPerBaseTrait < T > — 14 fns (14 exec, 0 spec)
+src/Chap18/ArraySeqMtPer.rs:167: info: trait ArraySeqMtPerRedefinableTrait <T> : ArraySeqMtPerBaseTrait < T > — 13 fns (13 exec, 0 spec)
+src/Chap18/ArraySeqStEph.rs:186: info: trait ArraySeqStEphRedefinableTrait <T> : ArraySeqStEphBaseTrait < T > — 14 fns (14 exec, 0 spec)
+src/Chap18/ArraySeqMtEph.rs:342: info: trait ArraySeqMtEphRedefinableTrait <T> : ArraySeqMtEphBaseTrait < T > — 15 fns (15 exec, 0 spec)
+src/Chap18/ArraySeqMtPer.rs:167: info: supertrait `ArraySeqMtPerBaseTrait < T >` (variant-substitution of `ArraySeqStPerBaseTrait < T >`)
+src/Chap18/ArraySeqStEph.rs:186: info: supertrait `ArraySeqStEphBaseTrait < T >` (variant-substitution of `ArraySeqStPerBaseTrait < T >`)
+src/Chap18/ArraySeqMtEph.rs:342: info: supertrait `ArraySeqMtEphBaseTrait < T >` (variant-substitution of `ArraySeqStPerBaseTrait < T >`)
+src/Chap18/ArraySeqMtPer.rs:167: warning: missing 1 fns present in StPer (ArraySeqStPerRedefinableTrait): `inject`
+src/Chap18/ArraySeqMtEph.rs:342: info: 1 extra fns not in StPer (ArraySeqStPerRedefinableTrait): `ninject`
+src/Chap18/ArraySeqStPer.rs:0: info: ArraySeqRedefinableTrait trait: 13 matched fns across 4 variants
+src/Chap18/LinkedListStEph.rs:0: info: file group LinkedList — comparing StEph (src/Chap18/LinkedListStEph.rs), StPer (src/Chap18/LinkedListStPer.rs)
+src/Chap18/LinkedListStPer.rs:65: info: struct LinkedListStPerS { seq: Vec < T > }
+src/Chap18/LinkedListStPer.rs:830: info: View = Seq < T >
+src/Chap18/LinkedListStPer.rs:94: info: wf = spec_linkedliststper_wf
+src/Chap18/LinkedListStEph.rs:64: info: struct LinkedListStEphS { seq: Vec < T > }
+src/Chap18/LinkedListStEph.rs:847: info: View = Seq < T >
+src/Chap18/LinkedListStEph.rs:93: info: wf = spec_linkedliststeph_wf
+src/Chap18/LinkedListStPer.rs:93: info: trait LinkedListStPerBaseTrait <T> : Sized — 8 fns (5 exec, 3 spec)
+src/Chap18/LinkedListStEph.rs:92: info: trait LinkedListStEphBaseTrait <T> : Sized — 9 fns (6 exec, 3 spec)
+src/Chap18/LinkedListStEph.rs:92: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_linkedliststper_wf`
+src/Chap18/LinkedListStEph.rs:92: info: 1 mutation fns (&mut self) added by Eph variant: `set`
+src/Chap18/LinkedListStEph.rs:92: info: 1 extra fns not in StPer (LinkedListStPerBaseTrait): `spec_linkedliststeph_wf`
+src/Chap18/LinkedListStPer.rs:0: info: LinkedListBaseTrait trait: 7 matched fns across 2 variants
+src/Chap18/LinkedListStPer.rs:146: info: trait LinkedListStPerRedefinableTrait <T> : LinkedListStPerBaseTrait < T > — 13 fns (13 exec, 0 spec)
+src/Chap18/LinkedListStEph.rs:154: info: trait LinkedListStEphRedefinableTrait <T> : LinkedListStEphBaseTrait < T > — 13 fns (13 exec, 0 spec)
+src/Chap18/LinkedListStEph.rs:154: info: supertrait `LinkedListStEphBaseTrait < T >` (variant-substitution of `LinkedListStPerBaseTrait < T >`)
+src/Chap18/LinkedListStPer.rs:0: info: LinkedListRedefinableTrait trait: 13 matched fns across 2 variants
+src/Chap19/ArraySeqMtEph.rs:0: info: file group ArraySeq — comparing MtEph (src/Chap19/ArraySeqMtEph.rs), StEph (src/Chap19/ArraySeqStEph.rs), StPer (src/Chap19/ArraySeqStPer.rs)
+src/Chap19/ArraySeqStPer.rs:76: info: struct ArraySeqStPerS { seq: Vec < T > }
+src/Chap19/ArraySeqStPer.rs:1110: info: View = Seq < T >
+src/Chap19/ArraySeqStPer.rs:164: info: wf = spec_arrayseqstper_wf
+src/Chap19/ArraySeqStEph.rs:77: info: struct ArraySeqStEphS { seq: Vec < T > }
+src/Chap19/ArraySeqStEph.rs:1102: info: View = Seq < T >
+src/Chap19/ArraySeqStEph.rs:167: info: wf = spec_arrayseqsteph_wf
+src/Chap19/ArraySeqMtEph.rs:68: info: struct ArraySeqMtEphS { seq: Vec < T > }
+src/Chap19/ArraySeqMtEph.rs:1388: info: View = Seq < T >
+src/Chap19/ArraySeqMtEph.rs:179: info: wf = spec_arrayseqmteph_wf
+src/Chap19/ArraySeqStPer.rs:163: info: trait ArraySeqStPerTrait <T> : Sized — 26 fns (23 exec, 3 spec)
+src/Chap19/ArraySeqStEph.rs:166: info: trait ArraySeqStEphTrait <T> : Sized — 27 fns (24 exec, 3 spec)
+src/Chap19/ArraySeqMtEph.rs:178: info: trait ArraySeqMtEphTrait <T> : Sized — 28 fns (25 exec, 3 spec)
+src/Chap19/ArraySeqStEph.rs:166: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_arrayseqstper_wf`
+src/Chap19/ArraySeqStEph.rs:166: info: 1 mutation fns (&mut self) added by Eph variant: `set`
+src/Chap19/ArraySeqStEph.rs:166: info: 1 extra fns not in StPer (ArraySeqStPerTrait): `spec_arrayseqsteph_wf`
+src/Chap19/ArraySeqMtEph.rs:178: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_arrayseqstper_wf`
+src/Chap19/ArraySeqMtEph.rs:178: info: 1 mutation fns (&mut self) added by Eph variant: `set`
+src/Chap19/ArraySeqMtEph.rs:178: info: 2 extra fns not in StPer (ArraySeqStPerTrait): `spec_arrayseqmteph_wf`, `ninject`
+src/Chap19/ArraySeqStPer.rs:0: info: ArraySeqTrait trait: 25 matched fns across 3 variants
+src/Chap26/DivConReduceMtPer.rs:0: info: file group DivConReduce — comparing MtPer (src/Chap26/DivConReduceMtPer.rs), StPer (src/Chap26/DivConReduceStPer.rs)
+src/Chap26/DivConReduceMtPer.rs:154: info: trait DivConReduceMtTrait — 5 fns (5 exec, 0 spec), only in MtPer variant
+src/Chap26/DivConReduceStPer.rs:58: info: trait DivConReduceStTrait — 5 fns (5 exec, 0 spec), only in StPer variant
+src/Chap26/ETSPMtEph.rs:0: info: file group ETSP — comparing MtEph (src/Chap26/ETSPMtEph.rs), StEph (src/Chap26/ETSPStEph.rs)
+src/Chap26/ETSPMtEph.rs:315: info: trait ETSPMtTrait — 1 fns (1 exec, 0 spec), only in MtEph variant
+src/Chap26/ETSPMtEph.rs:618: info: trait ETSPPointTrait — 1 fns (1 exec, 0 spec), only in MtEph variant
+src/Chap26/ETSPStEph.rs:290: info: trait ETSPStTrait — 1 fns (1 exec, 0 spec), only in StEph variant
+src/Chap26/MergeSortMtPer.rs:0: info: file group MergeSort — comparing MtPer (src/Chap26/MergeSortMtPer.rs), StPer (src/Chap26/MergeSortStPer.rs)
+src/Chap26/MergeSortMtPer.rs:175: info: trait MergeSortMtTrait — 2 fns (2 exec, 0 spec), only in MtPer variant
+src/Chap26/MergeSortStPer.rs:112: info: trait MergeSortStTrait — 2 fns (2 exec, 0 spec), only in StPer variant
+src/Chap26/ScanDCMtPer.rs:0: info: file group ScanDC — comparing MtPer (src/Chap26/ScanDCMtPer.rs), StPer (src/Chap26/ScanDCStPer.rs)
+src/Chap26/ScanDCMtPer.rs:90: info: trait ScanDCMtTrait — 1 fns (1 exec, 0 spec), only in MtPer variant
+src/Chap26/ScanDCStPer.rs:98: info: trait ScanDCStTrait — 2 fns (2 exec, 0 spec), only in StPer variant
+src/Chap27/ReduceContractMtEph.rs:0: info: file group ReduceContract — comparing MtEph (src/Chap27/ReduceContractMtEph.rs), StEph (src/Chap27/ReduceContractStEph.rs)
+src/Chap27/ReduceContractStEph.rs:163: info: trait ReduceContractStEphTrait <T : StT> : (none) — 1 fns (1 exec, 0 spec)
+src/Chap27/ReduceContractMtEph.rs:147: info: trait ReduceContractMtEphTrait <T : StTInMtT> : (none) — 1 fns (1 exec, 0 spec)
+src/Chap27/ReduceContractMtEph.rs:147: warning: generic bounds `<T : StTInMtT>` but StEph has `<T : StT>`
+src/Chap27/ReduceContractMtEph.rs:147: warning: missing 1 fns present in StEph (ReduceContractStEphTrait): `reduce_contract`
+src/Chap27/ReduceContractMtEph.rs:147: info: 1 extra fns not in StEph (ReduceContractStEphTrait): `reduce_contract_parallel`
+src/Chap27/ScanContractMtEph.rs:0: info: file group ScanContract — comparing MtEph (src/Chap27/ScanContractMtEph.rs), StEph (src/Chap27/ScanContractStEph.rs)
+src/Chap27/ScanContractStEph.rs:223: info: trait ScanContractStEphTrait <T : StT> : (none) — 2 fns (2 exec, 0 spec)
+src/Chap27/ScanContractMtEph.rs:229: info: trait ScanContractMtEphTrait <T : StTInMtT> : (none) — 2 fns (2 exec, 0 spec)
+src/Chap27/ScanContractMtEph.rs:229: warning: generic bounds `<T : StTInMtT>` but StEph has `<T : StT>`
+src/Chap27/ScanContractMtEph.rs:229: warning: missing 2 fns present in StEph (ScanContractStEphTrait): `scan_contract`, `expand_scan`
+src/Chap27/ScanContractMtEph.rs:229: info: 2 extra fns not in StEph (ScanContractStEphTrait): `scan_contract_parallel`, `expand_scan_parallel`
+src/Chap28/MaxContigSubSumDivConMtEph.rs:0: info: file group MaxContigSubSumDivCon — comparing MtEph (src/Chap28/MaxContigSubSumDivConMtEph.rs), StEph (src/Chap28/MaxContigSubSumDivConStEph.rs)
+src/Chap28/MaxContigSubSumDivConMtEph.rs:42: info: trait MaxContigSubSumDivConMtTrait — 1 fns (1 exec, 0 spec), only in MtEph variant
+src/Chap28/MaxContigSubSumDivConStEph.rs:148: info: trait MaxContigSubSumDivConTrait — 1 fns (1 exec, 0 spec), only in StEph variant
+src/Chap28/MaxContigSubSumDivConOptMtEph.rs:0: info: file group MaxContigSubSumDivConOpt — comparing MtEph (src/Chap28/MaxContigSubSumDivConOptMtEph.rs), StEph (src/Chap28/MaxContigSubSumDivConOptStEph.rs)
+src/Chap28/MaxContigSubSumDivConOptMtEph.rs:48: info: trait MaxContigSubSumDivConOptMtTrait — 1 fns (1 exec, 0 spec), only in MtEph variant
+src/Chap28/MaxContigSubSumDivConOptStEph.rs:257: info: trait MaxContigSubSumDivConOptTrait — 1 fns (1 exec, 0 spec), only in StEph variant
+src/Chap28/MaxContigSubSumOptMtEph.rs:0: info: file group MaxContigSubSumOpt — comparing MtEph (src/Chap28/MaxContigSubSumOptMtEph.rs), StEph (src/Chap28/MaxContigSubSumOptStEph.rs)
+src/Chap28/MaxContigSubSumOptMtEph.rs:16: info: trait MaxContigSubSumOptMtTrait — 1 fns (1 exec, 0 spec), only in MtEph variant
+src/Chap28/MaxContigSubSumOptStEph.rs:74: info: trait MaxContigSubSumOptTrait — 1 fns (1 exec, 0 spec), only in StEph variant
+src/Chap35/OrderStatSelectMtEph.rs:0: info: file group OrderStatSelect — comparing MtEph (src/Chap35/OrderStatSelectMtEph.rs), StEph (src/Chap35/OrderStatSelectStEph.rs), MtPer (src/Chap35/OrderStatSelectMtPer.rs), StPer (src/Chap35/OrderStatSelectStPer.rs)
+src/Chap35/OrderStatSelectStPer.rs:85: info: trait OrderStatSelectStPerTrait <T : TotalOrder> : (none) — 1 fns (1 exec, 0 spec)
+src/Chap35/OrderStatSelectMtPer.rs:108: info: trait OrderStatSelectMtPerTrait <T : TotalOrder> : (none) — 1 fns (1 exec, 0 spec)
+src/Chap35/OrderStatSelectStEph.rs:86: info: trait OrderStatSelectStEphTrait <T : TotalOrder> : (none) — 1 fns (1 exec, 0 spec)
+src/Chap35/OrderStatSelectMtEph.rs:108: info: trait OrderStatSelectMtEphTrait <T : TotalOrder> : (none) — 1 fns (1 exec, 0 spec)
+src/Chap35/OrderStatSelectStPer.rs:0: info: OrderStatSelectTrait trait: 1 matched fns across 4 variants
+src/Chap36/QuickSortMtEph.rs:0: info: file group QuickSort — comparing MtEph (src/Chap36/QuickSortMtEph.rs), StEph (src/Chap36/QuickSortStEph.rs)
+src/Chap36/QuickSortStEph.rs:179: info: trait QuickSortStEphTrait <T : TotalOrder> : (none) — 6 fns (6 exec, 0 spec)
+src/Chap36/QuickSortMtEph.rs:181: info: trait QuickSortMtEphTrait <T : TotalOrder> : (none) — 6 fns (6 exec, 0 spec)
+src/Chap36/QuickSortStEph.rs:0: info: QuickSortTrait trait: 6 matched fns across 2 variants
+src/Chap37/AVLTreeSeqStEph.rs:0: info: file group AVLTreeSeq — comparing StEph (src/Chap37/AVLTreeSeqStEph.rs), MtPer (src/Chap37/AVLTreeSeqMtPer.rs), StPer (src/Chap37/AVLTreeSeqStPer.rs)
+src/Chap37/AVLTreeSeqStPer.rs:65: info: struct AVLTreeSeqStPerS { root: Link < T > }
+src/Chap37/AVLTreeSeqStPer.rs:101: info: View = Seq < T :: V >
+src/Chap37/AVLTreeSeqStPer.rs:231: info: wf = spec_avltreeseqstper_wf
+src/Chap37/AVLTreeSeqMtPer.rs:68: info: struct AVLTreeSeqMtPerS { root: Link < T > }
+src/Chap37/AVLTreeSeqMtPer.rs:109: info: View = Seq < T >
+src/Chap37/AVLTreeSeqMtPer.rs:227: info: wf = spec_avltreeseqmtper_wf
+src/Chap37/AVLTreeSeqStEph.rs:88: info: struct AVLTreeSeqStEphS { root: Link < T >, next_key: N }
+src/Chap37/AVLTreeSeqStEph.rs:127: info: View = Seq < T :: V >
+src/Chap37/AVLTreeSeqStEph.rs:265: info: wf = spec_avltreeseqsteph_wf
+src/Chap37/AVLTreeSeqMtPer.rs:109: error: View = Seq < T > but StPer has View = Seq < T :: V >
+src/Chap37/AVLTreeSeqStPer.rs:229: info: trait AVLTreeSeqStPerTrait <T : StT> : Sized — 15 fns (13 exec, 2 spec)
+src/Chap37/AVLTreeSeqMtPer.rs:225: info: trait AVLTreeSeqMtPerTrait <T : StTInMtT> : Sized — 14 fns (12 exec, 2 spec)
+src/Chap37/AVLTreeSeqStEph.rs:263: info: trait AVLTreeSeqStEphTrait <T : StT> : Sized — 20 fns (18 exec, 2 spec)
+src/Chap37/AVLTreeSeqMtPer.rs:225: warning: generic bounds `<T : StTInMtT>` but StPer has `<T : StT>`
+src/Chap37/AVLTreeSeqMtPer.rs:225: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_avltreeseqstper_wf`
+src/Chap37/AVLTreeSeqMtPer.rs:225: warning: missing 1 fns present in StPer (AVLTreeSeqStPerTrait): `to_arrayseq`
+src/Chap37/AVLTreeSeqMtPer.rs:225: info: 1 extra fns not in StPer (AVLTreeSeqStPerTrait): `spec_avltreeseqmtper_wf`
+src/Chap37/AVLTreeSeqMtPer.rs:254: warning: `set`: StPer has ensures but MtPer does not
+src/Chap37/AVLTreeSeqMtPer.rs:261: warning: `subseq_copy`: StPer has ensures but MtPer does not
+src/Chap37/AVLTreeSeqMtPer.rs:264: warning: `from_vec`: StPer has requires but MtPer does not
+src/Chap37/AVLTreeSeqMtPer.rs:269: warning: `values_in_order`: StPer has requires but MtPer does not
+src/Chap37/AVLTreeSeqMtPer.rs:272: error: `iter` returns `AVLTreeSeqMtPerBorrowIter < 'a , T >` but StPer returns `AVLTreeSeqStPerIter < 'a , T >`
+src/Chap37/AVLTreeSeqStEph.rs:263: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_avltreeseqstper_wf`
+src/Chap37/AVLTreeSeqStEph.rs:263: warning: missing 1 fns present in StPer (AVLTreeSeqStPerTrait): `values_in_order`
+src/Chap37/AVLTreeSeqStEph.rs:263: info: 4 mutation fns (&mut self) added by Eph variant: `update`, `push_back`, `insert_value`, `delete_value`
+src/Chap37/AVLTreeSeqStEph.rs:263: info: 3 extra fns not in StPer (AVLTreeSeqStPerTrait): `spec_avltreeseqsteph_wf`, `new_root`, `contains_value`
+src/Chap37/AVLTreeSeqStEph.rs:281: info: `set` returns `Result < () , & 'static str >` but StPer returns `Result < Self , & 'static str >` (Eph→Per return shift)
+src/Chap37/AVLTreeSeqStEph.rs:317: info: `from_vec` returns `AVLTreeSeqStEphS < T >` but StPer returns `Self`
+src/Chap37/AVLTreeSeqStPer.rs:0: info: AVLTreeSeqTrait trait: 12 matched fns across 3 variants
+src/Chap37/BSTAVLMtEph.rs:0: info: file group BSTAVL — comparing MtEph (src/Chap37/BSTAVLMtEph.rs), StEph (src/Chap37/BSTAVLStEph.rs)
+src/Chap37/BSTAVLStEph.rs:35: info: struct BSTAVLStEph { root: BalBinTree < T > }
+src/Chap37/BSTAVLStEph.rs:127: info: wf = spec_bstavlsteph_wf
+src/Chap37/BSTAVLMtEph.rs:419: info: struct BSTAVLMtEph { root: RwLock < BalBinTree < T > , BSTAVLMtEphInv < T > >, ghost ghost_root: Ghost < BalBinTree < T > > }
+src/Chap37/BSTAVLMtEph.rs:438: info: View = BalBinTree < T >
+src/Chap37/BSTAVLMtEph.rs:443: info: wf = spec_bstavlmteph_wf
+src/Chap37/BSTAVLMtEph.rs:419: warning: ghost field `ghost_root` has no counterpart in other variants
+src/Chap37/BSTAVLStEph.rs:125: info: trait BSTAVLStEphTrait <T : TotalOrder> : Sized — 9 fns (7 exec, 2 spec)
+src/Chap37/BSTAVLMtEph.rs:442: info: trait BSTAVLMtEphTrait <T : TotalOrder> : Sized + View < V = BalBinTree < T > > — 12 fns (11 exec, 1 spec)
+src/Chap37/BSTAVLMtEph.rs:442: error: supertrait `Sized + View < V = BalBinTree < T > >` but StEph has `Sized`
+src/Chap37/BSTAVLMtEph.rs:442: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_bstavlsteph_wf`
+src/Chap37/BSTAVLMtEph.rs:442: warning: missing 1 fns present in StEph (BSTAVLStEphTrait): `spec_root`
+src/Chap37/BSTAVLMtEph.rs:442: info: 5 extra fns not in StEph (BSTAVLStEphTrait): `spec_bstavlmteph_wf`, `minimum`, `maximum`, `in_order`, `pre_order`
+src/Chap37/BSTAVLMtEph.rs:449: info: `insert` returns `Result < () , () >` but StEph returns `Self`
+src/Chap37/BSTAVLMtEph.rs:475: error: `find` returns `Option < T >` but StEph returns `Option < & T >`
+src/Chap37/BSTAVLMtEph.rs:475: warning: `find`: StEph has requires but MtEph does not
+src/Chap37/BSTAVLStEph.rs:0: info: BSTAVLTrait trait: 7 matched fns across 2 variants
+src/Chap37/BSTBBAlphaMtEph.rs:0: info: file group BSTBBAlpha — comparing MtEph (src/Chap37/BSTBBAlphaMtEph.rs), StEph (src/Chap37/BSTBBAlphaStEph.rs)
+src/Chap37/BSTBBAlphaStEph.rs:38: info: struct BSTBBAlphaStEph { root: BalBinTree < T > }
+src/Chap37/BSTBBAlphaStEph.rs:70: info: wf = spec_bstbbalphasteph_wf
+src/Chap37/BSTBBAlphaMtEph.rs:232: info: struct BSTBBAlphaMtEph { root: RwLock < BalBinTree < T > , BSTBBAlphaMtEphInv < T > >, ghost ghost_root: Ghost < BalBinTree < T > > }
+src/Chap37/BSTBBAlphaMtEph.rs:251: info: View = BalBinTree < T >
+src/Chap37/BSTBBAlphaMtEph.rs:256: info: wf = spec_bstbbalphamteph_wf
+src/Chap37/BSTBBAlphaMtEph.rs:232: warning: ghost field `ghost_root` has no counterpart in other variants
+src/Chap37/BSTBBAlphaStEph.rs:68: info: trait BSTBBAlphaStEphTrait <T : TotalOrder> : Sized — 12 fns (10 exec, 2 spec)
+src/Chap37/BSTBBAlphaMtEph.rs:255: info: trait BSTBBAlphaMtEphTrait <T : TotalOrder> : Sized + View < V = BalBinTree < T > > — 12 fns (11 exec, 1 spec)
+src/Chap37/BSTBBAlphaMtEph.rs:255: error: supertrait `Sized + View < V = BalBinTree < T > >` but StEph has `Sized`
+src/Chap37/BSTBBAlphaMtEph.rs:255: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_bstbbalphasteph_wf`
+src/Chap37/BSTBBAlphaMtEph.rs:255: warning: missing 2 fns present in StEph (BSTBBAlphaStEphTrait): `spec_root`, `delete`
+src/Chap37/BSTBBAlphaMtEph.rs:255: info: 3 extra fns not in StEph (BSTBBAlphaStEphTrait): `spec_bstbbalphamteph_wf`, `in_order`, `pre_order`
+src/Chap37/BSTBBAlphaMtEph.rs:262: info: `insert` returns `Result < () , () >` but StEph returns `Self`
+src/Chap37/BSTBBAlphaMtEph.rs:288: error: `find` returns `Option < T >` but StEph returns `Option < & T >`
+src/Chap37/BSTBBAlphaMtEph.rs:288: warning: `find`: StEph has requires but MtEph does not
+src/Chap37/BSTBBAlphaMtEph.rs:290: error: `minimum` returns `Option < T >` but StEph returns `Option < & T >`
+src/Chap37/BSTBBAlphaMtEph.rs:290: warning: `minimum`: StEph has requires but MtEph does not
+src/Chap37/BSTBBAlphaMtEph.rs:292: error: `maximum` returns `Option < T >` but StEph returns `Option < & T >`
+src/Chap37/BSTBBAlphaMtEph.rs:292: warning: `maximum`: StEph has requires but MtEph does not
+src/Chap37/BSTBBAlphaStEph.rs:0: info: BSTBBAlphaTrait trait: 9 matched fns across 2 variants
+src/Chap37/BSTPlainMtEph.rs:0: info: file group BSTPlain — comparing MtEph (src/Chap37/BSTPlainMtEph.rs), StEph (src/Chap37/BSTPlainStEph.rs)
+src/Chap37/BSTPlainStEph.rs:33: info: struct BSTPlainStEph { root: BalBinTree < T > }
+src/Chap37/BSTPlainStEph.rs:85: info: wf = spec_bstplainsteph_wf
+src/Chap37/BSTPlainMtEph.rs:232: info: struct BSTPlainMtEph { root: RwLock < BalBinTree < T > , BSTPlainMtEphInv < T > >, ghost ghost_root: Ghost < BalBinTree < T > > }
+src/Chap37/BSTPlainMtEph.rs:251: info: View = BalBinTree < T >
+src/Chap37/BSTPlainMtEph.rs:256: info: wf = spec_bstplainmteph_wf
+src/Chap37/BSTPlainMtEph.rs:232: warning: ghost field `ghost_root` has no counterpart in other variants
+src/Chap37/BSTPlainStEph.rs:83: info: trait BSTPlainStEphTrait <T : TotalOrder> : Sized — 12 fns (10 exec, 2 spec)
+src/Chap37/BSTPlainMtEph.rs:255: info: trait BSTPlainMtEphTrait <T : TotalOrder> : Sized + View < V = BalBinTree < T > > — 12 fns (11 exec, 1 spec)
+src/Chap37/BSTPlainMtEph.rs:255: error: supertrait `Sized + View < V = BalBinTree < T > >` but StEph has `Sized`
+src/Chap37/BSTPlainMtEph.rs:255: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_bstplainsteph_wf`
+src/Chap37/BSTPlainMtEph.rs:255: warning: missing 2 fns present in StEph (BSTPlainStEphTrait): `spec_root`, `delete`
+src/Chap37/BSTPlainMtEph.rs:255: info: 3 extra fns not in StEph (BSTPlainStEphTrait): `spec_bstplainmteph_wf`, `in_order`, `pre_order`
+src/Chap37/BSTPlainMtEph.rs:262: info: `insert` returns `Result < () , () >` but StEph returns `Self`
+src/Chap37/BSTPlainMtEph.rs:288: error: `find` returns `Option < T >` but StEph returns `Option < & T >`
+src/Chap37/BSTPlainMtEph.rs:288: warning: `find`: StEph has requires but MtEph does not
+src/Chap37/BSTPlainMtEph.rs:290: error: `minimum` returns `Option < T >` but StEph returns `Option < & T >`
+src/Chap37/BSTPlainMtEph.rs:290: warning: `minimum`: StEph has requires but MtEph does not
+src/Chap37/BSTPlainMtEph.rs:292: error: `maximum` returns `Option < T >` but StEph returns `Option < & T >`
+src/Chap37/BSTPlainMtEph.rs:292: warning: `maximum`: StEph has requires but MtEph does not
+src/Chap37/BSTPlainStEph.rs:0: info: BSTPlainTrait trait: 9 matched fns across 2 variants
+src/Chap37/BSTPlainStEph.rs:78: info: trait BSTSpecFns — 2 fns (0 exec, 2 spec), only in StEph variant
+src/Chap37/BSTRBMtEph.rs:0: info: file group BSTRB — comparing MtEph (src/Chap37/BSTRBMtEph.rs), StEph (src/Chap37/BSTRBStEph.rs)
+src/Chap37/BSTRBStEph.rs:38: info: struct BSTRBStEph { root: BalBinTree < T > }
+src/Chap37/BSTRBStEph.rs:104: info: wf = spec_bstrbsteph_wf
+src/Chap37/BSTRBMtEph.rs:901: info: struct BSTRBMtEph { root: RwLock < Link < T > , BSTRBMtEphInv >, ghost ghost_root: Ghost < Link < T > > }
+src/Chap37/BSTRBMtEph.rs:921: info: View = Link < T >
+src/Chap37/BSTRBMtEph.rs:926: info: wf = spec_bstrbmteph_wf
+src/Chap37/BSTRBMtEph.rs:901: warning: ghost field `ghost_root` has no counterpart in other variants
+src/Chap37/BSTRBStEph.rs:102: info: trait BSTRBStEphTrait <T : TotalOrder> : Sized — 9 fns (7 exec, 2 spec)
+src/Chap37/BSTRBMtEph.rs:925: info: trait BSTRBMtEphTrait <T : StTInMtT + Ord + TotalOrder> : Sized + View < V = Link < T > > — 15 fns (14 exec, 1 spec)
+src/Chap37/BSTRBMtEph.rs:925: error: supertrait `Sized + View < V = Link < T > >` but StEph has `Sized`
+src/Chap37/BSTRBMtEph.rs:925: warning: generic bounds `<T : StTInMtT + Ord + TotalOrder>` but StEph has `<T : TotalOrder>`
+src/Chap37/BSTRBMtEph.rs:925: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_bstrbsteph_wf`
+src/Chap37/BSTRBMtEph.rs:925: warning: missing 1 fns present in StEph (BSTRBStEphTrait): `spec_root`
+src/Chap37/BSTRBMtEph.rs:925: info: 8 extra fns not in StEph (BSTRBStEphTrait): `spec_bstrbmteph_wf`, `from_sorted_slice`, `minimum`, `maximum`, `in_order`, `pre_order`, `filter`, `reduce`
+src/Chap37/BSTRBMtEph.rs:947: error: `size` returns `N` but StEph returns `usize`
+src/Chap37/BSTRBMtEph.rs:951: error: `is_empty` returns `B` but StEph returns `bool`
+src/Chap37/BSTRBMtEph.rs:955: error: `height` returns `N` but StEph returns `usize`
+src/Chap37/BSTRBMtEph.rs:935: info: `insert` returns `Result < () , () >` but StEph returns `Self`
+src/Chap37/BSTRBMtEph.rs:943: error: `contains` returns `B` but StEph returns `bool`
+src/Chap37/BSTRBMtEph.rs:959: error: `find` returns `Option < T >` but StEph returns `Option < & T >`
+src/Chap37/BSTRBMtEph.rs:959: warning: `find`: StEph has requires but MtEph does not
+src/Chap37/BSTRBStEph.rs:0: info: BSTRBTrait trait: 7 matched fns across 2 variants
+src/Chap37/BSTSplayMtEph.rs:0: info: file group BSTSplay — comparing MtEph (src/Chap37/BSTSplayMtEph.rs), StEph (src/Chap37/BSTSplayStEph.rs)
+src/Chap37/BSTSplayStEph.rs:46: info: struct BSTSplayStEph { root: Link < T > }
+src/Chap37/BSTSplayStEph.rs:189: info: wf = spec_bstsplaysteph_wf
+src/Chap37/BSTSplayMtEph.rs:1748: info: struct BSTSplayMtEph { root: RwLock < Link < T > , BSTSplayMtEphInv >, ghost ghost_root: Ghost < Link < T > > }
+src/Chap37/BSTSplayMtEph.rs:1767: info: View = Link < T >
+src/Chap37/BSTSplayMtEph.rs:1772: info: wf = spec_bstsplaymteph_wf
+src/Chap37/BSTSplayMtEph.rs:1748: warning: ghost field `ghost_root` has no counterpart in other variants
+src/Chap37/BSTSplayStEph.rs:185: info: trait BSTSplayStEphTrait <T : TotalOrder + Clone> : (none) — 17 fns (11 exec, 6 spec)
+src/Chap37/BSTSplayMtEph.rs:1771: info: trait BSTSplayMtEphTrait <T : StTInMtT + Ord + TotalOrder> : Sized + View < V = Link < T > > — 15 fns (14 exec, 1 spec)
+src/Chap37/BSTSplayMtEph.rs:1771: error: supertrait `Sized + View < V = Link < T > >` but StEph has ``
+src/Chap37/BSTSplayMtEph.rs:1771: warning: generic bounds `<T : StTInMtT + Ord + TotalOrder>` but StEph has `<T : TotalOrder + Clone>`
+src/Chap37/BSTSplayMtEph.rs:1771: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_bstsplaysteph_wf`
+src/Chap37/BSTSplayMtEph.rs:1771: warning: missing 5 fns present in StEph (BSTSplayStEphTrait): `spec_size`, `spec_height`, `spec_contains`, `spec_in_order`, `spec_pre_order`
+src/Chap37/BSTSplayMtEph.rs:1771: info: 4 extra fns not in StEph (BSTSplayStEphTrait): `spec_bstsplaymteph_wf`, `from_sorted_slice`, `filter`, `reduce`
+src/Chap37/BSTSplayMtEph.rs:1786: error: `insert` returns `Result < () , () >` but StEph returns `()`
+src/Chap37/BSTSplayMtEph.rs:1810: error: `find` returns `Option < T >` but StEph returns `Option < & T >`
+src/Chap37/BSTSplayMtEph.rs:1810: warning: `find`: StEph has requires but MtEph does not
+src/Chap37/BSTSplayMtEph.rs:1812: error: `minimum` returns `Option < T >` but StEph returns `Option < & T >`
+src/Chap37/BSTSplayMtEph.rs:1812: warning: `minimum`: StEph has requires but MtEph does not
+src/Chap37/BSTSplayMtEph.rs:1814: error: `maximum` returns `Option < T >` but StEph returns `Option < & T >`
+src/Chap37/BSTSplayMtEph.rs:1814: warning: `maximum`: StEph has requires but MtEph does not
+src/Chap37/BSTSplayMtEph.rs:1816: warning: `in_order`: StEph has requires but MtEph does not
+src/Chap37/BSTSplayMtEph.rs:1818: warning: `pre_order`: StEph has requires but MtEph does not
+src/Chap37/BSTSplayStEph.rs:0: info: BSTSplayTrait trait: 11 matched fns across 2 variants
+src/Chap38/BSTParaMtEph.rs:0: info: file group BSTPara — comparing MtEph (src/Chap38/BSTParaMtEph.rs), StEph (src/Chap38/BSTParaStEph.rs)
+src/Chap38/BSTParaStEph.rs:50: info: struct BSTParaStEphInv { contents: Set < < T as View > :: V > }
+src/Chap38/BSTParaStEph.rs:142: info: View = ()
+src/Chap38/BSTParaStEph.rs:245: info: wf = spec_bstparasteph_wf
+src/Chap38/BSTParaMtEph.rs:52: info: struct BSTParaMtEphInv { contents: Set < < T as View > :: V > }
+src/Chap38/BSTParaMtEph.rs:141: info: View = ()
+src/Chap38/BSTParaMtEph.rs:243: info: wf = spec_bstparamteph_wf
+src/Chap38/BSTParaStEph.rs:244: info: trait ParamBSTTrait <T : StT + Ord> : Sized + View < V = Set < < T as View > :: V > > — 21 fns (20 exec, 1 spec)
+src/Chap38/BSTParaMtEph.rs:242: info: trait ParamBSTTrait <T : MtKey> : Sized + View < V = Set < < T as View > :: V > > — 19 fns (18 exec, 1 spec)
+src/Chap38/BSTParaMtEph.rs:242: warning: generic bounds `<T : MtKey>` but StEph has `<T : StT + Ord>`
+src/Chap38/BSTParaMtEph.rs:242: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_bstparasteph_wf`
+src/Chap38/BSTParaMtEph.rs:242: warning: missing 3 fns present in StEph (ParamBSTTrait): `join_m`, `min_key`, `collect_in_order`
+src/Chap38/BSTParaMtEph.rs:242: info: 2 extra fns not in StEph (ParamBSTTrait): `spec_bstparamteph_wf`, `join_pair_inner`
+src/Chap38/BSTParaMtEph.rs:369: warning: `reduce`: StEph has ensures but MtEph does not
+src/Chap38/BSTParaStEph.rs:0: info: ParamBSTTrait trait: 17 matched fns across 2 variants
+src/Chap39/BSTTreapMtEph.rs:0: info: file group BSTTreap — comparing MtEph (src/Chap39/BSTTreapMtEph.rs), StEph (src/Chap39/BSTTreapStEph.rs)
+src/Chap39/BSTTreapStEph.rs:56: info: struct BSTTreapStEph { root: Link < T > }
+src/Chap39/BSTTreapStEph.rs:91: info: View = Set < T :: V >
+src/Chap39/BSTTreapStEph.rs:2740: info: wf = spec_parambsttreapsteph_wf
+src/Chap39/BSTTreapMtEph.rs:56: info: struct BSTTreapMtEph { locked_root: RwLock < Link < T > , BSTTreapMtEphInv >, ghost ghost_locked_root: Ghost < Set < < T as View > :: V > > }
+src/Chap39/BSTTreapMtEph.rs:79: info: View = Set < < T as View > :: V >
+src/Chap39/BSTTreapMtEph.rs:255: info: wf = spec_bsttreapmteph_wf
+src/Chap39/BSTTreapMtEph.rs:79: error: View = Set < < T as View > :: V > but StEph has View = Set < T :: V >
+src/Chap39/BSTTreapMtEph.rs:56: warning: ghost field `ghost_locked_root` has no counterpart in other variants
+src/Chap39/BSTTreapStEph.rs:2740: warning: wf name `spec_parambsttreapsteph_wf` does not follow expected pattern `spec_bsttreap*_wf`
+src/Chap39/BSTTreapStEph.rs:413: info: trait BSTTreapStEphTrait <T : StT + Ord + IsLtTransitive> : (none) — 51 fns (26 exec, 17 spec)
+src/Chap39/BSTTreapMtEph.rs:254: info: trait BSTTreapMtEphTrait <T : StTInMtT + Ord + IsLtTransitive> : Sized + View < V = Set < < T as View > :: V > > — 13 fns (12 exec, 1 spec)
+src/Chap39/BSTTreapMtEph.rs:254: error: supertrait `Sized + View < V = Set < < T as View > :: V > >` but StEph has ``
+src/Chap39/BSTTreapMtEph.rs:254: warning: generic bounds `<T : StTInMtT + Ord + IsLtTransitive>` but StEph has `<T : StT + Ord + IsLtTransitive>`
+src/Chap39/BSTTreapMtEph.rs:254: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_bsttreapsteph_wf`
+src/Chap39/BSTTreapMtEph.rs:254: warning: missing 38 fns present in StEph (BSTTreapStEphTrait): `spec_size_link`, `spec_bst_link`, `spec_link_size_wf`, `spec_in_order_link`, `spec_pre_order_link`, `spec_min_link`, `spec_max_link`, `spec_height_link`, `spec_size`, `spec_bst`, `spec_height`, `spec_contains`, `spec_min`, `spec_max`, `spec_in_order`, `spec_pre_order`, `lemma_height_le_size`, `lemma_size_wf_child_bounded`, `lemma_wf_decompose`, `lemma_wf_assemble_node`, `lemma_contains_left`, `lemma_contains_right`, `lemma_bst_decompose`, `lemma_contains_root`, `new_node`, `size_link`, `update_size`, `rotate_left`, `rotate_right`, `clone_link`, `height_link`, `insert_link`, `delete_link`, `find_link`, `min_link`, `max_link`, `in_order_vec`, `pre_order_vec`
+src/Chap39/BSTTreapMtEph.rs:254: info: 1 extra fns not in StEph (BSTTreapStEphTrait): `spec_bsttreapmteph_wf`
+src/Chap39/BSTTreapMtEph.rs:283: warning: `height`: StEph has requires but MtEph does not
+src/Chap39/BSTTreapMtEph.rs:283: warning: `height`: StEph has ensures but MtEph does not
+src/Chap39/BSTTreapMtEph.rs:269: error: `find` returns `Option < T >` but StEph returns `Option < & T >`
+src/Chap39/BSTTreapMtEph.rs:285: error: `minimum` returns `Option < T >` but StEph returns `Option < & T >`
+src/Chap39/BSTTreapMtEph.rs:288: error: `maximum` returns `Option < T >` but StEph returns `Option < & T >`
+src/Chap39/BSTTreapStEph.rs:0: info: BSTTreapTrait trait: 12 matched fns across 2 variants
+src/Chap39/BSTTreapMtEph.rs:241: info: trait LinkTrait — 4 fns (0 exec, 4 spec), only in MtEph variant
+src/Chap39/BSTTreapStEph.rs:2737: info: trait ParamBSTTreapStEphTrait — 18 fns (17 exec, 1 spec), only in StEph variant
+src/Chap41/AVLTreeSetMtEph.rs:0: info: file group AVLTreeSet — comparing MtEph (src/Chap41/AVLTreeSetMtEph.rs), StEph (src/Chap41/AVLTreeSetStEph.rs), MtPer (src/Chap41/AVLTreeSetMtPer.rs), StPer (src/Chap41/AVLTreeSetStPer.rs)
+src/Chap41/AVLTreeSetStPer.rs:55: info: struct AVLTreeSetStPer { tree: ParamBST < T > }
+src/Chap41/AVLTreeSetStPer.rs:64: info: View = Set < < T as View > :: V >
+src/Chap41/AVLTreeSetStPer.rs:181: info: wf = spec_avltreesetstper_wf
+src/Chap41/AVLTreeSetMtPer.rs:66: info: struct AVLTreeSetMtPer { locked_set: Arc < RwLock < AVLTreeSetStPer < T > , AVLTreeSetMtPerInv > >, ghost ghost_set_view: Ghost < Set < < T as View > :: V > > }
+src/Chap41/AVLTreeSetMtPer.rs:74: info: View = Set < < T as View > :: V >
+src/Chap41/AVLTreeSetMtPer.rs:93: info: wf = spec_avltreesetmtper_wf
+src/Chap41/AVLTreeSetStEph.rs:55: info: struct AVLTreeSetStEph { tree: ParamBST < T > }
+src/Chap41/AVLTreeSetStEph.rs:64: info: View = Set < < T as View > :: V >
+src/Chap41/AVLTreeSetStEph.rs:188: info: wf = spec_avltreesetsteph_wf
+src/Chap41/AVLTreeSetMtEph.rs:64: info: struct AVLTreeSetMtEph { inner: Arc < RwLock < AVLTreeSetStEph < T > , AVLTreeSetMtEphInv > >, ghost ghost_set_view: Ghost < Set < < T as View > :: V > > }
+src/Chap41/AVLTreeSetMtEph.rs:96: info: View = Seq < T >
+src/Chap41/AVLTreeSetMtEph.rs:110: info: wf = spec_avltreesetmteph_wf
+src/Chap41/AVLTreeSetMtEph.rs:96: error: View = Seq < T > but StPer has View = Set < < T as View > :: V >
+src/Chap41/AVLTreeSetStPer.rs:373: info: trait AVLTreeSetStPerTotalOrderTrait <T : StT + Ord + TotalOrder> : AVLTreeSetStPerTrait < T > — 3 fns (1 exec, 2 spec)
+src/Chap41/AVLTreeSetStEph.rs:380: info: trait AVLTreeSetStEphTotalOrderTrait <T : StT + Ord + TotalOrder> : AVLTreeSetStEphTrait < T > — 8 fns (6 exec, 2 spec)
+src/Chap41/AVLTreeSetStEph.rs:380: info: supertrait `AVLTreeSetStEphTrait < T >` (variant-substitution of `AVLTreeSetStPerTrait < T >`)
+src/Chap41/AVLTreeSetStEph.rs:380: warning: missing 3 fns present in StPer (AVLTreeSetStPerTotalOrderTrait): `spec_elements_sorted_per`, `spec_values_seq_per`, `insert_sorted_per`
+src/Chap41/AVLTreeSetStEph.rs:380: info: 2 mutation fns (&mut self) added by Eph variant: `insert_sorted`, `delete_sorted`
+src/Chap41/AVLTreeSetStEph.rs:380: info: 6 extra fns not in StPer (AVLTreeSetStPerTotalOrderTrait): `spec_elements_sorted`, `spec_values_seq`, `filter_sorted`, `intersection_sorted`, `difference_sorted`, `union_sorted`
+src/Chap41/AVLTreeSetStPer.rs:180: info: trait AVLTreeSetStPerTrait <T : StT + Ord> : Sized + View < V = Set < < T as View > :: V > > — 20 fns (19 exec, 1 spec)
+src/Chap41/AVLTreeSetMtPer.rs:92: info: trait AVLTreeSetMtPerTrait <T : StTInMtT + Ord + 'static> : Sized + View < V = Set < < T as View > :: V > > — 13 fns (12 exec, 1 spec)
+src/Chap41/AVLTreeSetStEph.rs:187: info: trait AVLTreeSetStEphTrait <T : StT + Ord> : Sized + View < V = Set < < T as View > :: V > > — 20 fns (19 exec, 1 spec)
+src/Chap41/AVLTreeSetMtEph.rs:108: info: trait AVLTreeSetMtEphTrait <T : StTInMtT + Ord + 'static> : Sized + View < V = Set < < T as View > :: V > > — 14 fns (13 exec, 1 spec)
+src/Chap41/AVLTreeSetMtPer.rs:92: warning: generic bounds `<T : StTInMtT + Ord + 'static>` but StPer has `<T : StT + Ord>`
+src/Chap41/AVLTreeSetMtEph.rs:108: warning: generic bounds `<T : StTInMtT + Ord + 'static>` but StPer has `<T : StT + Ord>`
+src/Chap41/AVLTreeSetMtPer.rs:92: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_avltreesetstper_wf`
+src/Chap41/AVLTreeSetMtPer.rs:92: warning: missing 7 fns present in StPer (AVLTreeSetStPerTrait): `find_iter`, `insert_iter`, `delete_iter`, `filter_iter`, `intersection_iter`, `union_iter`, `difference_iter`
+src/Chap41/AVLTreeSetMtPer.rs:92: info: 1 extra fns not in StPer (AVLTreeSetStPerTrait): `spec_avltreesetmtper_wf`
+src/Chap41/AVLTreeSetMtPer.rs:143: warning: `intersection`: StPer has requires but MtPer does not
+src/Chap41/AVLTreeSetMtPer.rs:147: warning: `difference`: StPer has requires but MtPer does not
+src/Chap41/AVLTreeSetMtPer.rs:151: warning: `union`: StPer has requires but MtPer does not
+src/Chap41/AVLTreeSetMtPer.rs:163: warning: `delete`: StPer has requires but MtPer does not
+src/Chap41/AVLTreeSetMtPer.rs:167: warning: `insert`: StPer has requires but MtPer does not
+src/Chap41/AVLTreeSetStEph.rs:187: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_avltreesetstper_wf`
+src/Chap41/AVLTreeSetStEph.rs:187: info: 1 extra fns not in StPer (AVLTreeSetStPerTrait): `spec_avltreesetsteph_wf`
+src/Chap41/AVLTreeSetStEph.rs:283: info: `delete` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap41/AVLTreeSetStEph.rs:292: info: `insert` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap41/AVLTreeSetStEph.rs:309: info: `insert_iter` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap41/AVLTreeSetStEph.rs:319: info: `delete_iter` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap41/AVLTreeSetMtEph.rs:108: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_avltreesetstper_wf`
+src/Chap41/AVLTreeSetMtEph.rs:108: warning: missing 7 fns present in StPer (AVLTreeSetStPerTrait): `find_iter`, `insert_iter`, `delete_iter`, `filter_iter`, `intersection_iter`, `union_iter`, `difference_iter`
+src/Chap41/AVLTreeSetMtEph.rs:108: info: 2 extra fns not in StPer (AVLTreeSetStPerTrait): `spec_avltreesetmteph_wf`, `iter`
+src/Chap41/AVLTreeSetMtEph.rs:198: info: `delete` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap41/AVLTreeSetMtEph.rs:205: info: `insert` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap41/AVLTreeSetStPer.rs:0: info: AVLTreeSetTrait trait: 12 matched fns across 4 variants
+src/Chap42/TableMtEph.rs:0: info: file group Table — comparing MtEph (src/Chap42/TableMtEph.rs), StEph (src/Chap42/TableStEph.rs), StPer (src/Chap42/TableStPer.rs)
+src/Chap42/TableStPer.rs:71: info: struct TableStPer { entries: ArraySeqStPerS < Pair < K , V > > }
+src/Chap42/TableStPer.rs:82: info: View = Map < K :: V , V :: V >
+src/Chap42/TableStPer.rs:374: info: wf = spec_tablestper_wf
+src/Chap42/TableStEph.rs:72: info: struct TableStEph { entries: ArraySeqStEphS < Pair < K , V > > }
+src/Chap42/TableStEph.rs:81: info: View = Map < K :: V , V :: V >
+src/Chap42/TableStEph.rs:289: info: wf = spec_tablesteph_wf
+src/Chap42/TableMtEph.rs:76: info: struct TableMtEph { entries: ArraySeqMtEphS < Pair < K , V > > }
+src/Chap42/TableMtEph.rs:85: info: View = Map < K :: V , V :: V >
+src/Chap42/TableMtEph.rs:542: info: wf = spec_tablemteph_wf
+src/Chap42/TableStEph.rs:72: info: struct field `entries`: type `ArraySeqStEphS < Pair < K , V > >` (variant-substitution of `ArraySeqStPerS < Pair < K , V > >`)
+src/Chap42/TableStPer.rs:373: info: trait TableStPerTrait <K : StT + Ord, V : StT> : Sized + View < V = Map < K :: V , V :: V > > — 17 fns (16 exec, 1 spec)
+src/Chap42/TableStEph.rs:288: info: trait TableStEphTrait <K : StT + Ord, V : StT> : Sized + View < V = Map < K :: V , V :: V > > — 17 fns (16 exec, 1 spec)
+src/Chap42/TableMtEph.rs:541: info: trait TableMtEphTrait <K : MtKey, V : MtVal> : Sized + View < V = Map < K :: V , V :: V > > — 17 fns (16 exec, 1 spec)
+src/Chap42/TableMtEph.rs:541: warning: generic bounds `<K : MtKey, V : MtVal>` but StPer has `<K : StT + Ord, V : StT>`
+src/Chap42/TableStEph.rs:288: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_tablestper_wf`
+src/Chap42/TableStEph.rs:288: warning: missing 1 fns present in StPer (TableStPerTrait): `collect`
+src/Chap42/TableStEph.rs:288: info: 2 extra fns not in StPer (TableStPerTrait): `spec_tablesteph_wf`, `entries`
+src/Chap42/TableStEph.rs:323: info: `map` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableStEph.rs:337: info: `filter` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableStEph.rs:354: info: `intersection` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableStEph.rs:370: info: `union` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableStEph.rs:390: info: `difference` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableStEph.rs:408: info: `delete` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableStEph.rs:413: info: `insert` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableStEph.rs:429: info: `restrict` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableStEph.rs:438: info: `subtract` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableMtEph.rs:541: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_tablestper_wf`
+src/Chap42/TableMtEph.rs:541: warning: missing 1 fns present in StPer (TableStPerTrait): `collect`
+src/Chap42/TableMtEph.rs:541: info: 2 extra fns not in StPer (TableStPerTrait): `spec_tablemteph_wf`, `entries`
+src/Chap42/TableMtEph.rs:555: warning: `singleton`: StPer has requires but MtEph does not
+src/Chap42/TableMtEph.rs:559: warning: `domain`: StPer has requires but MtEph does not
+src/Chap42/TableMtEph.rs:573: info: `map` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableMtEph.rs:582: info: `filter` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableMtEph.rs:599: info: `intersection` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableMtEph.rs:605: info: `union` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableMtEph.rs:616: info: `difference` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableMtEph.rs:616: warning: `difference`: StPer has requires but MtEph does not
+src/Chap42/TableMtEph.rs:631: info: `delete` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableMtEph.rs:631: warning: `delete`: StPer has requires but MtEph does not
+src/Chap42/TableMtEph.rs:635: info: `insert` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableMtEph.rs:648: info: `restrict` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableMtEph.rs:655: info: `subtract` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableStPer.rs:0: info: TableTrait trait: 15 matched fns across 3 variants
+src/Chap43/AugOrderedTableMtEph.rs:0: info: file group AugOrderedTable — comparing MtEph (src/Chap43/AugOrderedTableMtEph.rs), StEph (src/Chap43/AugOrderedTableStEph.rs), StPer (src/Chap43/AugOrderedTableStPer.rs)
+src/Chap43/AugOrderedTableStPer.rs:52: info: struct AugOrderedTableStPer { base_table: OrderedTableStPer < K , V >, reducer: F, identity: V, cached_reduction: V }
+src/Chap43/AugOrderedTableStPer.rs:70: info: View = Map < K :: V , V :: V >
+src/Chap43/AugOrderedTableStPer.rs:125: info: wf = spec_augorderedtablestper_wf
+src/Chap43/AugOrderedTableStEph.rs:49: info: struct AugOrderedTableStEph { base_table: OrderedTableStEph < K , V >, reducer: F, identity: V, cached_reduction: V }
+src/Chap43/AugOrderedTableStEph.rs:67: info: View = Map < K :: V , V :: V >
+src/Chap43/AugOrderedTableStEph.rs:123: info: wf = spec_augorderedtablesteph_wf
+src/Chap43/AugOrderedTableMtEph.rs:61: info: struct AugOrderedTableMtEph { base_table: OrderedTableMtEph < K , V >, reducer: F, identity: V, cached_reduction: V }
+src/Chap43/AugOrderedTableMtEph.rs:73: info: View = Map < K :: V , V :: V >
+src/Chap43/AugOrderedTableMtEph.rs:133: info: wf = spec_augorderedtablemteph_wf
+src/Chap43/AugOrderedTableStEph.rs:49: info: struct field `base_table`: type `OrderedTableStEph < K , V >` (variant-substitution of `OrderedTableStPer < K , V >`)
+src/Chap43/AugOrderedTableStPer.rs:121: info: trait AugOrderedTableStPerTrait <K : StT + Ord, V : StT + Ord, F> : Sized + View < V = Map < K :: V , V :: V > > — 29 fns (28 exec, 1 spec)
+src/Chap43/AugOrderedTableStEph.rs:119: info: trait AugOrderedTableStEphTrait <K : StT + Ord, V : StT + Ord, F> : Sized + View < V = Map < K :: V , V :: V > > — 32 fns (31 exec, 1 spec)
+src/Chap43/AugOrderedTableMtEph.rs:132: info: trait AugOrderedTableMtEphTrait <K : MtKey, V : MtVal + Ord, F : MtReduceFn < V >> : Sized + View < V = Map < K :: V , V :: V > > — 34 fns (33 exec, 1 spec)
+src/Chap43/AugOrderedTableMtEph.rs:132: warning: generic bounds `<K : MtKey, V : MtVal + Ord, F : MtReduceFn < V >>` but StPer has `<K : StT + Ord, V : StT + Ord, F>`
+src/Chap43/AugOrderedTableStEph.rs:119: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_augorderedtablestper_wf`
+src/Chap43/AugOrderedTableStEph.rs:119: info: 4 extra fns not in StPer (AugOrderedTableStPerTrait): `spec_augorderedtablesteph_wf`, `lookup`, `is_empty`, `reduce`
+src/Chap43/AugOrderedTableStEph.rs:132: warning: `empty`: StPer has requires but StEph does not
+src/Chap43/AugOrderedTableStEph.rs:170: info: `insert` has 3 params but StPer has 2 (Eph/Per interface difference)
+src/Chap43/AugOrderedTableStEph.rs:170: info: `insert` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/AugOrderedTableStEph.rs:186: info: `delete` returns `Option < V >` but StPer returns `Self`
+src/Chap43/AugOrderedTableStEph.rs:244: info: `intersection` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/AugOrderedTableStEph.rs:261: info: `union` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/AugOrderedTableStEph.rs:283: info: `difference` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/AugOrderedTableStEph.rs:291: info: `restrict` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/AugOrderedTableStEph.rs:299: info: `subtract` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/AugOrderedTableStEph.rs:364: info: `join_key` has 1 params but StPer has 2 (Eph/Per interface difference)
+src/Chap43/AugOrderedTableStEph.rs:364: info: `join_key` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/AugOrderedTableMtEph.rs:132: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_augorderedtablestper_wf`
+src/Chap43/AugOrderedTableMtEph.rs:132: info: 6 extra fns not in StPer (AugOrderedTableStPerTrait): `spec_augorderedtablemteph_wf`, `lookup`, `is_empty`, `reduce`, `reduce_range_parallel`, `iter`
+src/Chap43/AugOrderedTableMtEph.rs:181: info: `insert` has 3 params but StPer has 2 (Eph/Per interface difference)
+src/Chap43/AugOrderedTableMtEph.rs:181: info: `insert` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/AugOrderedTableMtEph.rs:190: info: `delete` returns `Option < V >` but StPer returns `Self`
+src/Chap43/AugOrderedTableMtEph.rs:197: warning: `domain`: StPer has requires but MtEph does not
+src/Chap43/AugOrderedTableMtEph.rs:238: info: `intersection` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/AugOrderedTableMtEph.rs:245: info: `union` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/AugOrderedTableMtEph.rs:252: info: `difference` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/AugOrderedTableMtEph.rs:257: info: `restrict` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/AugOrderedTableMtEph.rs:262: info: `subtract` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/AugOrderedTableMtEph.rs:272: warning: `collect`: StPer has requires but MtEph does not
+src/Chap43/AugOrderedTableMtEph.rs:276: warning: `first_key`: StPer has requires but MtEph does not
+src/Chap43/AugOrderedTableMtEph.rs:285: warning: `last_key`: StPer has requires but MtEph does not
+src/Chap43/AugOrderedTableMtEph.rs:294: warning: `previous_key`: StPer has requires but MtEph does not
+src/Chap43/AugOrderedTableMtEph.rs:303: warning: `next_key`: StPer has requires but MtEph does not
+src/Chap43/AugOrderedTableMtEph.rs:318: info: `join_key` has 1 params but StPer has 2 (Eph/Per interface difference)
+src/Chap43/AugOrderedTableMtEph.rs:318: info: `join_key` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/AugOrderedTableStPer.rs:0: info: AugOrderedTableTrait trait: 28 matched fns across 3 variants
+src/Chap43/OrderedSetMtEph.rs:0: info: file group OrderedSet — comparing MtEph (src/Chap43/OrderedSetMtEph.rs), StEph (src/Chap43/OrderedSetStEph.rs), StPer (src/Chap43/OrderedSetStPer.rs)
+src/Chap43/OrderedSetStPer.rs:57: info: struct OrderedSetStPer { base_set: AVLTreeSetStPer < T > }
+src/Chap43/OrderedSetStPer.rs:957: info: View = Seq < T >
+src/Chap43/OrderedSetStPer.rs:219: info: wf = spec_orderedsetstper_wf
+src/Chap43/OrderedSetStEph.rs:54: info: struct OrderedSetStEph { base_set: AVLTreeSetStEph < T > }
+src/Chap43/OrderedSetStEph.rs:970: info: View = Seq < T >
+src/Chap43/OrderedSetStEph.rs:224: info: wf = spec_orderedsetsteph_wf
+src/Chap43/OrderedSetMtEph.rs:58: info: struct OrderedSetMtEph { locked_set: RwLock < OrderedSetStEph < T > , OrderedSetMtEphInv >, ghost ghost_locked_set: Ghost < Set < < T as View > :: V > > }
+src/Chap43/OrderedSetMtEph.rs:92: info: View = Set < < T as View > :: V >
+src/Chap43/OrderedSetMtEph.rs:102: info: wf = spec_orderedsetmteph_wf
+src/Chap43/OrderedSetMtEph.rs:92: error: View = Set < < T as View > :: V > but StPer has View = Seq < T >
+src/Chap43/OrderedSetMtEph.rs:58: warning: ghost field `ghost_locked_set` has no counterpart in other variants
+src/Chap43/OrderedSetStEph.rs:54: info: struct field `base_set`: type `AVLTreeSetStEph < T >` (variant-substitution of `AVLTreeSetStPer < T >`)
+src/Chap43/OrderedSetStPer.rs:218: info: trait OrderedSetStPerTrait <T : StT + Ord> : Sized + View < V = Set < < T as View > :: V > > — 31 fns (30 exec, 1 spec)
+src/Chap43/OrderedSetStEph.rs:223: info: trait OrderedSetStEphTrait <T : StT + Ord + TotalOrder> : Sized + View < V = Set < < T as View > :: V > > — 31 fns (30 exec, 1 spec)
+src/Chap43/OrderedSetMtEph.rs:101: info: trait OrderedSetMtEphTrait <T : MtKey + TotalOrder + 'static> : Sized + View < V = Set < < T as View > :: V > > — 23 fns (22 exec, 1 spec)
+src/Chap43/OrderedSetStEph.rs:223: warning: generic bounds `<T : StT + Ord + TotalOrder>` but StPer has `<T : StT + Ord>`
+src/Chap43/OrderedSetMtEph.rs:101: warning: generic bounds `<T : MtKey + TotalOrder + 'static>` but StPer has `<T : StT + Ord>`
+src/Chap43/OrderedSetStEph.rs:223: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_orderedsetstper_wf`
+src/Chap43/OrderedSetStEph.rs:223: info: 1 extra fns not in StPer (OrderedSetStPerTrait): `spec_orderedsetsteph_wf`
+src/Chap43/OrderedSetStEph.rs:252: info: `insert` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedSetStEph.rs:260: info: `delete` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedSetStEph.rs:266: info: `filter` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedSetStEph.rs:279: info: `intersection` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedSetStEph.rs:285: info: `union` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedSetStEph.rs:294: info: `difference` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedSetStEph.rs:372: info: `join` has 1 params but StPer has 2 (Eph/Per interface difference)
+src/Chap43/OrderedSetStEph.rs:372: info: `join` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedSetMtEph.rs:101: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_orderedsetstper_wf`
+src/Chap43/OrderedSetMtEph.rs:101: warning: missing 8 fns present in StPer (OrderedSetStPerTrait): `first_iter`, `last_iter`, `previous_iter`, `next_iter`, `split_iter`, `get_range_iter`, `rank_iter`, `split_rank_iter`
+src/Chap43/OrderedSetMtEph.rs:101: info: 1 extra fns not in StPer (OrderedSetStPerTrait): `spec_orderedsetmteph_wf`
+src/Chap43/OrderedSetMtEph.rs:107: warning: `size`: StPer has requires but MtEph does not
+src/Chap43/OrderedSetMtEph.rs:125: warning: `find`: StPer has requires but MtEph does not
+src/Chap43/OrderedSetMtEph.rs:129: info: `insert` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedSetMtEph.rs:134: info: `delete` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedSetMtEph.rs:134: warning: `delete`: StPer has requires but MtEph does not
+src/Chap43/OrderedSetMtEph.rs:138: info: `filter` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedSetMtEph.rs:150: info: `intersection` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedSetMtEph.rs:150: warning: `intersection`: StPer has requires but MtEph does not
+src/Chap43/OrderedSetMtEph.rs:154: info: `union` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedSetMtEph.rs:160: info: `difference` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedSetMtEph.rs:160: warning: `difference`: StPer has requires but MtEph does not
+src/Chap43/OrderedSetMtEph.rs:164: error: `to_seq` returns `ArraySeqStPerS < T >` but StPer returns `AVLTreeSeqStPerS < T >`
+src/Chap43/OrderedSetMtEph.rs:164: warning: `to_seq`: StPer has requires but MtEph does not
+src/Chap43/OrderedSetMtEph.rs:171: warning: `from_seq` param 1 type `ArraySeqStPerS < T >` but StPer has `AVLTreeSeqStPerS < T >`
+src/Chap43/OrderedSetMtEph.rs:181: warning: `first`: StPer has requires but MtEph does not
+src/Chap43/OrderedSetMtEph.rs:191: warning: `last`: StPer has requires but MtEph does not
+src/Chap43/OrderedSetMtEph.rs:201: warning: `previous`: StPer has requires but MtEph does not
+src/Chap43/OrderedSetMtEph.rs:212: warning: `next`: StPer has requires but MtEph does not
+src/Chap43/OrderedSetMtEph.rs:223: warning: `split`: StPer has requires but MtEph does not
+src/Chap43/OrderedSetMtEph.rs:228: info: `join` has 1 params but StPer has 2 (Eph/Per interface difference)
+src/Chap43/OrderedSetMtEph.rs:228: info: `join` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedSetMtEph.rs:234: warning: `get_range`: StPer has requires but MtEph does not
+src/Chap43/OrderedSetMtEph.rs:238: warning: `rank`: StPer has requires but MtEph does not
+src/Chap43/OrderedSetMtEph.rs:245: warning: `select`: StPer has requires but MtEph does not
+src/Chap43/OrderedSetMtEph.rs:253: warning: `split_rank`: StPer has requires but MtEph does not
+src/Chap43/OrderedSetStPer.rs:0: info: OrderedSetTrait trait: 22 matched fns across 3 variants
+src/Chap43/OrderedTableMtEph.rs:0: info: file group OrderedTable — comparing MtEph (src/Chap43/OrderedTableMtEph.rs), StEph (src/Chap43/OrderedTableStEph.rs), MtPer (src/Chap43/OrderedTableMtPer.rs), StPer (src/Chap43/OrderedTableStPer.rs)
+src/Chap43/OrderedTableStPer.rs:55: info: struct OrderedTableStPer { tree: ParamBST < Pair < K , V > > }
+src/Chap43/OrderedTableStPer.rs:3293: info: View = Seq < Pair < K , V > >
+src/Chap43/OrderedTableStPer.rs:440: info: wf = spec_orderedtablestper_wf
+src/Chap43/OrderedTableMtPer.rs:55: info: struct OrderedTableMtPer { locked_table: RwLock < OrderedTableStPer < K , V > , OrderedTableMtPerInv >, ghost ghost_locked_table: Ghost < Map < K :: V , V :: V > > }
+src/Chap43/OrderedTableMtPer.rs:93: info: View = Map < K :: V , V :: V >
+src/Chap43/OrderedTableMtPer.rs:102: info: wf = spec_orderedtablemtper_wf
+src/Chap43/OrderedTableStEph.rs:53: info: struct OrderedTableStEph { tree: ParamBST < Pair < K , V > > }
+src/Chap43/OrderedTableStEph.rs:3864: info: View = Seq < Pair < K , V > >
+src/Chap43/OrderedTableStEph.rs:535: info: wf = spec_orderedtablesteph_wf
+src/Chap43/OrderedTableMtEph.rs:62: info: struct OrderedTableMtEph { locked_table: RwLock < OrderedTableStEph < K , V > , OrderedTableMtEphInv >, ghost ghost_locked_table: Ghost < Map < K :: V , V :: V > > }
+src/Chap43/OrderedTableMtEph.rs:729: info: View = Seq < Pair < K , V > >
+src/Chap43/OrderedTableMtEph.rs:88: info: wf = spec_orderedtablemteph_wf
+src/Chap43/OrderedTableMtPer.rs:93: error: View = Map < K :: V , V :: V > but StPer has View = Seq < Pair < K , V > >
+src/Chap43/OrderedTableStPer.rs:439: info: trait OrderedTableStPerTrait <K : StT + Ord, V : StT + Ord> : Sized + View < V = Map < K :: V , V :: V > > — 39 fns (37 exec, 2 spec)
+src/Chap43/OrderedTableMtPer.rs:101: info: trait OrderedTableMtPerTrait <K : MtKey + TotalOrder + 'static, V : StTInMtT + Ord + 'static> : Sized + View < V = Map < K :: V , V :: V > > — 20 fns (19 exec, 1 spec)
+src/Chap43/OrderedTableStEph.rs:534: info: trait OrderedTableStEphTrait <K : StT + Ord, V : StT + Ord> : Sized + View < V = Map < K :: V , V :: V > > — 41 fns (40 exec, 1 spec)
+src/Chap43/OrderedTableMtEph.rs:87: info: trait OrderedTableMtEphTrait <K : MtKey, V : MtVal + Ord> : Sized + View < V = Map < K :: V , V :: V > > — 31 fns (30 exec, 1 spec)
+src/Chap43/OrderedTableMtPer.rs:101: warning: generic bounds `<K : MtKey + TotalOrder + 'static, V : StTInMtT + Ord + 'static>` but StPer has `<K : StT + Ord, V : StT + Ord>`
+src/Chap43/OrderedTableMtEph.rs:87: warning: generic bounds `<K : MtKey, V : MtVal + Ord>` but StPer has `<K : StT + Ord, V : StT + Ord>`
+src/Chap43/OrderedTableMtPer.rs:101: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_orderedtablestper_wf`
+src/Chap43/OrderedTableMtPer.rs:101: warning: missing 19 fns present in StPer (OrderedTableStPerTrait): `spec_orderedtablestper_find_pre`, `tabulate`, `intersection`, `union`, `difference`, `restrict`, `subtract`, `collect`, `find_iter`, `insert_iter`, `delete_iter`, `first_key_iter`, `last_key_iter`, `previous_key_iter`, `next_key_iter`, `split_key_iter`, `get_key_range_iter`, `rank_key_iter`, `split_rank_key_iter`
+src/Chap43/OrderedTableMtPer.rs:101: info: 1 extra fns not in StPer (OrderedTableStPerTrait): `spec_orderedtablemtper_wf`
+src/Chap43/OrderedTableMtPer.rs:106: warning: `size`: StPer has requires but MtPer does not
+src/Chap43/OrderedTableMtPer.rs:134: warning: `find`: StPer has requires but MtPer does not
+src/Chap43/OrderedTableMtPer.rs:134: warning: `find`: StPer has ensures but MtPer does not
+src/Chap43/OrderedTableMtPer.rs:144: warning: `delete`: StPer has requires but MtPer does not
+src/Chap43/OrderedTableMtPer.rs:149: error: `domain` returns `OrderedSetMtEph < K >` but StPer returns `ArraySetStEph < K >`
+src/Chap43/OrderedTableMtPer.rs:149: warning: `domain`: StPer has requires but MtPer does not
+src/Chap43/OrderedTableMtPer.rs:154: warning: `map` param 1 type `G` but StPer has `F`
+src/Chap43/OrderedTableMtPer.rs:160: warning: `filter` has 1 params but StPer has 2
+src/Chap43/OrderedTableMtPer.rs:166: warning: `first_key`: StPer has requires but MtPer does not
+src/Chap43/OrderedTableMtPer.rs:176: warning: `last_key`: StPer has requires but MtPer does not
+src/Chap43/OrderedTableMtPer.rs:186: warning: `previous_key`: StPer has requires but MtPer does not
+src/Chap43/OrderedTableMtPer.rs:196: warning: `next_key`: StPer has requires but MtPer does not
+src/Chap43/OrderedTableMtPer.rs:206: warning: `split_key`: StPer has requires but MtPer does not
+src/Chap43/OrderedTableMtPer.rs:212: warning: `join_key` has 1 params but StPer has 2
+src/Chap43/OrderedTableMtPer.rs:218: warning: `get_key_range`: StPer has requires but MtPer does not
+src/Chap43/OrderedTableMtPer.rs:223: warning: `rank_key`: StPer has requires but MtPer does not
+src/Chap43/OrderedTableMtPer.rs:232: warning: `select_key`: StPer has requires but MtPer does not
+src/Chap43/OrderedTableMtPer.rs:242: warning: `split_rank_key`: StPer has requires but MtPer does not
+src/Chap43/OrderedTableStEph.rs:534: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_orderedtablestper_wf`
+src/Chap43/OrderedTableStEph.rs:534: warning: missing 1 fns present in StPer (OrderedTableStPerTrait): `spec_orderedtablestper_find_pre`
+src/Chap43/OrderedTableStEph.rs:534: info: 4 extra fns not in StPer (OrderedTableStPerTrait): `spec_orderedtablesteph_wf`, `lookup`, `is_empty`, `reduce`
+src/Chap43/OrderedTableStEph.rs:544: warning: `empty`: StPer has requires but StEph does not
+src/Chap43/OrderedTableStEph.rs:582: info: `insert` has 3 params but StPer has 2 (Eph/Per interface difference)
+src/Chap43/OrderedTableStEph.rs:582: info: `insert` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableStEph.rs:599: info: `delete` returns `Option < V >` but StPer returns `Self`
+src/Chap43/OrderedTableStEph.rs:666: info: `intersection` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableStEph.rs:684: info: `union` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableStEph.rs:707: info: `difference` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableStEph.rs:716: info: `restrict` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableStEph.rs:725: info: `subtract` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableStEph.rs:801: info: `join_key` has 1 params but StPer has 2 (Eph/Per interface difference)
+src/Chap43/OrderedTableStEph.rs:801: info: `join_key` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableStEph.rs:871: info: `insert_iter` has 3 params but StPer has 2 (Eph/Per interface difference)
+src/Chap43/OrderedTableStEph.rs:871: info: `insert_iter` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableStEph.rs:887: info: `delete_iter` returns `Option < V >` but StPer returns `Self`
+src/Chap43/OrderedTableMtEph.rs:87: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_orderedtablestper_wf`
+src/Chap43/OrderedTableMtEph.rs:87: warning: missing 12 fns present in StPer (OrderedTableStPerTrait): `spec_orderedtablestper_find_pre`, `find_iter`, `insert_iter`, `delete_iter`, `first_key_iter`, `last_key_iter`, `previous_key_iter`, `next_key_iter`, `split_key_iter`, `get_key_range_iter`, `rank_key_iter`, `split_rank_key_iter`
+src/Chap43/OrderedTableMtEph.rs:87: info: 5 extra fns not in StPer (OrderedTableStPerTrait): `spec_orderedtablemteph_wf`, `lookup`, `is_empty`, `reduce`, `iter`
+src/Chap43/OrderedTableMtEph.rs:98: warning: `empty`: StPer has requires but MtEph does not
+src/Chap43/OrderedTableMtEph.rs:140: info: `insert` has 3 params but StPer has 2 (Eph/Per interface difference)
+src/Chap43/OrderedTableMtEph.rs:140: info: `insert` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableMtEph.rs:150: info: `delete` returns `Option < V >` but StPer returns `Self`
+src/Chap43/OrderedTableMtEph.rs:158: warning: `domain`: StPer has requires but MtEph does not
+src/Chap43/OrderedTableMtEph.rs:199: info: `intersection` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableMtEph.rs:205: info: `union` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableMtEph.rs:211: info: `difference` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableMtEph.rs:211: warning: `difference`: StPer has requires but MtEph does not
+src/Chap43/OrderedTableMtEph.rs:216: info: `restrict` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableMtEph.rs:216: warning: `restrict`: StPer has requires but MtEph does not
+src/Chap43/OrderedTableMtEph.rs:221: info: `subtract` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableMtEph.rs:221: warning: `subtract`: StPer has requires but MtEph does not
+src/Chap43/OrderedTableMtEph.rs:232: warning: `collect`: StPer has requires but MtEph does not
+src/Chap43/OrderedTableMtEph.rs:237: warning: `first_key`: StPer has requires but MtEph does not
+src/Chap43/OrderedTableMtEph.rs:247: warning: `last_key`: StPer has requires but MtEph does not
+src/Chap43/OrderedTableMtEph.rs:257: warning: `previous_key`: StPer has requires but MtEph does not
+src/Chap43/OrderedTableMtEph.rs:267: warning: `next_key`: StPer has requires but MtEph does not
+src/Chap43/OrderedTableMtEph.rs:277: warning: `split_key`: StPer has requires but MtEph does not
+src/Chap43/OrderedTableMtEph.rs:283: info: `join_key` has 1 params but StPer has 2 (Eph/Per interface difference)
+src/Chap43/OrderedTableMtEph.rs:283: info: `join_key` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableMtEph.rs:283: warning: `join_key`: StPer has requires but MtEph does not
+src/Chap43/OrderedTableMtEph.rs:288: warning: `get_key_range`: StPer has requires but MtEph does not
+src/Chap43/OrderedTableMtEph.rs:314: warning: `split_rank_key`: StPer has requires but MtEph does not
+src/Chap43/OrderedTableStPer.rs:0: info: OrderedTableTrait trait: 19 matched fns across 4 variants
+src/Chap49/MinEditDistMtEph.rs:0: info: file group MinEditDist — comparing MtEph (src/Chap49/MinEditDistMtEph.rs), StEph (src/Chap49/MinEditDistStEph.rs), MtPer (src/Chap49/MinEditDistMtPer.rs), StPer (src/Chap49/MinEditDistStPer.rs)
+src/Chap49/MinEditDistStPer.rs:46: info: struct MinEditDistStPerS { source: ArraySeqStPerS < T >, target: ArraySeqStPerS < T >, memo: HashMapWithViewPlus < Pair < usize , usize > , usize > }
+src/Chap49/MinEditDistMtPer.rs:55: info: struct MinEditDistMtPerS { source: ArraySeqMtPerS < T >, target: ArraySeqMtPerS < T >, memo: Arc < RwLock < HashMapWithViewPlus < Pair < usize , usize > , usize > , MinEditDistMtPerMemoInv > > }
+src/Chap49/MinEditDistStEph.rs:46: info: struct MinEditDistStEphS { source: ArraySeqStEphS < T >, target: ArraySeqStEphS < T >, memo: HashMapWithViewPlus < Pair < usize , usize > , usize > }
+src/Chap49/MinEditDistMtEph.rs:56: info: struct MinEditDistMtEphS { source: ArraySeqMtEphS < T >, target: ArraySeqMtEphS < T >, memo: Arc < RwLock < HashMapWithViewPlus < Pair < usize , usize > , usize > , MinEditDistMtEphMemoInv > > }
+src/Chap49/MinEditDistStEph.rs:46: info: struct field `source`: type `ArraySeqStEphS < T >` (variant-substitution of `ArraySeqStPerS < T >`)
+src/Chap49/MinEditDistStEph.rs:46: info: struct field `target`: type `ArraySeqStEphS < T >` (variant-substitution of `ArraySeqStPerS < T >`)
+src/Chap49/MinEditDistStPer.rs:0: warning: no spec_*_wf predicate found in StPer variant
+src/Chap49/MinEditDistMtPer.rs:0: warning: no spec_*_wf predicate found in MtPer variant
+src/Chap49/MinEditDistStEph.rs:0: warning: no spec_*_wf predicate found in StEph variant
+src/Chap49/MinEditDistMtEph.rs:0: warning: no spec_*_wf predicate found in MtEph variant
+src/Chap49/MinEditDistStPer.rs:79: info: trait MinEditDistStPerTrait <T : StT> : Sized — 8 fns (6 exec, 2 spec)
+src/Chap49/MinEditDistMtPer.rs:82: info: trait MinEditDistMtPerTrait <T : MtVal> : Sized — 8 fns (6 exec, 2 spec)
+src/Chap49/MinEditDistStEph.rs:79: info: trait MinEditDistStEphTrait <T : StT> : Sized — 11 fns (9 exec, 2 spec)
+src/Chap49/MinEditDistMtEph.rs:83: info: trait MinEditDistMtEphTrait <T : MtVal> : Sized — 11 fns (9 exec, 2 spec)
+src/Chap49/MinEditDistMtPer.rs:82: warning: generic bounds `<T : MtVal>` but StPer has `<T : StT>`
+src/Chap49/MinEditDistMtEph.rs:83: warning: generic bounds `<T : MtVal>` but StPer has `<T : StT>`
+src/Chap49/MinEditDistStEph.rs:79: info: 3 mutation fns (&mut self) added by Eph variant: `set_source`, `set_target`, `clear_memo`
+src/Chap49/MinEditDistStEph.rs:106: info: `min_edit_distance`: StEph has ensures but StPer does not
+src/Chap49/MinEditDistMtEph.rs:83: info: 3 mutation fns (&mut self) added by Eph variant: `set_source`, `set_target`, `clear_memo`
+src/Chap49/MinEditDistMtEph.rs:107: info: `min_edit_distance`: MtEph has ensures but StPer does not
+src/Chap49/MinEditDistStPer.rs:0: info: MinEditDistTrait trait: 8 matched fns across 4 variants
+src/Chap49/SubsetSumMtEph.rs:0: info: file group SubsetSum — comparing MtEph (src/Chap49/SubsetSumMtEph.rs), StEph (src/Chap49/SubsetSumStEph.rs), MtPer (src/Chap49/SubsetSumMtPer.rs), StPer (src/Chap49/SubsetSumStPer.rs)
+src/Chap49/SubsetSumStPer.rs:44: info: struct SubsetSumStPerS { multiset: ArraySeqStPerS < T >, memo: HashMapWithViewPlus < Pair < usize , i32 > , bool > }
+src/Chap49/SubsetSumMtPer.rs:55: info: struct SubsetSumMtPerS { multiset: ArraySeqMtPerS < T >, memo: Arc < RwLock < HashMapWithViewPlus < Pair < usize , i32 > , bool > , SubsetSumMtPerMemoInv > > }
+src/Chap49/SubsetSumStEph.rs:44: info: struct SubsetSumStEphS { multiset: ArraySeqStEphS < T >, memo: HashMapWithViewPlus < Pair < usize , i32 > , bool > }
+src/Chap49/SubsetSumMtEph.rs:56: info: struct SubsetSumMtEphS { multiset: ArraySeqMtEphS < T >, memo: Arc < RwLock < HashMapWithViewPlus < Pair < usize , i32 > , bool > , SubsetSumMtEphMemoInv > > }
+src/Chap49/SubsetSumStEph.rs:44: info: struct field `multiset`: type `ArraySeqStEphS < T >` (variant-substitution of `ArraySeqStPerS < T >`)
+src/Chap49/SubsetSumStPer.rs:0: warning: no spec_*_wf predicate found in StPer variant
+src/Chap49/SubsetSumMtPer.rs:0: warning: no spec_*_wf predicate found in MtPer variant
+src/Chap49/SubsetSumStEph.rs:0: warning: no spec_*_wf predicate found in StEph variant
+src/Chap49/SubsetSumMtEph.rs:0: warning: no spec_*_wf predicate found in MtEph variant
+src/Chap49/SubsetSumStPer.rs:72: info: trait SubsetSumStPerTrait <T : StT> : Sized — 6 fns (5 exec, 1 spec)
+src/Chap49/SubsetSumMtPer.rs:83: info: trait SubsetSumMtPerTrait <T : MtVal> : Sized — 6 fns (5 exec, 1 spec)
+src/Chap49/SubsetSumStEph.rs:72: info: trait SubsetSumStEphTrait <T : StT> : Sized — 8 fns (7 exec, 1 spec)
+src/Chap49/SubsetSumMtEph.rs:84: info: trait SubsetSumMtEphTrait <T : MtVal> : Sized — 8 fns (7 exec, 1 spec)
+src/Chap49/SubsetSumMtPer.rs:83: warning: generic bounds `<T : MtVal>` but StPer has `<T : StT>`
+src/Chap49/SubsetSumMtEph.rs:84: warning: generic bounds `<T : MtVal>` but StPer has `<T : StT>`
+src/Chap49/SubsetSumStEph.rs:72: info: 2 mutation fns (&mut self) added by Eph variant: `set`, `clear_memo`
+src/Chap49/SubsetSumStEph.rs:94: info: `subset_sum`: StEph has ensures but StPer does not
+src/Chap49/SubsetSumMtEph.rs:84: info: 2 mutation fns (&mut self) added by Eph variant: `set`, `clear_memo`
+src/Chap49/SubsetSumMtEph.rs:103: info: `subset_sum`: MtEph has ensures but StPer does not
+src/Chap49/SubsetSumStPer.rs:0: info: SubsetSumTrait trait: 6 matched fns across 4 variants
+src/Chap50/MatrixChainMtEph.rs:0: info: file group MatrixChain — comparing MtEph (src/Chap50/MatrixChainMtEph.rs), StEph (src/Chap50/MatrixChainStEph.rs), MtPer (src/Chap50/MatrixChainMtPer.rs), StPer (src/Chap50/MatrixChainStPer.rs)
+src/Chap50/MatrixChainStPer.rs:65: info: struct MatrixChainStPerS { dimensions: Vec < MatrixDim >, memo: HashMapWithViewPlus < Pair < usize , usize > , usize > }
+src/Chap50/MatrixChainStPer.rs:71: info: View = MatrixChainStPerV
+src/Chap50/MatrixChainMtPer.rs:80: info: struct MatrixChainMtPerS { dimensions: Arc < Vec < MatrixDim > >, memo: Arc < RwLock < HashMapWithViewPlus < Pair < usize , usize > , usize > , MatrixChainMtPerMemoInv > > }
+src/Chap50/MatrixChainMtPer.rs:86: info: View = MatrixChainMtPerV
+src/Chap50/MatrixChainMtPer.rs:142: info: wf = spec_matrixchainmtper_wf
+src/Chap50/MatrixChainStEph.rs:65: info: struct MatrixChainStEphS { dimensions: Vec < MatrixDim >, memo: HashMapWithViewPlus < Pair < usize , usize > , usize > }
+src/Chap50/MatrixChainStEph.rs:71: info: View = MatrixChainStEphV
+src/Chap50/MatrixChainMtEph.rs:83: info: struct MatrixChainMtEphS { dimensions: Arc < RwLock < Vec < MatrixDim > , MatrixChainMtEphDimInv > >, memo: Arc < RwLock < HashMapWithViewPlus < Pair < usize , usize > , usize > , MatrixChainMtEphMemoInv > >, ghost ghost_dimensions: Ghost < Seq < MatrixDim > > }
+src/Chap50/MatrixChainMtEph.rs:94: info: View = MatrixChainMtEphV
+src/Chap50/MatrixChainMtEph.rs:150: info: wf = spec_matrixchainmteph_wf
+src/Chap50/MatrixChainMtPer.rs:86: info: View = MatrixChainMtPerV (variant-substitution of StPer View = MatrixChainStPerV)
+src/Chap50/MatrixChainStEph.rs:71: info: View = MatrixChainStEphV (variant-substitution of StPer View = MatrixChainStPerV)
+src/Chap50/MatrixChainMtEph.rs:94: info: View = MatrixChainMtEphV (variant-substitution of StPer View = MatrixChainStPerV)
+src/Chap50/MatrixChainMtEph.rs:83: warning: ghost field `ghost_dimensions` has no counterpart in other variants
+src/Chap50/MatrixChainStPer.rs:0: warning: no spec_*_wf predicate found in StPer variant
+src/Chap50/MatrixChainStEph.rs:0: warning: no spec_*_wf predicate found in StEph variant
+src/Chap50/MatrixChainStPer.rs:134: info: trait MatrixChainStPerTrait <> : Sized + View < V = MatrixChainStPerV > — 9 fns (9 exec, 0 spec)
+src/Chap50/MatrixChainMtPer.rs:141: info: trait MatrixChainMtPerTrait <> : Sized + View < V = MatrixChainMtPerV > — 11 fns (10 exec, 1 spec)
+src/Chap50/MatrixChainStEph.rs:134: info: trait MatrixChainStEphTrait <> : Sized + View < V = MatrixChainStEphV > — 12 fns (12 exec, 0 spec)
+src/Chap50/MatrixChainMtEph.rs:149: info: trait MatrixChainMtEphTrait <> : Sized + View < V = MatrixChainMtEphV > — 14 fns (13 exec, 1 spec)
+src/Chap50/MatrixChainMtPer.rs:141: info: supertrait `Sized + View < V = MatrixChainMtPerV >` (variant-substitution of `Sized + View < V = MatrixChainStPerV >`)
+src/Chap50/MatrixChainStEph.rs:134: info: supertrait `Sized + View < V = MatrixChainStEphV >` (variant-substitution of `Sized + View < V = MatrixChainStPerV >`)
+src/Chap50/MatrixChainMtEph.rs:149: info: supertrait `Sized + View < V = MatrixChainMtEphV >` (variant-substitution of `Sized + View < V = MatrixChainStPerV >`)
+src/Chap50/MatrixChainMtPer.rs:141: info: 2 extra fns not in StPer (MatrixChainStPerTrait): `spec_matrixchainmtper_wf`, `parallel_min_reduction`
+src/Chap50/MatrixChainMtPer.rs:163: error: `dimensions` returns `& Arc < Vec < MatrixDim > >` but StPer returns `& Vec < MatrixDim >`
+src/Chap50/MatrixChainMtPer.rs:163: warning: `dimensions`: StPer has ensures but MtPer does not
+src/Chap50/MatrixChainMtPer.rs:168: warning: `memo_size`: StPer has ensures but MtPer does not
+src/Chap50/MatrixChainStEph.rs:134: info: 3 mutation fns (&mut self) added by Eph variant: `set_dimension`, `update_dimension`, `clear_memo`
+src/Chap50/MatrixChainMtEph.rs:149: info: 3 mutation fns (&mut self) added by Eph variant: `set_dimension`, `update_dimension`, `clear_memo`
+src/Chap50/MatrixChainMtEph.rs:149: info: 2 extra fns not in StPer (MatrixChainStPerTrait): `spec_matrixchainmteph_wf`, `parallel_min_reduction`
+src/Chap50/MatrixChainMtEph.rs:173: error: `dimensions` returns `Vec < MatrixDim >` but StPer returns `& Vec < MatrixDim >`
+src/Chap50/MatrixChainMtEph.rs:173: warning: `dimensions`: StPer has ensures but MtEph does not
+src/Chap50/MatrixChainMtEph.rs:183: info: `num_matrices`: MtEph has requires but StPer does not
+src/Chap50/MatrixChainMtEph.rs:191: warning: `memo_size`: StPer has ensures but MtEph does not
+src/Chap50/MatrixChainStPer.rs:0: info: MatrixChainTrait trait: 9 matched fns across 4 variants
+src/Chap50/OptBinSearchTreeMtEph.rs:0: info: file group OptBinSearchTree — comparing MtEph (src/Chap50/OptBinSearchTreeMtEph.rs), StEph (src/Chap50/OptBinSearchTreeStEph.rs), MtPer (src/Chap50/OptBinSearchTreeMtPer.rs), StPer (src/Chap50/OptBinSearchTreeStPer.rs)
+src/Chap50/OptBinSearchTreeStPer.rs:87: info: View = OBSTStPerV < T >
+src/Chap50/OptBinSearchTreeMtPer.rs:86: info: View = OBSTMtPerV < T >
+src/Chap50/OptBinSearchTreeStEph.rs:87: info: View = OBSTStEphV < T >
+src/Chap50/OptBinSearchTreeMtEph.rs:93: info: View = OBSTMtEphV < T >
+src/Chap50/OptBinSearchTreeMtEph.rs:101: info: wf = spec_obstmteph_wf
+src/Chap50/OptBinSearchTreeMtPer.rs:86: info: View = OBSTMtPerV < T > (variant-substitution of StPer View = OBSTStPerV < T >)
+src/Chap50/OptBinSearchTreeStEph.rs:87: info: View = OBSTStEphV < T > (variant-substitution of StPer View = OBSTStPerV < T >)
+src/Chap50/OptBinSearchTreeMtEph.rs:93: info: View = OBSTMtEphV < T > (variant-substitution of StPer View = OBSTStPerV < T >)
+src/Chap50/OptBinSearchTreeMtEph.rs:101: warning: wf name `spec_obstmteph_wf` does not follow expected pattern `spec_optbinsearchtree*_wf`
+src/Chap50/OptBinSearchTreeStPer.rs:97: info: trait OBSTStPerTrait <T : StT> : Sized + View < V = OBSTStPerV < T > > — 7 fns (7 exec, 0 spec)
+src/Chap50/OptBinSearchTreeMtPer.rs:93: info: trait OBSTMtPerTrait <T : MtVal> : Sized + View < V = OBSTMtPerV < T > > — 7 fns (7 exec, 0 spec)
+src/Chap50/OptBinSearchTreeStEph.rs:97: info: trait OBSTStEphTrait <T : StT> : Sized + View < V = OBSTStEphV < T > > — 10 fns (10 exec, 0 spec)
+src/Chap50/OptBinSearchTreeMtEph.rs:100: info: trait OBSTMtEphTrait <T : MtVal> : Sized + View < V = OBSTMtEphV < T > > — 11 fns (10 exec, 1 spec)
+src/Chap50/OptBinSearchTreeMtPer.rs:93: info: supertrait `Sized + View < V = OBSTMtPerV < T > >` (variant-substitution of `Sized + View < V = OBSTStPerV < T > >`)
+src/Chap50/OptBinSearchTreeStEph.rs:97: info: supertrait `Sized + View < V = OBSTStEphV < T > >` (variant-substitution of `Sized + View < V = OBSTStPerV < T > >`)
+src/Chap50/OptBinSearchTreeMtEph.rs:100: info: supertrait `Sized + View < V = OBSTMtEphV < T > >` (variant-substitution of `Sized + View < V = OBSTStPerV < T > >`)
+src/Chap50/OptBinSearchTreeMtPer.rs:93: warning: generic bounds `<T : MtVal>` but StPer has `<T : StT>`
+src/Chap50/OptBinSearchTreeMtEph.rs:100: warning: generic bounds `<T : MtVal>` but StPer has `<T : StT>`
+src/Chap50/OptBinSearchTreeMtPer.rs:106: error: `keys` returns `& Arc < Vec < KeyProb < T > > >` but StPer returns `& Vec < KeyProb < T > >`
+src/Chap50/OptBinSearchTreeMtPer.rs:106: warning: `keys`: StPer has ensures but MtPer does not
+src/Chap50/OptBinSearchTreeMtPer.rs:111: warning: `memo_size`: StPer has ensures but MtPer does not
+src/Chap50/OptBinSearchTreeStEph.rs:97: info: 3 mutation fns (&mut self) added by Eph variant: `set_key_prob`, `update_prob`, `clear_memo`
+src/Chap50/OptBinSearchTreeMtEph.rs:100: info: 3 mutation fns (&mut self) added by Eph variant: `set_key_prob`, `update_prob`, `clear_memo`
+src/Chap50/OptBinSearchTreeMtEph.rs:100: info: 1 extra fns not in StPer (OBSTStPerTrait): `spec_obstmteph_wf`
+src/Chap50/OptBinSearchTreeMtEph.rs:113: info: `optimal_cost`: MtEph has requires but StPer does not
+src/Chap50/OptBinSearchTreeMtEph.rs:116: error: `keys` returns `Vec < KeyProb < T > >` but StPer returns `& Vec < KeyProb < T > >`
+src/Chap50/OptBinSearchTreeMtEph.rs:116: warning: `keys`: StPer has ensures but MtEph does not
+src/Chap50/OptBinSearchTreeMtEph.rs:126: info: `num_keys`: MtEph has requires but StPer does not
+src/Chap50/OptBinSearchTreeMtEph.rs:134: warning: `memo_size`: StPer has ensures but MtEph does not
+src/Chap50/OptBinSearchTreeStPer.rs:0: info: OBSTTrait trait: 7 matched fns across 4 variants
+src/Chap51/BottomUpDPMtEph.rs:0: info: file group BottomUpDP — comparing MtEph (src/Chap51/BottomUpDPMtEph.rs), StEph (src/Chap51/BottomUpDPStEph.rs), MtPer (src/Chap51/BottomUpDPMtPer.rs), StPer (src/Chap51/BottomUpDPStPer.rs)
+src/Chap51/BottomUpDPStPer.rs:33: info: struct BottomUpDPStPerS { seq_s: ArraySeqStPerS < char >, seq_t: ArraySeqStPerS < char > }
+src/Chap51/BottomUpDPMtPer.rs:33: info: struct BottomUpDPMtPerS { seq_s: ArraySeqMtPerS < char >, seq_t: ArraySeqMtPerS < char > }
+src/Chap51/BottomUpDPStEph.rs:32: info: struct BottomUpDPStEphS { seq_s: ArraySeqStEphS < char >, seq_t: ArraySeqStEphS < char > }
+src/Chap51/BottomUpDPMtEph.rs:33: info: struct BottomUpDPMtEphS { seq_s: ArraySeqMtEphS < char >, seq_t: ArraySeqMtEphS < char > }
+src/Chap51/BottomUpDPStEph.rs:32: info: struct field `seq_s`: type `ArraySeqStEphS < char >` (variant-substitution of `ArraySeqStPerS < char >`)
+src/Chap51/BottomUpDPStEph.rs:32: info: struct field `seq_t`: type `ArraySeqStEphS < char >` (variant-substitution of `ArraySeqStPerS < char >`)
+src/Chap51/BottomUpDPStPer.rs:0: warning: no spec_*_wf predicate found in StPer variant
+src/Chap51/BottomUpDPMtPer.rs:0: warning: no spec_*_wf predicate found in MtPer variant
+src/Chap51/BottomUpDPStEph.rs:0: warning: no spec_*_wf predicate found in StEph variant
+src/Chap51/BottomUpDPMtEph.rs:0: warning: no spec_*_wf predicate found in MtEph variant
+src/Chap51/BottomUpDPStPer.rs:44: info: trait BottomUpDPStPerTrait <> : Sized — 13 fns (7 exec, 5 spec)
+src/Chap51/BottomUpDPMtPer.rs:44: info: trait BottomUpDPMtPerTrait <> : Sized — 11 fns (5 exec, 5 spec)
+src/Chap51/BottomUpDPStEph.rs:43: info: trait BottomUpDPStEphTrait <> : Sized — 15 fns (9 exec, 5 spec)
+src/Chap51/BottomUpDPMtEph.rs:44: info: trait BottomUpDPMtEphTrait <> : Sized — 13 fns (7 exec, 5 spec)
+src/Chap51/BottomUpDPMtPer.rs:44: warning: missing 3 fns present in StPer (BottomUpDPStPerTrait): `med_bottom_up`, `initialize_base_cases`, `compute_cell_value`
+src/Chap51/BottomUpDPMtPer.rs:44: info: 1 extra fns not in StPer (BottomUpDPStPerTrait): `med_bottom_up_parallel`
+src/Chap51/BottomUpDPStEph.rs:43: info: 2 mutation fns (&mut self) added by Eph variant: `set_s`, `set_t`
+src/Chap51/BottomUpDPMtEph.rs:44: warning: missing 3 fns present in StPer (BottomUpDPStPerTrait): `med_bottom_up`, `initialize_base_cases`, `compute_cell_value`
+src/Chap51/BottomUpDPMtEph.rs:44: info: 3 mutation fns (&mut self) added by Eph variant: `set_s`, `set_t`, `med_bottom_up_parallel`
+src/Chap51/BottomUpDPStPer.rs:0: info: BottomUpDPTrait trait: 10 matched fns across 4 variants
+src/Chap51/TopDownDPMtEph.rs:0: info: file group TopDownDP — comparing MtEph (src/Chap51/TopDownDPMtEph.rs), StEph (src/Chap51/TopDownDPStEph.rs), MtPer (src/Chap51/TopDownDPMtPer.rs), StPer (src/Chap51/TopDownDPStPer.rs)
+src/Chap51/TopDownDPStPer.rs:43: info: struct TopDownDPStPerS { seq_s: ArraySeqStPerS < char >, seq_t: ArraySeqStPerS < char >, memo_table: HashMapWithViewPlus < Pair < usize , usize > , usize > }
+src/Chap51/TopDownDPMtPer.rs:47: info: struct TopDownDPMtPerS { seq_s: ArraySeqMtPerS < char >, seq_t: ArraySeqMtPerS < char > }
+src/Chap51/TopDownDPStEph.rs:43: info: struct TopDownDPStEphS { seq_s: ArraySeqStEphS < char >, seq_t: ArraySeqStEphS < char >, memo_table: HashMapWithViewPlus < Pair < usize , usize > , usize > }
+src/Chap51/TopDownDPMtEph.rs:47: info: struct TopDownDPMtEphS { seq_s: ArraySeqMtEphS < char >, seq_t: ArraySeqMtEphS < char > }
+src/Chap51/TopDownDPStEph.rs:43: info: struct field `seq_s`: type `ArraySeqStEphS < char >` (variant-substitution of `ArraySeqStPerS < char >`)
+src/Chap51/TopDownDPStEph.rs:43: info: struct field `seq_t`: type `ArraySeqStEphS < char >` (variant-substitution of `ArraySeqStPerS < char >`)
+src/Chap51/TopDownDPStPer.rs:0: warning: no spec_*_wf predicate found in StPer variant
+src/Chap51/TopDownDPMtPer.rs:0: warning: no spec_*_wf predicate found in MtPer variant
+src/Chap51/TopDownDPStEph.rs:0: warning: no spec_*_wf predicate found in StEph variant
+src/Chap51/TopDownDPMtEph.rs:0: warning: no spec_*_wf predicate found in MtEph variant
+src/Chap51/TopDownDPStPer.rs:84: info: trait TopDownDPStPerTrait <> : Sized — 19 fns (11 exec, 7 spec)
+src/Chap51/TopDownDPMtPer.rs:111: info: trait TopDownDPMtPerTrait <> : Sized — 12 fns (6 exec, 5 spec)
+src/Chap51/TopDownDPStEph.rs:84: info: trait TopDownDPStEphTrait <> : Sized — 21 fns (13 exec, 7 spec)
+src/Chap51/TopDownDPMtEph.rs:111: info: trait TopDownDPMtEphTrait <> : Sized — 14 fns (8 exec, 5 spec)
+src/Chap51/TopDownDPMtPer.rs:111: warning: missing 9 fns present in StPer (TopDownDPStPerTrait): `spec_memo`, `spec_memo_correct`, `memo_size`, `is_memoized`, `get_memoized`, `with_memo_table`, `clear_memo`, `med_memoized`, `med_recursive`
+src/Chap51/TopDownDPMtPer.rs:111: info: 2 extra fns not in StPer (TopDownDPStPerTrait): `med_memoized_concurrent`, `med_memoized_parallel`
+src/Chap51/TopDownDPStEph.rs:84: warning: missing 1 fns present in StPer (TopDownDPStPerTrait): `with_memo_table`
+src/Chap51/TopDownDPStEph.rs:84: info: 3 mutation fns (&mut self) added by Eph variant: `insert_memo`, `set_s`, `set_t`
+src/Chap51/TopDownDPStEph.rs:91: info: `spec_memo_correct` has 0 params but StPer has 1 (Eph/Per interface difference)
+src/Chap51/TopDownDPStEph.rs:150: info: `clear_memo` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap51/TopDownDPStEph.rs:184: info: `med_recursive` has 2 params but StPer has 3 (Eph/Per interface difference)
+src/Chap51/TopDownDPMtEph.rs:111: warning: missing 9 fns present in StPer (TopDownDPStPerTrait): `spec_memo`, `spec_memo_correct`, `memo_size`, `is_memoized`, `get_memoized`, `with_memo_table`, `clear_memo`, `med_memoized`, `med_recursive`
+src/Chap51/TopDownDPMtEph.rs:111: info: 4 mutation fns (&mut self) added by Eph variant: `set_s`, `set_t`, `med_memoized_concurrent`, `med_memoized_parallel`
+src/Chap51/TopDownDPStPer.rs:0: info: TopDownDPTrait trait: 10 matched fns across 4 variants
+src/Chap52/AdjMatrixGraphMtEph.rs:0: info: file group AdjMatrixGraph — comparing MtEph (src/Chap52/AdjMatrixGraphMtEph.rs), StEph (src/Chap52/AdjMatrixGraphStEph.rs), MtPer (src/Chap52/AdjMatrixGraphMtPer.rs), StPer (src/Chap52/AdjMatrixGraphStPer.rs)
+src/Chap52/AdjMatrixGraphStPer.rs:35: info: struct AdjMatrixGraphStPer { matrix: ArraySeqStPerS < ArraySeqStPerS < bool > >, n: N }
+src/Chap52/AdjMatrixGraphStPer.rs:43: info: View = Seq < Seq < bool > >
+src/Chap52/AdjMatrixGraphStPer.rs:110: info: wf = spec_adjmatrixgraphstper_wf
+src/Chap52/AdjMatrixGraphMtPer.rs:31: info: struct AdjMatrixGraphMtPer { matrix: ArraySeqMtPerS < ArraySeqMtPerS < bool > >, n: N }
+src/Chap52/AdjMatrixGraphMtPer.rs:39: info: View = Seq < Seq < bool > >
+src/Chap52/AdjMatrixGraphMtPer.rs:106: info: wf = spec_adjmatrixgraphmtper_wf
+src/Chap52/AdjMatrixGraphStEph.rs:30: info: struct AdjMatrixGraphStEph { matrix: ArraySeqStEphS < ArraySeqStEphS < bool > >, n: N }
+src/Chap52/AdjMatrixGraphStEph.rs:38: info: View = Seq < Seq < bool > >
+src/Chap52/AdjMatrixGraphStEph.rs:105: info: wf = spec_adjmatrixgraphsteph_wf
+src/Chap52/AdjMatrixGraphMtEph.rs:30: info: struct AdjMatrixGraphMtEph { matrix: ArraySeqMtEphS < ArraySeqMtEphS < bool > >, n: N }
+src/Chap52/AdjMatrixGraphMtEph.rs:38: info: View = Seq < Seq < bool > >
+src/Chap52/AdjMatrixGraphMtEph.rs:105: info: wf = spec_adjmatrixgraphmteph_wf
+src/Chap52/AdjMatrixGraphStEph.rs:30: info: struct field `matrix`: type `ArraySeqStEphS < ArraySeqStEphS < bool > >` (variant-substitution of `ArraySeqStPerS < ArraySeqStPerS < bool > >`)
+src/Chap52/AdjMatrixGraphStPer.rs:109: info: trait AdjMatrixGraphStPerTrait <> : Sized — 12 fns (9 exec, 3 spec)
+src/Chap52/AdjMatrixGraphMtPer.rs:105: info: trait AdjMatrixGraphMtPerTrait <> : Sized — 10 fns (7 exec, 3 spec)
+src/Chap52/AdjMatrixGraphStEph.rs:104: info: trait AdjMatrixGraphStEphTrait <> : Sized — 12 fns (9 exec, 3 spec)
+src/Chap52/AdjMatrixGraphMtEph.rs:104: info: trait AdjMatrixGraphMtEphTrait <> : Sized — 12 fns (9 exec, 3 spec)
+src/Chap52/AdjMatrixGraphMtPer.rs:105: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_adjmatrixgraphstper_wf`
+src/Chap52/AdjMatrixGraphMtPer.rs:105: warning: missing 2 fns present in StPer (AdjMatrixGraphStPerTrait): `from_matrix`, `set_edge`
+src/Chap52/AdjMatrixGraphMtPer.rs:105: info: 1 extra fns not in StPer (AdjMatrixGraphStPerTrait): `spec_adjmatrixgraphmtper_wf`
+src/Chap52/AdjMatrixGraphStEph.rs:104: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_adjmatrixgraphstper_wf`
+src/Chap52/AdjMatrixGraphStEph.rs:104: info: 1 extra fns not in StPer (AdjMatrixGraphStPerTrait): `spec_adjmatrixgraphsteph_wf`
+src/Chap52/AdjMatrixGraphStEph.rs:182: info: `set_edge` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap52/AdjMatrixGraphMtEph.rs:104: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_adjmatrixgraphstper_wf`
+src/Chap52/AdjMatrixGraphMtEph.rs:104: info: 1 extra fns not in StPer (AdjMatrixGraphStPerTrait): `spec_adjmatrixgraphmteph_wf`
+src/Chap52/AdjMatrixGraphMtEph.rs:174: info: `set_edge` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap52/AdjMatrixGraphStPer.rs:0: info: AdjMatrixGraphTrait trait: 9 matched fns across 4 variants
+src/Chap52/AdjSeqGraphMtEph.rs:0: info: file group AdjSeqGraph — comparing MtEph (src/Chap52/AdjSeqGraphMtEph.rs), StEph (src/Chap52/AdjSeqGraphStEph.rs), MtPer (src/Chap52/AdjSeqGraphMtPer.rs), StPer (src/Chap52/AdjSeqGraphStPer.rs)
+src/Chap52/AdjSeqGraphStPer.rs:35: info: struct AdjSeqGraphStPer { adj: ArraySeqStPerS < ArraySeqStPerS < N > > }
+src/Chap52/AdjSeqGraphStPer.rs:42: info: View = Seq < Seq < int > >
+src/Chap52/AdjSeqGraphStPer.rs:83: info: wf = spec_adjseqgraphstper_wf
+src/Chap52/AdjSeqGraphMtPer.rs:30: info: struct AdjSeqGraphMtPer { adj: ArraySeqMtPerS < ArraySeqMtPerS < N > > }
+src/Chap52/AdjSeqGraphMtPer.rs:37: info: View = Seq < Seq < int > >
+src/Chap52/AdjSeqGraphMtPer.rs:77: info: wf = spec_adjseqgraphmtper_wf
+src/Chap52/AdjSeqGraphStEph.rs:30: info: struct AdjSeqGraphStEph { adj: ArraySeqStEphS < ArraySeqStEphS < N > > }
+src/Chap52/AdjSeqGraphStEph.rs:37: info: View = Seq < Seq < int > >
+src/Chap52/AdjSeqGraphStEph.rs:80: info: wf = spec_adjseqgraphsteph_wf
+src/Chap52/AdjSeqGraphMtEph.rs:32: info: struct AdjSeqGraphMtEph { adj: ArraySeqMtEphS < ArraySeqMtEphS < N > > }
+src/Chap52/AdjSeqGraphMtEph.rs:39: info: View = Seq < Seq < int > >
+src/Chap52/AdjSeqGraphMtEph.rs:80: info: wf = spec_adjseqgraphmteph_wf
+src/Chap52/AdjSeqGraphStEph.rs:30: info: struct field `adj`: type `ArraySeqStEphS < ArraySeqStEphS < N > >` (variant-substitution of `ArraySeqStPerS < ArraySeqStPerS < N > >`)
+src/Chap52/AdjSeqGraphStPer.rs:82: info: trait AdjSeqGraphStPerTrait <> : Sized — 13 fns (9 exec, 4 spec)
+src/Chap52/AdjSeqGraphMtPer.rs:76: info: trait AdjSeqGraphMtPerTrait <> : Sized — 10 fns (6 exec, 4 spec)
+src/Chap52/AdjSeqGraphStEph.rs:79: info: trait AdjSeqGraphStEphTrait <> : Sized — 13 fns (9 exec, 4 spec)
+src/Chap52/AdjSeqGraphMtEph.rs:79: info: trait AdjSeqGraphMtEphTrait <> : Sized — 11 fns (7 exec, 4 spec)
+src/Chap52/AdjSeqGraphMtPer.rs:76: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_adjseqgraphstper_wf`
+src/Chap52/AdjSeqGraphMtPer.rs:76: warning: missing 3 fns present in StPer (AdjSeqGraphStPerTrait): `from_seq`, `insert_edge`, `delete_edge`
+src/Chap52/AdjSeqGraphMtPer.rs:76: info: 1 extra fns not in StPer (AdjSeqGraphStPerTrait): `spec_adjseqgraphmtper_wf`
+src/Chap52/AdjSeqGraphStEph.rs:79: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_adjseqgraphstper_wf`
+src/Chap52/AdjSeqGraphStEph.rs:79: warning: missing 2 fns present in StPer (AdjSeqGraphStPerTrait): `insert_edge`, `delete_edge`
+src/Chap52/AdjSeqGraphStEph.rs:79: info: 2 mutation fns (&mut self) added by Eph variant: `set_neighbors`, `set_edge`
+src/Chap52/AdjSeqGraphStEph.rs:79: info: 1 extra fns not in StPer (AdjSeqGraphStPerTrait): `spec_adjseqgraphsteph_wf`
+src/Chap52/AdjSeqGraphStEph.rs:143: error: `out_neighbors` returns `ArraySeqStEphS < N >` but StPer returns `& ArraySeqStPerS < N >`
+src/Chap52/AdjSeqGraphMtEph.rs:79: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_adjseqgraphstper_wf`
+src/Chap52/AdjSeqGraphMtEph.rs:79: warning: missing 3 fns present in StPer (AdjSeqGraphStPerTrait): `from_seq`, `insert_edge`, `delete_edge`
+src/Chap52/AdjSeqGraphMtEph.rs:79: info: 1 mutation fns (&mut self) added by Eph variant: `set_edge`
+src/Chap52/AdjSeqGraphMtEph.rs:79: info: 1 extra fns not in StPer (AdjSeqGraphStPerTrait): `spec_adjseqgraphmteph_wf`
+src/Chap52/AdjSeqGraphMtEph.rs:121: error: `out_neighbors` returns `ArraySeqMtEphS < N >` but StPer returns `& ArraySeqStPerS < N >`
+src/Chap52/AdjSeqGraphStPer.rs:0: info: AdjSeqGraphTrait trait: 9 matched fns across 4 variants
+src/Chap52/AdjTableGraphStEph.rs:0: info: file group AdjTableGraph — comparing StEph (src/Chap52/AdjTableGraphStEph.rs), MtPer (src/Chap52/AdjTableGraphMtPer.rs), StPer (src/Chap52/AdjTableGraphStPer.rs)
+src/Chap52/AdjTableGraphStPer.rs:40: info: struct AdjTableGraphStPer { adj: TableStPer < V , AVLTreeSetStPer < V > > }
+src/Chap52/AdjTableGraphStPer.rs:47: info: View = Self
+src/Chap52/AdjTableGraphStPer.rs:54: info: wf = spec_adjtablegraphstper_wf
+src/Chap52/AdjTableGraphMtPer.rs:48: info: struct AdjTableGraphMtPer { adj: OrderedTableMtPer < V , AVLTreeSetMtPer < V > > }
+src/Chap52/AdjTableGraphMtPer.rs:55: info: View = Self
+src/Chap52/AdjTableGraphMtPer.rs:77: info: wf = spec_adjtablegraphmtper_wf
+src/Chap52/AdjTableGraphStEph.rs:38: info: struct AdjTableGraphStEph { adj: TableStEph < V , AVLTreeSetStEph < V > > }
+src/Chap52/AdjTableGraphStEph.rs:45: info: View = Self
+src/Chap52/AdjTableGraphStEph.rs:83: info: wf = spec_adjtablegraphsteph_wf
+src/Chap52/AdjTableGraphStEph.rs:38: info: struct field `adj`: type `TableStEph < V , AVLTreeSetStEph < V > >` (variant-substitution of `TableStPer < V , AVLTreeSetStPer < V > >`)
+src/Chap52/AdjTableGraphStPer.rs:53: info: trait AdjTableGraphStPerTrait <V : StT + Ord> : Sized — 15 fns (12 exec, 3 spec)
+src/Chap52/AdjTableGraphMtPer.rs:76: info: trait AdjTableGraphMtPerTrait <V : StTInMtT + Ord + TotalOrder + 'static> : (none) — 13 fns (10 exec, 3 spec)
+src/Chap52/AdjTableGraphStEph.rs:82: info: trait AdjTableGraphStEphTrait <V : StT + Ord> : Sized — 15 fns (12 exec, 3 spec)
+src/Chap52/AdjTableGraphMtPer.rs:76: error: supertrait `` but StPer has `Sized`
+src/Chap52/AdjTableGraphMtPer.rs:76: warning: generic bounds `<V : StTInMtT + Ord + TotalOrder + 'static>` but StPer has `<V : StT + Ord>`
+src/Chap52/AdjTableGraphMtPer.rs:76: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_adjtablegraphstper_wf`
+src/Chap52/AdjTableGraphMtPer.rs:76: warning: missing 2 fns present in StPer (AdjTableGraphStPerTrait): `from_table`, `vertices`
+src/Chap52/AdjTableGraphMtPer.rs:76: info: 1 extra fns not in StPer (AdjTableGraphStPerTrait): `spec_adjtablegraphmtper_wf`
+src/Chap52/AdjTableGraphMtPer.rs:82: info: `empty`: MtPer has requires but StPer does not
+src/Chap52/AdjTableGraphStEph.rs:82: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_adjtablegraphstper_wf`
+src/Chap52/AdjTableGraphStEph.rs:82: info: 1 extra fns not in StPer (AdjTableGraphStPerTrait): `spec_adjtablegraphsteph_wf`
+src/Chap52/AdjTableGraphStEph.rs:111: warning: `vertices`: StPer has ensures but StEph does not
+src/Chap52/AdjTableGraphStEph.rs:115: warning: `has_edge`: StPer has ensures but StEph does not
+src/Chap52/AdjTableGraphStEph.rs:119: warning: `out_neighbors`: StPer has ensures but StEph does not
+src/Chap52/AdjTableGraphStEph.rs:127: info: `insert_vertex` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap52/AdjTableGraphStEph.rs:132: info: `delete_vertex` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap52/AdjTableGraphStEph.rs:137: info: `insert_edge` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap52/AdjTableGraphStEph.rs:146: info: `delete_edge` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap52/AdjTableGraphStPer.rs:0: info: AdjTableGraphTrait trait: 12 matched fns across 3 variants
+src/Chap52/EdgeSetGraphStEph.rs:0: info: file group EdgeSetGraph — comparing StEph (src/Chap52/EdgeSetGraphStEph.rs), MtPer (src/Chap52/EdgeSetGraphMtPer.rs), StPer (src/Chap52/EdgeSetGraphStPer.rs)
+src/Chap52/EdgeSetGraphStPer.rs:58: info: struct EdgeSetGraphStPer { vertices: AVLTreeSetStPer < V >, edges: AVLTreeSetStPer < Pair < V , V > > }
+src/Chap52/EdgeSetGraphStPer.rs:66: info: View = Self
+src/Chap52/EdgeSetGraphStPer.rs:73: info: wf = spec_edgesetgraphstper_wf
+src/Chap52/EdgeSetGraphMtPer.rs:35: info: struct EdgeSetGraphMtPer { vertices: AVLTreeSetMtPer < V >, edges: AVLTreeSetMtPer < Pair < V , V > > }
+src/Chap52/EdgeSetGraphMtPer.rs:43: info: View = Self
+src/Chap52/EdgeSetGraphMtPer.rs:50: info: wf = spec_edgesetgraphmtper_wf
+src/Chap52/EdgeSetGraphStEph.rs:54: info: struct EdgeSetGraphStEph { vertices: AVLTreeSetStEph < V >, edges: AVLTreeSetStEph < Pair < V , V > > }
+src/Chap52/EdgeSetGraphStEph.rs:62: info: View = Self
+src/Chap52/EdgeSetGraphStEph.rs:69: info: wf = spec_edgesetgraphsteph_wf
+src/Chap52/EdgeSetGraphStEph.rs:54: info: struct field `vertices`: type `AVLTreeSetStEph < V >` (variant-substitution of `AVLTreeSetStPer < V >`)
+src/Chap52/EdgeSetGraphStEph.rs:54: info: struct field `edges`: type `AVLTreeSetStEph < Pair < V , V > >` (variant-substitution of `AVLTreeSetStPer < Pair < V , V > >`)
+src/Chap52/EdgeSetGraphStPer.rs:72: info: trait EdgeSetGraphStPerTrait <V : StT + Ord + ClonePreservesView> : Sized — 17 fns (13 exec, 4 spec)
+src/Chap52/EdgeSetGraphMtPer.rs:49: info: trait EdgeSetGraphMtPerTrait <V : StTInMtT + Ord + 'static> : (none) — 14 fns (13 exec, 1 spec)
+src/Chap52/EdgeSetGraphStEph.rs:68: info: trait EdgeSetGraphStEphTrait <V : StT + Ord + ClonePreservesView> : Sized — 17 fns (13 exec, 4 spec)
+src/Chap52/EdgeSetGraphMtPer.rs:49: error: supertrait `` but StPer has `Sized`
+src/Chap52/EdgeSetGraphMtPer.rs:49: warning: generic bounds `<V : StTInMtT + Ord + 'static>` but StPer has `<V : StT + Ord + ClonePreservesView>`
+src/Chap52/EdgeSetGraphMtPer.rs:49: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_edgesetgraphstper_wf`
+src/Chap52/EdgeSetGraphMtPer.rs:49: warning: missing 3 fns present in StPer (EdgeSetGraphStPerTrait): `spec_vertices`, `spec_edges`, `spec_out_neighbors`
+src/Chap52/EdgeSetGraphMtPer.rs:49: info: 1 extra fns not in StPer (EdgeSetGraphStPerTrait): `spec_edgesetgraphmtper_wf`
+src/Chap52/EdgeSetGraphMtPer.rs:53: warning: `empty`: StPer has requires but MtPer does not
+src/Chap52/EdgeSetGraphStEph.rs:68: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_edgesetgraphstper_wf`
+src/Chap52/EdgeSetGraphStEph.rs:68: info: 1 extra fns not in StPer (EdgeSetGraphStPerTrait): `spec_edgesetgraphsteph_wf`
+src/Chap52/EdgeSetGraphStEph.rs:128: info: `insert_vertex` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap52/EdgeSetGraphStEph.rs:135: info: `delete_vertex` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap52/EdgeSetGraphStEph.rs:140: info: `insert_edge` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap52/EdgeSetGraphStEph.rs:148: info: `delete_edge` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap52/EdgeSetGraphStPer.rs:0: info: EdgeSetGraphTrait trait: 13 matched fns across 3 variants
+src/Chap53/GraphSearchStEph.rs:0: info: file group GraphSearch — comparing StEph (src/Chap53/GraphSearchStEph.rs), MtPer (src/Chap53/GraphSearchMtPer.rs), StPer (src/Chap53/GraphSearchStPer.rs)
+src/Chap53/GraphSearchStPer.rs:46: info: trait GraphSearchStPerTrait <V : StT + Ord> : (none) — 3 fns (3 exec, 0 spec)
+src/Chap53/GraphSearchMtPer.rs:40: info: trait GraphSearchMtPerTrait <V : StTInMtT + Ord + 'static> : (none) — 3 fns (3 exec, 0 spec)
+src/Chap53/GraphSearchStEph.rs:38: info: trait GraphSearchStEphTrait <V : StT + Ord> : (none) — 3 fns (3 exec, 0 spec)
+src/Chap53/GraphSearchMtPer.rs:40: warning: generic bounds `<V : StTInMtT + Ord + 'static>` but StPer has `<V : StT + Ord>`
+src/Chap53/GraphSearchMtPer.rs:43: warning: `graph_search` has 3 params but StPer has 4
+src/Chap53/GraphSearchMtPer.rs:52: warning: `graph_search_multi` has 3 params but StPer has 4
+src/Chap53/GraphSearchMtPer.rs:63: warning: `reachable` has 2 params but StPer has 3
+src/Chap53/GraphSearchStPer.rs:0: info: GraphSearchTrait trait: 3 matched fns across 3 variants
+src/Chap53/GraphSearchStPer.rs:36: info: trait SelectionStrategy <V : StT + Ord> : (none) — 1 fns (1 exec, 0 spec)
+src/Chap53/GraphSearchMtPer.rs:34: info: trait SelectionStrategy <V : StTInMtT + Ord + 'static> : (none) — 1 fns (1 exec, 0 spec)
+src/Chap53/GraphSearchStEph.rs:30: info: trait SelectionStrategy <V : StT + Ord> : (none) — 1 fns (1 exec, 0 spec)
+src/Chap53/GraphSearchMtPer.rs:34: warning: generic bounds `<V : StTInMtT + Ord + 'static>` but StPer has `<V : StT + Ord>`
+src/Chap53/GraphSearchStPer.rs:0: info: SelectionStrategy trait: 1 matched fns across 3 variants
+src/Chap53/PQMinStEph.rs:0: info: file group PQMin — comparing StEph (src/Chap53/PQMinStEph.rs), StPer (src/Chap53/PQMinStPer.rs)
+src/Chap53/PQMinStPer.rs:30: info: struct PQMinResult { visited: AVLTreeSetStPer < V >, priorities: AVLTreeSetStPer < Pair < V , P > >, parent: Option < AVLTreeSetStPer < Pair < V , V > > > }
+src/Chap53/PQMinStPer.rs:46: info: wf = spec_pqminstper_wf
+src/Chap53/PQMinStEph.rs:25: info: struct PQMinResult { visited: AVLTreeSetStEph < V >, priorities: AVLTreeSetStEph < Pair < V , P > >, parent: Option < AVLTreeSetStEph < Pair < V , V > > > }
+src/Chap53/PQMinStEph.rs:41: info: wf = spec_pqminsteph_wf
+src/Chap53/PQMinStEph.rs:25: info: struct field `visited`: type `AVLTreeSetStEph < V >` (variant-substitution of `AVLTreeSetStPer < V >`)
+src/Chap53/PQMinStEph.rs:25: info: struct field `priorities`: type `AVLTreeSetStEph < Pair < V , P > >` (variant-substitution of `AVLTreeSetStPer < Pair < V , P > >`)
+src/Chap53/PQMinStEph.rs:25: info: struct field `parent`: type `Option < AVLTreeSetStEph < Pair < V , V > > >` (variant-substitution of `Option < AVLTreeSetStPer < Pair < V , V > > >`)
+src/Chap53/PQMinStPer.rs:45: info: trait PQMinStPerTrait <V : StT + Ord, P : StT + Ord> : (none) — 3 fns (2 exec, 1 spec)
+src/Chap53/PQMinStEph.rs:40: info: trait PQMinStEphTrait <V : StT + Ord, P : StT + Ord> : (none) — 3 fns (2 exec, 1 spec)
+src/Chap53/PQMinStEph.rs:40: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_pqminstper_wf`
+src/Chap53/PQMinStEph.rs:40: info: 1 extra fns not in StPer (PQMinStPerTrait): `spec_pqminsteph_wf`
+src/Chap53/PQMinStEph.rs:45: info: `pq_min` has 4 params but StPer has 5 (Eph/Per interface difference)
+src/Chap53/PQMinStEph.rs:75: info: `pq_min_multi` has 4 params but StPer has 5 (Eph/Per interface difference)
+src/Chap53/PQMinStPer.rs:0: info: PQMinTrait trait: 2 matched fns across 2 variants
+src/Chap54/BFSMtEph.rs:0: info: file group BFS — comparing MtEph (src/Chap54/BFSMtEph.rs), StEph (src/Chap54/BFSStEph.rs), MtPer (src/Chap54/BFSMtPer.rs), StPer (src/Chap54/BFSStPer.rs)
+src/Chap54/BFSStPer.rs:34: info: struct BFSStPer {  }
+src/Chap54/BFSMtPer.rs:34: info: struct BFSMtPer {  }
+src/Chap54/BFSStEph.rs:34: info: struct BFSStEph {  }
+src/Chap54/BFSMtEph.rs:34: info: struct BFSMtEph {  }
+src/Chap54/BFSStPer.rs:0: warning: no spec_*_wf predicate found in StPer variant
+src/Chap54/BFSMtPer.rs:0: warning: no spec_*_wf predicate found in MtPer variant
+src/Chap54/BFSStEph.rs:0: warning: no spec_*_wf predicate found in StEph variant
+src/Chap54/BFSMtEph.rs:0: warning: no spec_*_wf predicate found in MtEph variant
+src/Chap54/BFSStPer.rs:140: info: trait BFSStPerTrait <> : (none) — 2 fns (2 exec, 0 spec)
+src/Chap54/BFSMtPer.rs:282: info: trait BFSMtPerTrait <> : (none) — 2 fns (2 exec, 0 spec)
+src/Chap54/BFSStEph.rs:141: info: trait BFSStEphTrait <> : (none) — 2 fns (2 exec, 0 spec)
+src/Chap54/BFSMtEph.rs:280: info: trait BFSMtEphTrait <> : (none) — 2 fns (2 exec, 0 spec)
+src/Chap54/BFSStPer.rs:0: info: BFSTrait trait: 2 matched fns across 4 variants
+src/Chap54/BFSStPer.rs:182: info: trait BFSTreeStPerTrait <> : (none) — 3 fns (2 exec, 1 spec)
+src/Chap54/BFSMtPer.rs:261: info: trait BFSTreeMtPerTrait <> : (none) — 3 fns (2 exec, 1 spec)
+src/Chap54/BFSStEph.rs:182: info: trait BFSTreeStEphTrait <> : (none) — 3 fns (2 exec, 1 spec)
+src/Chap54/BFSMtEph.rs:259: info: trait BFSTreeMtEphTrait <> : (none) — 3 fns (2 exec, 1 spec)
+src/Chap54/BFSStPer.rs:0: info: BFSTreeTrait trait: 3 matched fns across 4 variants
+src/Chap55/CycleDetectStEph.rs:0: info: file group CycleDetect — comparing StEph (src/Chap55/CycleDetectStEph.rs), StPer (src/Chap55/CycleDetectStPer.rs)
+src/Chap55/CycleDetectStPer.rs:31: info: struct CycleDetectStPer {  }
+src/Chap55/CycleDetectStEph.rs:29: info: struct CycleDetectStEph {  }
+src/Chap55/CycleDetectStPer.rs:0: warning: no spec_*_wf predicate found in StPer variant
+src/Chap55/CycleDetectStEph.rs:0: warning: no spec_*_wf predicate found in StEph variant
+src/Chap55/CycleDetectStPer.rs:109: info: trait CycleDetectStPerTrait <> : (none) — 1 fns (1 exec, 0 spec)
+src/Chap55/CycleDetectStEph.rs:118: info: trait CycleDetectStEphTrait <> : (none) — 1 fns (1 exec, 0 spec)
+src/Chap55/CycleDetectStPer.rs:0: info: CycleDetectTrait trait: 1 matched fns across 2 variants
+src/Chap55/DFSStEph.rs:0: info: file group DFS — comparing StEph (src/Chap55/DFSStEph.rs), StPer (src/Chap55/DFSStPer.rs)
+src/Chap55/DFSStPer.rs:31: info: struct DFSStPer {  }
+src/Chap55/DFSStEph.rs:30: info: struct DFSStEph {  }
+src/Chap55/DFSStPer.rs:0: warning: no spec_*_wf predicate found in StPer variant
+src/Chap55/DFSStEph.rs:0: warning: no spec_*_wf predicate found in StEph variant
+src/Chap55/DFSStPer.rs:190: info: trait DFSStPerTrait <> : (none) — 1 fns (1 exec, 0 spec)
+src/Chap55/DFSStEph.rs:195: info: trait DFSStEphTrait <> : (none) — 1 fns (1 exec, 0 spec)
+src/Chap55/DFSStPer.rs:0: info: DFSTrait trait: 1 matched fns across 2 variants
+src/Chap55/SCCStEph.rs:0: info: file group SCC — comparing StEph (src/Chap55/SCCStEph.rs), StPer (src/Chap55/SCCStPer.rs)
+src/Chap55/SCCStPer.rs:38: info: struct SCCStPer {  }
+src/Chap55/SCCStEph.rs:39: info: struct SCCStEph {  }
+src/Chap55/SCCStPer.rs:0: warning: no spec_*_wf predicate found in StPer variant
+src/Chap55/SCCStEph.rs:0: warning: no spec_*_wf predicate found in StEph variant
+src/Chap55/SCCStPer.rs:65: info: trait SCCStPerTrait <> : (none) — 1 fns (1 exec, 0 spec)
+src/Chap55/SCCStEph.rs:73: info: trait SCCStEphTrait <> : (none) — 1 fns (1 exec, 0 spec)
+src/Chap55/SCCStPer.rs:0: info: SCCTrait trait: 1 matched fns across 2 variants
+src/Chap55/TopoSortStEph.rs:0: info: file group TopoSort — comparing StEph (src/Chap55/TopoSortStEph.rs), StPer (src/Chap55/TopoSortStPer.rs)
+src/Chap55/TopoSortStPer.rs:27: info: struct TopoSortStPer {  }
+src/Chap55/TopoSortStEph.rs:35: info: struct TopoSortStEph {  }
+src/Chap55/TopoSortStPer.rs:0: warning: no spec_*_wf predicate found in StPer variant
+src/Chap55/TopoSortStEph.rs:0: warning: no spec_*_wf predicate found in StEph variant
+src/Chap55/TopoSortStPer.rs:127: info: trait TopoSortStPerTrait <> : (none) — 1 fns (1 exec, 0 spec)
+src/Chap55/TopoSortStEph.rs:226: info: trait TopoSortStEphTrait <> : (none) — 1 fns (1 exec, 0 spec)
+src/Chap55/TopoSortStPer.rs:0: info: TopoSortTrait trait: 1 matched fns across 2 variants
+src/Chap56/PathWeightUtilsStEph.rs:0: info: file group PathWeightUtils — comparing StEph (src/Chap56/PathWeightUtilsStEph.rs), StPer (src/Chap56/PathWeightUtilsStPer.rs)
+src/Chap56/PathWeightUtilsStPer.rs:31: info: struct PathWeightUtilsStPerS {  }
+src/Chap56/PathWeightUtilsStEph.rs:34: info: struct PathWeightUtilsStEphS {  }
+src/Chap56/PathWeightUtilsStPer.rs:0: warning: no spec_*_wf predicate found in StPer variant
+src/Chap56/PathWeightUtilsStEph.rs:0: warning: no spec_*_wf predicate found in StEph variant
+src/Chap56/PathWeightUtilsStPer.rs:35: info: trait PathWeightUtilsStPerTrait <> : Sized — 6 fns (4 exec, 2 spec)
+src/Chap56/PathWeightUtilsStEph.rs:38: info: trait PathWeightUtilsStEphTrait <> : Sized — 6 fns (4 exec, 2 spec)
+src/Chap56/PathWeightUtilsStPer.rs:0: info: PathWeightUtilsTrait trait: 6 matched fns across 2 variants
+src/Chap61/EdgeContractionMtEph.rs:0: info: file group EdgeContraction — comparing MtEph (src/Chap61/EdgeContractionMtEph.rs), StEph (src/Chap61/EdgeContractionStEph.rs)
+src/Chap61/EdgeContractionStEph.rs:27: info: struct EdgeContractionStEph {  }
+src/Chap61/EdgeContractionStEph.rs:33: info: wf = spec_edgecontractionsteph_wf
+src/Chap61/EdgeContractionMtEph.rs:28: info: struct EdgeContractionMtEph {  }
+src/Chap61/EdgeContractionMtEph.rs:34: info: wf = spec_edgecontractionmteph_wf
+src/Chap61/EdgeContractionStEph.rs:31: info: trait EdgeContractionStEphTrait <> : (none) — 3 fns (2 exec, 1 spec)
+src/Chap61/EdgeContractionMtEph.rs:32: info: trait EdgeContractionMtEphTrait <> : (none) — 3 fns (2 exec, 1 spec)
+src/Chap61/EdgeContractionMtEph.rs:32: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_edgecontractionsteph_wf`
+src/Chap61/EdgeContractionMtEph.rs:32: warning: missing 2 fns present in StEph (EdgeContractionStEphTrait): `edge_contract`, `contract_round`
+src/Chap61/EdgeContractionMtEph.rs:32: info: 3 extra fns not in StEph (EdgeContractionStEphTrait): `spec_edgecontractionmteph_wf`, `edge_contract_mt`, `contract_round_mt`
+src/Chap61/VertexMatchingMtEph.rs:0: info: file group VertexMatching — comparing MtEph (src/Chap61/VertexMatchingMtEph.rs), StEph (src/Chap61/VertexMatchingStEph.rs)
+src/Chap61/VertexMatchingStEph.rs:26: info: struct VertexMatchingStEph {  }
+src/Chap61/VertexMatchingStEph.rs:32: info: wf = spec_vertexmatchingsteph_wf
+src/Chap61/VertexMatchingMtEph.rs:28: info: struct VertexMatchingMtEph {  }
+src/Chap61/VertexMatchingMtEph.rs:34: info: wf = spec_vertexmatchingmteph_wf
+src/Chap61/VertexMatchingStEph.rs:30: info: trait VertexMatchingStEphTrait <> : (none) — 3 fns (2 exec, 1 spec)
+src/Chap61/VertexMatchingMtEph.rs:32: info: trait VertexMatchingMtEphTrait <> : (none) — 2 fns (1 exec, 1 spec)
+src/Chap61/VertexMatchingMtEph.rs:32: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_vertexmatchingsteph_wf`
+src/Chap61/VertexMatchingMtEph.rs:32: warning: missing 2 fns present in StEph (VertexMatchingStEphTrait): `greedy_matching`, `parallel_matching_st`
+src/Chap61/VertexMatchingMtEph.rs:32: info: 2 extra fns not in StEph (VertexMatchingStEphTrait): `spec_vertexmatchingmteph_wf`, `parallel_matching_mt`
+src/Chap62/StarContractionMtEph.rs:0: info: file group StarContraction — comparing MtEph (src/Chap62/StarContractionMtEph.rs), StEph (src/Chap62/StarContractionStEph.rs)
+src/Chap62/StarContractionStEph.rs:32: info: struct StarContractionStEph {  }
+src/Chap62/StarContractionStEph.rs:38: info: wf = spec_starcontractionsteph_wf
+src/Chap62/StarContractionMtEph.rs:33: info: struct StarContractionMtEph {  }
+src/Chap62/StarContractionMtEph.rs:39: info: wf = spec_starcontractionmteph_wf
+src/Chap62/StarContractionStEph.rs:36: info: trait StarContractionStEphTrait <> : (none) — 3 fns (2 exec, 1 spec)
+src/Chap62/StarContractionMtEph.rs:37: info: trait StarContractionMtEphTrait <> : (none) — 3 fns (2 exec, 1 spec)
+src/Chap62/StarContractionMtEph.rs:37: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_starcontractionsteph_wf`
+src/Chap62/StarContractionMtEph.rs:37: warning: missing 2 fns present in StEph (StarContractionStEphTrait): `star_contract`, `contract_to_vertices`
+src/Chap62/StarContractionMtEph.rs:37: info: 3 extra fns not in StEph (StarContractionStEphTrait): `spec_starcontractionmteph_wf`, `star_contract_mt`, `contract_to_vertices_mt`
+src/Chap62/StarPartitionMtEph.rs:0: info: file group StarPartition — comparing MtEph (src/Chap62/StarPartitionMtEph.rs), StEph (src/Chap62/StarPartitionStEph.rs)
+src/Chap62/StarPartitionStEph.rs:29: info: struct StarPartitionStEph {  }
+src/Chap62/StarPartitionStEph.rs:35: info: wf = spec_starpartitionsteph_wf
+src/Chap62/StarPartitionStEph.rs:33: info: trait StarPartitionStEphTrait — 2 fns (1 exec, 1 spec), only in StEph variant
+src/Chap63/ConnectivityMtEph.rs:0: info: file group Connectivity — comparing MtEph (src/Chap63/ConnectivityMtEph.rs), StEph (src/Chap63/ConnectivityStEph.rs)
+src/Chap63/ConnectivityStEph.rs:31: info: struct ConnectivityStEph {  }
+src/Chap63/ConnectivityStEph.rs:37: info: wf = spec_connectivitysteph_wf
+src/Chap63/ConnectivityMtEph.rs:30: info: struct ConnectivityMtEph {  }
+src/Chap63/ConnectivityMtEph.rs:36: info: wf = spec_connectivitymteph_wf
+src/Chap63/ConnectivityStEph.rs:35: info: trait ConnectivityStEphTrait <> : (none) — 5 fns (4 exec, 1 spec)
+src/Chap63/ConnectivityMtEph.rs:34: info: trait ConnectivityMtEphTrait <> : (none) — 5 fns (4 exec, 1 spec)
+src/Chap63/ConnectivityMtEph.rs:34: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_connectivitysteph_wf`
+src/Chap63/ConnectivityMtEph.rs:34: warning: missing 2 fns present in StEph (ConnectivityStEphTrait): `count_components`, `connected_components`
+src/Chap63/ConnectivityMtEph.rs:34: info: 3 extra fns not in StEph (ConnectivityStEphTrait): `spec_connectivitymteph_wf`, `count_components_mt`, `connected_components_mt`
+src/Chap63/ConnectivityMtEph.rs:55: warning: `count_components_hof` has 2 params but StEph has 1
+src/Chap63/ConnectivityMtEph.rs:60: warning: `connected_components_hof` has 2 params but StEph has 1
+src/Chap63/ConnectivityStEph.rs:0: info: ConnectivityTrait trait: 2 matched fns across 2 variants
+src/Chap64/SpanTreeMtEph.rs:0: info: file group SpanTree — comparing MtEph (src/Chap64/SpanTreeMtEph.rs), StEph (src/Chap64/SpanTreeStEph.rs)
+src/Chap64/SpanTreeStEph.rs:29: info: struct SpanTreeStEph {  }
+src/Chap64/SpanTreeStEph.rs:35: info: wf = spec_spantreesteph_wf
+src/Chap64/SpanTreeMtEph.rs:26: info: struct SpanTreeMtEph {  }
+src/Chap64/SpanTreeMtEph.rs:32: info: wf = spec_spantreemteph_wf
+src/Chap64/SpanTreeStEph.rs:33: info: trait SpanTreeStEphTrait <> : (none) — 3 fns (2 exec, 1 spec)
+src/Chap64/SpanTreeMtEph.rs:30: info: trait SpanTreeMtEphTrait <> : (none) — 3 fns (2 exec, 1 spec)
+src/Chap64/SpanTreeMtEph.rs:30: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_spantreesteph_wf`
+src/Chap64/SpanTreeMtEph.rs:30: warning: missing 1 fns present in StEph (SpanTreeStEphTrait): `spanning_tree_star_contraction`
+src/Chap64/SpanTreeMtEph.rs:30: info: 2 extra fns not in StEph (SpanTreeStEphTrait): `spec_spantreemteph_wf`, `spanning_tree_star_contraction_mt`
+src/Chap64/SpanTreeStEph.rs:0: info: SpanTreeTrait trait: 1 matched fns across 2 variants
+src/Chap66/BoruvkaMtEph.rs:0: info: file group Boruvka — comparing MtEph (src/Chap66/BoruvkaMtEph.rs), StEph (src/Chap66/BoruvkaStEph.rs)
+src/Chap66/BoruvkaStEph.rs:56: info: struct BoruvkaStEph {  }
+src/Chap66/BoruvkaStEph.rs:82: info: View = Self
+src/Chap66/BoruvkaStEph.rs:116: info: wf = spec_boruvkasteph_wf
+src/Chap66/BoruvkaMtEph.rs:38: info: struct BoruvkaMtEph {  }
+src/Chap66/BoruvkaMtEph.rs:72: info: View = Self
+src/Chap66/BoruvkaMtEph.rs:92: info: wf = spec_boruvkamteph_wf
+src/Chap66/BoruvkaStEph.rs:114: info: trait BoruvkaStEphTrait <> : (none) — 6 fns (5 exec, 1 spec)
+src/Chap66/BoruvkaMtEph.rs:90: info: trait BoruvkaMtEphTrait <> : (none) — 6 fns (5 exec, 1 spec)
+src/Chap66/BoruvkaMtEph.rs:90: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_boruvkasteph_wf`
+src/Chap66/BoruvkaMtEph.rs:90: warning: missing 4 fns present in StEph (BoruvkaStEphTrait): `vertex_bridges`, `bridge_star_partition`, `boruvka_mst`, `boruvka_mst_with_seed`
+src/Chap66/BoruvkaMtEph.rs:90: info: 5 extra fns not in StEph (BoruvkaStEphTrait): `spec_boruvkamteph_wf`, `vertex_bridges_mt`, `bridge_star_partition_mt`, `boruvka_mst_mt`, `boruvka_mst_mt_with_seed`
+src/Chap66/BoruvkaStEph.rs:0: info: BoruvkaTrait trait: 1 matched fns across 2 variants
+
+Phase 2 summary: 57 groups compared, 46 errors, 222 warnings, 823 info
