@@ -2449,9 +2449,9 @@ Proof Functions:
 Function Specs:
    5296 exec fns with complete spec (requires+ensures) (67%)
    57 exec fns missing spec (0%)
-   2432 proof/spec fns clean (31%)
+   2436 proof/spec fns clean (31%)
    4 proof/spec fns with holes (0%)
-   7789 total fns
+   7793 total fns
 
 
 Holes Found: 4 (actionable)
@@ -2476,8 +2476,8 @@ Accepted (reviewed): 65 total
    10 × trivial_spec_wf
    4 × unsafe_block_accept_hole
    3 × external_accept_hole
-   1 × external_type_specification_accept_hole
    1 × enum_outside_verus_accept_hole
+   1 × external_type_specification_accept_hole
    1 × struct_outside_verus_accept_hole
 
 Accepted by Chapter:
@@ -2504,51 +2504,51 @@ Structural (info only): 220
 =================================================================
 
    1  Chap65  (4 holes, 3 files)
-   2  Chap27  (0 holes, 4 files)
-   3  Chap18  (0 holes, 7 files)
-   4  Chap50  (0 holes, 8 files)
-   5  Chap51  (0 holes, 8 files)
-   6  Chap53  (0 holes, 5 files)
-   7  Chap59  (0 holes, 4 files)
-   8  Chap38  (0 holes, 2 files)
-   9  Chap57  (0 holes, 3 files)
-   10  Chap47  (0 holes, 9 files)
-   11  Chap28  (0 holes, 11 files)
-   12  Chap45  (0 holes, 6 files)
-   13  Chap58  (0 holes, 2 files)
-   14  Chap64  (0 holes, 3 files)
-   15  Chap21  (0 holes, 5 files)
-   16  Chap66  (0 holes, 2 files)
-   17  Chap61  (0 holes, 4 files)
-   18  ParaPairs  (0 holes, 1 files)
-   19  Chap03  (0 holes, 1 files)
-   20  Chap11  (0 holes, 5 files)
-   21  Chap49  (0 holes, 8 files)
-   22  Chap37  (0 holes, 19 files)
-   23  Chap63  (0 holes, 2 files)
-   24  Chap19  (0 holes, 4 files)
-   25  Concurrency  (0 holes, 1 files)
-   26  Chap56  (0 holes, 10 files)
-   27  Chap52  (0 holes, 14 files)
-   28  Chap06  (0 holes, 21 files)
-   29  Chap12  (0 holes, 3 files)
-   30  Chap44  (0 holes, 1 files)
-   31  Chap62  (0 holes, 4 files)
-   32  Chap17  (0 holes, 1 files)
-   33  Chap30  (0 holes, 1 files)
-   34  Chap55  (0 holes, 8 files)
-   35  Chap41  (0 holes, 6 files)
-   36  Chap43  (0 holes, 10 files)
-   37  Chap36  (0 holes, 3 files)
-   38  Chap35  (0 holes, 4 files)
-   39  Chap02  (0 holes, 2 files)
+   2  ParaPairs  (0 holes, 1 files)
+   3  Chap52  (0 holes, 14 files)
+   4  Chap54  (0 holes, 4 files)
+   5  Chap28  (0 holes, 11 files)
+   6  Chap19  (0 holes, 4 files)
+   7  Chap26  (0 holes, 8 files)
+   8  Chap63  (0 holes, 2 files)
+   9  Chap61  (0 holes, 4 files)
+   10  Chap23  (0 holes, 2 files)
+   11  Chap38  (0 holes, 2 files)
+   12  Chap18  (0 holes, 7 files)
+   13  Chap57  (0 holes, 3 files)
+   14  Chap03  (0 holes, 1 files)
+   15  Chap37  (0 holes, 19 files)
+   16  Chap12  (0 holes, 3 files)
+   17  Concurrency  (0 holes, 1 files)
+   18  Chap56  (0 holes, 10 files)
+   19  Chap21  (0 holes, 5 files)
+   20  Chap55  (0 holes, 8 files)
+   21  Chap59  (0 holes, 4 files)
+   22  Chap02  (0 holes, 2 files)
+   23  Chap40  (0 holes, 3 files)
+   24  Chap51  (0 holes, 8 files)
+   25  Chap30  (0 holes, 1 files)
+   26  Chap11  (0 holes, 5 files)
+   27  Chap62  (0 holes, 4 files)
+   28  Chap35  (0 holes, 4 files)
+   29  Chap45  (0 holes, 6 files)
+   30  Chap53  (0 holes, 5 files)
+   31  Chap58  (0 holes, 2 files)
+   32  Chap64  (0 holes, 3 files)
+   33  Chap50  (0 holes, 8 files)
+   34  Chap42  (0 holes, 3 files)
+   35  Chap27  (0 holes, 4 files)
+   36  Chap06  (0 holes, 21 files)
+   37  Chap43  (0 holes, 10 files)
+   38  Chap47  (0 holes, 9 files)
+   39  Chap41  (0 holes, 6 files)
    40  Chap39  (0 holes, 4 files)
-   41  Chap23  (0 holes, 2 files)
-   42  Chap40  (0 holes, 3 files)
-   43  Chap05  (0 holes, 5 files)
-   44  Chap42  (0 holes, 3 files)
-   45  Chap54  (0 holes, 4 files)
-   46  Chap26  (0 holes, 8 files)
+   41  Chap36  (0 holes, 3 files)
+   42  Chap66  (0 holes, 2 files)
+   43  Chap49  (0 holes, 8 files)
+   44  Chap44  (0 holes, 1 files)
+   45  Chap17  (0 holes, 1 files)
+   46  Chap05  (0 holes, 5 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
@@ -2637,8 +2637,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-26 08:30:17 -07:00
-Ended:     2026-03-26 08:30:19 -07:00
-Duration:  1711ms
+Started:   2026-03-26 08:57:10 -07:00
+Ended:     2026-03-26 08:57:11 -07:00
+Duration:  1512ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log
