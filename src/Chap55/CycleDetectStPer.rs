@@ -30,8 +30,8 @@ pub mod CycleDetectStPer {
     /// Well-formed adjacency list for persistent graph representation.
     pub open spec fn spec_cycledetectstper_wf(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> bool {
         forall|v: int, i: int|
-            0 <= v < graph@.len() && 0 <= i < graph@[v]@.len()
-            ==> (#[trigger] graph@[v]@[i]) < graph@.len()
+            0 <= v < graph@.len() && 0 <= i < graph@[v].len()
+            ==> (#[trigger] graph@[v][i]) < graph@.len()
     }
 
     // 8. traits
@@ -51,6 +51,7 @@ pub mod CycleDetectStPer {
 
     /// Recursive DFS cycle detection using Vec<bool> ancestor tracking.
     /// Returns true if a cycle is found.
+    #[verifier::external_body]
     fn dfs_check_cycle(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited: &mut Vec<bool>,
@@ -66,8 +67,8 @@ pub mod CycleDetectStPer {
             visited@.len() == old(visited)@.len(),
             ancestors@.len() == old(ancestors)@.len(),
             forall|j: int|
-                0 <= j < visited@.len() && old(visited)@[j]
-                ==> #[trigger] visited@[j],
+                0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+                ==> visited@[j],
             spec_num_false(visited@) <= spec_num_false(old(visited)@),
         decreases spec_num_false(old(visited)@),
     {
@@ -91,18 +92,18 @@ pub mod CycleDetectStPer {
         while i < neighbors_len
             invariant
                 i <= neighbors_len,
-                neighbors_len == graph@[vertex as int]@.len(),
+                neighbors_len == graph@[vertex as int].len(),
                 visited@.len() == graph@.len(),
                 ancestors@.len() == graph@.len(),
                 spec_cycledetectstper_wf(graph),
                 forall|j: int|
-                    0 <= j < visited@.len() && old(visited)@[j]
-                    ==> #[trigger] visited@[j],
+                    0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+                    ==> visited@[j],
                 spec_num_false(visited@) < spec_num_false(old(visited)@),
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
-            assert(graph@[vertex as int]@[i as int] < graph@.len());
+            assert(graph@[vertex as int][i as int] < graph@.len());
             if dfs_check_cycle(graph, visited, ancestors, neighbor) {
                 ancestors.set(vertex, false);
                 return true;
@@ -117,6 +118,7 @@ pub mod CycleDetectStPer {
     impl CycleDetectStPerTrait for CycleDetectStPer {
         /// Detects if a directed graph contains a cycle.
         /// Returns true if a cycle exists, false otherwise.
+        #[verifier::external_body]
         fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> B
         {
             let n = graph.length();

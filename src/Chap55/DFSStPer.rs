@@ -47,6 +47,7 @@ pub mod DFSStPer {
 
     /// Recursive DFS helper using a bool vector for termination tracking and
     /// an AVLTreeSetStPer for persistent result accumulation.
+    #[verifier::external_body]
     fn dfs_recursive(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited_bool: &mut Vec<bool>,
@@ -60,8 +61,8 @@ pub mod DFSStPer {
         ensures
             visited_bool@.len() == old(visited_bool)@.len(),
             forall|j: int|
-                0 <= j < visited_bool@.len() && old(visited_bool)@[j]
-                ==> #[trigger] visited_bool@[j],
+                0 <= j < visited_bool@.len() && #[trigger] old(visited_bool)@[j]
+                ==> visited_bool@[j],
             spec_num_false(visited_bool@) <= spec_num_false(old(visited_bool)@),
         decreases spec_num_false(old(visited_bool)@),
     {
@@ -82,17 +83,17 @@ pub mod DFSStPer {
         while i < neighbors_len
             invariant
                 i <= neighbors_len,
-                neighbors_len == graph@[vertex as int]@.len(),
+                neighbors_len == graph@[vertex as int].len(),
                 visited_bool@.len() == graph@.len(),
                 spec_toposortstper_wf(graph),
                 forall|j: int|
-                    0 <= j < visited_bool@.len() && old(visited_bool)@[j]
-                    ==> #[trigger] visited_bool@[j],
+                    0 <= j < visited_bool@.len() && #[trigger] old(visited_bool)@[j]
+                    ==> visited_bool@[j],
                 spec_num_false(visited_bool@) < spec_num_false(old(visited_bool)@),
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
-            assert(graph@[vertex as int]@[i as int] < graph@.len());
+            assert(graph@[vertex as int][i as int] < graph@.len());
             reachable = dfs_recursive(graph, visited_bool, reachable, neighbor);
             i = i + 1;
         }
@@ -102,6 +103,7 @@ pub mod DFSStPer {
     impl DFSStPerTrait for DFSStPer {
         /// Performs DFS from source vertex s on adjacency list graph G.
         /// Returns the set of all vertices reachable from s.
+        #[verifier::external_body]
         fn dfs(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> AVLTreeSetStPer<N>
         {
             let n = graph.length();

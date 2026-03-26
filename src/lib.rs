@@ -578,14 +578,14 @@ pub mod Chap54 {
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap55")))]
 pub mod Chap55 {
-//    pub mod DFSStEph;          // FIX: 48× .view() on Seq (mechanical) + 1 pub visibility
-//    pub mod DFSStPer;          // FIX: same
-//    pub mod TopoSortStEph;     // FIX: same (has the pub fix too)
-//    pub mod TopoSortStPer;     // FIX: same
-//    pub mod CycleDetectStEph;  // FIX: same
-//    pub mod CycleDetectStPer;  // FIX: same
-//    pub mod SCCStEph;          // FIX: same
-//    pub mod SCCStPer;          // FIX: same
+    pub mod DFSStEph;
+    pub mod DFSStPer;
+    pub mod TopoSortStEph;
+    pub mod TopoSortStPer;
+    pub mod CycleDetectStEph;
+    pub mod CycleDetectStPer;
+    pub mod SCCStEph;
+    pub mod SCCStPer;
 }
 
 /*

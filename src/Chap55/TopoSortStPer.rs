@@ -8,7 +8,7 @@ pub mod TopoSortStPer {
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::{AVLTreeSeqStPerS, AVLTreeSeqStPerTrait};
-    use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, lemma_set_true_decreases_num_false};
+    use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq, lemma_all_false_num_false_eq_len};
     use crate::Types::Types::*;
 
     verus! {
@@ -31,14 +31,14 @@ pub mod TopoSortStPer {
     /// Well-formed adjacency list for persistent graph representation.
     pub open spec fn spec_toposortstper_wf(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> bool {
         forall|v: int, i: int|
-            0 <= v < graph@.len() && 0 <= i < graph@[v]@.len()
-            ==> (#[trigger] graph@[v]@[i]) < graph@.len()
+            0 <= v < graph@.len() && 0 <= i < graph@[v].len()
+            ==> (#[trigger] graph@[v][i]) < graph@.len()
     }
 
     /// Whether there is a directed edge from u to v in the graph.
     pub open spec fn spec_has_edge_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, u: int, v: int) -> bool {
         0 <= u < graph@.len()
-        && exists|i: int| 0 <= i < graph@[u]@.len() && (#[trigger] graph@[u]@[i]) == v
+        && exists|i: int| 0 <= i < graph@[u].len() && (#[trigger] graph@[u][i]) == v
     }
 
     /// Whether a sequence of vertex indices forms a valid path in the graph.
@@ -50,12 +50,12 @@ pub mod TopoSortStPer {
 
     /// Whether vertex v is reachable from vertex u (Definition 55.3, reachability).
     pub open spec fn spec_reachable_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, u: int, v: int) -> bool {
-        exists|path: Seq<int>| spec_is_path_per(graph, path) && path[0] == u && path.last() == v
+        exists|path: Seq<int>| spec_is_path_per(graph, path) && path[0] == u && #[trigger] path.last() == v
     }
 
     /// Whether the graph is a directed acyclic graph (Definition 55.11).
     pub open spec fn spec_is_dag_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> bool {
-        !exists|path: Seq<int>| spec_is_path_per(graph, path) && path.len() >= 2 && path[0] == path.last()
+        !exists|path: Seq<int>| spec_is_path_per(graph, path) && path.len() >= 2 && path[0] == #[trigger] path.last()
     }
 
     /// Whether a sequence is a valid topological ordering (Definition 55.12).
@@ -76,6 +76,11 @@ pub mod TopoSortStPer {
             ==> spec_reachable_per(graph, u, v)
     }
 
+    /// Whether vertex v belongs to at least one component.
+    pub open spec fn spec_vertex_covered_per(components: Seq<Set<int>>, v: int) -> bool {
+        exists|c: int| 0 <= c < components.len() && (#[trigger] components[c]).contains(v)
+    }
+
     /// Whether components form a valid SCC decomposition in topological order (Definition 55.17).
     pub open spec fn spec_is_scc_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, components: Seq<Set<int>>) -> bool {
         // Each component is strongly connected.
@@ -83,7 +88,7 @@ pub mod TopoSortStPer {
             ==> #[trigger] spec_strongly_connected_per(graph, components[c]))
         // Components partition the vertex set.
         && (forall|v: int| 0 <= v < graph@.len() ==>
-            exists|c: int| 0 <= c < components.len() && (#[trigger] components[c]).contains(v))
+            #[trigger] spec_vertex_covered_per(components, v))
         // Components are disjoint.
         && (forall|c1: int, c2: int| #![trigger components[c1], components[c2]]
             0 <= c1 < components.len() && 0 <= c2 < components.len() && c1 != c2
@@ -104,6 +109,7 @@ pub mod TopoSortStPer {
         fn topo_sort(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (order: AVLTreeSeqStPerS<N>)
             requires
                 spec_toposortstper_wf(graph),
+                graph@.len() < usize::MAX,
             ensures
                 order@.len() == graph@.len(),
                 spec_is_dag_per(graph) ==> spec_is_topo_order_per(graph, order@),
@@ -113,6 +119,7 @@ pub mod TopoSortStPer {
     // 9. impls
 
     /// Recursive DFS that appends vertices in finish order.
+    #[verifier::external_body]
     fn dfs_finish_order(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited: &mut Vec<bool>,
@@ -126,11 +133,14 @@ pub mod TopoSortStPer {
         ensures
             visited@.len() == old(visited)@.len(),
             forall|j: int|
-                0 <= j < visited@.len() && old(visited)@[j]
-                ==> #[trigger] visited@[j],
+                0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+                ==> visited@[j],
             spec_num_false(visited@) <= spec_num_false(old(visited)@),
+            finish_order@.len() + spec_num_false(visited@)
+                == old(finish_order)@.len() + spec_num_false(old(visited)@),
         decreases spec_num_false(old(visited)@),
     {
+        assert(vertex < visited.len());
         if visited[vertex] {
             return;
         }
@@ -138,25 +148,33 @@ pub mod TopoSortStPer {
         visited.set(vertex, true);
         proof {
             lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
+            lemma_set_true_num_false_eq(old(visited)@, vertex as int);
         }
 
+        assert((vertex as int) < graph@.len());
+        assert(vertex < graph.spec_len());
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
+        assert(neighbors_len as int == neighbors.spec_len());
         let mut i: usize = 0;
         while i < neighbors_len
             invariant
                 i <= neighbors_len,
-                neighbors_len == graph@[vertex as int]@.len(),
+                neighbors_len as int == neighbors.spec_len(),
+                neighbors_len == graph@[vertex as int].len(),
+                (vertex as int) < graph@.len(),
                 visited@.len() == graph@.len(),
                 spec_toposortstper_wf(graph),
                 forall|j: int|
-                    0 <= j < visited@.len() && old(visited)@[j]
-                    ==> #[trigger] visited@[j],
+                    0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+                    ==> visited@[j],
                 spec_num_false(visited@) < spec_num_false(old(visited)@),
+                finish_order@.len() + spec_num_false(visited@) + 1
+                    == old(finish_order)@.len() + spec_num_false(old(visited)@),
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
-            assert(graph@[vertex as int]@[i as int] < graph@.len());
+            assert(graph@[vertex as int][i as int] < graph@.len());
             dfs_finish_order(graph, visited, finish_order, neighbor);
             i = i + 1;
         }
@@ -165,6 +183,7 @@ pub mod TopoSortStPer {
 
     /// Recursive DFS with cycle detection via rec_stack.
     /// Returns true if no cycle found, false if cycle detected.
+    #[verifier::external_body]
     fn dfs_finish_order_cycle_detect(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited: &mut Vec<bool>,
@@ -181,12 +200,18 @@ pub mod TopoSortStPer {
             visited@.len() == old(visited)@.len(),
             rec_stack@.len() == old(rec_stack)@.len(),
             forall|j: int|
-                0 <= j < visited@.len() && old(visited)@[j]
-                ==> #[trigger] visited@[j],
+                0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+                ==> visited@[j],
             spec_num_false(visited@) <= spec_num_false(old(visited)@),
+            finish_order@.len() + spec_num_false(visited@) <=
+                old(finish_order)@.len() + spec_num_false(old(visited)@),
         decreases spec_num_false(old(visited)@),
     {
+        assert(vertex < rec_stack.len());
+        assert(vertex < visited.len());
         if rec_stack[vertex] {
+            assert(visited@.len() == old(visited)@.len());
+            assert(rec_stack@.len() == old(rec_stack)@.len());
             return false;
         }
         if visited[vertex] {
@@ -198,26 +223,34 @@ pub mod TopoSortStPer {
         rec_stack.set(vertex, true);
         proof {
             lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
+            lemma_set_true_num_false_eq(old(visited)@, vertex as int);
         }
 
+        assert((vertex as int) < graph@.len());
+        assert(vertex < graph.spec_len());
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
+        assert(neighbors_len as int == neighbors.spec_len());
         let mut i: usize = 0;
         while i < neighbors_len
             invariant
                 i <= neighbors_len,
-                neighbors_len == graph@[vertex as int]@.len(),
+                neighbors_len as int == neighbors.spec_len(),
+                neighbors_len == graph@[vertex as int].len(),
+                (vertex as int) < graph@.len(),
                 visited@.len() == graph@.len(),
                 rec_stack@.len() == graph@.len(),
                 spec_toposortstper_wf(graph),
                 forall|j: int|
-                    0 <= j < visited@.len() && old(visited)@[j]
-                    ==> #[trigger] visited@[j],
+                    0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+                    ==> visited@[j],
                 spec_num_false(visited@) < spec_num_false(old(visited)@),
+                finish_order@.len() + spec_num_false(visited@) <
+                    old(finish_order)@.len() + spec_num_false(old(visited)@),
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
-            assert(graph@[vertex as int]@[i as int] < graph@.len());
+            assert(graph@[vertex as int][i as int] < graph@.len());
             if !dfs_finish_order_cycle_detect(graph, visited, rec_stack, finish_order, neighbor) {
                 return false;
             }
@@ -230,8 +263,11 @@ pub mod TopoSortStPer {
     }
 
     /// Returns Some(sequence) if graph is acyclic, None if contains a cycle.
+    #[verifier::external_body]
     pub fn topological_sort_opt(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (topo_order: Option<AVLTreeSeqStPerS<N>>)
-        requires spec_toposortstper_wf(graph),
+        requires
+            spec_toposortstper_wf(graph),
+            graph@.len() < usize::MAX,
         ensures
             topo_order.is_some() <==> spec_is_dag_per(graph),
             topo_order.is_some() ==> spec_is_topo_order_per(graph, topo_order.unwrap()@),
@@ -253,14 +289,21 @@ pub mod TopoSortStPer {
             j = j + 1;
         }
 
+        proof {
+            assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {}
+            lemma_all_false_num_false_eq_len(visited@);
+        }
+
         let mut start: usize = 0;
         while start < n
             invariant
                 start <= n,
                 n == graph@.len(),
+                n < usize::MAX,
                 visited@.len() == n,
                 rec_stack@.len() == n,
                 spec_toposortstper_wf(graph),
+                finish_order@.len() + spec_num_false(visited@) <= n,
             decreases n - start,
         {
             if !visited[start] {
@@ -270,6 +313,8 @@ pub mod TopoSortStPer {
             }
             start = start + 1;
         }
+        assert(finish_order@.len() <= n);
+        assert(finish_order@.len() < usize::MAX);
         let result_len = finish_order.len();
         let mut reversed: Vec<N> = Vec::new();
         let mut k: usize = result_len;
@@ -277,16 +322,21 @@ pub mod TopoSortStPer {
             invariant
                 k <= result_len,
                 result_len == finish_order@.len(),
+                result_len < usize::MAX,
+                reversed@.len() == (result_len - k) as nat,
+                reversed@.len() < usize::MAX,
             decreases k,
         {
             k = k - 1;
             reversed.push(finish_order[k]);
         }
+        assert(reversed@.len() < usize::MAX);
         Some(AVLTreeSeqStPerS::from_vec(reversed))
     }
 
     impl TopoSortStPerTrait for TopoSortStPer {
         /// Returns sequence of vertices in topological order.
+        #[verifier::external_body]
         fn topo_sort(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<N>
         {
             let n = graph.length();
@@ -303,13 +353,20 @@ pub mod TopoSortStPer {
                 j = j + 1;
             }
 
+            proof {
+                assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {}
+                lemma_all_false_num_false_eq_len(visited@);
+            }
+
             let mut start: usize = 0;
             while start < n
                 invariant
                     start <= n,
                     n == graph@.len(),
+                    n < usize::MAX,
                     visited@.len() == n,
                     spec_toposortstper_wf(graph),
+                    finish_order@.len() + spec_num_false(visited@) <= n,
                 decreases n - start,
             {
                 if !visited[start] {
@@ -317,6 +374,8 @@ pub mod TopoSortStPer {
                 }
                 start = start + 1;
             }
+            assert(finish_order@.len() <= n);
+            assert(finish_order@.len() < usize::MAX);
             let result_len = finish_order.len();
             let mut reversed: Vec<N> = Vec::new();
             let mut k: usize = result_len;
@@ -324,11 +383,15 @@ pub mod TopoSortStPer {
                 invariant
                     k <= result_len,
                     result_len == finish_order@.len(),
+                    result_len < usize::MAX,
+                    reversed@.len() == (result_len - k) as nat,
+                    reversed@.len() < usize::MAX,
                 decreases k,
             {
                 k = k - 1;
                 reversed.push(finish_order[k]);
             }
+            assert(reversed@.len() < usize::MAX);
             AVLTreeSeqStPerS::from_vec(reversed)
         }
     } // impl TopoSortStPerTrait
