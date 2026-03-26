@@ -11,6 +11,7 @@ pub mod SCCStEph {
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Chap55::TopoSortStEph::TopoSortStEph::{
         spec_toposortsteph_wf, spec_num_false, lemma_set_true_decreases_num_false,
+        lemma_set_true_num_false_eq,
         dfs_finish_order, lemma_all_true_num_false_zero, lemma_all_false_num_false_eq_len,
     };
     use crate::Types::Types::*;
@@ -34,6 +35,36 @@ pub mod SCCStEph {
 
     pub type T<N> = ArraySeqStEphS<ArraySeqStEphS<N>>;
     pub struct SCCStEph;
+
+    // 6. spec fns
+
+    /// Bridge: for ArraySeqStEphS<bool>, view index equals spec_index.
+    proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<B>)
+        ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
+    {
+        assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
+    }
+
+    /// Bridge: for ArraySeqStEphS<usize>, view index equals spec_index.
+    proof fn lemma_usize_view_eq_spec_index(a: &ArraySeqStEphS<N>)
+        ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
+    {
+        assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
+    }
+
+    /// Bridge: graph adjacency list view at vertex equals spec_index view.
+    proof fn lemma_graph_view_bridge(
+        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
+        neighbors: &ArraySeqStEphS<N>,
+        vertex: int,
+    )
+        requires
+            0 <= vertex < graph@.len(),
+            *neighbors == graph.spec_index(vertex),
+        ensures
+            neighbors@ =~= graph@[vertex],
+    {
+    }
 
     // 8. traits
 
@@ -166,12 +197,18 @@ pub mod SCCStEph {
             let neighbors_len = neighbors.length();
             assert(neighbors_len as int == neighbors.spec_len());
             assert(neighbors_len == graph@[u as int].len());
+            // Bridge neighbors to graph view.
+            assert(*neighbors == graph.spec_index(u as int));
+            proof { lemma_graph_view_bridge(graph, neighbors, u as int); }
+            assert(neighbors@ =~= graph@[u as int]);
             let mut i: usize = 0;
             while i < neighbors_len
                 invariant
                     i <= neighbors_len,
                     neighbors_len as int == neighbors.spec_len(),
                     neighbors_len == graph@[u as int].len(),
+                    neighbors@ =~= graph@[u as int],
+                    *neighbors == graph.spec_index(u as int),
                     (u as int) < graph@.len(),
                     u < n,
                     adj_vecs@.len() == n,
@@ -183,6 +220,9 @@ pub mod SCCStEph {
                 decreases neighbors_len - i,
             {
                 let v = *neighbors.nth(i);
+                proof { lemma_usize_view_eq_spec_index(neighbors); }
+                assert(v == neighbors@[i as int]);
+                assert(v == graph@[u as int][i as int]);
                 assert(graph@[u as int][i as int] < graph@.len());
                 assert(v < n);
                 let mut temp = adj_vecs.remove(v);
@@ -229,7 +269,6 @@ pub mod SCCStEph {
 
     /// Runtime check that all neighbor indices are valid vertex indices.
     // veracity: no_requires
-    #[verifier::external_body]
     fn check_wf_adj_list_eph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (valid: bool)
         ensures valid ==> spec_toposortsteph_wf(graph),
     {
@@ -248,6 +287,10 @@ pub mod SCCStEph {
             let neighbors_len = neighbors.length();
             assert(neighbors_len as int == neighbors.spec_len());
             assert(neighbors_len == graph@[u as int].len());
+            // Bridge neighbors to graph view.
+            assert(*neighbors == graph.spec_index(u as int));
+            proof { lemma_graph_view_bridge(graph, neighbors, u as int); }
+            assert(neighbors@ =~= graph@[u as int]);
             let mut i: usize = 0;
             while i < neighbors_len
                 invariant
@@ -256,6 +299,8 @@ pub mod SCCStEph {
                     u < n,
                     n == graph@.len(),
                     neighbors_len == graph@[u as int].len(),
+                    neighbors@ =~= graph@[u as int],
+                    *neighbors == graph.spec_index(u as int),
                     forall|v: int, j: int|
                         0 <= v < u as int && 0 <= j < graph@[v].len()
                         ==> (#[trigger] graph@[v][j]) < graph@.len(),
@@ -265,6 +310,8 @@ pub mod SCCStEph {
                 decreases neighbors_len - i,
             {
                 let neighbor = *neighbors.nth(i);
+                proof { lemma_usize_view_eq_spec_index(neighbors); }
+                assert(neighbor == graph@[u as int][i as int]);
                 if neighbor >= n {
                     return false;
                 }
@@ -275,7 +322,6 @@ pub mod SCCStEph {
         true
     }
 
-    #[verifier::external_body]
     fn dfs_reach(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,
@@ -289,15 +335,16 @@ pub mod SCCStEph {
             old(component).spec_avltreesetsteph_wf(),
             old(component)@.len() + spec_num_false(old(visited)@) < usize::MAX as nat,
         ensures
-            visited@.len() == old(visited)@.len(),
+            visited@.len() == graph@.len(),
             forall|j: int|
                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
                 ==> visited@[j],
             spec_num_false(visited@) <= spec_num_false(old(visited)@),
             component.spec_avltreesetsteph_wf(),
-            component@.len() <= old(component)@.len() + spec_num_false(old(visited)@),
+            component@.len() + spec_num_false(visited@) <= old(component)@.len() + spec_num_false(old(visited)@),
         decreases spec_num_false(old(visited)@),
     {
+        proof { lemma_bool_view_eq_spec_index(visited); }
         assert(visited.spec_len() == visited@.len());
         assert(vertex < visited.spec_len());
         if *visited.nth(vertex) {
@@ -309,31 +356,63 @@ pub mod SCCStEph {
         assert(set_ok.is_ok());
         proof {
             lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
+            lemma_set_true_num_false_eq(old(visited)@, vertex as int);
         }
-        // After set: spec_num_false(visited@) == spec_num_false(old(visited)@) - 1.
-        // old(component)@.len() + spec_num_false(old(visited)@) < usize::MAX
-        // => old(component)@.len() < usize::MAX - spec_num_false(old(visited)@) + 1
-        // => old(component)@.len() + 1 <= old(component)@.len() + spec_num_false(old(visited)@) < usize::MAX
+
+        // Establish visited@ == old(visited)@.update(vertex, true).
+        proof { lemma_bool_view_eq_spec_index(visited); }
+        assert forall|j: int| 0 <= j < visited@.len()
+            implies #[trigger] visited@[j] == old(visited)@.update(vertex as int, true)[j] by {
+            assert(visited@[j] == visited.spec_index(j));
+            if j == vertex as int {
+                assert(visited.spec_index(j) == true);
+            } else {
+                assert(visited.spec_index(j) == old(visited).spec_index(j));
+            }
+        };
+        assert(visited@ =~= old(visited)@.update(vertex as int, true));
+        assert(spec_num_false(visited@) < spec_num_false(old(visited)@));
+        assert(visited@.len() == graph@.len());
+
+        // Monotonicity.
+        assert forall|j: int| 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+            implies visited@[j] by {};
+
+        // Combined bound: spec_num_false decreased by 1, so component can grow by 1.
+        assert(spec_num_false(visited@) == spec_num_false(old(visited)@) - 1);
         assert(old(component)@.len() + 1 < usize::MAX as nat);
         component.insert(vertex);
+        // After insert: component@.len() increased by at most 1.
+        // component@.len() + spec_num_false(visited@) <= old(component)@.len() + 1 + spec_num_false(old(visited)@) - 1
+        assert(component@.len() + spec_num_false(visited@) <= old(component)@.len() + spec_num_false(old(visited)@));
 
+        assert((vertex as int) < graph@.len());
+        assert(vertex < graph.spec_len());
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
         assert(neighbors_len as int == neighbors.spec_len());
-        assert((vertex as int) < graph@.len());
         assert(neighbors_len == graph@[vertex as int].len());
+
+        // Bridge neighbors to graph view.
+        assert(*neighbors == graph.spec_index(vertex as int));
+        proof { lemma_graph_view_bridge(graph, neighbors, vertex as int); }
+        assert(neighbors@ =~= graph@[vertex as int]);
+
         let mut i: usize = 0;
         while i < neighbors_len
             invariant
                 i <= neighbors_len,
                 neighbors_len as int == neighbors.spec_len(),
                 neighbors_len == graph@[vertex as int].len(),
+                neighbors@ =~= graph@[vertex as int],
+                *neighbors == graph.spec_index(vertex as int),
                 (vertex as int) < graph@.len(),
                 visited@.len() == graph@.len(),
                 visited.spec_len() == graph@.len(),
                 spec_toposortsteph_wf(graph),
                 component.spec_avltreesetsteph_wf(),
                 component@.len() + spec_num_false(visited@) < usize::MAX as nat,
+                component@.len() + spec_num_false(visited@) <= old(component)@.len() + spec_num_false(old(visited)@),
                 forall|j: int|
                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
                     ==> visited@[j],
@@ -341,7 +420,11 @@ pub mod SCCStEph {
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
+            proof { lemma_usize_view_eq_spec_index(neighbors); }
+            assert(neighbor == neighbors@[i as int]);
+            assert(neighbor == graph@[vertex as int][i as int]);
             assert(graph@[vertex as int][i as int] < graph@.len());
+            assert(neighbor < graph@.len());
             dfs_reach(graph, visited, component, neighbor);
             i = i + 1;
         }

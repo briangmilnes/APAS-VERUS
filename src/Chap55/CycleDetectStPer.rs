@@ -7,11 +7,13 @@ pub mod CycleDetectStPer {
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
-    use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, lemma_set_true_decreases_num_false};
+    use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq};
     use crate::Chap55::TopoSortStPer::TopoSortStPer::spec_is_dag_per;
     use crate::Types::Types::*;
 
     verus! {
+
+broadcast use vstd::seq::group_seq_axioms;
 
     // Table of Contents
     // 1. module
@@ -34,6 +36,27 @@ pub mod CycleDetectStPer {
             ==> (#[trigger] graph@[v][i]) < graph@.len()
     }
 
+    /// Bridge: for ArraySeqStPerS<usize>, view index equals spec_index.
+    proof fn lemma_usize_per_view_eq_spec_index(a: &ArraySeqStPerS<N>)
+        ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
+    {
+        assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
+    }
+
+    /// Bridge: persistent graph adjacency list view at vertex equals spec_index view.
+    proof fn lemma_graph_per_view_bridge(
+        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
+        neighbors: &ArraySeqStPerS<N>,
+        vertex: int,
+    )
+        requires
+            0 <= vertex < graph@.len(),
+            *neighbors == graph.spec_index(vertex),
+        ensures
+            neighbors@ =~= graph@[vertex],
+    {
+    }
+
     // 8. traits
 
     pub trait CycleDetectStPerTrait {
@@ -51,7 +74,6 @@ pub mod CycleDetectStPer {
 
     /// Recursive DFS cycle detection using Vec<bool> ancestor tracking.
     /// Returns true if a cycle is found.
-    #[verifier::external_body]
     fn dfs_check_cycle(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited: &mut Vec<bool>,
@@ -64,8 +86,8 @@ pub mod CycleDetectStPer {
             old(ancestors)@.len() == graph@.len(),
             spec_cycledetectstper_wf(graph),
         ensures
-            visited@.len() == old(visited)@.len(),
-            ancestors@.len() == old(ancestors)@.len(),
+            visited@.len() == graph@.len(),
+            ancestors@.len() == graph@.len(),
             forall|j: int|
                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
                 ==> visited@[j],
@@ -84,15 +106,38 @@ pub mod CycleDetectStPer {
         ancestors.set(vertex, true);
         proof {
             lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
+            lemma_set_true_num_false_eq(old(visited)@, vertex as int);
         }
+        // Vec::set gives us visited@ =~= old(visited)@.update(vertex, true).
+        assert(visited@ =~= old(visited)@.update(vertex as int, true));
+        assert(spec_num_false(visited@) < spec_num_false(old(visited)@));
+        assert(visited@.len() == graph@.len());
+        assert(ancestors@.len() == graph@.len());
 
+        // Monotonicity.
+        assert forall|j: int| 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+            implies visited@[j] by {};
+
+        assert((vertex as int) < graph@.len());
+        assert(vertex < graph.spec_len());
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
+        assert(neighbors_len as int == neighbors.spec_len());
+
+        // Bridge neighbors to graph view.
+        assert(*neighbors == graph.spec_index(vertex as int));
+        proof { lemma_graph_per_view_bridge(graph, neighbors, vertex as int); }
+        assert(neighbors@ =~= graph@[vertex as int]);
+
         let mut i: usize = 0;
         while i < neighbors_len
             invariant
                 i <= neighbors_len,
+                neighbors_len as int == neighbors.spec_len(),
                 neighbors_len == graph@[vertex as int].len(),
+                neighbors@ =~= graph@[vertex as int],
+                *neighbors == graph.spec_index(vertex as int),
+                (vertex as int) < graph@.len(),
                 visited@.len() == graph@.len(),
                 ancestors@.len() == graph@.len(),
                 spec_cycledetectstper_wf(graph),
@@ -103,7 +148,11 @@ pub mod CycleDetectStPer {
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
+            proof { lemma_usize_per_view_eq_spec_index(neighbors); }
+            assert(neighbor == neighbors@[i as int]);
+            assert(neighbor == graph@[vertex as int][i as int]);
             assert(graph@[vertex as int][i as int] < graph@.len());
+            assert(neighbor < graph@.len());
             if dfs_check_cycle(graph, visited, ancestors, neighbor) {
                 ancestors.set(vertex, false);
                 return true;

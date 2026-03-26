@@ -118,6 +118,34 @@ broadcast use {
             ==> c1 < c2)
     }
 
+    /// Bridge: for ArraySeqStEphS<bool>, view index equals spec_index.
+    proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<B>)
+        ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
+    {
+        assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
+    }
+
+    /// Bridge: for ArraySeqStEphS<usize>, view index equals spec_index.
+    proof fn lemma_usize_view_eq_spec_index(a: &ArraySeqStEphS<N>)
+        ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
+    {
+        assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
+    }
+
+    /// Bridge: graph adjacency list view at vertex equals spec_index view.
+    proof fn lemma_graph_view_bridge(
+        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
+        neighbors: &ArraySeqStEphS<N>,
+        vertex: int,
+    )
+        requires
+            0 <= vertex < graph@.len(),
+            *neighbors == graph.spec_index(vertex),
+        ensures
+            neighbors@ =~= graph@[vertex],
+    {
+    }
+
     // 7. proof fns
 
     /// Setting a false entry to true strictly decreases the count of false entries.
@@ -213,7 +241,6 @@ broadcast use {
 
     /// Recursive DFS that appends vertices in finish order.
     /// Also used by SCCStEph::compute_finish_order.
-    #[verifier::external_body]
     pub fn dfs_finish_order(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,
@@ -227,7 +254,7 @@ broadcast use {
             forall|k: int| 0 <= k < old(finish_order)@.len()
                 ==> (#[trigger] old(finish_order)@[k] as int) < graph@.len(),
         ensures
-            visited@.len() == old(visited)@.len(),
+            visited@.len() == graph@.len(),
             forall|j: int|
                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
                 ==> visited@[j],
@@ -240,6 +267,7 @@ broadcast use {
                 == old(finish_order)@.len() + spec_num_false(old(visited)@),
         decreases spec_num_false(old(visited)@),
     {
+        proof { lemma_bool_view_eq_spec_index(visited); }
         assert(visited.spec_len() == visited@.len());
         if *visited.nth(vertex) {
             return;
@@ -253,17 +281,48 @@ broadcast use {
             lemma_set_true_num_false_eq(old(visited)@, vertex as int);
         }
 
+        // Establish visited@ == old(visited)@.update(vertex, true).
+        proof { lemma_bool_view_eq_spec_index(visited); }
+        assert forall|j: int| 0 <= j < visited@.len()
+            implies #[trigger] visited@[j] == old(visited)@.update(vertex as int, true)[j] by {
+            assert(visited@[j] == visited.spec_index(j));
+            if j == vertex as int {
+                assert(visited.spec_index(j) == true);
+            } else {
+                assert(visited.spec_index(j) == old(visited).spec_index(j));
+            }
+        };
+        assert(visited@ =~= old(visited)@.update(vertex as int, true));
+        assert(spec_num_false(visited@) < spec_num_false(old(visited)@));
+        assert(spec_num_false(visited@) == spec_num_false(old(visited)@) - 1);
+        assert(visited@.len() == graph@.len());
+
+        // Monotonicity.
+        assert forall|j: int| 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+            implies visited@[j] by {};
+
+        // visited@[vertex as int] is true.
+        assert(visited@[vertex as int]);
+
         assert((vertex as int) < graph@.len());
         assert(vertex < graph.spec_len());
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
         assert(neighbors_len as int == neighbors.spec_len());
+
+        // Bridge neighbors to graph view.
+        assert(*neighbors == graph.spec_index(vertex as int));
+        proof { lemma_graph_view_bridge(graph, neighbors, vertex as int); }
+        assert(neighbors@ =~= graph@[vertex as int]);
+
         let mut i: usize = 0;
         while i < neighbors_len
             invariant
                 i <= neighbors_len,
                 neighbors_len as int == neighbors.spec_len(),
                 neighbors_len == graph@[vertex as int].len(),
+                neighbors@ =~= graph@[vertex as int],
+                *neighbors == graph.spec_index(vertex as int),
                 (vertex as int) < graph@.len(),
                 visited@.len() == graph@.len(),
                 spec_toposortsteph_wf(graph),
@@ -280,7 +339,11 @@ broadcast use {
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
+            proof { lemma_usize_view_eq_spec_index(neighbors); }
+            assert(neighbor == neighbors@[i as int]);
+            assert(neighbor == graph@[vertex as int][i as int]);
             assert(graph@[vertex as int][i as int] < graph@.len());
+            assert(neighbor < graph@.len());
             dfs_finish_order(graph, visited, finish_order, neighbor);
             i = i + 1;
         }
@@ -289,7 +352,6 @@ broadcast use {
 
     /// Recursive DFS with cycle detection via rec_stack.
     /// Returns true if no cycle found, false if cycle detected.
-    #[verifier::external_body]
     fn dfs_finish_order_cycle_detect(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
         visited: &mut ArraySeqStEphS<B>,
@@ -303,8 +365,8 @@ broadcast use {
             old(rec_stack)@.len() == graph@.len(),
             spec_toposortsteph_wf(graph),
         ensures
-            visited@.len() == old(visited)@.len(),
-            rec_stack@.len() == old(rec_stack)@.len(),
+            visited@.len() == graph@.len(),
+            rec_stack@.len() == graph@.len(),
             forall|j: int|
                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
                 ==> visited@[j],
@@ -313,11 +375,10 @@ broadcast use {
                 old(finish_order)@.len() + spec_num_false(old(visited)@),
         decreases spec_num_false(old(visited)@),
     {
+        proof { lemma_bool_view_eq_spec_index(visited); }
         assert(visited.spec_len() == visited@.len());
         assert(rec_stack.spec_len() == rec_stack@.len());
         if *rec_stack.nth(vertex) {
-            assert(visited@.len() == old(visited)@.len());
-            assert(rec_stack@.len() == old(rec_stack)@.len());
             return false;
         }
         if *visited.nth(vertex) {
@@ -333,22 +394,56 @@ broadcast use {
         assert(ok2.is_ok());
         proof {
             lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
+            lemma_set_true_num_false_eq(old(visited)@, vertex as int);
         }
+
+        // Establish visited@ after both sets.
+        proof { lemma_bool_view_eq_spec_index(visited); }
+        assert(visited.spec_len() == old(visited).spec_len());
+        assert(rec_stack.spec_len() == old(rec_stack).spec_len());
+        assert forall|j: int| 0 <= j < visited@.len()
+            implies #[trigger] visited@[j] == old(visited)@.update(vertex as int, true)[j] by {
+            assert(visited@[j] == visited.spec_index(j));
+            if j == vertex as int {
+                assert(visited.spec_index(j) == true);
+            } else {
+                assert(visited.spec_index(j) == old(visited).spec_index(j));
+            }
+        };
+        assert(visited@ =~= old(visited)@.update(vertex as int, true));
+        assert(spec_num_false(visited@) < spec_num_false(old(visited)@));
+        assert(visited@.len() == graph@.len());
+        assert(rec_stack@.len() == graph@.len());
+
+        // Monotonicity.
+        assert forall|j: int| 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+            implies visited@[j] by {};
 
         assert((vertex as int) < graph@.len());
         assert(vertex < graph.spec_len());
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
         assert(neighbors_len as int == neighbors.spec_len());
+
+        // Bridge neighbors to graph view.
+        assert(*neighbors == graph.spec_index(vertex as int));
+        proof { lemma_graph_view_bridge(graph, neighbors, vertex as int); }
+        assert(neighbors@ =~= graph@[vertex as int]);
+
         let mut i: usize = 0;
         while i < neighbors_len
             invariant
                 i <= neighbors_len,
                 neighbors_len as int == neighbors.spec_len(),
                 neighbors_len == graph@[vertex as int].len(),
+                neighbors@ =~= graph@[vertex as int],
+                *neighbors == graph.spec_index(vertex as int),
                 (vertex as int) < graph@.len(),
+                vertex < rec_stack.spec_len(),
                 visited@.len() == graph@.len(),
+                visited.spec_len() == visited@.len(),
                 rec_stack@.len() == graph@.len(),
+                rec_stack.spec_len() == rec_stack@.len(),
                 spec_toposortsteph_wf(graph),
                 forall|j: int|
                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
@@ -359,7 +454,11 @@ broadcast use {
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
+            proof { lemma_usize_view_eq_spec_index(neighbors); }
+            assert(neighbor == neighbors@[i as int]);
+            assert(neighbor == graph@[vertex as int][i as int]);
             assert(graph@[vertex as int][i as int] < graph@.len());
+            assert(neighbor < graph@.len());
             if !dfs_finish_order_cycle_detect(graph, visited, rec_stack, finish_order, neighbor) {
                 return false;
             }
@@ -369,6 +468,8 @@ broadcast use {
         assert(vertex < rec_stack.spec_len());
         let ok3 = rec_stack.set(vertex, false);
         assert(ok3.is_ok());
+        assert(rec_stack@.len() == rec_stack.spec_len());
+        assert(rec_stack@.len() == graph@.len());
         finish_order.push(vertex);
         true
     }

@@ -37,6 +37,29 @@ pub mod SCCStPer {
     pub type T<N> = ArraySeqStPerS<ArraySeqStPerS<N>>;
     pub struct SCCStPer;
 
+    // 6. spec fns
+
+    /// Bridge: for ArraySeqStPerS<usize>, view index equals spec_index.
+    proof fn lemma_usize_per_view_eq_spec_index(a: &ArraySeqStPerS<N>)
+        ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
+    {
+        assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
+    }
+
+    /// Bridge: persistent graph adjacency list view at vertex.
+    proof fn lemma_graph_per_view_bridge(
+        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
+        neighbors: &ArraySeqStPerS<N>,
+        vertex: int,
+    )
+        requires
+            0 <= vertex < graph@.len(),
+            *neighbors == graph.spec_index(vertex),
+        ensures
+            neighbors@ =~= graph@[vertex],
+    {
+    }
+
     // 8. traits
 
     pub trait SCCStPerTrait {
@@ -53,7 +76,6 @@ pub mod SCCStPer {
     // 9. impls
 
     /// Recursive DFS that appends vertices in finish order.
-    #[verifier::external_body]
     fn dfs_finish_order(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited: &mut Vec<bool>,
@@ -67,7 +89,7 @@ pub mod SCCStPer {
             forall|k: int| 0 <= k < old(finish_order)@.len()
                 ==> (#[trigger] old(finish_order)@[k] as int) < graph@.len(),
         ensures
-            visited@.len() == old(visited)@.len(),
+            visited@.len() == graph@.len(),
             forall|j: int|
                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
                 ==> visited@[j],
@@ -89,17 +111,36 @@ pub mod SCCStPer {
             lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
             lemma_set_true_num_false_eq(old(visited)@, vertex as int);
         }
+        assert(visited@ =~= old(visited)@.update(vertex as int, true));
+        assert(spec_num_false(visited@) < spec_num_false(old(visited)@));
+        assert(spec_num_false(visited@) == spec_num_false(old(visited)@) - 1);
+        assert(visited@.len() == graph@.len());
+        assert(visited@[vertex as int]);
 
+        // Monotonicity.
+        assert forall|j: int| 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+            implies visited@[j] by {};
+
+        assert((vertex as int) < graph@.len());
+        assert(vertex < graph.spec_len());
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
         assert(neighbors_len as int == neighbors.spec_len());
         assert(neighbors_len == graph@[vertex as int].len());
+
+        // Bridge neighbors to graph view.
+        assert(*neighbors == graph.spec_index(vertex as int));
+        proof { lemma_graph_per_view_bridge(graph, neighbors, vertex as int); }
+        assert(neighbors@ =~= graph@[vertex as int]);
+
         let mut i: usize = 0;
         while i < neighbors_len
             invariant
                 i <= neighbors_len,
                 neighbors_len as int == neighbors.spec_len(),
                 neighbors_len == graph@[vertex as int].len(),
+                neighbors@ =~= graph@[vertex as int],
+                *neighbors == graph.spec_index(vertex as int),
                 (vertex as int) < graph@.len(),
                 visited@.len() == graph@.len(),
                 spec_toposortstper_wf(graph),
@@ -116,7 +157,11 @@ pub mod SCCStPer {
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
+            proof { lemma_usize_per_view_eq_spec_index(neighbors); }
+            assert(neighbor == neighbors@[i as int]);
+            assert(neighbor == graph@[vertex as int][i as int]);
             assert(graph@[vertex as int][i as int] < graph@.len());
+            assert(neighbor < graph@.len());
             dfs_finish_order(graph, visited, finish_order, neighbor);
             i = i + 1;
         }
@@ -302,7 +347,6 @@ pub mod SCCStPer {
 
     /// Runtime check that all neighbor indices are valid vertex indices.
     // veracity: no_requires
-    #[verifier::external_body]
     fn check_wf_adj_list_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (valid: bool)
         ensures valid ==> spec_toposortstper_wf(graph),
     {
@@ -321,6 +365,10 @@ pub mod SCCStPer {
             let neighbors_len = neighbors.length();
             assert(neighbors_len as int == neighbors.spec_len());
             assert(neighbors_len == graph@[u as int].len());
+            // Bridge neighbors to graph view.
+            assert(*neighbors == graph.spec_index(u as int));
+            proof { lemma_graph_per_view_bridge(graph, neighbors, u as int); }
+            assert(neighbors@ =~= graph@[u as int]);
             let mut i: usize = 0;
             while i < neighbors_len
                 invariant
@@ -329,6 +377,8 @@ pub mod SCCStPer {
                     u < n,
                     n == graph@.len(),
                     neighbors_len == graph@[u as int].len(),
+                    neighbors@ =~= graph@[u as int],
+                    *neighbors == graph.spec_index(u as int),
                     forall|v: int, j: int|
                         0 <= v < u as int && 0 <= j < graph@[v].len()
                         ==> (#[trigger] graph@[v][j]) < graph@.len(),
@@ -338,6 +388,8 @@ pub mod SCCStPer {
                 decreases neighbors_len - i,
             {
                 let neighbor = *neighbors.nth(i);
+                proof { lemma_usize_per_view_eq_spec_index(neighbors); }
+                assert(neighbor == graph@[u as int][i as int]);
                 if neighbor >= n {
                     return false;
                 }
@@ -350,7 +402,6 @@ pub mod SCCStPer {
 
     /// DFS reachability using Vec<bool> for termination and persistent set
     /// for component accumulation (same pattern as DFSStPer::dfs_recursive).
-    #[verifier::external_body]
     fn dfs_reach(
         graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
         visited_bool: &mut Vec<bool>,
@@ -364,15 +415,17 @@ pub mod SCCStPer {
             component.spec_avltreesetstper_wf(),
             component@.len() + spec_num_false(old(visited_bool)@) < usize::MAX as nat,
         ensures
-            visited_bool@.len() == old(visited_bool)@.len(),
+            visited_bool@.len() == graph@.len(),
             forall|j: int|
                 0 <= j < visited_bool@.len() && old(visited_bool)@[j]
                 ==> #[trigger] visited_bool@[j],
             spec_num_false(visited_bool@) <= spec_num_false(old(visited_bool)@),
             out.spec_avltreesetstper_wf(),
-            out@.len() <= component@.len() + spec_num_false(old(visited_bool)@),
+            out@.len() + spec_num_false(visited_bool@) <= component@.len() + spec_num_false(old(visited_bool)@),
         decreases spec_num_false(old(visited_bool)@),
     {
+        let ghost init_comp_len = component@.len();
+
         if visited_bool[vertex] {
             return component;
         }
@@ -380,23 +433,42 @@ pub mod SCCStPer {
         visited_bool.set(vertex, true);
         proof {
             lemma_set_true_decreases_num_false(old(visited_bool)@, vertex as int);
+            lemma_set_true_num_false_eq(old(visited_bool)@, vertex as int);
         }
-        // component@.len() + spec_num_false(old_visited) < usize::MAX
-        // => component@.len() + 1 < usize::MAX (since spec_num_false >= 1 when !visited[v]).
+        assert(visited_bool@ =~= old(visited_bool)@.update(vertex as int, true));
+        assert(spec_num_false(visited_bool@) < spec_num_false(old(visited_bool)@));
+        assert(spec_num_false(visited_bool@) == spec_num_false(old(visited_bool)@) - 1);
+        assert(visited_bool@.len() == graph@.len());
+
+        // Monotonicity.
+        assert forall|j: int| 0 <= j < visited_bool@.len() && old(visited_bool)@[j]
+            implies #[trigger] visited_bool@[j] by {};
+
         assert(component@.len() + 1 < usize::MAX as nat);
         let mut component = component.insert(vertex);
+        // After insert: combined bound maintained.
+        assert(component@.len() + spec_num_false(visited_bool@) <= init_comp_len + spec_num_false(old(visited_bool)@));
 
+        assert((vertex as int) < graph@.len());
+        assert(vertex < graph.spec_len());
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
         assert(neighbors_len as int == neighbors.spec_len());
-        assert((vertex as int) < graph@.len());
         assert(neighbors_len == graph@[vertex as int].len());
+
+        // Bridge neighbors to graph view.
+        assert(*neighbors == graph.spec_index(vertex as int));
+        proof { lemma_graph_per_view_bridge(graph, neighbors, vertex as int); }
+        assert(neighbors@ =~= graph@[vertex as int]);
+
         let mut i: usize = 0;
         while i < neighbors_len
             invariant
                 i <= neighbors_len,
                 neighbors_len as int == neighbors.spec_len(),
                 neighbors_len == graph@[vertex as int].len(),
+                neighbors@ =~= graph@[vertex as int],
+                *neighbors == graph.spec_index(vertex as int),
                 (vertex as int) < graph@.len(),
                 visited_bool@.len() == graph@.len(),
                 spec_toposortstper_wf(graph),
@@ -406,10 +478,15 @@ pub mod SCCStPer {
                 spec_num_false(visited_bool@) < spec_num_false(old(visited_bool)@),
                 component.spec_avltreesetstper_wf(),
                 component@.len() + spec_num_false(visited_bool@) < usize::MAX as nat,
+                component@.len() + spec_num_false(visited_bool@) <= init_comp_len + spec_num_false(old(visited_bool)@),
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
+            proof { lemma_usize_per_view_eq_spec_index(neighbors); }
+            assert(neighbor == neighbors@[i as int]);
+            assert(neighbor == graph@[vertex as int][i as int]);
             assert(graph@[vertex as int][i as int] < graph@.len());
+            assert(neighbor < graph@.len());
             component = dfs_reach(graph, visited_bool, component, neighbor);
             i = i + 1;
         }
