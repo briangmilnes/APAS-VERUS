@@ -96,8 +96,48 @@ Flags:
 - Struct field count mismatch (may indicate different backing stores)
 - Missing wf predicate
 
+## Phase 3: Compare traits across variants (Round 2)
+
+For each file group from Phase 1, extract the module trait from each variant file
+and compare across the group.
+
+For each variant file, extract:
+- Trait name (e.g., `ArraySeqStEphTrait`)
+- Type bounds on the trait's generic parameters (e.g., `T: StT + Ord`)
+- Supertraits (e.g., `Sized + View<V = Seq<T>>`)
+- Function list: name, parameters, return type (with named return if present)
+- For each function: has requires (yes/no), has ensures (yes/no)
+
+Then compare across variants in the group:
+
+**Function set alignment**: Does MtEph have every function that StEph has?
+Missing functions are gaps. Extra functions are noted but not flagged.
+
+**Type bound alignment**: Do all variants require the same bounds on T?
+Extra bounds on one variant (e.g., MtEph adds `Clone`) are warnings.
+
+**Supertrait alignment**: Do all variants have the same View type in their
+supertrait? Mismatches are errors.
+
+**Parameter alignment**: For matched functions, do parameter counts and types
+agree (modulo `&self` vs `&mut self` for Eph vs Per)?
+
+Output example:
+```
+src/Chap18/ArraySeqStEph.rs:45: info: trait ArraySeqStEphTrait<T: StT> — 12 fns
+src/Chap18/ArraySeqMtEph.rs:89: info: trait ArraySeqMtEphTrait<T: StT> — 12 fns
+src/Chap18/ArraySeqStEph.rs:0: info: matched functions: new, length, nth, set, push, pop, ...
+src/Chap18/ArraySeqMtEph.rs:0: warning: missing function `append` (present in StEph)
+src/Chap18/ArraySeqMtEph.rs:102: warning: `insert` extra type bound: MtEph has T: StT + Clone, StEph has T: StT
+src/Chap18/ArraySeqStPer.rs:60: error: supertrait View<V = Seq<T>> but MtPer has View<V = Seq<T::V>>
+```
+
+Severity:
+- `info:` — each trait identified, function count, matched function sets
+- `warning:` — missing functions, extra type bounds, different param counts
+- `error:` — supertrait View type mismatch, return type mismatch
+
 ## Not in scope (future phases)
 
-- Phase 3: Compare trait function signatures across variants
 - Phase 4: Compare requires/ensures clauses for semantic alignment
 - Phase 5: Compare spec function definitions across variants
