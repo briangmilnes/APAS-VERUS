@@ -150,6 +150,11 @@ minor). You bring:
   more than a clean revert. Verification failures are data, not reasons to undo. If the
   user tells you something about a different file or pattern, do NOT assume that means
   your current work should be reverted. Ask before destroying any work.
+- **NEVER delete proof lemmas, compression code, or other proof infrastructure** even when
+  bypassing it. If a prompt says to "drop", "skip", or "bypass" a code path, **comment it
+  out** — do not delete it. Proof work represents hours of Z3 budget and human steering.
+  Use `// BYPASSED:` comments or `#[cfg(never)]` to disable code without destroying it.
+  The only time code should be deleted is when the user explicitly says "delete".
 
 ### Git
 
