@@ -68,6 +68,7 @@ pub mod SCCStPer {
         fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (components: AVLTreeSeqStPerS<AVLTreeSetStPer<N>>)
             requires
                 spec_toposortstper_wf(graph),
+                graph@.len() < usize::MAX,
             ensures
                 components@.len() >= 1 || graph@.len() == 0,
             ;
@@ -169,9 +170,10 @@ pub mod SCCStPer {
     }
 
     /// Computes the finish order for SCC (decreasing finish times).
-    #[verifier::external_body]
     fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (result: AVLTreeSeqStPerS<N>)
-        requires spec_toposortstper_wf(graph),
+        requires
+            spec_toposortstper_wf(graph),
+            graph@.len() < usize::MAX,
         ensures
             result.spec_avltreeseqstper_wf(),
             result@.len() == graph@.len(),
@@ -202,6 +204,7 @@ pub mod SCCStPer {
             invariant
                 start <= n,
                 n == graph@.len(),
+                n < usize::MAX,
                 visited@.len() == n,
                 spec_toposortstper_wf(graph),
                 forall|k: int| 0 <= k < finish_order@.len()
@@ -211,7 +214,19 @@ pub mod SCCStPer {
             decreases n - start,
         {
             if !visited[start] {
+                let ghost pre_vis = visited@;
                 dfs_finish_order(graph, &mut visited, &mut finish_order, start);
+                // dfs_finish_order ensures visited@[start as int] and monotonicity.
+                proof {
+                    assert forall|j: int| 0 <= j < start as int + 1
+                        implies #[trigger] visited@[j] by {
+                        if j < start as int {
+                            assert(pre_vis[j]);
+                        }
+                    };
+                }
+            } else {
+                assert(visited@[start as int]);
             }
             start = start + 1;
         }
@@ -227,6 +242,7 @@ pub mod SCCStPer {
                 result_len == finish_order@.len(),
                 result_len == n,
                 n == graph@.len(),
+                n < usize::MAX,
                 forall|j: int| 0 <= j < finish_order@.len()
                     ==> (#[trigger] finish_order@[j] as int) < graph@.len(),
                 forall|j: int| 0 <= j < reversed@.len()
@@ -237,15 +253,11 @@ pub mod SCCStPer {
             k = k - 1;
             reversed.push(finish_order[k]);
         }
-        assert(reversed@.len() == result_len as nat);
-        assert(reversed@.len() < usize::MAX) by {
-            assert(result_len <= usize::MAX);
-        };
+        assert(reversed@.len() < usize::MAX);
         AVLTreeSeqStPerS::from_vec(reversed)
     }
 
     /// Transposes a directed graph (reverses all edges).
-    #[verifier::external_body]
     fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (transposed: ArraySeqStPerS<ArraySeqStPerS<N>>)
         requires spec_toposortstper_wf(graph),
         ensures
@@ -285,12 +297,18 @@ pub mod SCCStPer {
             let neighbors_len = neighbors.length();
             assert(neighbors_len as int == neighbors.spec_len());
             assert(neighbors_len == graph@[u as int].len());
+            // Bridge neighbors to graph view.
+            assert(*neighbors == graph.spec_index(u as int));
+            proof { lemma_graph_per_view_bridge(graph, neighbors, u as int); }
+            assert(neighbors@ =~= graph@[u as int]);
             let mut i: usize = 0;
             while i < neighbors_len
                 invariant
                     i <= neighbors_len,
                     neighbors_len as int == neighbors.spec_len(),
                     neighbors_len == graph@[u as int].len(),
+                    neighbors@ =~= graph@[u as int],
+                    *neighbors == graph.spec_index(u as int),
                     (u as int) < graph@.len(),
                     u < n,
                     adj_vecs@.len() == n,
@@ -302,6 +320,9 @@ pub mod SCCStPer {
                 decreases neighbors_len - i,
             {
                 let v = *neighbors.nth(i);
+                proof { lemma_usize_per_view_eq_spec_index(neighbors); }
+                assert(v == neighbors@[i as int]);
+                assert(v == graph@[u as int][i as int]);
                 assert(graph@[u as int][i as int] < graph@.len());
                 assert(v < n);
                 let mut temp = adj_vecs.remove(v);
@@ -320,6 +341,7 @@ pub mod SCCStPer {
         while m < n
             invariant
                 m <= n,
+                n == graph@.len(),
                 adj_vecs@.len() == n,
                 result_vecs@.len() == m as int,
                 forall|w: int, j: int|
@@ -330,18 +352,33 @@ pub mod SCCStPer {
                     ==> (#[trigger] result_vecs@[r]@[j]) < graph@.len(),
             decreases n - m,
         {
-            result_vecs.push(ArraySeqStPerS::from_vec(adj_vecs[m].clone()));
+            let cloned_vec = adj_vecs[m].clone();
+            let ghost cv_view = cloned_vec@;
+            let new_arr = ArraySeqStPerS::from_vec(cloned_vec);
+            proof {
+                lemma_usize_per_view_eq_spec_index(&new_arr);
+                assert(cv_view =~= adj_vecs@[m as int]@);
+                assert forall|j: int| 0 <= j < new_arr@.len()
+                    implies (#[trigger] new_arr@[j]) < graph@.len() by {
+                    assert(new_arr@[j] == new_arr.spec_index(j));
+                    assert(new_arr.spec_index(j) == cv_view[j]);
+                    assert((adj_vecs@[m as int][j] as int) < (n as int));
+                };
+            }
+            result_vecs.push(new_arr);
             m = m + 1;
         }
         let transposed = ArraySeqStPerS::from_vec(result_vecs);
-        assert(spec_toposortstper_wf(&transposed)) by {
+        proof {
             assert(transposed@.len() == n as nat);
             assert forall|v: int, i: int|
                 0 <= v < transposed@.len() && 0 <= i < transposed@[v].len()
                 implies (#[trigger] transposed@[v][i]) < transposed@.len() by {
-                assert(transposed@[v][i] < graph@.len());
+                assert(transposed.spec_index(v) == result_vecs@[v]);
+                assert(result_vecs@[v]@[i] < graph@.len());
             };
-        };
+        }
+        assert(spec_toposortstper_wf(&transposed));
         transposed
     }
 
@@ -422,11 +459,13 @@ pub mod SCCStPer {
             spec_num_false(visited_bool@) <= spec_num_false(old(visited_bool)@),
             out.spec_avltreesetstper_wf(),
             out@.len() + spec_num_false(visited_bool@) <= component@.len() + spec_num_false(old(visited_bool)@),
+            visited_bool@[vertex as int],
         decreases spec_num_false(old(visited_bool)@),
     {
         let ghost init_comp_len = component@.len();
 
         if visited_bool[vertex] {
+            assert(visited_bool@[vertex as int]);
             return component;
         }
         assert(!old(visited_bool)@[vertex as int]);
@@ -436,6 +475,7 @@ pub mod SCCStPer {
             lemma_set_true_num_false_eq(old(visited_bool)@, vertex as int);
         }
         assert(visited_bool@ =~= old(visited_bool)@.update(vertex as int, true));
+        assert(visited_bool@[vertex as int]);
         assert(spec_num_false(visited_bool@) < spec_num_false(old(visited_bool)@));
         assert(spec_num_false(visited_bool@) == spec_num_false(old(visited_bool)@) - 1);
         assert(visited_bool@.len() == graph@.len());
@@ -479,6 +519,7 @@ pub mod SCCStPer {
                 component.spec_avltreesetstper_wf(),
                 component@.len() + spec_num_false(visited_bool@) < usize::MAX as nat,
                 component@.len() + spec_num_false(visited_bool@) <= init_comp_len + spec_num_false(old(visited_bool)@),
+                visited_bool@[vertex as int],
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
@@ -487,7 +528,12 @@ pub mod SCCStPer {
             assert(neighbor == graph@[vertex as int][i as int]);
             assert(graph@[vertex as int][i as int] < graph@.len());
             assert(neighbor < graph@.len());
+            let ghost pre_vis = visited_bool@;
             component = dfs_reach(graph, visited_bool, component, neighbor);
+            // visited_bool@[vertex] maintained via monotonicity.
+            assert(visited_bool@[vertex as int]) by {
+                assert(pre_vis[vertex as int]);
+            };
             i = i + 1;
         }
         component
@@ -495,7 +541,6 @@ pub mod SCCStPer {
 
     impl SCCStPerTrait for SCCStPer {
         /// Finds strongly connected components in a directed graph.
-        #[verifier::external_body]
         fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<N>>
         {
             let finish_order = compute_finish_order(graph);
@@ -505,7 +550,10 @@ pub mod SCCStPer {
             let mut visited_bool: Vec<bool> = Vec::new();
             let mut j: usize = 0;
             while j < n
-                invariant j <= n, visited_bool@.len() == j as int,
+                invariant
+                    j <= n,
+                    visited_bool@.len() == j as int,
+                    forall|k: int| #![trigger visited_bool@[k]] 0 <= k < j as int ==> !visited_bool@[k],
                 decreases n - j,
             {
                 visited_bool.push(false);
@@ -518,40 +566,57 @@ pub mod SCCStPer {
 
             let finish_len = finish_order.length();
             let mut components_vec: Vec<AVLTreeSetStPer<N>> = Vec::new();
-            let mut i: usize = 0;
-            while i < finish_len
-                invariant
-                    i <= finish_len,
-                    finish_len as int == finish_order@.len(),
-                    finish_order.spec_avltreeseqstper_wf(),
-                    forall|k: int| 0 <= k < finish_order@.len()
-                        ==> (#[trigger] finish_order@[k] as int) < n,
-                    visited_bool@.len() == n,
-                    n == transposed@.len(),
-                    n == graph@.len(),
-                    spec_toposortstper_wf(&transposed),
-                    spec_num_false(visited_bool@) + i as nat == n,
-                    forall|k: int| 0 <= k < components_vec@.len()
-                        ==> (#[trigger] components_vec@[k]).spec_avltreesetstper_wf(),
-                    components_vec@.len() < usize::MAX,
-                decreases finish_len - i,
-            {
-                assert((i as int) < finish_order@.len());
-                let vertex = *finish_order.nth(i);
-                if vertex < n && !visited_bool[vertex] {
-                    let component = AVLTreeSetStPer::empty();
-                    assert(component@.len() + spec_num_false(visited_bool@) < usize::MAX as nat) by {
-                        assert(component@.len() == 0nat);
-                        assert(spec_num_false(visited_bool@) <= n as nat);
-                        assert(n as nat <= usize::MAX as nat);
-                    };
-                    let component = dfs_reach(&transposed, &mut visited_bool, component, vertex);
-                    if component.size() > 0 {
-                        components_vec.push(component);
+
+            if finish_len > 0 {
+                // Handle first vertex to guarantee at least one component.
+                let vertex = *finish_order.nth(0usize);
+                assert((vertex as int) < n);
+                let component = AVLTreeSetStPer::empty();
+                assert(component@.len() + spec_num_false(visited_bool@) < usize::MAX as nat) by {
+                    assert(component@.len() == 0nat);
+                    assert(spec_num_false(visited_bool@) <= n as nat);
+                };
+                let component = dfs_reach(&transposed, &mut visited_bool, component, vertex);
+                components_vec.push(component);
+
+                let mut i: usize = 1;
+                while i < finish_len
+                    invariant
+                        1 <= i <= finish_len,
+                        finish_len as int == finish_order@.len(),
+                        finish_len == n,
+                        finish_order.spec_avltreeseqstper_wf(),
+                        forall|k: int| 0 <= k < finish_order@.len()
+                            ==> (#[trigger] finish_order@[k] as int) < n,
+                        visited_bool@.len() == n,
+                        n == transposed@.len(),
+                        n == graph@.len(),
+                        n < usize::MAX,
+                        spec_toposortstper_wf(&transposed),
+                        spec_num_false(visited_bool@) <= n,
+                        forall|k: int| 0 <= k < components_vec@.len()
+                            ==> (#[trigger] components_vec@[k]).spec_avltreesetstper_wf(),
+                        components_vec@.len() >= 1,
+                        components_vec@.len() <= i,
+                    decreases finish_len - i,
+                {
+                    assert((i as int) < finish_order@.len());
+                    let vertex = *finish_order.nth(i);
+                    if vertex < n && !visited_bool[vertex] {
+                        let component = AVLTreeSetStPer::empty();
+                        assert(component@.len() + spec_num_false(visited_bool@) < usize::MAX as nat) by {
+                            assert(component@.len() == 0nat);
+                            assert(spec_num_false(visited_bool@) <= n as nat);
+                        };
+                        let component = dfs_reach(&transposed, &mut visited_bool, component, vertex);
+                        if component.size() > 0 {
+                            components_vec.push(component);
+                        }
                     }
+                    i = i + 1;
                 }
-                i = i + 1;
             }
+            assert(components_vec@.len() >= 1 || graph@.len() == 0);
             assert(components_vec@.len() < usize::MAX);
             AVLTreeSeqStPerS::from_vec(components_vec)
         }
