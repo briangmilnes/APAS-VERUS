@@ -362,11 +362,16 @@ scripts/rtt.sh               # run time tests (cargo nextest)
   separate command and check its output before proceeding to the next. Fix any trigger
   warnings or errors between steps. Do NOT use a combined pipeline script — each step must
   be independently verified clean.
-- **DO NOT run validate from subagents.** Validation is inherently sequential (single Verus
-  process, single Z3 solver). Running validate from multiple subagents concurrently will
-  wedge the machine. If you need multiple views of the output, run validate ONCE in the
-  main agent, tee the output to a temp file (`scripts/validate.sh 2>&1 | tee /tmp/validate.txt`),
-  and have subagents read the temp file. The same applies to rtt and ptt.
+- **DO NOT spawn subagents.** Do all work yourself, sequentially. Subagents running
+  concurrent validates, RTTs, or PTTs will OOM the machine (32GB, Verus+Z3 needs 8GB+).
+  If you need to read multiple files, use the Read tool directly — do not delegate to
+  subagents. This applies to all agent work: editing, searching, validating, testing.
+- **DO NOT run validate, rtt, or ptt from subagents.** If for any reason you do spawn
+  a subagent, it must NEVER run `scripts/validate.sh`, `scripts/rtt.sh`, or
+  `scripts/ptt.sh`. Validation is inherently sequential (single Verus process, single
+  Z3 solver). Run validate ONCE in the main agent, tee the output to a temp file
+  (`scripts/validate.sh 2>&1 | tee /tmp/validate.txt`), and have subagents read the
+  temp file.
 
 ### Validation Modes
 
