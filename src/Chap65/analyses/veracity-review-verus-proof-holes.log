@@ -80,19 +80,11 @@ Table of Contents:
    Info: 3 total
    Proof functions: 4 total (0 clean, 4 holed)
 ❌ UnionFindStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:352: error: external_body - #[verifier::external_body]
-       353 |         fn find(&mut self, v: &V) -> (root: V) {
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:377: error: external_body [blocked_by: find] - #[verifier::external_body]
-       378 |         fn union(&mut self, u: &V, v: &V) {
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:398: error: external_body [blocked_by: find] - #[verifier::external_body]
-       399 |         fn equals(&mut self, u: &V, v: &V) -> (same: B) {
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:406: error: external_body [blocked_by: find] - #[verifier::external_body]
-       407 |         fn num_sets(&mut self) -> (count: usize) {
-   Holes: 4 total
-      4 × external_body
-         1 × root cause
-         3 × downstream (blocked by root causes)
-   Proof functions: 2 total (2 clean, 0 holed)
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:532: error: external_body - #[verifier::external_body]
+       533 |         fn union(&mut self, u: &V, v: &V) {
+   Holes: 1 total
+      1 × external_body
+   Proof functions: 3 total (3 clean, 0 holed)
 
 =================================================================
 2. Depends Upon
@@ -124,24 +116,22 @@ Modules:
    3 total
 
 Proof Functions:
-   2 clean (33%)
-   4 holed (66%)
-   6 total
+   3 clean (42%)
+   4 holed (57%)
+   7 total
 
 Function Specs:
-   26 exec fns with complete spec (requires+ensures) (66%)
+   27 exec fns with complete spec (requires+ensures) (49%)
    0 exec fns missing spec (0%)
-   9 proof/spec fns clean (23%)
-   4 proof/spec fns with holes (10%)
-   39 total fns
+   24 proof/spec fns clean (43%)
+   4 proof/spec fns with holes (7%)
+   55 total fns
 
 
-Holes Found: 7 (actionable)
-   1 × assume() [algorithmic] (14%)
-   6 × external_body (85%)
-      3 × root cause
-      3 × downstream (blocked by root causes)
-Real Proof Targets: 7 (all actionable)
+Holes Found: 4 (actionable)
+   1 × assume() [algorithmic] (25%)
+   3 × external_body (75%)
+Real Proof Targets: 4 (all actionable)
 
 Warnings: 1 total
    1 × assume_eq_clone_workaround
@@ -156,15 +146,15 @@ Structural (info only): 1
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-25 17:37:36 -07:00
-Ended:     2026-03-25 17:37:36 -07:00
-Duration:  12ms
+Started:   2026-03-25 19:41:34 -07:00
+Ended:     2026-03-25 19:41:34 -07:00
+Duration:  14ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-===========
 
-Started:   2026-03-25 17:37:36 -07:00
-Ended:     2026-03-25 17:37:36 -07:00
-Duration:  12ms
+
+Started:   2026-03-25 19:41:34 -07:00
+Ended:     2026-03-25 19:41:34 -07:00
+Duration:  14ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log

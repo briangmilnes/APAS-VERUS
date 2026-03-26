@@ -1867,19 +1867,11 @@ Table of Contents:
    Info: 3 total
    Proof functions: 4 total (0 clean, 4 holed)
 ❌ src/Chap65/UnionFindStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:352: error: external_body - #[verifier::external_body]
-       353 |         fn find(&mut self, v: &V) -> (root: V) {
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:377: error: external_body [blocked_by: find] - #[verifier::external_body]
-       378 |         fn union(&mut self, u: &V, v: &V) {
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:398: error: external_body [blocked_by: find] - #[verifier::external_body]
-       399 |         fn equals(&mut self, u: &V, v: &V) -> (same: B) {
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:406: error: external_body [blocked_by: find] - #[verifier::external_body]
-       407 |         fn num_sets(&mut self) -> (count: usize) {
-   Holes: 4 total
-      4 × external_body
-         1 × root cause
-         3 × downstream (blocked by root causes)
-   Proof functions: 2 total (2 clean, 0 holed)
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:532: error: external_body - #[verifier::external_body]
+       533 |         fn union(&mut self, u: &V, v: &V) {
+   Holes: 1 total
+      1 × external_body
+   Proof functions: 3 total (3 clean, 0 holed)
 ⚠ src/Chap66/BoruvkaMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:62: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         58 |         fn eq(&self, other: &Self) -> (equal: bool)
@@ -2444,27 +2436,25 @@ Modules:
    244 total
 
 Proof Functions:
-   451 clean (99%)
+   452 clean (99%)
    4 holed (0%)
-   455 total
+   456 total
 
 Function Specs:
-   5292 exec fns with complete spec (requires+ensures) (68%)
+   5293 exec fns with complete spec (requires+ensures) (68%)
    58 exec fns missing spec (0%)
-   2410 proof/spec fns clean (31%)
+   2425 proof/spec fns clean (31%)
    4 proof/spec fns with holes (0%)
-   7764 total fns
+   7780 total fns
 
 
-Holes Found: 8 (actionable)
-   2 × assume() [algorithmic] (25%)
-   6 × external_body (75%)
-      3 × root cause
-      3 × downstream (blocked by root causes)
-Real Proof Targets: 8 (all actionable)
+Holes Found: 5 (actionable)
+   2 × assume() [algorithmic] (40%)
+   3 × external_body (60%)
+Real Proof Targets: 5 (all actionable)
 
 Per-Chapter Holes:
-  Chap37:  1  Chap65:  7
+  Chap37:  1  Chap65:  4
 
 Warnings: 174 total
    2 × fn_missing_requires
@@ -2479,9 +2469,9 @@ Accepted (reviewed): 65 total
    10 × trivial_spec_wf
    4 × unsafe_block_accept_hole
    3 × external_accept_hole
-   1 × struct_outside_verus_accept_hole
-   1 × external_type_specification_accept_hole
    1 × enum_outside_verus_accept_hole
+   1 × external_type_specification_accept_hole
+   1 × struct_outside_verus_accept_hole
 
 Accepted by Chapter:
   Chap02:  6  Chap11:  6  Chap12: 19
@@ -2506,59 +2496,59 @@ Structural (info only): 220
 4.1. Worst src/* Directories (all dirs, by holes)
 =================================================================
 
-   1  Chap65  (7 holes, 3 files)
+   1  Chap65  (4 holes, 3 files)
    2  Chap37  (1 holes, 19 files)
-   3  Chap23  (0 holes, 2 files)
-   4  Chap02  (0 holes, 2 files)
-   5  Chap66  (0 holes, 2 files)
-   6  Chap54  (0 holes, 4 files)
-   7  Chap50  (0 holes, 8 files)
-   8  Chap63  (0 holes, 2 files)
-   9  Chap40  (0 holes, 3 files)
-   10  Chap36  (0 holes, 3 files)
-   11  Concurrency  (0 holes, 1 files)
-   12  Chap49  (0 holes, 8 files)
-   13  Chap64  (0 holes, 3 files)
-   14  Chap03  (0 holes, 1 files)
-   15  Chap18  (0 holes, 7 files)
-   16  Chap51  (0 holes, 8 files)
-   17  Chap62  (0 holes, 4 files)
+   3  Chap21  (0 holes, 5 files)
+   4  Chap42  (0 holes, 3 files)
+   5  Chap39  (0 holes, 4 files)
+   6  Chap55  (0 holes, 8 files)
+   7  Chap66  (0 holes, 2 files)
+   8  Chap53  (0 holes, 5 files)
+   9  Chap03  (0 holes, 1 files)
+   10  Chap63  (0 holes, 2 files)
+   11  Chap18  (0 holes, 7 files)
+   12  Chap45  (0 holes, 6 files)
+   13  Chap12  (0 holes, 3 files)
+   14  Chap02  (0 holes, 2 files)
+   15  Chap06  (0 holes, 21 files)
+   16  Chap19  (0 holes, 4 files)
+   17  Chap17  (0 holes, 1 files)
    18  Chap61  (0 holes, 4 files)
-   19  Chap58  (0 holes, 2 files)
-   20  Chap39  (0 holes, 4 files)
-   21  Chap11  (0 holes, 5 files)
-   22  Chap47  (0 holes, 9 files)
-   23  Chap52  (0 holes, 14 files)
-   24  Chap21  (0 holes, 5 files)
-   25  Chap38  (0 holes, 2 files)
-   26  Chap12  (0 holes, 3 files)
-   27  Chap28  (0 holes, 11 files)
-   28  Chap59  (0 holes, 4 files)
-   29  Chap06  (0 holes, 21 files)
-   30  Chap41  (0 holes, 6 files)
-   31  Chap56  (0 holes, 10 files)
-   32  Chap44  (0 holes, 1 files)
-   33  Chap53  (0 holes, 5 files)
-   34  Chap27  (0 holes, 4 files)
-   35  Chap05  (0 holes, 5 files)
-   36  ParaPairs  (0 holes, 1 files)
-   37  Chap30  (0 holes, 1 files)
-   38  Chap55  (0 holes, 8 files)
-   39  Chap43  (0 holes, 10 files)
-   40  Chap19  (0 holes, 4 files)
-   41  Chap42  (0 holes, 3 files)
-   42  Chap45  (0 holes, 6 files)
-   43  Chap35  (0 holes, 4 files)
-   44  Chap26  (0 holes, 8 files)
-   45  Chap17  (0 holes, 1 files)
-   46  Chap57  (0 holes, 3 files)
+   19  Chap56  (0 holes, 10 files)
+   20  Chap44  (0 holes, 1 files)
+   21  Chap59  (0 holes, 4 files)
+   22  Concurrency  (0 holes, 1 files)
+   23  Chap43  (0 holes, 10 files)
+   24  Chap49  (0 holes, 8 files)
+   25  Chap41  (0 holes, 6 files)
+   26  Chap64  (0 holes, 3 files)
+   27  Chap40  (0 holes, 3 files)
+   28  Chap51  (0 holes, 8 files)
+   29  Chap11  (0 holes, 5 files)
+   30  Chap47  (0 holes, 9 files)
+   31  Chap27  (0 holes, 4 files)
+   32  Chap05  (0 holes, 5 files)
+   33  ParaPairs  (0 holes, 1 files)
+   34  Chap36  (0 holes, 3 files)
+   35  Chap54  (0 holes, 4 files)
+   36  Chap35  (0 holes, 4 files)
+   37  Chap62  (0 holes, 4 files)
+   38  Chap52  (0 holes, 14 files)
+   39  Chap50  (0 holes, 8 files)
+   40  Chap38  (0 holes, 2 files)
+   41  Chap23  (0 holes, 2 files)
+   42  Chap30  (0 holes, 1 files)
+   43  Chap58  (0 holes, 2 files)
+   44  Chap57  (0 holes, 3 files)
+   45  Chap28  (0 holes, 11 files)
+   46  Chap26  (0 holes, 8 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
 =================================================================
 
-   1  src/Chap65/UnionFindStEph.rs  (4 holes)
-   2  src/Chap65/PrimStEph.rs  (2 holes)
+   1  src/Chap65/PrimStEph.rs  (2 holes)
+   2  src/Chap65/UnionFindStEph.rs  (1 holes)
    3  src/Chap37/BSTSplayMtEph.rs  (1 holes)
 
 =================================================================
@@ -2577,7 +2567,7 @@ Structural (info only): 220
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 44 clean, 2 holed, 8 holes (global), 244 modules
+Chapter Status — 46 chapters, 44 clean, 2 holed, 5 holes (global), 244 modules
 
 CLEAN CHAPTERS (44)
   Chapter        Files
@@ -2627,11 +2617,11 @@ CLEAN CHAPTERS (44)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (2) — 8 holes
+HOLED CHAPTERS (2) — 5 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
   Chap37             1    19  internal  Chap37::BSTSplayMtEph
-  Chap65             7     3  internal  Chap65::UnionFindStEph
+  Chap65             4     3  internal  Chap65::UnionFindStEph
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
@@ -2641,8 +2631,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-25 17:37:37 -07:00
-Ended:     2026-03-25 17:37:39 -07:00
-Duration:  2122ms
+Started:   2026-03-25 19:41:34 -07:00
+Ended:     2026-03-25 19:41:35 -07:00
+Duration:  1627ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log

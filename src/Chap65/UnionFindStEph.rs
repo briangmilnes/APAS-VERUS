@@ -1,8 +1,13 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 65: Union-Find Data Structure (Sequential Ephemeral)
 //!
-//! Implements Union-Find (Disjoint Set Union) with path compression and union by rank.
+//! Implements Union-Find (Disjoint Set Union) with union by rank.
 //! Used in Kruskal's MST algorithm for efficient cycle detection.
+//!
+//! NOTE: find currently uses root-chasing without path compression (O(log n) per call).
+//! Path compression lemmas are written and commented out — the assembly lemma needs
+//! rlimit work to combine 13 named wf sub-predicates. The algorithm is correct and
+//! fully proved; compression is a performance optimization for future work.
 //!
 //! Ghost field `roots` maps each element to its canonical representative, allowing
 //! clean specifications without recursive spec functions. Path compression changes

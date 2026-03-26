@@ -341,11 +341,9 @@ Structural (info only): 35
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-25 17:37:35 -07:00
-Ended:     2026-03-25 17:37:35 -07:00
-Duration:  182ms
+Started:   2026-03-25 19:41:32 -07:00
+Ended:     2026-03-25 19:41:33 -07:00
+Duration:  160ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
-ation:  182ms
-
-Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
