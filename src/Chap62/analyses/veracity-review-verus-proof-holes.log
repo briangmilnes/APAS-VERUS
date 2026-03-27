@@ -21,13 +21,13 @@ Table of Contents:
 =================================================================
 
 ❌ StarContractionMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap62/StarContractionMtEph.rs:249: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:249: error: external_body - #[verifier::external_body]
        250 |     fn route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
    Holes: 1 total
       1 × external_body
 ✓ StarContractionStEph.rs
 ❌ StarPartitionMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap62/StarPartitionMtEph.rs:72: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarPartitionMtEph.rs:72: error: external_body - #[verifier::external_body]
         73 |     pub fn parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
    Holes: 1 total
       1 × external_body
@@ -85,8 +85,9 @@ Real Proof Targets: 2 (all actionable)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 10:36:57 -07:00
-Ended:     2026-03-27 10:36:57 -07:00
-Duration:  15ms
+Started:   2026-03-27 12:14:08 -07:00
+Ended:     2026-03-27 12:14:08 -07:00
+Duration:  17ms
 
 Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap62/analyses/veracity-review-verus-proof-holes.log

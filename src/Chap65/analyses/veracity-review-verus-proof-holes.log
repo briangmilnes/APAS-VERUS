@@ -53,17 +53,10 @@ Table of Contents:
        457 |         }
 /home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:216: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
 ❌ UnionFindStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:982: error: admit() - admit(); // Overflow: rank bounded by log2(n) < 64 (2^rank t
-       914 |     fn union_merge_exec<V: StT + Hash>(
-            ...
-       980 |                 proof {
-       981 |                     assert(strictly_cloned(root_u, ru2));
-       983 |                 }
-       984 |                 uf.rank.insert(ru2, rank_u + 1);
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1078: error: external_body - #[verifier::external_body]
-      1079 |     fn union_merge<V: StT + Hash>(
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1308: error: external_body - #[verifier::external_body]
-      1309 |         fn union(&mut self, u: &V, v: &V) {
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1087: error: external_body - #[verifier::external_body]
+      1088 |     fn union_merge<V: StT + Hash>(
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1317: error: external_body - #[verifier::external_body]
+      1318 |         fn union(&mut self, u: &V, v: &V) {
 /home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:914: error: fn_missing_wf_requires - fn union_merge_exec — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
        890 |     proof fn lemma_union_wf_frame<V: StT + Hash>(
             ...
@@ -71,15 +64,14 @@ Table of Contents:
        913 |     #[verifier::rlimit(30)]
        915 |         uf: &mut UnionFindStEph<V>,
        916 |         root_u: V,
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1079: error: fn_missing_wf_requires - fn union_merge — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
-      1005 |     proof fn lemma_union_merge_wf<V: StT + Hash>(
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1088: error: fn_missing_wf_requires - fn union_merge — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
+      1014 |     proof fn lemma_union_merge_wf<V: StT + Hash>(
             ...
-      1077 |     /// lemma_union_merge_wf to keep &mut encoding out of the proof context.
-      1078 |     #[verifier::external_body]
-      1080 |         uf: &mut UnionFindStEph<V>,
-      1081 |         root_u: V,
-   Holes: 3 total
-      1 × admit()
+      1086 |     /// lemma_union_merge_wf to keep &mut encoding out of the proof context.
+      1087 |     #[verifier::external_body]
+      1089 |         uf: &mut UnionFindStEph<V>,
+      1090 |         root_u: V,
+   Holes: 2 total
       2 × external_body
    Proof functions: 13 total (13 clean, 0 holed)
 
@@ -125,11 +117,10 @@ Function Specs:
    75 total fns
 
 
-Holes Found: 5 (actionable)
-   1 × admit() (20%)
-   3 × external_body (60%)
-   1 × opaque (20%)
-Real Proof Targets: 5 (all actionable)
+Holes Found: 4 (actionable)
+   3 × external_body (75%)
+   1 × opaque (25%)
+Real Proof Targets: 4 (all actionable)
 
 Warnings: 5 total
    2 × fn_missing_ensures
@@ -143,9 +134,13 @@ Structural (info only): 1
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 09:09:11 -07:00
-Ended:     2026-03-27 09:09:11 -07:00
-Duration:  22ms
+Started:   2026-03-27 12:14:08 -07:00
+Ended:     2026-03-27 12:14:08 -07:00
+Duration:  27ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
+ed:   2026-03-27 12:14:08 -07:00
+Ended:     2026-03-27 12:14:08 -07:00
+Duration:  27ms
+
+Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log

@@ -1,5 +1,6 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
+//! RESULT: FAILS — antisymmetric, add_zero, add_monotone fail; reflexive/total work.
 //! Testing what f32 by(bit_vector) can actually prove for algorithm use.
 //! Need: unbounded non-negative finite floats, addition, comparison bridge.
 
