@@ -21,11 +21,7 @@ Table of Contents:
 =================================================================
 
 ✓ JohnsonMtEphF64.rs
-❌ JohnsonMtEphI64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:95: error: external_body - #[verifier::external_body]
-        96 |     fn parallel_dijkstra_all(
-   Holes: 1 total
-      1 × external_body
+✓ JohnsonMtEphI64.rs
 ✓ JohnsonStEphF64.rs
 ✓ JohnsonStEphI64.rs
 
@@ -56,8 +52,8 @@ JohnsonStEphI64.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   3 clean (no holes, no errors; 75%)
-   1 holed (holes or errors, 25%)
+   4 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    4 total
 
 Proof Functions:
@@ -66,24 +62,24 @@ Proof Functions:
    0 total
 
 Function Specs:
-   12 exec fns with complete spec (requires+ensures) (85%)
-   2 exec fns missing spec (14%)
+   12 exec fns with complete spec (requires+ensures) (80%)
+   3 exec fns missing spec (20%)
    0 proof/spec fns clean (0%)
    0 proof/spec fns with holes (0%)
-   14 total fns
+   15 total fns
 
 
-Holes Found: 1 (actionable)
-   1 × external_body (100%)
-Real Proof Targets: 1 (all actionable)
+Holes Found: 0 (actionable)
+Real Proof Targets: 0 (all actionable)
+
+No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 12:52:42 -07:00
-Ended:     2026-03-27 12:52:42 -07:00
-Duration:  11ms
+Started:   2026-03-27 12:57:55 -07:00
+Ended:     2026-03-27 12:57:55 -07:00
+Duration:  16ms
 
-Full output: src/Chap59/analyses/veracity-review-verus-proof-holes.log
 Full output: src/Chap59/analyses/veracity-review-verus-proof-holes.log
