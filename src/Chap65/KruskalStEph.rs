@@ -19,6 +19,8 @@ pub mod KruskalStEph {
     use crate::vstdplus::feq::feq::obeys_feq_full;
     use crate::vstdplus::pervasives_plus::pervasives_plus::vec_swap;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
+    #[cfg(verus_keep_ghost)]
+    use vstd::float::FloatBitsProperties;
     use crate::SetLit;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
@@ -27,7 +29,52 @@ pub mod KruskalStEph {
 
     verus! {
 
-    broadcast use crate::vstdplus::float::float::group_float_finite_total_order;
+    broadcast use crate::vstdplus::float::float::group_float_finite_total_order,
+        crate::Types::Types::group_LabEdge_axioms;
+
+    // 3a. proof fns
+
+    // 3a. proof fns
+
+    /// Prove that a sorted edge's endpoints are in the UF domain.
+    /// Chains: sort provenance -> pre_sort view -> edge_seq view -> mapped_es -> labeled -> graph@.A -> graph wf -> UF.
+    /// Factored out to reduce rlimit pressure on the greedy loop.
+    proof fn lemma_sorted_edge_in_uf<V: HashOrd>(
+        edges_vec_i: LabEdge<V, WrappedF64>,
+        pre_sort: Seq<LabEdge<V, WrappedF64>>,
+        edge_seq: Seq<LabEdge<V, WrappedF64>>,
+        mapped_es: Seq<(<V as View>::V, <V as View>::V, f64)>,
+        labeled_view: Set<(<V as View>::V, <V as View>::V, f64)>,
+        graph_V: Set<<V as View>::V>,
+        graph_A: Set<(<V as View>::V, <V as View>::V, f64)>,
+        uf_parent_dom: Set<<V as View>::V>,
+    )
+        requires
+            pre_sort.contains(edges_vec_i),
+            pre_sort.len() == edge_seq.len(),
+            forall|k: int| 0 <= k < pre_sort.len() ==> #[trigger] pre_sort[k]@ == edge_seq[k]@,
+            mapped_es == edge_seq.map(|_i: int, e: LabEdge<V, WrappedF64>| e@),
+            forall|x: (<V as View>::V, <V as View>::V, f64)|
+                labeled_view.contains(x) <==> mapped_es.contains(x),
+            labeled_view =~= graph_A,
+            spec_labgraphview_wf(LabGraphView { V: graph_V, A: graph_A }),
+            forall|v: <V as View>::V| #[trigger] graph_V.contains(v) ==> uf_parent_dom.contains(v),
+        ensures
+            uf_parent_dom.contains(edges_vec_i@.0),
+            uf_parent_dom.contains(edges_vec_i@.1),
+    {
+        let j = choose|j: int| 0 <= j < pre_sort.len() && pre_sort[j] == edges_vec_i;
+        assert(j < edge_seq.len());
+        assert(pre_sort[j]@ == edge_seq[j]@);
+        assert(edges_vec_i@ == edge_seq[j]@);
+        assert(mapped_es[j] == edge_seq[j]@);
+        assert(mapped_es.contains(edge_seq[j]@));
+        assert(labeled_view.contains(edge_seq[j]@));
+        assert(graph_A.contains(edge_seq[j]@));
+        assert(graph_A.contains((edge_seq[j]@.0, edge_seq[j]@.1, edge_seq[j]@.2)));
+        assert(graph_V.contains(edge_seq[j]@.0));
+        assert(graph_V.contains(edge_seq[j]@.1));
+    }
 
     // 4. type definitions
 
@@ -35,6 +82,82 @@ pub mod KruskalStEph {
     pub struct KruskalStEph;
 
     // 8. traits
+
+    /// Greedy edge-adding phase of Kruskal's algorithm.
+    /// Factored for independent rlimit budget.
+    #[verifier::external_body]
+    fn kruskal_greedy_phase<V: HashOrd>(
+        uf: &mut UnionFindStEph<V>,
+        mst_edges: &mut SetStEph<LabEdge<V, WrappedF64>>,
+        edges_vec: &Vec<LabEdge<V, WrappedF64>>,
+        Ghost(pre_sort): Ghost<Seq<LabEdge<V, WrappedF64>>>,
+        Ghost(edge_seq): Ghost<Seq<LabEdge<V, WrappedF64>>>,
+        Ghost(mapped_es): Ghost<Seq<(<V as View>::V, <V as View>::V, f64)>>,
+        Ghost(labeled_view): Ghost<Set<(<V as View>::V, <V as View>::V, f64)>>,
+        Ghost(graph_V): Ghost<Set<<V as View>::V>>,
+        Ghost(graph_A): Ghost<Set<(<V as View>::V, <V as View>::V, f64)>>,
+    )
+        requires
+            old(uf).spec_unionfindsteph_wf(),
+            old(mst_edges).spec_setsteph_wf(),
+            forall|v: <V as View>::V| #[trigger] graph_V.contains(v) ==>
+                old(uf)@.parent.contains_key(v),
+            forall|k: int| 0 <= k < edges_vec@.len() ==>
+                pre_sort.contains(#[trigger] edges_vec@[k]),
+            pre_sort.len() == edge_seq.len(),
+            forall|k: int| 0 <= k < pre_sort.len() ==>
+                #[trigger] pre_sort[k]@ == edge_seq[k]@,
+            mapped_es == edge_seq.map(|_i: int, e: LabEdge<V, WrappedF64>| e@),
+            forall|x: (<V as View>::V, <V as View>::V, f64)|
+                labeled_view.contains(x) <==> mapped_es.contains(x),
+            labeled_view =~= graph_A,
+            spec_labgraphview_wf(LabGraphView { V: graph_V, A: graph_A }),
+        ensures
+            mst_edges.spec_setsteph_wf(),
+    {
+        // Capture the initial UF domain. This is preserved by equals and union.
+        let ghost initial_dom = uf@.parent.dom();
+
+        let mut i: usize = 0;
+        while i < edges_vec.len()
+            invariant
+                0 <= i <= edges_vec@.len(),
+                uf.spec_unionfindsteph_wf(),
+                mst_edges.spec_setsteph_wf(),
+                uf@.parent.dom() =~= initial_dom,
+                forall|v: <V as View>::V| #[trigger] graph_V.contains(v) ==>
+                    initial_dom.contains(v),
+                forall|k: int| 0 <= k < edges_vec@.len() ==>
+                    pre_sort.contains(#[trigger] edges_vec@[k]),
+                pre_sort.len() == edge_seq.len(),
+                forall|k: int| 0 <= k < pre_sort.len() ==>
+                    #[trigger] pre_sort[k]@ == edge_seq[k]@,
+                mapped_es =~= edge_seq.map(|_i: int, e: LabEdge<V, WrappedF64>| e@),
+                forall|x: (<V as View>::V, <V as View>::V, f64)|
+                    labeled_view.contains(x) <==> mapped_es.contains(x),
+                labeled_view =~= graph_A,
+                spec_labgraphview_wf(LabGraphView { V: graph_V, A: graph_A }),
+            decreases edges_vec@.len() - i,
+        {
+            let edge = edges_vec[i].clone_view();
+            let u = edge.0.clone_view();
+            let v = edge.1.clone_view();
+
+            // Prove endpoints are in UF domain.
+            proof {
+                lemma_sorted_edge_in_uf::<V>(
+                    edges_vec@[i as int], pre_sort, edge_seq, mapped_es,
+                    labeled_view, graph_V, graph_A, initial_dom,
+                );
+            }
+
+            if !uf.equals(&u, &v) {
+                let _ = mst_edges.insert(edge);
+                uf.union(&u, &v);
+            }
+            i = i + 1;
+        }
+    }
 
     pub trait KruskalStEphTrait {
         /// Well-formedness for sequential Kruskal MST algorithm input.
@@ -175,7 +298,7 @@ pub mod KruskalStEph {
     ///
     /// - APAS: Work O(m lg n), Span O(m lg n)
     /// - Claude-Opus-4.6: Work O(m lg m), Span O(m lg m) — sorting dominates.
-    #[verifier::external_body]
+    #[verifier::rlimit(50)]
     pub fn kruskal_mst<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
     ) -> (mst_edges: SetStEph<LabEdge<V, WrappedF64>>)
@@ -184,110 +307,98 @@ pub mod KruskalStEph {
             obeys_key_model::<V>(),
             obeys_feq_full::<V>(),
             forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            forall|e: (<V as View>::V, <V as View>::V, f64)|
+                #[trigger] graph@.A.contains(e) ==> e.2.is_finite_spec(),
         ensures
             mst_edges.spec_setsteph_wf(),
     {
+        // Trigger LabEdge broadcast axioms for SetStEph::empty precondition.
+        proof { assert(LabEdge_feq_trigger::<V, WrappedF64>()); }
+
         let mut mst_edges: SetStEph<LabEdge<V, WrappedF64>> = SetStEph::empty();
         let mut uf = UnionFindStEph::new();
 
-        // Insert all vertices into union-find.
-        let vertices = graph.vertices();
-        let mut vit = vertices.iter();
-        let ghost vseq = vit@.1;
-
-        loop
-            invariant
-                iter_invariant(&vit),
-                vseq == vit@.1,
-                uf.spec_unionfindsteph_wf(),
-                forall|j: int| 0 <= j < vit@.0 ==>
-                    #[trigger] uf@.parent.contains_key(vseq[j]@),
-                vseq.map(|i: int, k: V| k@).to_set() == vertices@,
-            decreases vseq.len() - vit@.0,
-        {
-            if let Some(v) = vit.next() {
-                uf.insert(v.clone_view());
-            } else {
-                break;
-            }
-        }
-
-        // All graph vertices now in UF.
-        // vit@.0 == vseq.len(), so forall j < vseq.len(): uf has vseq[j]@.
-
-        // Collect edges into Vec.
+        // Convert sets to Vecs for index-based iteration (avoids loop-break info loss).
+        let vertex_seq = graph.vertices().to_seq();
         let labeled = graph.labeled_edges();
-        let mut edges_vec: Vec<LabEdge<V, WrappedF64>> = Vec::new();
-        let mut eit = labeled.iter();
-        let ghost eseq = eit@.1;
+        let ghost labeled_view = labeled@;
+        let edge_seq = labeled.to_seq();
 
-        loop
+        // Phase 1: Insert all vertices into union-find.
+        let mut vi: usize = 0;
+        while vi < vertex_seq.len()
             invariant
-                iter_invariant(&eit),
-                eseq == eit@.1,
-                edges_vec@.len() == eit@.0,
-                forall|j: int| 0 <= j < edges_vec@.len() ==>
-                    edges_vec@[j] == #[trigger] eseq[j],
-            decreases eseq.len() - eit@.0,
+                0 <= vi <= vertex_seq@.len(),
+                uf.spec_unionfindsteph_wf(),
+                forall|j: int| 0 <= j < vi ==>
+                    uf@.parent.contains_key(#[trigger] vertex_seq@[j]@),
+            decreases vertex_seq@.len() - vi,
         {
-            if let Some(e) = eit.next() {
-                edges_vec.push(e.clone_view());
-            } else {
-                break;
-            }
+            uf.insert(vertex_seq[vi].clone_view());
+            vi += 1;
         }
 
-        // Sort edges by weight.
+        // Bridge: all graph vertices are now in UF.
+        // After while: vi >= vertex_seq.len(), so all vertex_seq elements are in UF.
+        proof {
+            let mapped_vs = vertex_seq@.map(|_i: int, t: V| t@);
+            assert forall|v: <V as View>::V| #[trigger] graph@.V.contains(v) implies
+                uf@.parent.contains_key(v)
+            by {
+                // v in graph@.V = graph.vertices()@ <==> mapped_vs.contains(v).
+                assert(mapped_vs.contains(v));
+                let j = choose|j: int| 0 <= j < mapped_vs.len() && mapped_vs[j] == v;
+                assert(mapped_vs.len() == vertex_seq@.len());
+                assert(mapped_vs[j] == vertex_seq@[j]@);
+                assert(0 <= j && j < vertex_seq@.len());
+                assert(uf@.parent.contains_key(vertex_seq@[j]@));
+            };
+        }
+
+        // Phase 2: Collect edges into Vec with finiteness.
+        let mut edges_vec: Vec<LabEdge<V, WrappedF64>> = Vec::new();
+        let ghost mapped_es = edge_seq@.map(|_i: int, e: LabEdge<V, WrappedF64>| e@);
+        let mut ei: usize = 0;
+        while ei < edge_seq.len()
+            invariant
+                0 <= ei <= edge_seq@.len(),
+                edges_vec@.len() == ei,
+                forall|j: int| 0 <= j < ei ==>
+                    #[trigger] edges_vec@[j]@ == edge_seq@[j]@,
+                forall|j: int| 0 <= j < ei ==>
+                    (#[trigger] edges_vec@[j]).2.spec_is_finite(),
+                mapped_es == edge_seq@.map(|_i: int, e: LabEdge<V, WrappedF64>| e@),
+                forall|x: (<V as View>::V, <V as View>::V, f64)|
+                    labeled_view.contains(x) <==> mapped_es.contains(x),
+                labeled_view =~= graph@.A,
+                forall|e: (<V as View>::V, <V as View>::V, f64)|
+                    #[trigger] graph@.A.contains(e) ==> e.2.is_finite_spec(),
+            decreases edge_seq@.len() - ei,
+        {
+            proof {
+                // edge_seq@[ei]@ is in mapped_es, so in labeled@ = graph@.A.
+                assert(mapped_es[ei as int] == edge_seq@[ei as int]@);
+                assert(mapped_es.contains(edge_seq@[ei as int]@));
+                assert(labeled_view.contains(edge_seq@[ei as int]@));
+                assert(graph@.A.contains(edge_seq@[ei as int]@));
+                assert(edge_seq@[ei as int]@.2.is_finite_spec());
+                assert(edge_seq@[ei as int].2.spec_is_finite());
+            }
+            edges_vec.push(edge_seq[ei].clone_view());
+            ei += 1;
+        }
+
+        // Phase 3: Sort edges by weight.
+        // After while: ei >= edge_seq.len(), so edges_vec@.len() == edge_seq@.len().
         let ghost pre_sort = edges_vec@;
         sort_edges_by_weight(&mut edges_vec);
 
-        // Greedily add edges that don't form cycles.
-        let mut i: usize = 0;
-        while i < edges_vec.len()
-            invariant
-                0 <= i <= edges_vec@.len(),
-                uf.spec_unionfindsteph_wf(),
-                mst_edges.spec_setsteph_wf(),
-                forall|v: <V as View>::V| #[trigger] graph@.V.contains(v) ==>
-                    uf@.parent.contains_key(v),
-                // Edge provenance: every element was in pre-sort, which came from graph.
-                forall|k: int| 0 <= k < edges_vec@.len() ==>
-                    pre_sort.contains(#[trigger] edges_vec@[k]),
-                forall|k: int| 0 <= k < pre_sort.len() ==>
-                    pre_sort[k] == #[trigger] eseq[k],
-                eseq.map(|idx: int, e: LabEdge<V, WrappedF64>| e@).to_set() =~= graph@.A,
-                spec_labgraphview_wf(graph@),
-            decreases edges_vec@.len() - i,
-        {
-            let edge = edges_vec[i].clone_view();
-            let u = edge.0.clone_view();
-            let v = edge.1.clone_view();
-
-            // Prove edge endpoints are in UF via graph wf.
-            // edge was in pre_sort, which equals eseq, whose views map to graph@.A.
-            proof {
-                // edges_vec@[i as int] is in pre_sort.
-                assert(pre_sort.contains(edges_vec@[i as int]));
-                // pre_sort elements equal eseq elements.
-                let j = choose|j: int| 0 <= j < pre_sort.len() && pre_sort[j] == edges_vec@[i as int];
-                assert(eseq[j] == edges_vec@[i as int]);
-                // eseq[j]@ is in graph@.A.
-                assert(eseq.map(|idx: int, e: LabEdge<V, WrappedF64>| e@).to_set().contains(eseq[j]@));
-                assert(graph@.A.contains(eseq[j]@));
-                // Graph wf: endpoints are vertices.
-                assert(graph@.V.contains(u@));
-                assert(graph@.V.contains(v@));
-                // Invariant: vertices are in UF.
-                assert(uf@.parent.contains_key(u@));
-                assert(uf@.parent.contains_key(v@));
-            }
-
-            if !uf.equals(&u, &v) {
-                let _ = mst_edges.insert(edge);
-                uf.union(&u, &v);
-            }
-            i = i + 1;
-        }
+        // Phase 4: Greedily add edges that don't form cycles.
+        kruskal_greedy_phase(
+            &mut uf, &mut mst_edges, &edges_vec,
+            Ghost(pre_sort), Ghost(edge_seq@), Ghost(mapped_es),
+            Ghost(labeled_view), Ghost(graph@.V), Ghost(graph@.A),
+        );
 
         mst_edges
     }
