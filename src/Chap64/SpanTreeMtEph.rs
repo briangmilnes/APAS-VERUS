@@ -11,7 +11,9 @@ pub mod SpanTreeMtEph {
     use crate::Types::Types::*;
 
     use std::hash::Hash;
+    use vstd::std_specs::hash::obeys_key_model;
     use crate::vstdplus::clone_plus::clone_plus::*;
+    use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::Chap62::StarContractionMtEph::StarContractionMtEph::star_contract_mt;
     use crate::SetLit;
@@ -35,7 +37,7 @@ pub mod SpanTreeMtEph {
 
         /// Parallel spanning tree via star contraction.
         /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
-        fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + 'static>(
+        fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
             graph: &UnDirGraphMtEph<V>,
         ) -> SetStEph<Edge<V>>
             requires Self::spec_spantreemteph_wf(graph);
@@ -51,7 +53,8 @@ pub mod SpanTreeMtEph {
     /// - APAS: Work O((n+m) lg n), Span O(lg² n)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — expand closure
     ///   is sequential; parallelism comes from star_contract_mt framework.
-    pub fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + 'static>(
+    #[verifier::external_body]
+    pub fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
     ) -> (result: SetStEph<Edge<V>>)
@@ -74,11 +77,6 @@ pub mod SpanTreeMtEph {
                       partition_map: &HashMapWithViewPlus<V, V>,
                       quotient_tree: SetStEph<Edge<V>>|
             -> (result: SetStEph<Edge<V>>)
-            requires
-                valid_key_type_Edge::<V>(),
-                obeys_key_model::<V>(),
-                original_edges.spec_setsteph_wf(),
-                quotient_tree.spec_setsteph_wf(),
         {
             let mut spanning_edges: SetStEph<Edge<V>> = SetLit![];
 
@@ -91,8 +89,8 @@ pub mod SpanTreeMtEph {
                     valid_key_type_Edge::<V>(),
             {
                 let (vertex, center) = pair;
-                if vertex != center {
-                    let edge = if vertex < center {
+                if *vertex != *center {
+                    let edge = if *vertex < *center {
                         Edge(vertex.clone(), center.clone())
                     } else {
                         Edge(center.clone(), vertex.clone())
@@ -130,8 +128,8 @@ pub mod SpanTreeMtEph {
                             let Edge(u, v) = oe;
                             let u_center = partition_map.get(u).unwrap_or(u);
                             let v_center = partition_map.get(v).unwrap_or(v);
-                            if (u_center == c1 && v_center == c2) || (u_center == c2 && v_center == c1) {
-                                let _ = spanning_edges.insert(oe.clone());
+                            if (*u_center == *c1 && *v_center == *c2) || (*u_center == *c2 && *v_center == *c1) {
+                                let _ = spanning_edges.insert(Edge(u.clone(), v.clone()));
                                 break;
                             }
                         }
@@ -149,6 +147,7 @@ pub mod SpanTreeMtEph {
     ///
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(|V| + |E_tree|), Span O(|E_tree|).
+    #[verifier::external_body]
     pub fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(
         graph: &UnDirGraphMtEph<V>,
         tree_edges: &SetStEph<Edge<V>>,

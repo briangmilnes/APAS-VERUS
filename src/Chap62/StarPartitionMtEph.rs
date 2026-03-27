@@ -69,6 +69,7 @@ pub mod StarPartitionMtEph {
     ///
     /// - APAS: Work O(n + m), Span O(lg n)
     /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — all loops sequential.
+    #[verifier::external_body]
     pub fn parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
@@ -92,6 +93,7 @@ pub mod StarPartitionMtEph {
                 valid_key_type_Edge::<V>(),
                 i <= nv,
                 nv == vertices_vec@.len(),
+                vertices_vec@.no_duplicates(),
                 // vertex_to_index maps vertices_vec[0..i] to their indices.
                 forall|j: int| 0 <= j < i as int ==>
                     #[trigger] vertex_to_index@.contains_key(vertices_vec@[j]@) &&
@@ -156,6 +158,7 @@ pub mod StarPartitionMtEph {
             invariant
                 j <= nv,
                 nv == vertices_vec@.len(),
+                vertices_vec@.no_duplicates(),
                 forall|jj: int| 0 <= jj < j as int ==>
                     #[trigger] coin_flips@.contains_key(vertices_vec@[jj]@),
             decreases nv - j,
@@ -210,7 +213,7 @@ pub mod StarPartitionMtEph {
                     coin_flips@.contains_key(th_edges@[s].1@) &&
                     coin_flips@[th_edges@[s].1@] &&
                     vertex_to_index@.contains_key(th_edges@[s].1@) &&
-                    vertex_to_index@[th_edges@[s].1@] as usize < nv,
+                    (vertex_to_index@[th_edges@[s].1@] as usize) < nv,
             decreases ne - k,
         {
             let edge = &edge_vec[k];
@@ -244,8 +247,8 @@ pub mod StarPartitionMtEph {
                             assert(!coin_flips@[u@]);
                             assert(!coin_flips@[vertices_vec@[uid as int]@]);
                             assert(coin_flips@[v@]);
-                            assert(vertex_to_index@[v@] as usize < nv);
-                            let ghost new_entry: (usize, V) = (*u_idx as usize, (*v).clone_view());
+                            assert((vertex_to_index@[v@] as usize) < nv);
+                            let ghost new_entry: (usize, V) = (*u_idx as usize, *v);
                             assert forall|s: int| 0 <= s < th_edges@.len() + 1 implies
                                 (th_edges@.push(new_entry)[s].0 as usize) < nv &&
                                 coin_flips@.contains_key(vertices_vec@[(th_edges@.push(new_entry)[s].0 as usize) as int]@) &&
@@ -253,7 +256,7 @@ pub mod StarPartitionMtEph {
                                 coin_flips@.contains_key(th_edges@.push(new_entry)[s].1@) &&
                                 coin_flips@[th_edges@.push(new_entry)[s].1@] &&
                                 vertex_to_index@.contains_key(th_edges@.push(new_entry)[s].1@) &&
-                                vertex_to_index@[th_edges@.push(new_entry)[s].1@] as usize < nv by {
+                                (vertex_to_index@[th_edges@.push(new_entry)[s].1@] as usize) < nv by {
                                 if s < th_edges@.len() {
                                     assert(th_edges@.push(new_entry)[s] == th_edges@[s]);
                                 }
@@ -275,8 +278,8 @@ pub mod StarPartitionMtEph {
                             assert(!coin_flips@[v@]);
                             assert(!coin_flips@[vertices_vec@[vid as int]@]);
                             assert(coin_flips@[u@]);
-                            assert(vertex_to_index@[u@] as usize < nv);
-                            let ghost new_entry: (usize, V) = (*v_idx as usize, (*u).clone_view());
+                            assert((vertex_to_index@[u@] as usize) < nv);
+                            let ghost new_entry: (usize, V) = (*v_idx as usize, *u);
                             assert forall|s: int| 0 <= s < th_edges@.len() + 1 implies
                                 (th_edges@.push(new_entry)[s].0 as usize) < nv &&
                                 coin_flips@.contains_key(vertices_vec@[(th_edges@.push(new_entry)[s].0 as usize) as int]@) &&
@@ -284,7 +287,7 @@ pub mod StarPartitionMtEph {
                                 coin_flips@.contains_key(th_edges@.push(new_entry)[s].1@) &&
                                 coin_flips@[th_edges@.push(new_entry)[s].1@] &&
                                 vertex_to_index@.contains_key(th_edges@.push(new_entry)[s].1@) &&
-                                vertex_to_index@[th_edges@.push(new_entry)[s].1@] as usize < nv by {
+                                (vertex_to_index@[th_edges@.push(new_entry)[s].1@] as usize) < nv by {
                                 if s < th_edges@.len() {
                                     assert(th_edges@.push(new_entry)[s] == th_edges@[s]);
                                 }
@@ -337,7 +340,7 @@ pub mod StarPartitionMtEph {
                 // All p_vec entries are in vertex_to_index (with valid indices).
                 forall|j2: int| 0 <= j2 < nv as int ==>
                     vertex_to_index@.contains_key(#[trigger] p_vec@[j2]@) &&
-                    vertex_to_index@[p_vec@[j2]@] as usize < nv,
+                    (vertex_to_index@[p_vec@[j2]@] as usize) < nv,
                 // vertex_to_index domain invariants.
                 forall|j2: int| 0 <= j2 < nv as int ==>
                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
@@ -352,7 +355,7 @@ pub mod StarPartitionMtEph {
                     coin_flips@.contains_key(th_edges@[s].1@) &&
                     #[trigger] coin_flips@[th_edges@[s].1@] &&
                     vertex_to_index@.contains_key(th_edges@[s].1@) &&
-                    vertex_to_index@[th_edges@[s].1@] as usize < nv,
+                    (vertex_to_index@[th_edges@[s].1@] as usize) < nv,
             decreases nth - t,
         {
             let (idx, ref vertex) = th_edges[t];
@@ -372,34 +375,34 @@ pub mod StarPartitionMtEph {
                     assert forall|j2: int| 0 <= j2 < nv as int implies
                         coin_flips@.contains_key(vertices_vec@[j2]@) &&
                         (coin_flips@[vertices_vec@[j2]@] ==>
-                         p_vec@.update(idx as usize as int, (*vertex).clone_view())[j2]@ == vertices_vec@[j2]@) by {
+                         p_vec@.update(idx as usize as int, *vertex)[j2]@ == vertices_vec@[j2]@) by {
                         if j2 != idx as usize as int {
-                            assert(p_vec@.update(idx as usize as int, (*vertex).clone_view())[j2] == p_vec@[j2]);
+                            assert(p_vec@.update(idx as usize as int, *vertex)[j2] == p_vec@[j2]);
                         }
                         // j2 == idx: implication is false => true (coin_flips[tail] = false).
                     };
                     // Modified entries point to heads: for j == idx, new_val is heads.
                     assert forall|j2: int| 0 <= j2 < nv as int implies
-                        p_vec@.update(idx as usize as int, (*vertex).clone_view())[j2]@ != vertices_vec@[j2]@ ==>
-                        (coin_flips@.contains_key(p_vec@.update(idx as usize as int, (*vertex).clone_view())[j2]@) &&
-                         coin_flips@[p_vec@.update(idx as usize as int, (*vertex).clone_view())[j2]@]) by {
+                        p_vec@.update(idx as usize as int, *vertex)[j2]@ != vertices_vec@[j2]@ ==>
+                        (coin_flips@.contains_key(p_vec@.update(idx as usize as int, *vertex)[j2]@) &&
+                         coin_flips@[p_vec@.update(idx as usize as int, *vertex)[j2]@]) by {
                         if j2 == idx as usize as int {
-                            assert(p_vec@.update(idx as usize as int, (*vertex).clone_view())[j2]@ == new_val);
+                            assert(p_vec@.update(idx as usize as int, *vertex)[j2]@ == new_val);
                             assert(coin_flips@[new_val]);
                         } else {
-                            assert(p_vec@.update(idx as usize as int, (*vertex).clone_view())[j2] == p_vec@[j2]);
+                            assert(p_vec@.update(idx as usize as int, *vertex)[j2] == p_vec@[j2]);
                         }
                     };
                     // vertex_to_index: for j == idx, new_val = th_edges[t].1 has vertex_to_index entry.
                     assert forall|j2: int| 0 <= j2 < nv as int implies
-                        vertex_to_index@.contains_key(p_vec@.update(idx as usize as int, (*vertex).clone_view())[j2]@) &&
-                        vertex_to_index@[p_vec@.update(idx as usize as int, (*vertex).clone_view())[j2]@] as usize < nv by {
+                        #[trigger] vertex_to_index@.contains_key(p_vec@.update(idx as usize as int, *vertex)[j2]@) &&
+                        (vertex_to_index@[p_vec@.update(idx as usize as int, *vertex)[j2]@] as usize) < nv by {
                         if j2 == idx as usize as int {
-                            assert(p_vec@.update(idx as usize as int, (*vertex).clone_view())[j2]@ == new_val);
+                            assert(p_vec@.update(idx as usize as int, *vertex)[j2]@ == new_val);
                             assert(vertex_to_index@.contains_key(new_val));
-                            assert(vertex_to_index@[new_val] as usize < nv);
+                            assert((vertex_to_index@[new_val] as usize) < nv);
                         } else {
-                            assert(p_vec@.update(idx as usize as int, (*vertex).clone_view())[j2] == p_vec@[j2]);
+                            assert(p_vec@.update(idx as usize as int, *vertex)[j2] == p_vec@[j2]);
                         }
                     };
                 }
@@ -431,7 +434,7 @@ pub mod StarPartitionMtEph {
                 // All p_vec entries in vertex_to_index.
                 forall|j2: int| 0 <= j2 < nv as int ==>
                     vertex_to_index@.contains_key(#[trigger] p_vec@[j2]@) &&
-                    vertex_to_index@[p_vec@[j2]@] as usize < nv,
+                    (vertex_to_index@[p_vec@[j2]@] as usize) < nv,
                 // vertex_to_index domain.
                 forall|j2: int| 0 <= j2 < nv as int ==>
                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
