@@ -188,6 +188,7 @@ pub mod PrimStEph {
     /// Module-level function to create a new PQEntry.
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    // veracity: no_requires
     fn pq_entry_new<V: HashOrd>(priority: u64, vertex: V, parent: Option<V>) -> (entry: PQEntry<V>)
         ensures entry.priority == priority, entry.vertex == vertex, entry.parent == parent,
     {

@@ -229,6 +229,7 @@ pub mod KruskalStEph {
     }
 
     /// Sort edges by weight — selection sort.
+    // veracity: no_requires
     fn sort_edges_by_weight<V: HashOrd>(edges: &mut Vec<LabEdge<V, u64>>)
         ensures
             edges@.len() == old(edges)@.len(),
