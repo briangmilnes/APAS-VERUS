@@ -928,6 +928,10 @@ pub mod UnionFindStEph {
             old(uf)@.roots[root_v@] == root_v@,
             old(uf)@.parent[root_u@]@ == root_u@,
             old(uf)@.parent[root_v@]@ == root_v@,
+            // Rank bounded by elements length — prevents overflow on rank increment.
+            // True invariant of union-by-rank: 2^rank <= component_size <= elements.len().
+            old(uf).rank@[root_u@] < old(uf).elements@.len(),
+            old(uf).rank@[root_v@] < old(uf).elements@.len(),
         ensures
             ((info@.winner_view == root_u@ && info@.loser_view == root_v@) ||
              (info@.winner_view == root_v@ && info@.loser_view == root_u@)),
@@ -977,9 +981,14 @@ pub mod UnionFindStEph {
             uf.parent.insert(rv1, ru1);
             if rank_u == rank_v {
                 let ru2 = root_u.clone();
+                let ghost elem_len = uf.elements.len();
                 proof {
                     assert(strictly_cloned(root_u, ru2));
-                    admit(); // Overflow: rank bounded by log2(n) < 64 (2^rank theorem).
+                    // rank_u < elements.len() (from requires). elements.len() is usize,
+                    // so rank_u < usize::MAX, and rank_u + 1 <= usize::MAX.
+                    assert(rank_u < old(uf).elements@.len());
+                    assert(elem_len <= usize::MAX);
+                    assert(old(uf).elements@.len() == elem_len as nat);
                 }
                 uf.rank.insert(ru2, rank_u + 1);
             }
