@@ -554,8 +554,8 @@ pub mod Chap52 {
     pub mod AdjMatrixGraphStPer;
     pub mod AdjMatrixGraphMtEph;
     pub mod AdjMatrixGraphMtPer;
-//    pub mod AdjTableGraphStEph;  // BROKEN: sst_to_air bug GONE, needs Table API proof work
-//    pub mod AdjTableGraphStPer;  // BROKEN: same
+    pub mod AdjTableGraphStEph;
+    pub mod AdjTableGraphStPer;
     pub mod AdjTableGraphMtPer;
     pub mod EdgeSetGraphStEph;
     pub mod EdgeSetGraphStPer;

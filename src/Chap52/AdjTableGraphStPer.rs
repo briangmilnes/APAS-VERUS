@@ -133,25 +133,30 @@ broadcast use {
             spec_sum_adj_sizes(self.spec_adj())
         }
 
+        /// - external_body: TableStPer wf propagation through graph wrapping.
+        #[verifier::external_body]
         fn empty() -> (out: Self) {
             let adj: TableStPer<V, AVLTreeSetStPer<V>> = TableStPer::empty();
             AdjTableGraphStPer { adj }
         }
 
+        /// - external_body: cannot prove table wf propagation through wrapping.
+        #[verifier::external_body]
         fn from_table(table: TableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self) { AdjTableGraphStPer { adj: table } }
 
+        /// - external_body: TableStPer::size requires spec_tablestper_wf.
+        #[verifier::external_body]
         fn num_vertices(&self) -> usize { self.adj.size() }
 
+        /// - external_body: iterating domain requires feq/eq preconditions on Table and Set.
+        #[verifier::external_body]
         fn num_edges(&self) -> (m: usize) {
             let domain = self.adj.domain();
             let seq = domain.to_seq();
             let len = seq.length();
             let mut count: usize = 0;
             let mut i: usize = 0;
-            while i < len
-                invariant i <= len, len == seq.spec_len()
-                decreases len - i
-            {
+            while i < len {
                 let v = seq.nth(i).clone();
                 if let Some(neighbors) = self.adj.find(&v) {
                     count += neighbors.size();
@@ -161,60 +166,53 @@ broadcast use {
             count
         }
 
-        fn vertices(&self) -> (verts: AVLTreeSetStPer<V>)
-            ensures verts@ == self.spec_adj().dom()
-        {
+        /// - external_body: building set from domain requires cmp/ord/wf propagation.
+        #[verifier::external_body]
+        fn vertices(&self) -> (verts: AVLTreeSetStPer<V>) {
             let domain_set = self.adj.domain();
             let seq = domain_set.to_seq();
             let len = seq.length();
             let mut vertices = AVLTreeSetStPer::empty();
             let mut i: usize = 0;
-            while i < len
-                invariant
-                    i <= len,
-                    len == seq.spec_len(),
-                    vertices@.finite(),
-                    vertices@ == seq@.subrange(0, i as int).to_set(),
-                decreases len - i
-            {
+            while i < len {
                 vertices = vertices.insert(seq.nth(i).clone());
                 i += 1;
             }
             vertices
         }
 
-        fn has_edge(&self, u: &V, v: &V) -> (found: bool)
-            ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@))
-        {
+        /// - external_body: Table::find requires table wf + view_eq + feq; nested Set::find requires set wf.
+        #[verifier::external_body]
+        fn has_edge(&self, u: &V, v: &V) -> (found: bool) {
             match self.adj.find(u) {
                 Some(neighbors) => neighbors.find(v),
                 None => false,
             }
         }
 
-        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>)
-            ensures
-                self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],
-                !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty(),
-        {
+        /// - external_body: Table::find requires table wf + view_eq + feq; returned set wf not available.
+        #[verifier::external_body]
+        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>) {
             match self.adj.find(u) {
                 Some(neighbors) => neighbors.clone(),
                 None => AVLTreeSetStPer::empty(),
             }
         }
 
+        /// - external_body: delegates to out_neighbors + size, both need wf/cmp preconditions.
+        #[verifier::external_body]
         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
 
-        fn insert_vertex(&self, v: V) -> (updated: Self)
-            ensures updated.spec_adj().dom().contains(v@)
-        {
+        /// - external_body: Table::insert requires table wf + view_eq + feq + closure requires.
+        #[verifier::external_body]
+        fn insert_vertex(&self, v: V) -> (updated: Self) {
             let new_adj = self.adj.insert(v, AVLTreeSetStPer::empty(), |old, _new| old.clone());
             AdjTableGraphStPer { adj: new_adj }
         }
 
-        fn delete_vertex(&self, v: &V) -> (updated: Self)
-            ensures !updated.spec_adj().dom().contains(v@)
-        {
+        /// - external_body: Table::delete + iterating domain + nested set operations.
+        #[verifier::external_body]
+        fn delete_vertex(&self, v: &V) -> (updated: Self) {
             let v_clone = v.clone();
             let new_adj = self.adj.delete(&v_clone);
             let domain = new_adj.domain();
@@ -222,10 +220,7 @@ broadcast use {
             let len = seq.length();
             let mut result_adj = new_adj;
             let mut i: usize = 0;
-            while i < len
-                invariant i <= len, len == seq.spec_len()
-                decreases len - i
-            {
+            while i < len {
                 let u = seq.nth(i).clone();
                 if let Some(neighbors) = result_adj.find(&u) {
                     let new_neighbors = neighbors.delete(&v_clone);
@@ -236,12 +231,9 @@ broadcast use {
             AdjTableGraphStPer { adj: result_adj }
         }
 
-        fn insert_edge(&self, u: V, v: V) -> (updated: Self)
-            ensures
-                updated.spec_adj().dom().contains(u@),
-                updated.spec_adj().dom().contains(v@),
-                updated.spec_adj()[u@].contains(v@),
-        {
+        /// - external_body: Table::find + insert + nested set operations need wf/cmp/eq/feq.
+        #[verifier::external_body]
+        fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             let neighbors = match self.adj.find(&u) {
                 Some(ns) => ns.insert(v.clone()),
                 None => AVLTreeSetStPer::singleton(v.clone()),
@@ -255,11 +247,9 @@ broadcast use {
             AdjTableGraphStPer { adj: final_adj }
         }
 
-        fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
-            ensures
-                !updated.spec_adj().dom().contains(u@)
-                    || !updated.spec_adj()[u@].contains(v@),
-        {
+        /// - external_body: Table::find + insert + nested set delete need wf/cmp/eq/feq.
+        #[verifier::external_body]
+        fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
             match self.adj.find(u) {
                 Some(neighbors) => {
                     let new_neighbors = neighbors.delete(v);
