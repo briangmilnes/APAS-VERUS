@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap62/StarContractionStEph.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap62/StarPartitionMtEph.rs
 Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,7 +20,11 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-✓ StarContractionStEph.rs
+❌ StarPartitionMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap62/StarPartitionMtEph.rs:72: error: external_body - #[verifier::external_body]
+        73 |     pub fn parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
+   Holes: 1 total
+      1 × external_body
 
 =================================================================
 2. Depends Upon
@@ -30,21 +34,21 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
-StarContractionStEph  depends upon only clean modules
+StarPartitionMtEph  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
-StarContractionStEph.rs  depends upon only clean modules
+StarPartitionMtEph.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   1 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   0 clean (no holes, no errors; 0%)
+   1 holed (holes or errors, 100%)
    1 total
 
 Proof Functions:
@@ -53,24 +57,23 @@ Proof Functions:
    0 total
 
 Function Specs:
-   6 exec fns with complete spec (requires+ensures) (85%)
+   2 exec fns with complete spec (requires+ensures) (50%)
    0 exec fns missing spec (0%)
-   1 proof/spec fns clean (14%)
+   2 proof/spec fns clean (50%)
    0 proof/spec fns with holes (0%)
-   7 total fns
+   4 total fns
 
 
-Holes Found: 0 (actionable)
-Real Proof Targets: 0 (all actionable)
-
-No proof holes or warnings found! All proofs are complete.
+Holes Found: 1 (actionable)
+   1 × external_body (100%)
+Real Proof Targets: 1 (all actionable)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 13:13:20 -07:00
-Ended:     2026-03-27 13:13:20 -07:00
-Duration:  6ms
+Started:   2026-03-27 13:20:27 -07:00
+Ended:     2026-03-27 13:20:27 -07:00
+Duration:  9ms
 
 Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
