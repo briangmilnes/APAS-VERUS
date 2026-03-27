@@ -11,8 +11,11 @@ pub mod EdgeSetGraphMtPer {
     use crate::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::AVLTreeSeqMtPerTrait;
     use crate::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
     #[cfg(verus_keep_ghost)]
     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpec;
 
     verus! {
 
@@ -20,6 +23,7 @@ pub mod EdgeSetGraphMtPer {
     broadcast use {
         vstd::set::group_set_axioms,
         vstd::set_lib::group_set_lib_default,
+        crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
     // Table of Contents
@@ -27,6 +31,7 @@ pub mod EdgeSetGraphMtPer {
     // 2. imports (above)
     // 4. type definitions
     // 5. view impls
+    // 7. proof fns
     // 8. traits
     // 9. impls
     // 11. derive impls in verus!
@@ -34,21 +39,35 @@ pub mod EdgeSetGraphMtPer {
     // 4. type definitions
 
     #[verifier::reject_recursive_types(V)]
-    pub struct EdgeSetGraphMtPer<V: StTInMtT + Ord + 'static> {
+    pub struct EdgeSetGraphMtPer<V: StTInMtT + Ord + ClonePreservesView + 'static> {
         pub vertices: AVLTreeSetMtPer<V>,
         pub edges: AVLTreeSetMtPer<Pair<V, V>>,
     }
 
     // 5. view impls
 
-    impl<V: StTInMtT + Ord + 'static> View for EdgeSetGraphMtPer<V> {
+    impl<V: StTInMtT + Ord + ClonePreservesView + 'static> View for EdgeSetGraphMtPer<V> {
         type V = Self;
         open spec fn view(&self) -> Self::V { *self }
     }
 
+    // 7. proof fns
+
+    /// Bridges PartialEq's eq_spec to View equality via the cmp chain.
+    proof fn lemma_eq_spec_iff_view_eq<V: StTInMtT + Ord>()
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            view_ord_consistent::<V>(),
+        ensures
+            forall|a: V, b: V| #[trigger] a.eq_spec(&b) <==> (a@ == b@),
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_partial_ord);
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+    }
+
     // 8. traits
 
-    pub trait EdgeSetGraphMtPerTrait<V: StTInMtT + Ord + 'static>: Sized {
+    pub trait EdgeSetGraphMtPerTrait<V: StTInMtT + Ord + ClonePreservesView + 'static>: Sized {
         spec fn spec_edgesetgraphmtper_wf(&self) -> bool;
         spec fn spec_vertices(&self) -> Set<<V as View>::V>;
         spec fn spec_edges(&self) -> Set<(<V as View>::V, <V as View>::V)>;
@@ -92,7 +111,9 @@ pub mod EdgeSetGraphMtPer {
         /// Work Theta(|E| log |V|), Span Theta(log |E| * log |V|)
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)
             requires self.spec_edgesetgraphmtper_wf()
-            ensures neighbors@ == Set::new(|v: <V as View>::V| self.spec_edges().contains((u@, v)));
+            ensures
+                neighbors@ == Set::new(|v: <V as View>::V| self.spec_edges().contains((u@, v))),
+                neighbors.spec_avltreesetmtper_wf();
         /// Work Theta(|E|), Span Theta(log |E|)
         fn out_degree(&self, u: &V) -> usize
             requires self.spec_edgesetgraphmtper_wf();
@@ -116,7 +137,7 @@ pub mod EdgeSetGraphMtPer {
 
     // 9. impls
 
-    impl<V: StTInMtT + Ord + 'static> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    impl<V: StTInMtT + Ord + ClonePreservesView + 'static> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
         open spec fn spec_edgesetgraphmtper_wf(&self) -> bool {
             self.vertices.spec_avltreesetmtper_wf()
             && self.edges.spec_avltreesetmtper_wf()
@@ -158,38 +179,68 @@ pub mod EdgeSetGraphMtPer {
 
         fn has_edge(&self, u: &V, v: &V) -> bool { self.edges.find(&Pair(u.clone(), v.clone())) }
 
-        /// - APAS: Work Θ(m), Span Θ(lg n) [Cost Spec 52.1]
-        /// - external_body: AVLTreeSetMtPer::filter requires Pred+Clone, Verus cannot verify Clone on closures.
-        #[verifier::external_body]
+        /// - APAS: Work Theta(m), Span Theta(lg n) [Cost Spec 52.1]
+        /// - Claude-Opus-4.6: Work Theta(|E| log |V|), Span Theta(|E| log |V|) — sequential iterate+insert.
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)
-            ensures neighbors@ == Set::new(|v: <V as View>::V| self.spec_edges().contains((u@, v)))
         {
-            let u_clone = u.clone();
-            let filtered = self.edges.filter(
-                move |edge: &Pair<V, V>| {
-                    let Pair(eu, _) = edge;
-                    *eu == u_clone
-                },
-                Ghost(|v: (V::V, V::V)| v.0 == u@),
-            );
-            let seq = filtered.to_seq();
+            proof { lemma_eq_spec_iff_view_eq::<V>(); }
+            let seq = self.edges.to_seq();
             let len = seq.length();
             let mut neighbors = AVLTreeSetMtPer::<V>::empty();
             let mut i: usize = 0;
-            while i < len {
-                let elem: &Pair<V, V> = seq.nth(i);
-                let Pair(_, v) = elem;
-                let v_clone: V = v.clone();
-                neighbors = neighbors.insert(v_clone);
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            while i < len
+                invariant
+                    len as nat == seq.spec_seq().len(),
+                    i <= len,
+                    seq.spec_avltreeseqmtper_wf(),
+                    neighbors.spec_avltreesetmtper_wf(),
+                    self.spec_edgesetgraphmtper_wf(),
+                    seq.spec_seq().to_set() =~= self.edges@,
+                    forall|w: <V as View>::V| #[trigger] neighbors@.contains(w) ==>
+                        self.edges@.contains((u@, w)),
+                    forall|j: int| 0 <= j < i ==>
+                        (#[trigger] seq.spec_seq()[j]).0 == u@
+                        ==> neighbors@.contains(seq.spec_seq()[j].1),
+                decreases len - i,
+            {
+                let elem = seq.nth(i);
+                if elem.0 == *u {
+                    let w = elem.1.clone_view();
+                    proof {
+                        assert(seq.spec_seq().to_set().contains(seq.spec_seq()[i as int]));
+                        assert(self.edges@.contains(seq.spec_seq()[i as int]));
+                        assert(seq.spec_seq()[i as int].0 == u@);
+                    }
+                    neighbors = neighbors.insert(w);
+                }
                 i += 1;
             }
+
+            proof {
+                assert forall|v: <V as View>::V|
+                    Set::new(|v: <V as View>::V| self.spec_edges().contains((u@, v))).contains(v)
+                    implies #[trigger] neighbors@.contains(v) by {
+                    assert(self.edges@.contains((u@, v)));
+                    assert(seq.spec_seq().to_set().contains((u@, v)));
+                    let j = choose|j: int| 0 <= j < seq.spec_seq().len() && seq.spec_seq()[j] == (u@, v);
+                    assert(seq.spec_seq()[j].0 == u@);
+                    assert(seq.spec_seq()[j].1 == v);
+                }
+                assert forall|v: <V as View>::V|
+                    #[trigger] neighbors@.contains(v)
+                    implies Set::new(|v: <V as View>::V| self.spec_edges().contains((u@, v))).contains(v) by {
+                    assert(self.edges@.contains((u@, v)));
+                }
+                assert(neighbors@ =~= Set::new(|v: <V as View>::V| self.spec_edges().contains((u@, v))));
+            }
+
             neighbors
         }
 
-        /// - APAS: Work Θ(m), Span Θ(lg n) [Cost Spec 52.1]
-        /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — delegates to out_neighbors.
-        /// - external_body: out_neighbors ensures doesn't include wf, size() requires wf.
-        #[verifier::external_body]
+        /// - APAS: Work Theta(m), Span Theta(lg n) [Cost Spec 52.1, degree of vertex]
+        /// - Claude-Opus-4.6: Work Theta(|E| log |V|), Span Theta(|E| log |V|) — delegates to out_neighbors.
         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
 
         fn insert_vertex(&self, v: V) -> (updated: Self) {
@@ -206,50 +257,101 @@ pub mod EdgeSetGraphMtPer {
             }
         }
 
-        /// - external_body: AVLTreeSetMtPer::filter requires Pred+Clone, Verus cannot verify Clone on closures.
-        #[verifier::external_body]
+        /// - APAS: Work Theta(|E| log |E|), Span Theta(log |E| * log |V|)
+        /// - Claude-Opus-4.6: Work Theta(|E| log |E|), Span Theta(|E| log |E|) — sequential iterate+insert.
         fn delete_vertex(&self, v: &V) -> (updated: Self)
-            ensures !updated.spec_vertices().contains(v@)
         {
-            let v_clone = v.clone();
-            let new_vertices = self.vertices.delete(&v_clone);
-            let new_edges = self.edges.filter(
-                |edge: &Pair<V, V>| {
-                    let Pair(u, w) = edge;
-                    *u != v_clone && *w != v_clone
-                },
-                Ghost(|p: (V::V, V::V)| p.0 != v@ && p.1 != v@),
-            );
+            proof { lemma_eq_spec_iff_view_eq::<V>(); }
+            let v_cv = v.clone_view();
+            let new_vertices = self.vertices.delete(&v_cv);
+            let seq = self.edges.to_seq();
+            let len = seq.length();
+            let mut new_edges = AVLTreeSetMtPer::<Pair<V, V>>::empty();
+            let mut i: usize = 0;
+
+            #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+            while i < len
+                invariant
+                    len as nat == seq.spec_seq().len(),
+                    i <= len,
+                    seq.spec_avltreeseqmtper_wf(),
+                    new_edges.spec_avltreesetmtper_wf(),
+                    self.spec_edgesetgraphmtper_wf(),
+                    v_cv@ == v@,
+                    new_vertices@ == self.vertices@.remove(v@),
+                    seq.spec_seq().to_set() =~= self.edges@,
+                    forall|a: <V as View>::V, b: <V as View>::V|
+                        #[trigger] new_edges@.contains((a, b))
+                        ==> self.edges@.contains((a, b)) && a != v@ && b != v@,
+                    forall|j: int| 0 <= j < i ==>
+                        (seq.spec_seq()[j].0 != v@ && seq.spec_seq()[j].1 != v@)
+                        ==> #[trigger] new_edges@.contains(seq.spec_seq()[j]),
+                decreases len - i,
+            {
+                let elem = seq.nth(i);
+                if !(elem.0 == *v) && !(elem.1 == *v) {
+                    let e = Pair(elem.0.clone_view(), elem.1.clone_view());
+                    proof {
+                        assert(seq.spec_seq().to_set().contains(seq.spec_seq()[i as int]));
+                        assert(self.edges@.contains(seq.spec_seq()[i as int]));
+                        assert(e@ == seq.spec_seq()[i as int]);
+                    }
+                    new_edges = new_edges.insert(e);
+                }
+                i += 1;
+            }
+
+            proof {
+                assert forall|a: <V as View>::V, b: <V as View>::V|
+                    #[trigger] new_edges@.contains((a, b))
+                    implies new_vertices@.contains(a) && new_vertices@.contains(b) by {
+                    assert(self.edges@.contains((a, b)));
+                    assert(a != v@ && b != v@);
+                    assert(self.vertices@.contains(a));
+                    assert(self.vertices@.contains(b));
+                }
+            }
+
             EdgeSetGraphMtPer {
                 vertices: new_vertices,
                 edges: new_edges,
             }
         }
 
-        /// - external_body: clone-view bridging prevents proving vertex containment through chained inserts.
-        #[verifier::external_body]
         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
-            let new_vertices = self.vertices.insert(u.clone()).insert(v.clone());
+            let u_cv = u.clone_view();
+            let v_cv = v.clone_view();
+            let new_vertices = self.vertices.insert(u_cv).insert(v_cv);
             let new_edges = self.edges.insert(Pair(u, v));
+            proof {
+                assert forall|a: <V as View>::V, b: <V as View>::V|
+                    #[trigger] new_edges@.contains((a, b))
+                    implies new_vertices@.contains(a) && new_vertices@.contains(b) by {}
+            }
             EdgeSetGraphMtPer {
                 vertices: new_vertices,
                 edges: new_edges,
             }
         }
 
-        /// - external_body: Pair view bridging through delete prevents proving edge invariant.
-        #[verifier::external_body]
         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
+            let new_edges = self.edges.delete(&Pair(u.clone(), v.clone()));
+            let new_vertices = self.vertices.clone();
+            proof {
+                assert forall|a: <V as View>::V, b: <V as View>::V|
+                    #[trigger] new_edges@.contains((a, b))
+                    implies new_vertices@.contains(a) && new_vertices@.contains(b) by {}
+            }
             EdgeSetGraphMtPer {
-                vertices: self.vertices.clone(),
-                edges: self.edges.delete(&Pair(u.clone(), v.clone())),
+                vertices: new_vertices,
+                edges: new_edges,
             }
         }
     }
 
     // 11. derive impls in verus!
 
-    impl<V: StTInMtT + Ord + 'static> Default for EdgeSetGraphMtPer<V> {
+    impl<V: StTInMtT + Ord + ClonePreservesView + 'static> Default for EdgeSetGraphMtPer<V> {
         #[verifier::external_body]
         fn default() -> Self { Self::empty() }
     }
