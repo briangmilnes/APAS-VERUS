@@ -85,7 +85,7 @@ pub mod VertexMatchingMtEph {
     ///
     /// - APAS: Work Θ(|E|), Span Θ(1) — each coin is independent
     /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — RNG is sequential, no actual parallelism
-    fn flip_coins_parallel<V: StT + MtT + 'static>(
+    fn flip_coins_parallel<V: StT + MtT + Hash + 'static>(
         edges: &ArraySeqStEphS<Edge<V>>,
         seed: u64,
     ) -> (result: ArraySeqStEphS<bool>)
@@ -102,8 +102,9 @@ pub mod VertexMatchingMtEph {
         let mut i: usize = 0;
         while i < n
             invariant
-                n == edges.length(),
+                n == edges@.len(),
                 i <= n,
+            decreases n - i,
         {
             coins_vec.push(random_bool_seeded(&mut rng));
             i = i + 1;
@@ -220,7 +221,7 @@ pub mod VertexMatchingMtEph {
         for adj_edge in graph.edges().iter()
             invariant valid_key_type_Edge::<V>(),
         {
-            if adj_edge != edge {
+            if !(adj_edge.0 == edge.0 && adj_edge.1 == edge.1) {
                 if graph.incident(adj_edge, u) || graph.incident(adj_edge, v) {
                     let adj_coin = match edge_coins.get(adj_edge) {
                         Some(val) => *val,
