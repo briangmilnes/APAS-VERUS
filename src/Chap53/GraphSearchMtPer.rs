@@ -20,7 +20,6 @@ pub mod GraphSearchMtPer {
     broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
     // 4. type definitions
-    #[derive(Clone)]
     #[verifier::reject_recursive_types(V)]
     pub struct SearchResult<V: StTInMtT + Ord + 'static> {
         pub visited: AVLTreeSetMtPer<V>,
@@ -213,6 +212,17 @@ pub mod GraphSearchMtPer {
     {
         let result = graph_search(graph, source, &SelectAll);
         result.visited
+    }
+
+    // 12. derive impls in verus!
+
+    impl<V: StTInMtT + Ord + 'static> Clone for SearchResult<V> {
+        fn clone(&self) -> (result: Self) {
+            SearchResult {
+                visited: self.visited.clone(),
+                parent: self.parent.clone(),
+            }
+        }
     }
 
     } // verus!

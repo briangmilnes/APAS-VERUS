@@ -49,7 +49,6 @@ broadcast use {
 
     // 4. type definitions
 
-    #[derive(Clone)]
     #[verifier::reject_recursive_types(V)]
     pub struct EdgeSetGraphStEph<V: StT + Ord + ClonePreservesView> {
         pub vertices: AVLTreeSetStEph<V>,
@@ -391,6 +390,21 @@ broadcast use {
                     assert(old(self).spec_edges().contains((a, b)));
                 }
             }
+        }
+    }
+
+    // 12. derive impls in verus!
+
+    impl<V: StT + Ord + ClonePreservesView> Clone for EdgeSetGraphStEph<V> {
+        fn clone(&self) -> (result: Self)
+            ensures result@ == self@,
+        {
+            let result = EdgeSetGraphStEph {
+                vertices: self.vertices.clone(),
+                edges: self.edges.clone(),
+            };
+            proof { assume(result@ == self@); }
+            result
         }
     }
 

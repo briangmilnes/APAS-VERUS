@@ -15,6 +15,8 @@ pub mod EdgeSetGraphStPer {
     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpec;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
 
     verus! {
@@ -53,7 +55,6 @@ broadcast use {
 
     // 4. type definitions
 
-    #[derive(Clone, PartialEq, Eq)]
     #[verifier::reject_recursive_types(V)]
     pub struct EdgeSetGraphStPer<V: StT + Ord + ClonePreservesView> {
         pub vertices: AVLTreeSetStPer<V>,
@@ -360,6 +361,39 @@ broadcast use {
             }
         }
     }
+
+    // 12. derive impls in verus!
+
+    impl<V: StT + Ord + ClonePreservesView> Clone for EdgeSetGraphStPer<V> {
+        fn clone(&self) -> (result: Self)
+            ensures result@ == self@,
+        {
+            let result = EdgeSetGraphStPer {
+                vertices: self.vertices.clone(),
+                edges: self.edges.clone(),
+            };
+            proof { assume(result@ == self@); }
+            result
+        }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl<V: StT + Ord + ClonePreservesView + PartialEq> PartialEqSpecImpl for EdgeSetGraphStPer<V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl<V: StT + Ord + ClonePreservesView + PartialEq> PartialEq for EdgeSetGraphStPer<V> {
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@),
+        {
+            let equal = self.vertices == other.vertices && self.edges == other.edges;
+            proof { assume(equal == (self@ == other@)); }
+            equal
+        }
+    }
+
+    impl<V: StT + Ord + ClonePreservesView + Eq> Eq for EdgeSetGraphStPer<V> {}
 
     } // verus!
 
