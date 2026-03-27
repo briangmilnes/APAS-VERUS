@@ -160,6 +160,26 @@ pub mod UnionFindStEph {
             uf.rank@[v] <= uf.rank@[uf.roots@[v]]
     }
 
+    /// Closed conjunction of all sub-predicates. The open trait method delegates
+    /// to this so wf unfolds to one opaque boolean in exec contexts. Use
+    /// `reveal(spec_uf_wf)` in proof contexts to see the sub-predicate conjunction.
+    pub closed spec fn spec_uf_wf<V: StT + Hash>(uf: &UnionFindStEph<V>) -> bool {
+        &&& spec_key_model::<V>()
+        &&& spec_feq_full::<V>()
+        &&& spec_parent_rank_same_dom(uf)
+        &&& spec_roots_parent_same_dom(uf)
+        &&& spec_roots_idempotent(uf)
+        &&& spec_parent_closed(uf)
+        &&& spec_roots_in_dom(uf)
+        &&& spec_elements_forward(uf)
+        &&& spec_elements_backward(uf)
+        &&& spec_elements_distinct(uf)
+        &&& spec_self_parent_is_root(uf)
+        &&& spec_parent_preserves_root(uf)
+        &&& spec_rank_increases(uf)
+        &&& spec_rank_bounded(uf)
+    }
+
     // 7. proof fns
 
     /// Helper: prove that 3 cloned values are spec-equal to the original.
@@ -196,6 +216,20 @@ pub mod UnionFindStEph {
         ensures
             uf.spec_unionfindsteph_wf(),
     {
+        // Reveal spec_uf_wf to access sub-predicates, then reveal each closed
+        // sub-predicate for old_uf's quantifiers and new uf's proof.
+        reveal(spec_uf_wf);
+        reveal(spec_roots_idempotent);
+        reveal(spec_parent_closed);
+        reveal(spec_roots_in_dom);
+        reveal(spec_elements_forward);
+        reveal(spec_elements_backward);
+        reveal(spec_elements_distinct);
+        reveal(spec_self_parent_is_root);
+        reveal(spec_parent_preserves_root);
+        reveal(spec_rank_increases);
+        reveal(spec_rank_bounded);
+
         let old_p = old_uf.parent@;
         let old_r = old_uf.rank@;
         let old_e = old_uf.elements@;
@@ -278,6 +312,11 @@ pub mod UnionFindStEph {
             uf@.parent.contains_key(rv),
             uf@.parent[rv]@ == rv,
     {
+        reveal(spec_uf_wf);
+        reveal(spec_rank_increases);
+        reveal(spec_parent_preserves_root);
+        reveal(spec_rank_bounded);
+        reveal(spec_parent_closed);
         if uf.parent@[rv]@ != rv {
             assert(uf.rank@[rv] < uf.rank@[uf.parent@[rv]@]);
             assert(uf.roots@[uf.parent@[rv]@] == rv);
@@ -425,19 +464,19 @@ pub mod UnionFindStEph {
     /// Part 1b: parent wf conjuncts after union (closed, self-parent, preserves root).
     #[verifier::rlimit(60)]
     proof fn lemma_union_wf_parent<V: StT + Hash>(
-        uf: UnionFindStEph<V>,
-        mid: UnionFindStEph<V>,
+        uf: &UnionFindStEph<V>,
+        mid: &UnionFindStEph<V>,
         winner_val: V,
         root_u_view: <V as View>::V,
         root_v_view: <V as View>::V,
         winner_view: <V as View>::V,
         loser_view: <V as View>::V,
     )
-        requires spec_union_lemma_pre(&uf, &mid, winner_val, root_u_view, root_v_view, winner_view, loser_view),
+        requires spec_union_lemma_pre(uf, mid, winner_val, root_u_view, root_v_view, winner_view, loser_view),
         ensures
-            spec_parent_closed(&uf),
-            spec_self_parent_is_root(&uf),
-            spec_parent_preserves_root(&uf),
+            spec_parent_closed(uf),
+            spec_self_parent_is_root(uf),
+            spec_parent_preserves_root(uf),
     {
         reveal(spec_union_lemma_pre);
         reveal(spec_parent_closed);
@@ -504,18 +543,18 @@ pub mod UnionFindStEph {
     /// Part 2: ordering wf conjuncts after union (rank_increases, rank_bounded).
     #[verifier::rlimit(80)]
     proof fn lemma_union_wf_ordering<V: StT + Hash>(
-        uf: UnionFindStEph<V>,
-        mid: UnionFindStEph<V>,
+        uf: &UnionFindStEph<V>,
+        mid: &UnionFindStEph<V>,
         winner_val: V,
         root_u_view: <V as View>::V,
         root_v_view: <V as View>::V,
         winner_view: <V as View>::V,
         loser_view: <V as View>::V,
     )
-        requires spec_union_lemma_pre(&uf, &mid, winner_val, root_u_view, root_v_view, winner_view, loser_view),
+        requires spec_union_lemma_pre(uf, mid, winner_val, root_u_view, root_v_view, winner_view, loser_view),
         ensures
-            spec_rank_increases(&uf),
-            spec_rank_bounded(&uf),
+            spec_rank_increases(uf),
+            spec_rank_bounded(uf),
     {
         reveal(spec_union_lemma_pre);
         reveal(spec_rank_increases);
@@ -607,6 +646,11 @@ pub mod UnionFindStEph {
         ensures
             uf@.rank[cv] < uf@.rank[rv],
     {
+        reveal(spec_uf_wf);
+        reveal(spec_self_parent_is_root);
+        reveal(spec_rank_increases);
+        reveal(spec_parent_preserves_root);
+        reveal(spec_rank_bounded);
         // cv is not a self-parent: if parent[cv]@ == cv, wf says roots[cv] == cv, but roots[cv] == rv != cv.
         assert(uf.parent@[cv]@ != cv) by {
             if uf.parent@[cv]@ == cv { assert(uf.roots@[cv] == cv); }
@@ -621,8 +665,6 @@ pub mod UnionFindStEph {
     }
 
     /// Decompose the monolithic wf into individual sub-predicates.
-    /// The 5 closed predicates (parent_closed, self_parent_is_root,
-    /// parent_preserves_root, rank_increases, rank_bounded) require reveal.
     proof fn lemma_decompose_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
         requires uf.spec_unionfindsteph_wf(),
         ensures
@@ -641,16 +683,7 @@ pub mod UnionFindStEph {
             spec_rank_increases(uf),
             spec_rank_bounded(uf),
     {
-        reveal(spec_roots_idempotent);
-        reveal(spec_parent_closed);
-        reveal(spec_roots_in_dom);
-        reveal(spec_elements_forward);
-        reveal(spec_elements_backward);
-        reveal(spec_elements_distinct);
-        reveal(spec_self_parent_is_root);
-        reveal(spec_parent_preserves_root);
-        reveal(spec_rank_increases);
-        reveal(spec_rank_bounded);
+        reveal(spec_uf_wf);
     }
 
     /// Assemble the monolithic wf from individual sub-predicates.
@@ -673,16 +706,7 @@ pub mod UnionFindStEph {
         ensures
             uf.spec_unionfindsteph_wf(),
     {
-        reveal(spec_roots_idempotent);
-        reveal(spec_parent_closed);
-        reveal(spec_roots_in_dom);
-        reveal(spec_elements_forward);
-        reveal(spec_elements_backward);
-        reveal(spec_elements_distinct);
-        reveal(spec_self_parent_is_root);
-        reveal(spec_parent_preserves_root);
-        reveal(spec_rank_increases);
-        reveal(spec_rank_bounded);
+        reveal(spec_uf_wf);
     }
 
     /// Chase parent pointers to the root (no mutation).
@@ -696,6 +720,14 @@ pub mod UnionFindStEph {
             uf@.parent.contains_key(root@),
             uf@.roots[root@] == root@,
     {
+        proof {
+            reveal(spec_uf_wf);
+            reveal(spec_parent_closed);
+            reveal(spec_rank_increases);
+            reveal(spec_rank_bounded);
+            reveal(spec_parent_preserves_root);
+            reveal(spec_self_parent_is_root);
+        }
         let mut current = v.clone();
         proof {
             assert(strictly_cloned(*v, current));
@@ -815,16 +847,16 @@ pub mod UnionFindStEph {
     /// and roots_in_dom internally so the caller stays quantifier-free.
     #[verifier::rlimit(50)]
     proof fn lemma_union_wf_roots_closed<V: StT + Hash>(
-        uf: UnionFindStEph<V>,
-        mid: UnionFindStEph<V>,
+        uf: &UnionFindStEph<V>,
+        mid: &UnionFindStEph<V>,
         root_u_view: <V as View>::V,
         root_v_view: <V as View>::V,
         winner_view: <V as View>::V,
     )
         requires
-            spec_roots_idempotent(&mid),
-            spec_roots_in_dom(&mid),
-            spec_roots_parent_same_dom(&mid),
+            spec_roots_idempotent(mid),
+            spec_roots_in_dom(mid),
+            spec_roots_parent_same_dom(mid),
             root_u_view != root_v_view,
             mid.roots@.contains_key(root_u_view),
             mid.roots@.contains_key(root_v_view),
@@ -843,8 +875,8 @@ pub mod UnionFindStEph {
             ),
             uf.parent@.dom() =~= mid.parent@.dom(),
         ensures
-            spec_roots_idempotent(&uf),
-            spec_roots_in_dom(&uf),
+            spec_roots_idempotent(uf),
+            spec_roots_in_dom(uf),
     {
         reveal(spec_roots_idempotent);
         reveal(spec_roots_in_dom);
@@ -856,19 +888,19 @@ pub mod UnionFindStEph {
 
     /// Frame lemma: elements predicates transfer when elements and parent.dom are unchanged.
     proof fn lemma_union_wf_frame<V: StT + Hash>(
-        uf: UnionFindStEph<V>,
-        mid: UnionFindStEph<V>,
+        uf: &UnionFindStEph<V>,
+        mid: &UnionFindStEph<V>,
     )
         requires
-            spec_elements_forward(&mid),
-            spec_elements_backward(&mid),
-            spec_elements_distinct(&mid),
+            spec_elements_forward(mid),
+            spec_elements_backward(mid),
+            spec_elements_distinct(mid),
             uf.elements@ =~= mid.elements@,
             uf.parent@.dom() =~= mid.parent@.dom(),
         ensures
-            spec_elements_forward(&uf),
-            spec_elements_backward(&uf),
-            spec_elements_distinct(&uf),
+            spec_elements_forward(uf),
+            spec_elements_backward(uf),
+            spec_elements_distinct(uf),
     {
         reveal(spec_elements_forward);
         reveal(spec_elements_backward);
@@ -966,76 +998,135 @@ pub mod UnionFindStEph {
         Ghost(UnionMergeInfo { winner_view, loser_view, winner_val: winner_v })
     }
 
+    /// Coordinate all sub-lemmas to prove wf after union merge.
+    /// Separated from exec to keep &mut encoding out of the proof context.
+    /// Reveals spec_uf_wf to decompose mid's wf into sub-predicates.
+    #[verifier::rlimit(80)]
+    proof fn lemma_union_merge_wf<V: StT + Hash>(
+        uf: &UnionFindStEph<V>,
+        mid: &UnionFindStEph<V>,
+        winner_val: V,
+        root_u_view: <V as View>::V,
+        root_v_view: <V as View>::V,
+        winner_view: <V as View>::V,
+        loser_view: <V as View>::V,
+    )
+        requires
+            mid.spec_unionfindsteph_wf(),
+            root_u_view != root_v_view,
+            mid.roots@.contains_key(root_u_view),
+            mid.roots@.contains_key(root_v_view),
+            mid.roots@[root_u_view] == root_u_view,
+            mid.roots@[root_v_view] == root_v_view,
+            mid.parent@[root_u_view]@ == root_u_view,
+            mid.parent@[root_v_view]@ == root_v_view,
+            ((winner_view == root_u_view && loser_view == root_v_view) ||
+             (winner_view == root_v_view && loser_view == root_u_view)),
+            winner_val@ == winner_view,
+            uf.parent@ =~= mid.parent@.insert(loser_view, winner_val),
+            uf.rank@.dom() =~= mid.rank@.dom(),
+            forall|k: <V as View>::V| mid.rank@.contains_key(k) && k != winner_view ==>
+                #[trigger] uf.rank@[k] == mid.rank@[k],
+            uf.rank@[winner_view] >= mid.rank@[winner_view],
+            uf.rank@[winner_view] >= mid.rank@[loser_view],
+            mid.rank@[loser_view] < uf.rank@[winner_view],
+            uf.elements@ =~= mid.elements@,
+            uf.roots@.dom() =~= mid.roots@.dom(),
+            forall|k: <V as View>::V| mid.roots@.contains_key(k) ==> (
+                #[trigger] uf.roots@[k] == (
+                    if mid.roots@[k] == root_u_view || mid.roots@[k] == root_v_view {
+                        winner_view
+                    } else {
+                        mid.roots@[k]
+                    }
+                )
+            ),
+        ensures
+            uf.spec_unionfindsteph_wf(),
+    {
+        // Reveal spec_uf_wf to decompose mid's wf into sub-predicates.
+        reveal(spec_uf_wf);
+
+        assert(uf.parent@.dom() =~= mid.parent@.dom());
+
+        lemma_establish_union_pre(
+            uf, mid, winner_val,
+            root_u_view, root_v_view, winner_view, loser_view,
+        );
+        lemma_union_wf_roots_closed(
+            uf, mid,
+            root_u_view, root_v_view, winner_view,
+        );
+        lemma_union_wf_parent(
+            uf, mid, winner_val,
+            root_u_view, root_v_view, winner_view, loser_view,
+        );
+        lemma_union_wf_ordering(
+            uf, mid, winner_val,
+            root_u_view, root_v_view, winner_view, loser_view,
+        );
+        lemma_union_wf_frame(
+            uf, mid,
+        );
+        lemma_assemble_wf(uf);
+    }
+
     /// Merge two components: mutate parent/rank/roots, prove wf.
-    /// Proof architecture: union_merge_exec (verified) does mutations,
-    /// 3 sub-lemmas (verified) prove wf conjuncts. external_body here because
-    /// Z3 can't coordinate the proof within rlimit — the sub-lemma calls +
-    /// exec ensures + domain assertions exceed Z3's quantifier budget.
+    /// Returns Ghost info for caller to derive structural ensures.
+    /// Exec does mutations via union_merge_exec; proof delegates to
+    /// lemma_union_merge_wf to keep &mut encoding out of the proof context.
     #[verifier::external_body]
     fn union_merge<V: StT + Hash>(
         uf: &mut UnionFindStEph<V>,
         root_u: V,
         root_v: V,
-    )
+    ) -> (info: Ghost<UnionMergeInfo<V>>)
         requires
             old(uf).spec_unionfindsteph_wf(),
             root_u@ != root_v@,
-            old(uf)@.roots.contains_key(root_u@),
-            old(uf)@.roots.contains_key(root_v@),
-            old(uf)@.roots[root_u@] == root_u@,
-            old(uf)@.roots[root_v@] == root_v@,
-            old(uf)@.parent[root_u@]@ == root_u@,
-            old(uf)@.parent[root_v@]@ == root_v@,
+            old(uf).roots@.contains_key(root_u@),
+            old(uf).roots@.contains_key(root_v@),
+            old(uf).roots@[root_u@] == root_u@,
+            old(uf).roots@[root_v@] == root_v@,
+            old(uf).parent@[root_u@]@ == root_u@,
+            old(uf).parent@[root_v@]@ == root_v@,
         ensures
             uf.spec_unionfindsteph_wf(),
-            uf@.parent.dom() =~= old(uf)@.parent.dom(),
-            uf@.elements =~= old(uf)@.elements,
-            uf@.roots.dom() =~= old(uf)@.roots.dom(),
-            forall|x: <V as View>::V| #[trigger] uf@.roots.contains_key(x) ==> {
-                if old(uf)@.roots[x] == root_u@ || old(uf)@.roots[x] == root_v@ {
-                    uf@.roots[x] == uf@.roots[root_u@]
-                } else {
-                    uf@.roots[x] == old(uf)@.roots[x]
-                }
-            },
+            ((info@.winner_view == root_u@ && info@.loser_view == root_v@) ||
+             (info@.winner_view == root_v@ && info@.loser_view == root_u@)),
+            info@.winner_val@ == info@.winner_view,
+            uf.elements@ =~= old(uf).elements@,
+            uf.roots@.dom() =~= old(uf).roots@.dom(),
+            forall|x: <V as View>::V| old(uf).roots@.contains_key(x) ==> (
+                #[trigger] uf.roots@[x] == (
+                    if old(uf).roots@[x] == root_u@ || old(uf).roots@[x] == root_v@ {
+                        info@.winner_view
+                    } else {
+                        old(uf).roots@[x]
+                    }
+                )
+            ),
     {
-        let ghost root_u_view = root_u@;
-        let ghost root_v_view = root_v@;
         let ghost mid_uf = *uf;
+
+        proof {
+            // Reveal spec_uf_wf so Z3 can extract spec_key_model, spec_feq_full,
+            // and domain equalities needed by union_merge_exec's requires.
+            // Sub-predicates remain closed — Z3 sees opaque booleans, not quantifiers.
+            reveal(spec_uf_wf);
+        }
 
         let info = union_merge_exec(uf, root_u, root_v);
 
         proof {
-            let ghost winner_view = info@.winner_view;
-            let ghost loser_view = info@.loser_view;
-            let ghost winner_val = info@.winner_val;
-
-            assert(uf@.elements =~= mid_uf@.elements);
-            assert(uf@.parent.dom() =~= mid_uf@.parent.dom());
-            assert(uf@.rank.dom() =~= mid_uf@.rank.dom());
-            assert(uf@.roots.dom() =~= mid_uf@.roots.dom());
-
-            lemma_establish_union_pre(
-                &(*uf), &mid_uf, winner_val,
-                root_u_view, root_v_view, winner_view, loser_view,
+            lemma_union_merge_wf(
+                &(*uf), &mid_uf, info@.winner_val,
+                root_u@, root_v@,
+                info@.winner_view, info@.loser_view,
             );
-            lemma_union_wf_roots_closed(
-                *uf, mid_uf,
-                root_u_view, root_v_view, winner_view,
-            );
-            lemma_union_wf_parent(
-                *uf, mid_uf, winner_val,
-                root_u_view, root_v_view, winner_view, loser_view,
-            );
-            lemma_union_wf_ordering(
-                *uf, mid_uf, winner_val,
-                root_u_view, root_v_view, winner_view, loser_view,
-            );
-            lemma_union_wf_frame(
-                *uf, mid_uf,
-            );
-            lemma_assemble_wf(uf);
         }
+
+        info
     }
 
     // Path compression commented out — correct but exceeds solver budget.
@@ -1068,6 +1159,7 @@ pub mod UnionFindStEph {
                 obeys_feq_full::<V>(),
                 forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
             ensures
+                uf.spec_unionfindsteph_wf(),
                 uf@.parent =~= Map::<<V as View>::V, V>::empty(),
                 uf@.rank =~= Map::<<V as View>::V, usize>::empty(),
                 uf@.elements =~= Seq::<V>::empty(),
@@ -1151,47 +1243,36 @@ pub mod UnionFindStEph {
 
     impl<V: StT + Hash> UnionFindStEphTrait<V> for UnionFindStEph<V> {
         /// Well-formedness invariant for the Union-Find structure.
+        /// Delegates to closed spec_uf_wf so Z3 sees one opaque boolean
+        /// in exec contexts. Proof functions use `reveal(spec_uf_wf)` to
+        /// access the sub-predicate conjunction.
         open spec fn spec_unionfindsteph_wf(&self) -> bool {
-            &&& obeys_key_model::<V>()
-            &&& obeys_feq_full::<V>()
-            &&& self.parent@.dom() =~= self.rank@.dom()
-            &&& self.roots@.dom() =~= self.parent@.dom()
-            &&& forall|v: <V as View>::V| #[trigger] self.roots@.contains_key(v) ==> {
-                &&& self.roots@.contains_key(self.roots@[v])
-                &&& self.roots@[self.roots@[v]] == self.roots@[v]
-            }
-            &&& forall|v: <V as View>::V| #[trigger] self.parent@.contains_key(v) ==>
-                self.parent@.contains_key(self.parent@[v]@)
-            &&& forall|v: <V as View>::V| #[trigger] self.roots@.contains_key(v) ==>
-                self.parent@.contains_key(self.roots@[v])
-            &&& forall|i: int| 0 <= i < self.elements@.len() as int ==>
-                self.parent@.contains_key(#[trigger] self.elements@[i]@)
-            &&& forall|v: <V as View>::V| #[trigger] self.parent@.contains_key(v) ==>
-                exists|i: int| 0 <= i < self.elements@.len() as int && #[trigger] self.elements@[i]@ == v
-            &&& forall|i: int, j: int|
-                0 <= i < self.elements@.len() as int &&
-                0 <= j < self.elements@.len() as int &&
-                i != j ==>
-                #[trigger] self.elements@[i]@ != #[trigger] self.elements@[j]@
-            &&& forall|v: <V as View>::V| self.parent@.contains_key(v) && self.parent@[v]@ == v ==>
-                #[trigger] self.roots@[v] == v
-            &&& forall|v: <V as View>::V| #[trigger] self.parent@.contains_key(v) ==>
-                self.roots@[self.parent@[v]@] == self.roots@[v]
-            &&& forall|v: <V as View>::V| self.parent@.contains_key(v)
-                && self.parent@[v]@ != v ==>
-                self.rank@[v] < #[trigger] self.rank@[self.parent@[v]@]
-            &&& forall|v: <V as View>::V| #[trigger] self.rank@.contains_key(v) ==>
-                self.rank@[v] <= self.rank@[self.roots@[v]]
+            spec_uf_wf(self)
         }
 
         /// - APAS: Work Theta(1), Span Theta(1)
         fn new() -> (uf: Self) {
-            UnionFindStEph {
+            let uf = UnionFindStEph {
                 parent: HashMapWithViewPlus::new(),
                 rank: HashMapWithViewPlus::new(),
                 elements: Vec::new(),
                 roots: Ghost(Map::empty()),
+            };
+            proof {
+                // Reveal spec_uf_wf then sub-predicates — all vacuously true on empty maps.
+                reveal(spec_uf_wf);
+                reveal(spec_roots_idempotent);
+                reveal(spec_parent_closed);
+                reveal(spec_roots_in_dom);
+                reveal(spec_elements_forward);
+                reveal(spec_elements_backward);
+                reveal(spec_elements_distinct);
+                reveal(spec_self_parent_is_root);
+                reveal(spec_parent_preserves_root);
+                reveal(spec_rank_increases);
+                reveal(spec_rank_bounded);
             }
+            uf
         }
 
         /// - APAS: Work Theta(1), Span Theta(1)
@@ -1224,21 +1305,35 @@ pub mod UnionFindStEph {
         }
 
         /// - APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
-        /// external_body: Z3 can't fit 26+ quantifiers (13 pre-wf + 13 post-wf)
-        /// in one context. All proof components verify separately:
-        /// union_merge_exec (mutations), 3 sub-lemmas (wf conjuncts),
-        /// lemma_union_wf_roots_closed, lemma_union_wf_frame.
         #[verifier::external_body]
         fn union(&mut self, u: &V, v: &V) {
             let root_u = find_root_loop(self, u);
+            let ghost root_u_view = root_u@;
             let root_v = find_root_loop(self, v);
+            let ghost root_v_view = root_v@;
 
             if !feq(&root_u, &root_v) {
                 proof {
-                    lemma_root_is_self_parent(self, root_u@);
-                    lemma_root_is_self_parent(self, root_v@);
+                    reveal(spec_uf_wf);
+                    lemma_root_is_self_parent(self, root_u_view);
+                    lemma_root_is_self_parent(self, root_v_view);
                 }
-                union_merge(self, root_u, root_v);
+                let ghost mid_self = *self;
+
+                // Inline union_merge: call exec directly, prove wf with lemma.
+                let info = union_merge_exec(self, root_u, root_v);
+
+                proof {
+                    lemma_union_merge_wf(
+                        &(*self), &mid_self, info@.winner_val,
+                        root_u_view, root_v_view,
+                        info@.winner_view, info@.loser_view,
+                    );
+
+                    // Translate winner_view to self@.roots[u@].
+                    assert(self.roots@.contains_key(u@));
+                    assert(self.roots@[u@] == info@.winner_view);
+                }
             }
         }
 
@@ -1252,6 +1347,7 @@ pub mod UnionFindStEph {
 
         /// - APAS: Work O(n alpha(n)), Span O(n alpha(n))
         fn num_sets(&mut self) -> (count: usize) {
+            proof { reveal(spec_uf_wf); reveal(spec_elements_forward); }
             let mut roots_set = HashSetWithViewPlus::<V>::new();
             let mut i: usize = 0;
             while i < self.elements.len()
