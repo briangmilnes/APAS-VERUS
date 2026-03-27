@@ -40,7 +40,7 @@ pub mod Concurrency {
     pub trait MtReduceFn<V>: Fn(&V, &V) -> V + Clone + Send + Sync + 'static {}
 
     /// Multi-threaded predicate function (boolean function).
-    pub trait Pred<T>: Fn(&T) -> B + Send + Sync + 'static {}
+    pub trait Pred<T>: Fn(&T) -> bool + Send + Sync + 'static {}
 
     // Blanket implementations
     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
@@ -48,7 +48,7 @@ pub mod Concurrency {
     impl<T> MtKey for T where T: StTInMtT + Ord + 'static {}
     impl<T> MtVal for T where T: StTInMtT + 'static {}
     impl<T, V> MtReduceFn<V> for T where T: Fn(&V, &V) -> V + Clone + Send + Sync + 'static {}
-    impl<F, T> Pred<T> for F where F: Fn(&T) -> B + Send + Sync + 'static {}
+    impl<F, T> Pred<T> for F where F: Fn(&T) -> bool + Send + Sync + 'static {}
 
     } // verus!
 }

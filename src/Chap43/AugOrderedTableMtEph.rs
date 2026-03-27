@@ -173,7 +173,7 @@ broadcast use {
                 };
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- delegates to base table is_empty
-        fn is_empty(&self) -> (is_empty: B)
+        fn is_empty(&self) -> (is_empty: bool)
             requires self.spec_augorderedtablemteph_wf()
             ensures is_empty == self@.dom().is_empty(), self@.dom().finite();
         /// - APAS: Work O(log n), Span O(log n)
@@ -227,7 +227,7 @@ broadcast use {
             ensures mapped@.dom().finite();
         /// - APAS: Work O(n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- filters base table linearly, then recalculates reduction O(n)
-        fn filter<G: Fn(&K, &V) -> B + Send + Sync + 'static>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
+        fn filter<G: Fn(&K, &V) -> bool + Send + Sync + 'static>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
             requires
                 self.spec_augorderedtablemteph_wf(),
                 forall|k: &K, v: &V| f.requires((k, v)),
@@ -433,7 +433,7 @@ broadcast use {
             self.base_table.lookup(k)
         }
 
-        fn is_empty(&self) -> (is_empty: B)
+        fn is_empty(&self) -> (is_empty: bool)
             ensures is_empty == self@.dom().is_empty(), self@.dom().finite()
         {
             proof { lemma_aug_view(self); }
@@ -501,7 +501,7 @@ broadcast use {
             r
         }
 
-        fn filter<G: Fn(&K, &V) -> B + Send + Sync + 'static>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
+        fn filter<G: Fn(&K, &V) -> bool + Send + Sync + 'static>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
             ensures filtered@.dom().finite()
         {
             let new_base = self.base_table.filter(f, Ghost(spec_pred));

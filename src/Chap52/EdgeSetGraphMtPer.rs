@@ -74,7 +74,7 @@ pub mod EdgeSetGraphMtPer {
         fn edges(&self) -> &AVLTreeSetMtPer<Pair<V, V>>
             requires self.spec_edgesetgraphmtper_wf();
         /// Work Theta(log |E|), Span Theta(log |E|)
-        fn has_edge(&self, u: &V, v: &V) -> B
+        fn has_edge(&self, u: &V, v: &V) -> bool
             requires self.spec_edgesetgraphmtper_wf();
         /// Work Theta(|E| log |V|), Span Theta(log |E| * log |V|)
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)
@@ -131,7 +131,7 @@ pub mod EdgeSetGraphMtPer {
 
         fn edges(&self) -> &AVLTreeSetMtPer<Pair<V, V>> { &self.edges }
 
-        fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
+        fn has_edge(&self, u: &V, v: &V) -> bool { self.edges.find(&Pair(u.clone(), v.clone())) }
 
         /// - APAS: Work Θ(m), Span Θ(lg n) [Cost Spec 52.1]
         /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — filter edges, iterate filtered seq, insert second components.

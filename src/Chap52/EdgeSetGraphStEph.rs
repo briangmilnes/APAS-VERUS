@@ -111,7 +111,7 @@ broadcast use {
             requires self.spec_edgesetgraphsteph_wf();
         /// - APAS: Work Theta(lg m), Span Theta(lg m) [Cost Spec 52.1]
         /// - Claude-Opus-4.6: Work Theta(lg m), Span Theta(lg m) — agrees; AVL set find.
-        fn has_edge(&self, u: &V, v: &V) -> B
+        fn has_edge(&self, u: &V, v: &V) -> bool
             requires self.spec_edgesetgraphsteph_wf();
         /// - APAS: Work Theta(m lg n), Span Theta(m lg n) [Cost Spec 52.1]
         /// - Claude-Opus-4.6: Work Theta(m lg n), Span Theta(m lg n) — agrees; filter edges + build set.
@@ -195,7 +195,7 @@ broadcast use {
 
         fn edges(&self) -> &AVLTreeSetStEph<Pair<V, V>> { &self.edges }
 
-        fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
+        fn has_edge(&self, u: &V, v: &V) -> bool { self.edges.find(&Pair(u.clone(), v.clone())) }
 
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
             ensures neighbors@ == self.spec_out_neighbors(u@)

@@ -42,7 +42,7 @@ pub mod SpanTreeMtEph {
 
         /// Verify spanning tree properties.
         /// APAS: Work O(|V| + |E|), Span O(lg |V|)
-        fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(graph: &UnDirGraphMtEph<V>, tree: &SetStEph<Edge<V>>) -> B
+        fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(graph: &UnDirGraphMtEph<V>, tree: &SetStEph<Edge<V>>) -> bool
             requires Self::spec_spantreemteph_wf(graph);
     }
 
@@ -152,7 +152,7 @@ pub mod SpanTreeMtEph {
     pub fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(
         graph: &UnDirGraphMtEph<V>,
         tree_edges: &SetStEph<Edge<V>>,
-    ) -> (result: B)
+    ) -> (result: bool)
         requires
             spec_graphview_wf(graph@),
             valid_key_type_for_graph::<V>(),

@@ -45,7 +45,7 @@ pub mod Exercise21_7 {
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     // veracity: no_requires
-    pub fn is_even(x: &N) -> (r: B)
+    pub fn is_even(x: &N) -> (r: bool)
         ensures r == spec_is_even(*x as int)
     { *x % 2 == 0 }
 
@@ -59,7 +59,7 @@ pub mod Exercise21_7 {
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     // veracity: no_requires
-    pub fn is_vowel(c: &char) -> (r: B)
+    pub fn is_vowel(c: &char) -> (r: bool)
         ensures r == spec_is_vowel(*c)
     {
         match *c {
@@ -85,8 +85,8 @@ pub mod Exercise21_7 {
        ensures
             pairs.seq@.len() <= a.seq@.len() as int * b.seq@.len() as int,
     {
-        let pred_even = |x: &N| -> (r: B) ensures r == spec_is_even(*x as int) { is_even(x) };
-        let pred_vowel = |y: &char| -> (r: B) ensures r == spec_is_vowel(*y) { is_vowel(y) };
+        let pred_even = |x: &N| -> (r: bool) ensures r == spec_is_even(*x as int) { is_even(x) };
+        let pred_vowel = |y: &char| -> (r: bool) ensures r == spec_is_vowel(*y) { is_vowel(y) };
         let ghost spec_even: spec_fn(N) -> bool = |x: N| spec_is_even(x as int);
         let ghost spec_vowel: spec_fn(char) -> bool = |c: char| spec_is_vowel(c);
         let filtered_a: ArraySeqStPerS<N> = ArraySeqStPerS::filter(a, &pred_even, Ghost(spec_even));

@@ -41,7 +41,7 @@ pub mod SCCStEph {
     // 6. spec fns
 
     /// Bridge: for ArraySeqStEphS<bool>, view index equals spec_index.
-    proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<B>)
+    proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<bool>)
         ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
     {
         assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
@@ -97,7 +97,7 @@ pub mod SCCStEph {
                 ==> (#[trigger] result@[i] as int) < graph@.len(),
     {
         let n = graph.length();
-        let init_false = |_x: usize| -> (r: B)
+        let init_false = |_x: usize| -> (r: bool)
             ensures !r
         { false };
         let mut visited = ArraySeqStEphS::tabulate(&init_false, n);
@@ -364,7 +364,7 @@ pub mod SCCStEph {
 
     fn dfs_reach(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
-        visited: &mut ArraySeqStEphS<B>,
+        visited: &mut ArraySeqStEphS<bool>,
         component: &mut AVLTreeSetStEph<N>,
         vertex: N,
     )
@@ -487,7 +487,7 @@ pub mod SCCStEph {
             let transposed = transpose_graph(graph);
 
             let n = transposed.length();
-            let init_false = |_x: usize| -> (r: B)
+            let init_false = |_x: usize| -> (r: bool)
                 ensures !r
             { false };
             let mut visited = ArraySeqStEphS::tabulate(&init_false, n);

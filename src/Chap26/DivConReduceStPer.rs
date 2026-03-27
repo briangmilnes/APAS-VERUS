@@ -49,8 +49,8 @@ pub mod DivConReduceStPer {
 
     pub open spec fn spec_sum_fn() -> spec_fn(N, N) -> N { |x: N, y: N| spec_wrapping_add(x, y) }
     pub open spec fn spec_product_fn() -> spec_fn(N, N) -> N { |x: N, y: N| spec_wrapping_mul(x, y) }
-    pub open spec fn spec_or_fn() -> spec_fn(B, B) -> B { |x: B, y: B| x || y }
-    pub open spec fn spec_and_fn() -> spec_fn(B, B) -> B { |x: B, y: B| x && y }
+    pub open spec fn spec_or_fn() -> spec_fn(bool, bool) -> bool { |x: bool, y: bool| x || y }
+    pub open spec fn spec_and_fn() -> spec_fn(bool, bool) -> bool { |x: bool, y: bool| x && y }
     pub open spec fn spec_max_fn() -> spec_fn(N, N) -> N { |x: N, y: N| if x >= y { x } else { y } }
 
     //		8. traits
@@ -100,7 +100,7 @@ pub mod DivConReduceStPer {
         /// Pattern: reduce (||) false identity
         /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential reduce, Span = Work.
-        fn any(a: &ArraySeqStPerS<B>) -> (found: B)
+        fn any(a: &ArraySeqStPerS<bool>) -> (found: bool)
             requires
                 a.spec_len() <= usize::MAX,
                 spec_monoid(spec_or_fn(), false),
@@ -112,7 +112,7 @@ pub mod DivConReduceStPer {
         /// Pattern: reduce (&&) true identity
         /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential reduce, Span = Work.
-        fn all(a: &ArraySeqStPerS<B>) -> (all_true: B)
+        fn all(a: &ArraySeqStPerS<bool>) -> (all_true: bool)
             requires
                 a.spec_len() <= usize::MAX,
                 spec_monoid(spec_and_fn(), true),
@@ -168,17 +168,17 @@ pub mod DivConReduceStPer {
                 Ghost(spec_product_fn()), 1)
         }
 
-        fn any(a: &ArraySeqStPerS<B>) -> (found: B) {
+        fn any(a: &ArraySeqStPerS<bool>) -> (found: bool) {
             ArraySeqStPerS::reduce(a,
-                &(|x: &B, y: &B| -> (ret: B)
+                &(|x: &bool, y: &bool| -> (ret: bool)
                     ensures ret == spec_or_fn()(*x, *y)
                 { *x || *y }),
                 Ghost(spec_or_fn()), false)
         }
 
-        fn all(a: &ArraySeqStPerS<B>) -> (all_true: B) {
+        fn all(a: &ArraySeqStPerS<bool>) -> (all_true: bool) {
             ArraySeqStPerS::reduce(a,
-                &(|x: &B, y: &B| -> (ret: B)
+                &(|x: &bool, y: &bool| -> (ret: bool)
                     ensures ret == spec_and_fn()(*x, *y)
                 { *x && *y }),
                 Ghost(spec_and_fn()), true)

@@ -249,7 +249,7 @@ broadcast use vstd::seq::group_seq_axioms;
     pub trait CycleDetectStPerTrait {
         /// Detects if a directed graph contains a cycle (Algorithm 55.10)
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (has_cycle: B)
+        fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (has_cycle: bool)
             requires
                 spec_cycledetectstper_wf(graph),
             ensures
@@ -269,7 +269,7 @@ broadcast use vstd::seq::group_seq_axioms;
         Ghost(dfs_path): Ghost<Seq<int>>,
         Ghost(ord): Ghost<Map<int, nat>>,
         Ghost(next_time): Ghost<nat>,
-    ) -> (has_cycle: B)
+    ) -> (has_cycle: bool)
         requires
             vertex < old(visited)@.len(),
             old(visited)@.len() == graph@.len(),
@@ -597,7 +597,7 @@ broadcast use vstd::seq::group_seq_axioms;
     impl CycleDetectStPerTrait for CycleDetectStPer {
         /// Detects if a directed graph contains a cycle.
         /// Returns true if a cycle exists, false otherwise.
-        fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (has_cycle: B)
+        fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (has_cycle: bool)
         {
             let n = graph.length();
             let mut visited: Vec<bool> = Vec::new();

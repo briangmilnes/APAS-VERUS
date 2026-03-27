@@ -522,7 +522,7 @@ broadcast use {
                         && table@[k] == result@),
                 table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(n), Span Θ(n)
-        fn filter<F: Fn(&K, &V) -> B>(&self, f: F, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (table: Self)
+        fn filter<F: Fn(&K, &V) -> bool>(&self, f: F, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
                 forall|k: &K, v: &V| f.requires((k, v)),
@@ -1263,7 +1263,7 @@ broadcast use {
             mapped
         }
 
-        fn filter<F: Fn(&K, &V) -> B>(
+        fn filter<F: Fn(&K, &V) -> bool>(
             &self,
             f: F,
             Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,

@@ -154,7 +154,7 @@ verus! {
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn neighbor(&self, u: &V, v: &V) -> (b: B)
+        fn neighbor(&self, u: &V, v: &V) -> (b: bool)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>()
             ensures b == self@.A.contains((u@, v@));
 
@@ -196,7 +196,7 @@ verus! {
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn incident(&self, e: &Edge<V>, v: &V) -> (b: B)
+        fn incident(&self, e: &Edge<V>, v: &V) -> (b: bool)
             requires valid_key_type_Edge::<V>()
             ensures b == (e@.0 == v@ || e@.1 == v@);
 
@@ -250,7 +250,7 @@ verus! {
 
         fn sizeA(&self) -> (n: N) { self.A.size() }
 
-        fn neighbor(&self, u: &V, v: &V) -> (b: B) { self.A.mem(&Edge(u.clone_plus(), v.clone_plus())) }
+        fn neighbor(&self, u: &V, v: &V) -> (b: bool) { self.A.mem(&Edge(u.clone_plus(), v.clone_plus())) }
 
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
             ensures neighbors@ == self.spec_ng(v@)
@@ -523,7 +523,7 @@ verus! {
             }
         }
 
-        fn incident(&self, e: &Edge<V>, v: &V) -> (b: B) { feq(&e.0, v) || feq(&e.1, v) }
+        fn incident(&self, e: &Edge<V>, v: &V) -> (b: bool) { feq(&e.0, v) || feq(&e.1, v) }
 
         fn degree(&self, v: &V) -> (n: N)
             ensures n == self.spec_degree(v@)

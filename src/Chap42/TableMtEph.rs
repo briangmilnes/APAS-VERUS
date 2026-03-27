@@ -579,7 +579,7 @@ broadcast use {
                 self@.dom() == old(self)@.dom();
         /// - APAS Cost Spec 42.5: Work Σ W(p(k,v)), Span lg |a| + max S(p(k,v))
         /// - Claude-Opus-4.6: Work Θ(Σ W(p(k,v))), Span Θ(lg |a| + max S(p(k,v))) -- parallel via join(); agrees with APAS.
-        fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(
+        fn filter<F: Fn(&K, &V) -> bool + Send + Sync + 'static>(
             &mut self,
             f: F,
             Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,
@@ -890,7 +890,7 @@ broadcast use {
         }
 
         #[verifier::loop_isolation(false)]
-        fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(
+        fn filter<F: Fn(&K, &V) -> bool + Send + Sync + 'static>(
             &mut self,
             f: F,
             Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,

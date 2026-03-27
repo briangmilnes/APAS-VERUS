@@ -69,9 +69,9 @@ pub mod DivConReduceMtPer {
 
     pub open spec fn spec_product_fn() -> spec_fn(N, N) -> N { |x: N, y: N| spec_wrapping_mul(x, y) }
 
-    pub open spec fn spec_or_fn() -> spec_fn(B, B) -> B { |x: B, y: B| x || y }
+    pub open spec fn spec_or_fn() -> spec_fn(bool, bool) -> bool { |x: bool, y: bool| x || y }
 
-    pub open spec fn spec_and_fn() -> spec_fn(B, B) -> B { |x: B, y: B| x && y }
+    pub open spec fn spec_and_fn() -> spec_fn(bool, bool) -> bool { |x: bool, y: bool| x && y }
 
     pub open spec fn spec_max_fn() -> spec_fn(N, N) -> N { |x: N, y: N| if x >= y { x } else { y } }
 
@@ -196,7 +196,7 @@ pub mod DivConReduceMtPer {
         /// Pattern: reduce (||) false identity (parallel)
         /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
-        fn any_parallel(a: &ArraySeqMtPerS<B>) -> (found: B)
+        fn any_parallel(a: &ArraySeqMtPerS<bool>) -> (found: bool)
             requires
                 a.spec_len() <= usize::MAX,
                 spec_monoid(spec_or_fn(), false),
@@ -208,7 +208,7 @@ pub mod DivConReduceMtPer {
         /// Pattern: reduce (&&) true identity (parallel)
         /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
-        fn all_parallel(a: &ArraySeqMtPerS<B>) -> (all_true: B)
+        fn all_parallel(a: &ArraySeqMtPerS<bool>) -> (all_true: bool)
             requires
                 a.spec_len() <= usize::MAX,
                 spec_monoid(spec_and_fn(), true),
@@ -272,17 +272,17 @@ pub mod DivConReduceMtPer {
                 Ghost(spec_product_fn()), 1)
         }
 
-        fn any_parallel(a: &ArraySeqMtPerS<B>) -> (found: B) {
+        fn any_parallel(a: &ArraySeqMtPerS<bool>) -> (found: bool) {
             ArraySeqMtPerS::reduce(a,
-                &(|x: &B, y: &B| -> (ret: B)
+                &(|x: &bool, y: &bool| -> (ret: bool)
                     ensures ret == spec_or_fn()(*x, *y)
                 { *x || *y }),
                 Ghost(spec_or_fn()), false)
         }
 
-        fn all_parallel(a: &ArraySeqMtPerS<B>) -> (all_true: B) {
+        fn all_parallel(a: &ArraySeqMtPerS<bool>) -> (all_true: bool) {
             ArraySeqMtPerS::reduce(a,
-                &(|x: &B, y: &B| -> (ret: B)
+                &(|x: &bool, y: &bool| -> (ret: bool)
                     ensures ret == spec_and_fn()(*x, *y)
                 { *x && *y }),
                 Ghost(spec_and_fn()), true)

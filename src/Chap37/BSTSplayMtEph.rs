@@ -1791,7 +1791,7 @@ pub mod BSTSplayMtEph {
                         Err(_) => self@ == old(self)@,
                     };
 
-        fn contains(&self, target: &T) -> (found: B)
+        fn contains(&self, target: &T) -> (found: bool)
             requires self.spec_bstsplaymteph_wf(),
             ensures found == link_contains(self@, *target);
 
@@ -1799,7 +1799,7 @@ pub mod BSTSplayMtEph {
             requires self.spec_bstsplaymteph_wf(),
             ensures n as nat == link_spec_size(self@);
 
-        fn is_empty(&self) -> (b: B)
+        fn is_empty(&self) -> (b: bool)
             requires self.spec_bstsplaymteph_wf(),
             ensures b == (self@ is None);
 
@@ -1879,7 +1879,7 @@ pub mod BSTSplayMtEph {
         }
 
         // Reader: assume return value matches ghost.
-        fn contains(&self, target: &T) -> (found: B) {
+        fn contains(&self, target: &T) -> (found: bool) {
             let handle = self.root.acquire_read();
             let found = find_link(handle.borrow(), target).is_some();
             proof { assume(found == link_contains(self@, *target)); }
@@ -1897,7 +1897,7 @@ pub mod BSTSplayMtEph {
         }
 
         // Predicate: assume return predicate matches spec predicate.
-        fn is_empty(&self) -> (b: B) {
+        fn is_empty(&self) -> (b: bool) {
             let handle = self.root.acquire_read();
             let b = handle.borrow().is_none();
             proof { assume(b == (self@ is None)); }

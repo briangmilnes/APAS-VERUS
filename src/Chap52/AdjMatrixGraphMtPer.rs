@@ -136,7 +136,7 @@ broadcast use {
                 );
 
         /// Work Theta(1), Span Theta(1)
-        fn has_edge(&self, u: N, v: N) -> (found: B)
+        fn has_edge(&self, u: N, v: N) -> (found: bool)
             requires self.spec_adjmatrixgraphmtper_wf()
             ensures
                 u < self.spec_n() && v < self.spec_n() ==> found == self.spec_edge(u as int, v as int),
@@ -257,7 +257,7 @@ broadcast use {
             total
         }
 
-        fn has_edge(&self, u: N, v: N) -> (found: B) {
+        fn has_edge(&self, u: N, v: N) -> (found: bool) {
             if u >= self.n || v >= self.n {
                 return false;
             }

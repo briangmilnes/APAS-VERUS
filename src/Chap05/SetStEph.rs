@@ -163,7 +163,7 @@ verus! {
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Hash set contains().
-        fn mem(&self, x: &T)                 -> (contains: B)
+        fn mem(&self, x: &T)                 -> (contains: bool)
             requires self.spec_setsteph_wf()
             ensures contains == self@.contains(x@);
 
@@ -377,7 +377,7 @@ verus! {
             ensures size == self@.len()
         { self.elements.len() }
 
-        fn mem(&self, x: &T) -> (contains: B) { self.elements.contains(x) }
+        fn mem(&self, x: &T) -> (contains: bool) { self.elements.contains(x) }
 
         fn insert(&mut self, x: T) -> (inserted: bool)
         { self.elements.insert(x) }

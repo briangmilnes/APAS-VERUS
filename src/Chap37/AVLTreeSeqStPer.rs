@@ -247,11 +247,11 @@ pub mod AVLTreeSeqStPer {
             requires self.spec_avltreeseqstper_wf(), (index as int) < self.spec_seq().len(),
             ensures elem@ == self.spec_seq()[index as int];
 
-        fn isEmpty(&self) -> (empty: B)
+        fn isEmpty(&self) -> (empty: bool)
             requires self.spec_avltreeseqstper_wf(),
             ensures empty == (self.spec_seq().len() == 0);
 
-        fn isSingleton(&self) -> (single: B)
+        fn isSingleton(&self) -> (single: bool)
             requires self.spec_avltreeseqstper_wf(),
             ensures single == (self.spec_seq().len() == 1);
 
@@ -705,11 +705,11 @@ pub mod AVLTreeSeqStPer {
             nth_ref(&self.root, index)
         }
 
-        fn isEmpty(&self) -> (empty: B) {
+        fn isEmpty(&self) -> (empty: bool) {
             self.length() == 0
         }
 
-        fn isSingleton(&self) -> (single: B) {
+        fn isSingleton(&self) -> (single: bool) {
             self.length() == 1
         }
 

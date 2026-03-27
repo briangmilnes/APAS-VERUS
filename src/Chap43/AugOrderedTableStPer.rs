@@ -229,7 +229,7 @@ broadcast use {
                 mapped.spec_augorderedtablestper_wf();
         /// - APAS: Work O(n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- filters base table linearly, then recalculates reduction O(n)
-        fn filter<G: Fn(&K, &V) -> B>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
+        fn filter<G: Fn(&K, &V) -> bool>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
             requires
                 self.spec_augorderedtablestper_wf(),
 
@@ -582,7 +582,7 @@ broadcast use {
             r
         }
 
-        fn filter<G: Fn(&K, &V) -> B>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
+        fn filter<G: Fn(&K, &V) -> bool>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
         {
             let new_base = self.base_table.filter(f, Ghost(spec_pred));
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);

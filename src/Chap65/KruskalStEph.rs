@@ -184,7 +184,7 @@ pub mod KruskalStEph {
         fn verify_mst_size<V: HashOrd>(
             graph: &LabUnDirGraphStEph<V, WrappedF64>,
             mst: &SetStEph<LabEdge<V, WrappedF64>>,
-        ) -> B
+        ) -> bool
             requires Self::spec_kruskalsteph_wf(graph), mst.spec_setsteph_wf();
     }
 
@@ -441,7 +441,7 @@ pub mod KruskalStEph {
     pub fn verify_mst_size<V: HashOrd>(
         n_vertices: N,
         mst_edges: &SetStEph<LabEdge<V, WrappedF64>>,
-    ) -> (result: B)
+    ) -> (result: bool)
         requires mst_edges.spec_setsteph_wf(),
         ensures result == (mst_edges@.len() == (if n_vertices > 0 { (n_vertices - 1) as nat } else { 0nat })),
     {

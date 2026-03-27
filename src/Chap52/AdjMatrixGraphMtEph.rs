@@ -147,7 +147,7 @@ broadcast use {
                 );
 
         /// Work Theta(1), Span Theta(1)
-        fn has_edge(&self, u: N, v: N) -> (found: B)
+        fn has_edge(&self, u: N, v: N) -> (found: bool)
             requires self.spec_adjmatrixgraphmteph_wf(), u < self.spec_n(), v < self.spec_n()
             ensures found == self.spec_edge(u as int, v as int);
 
@@ -171,7 +171,7 @@ broadcast use {
             );
 
         /// Work Theta(1), Span Theta(1)
-        fn set_edge(&mut self, u: N, v: N, exists: B)
+        fn set_edge(&mut self, u: N, v: N, exists: bool)
             requires
                 old(self).spec_adjmatrixgraphmteph_wf(),
                 u < old(self).spec_n(),
@@ -285,7 +285,7 @@ broadcast use {
             total
         }
 
-        fn has_edge(&self, u: N, v: N) -> (found: B) {
+        fn has_edge(&self, u: N, v: N) -> (found: bool) {
             *self.matrix.nth(u).nth(v)
         }
 
@@ -375,7 +375,7 @@ broadcast use {
             count
         }
 
-        fn set_edge(&mut self, u: N, v: N, exists: B) {
+        fn set_edge(&mut self, u: N, v: N, exists: bool) {
             let n = self.n;
             let new_row = ArraySeqMtEphS::tabulate(
                 &|j: usize| -> (r: bool)

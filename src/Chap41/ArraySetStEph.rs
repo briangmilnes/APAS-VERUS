@@ -393,7 +393,7 @@ pub mod ArraySetStEph {
 
         /// - APAS: no cost spec (unordered array set)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan.
-        fn find(&self, x: &T) -> (found: B)
+        fn find(&self, x: &T) -> (found: bool)
             requires self@.finite(),
             ensures found == self@.contains(x@);
 
@@ -554,7 +554,7 @@ pub mod ArraySetStEph {
         }
 
         #[verifier::loop_isolation(false)]
-        fn find(&self, x: &T) -> (found: B)
+        fn find(&self, x: &T) -> (found: bool)
         {
             assert(obeys_feq_full_trigger::<T>());
             let n = self.elements.length();

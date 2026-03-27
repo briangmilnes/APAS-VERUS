@@ -119,7 +119,7 @@ broadcast use {
     }
 
     /// Bridge: for ArraySeqStEphS<bool>, view index equals spec_index.
-    proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<B>)
+    proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<bool>)
         ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
     {
         assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
@@ -243,7 +243,7 @@ broadcast use {
     /// Also used by SCCStEph::compute_finish_order.
     pub fn dfs_finish_order(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
-        visited: &mut ArraySeqStEphS<B>,
+        visited: &mut ArraySeqStEphS<bool>,
         finish_order: &mut Vec<N>,
         vertex: N,
     )
@@ -354,8 +354,8 @@ broadcast use {
     /// Returns true if no cycle found, false if cycle detected.
     fn dfs_finish_order_cycle_detect(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
-        visited: &mut ArraySeqStEphS<B>,
-        rec_stack: &mut ArraySeqStEphS<B>,
+        visited: &mut ArraySeqStEphS<bool>,
+        rec_stack: &mut ArraySeqStEphS<bool>,
         finish_order: &mut Vec<N>,
         vertex: N,
     ) -> (cycle_free: bool)

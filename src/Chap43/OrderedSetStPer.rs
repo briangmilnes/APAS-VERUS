@@ -236,7 +236,7 @@ broadcast use {
                 view_ord_consistent::<T>(),
             ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_orderedsetstper_wf();
         /// - APAS: Work Θ(log n), Span Θ(log n)
-        fn find(&self, x: &T) -> (found: B)
+        fn find(&self, x: &T) -> (found: bool)
             requires self.spec_orderedsetstper_wf(),
             ensures found == self@.contains(x@);
         /// - APAS: Work Θ(log n), Span Θ(log n)
@@ -333,7 +333,7 @@ broadcast use {
                     #[trigger] self@.contains(t@) && t.cmp_spec(k) == Greater ==>
                     v.cmp_spec(&t) == Less || v@ == t@;
         /// - APAS: Work Θ(log n), Span Θ(log n)
-        fn split(&self, k: &T) -> (split: (Self, B, Self))
+        fn split(&self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
             requires
                 self.spec_orderedsetstper_wf(),
@@ -428,7 +428,7 @@ broadcast use {
                 successor matches Some(v) ==> forall|t: T|
                     #[trigger] self@.contains(t@) && t.cmp_spec(k) == Greater ==>
                     v.cmp_spec(&t) == Less || v@ == t@;
-        fn split_iter(&self, k: &T) -> (split: (Self, B, Self))
+        fn split_iter(&self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
             requires
                 self.spec_orderedsetstper_wf(),
@@ -497,7 +497,7 @@ broadcast use {
             OrderedSetStPer { base_set: AVLTreeSetStPer::singleton(x) }
         }
 
-        fn find(&self, x: &T) -> (found: B)
+        fn find(&self, x: &T) -> (found: bool)
         { self.base_set.find(x) }
 
         fn insert(&self, x: T) -> (updated: Self)
@@ -678,7 +678,7 @@ broadcast use {
         { self.next_iter(k) }
 
         /// Split via BST split.
-        fn split_iter(&self, k: &T) -> (split: (Self, B, Self))
+        fn split_iter(&self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
         {
             let (left_tree, found, right_tree) = self.base_set.tree.split(k);
@@ -707,7 +707,7 @@ broadcast use {
             (left, found, right)
         }
 
-        fn split(&self, k: &T) -> (split: (Self, B, Self))
+        fn split(&self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
         { self.split_iter(k) }
 

@@ -131,7 +131,7 @@ broadcast use {
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- compares size to 0
-        fn is_empty(&self) -> (is_empty: B)
+        fn is_empty(&self) -> (is_empty: bool)
             requires self.spec_orderedtablemteph_wf()
             ensures is_empty == self@.dom().is_empty();
 
@@ -183,7 +183,7 @@ broadcast use {
 
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires read lock, delegates to StEph.filter
-        fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(
+        fn filter<F: Fn(&K, &V) -> bool + Send + Sync + 'static>(
             &self,
             f: F,
             Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,
@@ -371,7 +371,7 @@ broadcast use {
             self.find(k)
         }
 
-        fn is_empty(&self) -> (is_empty: B)
+        fn is_empty(&self) -> (is_empty: bool)
             ensures is_empty == self@.dom().is_empty()
         {
             self.size() == 0
@@ -433,7 +433,7 @@ broadcast use {
             from_st(result)
         }
 
-        fn filter<F: Fn(&K, &V) -> B + Send + Sync + 'static>(
+        fn filter<F: Fn(&K, &V) -> bool + Send + Sync + 'static>(
             &self,
             f: F,
             Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,

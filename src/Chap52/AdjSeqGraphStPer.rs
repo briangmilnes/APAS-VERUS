@@ -130,7 +130,7 @@ broadcast use {
                 );
 
         /// Work Theta(deg(u)), Span Theta(deg(u))
-        fn has_edge(&self, u: N, v: N) -> (found: B)
+        fn has_edge(&self, u: N, v: N) -> (found: bool)
             requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()
             ensures found == exists|j: int|
                 0 <= j < self.spec_degree(u as int)
@@ -253,7 +253,7 @@ broadcast use {
             count
         }
 
-        fn has_edge(&self, u: N, v: N) -> (found: B) {
+        fn has_edge(&self, u: N, v: N) -> (found: bool) {
             let neighbors = self.adj.nth(u);
             let len = neighbors.length();
             let mut i: usize = 0;

@@ -940,7 +940,7 @@ pub mod BSTRBMtEph {
                         Err(_) => self@ == old(self)@,
                     };
 
-        fn contains(&self, target: &T) -> (found: B)
+        fn contains(&self, target: &T) -> (found: bool)
             requires self.spec_bstrbmteph_wf(),
             ensures found == link_contains(self@, *target);
 
@@ -948,7 +948,7 @@ pub mod BSTRBMtEph {
             requires self.spec_bstrbmteph_wf(),
             ensures n as nat == link_spec_size(self@);
 
-        fn is_empty(&self) -> (b: B)
+        fn is_empty(&self) -> (b: bool)
             requires self.spec_bstrbmteph_wf(),
             ensures b == (self@ is None);
 
@@ -1039,7 +1039,7 @@ pub mod BSTRBMtEph {
         }
 
         // Reader: spec_is_bst_link from lock predicate, assume return matches ghost.
-        fn contains(&self, target: &T) -> (found: B) {
+        fn contains(&self, target: &T) -> (found: bool) {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
             // spec_is_bst_link(*data) from lock predicate via acquire_read.
@@ -1061,7 +1061,7 @@ pub mod BSTRBMtEph {
         }
 
         // Predicate: assume return predicate matches spec predicate.
-        fn is_empty(&self) -> (b: B) {
+        fn is_empty(&self) -> (b: bool) {
             let handle = self.root.acquire_read();
             let b = handle.borrow().is_none();
             proof { assume(b == (self@ is None)); }

@@ -135,13 +135,13 @@ verus! {
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Hash set contains() on the pair.
-        fn mem(&self, a: &X, b: &Y) -> (contains: B)
+        fn mem(&self, a: &X, b: &Y) -> (contains: bool)
             requires self.spec_relationsteph_wf()
             ensures contains == self@.contains((a@, b@));
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Delegates to set mem.
-        fn relates(&self, p: &Pair<X, Y>) -> (contains: B)
+        fn relates(&self, p: &Pair<X, Y>) -> (contains: bool)
             requires self.spec_relationsteph_wf()
             ensures contains == self@.contains(p@);
 
@@ -259,13 +259,13 @@ verus! {
             out
         }
 
-        fn mem(&self, a: &X, b: &Y) -> B {
+        fn mem(&self, a: &X, b: &Y) -> bool {
             let a_clone = a.clone_plus();
             let b_clone = b.clone_plus();
             self.pairs.mem(&Pair(a_clone, b_clone))
         }
 
-        fn relates(&self, p: &Pair<X, Y>) -> B {
+        fn relates(&self, p: &Pair<X, Y>) -> bool {
             self.mem(&p.0, &p.1)
         }
 

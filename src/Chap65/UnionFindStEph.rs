@@ -1125,7 +1125,7 @@ pub mod UnionFindStEph {
 
         /// Check if two elements are in the same set.
         /// APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
-        fn equals(&mut self, u: &V, v: &V) -> (same: B)
+        fn equals(&mut self, u: &V, v: &V) -> (same: bool)
             requires
                 old(self).spec_unionfindsteph_wf(),
                 old(self)@.parent.contains_key(u@),
@@ -1244,7 +1244,7 @@ pub mod UnionFindStEph {
 
         /// - APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
         #[verifier::rlimit(20)]
-        fn equals(&mut self, u: &V, v: &V) -> (same: B) {
+        fn equals(&mut self, u: &V, v: &V) -> (same: bool) {
             let root_u = find_root_loop(self, u);
             let root_v = find_root_loop(self, v);
             feq(&root_u, &root_v)

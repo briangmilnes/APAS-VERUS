@@ -278,7 +278,7 @@ pub mod BSTParaMtEph {
             ensures count == self@.len(), self@.finite();
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
-        fn is_empty(&self) -> (empty: B)
+        fn is_empty(&self) -> (empty: bool)
             ensures empty == (self@.len() == 0), self@.finite();
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
@@ -300,7 +300,7 @@ pub mod BSTParaMtEph {
             ensures found.is_some() <==> self@.contains(key@);
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
-        fn split(&self, key: &T) -> (parts: (Self, B, Self))
+        fn split(&self, key: &T) -> (parts: (Self, bool, Self))
             requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
             ensures
                 parts.1 == self@.contains(key@),
@@ -462,7 +462,7 @@ pub mod BSTParaMtEph {
             count
         }
 
-        fn is_empty(&self) -> (empty: B)
+        fn is_empty(&self) -> (empty: bool)
             ensures empty == (self@.len() == 0), self@.finite()
         { self.size() == 0 }
 
@@ -501,7 +501,7 @@ pub mod BSTParaMtEph {
             find_recursive(self, key)
         }
 
-        fn split(&self, key: &T) -> (parts: (Self, B, Self))
+        fn split(&self, key: &T) -> (parts: (Self, bool, Self))
             ensures
                 parts.1 == self@.contains(key@),
                 parts.0@.finite(),
@@ -753,7 +753,7 @@ pub mod BSTParaMtEph {
         exposed
     }
 
-    fn split_inner<T: MtKey>(tree: &ParamBST<T>, key: &T) -> (parts: (ParamBST<T>, B, ParamBST<T>))
+    fn split_inner<T: MtKey>(tree: &ParamBST<T>, key: &T) -> (parts: (ParamBST<T>, bool, ParamBST<T>))
         requires
             tree@.finite(),
             vstd::laws_cmp::obeys_cmp_spec::<T>(),

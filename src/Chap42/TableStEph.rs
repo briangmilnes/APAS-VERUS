@@ -334,7 +334,7 @@ broadcast use {
                         && self@[k] == result@);
         /// - APAS Cost Spec 42.5: Work Σ W(p(k,v)), Span lg |a| + max S(p(k,v))
         /// - Claude-Opus-4.6: Work Θ(n * W(p)), Span Θ(n * W(p)) -- sequential; disagrees with APAS span.
-        fn filter<F: Fn(&K, &V) -> B>(
+        fn filter<F: Fn(&K, &V) -> bool>(
             &mut self,
             f: F,
             Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,
@@ -710,7 +710,7 @@ broadcast use {
         }
 
         #[verifier::loop_isolation(false)]
-        fn filter<F: Fn(&K, &V) -> B>(
+        fn filter<F: Fn(&K, &V) -> bool>(
             &mut self,
             f: F,
             Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,

@@ -71,8 +71,8 @@ broadcast use {
     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
 
     /// Single-threaded predicate function (boolean function).
-    pub trait PredSt<T>: Fn(&T) -> B {}
-    impl<F, T> PredSt<T> for F where F: Fn(&T) -> B {}
+    pub trait PredSt<T>: Fn(&T) -> bool {}
+    impl<F, T> PredSt<T> for F where F: Fn(&T) -> bool {}
 
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
 

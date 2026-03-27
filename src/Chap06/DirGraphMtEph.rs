@@ -143,7 +143,7 @@ pub mod DirGraphMtEph {
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn neighbor(&self, u: &V, v: &V) -> (b: B)
+        fn neighbor(&self, u: &V, v: &V) -> (b: bool)
             requires 
                 spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
@@ -153,7 +153,7 @@ pub mod DirGraphMtEph {
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn incident(&self, e: &Edge<V>, v: &V) -> (b: B)
+        fn incident(&self, e: &Edge<V>, v: &V) -> (b: bool)
             requires valid_key_type_for_graph::<V>()
             ensures b == (e@.0 == v@ || e@.1 == v@);
 
@@ -415,11 +415,11 @@ pub mod DirGraphMtEph {
         fn sizeV(&self) -> (n: N) { self.V.size() }
         fn sizeA(&self) -> (n: N) { self.A.size() }
 
-        fn neighbor(&self, u: &V, v: &V) -> (b: B) {
+        fn neighbor(&self, u: &V, v: &V) -> (b: bool) {
             self.A.mem(&Edge(u.clone_plus(), v.clone_plus()))
         }
 
-        fn incident(&self, e: &Edge<V>, v: &V) -> (b: B) { feq(&e.0, v) || feq(&e.1, v) }
+        fn incident(&self, e: &Edge<V>, v: &V) -> (b: bool) { feq(&e.0, v) || feq(&e.1, v) }
 
         fn n_plus(&self, v: &V) -> SetStEph<V> {
             let arcs = self.A.clone();
@@ -861,7 +861,7 @@ pub mod DirGraphMtEph {
             requires self.spec_lockeddirgraphmteph_wf()
             ensures n == self@.A.len();
 
-        fn neighbor(&self, u: &V, v: &V) -> (b: B)
+        fn neighbor(&self, u: &V, v: &V) -> (b: bool)
             requires
                 self.spec_lockeddirgraphmteph_wf(),
                 self@.V.contains(u@),
@@ -969,7 +969,7 @@ pub mod DirGraphMtEph {
             n
         }
 
-        fn neighbor(&self, u: &V, v: &V) -> (b: B) {
+        fn neighbor(&self, u: &V, v: &V) -> (b: bool) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
             proof { assume(inner@ == self@); }

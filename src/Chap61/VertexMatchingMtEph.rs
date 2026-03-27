@@ -88,7 +88,7 @@ pub mod VertexMatchingMtEph {
     fn flip_coins_parallel<V: StT + MtT + 'static>(
         edges: &ArraySeqStEphS<Edge<V>>,
         seed: u64,
-    ) -> (result: ArraySeqStEphS<B>)
+    ) -> (result: ArraySeqStEphS<bool>)
         requires valid_key_type_Edge::<V>(),
         ensures true,
     {
@@ -98,7 +98,7 @@ pub mod VertexMatchingMtEph {
         }
 
         let mut rng = seeded_rng(seed);
-        let mut coins_vec: Vec<B> = Vec::new();
+        let mut coins_vec: Vec<bool> = Vec::new();
         let mut i: usize = 0;
         while i < n
             invariant
@@ -120,7 +120,7 @@ pub mod VertexMatchingMtEph {
     fn select_edges_parallel<V: StT + MtT + Hash + 'static>(
         graph: &UnDirGraphMtEph<V>,
         edges: &ArraySeqStEphS<Edge<V>>,
-        coins: &ArraySeqStEphS<B>,
+        coins: &ArraySeqStEphS<bool>,
     ) -> SetStEph<Edge<V>> {
         use std::sync::Arc;
         pub type T<V> = UnDirGraphMtEph<V>;

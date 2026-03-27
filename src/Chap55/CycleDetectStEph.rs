@@ -52,7 +52,7 @@ broadcast use vstd::seq::group_seq_axioms;
     }
 
     /// Bridge: for ArraySeqStEphS<bool>, view index equals spec_index.
-    proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<B>)
+    proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<bool>)
         ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
     {
         assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
@@ -263,7 +263,7 @@ broadcast use vstd::seq::group_seq_axioms;
         /// Detects if a directed graph contains a cycle (Algorithm 55.10).
         /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|) [Cost Spec 55.8, array sequences]
         /// - Claude-Opus-4.6: Work O(|V| + |E|), Span O(|V| + |E|) — agrees with APAS.
-        fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (has_cycle: B)
+        fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (has_cycle: bool)
             requires
                 spec_toposortsteph_wf(graph),
             ensures
@@ -278,13 +278,13 @@ broadcast use vstd::seq::group_seq_axioms;
     /// Ghost parameters: dfs_path for cycle witness, ord/next_time for completeness ordering.
     fn dfs_check_cycle(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
-        visited: &mut ArraySeqStEphS<B>,
-        ancestors: &mut ArraySeqStEphS<B>,
+        visited: &mut ArraySeqStEphS<bool>,
+        ancestors: &mut ArraySeqStEphS<bool>,
         vertex: N,
         Ghost(dfs_path): Ghost<Seq<int>>,
         Ghost(ord): Ghost<Map<int, nat>>,
         Ghost(next_time): Ghost<nat>,
-    ) -> (has_cycle: B)
+    ) -> (has_cycle: bool)
         requires
             vertex < old(visited)@.len(),
             old(visited)@.len() == graph@.len(),
@@ -768,7 +768,7 @@ broadcast use vstd::seq::group_seq_axioms;
     impl CycleDetectStEphTrait for CycleDetectStEph {
         /// Detects if a directed graph contains a cycle.
         /// Returns true if a cycle exists, false otherwise.
-        fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (has_cycle: B)
+        fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (has_cycle: bool)
         {
             let n = graph.length();
             let f_false = |_x: usize| -> (r: bool) ensures !r { false };

@@ -111,7 +111,7 @@ broadcast use {
                 );
 
         /// Work Theta(deg(u)), Span Theta(deg(u))
-        fn has_edge(&self, u: N, v: N) -> (found: B)
+        fn has_edge(&self, u: N, v: N) -> (found: bool)
             requires self.spec_adjseqgraphmteph_wf(), u < self.spec_num_vertices()
             ensures found == exists|j: int|
                 0 <= j < self.spec_degree(u as int)
@@ -131,7 +131,7 @@ broadcast use {
             ensures d as nat == self.spec_degree(u as int);
 
         /// Work Theta(deg(u)), Span Theta(deg(u))
-        fn set_edge(&mut self, u: N, v: N, exists: B)
+        fn set_edge(&mut self, u: N, v: N, exists: bool)
             requires
                 old(self).spec_adjseqgraphmteph_wf(),
                 u < old(self).spec_num_vertices(),
@@ -217,7 +217,7 @@ broadcast use {
             count
         }
 
-        fn has_edge(&self, u: N, v: N) -> (found: B) {
+        fn has_edge(&self, u: N, v: N) -> (found: bool) {
             let neighbors = self.adj.nth(u);
             let len = neighbors.length();
             let mut i: usize = 0;
@@ -260,7 +260,7 @@ broadcast use {
             self.adj.nth(u).length()
         }
 
-        fn set_edge(&mut self, u: N, v: N, exists: B) {
+        fn set_edge(&mut self, u: N, v: N, exists: bool) {
             let ghost old_degree = self.spec_degree(u as int);
             let ghost old_neighbors_view = Seq::new(old_degree, |j: int| self.spec_neighbor(u as int, j));
             let ghost adj_len = self.adj.spec_len();

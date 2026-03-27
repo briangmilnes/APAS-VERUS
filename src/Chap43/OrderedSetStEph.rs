@@ -245,7 +245,7 @@ broadcast use {
                 tree@ == Set::<<T as View>::V>::empty().insert(x@),
                 tree.spec_orderedsetsteph_wf();
         /// - APAS: Work Θ(log n), Span Θ(log n)
-        fn find(&self, x: &T) -> (found: B)
+        fn find(&self, x: &T) -> (found: bool)
             requires self.spec_orderedsetsteph_wf(),
             ensures found == self@.contains(x@);
         /// - APAS: Work Θ(log n), Span Θ(log n)
@@ -353,7 +353,7 @@ broadcast use {
                 successor matches Some(v) ==> forall|t: T|
                     #[trigger] self@.contains(t@) && t.cmp_spec(k) == Greater ==>
                     v.cmp_spec(&t) == Less || v@ == t@;
-        fn split(&mut self, k: &T) -> (split: (Self, B, Self))
+        fn split(&mut self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
             requires old(self).spec_orderedsetsteph_wf(),
             ensures
@@ -447,7 +447,7 @@ broadcast use {
                     #[trigger] self@.contains(t@) && t.cmp_spec(k) == Greater ==>
                     v.cmp_spec(&t) == Less || v@ == t@;
         /// Iterative alternative to `split`.
-        fn split_iter(&mut self, k: &T) -> (split: (Self, B, Self))
+        fn split_iter(&mut self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
             requires old(self).spec_orderedsetsteph_wf(),
             ensures
@@ -515,7 +515,7 @@ broadcast use {
             OrderedSetStEph { base_set: AVLTreeSetStEph::singleton(x) }
         }
 
-        fn find(&self, x: &T) -> (found: B)
+        fn find(&self, x: &T) -> (found: bool)
         { self.base_set.find(x) }
 
         fn insert(&mut self, x: T)
@@ -722,7 +722,7 @@ broadcast use {
         { self.next_iter(k) }
 
         /// Split via BST split.
-        fn split_iter(&mut self, k: &T) -> (split: (Self, B, Self))
+        fn split_iter(&mut self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
         {
             let ghost old_view = self@;
@@ -755,7 +755,7 @@ broadcast use {
             (left, found, right)
         }
 
-        fn split(&mut self, k: &T) -> (split: (Self, B, Self))
+        fn split(&mut self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
         { self.split_iter(k) }
 

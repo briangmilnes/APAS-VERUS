@@ -200,7 +200,7 @@ pub mod BSTSplayStEph {
         fn size(&self) -> (n: N)
             requires self.spec_bstsplaysteph_wf(),
             ensures n as nat == self.spec_size();
-        fn is_empty(&self) -> (b: B)
+        fn is_empty(&self) -> (b: bool)
             requires self.spec_bstsplaysteph_wf(),
             ensures b == (self.spec_size() == 0);
         fn height(&self) -> (h: N)
@@ -219,7 +219,7 @@ pub mod BSTSplayStEph {
             ensures
                 found.is_some() <==> self.spec_contains(*target),
                 found.is_some() ==> *found.unwrap() == *target;
-        fn contains(&self, target: &T) -> (found: B)
+        fn contains(&self, target: &T) -> (found: bool)
             requires self.spec_bstsplaysteph_wf(),
             ensures found == self.spec_contains(*target);
         fn minimum(&self) -> (min: Option<&T>)
@@ -1648,7 +1648,7 @@ pub mod BSTSplayStEph {
 
         /// - APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- compares cached size.
-        fn is_empty(&self) -> (b: B) { self.size() == 0 }
+        fn is_empty(&self) -> (b: bool) { self.size() == 0 }
 
         /// - APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- recursive tree traversal.
@@ -1666,7 +1666,7 @@ pub mod BSTSplayStEph {
 
         /// - APAS: Work O(h(T)), Span O(h(T))
         /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- delegates to find.
-        fn contains(&self, target: &T) -> (found: B) { self.find(target).is_some() }
+        fn contains(&self, target: &T) -> (found: bool) { self.find(target).is_some() }
 
         /// - APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends leftmost path.

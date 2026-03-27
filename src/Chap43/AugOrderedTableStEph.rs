@@ -162,7 +162,7 @@ broadcast use {
                 };
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- compares size to 0
-        fn is_empty(&self) -> (is_empty: B)
+        fn is_empty(&self) -> (is_empty: bool)
             requires self.spec_augorderedtablesteph_wf(),
             ensures is_empty == self@.dom().is_empty(), self@.dom().finite();
         /// - APAS: Work Θ(log n), Span Θ(log n)
@@ -223,7 +223,7 @@ broadcast use {
             ensures mapped@.dom() =~= self@.dom(), mapped@.dom().finite();
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- delegates to OrderedTableStEph.filter (collect + filter + rebuild)
-        fn filter<G: Fn(&K, &V) -> B>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
+        fn filter<G: Fn(&K, &V) -> bool>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
             requires
                 self.spec_augorderedtablesteph_wf(),
                 forall|k: &K, v: &V| f.requires((k, v)),
@@ -489,7 +489,7 @@ broadcast use {
             self.base_table.lookup(k)
         }
 
-        fn is_empty(&self) -> (is_empty: B)
+        fn is_empty(&self) -> (is_empty: bool)
             ensures is_empty == self@.dom().is_empty(), self@.dom().finite()
         {
             proof {
@@ -554,7 +554,7 @@ broadcast use {
             r
         }
 
-        fn filter<G: Fn(&K, &V) -> B>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
+        fn filter<G: Fn(&K, &V) -> bool>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
         {
             let new_base = self.base_table.filter(f, Ghost(spec_pred));
             let new_reduction = calculate_reduction(&new_base, &self.reducer, &self.identity);

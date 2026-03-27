@@ -28,7 +28,7 @@ pub mod GraphSearchStEph {
 
     // 8. traits
     pub trait SelectionStrategy<V: StT + Ord> {
-        fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, B))
+        fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, bool))
             requires
                 frontier.spec_avltreesetsteph_wf(),
                 obeys_feq_clone::<V>(),
@@ -90,11 +90,11 @@ pub mod GraphSearchStEph {
 
     // 9. impls
     impl<V: StT + Ord> SelectionStrategy<V> for SelectAll {
-        fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, B)) { (frontier.clone(), false) }
+        fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, bool)) { (frontier.clone(), false) }
     }
 
     impl<V: StT + Ord> SelectionStrategy<V> for SelectOne {
-        fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, B)) {
+        fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, bool)) {
             if frontier.size() == 0 {
                 (AVLTreeSetStEph::empty(), false)
             } else {

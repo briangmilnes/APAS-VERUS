@@ -78,7 +78,7 @@ broadcast use {
             requires self.spec_adjtablegraphstper_wf()
             ensures verts@ == self.spec_adj().dom();
         /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
-        fn has_edge(&self, u: &V, v: &V) -> (found: B)
+        fn has_edge(&self, u: &V, v: &V) -> (found: bool)
             requires self.spec_adjtablegraphstper_wf()
             ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@));
         /// Work Theta(log |V|), Span Theta(log |V|)
@@ -183,7 +183,7 @@ broadcast use {
             vertices
         }
 
-        fn has_edge(&self, u: &V, v: &V) -> (found: B)
+        fn has_edge(&self, u: &V, v: &V) -> (found: bool)
             ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@))
         {
             match self.adj.find(u) {

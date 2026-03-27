@@ -136,7 +136,7 @@ verus! {
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn neighbor(&self, u: &V, v: &V) -> (b: B)
+        fn neighbor(&self, u: &V, v: &V) -> (b: bool)
             requires 
                 spec_graphview_wf(self@),
                 valid_key_type_Edge::<V>(),
@@ -168,7 +168,7 @@ verus! {
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn incident(&self, e: &Edge<V>, v: &V) -> (b: B)
+        fn incident(&self, e: &Edge<V>, v: &V) -> (b: bool)
             requires valid_key_type_Edge::<V>()
             ensures b == (e@.0 == v@ || e@.1 == v@);
 
@@ -203,7 +203,7 @@ verus! {
 
         fn sizeE(&self) -> (n: N) { self.E.size() }
 
-        fn neighbor(&self, u: &V, v: &V) -> (b: B) {
+        fn neighbor(&self, u: &V, v: &V) -> (b: bool) {
             self.E.mem(&Edge(u.clone_plus(), v.clone_plus())) || 
             self.E.mem(&Edge(v.clone_plus(), u.clone_plus()))
         }
@@ -321,7 +321,7 @@ verus! {
             }
         }
 
-        fn incident(&self, e: &Edge<V>, v: &V) -> (b: B) { 
+        fn incident(&self, e: &Edge<V>, v: &V) -> (b: bool) { 
             feq(&e.0, v) || feq(&e.1, v) 
         }
 

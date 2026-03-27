@@ -112,7 +112,7 @@ broadcast use {
             requires self.spec_adjtablegraphsteph_wf();
         /// - APAS: Work Theta(lg n + lg m), Span Theta(lg n + lg m) [Cost Spec 52.3]
         /// - Claude-Opus-4.6: Work Theta(lg n + lg m), Span Theta(lg n + lg m) — agrees; table find + set find.
-        fn has_edge(&self, u: &V, v: &V) -> B
+        fn has_edge(&self, u: &V, v: &V) -> bool
             requires self.spec_adjtablegraphsteph_wf();
         /// - APAS: Work Theta(lg n), Span Theta(lg n) [Cost Spec 52.3]
         /// - Claude-Opus-4.6: Work Theta(lg n), Span Theta(lg n) — agrees; table find.
@@ -219,7 +219,7 @@ broadcast use {
             verts
         }
 
-        fn has_edge(&self, u: &V, v: &V) -> (found: B)
+        fn has_edge(&self, u: &V, v: &V) -> (found: bool)
             ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@))
         {
             match self.adj.find(u) {

@@ -257,11 +257,11 @@ pub mod AVLTreeSeq {
                 tree.spec_avltreeseq_seq().len() == 1,
                 tree.spec_avltreeseq_wf();
 
-        fn isEmpty(&self) -> (empty: B)
+        fn isEmpty(&self) -> (empty: bool)
             requires self.spec_avltreeseq_wf(),
             ensures empty == (self.spec_avltreeseq_seq().len() == 0);
 
-        fn isSingleton(&self) -> (single: B)
+        fn isSingleton(&self) -> (single: bool)
             requires self.spec_avltreeseq_wf(),
             ensures single == (self.spec_avltreeseq_seq().len() == 1);
 
@@ -307,7 +307,7 @@ pub mod AVLTreeSeq {
             requires old(self).spec_avltreeseq_wf(),
             ensures self.spec_avltreeseq_seq() =~= old(self).spec_avltreeseq_seq().push(value@);
 
-        fn contains_value(&self, target: &T) -> (found: B)
+        fn contains_value(&self, target: &T) -> (found: bool)
             requires self.spec_avltreeseq_wf(),
             ensures found == exists|j: int| 0 <= j < self.spec_avltreeseq_seq().len()
                 && self.spec_avltreeseq_seq()[j] == target@;
@@ -820,11 +820,11 @@ pub mod AVLTreeSeq {
             AVLTreeS { root, next_key: 1 }
         }
 
-        fn isEmpty(&self) -> (empty: B) {
+        fn isEmpty(&self) -> (empty: bool) {
             self.length() == 0
         }
 
-        fn isSingleton(&self) -> (single: B) {
+        fn isSingleton(&self) -> (single: bool) {
             self.length() == 1
         }
 
@@ -960,7 +960,7 @@ pub mod AVLTreeSeq {
             self.root = node;
         }
 
-        fn contains_value(&self, target: &T) -> (found: B) {
+        fn contains_value(&self, target: &T) -> (found: bool) {
             assert(self.spec_avltreeseq_wf());
             assert(obeys_feq_full::<T>());
             let n = self.length();

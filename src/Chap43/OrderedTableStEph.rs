@@ -574,7 +574,7 @@ broadcast use {
                 };
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS
-        fn is_empty(&self) -> (is_empty: B)
+        fn is_empty(&self) -> (is_empty: bool)
             requires self.spec_orderedtablesteph_wf(),
             ensures is_empty == self@.dom().is_empty();
         /// - APAS: Work Θ(log n), Span Θ(log n)
@@ -639,7 +639,7 @@ broadcast use {
             ensures mapped@.dom() =~= self@.dom(), mapped@.dom().finite(), mapped.spec_orderedtablesteph_wf();
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects, filters, rebuilds
-        fn filter<F: Fn(&K, &V) -> B>(
+        fn filter<F: Fn(&K, &V) -> bool>(
             &self,
             f: F,
             Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,
@@ -1132,7 +1132,7 @@ broadcast use {
             self.find(k)
         }
 
-        fn is_empty(&self) -> (is_empty: B)
+        fn is_empty(&self) -> (is_empty: bool)
             ensures is_empty == self@.dom().is_empty()
         {
             let r = self.tree.is_empty();
@@ -1578,7 +1578,7 @@ broadcast use {
             mapped
         }
 
-        fn filter<F: Fn(&K, &V) -> B>(
+        fn filter<F: Fn(&K, &V) -> bool>(
             &self,
             f: F,
             Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,

@@ -32,7 +32,7 @@ broadcast use vstd::seq::group_seq_axioms;
     // 6. spec fns
 
     /// Bridge: for ArraySeqStEphS<bool>, view index equals spec_index.
-    proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<B>)
+    proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<bool>)
         ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
     {
         assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
@@ -217,7 +217,7 @@ broadcast use vstd::seq::group_seq_axioms;
     /// visited vertices NOT in gray.
     fn dfs_recursive(
         graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
-        visited: &mut ArraySeqStEphS<B>,
+        visited: &mut ArraySeqStEphS<bool>,
         reachable: &mut AVLTreeSetStEph<N>,
         vertex: N,
         Ghost(gray): Ghost<Set<int>>,

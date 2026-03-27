@@ -267,7 +267,7 @@ broadcast use {
 
         /// - APAS Cost Spec 41.3: Work 1, Span 1
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS; single bit test.
-        fn find(&self, x: usize) -> (found: B)
+        fn find(&self, x: usize) -> (found: bool)
             requires self.spec_arraysetenummteph_wf(),
             ensures found == self@.contains(x);
 
@@ -814,7 +814,7 @@ broadcast use {
             combined
         }
 
-        fn find(&self, x: usize) -> (found: B)
+        fn find(&self, x: usize) -> (found: bool)
             ensures found == self@.contains(x),
         {
             if x >= self.universe_size {

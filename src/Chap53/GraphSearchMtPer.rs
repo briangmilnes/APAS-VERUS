@@ -31,7 +31,7 @@ pub mod GraphSearchMtPer {
 
     // 8. traits
     pub trait SelectionStrategy<V: StTInMtT + Ord + 'static> {
-        fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, B))
+        fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, bool))
             requires obeys_feq_clone::<V>(), frontier.spec_avltreesetmtper_wf(),
             ensures selected.0@.subset_of(frontier@);
     }
@@ -68,11 +68,11 @@ pub mod GraphSearchMtPer {
 
     // 9. impls
     impl<V: StTInMtT + Ord + 'static> SelectionStrategy<V> for SelectAll {
-        fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, B)) { (frontier.clone(), false) }
+        fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, bool)) { (frontier.clone(), false) }
     }
 
     impl<V: StTInMtT + Ord + 'static> SelectionStrategy<V> for SelectOne {
-        fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, B)) {
+        fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, bool)) {
             if frontier.size() == 0 {
                 (AVLTreeSetMtPer::empty(), false)
             } else {

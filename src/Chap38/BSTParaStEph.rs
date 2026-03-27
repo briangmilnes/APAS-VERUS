@@ -306,7 +306,7 @@ pub mod BSTParaStEph {
             ensures count == self@.len(), self@.finite();
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
-        fn is_empty(&self) -> (empty: B)
+        fn is_empty(&self) -> (empty: bool)
             ensures empty == (self@.len() == 0), self@.finite();
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
@@ -339,7 +339,7 @@ pub mod BSTParaStEph {
             ensures found.is_some() <==> self@.contains(key@);
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
-        fn split(&self, key: &T) -> (parts: (Self, B, Self))
+        fn split(&self, key: &T) -> (parts: (Self, bool, Self))
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
@@ -586,7 +586,7 @@ pub mod BSTParaStEph {
             count
         }
 
-        fn is_empty(&self) -> (empty: B)
+        fn is_empty(&self) -> (empty: bool)
             ensures empty == (self@.len() == 0), self@.finite()
         { self.size() == 0 }
 
@@ -650,7 +650,7 @@ pub mod BSTParaStEph {
         }
 
         /// Algorithm 38.5 — split via expose and recursive descent.
-        fn split(&self, key: &T) -> (parts: (Self, B, Self))
+        fn split(&self, key: &T) -> (parts: (Self, bool, Self))
             ensures
                 parts.1 == self@.contains(key@),
                 parts.0@.finite(),

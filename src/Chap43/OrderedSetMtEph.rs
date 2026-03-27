@@ -122,7 +122,7 @@ pub mod OrderedSetMtEph {
             ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_orderedsetmteph_wf();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- acquires lock, delegates to StEph.find (BST search)
-        fn find(&self, x: &T) -> (found: B)
+        fn find(&self, x: &T) -> (found: bool)
             ensures found == self@.contains(x@);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- acquires lock, delegates to StEph.insert (BST insert)
@@ -220,7 +220,7 @@ pub mod OrderedSetMtEph {
                     v.cmp_spec(&t) == Less || v@ == t@;
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + partition)
-        fn split(&mut self, k: &T) -> (split: (Self, B, Self))
+        fn split(&mut self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
             ensures self@.finite();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
@@ -293,7 +293,7 @@ pub mod OrderedSetMtEph {
             }
         }
 
-        fn find(&self, x: &T) -> (found: B) {
+        fn find(&self, x: &T) -> (found: bool) {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
@@ -480,7 +480,7 @@ pub mod OrderedSetMtEph {
             successor
         }
 
-        fn split(&mut self, k: &T) -> (split: (Self, B, Self)) {
+        fn split(&mut self, k: &T) -> (split: (Self, bool, Self)) {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
             let (left, found, right) = locked_val.split(k);
             // Release with empty to satisfy inv (empty is wf by construction).

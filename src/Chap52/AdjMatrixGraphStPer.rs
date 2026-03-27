@@ -152,7 +152,7 @@ broadcast use {
                 );
 
         /// Work Theta(1), Span Theta(1)
-        fn has_edge(&self, u: N, v: N) -> (found: B)
+        fn has_edge(&self, u: N, v: N) -> (found: bool)
             requires self.spec_adjmatrixgraphstper_wf(), u < self.spec_n(), v < self.spec_n()
             ensures found == self.spec_edge(u as int, v as int);
 
@@ -176,7 +176,7 @@ broadcast use {
             );
 
         /// Work Theta(n), Span Theta(n)
-        fn set_edge(&self, u: N, v: N, exists: B) -> (updated: Self)
+        fn set_edge(&self, u: N, v: N, exists: bool) -> (updated: Self)
             requires
                 self.spec_adjmatrixgraphstper_wf(),
                 u < self.spec_n(),
@@ -286,7 +286,7 @@ broadcast use {
             total
         }
 
-        fn has_edge(&self, u: N, v: N) -> (found: B) {
+        fn has_edge(&self, u: N, v: N) -> (found: bool) {
             *self.matrix.nth(u).nth(v)
         }
 
@@ -376,7 +376,7 @@ broadcast use {
             count
         }
 
-        fn set_edge(&self, u: N, v: N, exists: B) -> (updated: Self) {
+        fn set_edge(&self, u: N, v: N, exists: bool) -> (updated: Self) {
             let n = self.n;
             let new_row = ArraySeqStPerS::tabulate(
                 &|j: usize| -> (r: bool)

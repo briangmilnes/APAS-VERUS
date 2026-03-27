@@ -84,13 +84,13 @@ pub mod BSTSetRBMtEph {
         fn size(&self) -> (n: N)
             requires self.spec_bstsetrbmteph_wf()
             ensures true;
-        fn is_empty(&self) -> (b: B)
+        fn is_empty(&self) -> (b: bool)
             requires self.spec_bstsetrbmteph_wf()
             ensures true;
         fn find(&self, value: &T) -> (found: Option<T>)
             requires self.spec_bstsetrbmteph_wf()
             ensures true;
-        fn contains(&self, value: &T) -> (found: B)
+        fn contains(&self, value: &T) -> (found: bool)
             requires self.spec_bstsetrbmteph_wf()
             ensures true;
         fn minimum(&self) -> (min: Option<T>)
@@ -114,7 +114,7 @@ pub mod BSTSetRBMtEph {
         fn difference(&self, other: &Self) -> (diff: Self)
             requires self.spec_bstsetrbmteph_wf(), other.spec_bstsetrbmteph_wf()
             ensures diff.spec_bstsetrbmteph_wf();
-        fn split(&self, pivot: &T) -> (parts: (Self, B, Self))
+        fn split(&self, pivot: &T) -> (parts: (Self, bool, Self))
             requires self.spec_bstsetrbmteph_wf()
             ensures parts.0.spec_bstsetrbmteph_wf(), parts.2.spec_bstsetrbmteph_wf();
         fn join_pair(left: Self, right: Self) -> (joined: Self)
@@ -219,11 +219,11 @@ pub mod BSTSetRBMtEph {
 
         fn size(&self) -> N { self.tree.size() }
 
-        fn is_empty(&self) -> B { self.tree.is_empty() }
+        fn is_empty(&self) -> bool { self.tree.is_empty() }
 
         fn find(&self, value: &T) -> Option<T> { self.tree.find(value) }
 
-        fn contains(&self, value: &T) -> B { self.tree.contains(value) }
+        fn contains(&self, value: &T) -> bool { self.tree.contains(value) }
 
         fn minimum(&self) -> Option<T> { self.tree.minimum() }
 
@@ -364,7 +364,7 @@ pub mod BSTSetRBMtEph {
             }
         }
 
-        fn split(&self, pivot: &T) -> (Self, B, Self) {
+        fn split(&self, pivot: &T) -> (Self, bool, Self) {
             let sorted = self.tree.in_order();
             let n = sorted.length();
             let mut left: Vec<T> = Vec::new();

@@ -118,7 +118,7 @@ pub mod Exercise21_8 {
             lemma_filter_len_eq_divisor_count(n, k - 1);
             let s = Seq::new(k as nat, |i: int| (n % (i + 1) == 0));
             let s_prev = Seq::new((k - 1) as nat, |i: int| (n % (i + 1) == 0));
-            let pred = |v: B| v;
+            let pred = |v: bool| v;
             assert(s.drop_last() =~= s_prev);
             assert(s.last() == (n % (k as int) == 0));
 
@@ -161,7 +161,7 @@ pub mod Exercise21_8 {
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    pub fn is_divisible(n: N, i: N) -> (divides: B)
+    pub fn is_divisible(n: N, i: N) -> (divides: bool)
         requires i > 0
         ensures divides == (n as int % i as int == 0)
     {
@@ -174,7 +174,7 @@ pub mod Exercise21_8 {
     /// - APAS: Work Θ(√n), Span Θ(lg n)
     /// - Claude-Opus-4.6: Work Θ(√n), Span Θ(√n) — sequential StEph tabulate + filter.
     // veracity: no_requires
-    pub fn is_prime(n: N) -> (prime: B)
+    pub fn is_prime(n: N) -> (prime: bool)
         ensures prime == spec_is_prime(n as int)
     {
         if n < 2 {
@@ -183,8 +183,8 @@ pub mod Exercise21_8 {
         let k: N = n.isqrt();
 
         // Tabulate: all[i] = (n % (i+1) == 0) for i in 0..k
-        let all: ArraySeqStEphS<B> = ArraySeqStEphS::tabulate(
-            &(|i: usize| -> (d: B)
+        let all: ArraySeqStEphS<bool> = ArraySeqStEphS::tabulate(
+            &(|i: usize| -> (d: bool)
                 requires
                     i < k,
                     n >= 2,
@@ -197,9 +197,9 @@ pub mod Exercise21_8 {
         );
 
         // Filter: keep only the true values (divisors).
-        let pred = |x: &B| -> (keep: bool) ensures keep == *x { *x };
-        let ghost spec_pred = |v: B| v;
-        let ones: ArraySeqStEphS<B> = ArraySeqStEphS::filter(
+        let pred = |x: &bool| -> (keep: bool) ensures keep == *x { *x };
+        let ghost spec_pred = |v: bool| v;
+        let ones: ArraySeqStEphS<bool> = ArraySeqStEphS::filter(
             &all,
             &pred,
             Ghost(spec_pred),

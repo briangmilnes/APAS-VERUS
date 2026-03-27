@@ -266,7 +266,7 @@ broadcast use {
                 combined@ == self@.union(other@),
                 combined.spec_avltreesetstper_wf();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
-        fn find(&self, x: &T) -> (found: B)
+        fn find(&self, x: &T) -> (found: bool)
             requires
                 self.spec_avltreesetstper_wf(),
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -292,7 +292,7 @@ broadcast use {
                 updated@ == self@.insert(x@),
                 updated.spec_avltreesetstper_wf();
         /// Iterative alternative to `find`.
-        fn find_iter(&self, x: &T) -> (found: B)
+        fn find_iter(&self, x: &T) -> (found: bool)
             requires
                 self.spec_avltreesetstper_wf(),
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -504,7 +504,7 @@ broadcast use {
         }
 
         /// Recursive find via BSTParaStEph.
-        fn find(&self, x: &T) -> (found: B)
+        fn find(&self, x: &T) -> (found: bool)
         {
             self.tree.find(x).is_some()
         }
@@ -573,7 +573,7 @@ broadcast use {
         }
 
         /// Iterative alternative to `find`. Delegates to recursive default.
-        fn find_iter(&self, x: &T) -> (found: B)
+        fn find_iter(&self, x: &T) -> (found: bool)
         {
             self.find(x)
         }

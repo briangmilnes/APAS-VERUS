@@ -426,7 +426,7 @@ pub mod TableStPer {
 
         /// - APAS Cost Spec 42.5: Work Σ W(p(k,v)), Span lg |a| + max S(p(k,v))
         /// - Claude-Opus-4.6: Work Θ(n * W(p)), Span Θ(n * W(p)) -- sequential; disagrees with APAS span.
-        fn filter<F: Fn(&K, &V) -> B>(
+        fn filter<F: Fn(&K, &V) -> bool>(
             &self,
             f: F,
             Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,
@@ -806,7 +806,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
-        fn filter<F: Fn(&K, &V) -> B>(
+        fn filter<F: Fn(&K, &V) -> bool>(
             &self,
             f: F,
             Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,

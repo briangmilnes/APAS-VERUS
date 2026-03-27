@@ -110,7 +110,7 @@ broadcast use {
         fn edges(&self) -> &AVLTreeSetStPer<Pair<V, V>>
             requires self.spec_edgesetgraphstper_wf();
         /// Work Theta(log |E|), Span Theta(log |E|)
-        fn has_edge(&self, u: &V, v: &V) -> B
+        fn has_edge(&self, u: &V, v: &V) -> bool
             requires self.spec_edgesetgraphstper_wf();
         /// Work Theta(|E| log |V|), Span Theta(|E| log |V|)
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>)
@@ -188,7 +188,7 @@ broadcast use {
 
         fn edges(&self) -> &AVLTreeSetStPer<Pair<V, V>> { &self.edges }
 
-        fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
+        fn has_edge(&self, u: &V, v: &V) -> bool { self.edges.find(&Pair(u.clone(), v.clone())) }
 
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>)
             ensures neighbors@ == self.spec_out_neighbors(u@)

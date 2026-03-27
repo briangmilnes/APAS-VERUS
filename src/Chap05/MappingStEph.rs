@@ -212,7 +212,7 @@ verus! {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Hash set contains() on the pair.
         /// - Matches vstd Map::contains_pair() from map_lib.
-        fn mem(&self, p: &Pair<X, Y>) -> (contains: B)
+        fn mem(&self, p: &Pair<X, Y>) -> (contains: bool)
             requires self.spec_mappingsteph_wf()
             ensures
                 contains == (self@.dom().contains(p@.0) && self@[p@.0] == p@.1),
@@ -440,7 +440,7 @@ verus! {
             }
             size
         }
-        fn mem(&self, p: &Pair<X, Y>) -> B { self.mapping.relates(p) }
+        fn mem(&self, p: &Pair<X, Y>) -> bool { self.mapping.relates(p) }
         fn domain(&self) -> SetStEph<X> { self.mapping.domain() }
 
         fn range(&self) -> SetStEph<Y> { 

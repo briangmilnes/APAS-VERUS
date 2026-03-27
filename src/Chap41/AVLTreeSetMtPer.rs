@@ -152,7 +152,7 @@ broadcast use {
             ensures combined@ == self@.union(other@), combined.spec_avltreesetmtper_wf();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
-        fn find(&self, x: &T) -> (found: B)
+        fn find(&self, x: &T) -> (found: bool)
             requires
                 self.spec_avltreesetmtper_wf(),
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -372,7 +372,7 @@ broadcast use {
             combined
         }
 
-        fn find(&self, x: &T) -> (found: B)
+        fn find(&self, x: &T) -> (found: bool)
         {
             let handle = self.locked_set.acquire_read();
             let found = handle.borrow().find(x);

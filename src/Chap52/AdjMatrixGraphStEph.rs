@@ -152,7 +152,7 @@ broadcast use {
 
         /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.6]
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees with APAS.
-        fn has_edge(&self, u: N, v: N) -> (found: B)
+        fn has_edge(&self, u: N, v: N) -> (found: bool)
             requires self.spec_adjmatrixgraphsteph_wf(), u < self.spec_n(), v < self.spec_n()
             ensures found == self.spec_edge(u as int, v as int);
 
@@ -179,7 +179,7 @@ broadcast use {
 
         /// - APAS: Work Theta(n), Span Theta(1) [Cost Spec 52.6, insert/delete edge with ephemeral]
         /// - Claude-Opus-4.6: Work Theta(n^2), Span Theta(n^2) — rebuilds entire matrix via tabulate.
-        fn set_edge(&mut self, u: N, v: N, exists: B)
+        fn set_edge(&mut self, u: N, v: N, exists: bool)
             requires
                 old(self).spec_adjmatrixgraphsteph_wf(),
                 u < old(self).spec_n(),
@@ -294,7 +294,7 @@ broadcast use {
             total
         }
 
-        fn has_edge(&self, u: N, v: N) -> (found: B) {
+        fn has_edge(&self, u: N, v: N) -> (found: bool) {
             *self.matrix.nth(u).nth(v)
         }
 
@@ -384,7 +384,7 @@ broadcast use {
             count
         }
 
-        fn set_edge(&mut self, u: N, v: N, exists: B) {
+        fn set_edge(&mut self, u: N, v: N, exists: bool) {
             let n = self.n;
             let new_row = ArraySeqStEphS::tabulate(
                 &|j: usize| -> (r: bool)

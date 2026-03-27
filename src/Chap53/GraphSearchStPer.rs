@@ -36,7 +36,7 @@ pub mod GraphSearchStPer {
     pub trait SelectionStrategy<V: StT + Ord> {
         /// Select subset U ⊆ F where |U| ≥ 1.
         /// Returns (selected vertices, should_track_parents).
-        fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, B))
+        fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, bool))
             requires
                 frontier.spec_avltreesetstper_wf(),
                 obeys_feq_clone::<V>(),
@@ -98,11 +98,11 @@ pub mod GraphSearchStPer {
 
     // 9. impls
     impl<V: StT + Ord> SelectionStrategy<V> for SelectAll {
-        fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, B)) { (frontier.clone(), false) }
+        fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, bool)) { (frontier.clone(), false) }
     }
 
     impl<V: StT + Ord> SelectionStrategy<V> for SelectOne {
-        fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, B)) {
+        fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, bool)) {
             let n = frontier.size();
             if n == 0 {
                 (AVLTreeSetStPer::empty(), false)
