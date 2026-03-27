@@ -1784,22 +1784,10 @@ Table of Contents:
    3 clean proof functions
 ✓ src/Chap55/SCCStPer.rs
    2 clean proof functions
-❌ src/Chap55/TopoSortStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:478: error: external_body - #[verifier::external_body]
-       479 |     pub fn topological_sort_opt(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (topo_order: Option<AVLTreeSeqStEphS<usize>>)
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:548: error: external_body - #[verifier::external_body]
-       549 |         fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (order: AVLTreeSeqStEphS<usize>)
-   Holes: 2 total
-      2 × external_body
-   Proof functions: 7 total (7 clean, 0 holed)
-❌ src/Chap55/TopoSortStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:338: error: external_body - #[verifier::external_body]
-       339 |     pub fn topological_sort_opt(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (topo_order: Option<AVLTreeSeqStPerS<usize>>)
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:412: error: external_body - #[verifier::external_body]
-       413 |         fn topo_sort(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (order: AVLTreeSeqStPerS<usize>)
-   Holes: 2 total
-      2 × external_body
-   Proof functions: 2 total (2 clean, 0 holed)
+✓ src/Chap55/TopoSortStEph.rs
+   11 clean proof functions
+✓ src/Chap55/TopoSortStPer.rs
+   6 clean proof functions
 ✓ src/Chap56/AllPairsResultStEphF64.rs
 ✓ src/Chap56/AllPairsResultStEphI64.rs
 ✓ src/Chap56/AllPairsResultStPerF64.rs
@@ -1842,97 +1830,118 @@ Table of Contents:
 ✓ src/Chap64/SpanTreeStEph.rs
 ✓ src/Chap64/TSPApproxStEph.rs
 ❌ src/Chap65/KruskalStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:90: error: external_body - #[verifier::external_body]
-        91 |     fn kruskal_greedy_phase<V: HashOrd>(
-   Holes: 1 total
-      1 × external_body
-   Proof functions: 1 total (1 clean, 0 holed)
-❌ src/Chap65/PrimStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:72: error: assume() [algorithmic] - assume(TotalOrder::le(x, y) || TotalOrder::le(y, x));
-        70 |         // accept hole
-        71 |         proof fn total(x: Self, y: Self) {
-        73 |         }
-        74 |         #[verifier::external_body]
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:74: error: external_body - #[verifier::external_body]
-        75 |         fn cmp(&self, other: &Self) -> (c: Ordering) {
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:59: error: proof_fn_with_holes - proof fn reflexive — contains assume/external_body/admit, needs proof
-        55 |         open spec fn le(self, other: Self) -> bool {
+/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:40: error: opaque - #[verifier::opaque]
+        41 |         pub open spec fn uf_wf_opaque<V: HashOrd>(uf: &UnionFindStEph<V>) -> bool {
+/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:49: error: external_body - #[verifier::external_body]
+        50 |         pub fn kruskal_process_edge<V: HashOrd>(
+/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:422: error: assume() [algorithmic] - proof { assume(total as int + edge.2 as int <= u64::MAX as i
+       402 |     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, u64>>) -> (total: u64)
             ...
-        57 |         }
-        58 |         // accept hole — float reflexive requires finiteness precondition.
-        60 |             assume(TotalOrder::le(x, x));
-        61 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:63: error: proof_fn_with_holes - proof fn transitive — contains assume/external_body/admit, needs proof
-        59 |         proof fn reflexive(x: Self) {
+       420 |                 Some(edge) => {
+       421 |                     // accept hole — u64 addition overflow: callers use small test weights.
+       423 |                     total = total + edge.2;
+       424 |                 },
+/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:232: error: fn_missing_requires - fn sort_edges_by_weight — exec fn should have requires
+       224 |         fn verify_mst_size<V: HashOrd>(
             ...
-        61 |         }
-        62 |         // accept hole
-        64 |             assume(TotalOrder::le(x, z));
-        65 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:67: error: proof_fn_with_holes - proof fn antisymmetric — contains assume/external_body/admit, needs proof
-        63 |         proof fn transitive(x: Self, y: Self, z: Self) {
+       230 | 
+       231 |     /// Sort edges by weight — selection sort.
+       233 |         ensures
+       234 |             edges@.len() == old(edges)@.len(),
+/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:402: error: fn_missing_ensures - fn mst_weight — exec fn should have ensures
+       310 |     pub fn kruskal_mst<V: HashOrd>(
             ...
-        65 |         }
-        66 |         // accept hole — preorder: equal priority does not imply equal entry.
-        68 |             assume(x == y);
-        69 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:71: error: proof_fn_with_holes - proof fn total — contains assume/external_body/admit, needs proof
-        67 |         proof fn antisymmetric(x: Self, y: Self) {
-            ...
-        69 |         }
-        70 |         // accept hole
-        72 |             assume(TotalOrder::le(x, y) || TotalOrder::le(y, x));
-        73 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:368: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       364 |         fn clone(&self) -> (result: Self)
-            ...
-       366 |         {
-       367 |             let result = PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() };
-       369 |             result
-       370 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:60: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:64: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:68: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:131: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
-   Holes: 2 total
+       400 |     /// - APAS: (no cost stated) — utility function
+       401 |     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
+       403 |         requires mst_edges.spec_setsteph_wf(),
+       404 |     {
+   Holes: 3 total
       1 × assume()
       1 × external_body
+      1 × opaque
+   Proof functions: 1 total (1 clean, 0 holed)
+❌ src/Chap65/PrimStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:61: error: assume() [algorithmic] - assume(x == y);
+        59 |         }
+        60 |         proof fn antisymmetric(x: Self, y: Self) {
+        62 |         }
+        63 |         proof fn total(x: Self, y: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:70: error: assume() [algorithmic] - proof { assume(self == other); }
+        65 |         fn cmp(&self, other: &Self) -> (c: Ordering) {
+            ...
+        68 |             } else if self.priority == other.priority {
+        69 |                 // Equal priority — antisymmetric axiom handles PQEntry equality.
+        71 |                 Ordering::Equal
+        72 |             } else {
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:352: error: assume() [algorithmic] - proof { assume(total as int + edge.2 as int <= u64::MAX as i
+       332 |     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, u64>>) -> (total: u64)
+            ...
+       350 |                 Some(edge) => {
+       351 |                     // accept hole — u64 addition overflow: callers use small test weights.
+       353 |                     total = total + edge.2;
+       354 |                 },
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:60: error: proof_fn_with_holes - proof fn antisymmetric — contains assume/external_body/admit, needs proof
+        58 |         proof fn transitive(x: Self, y: Self, z: Self) {
+        59 |         }
+        61 |             assume(x == y);
+        62 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:104: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
+        97 |         fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, u64>>) -> u64
+            ...
+       102 |     /// - APAS: N/A — Verus-specific scaffolding.
+       103 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+       105 |         ensures entry.priority == priority, entry.vertex == vertex, entry.parent == parent,
+       106 |     {
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:332: error: fn_missing_ensures - fn mst_weight — exec fn should have ensures
+       129 |     pub fn prim_mst<V: HashOrd + Display>(
+            ...
+       330 |     /// - APAS: (no cost stated) — utility function
+       331 |     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
+       333 |         requires mst_edges.spec_setsteph_wf(),
+       334 |     {
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:366: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       362 |         fn clone(&self) -> (result: Self)
+            ...
+       364 |         {
+       365 |             let result = PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() };
+       367 |             result
+       368 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:128: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
+   Holes: 3 total
+      3 × assume()
    Info: 1 × structural_false_positive
       1 × OPAQUE_EXTERNAL
-   Info: 3 total
-   Proof functions: 4 total (0 clean, 4 holed)
+   Proof functions: 4 total (3 clean, 1 holed)
 ❌ src/Chap65/UnionFindStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:950: error: admit() - admit(); // Overflow: rank bounded by log2(n) < 64 (2^rank t
-       882 |     fn union_merge_exec<V: StT + Hash>(
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:982: error: admit() - admit(); // Overflow: rank bounded by log2(n) < 64 (2^rank t
+       914 |     fn union_merge_exec<V: StT + Hash>(
             ...
-       948 |                 proof {
-       949 |                     assert(strictly_cloned(root_u, ru2));
-       951 |                 }
-       952 |                 uf.rank.insert(ru2, rank_u + 1);
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:974: error: external_body - #[verifier::external_body]
-       975 |     fn union_merge<V: StT + Hash>(
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1231: error: external_body [blocked_by: union_merge] - #[verifier::external_body]
-      1232 |         fn union(&mut self, u: &V, v: &V) {
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:882: error: fn_missing_wf_requires - fn union_merge_exec — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
-       858 |     proof fn lemma_union_wf_frame<V: StT + Hash>(
+       980 |                 proof {
+       981 |                     assert(strictly_cloned(root_u, ru2));
+       983 |                 }
+       984 |                 uf.rank.insert(ru2, rank_u + 1);
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1078: error: external_body - #[verifier::external_body]
+      1079 |     fn union_merge<V: StT + Hash>(
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1308: error: external_body - #[verifier::external_body]
+      1309 |         fn union(&mut self, u: &V, v: &V) {
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:914: error: fn_missing_wf_requires - fn union_merge_exec — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
+       890 |     proof fn lemma_union_wf_frame<V: StT + Hash>(
             ...
-       880 |     /// the quantified wf proof, keeping Z3 under 4 GB.
-       881 |     #[verifier::rlimit(30)]
-       883 |         uf: &mut UnionFindStEph<V>,
-       884 |         root_u: V,
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:975: error: fn_missing_wf_requires - fn union_merge — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
-       882 |     fn union_merge_exec<V: StT + Hash>(
+       912 |     /// the quantified wf proof, keeping Z3 under 4 GB.
+       913 |     #[verifier::rlimit(30)]
+       915 |         uf: &mut UnionFindStEph<V>,
+       916 |         root_u: V,
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1079: error: fn_missing_wf_requires - fn union_merge — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
+      1005 |     proof fn lemma_union_merge_wf<V: StT + Hash>(
             ...
-       973 |     /// exec ensures + domain assertions exceed Z3's quantifier budget.
-       974 |     #[verifier::external_body]
-       976 |         uf: &mut UnionFindStEph<V>,
-       977 |         root_u: V,
+      1077 |     /// lemma_union_merge_wf to keep &mut encoding out of the proof context.
+      1078 |     #[verifier::external_body]
+      1080 |         uf: &mut UnionFindStEph<V>,
+      1081 |         root_u: V,
    Holes: 3 total
       1 × admit()
       2 × external_body
-         1 × root cause
-         1 × downstream (blocked by root causes)
-   Proof functions: 12 total (12 clean, 0 holed)
+   Proof functions: 13 total (13 clean, 0 holed)
 ⚠ src/Chap66/BoruvkaMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap66/BoruvkaMtEph.rs:62: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         58 |         fn eq(&self, other: &Self) -> (equal: bool)
@@ -2190,14 +2199,14 @@ Chap54::BFSMtEph  depends upon only clean modules
 Chap54::BFSMtPer  depends upon only clean modules
 Chap54::BFSStEph  depends upon only clean modules
 Chap54::BFSStPer  depends upon only clean modules
-Chap55::CycleDetectStEph  depends upon holed modules: Chap55::TopoSortStEph
-Chap55::CycleDetectStPer  depends upon holed modules: Chap55::TopoSortStEph, Chap55::TopoSortStPer
-Chap55::DFSStEph  depends upon holed modules: Chap55::TopoSortStEph
-Chap55::DFSStPer  depends upon holed modules: Chap55::TopoSortStEph, Chap55::TopoSortStPer
-Chap55::SCCStEph  depends upon holed modules: Chap55::TopoSortStEph
-Chap55::SCCStPer  depends upon holed modules: Chap55::TopoSortStEph
+Chap55::CycleDetectStEph  depends upon only clean modules
+Chap55::CycleDetectStPer  depends upon only clean modules
+Chap55::DFSStEph  depends upon only clean modules
+Chap55::DFSStPer  depends upon only clean modules
+Chap55::SCCStEph  depends upon only clean modules
+Chap55::SCCStPer  depends upon only clean modules
 Chap55::TopoSortStEph  depends upon only clean modules
-Chap55::TopoSortStPer  depends upon holed modules: Chap55::TopoSortStEph
+Chap55::TopoSortStPer  depends upon only clean modules
 Chap56::AllPairsResultStEphF64  depends upon only clean modules
 Chap56::AllPairsResultStEphI64  depends upon only clean modules
 Chap56::AllPairsResultStPerF64  depends upon only clean modules
@@ -2439,14 +2448,14 @@ src/Chap54/BFSMtEph.rs  depends upon only clean modules
 src/Chap54/BFSMtPer.rs  depends upon only clean modules
 src/Chap54/BFSStEph.rs  depends upon only clean modules
 src/Chap54/BFSStPer.rs  depends upon only clean modules
-src/Chap55/CycleDetectStEph.rs  depends upon holed modules: Chap55::TopoSortStEph
-src/Chap55/CycleDetectStPer.rs  depends upon holed modules: Chap55::TopoSortStEph, Chap55::TopoSortStPer
-src/Chap55/DFSStEph.rs  depends upon holed modules: Chap55::TopoSortStEph
-src/Chap55/DFSStPer.rs  depends upon holed modules: Chap55::TopoSortStEph, Chap55::TopoSortStPer
-src/Chap55/SCCStEph.rs  depends upon holed modules: Chap55::TopoSortStEph
-src/Chap55/SCCStPer.rs  depends upon holed modules: Chap55::TopoSortStEph
+src/Chap55/CycleDetectStEph.rs  depends upon only clean modules
+src/Chap55/CycleDetectStPer.rs  depends upon only clean modules
+src/Chap55/DFSStEph.rs  depends upon only clean modules
+src/Chap55/DFSStPer.rs  depends upon only clean modules
+src/Chap55/SCCStEph.rs  depends upon only clean modules
+src/Chap55/SCCStPer.rs  depends upon only clean modules
 src/Chap55/TopoSortStEph.rs  depends upon only clean modules
-src/Chap55/TopoSortStPer.rs  depends upon holed modules: Chap55::TopoSortStEph
+src/Chap55/TopoSortStPer.rs  depends upon only clean modules
 src/Chap56/AllPairsResultStEphF64.rs  depends upon only clean modules
 src/Chap56/AllPairsResultStEphI64.rs  depends upon only clean modules
 src/Chap56/AllPairsResultStPerF64.rs  depends upon only clean modules
@@ -2492,44 +2501,43 @@ src/ParaPairs.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   234 clean (no holes, no errors; 95%)
-   10 holed (holes or errors, 4%)
+   236 clean (no holes, no errors; 96%)
+   8 holed (holes or errors, 3%)
    244 total
 
 Proof Functions:
-   503 clean (99%)
-   4 holed (0%)
-   507 total
+   515 clean (99%)
+   1 holed (0%)
+   516 total
 
 Function Specs:
-   5302 exec fns with complete spec (requires+ensures) (67%)
-   57 exec fns missing spec (0%)
-   2489 proof/spec fns clean (31%)
-   4 proof/spec fns with holes (0%)
-   7852 total fns
+   5299 exec fns with complete spec (requires+ensures) (67%)
+   61 exec fns missing spec (0%)
+   2509 proof/spec fns clean (31%)
+   1 proof/spec fns with holes (0%)
+   7870 total fns
 
 
-Holes Found: 10 (actionable)
-   1 × assume() [algorithmic] (10%)
-   1 × admit() (10%)
-   8 × external_body (80%)
-      7 × root cause
-      1 × downstream (blocked by root causes)
-Real Proof Targets: 10 (all actionable)
+Holes Found: 9 (actionable)
+   4 × assume() [algorithmic] (44%)
+   1 × admit() (11%)
+   3 × external_body (33%)
+   1 × opaque (11%)
+Real Proof Targets: 9 (all actionable)
 
 Per-Chapter Holes:
-  Chap55:  4  Chap65:  6
+  Chap65:  9
 
-Warnings: 180 total
-   2 × fn_missing_requires
-   5 × fn_missing_ensures
+Warnings: 184 total
+   4 × fn_missing_requires
+   7 × fn_missing_ensures
    8 × fn_missing_wf_requires
    3 × fn_missing_wf_ensures
    162 × assume_eq_clone_workaround
 
-Accepted (reviewed): 65 total
+Accepted (reviewed): 62 total
    26 × external_body_accept_hole
-   19 × accept()
+   16 × accept()
    10 × trivial_spec_wf
    4 × unsafe_block_accept_hole
    3 × external_accept_hole
@@ -2541,13 +2549,13 @@ Accepted by Chapter:
   Chap02:  6  Chap11:  6  Chap12: 19
   Chap18:  8  Chap19:  3  Chap30:  7
   Chap37:  5  Chap39:  2  Chap40:  3
-  Chap41:  2  Chap65:  3
+  Chap41:  2
 
 Structural (info only): 220
    181 × RWLOCK_GHOST
    15 × STD_TRAIT_IMPL
-   10 × OPAQUE_EXTERNAL
    10 × UNSAFE_SEND_SYNC
+   10 × OPAQUE_EXTERNAL
    4 × THREAD_SPAWN
 
 =================================================================
@@ -2560,60 +2568,59 @@ Structural (info only): 220
 4.1. Worst src/* Directories (all dirs, by holes)
 =================================================================
 
-   1  Chap65  (6 holes, 3 files)
-   2  Chap55  (4 holes, 8 files)
+   1  Chap65  (9 holes, 3 files)
+   2  Chap59  (0 holes, 4 files)
    3  Chap38  (0 holes, 2 files)
    4  Chap17  (0 holes, 1 files)
    5  Chap26  (0 holes, 8 files)
    6  Chap12  (0 holes, 3 files)
-   7  Chap57  (0 holes, 3 files)
-   8  Chap06  (0 holes, 21 files)
-   9  Chap54  (0 holes, 4 files)
-   10  Chap43  (0 holes, 10 files)
-   11  Chap41  (0 holes, 6 files)
-   12  Chap28  (0 holes, 11 files)
-   13  Concurrency  (0 holes, 1 files)
-   14  Chap49  (0 holes, 8 files)
-   15  Chap19  (0 holes, 4 files)
-   16  Chap61  (0 holes, 4 files)
-   17  Chap51  (0 holes, 8 files)
-   18  Chap50  (0 holes, 8 files)
-   19  Chap44  (0 holes, 1 files)
-   20  Chap42  (0 holes, 3 files)
-   21  Chap36  (0 holes, 3 files)
-   22  Chap62  (0 holes, 4 files)
-   23  Chap30  (0 holes, 1 files)
-   24  Chap63  (0 holes, 2 files)
-   25  Chap66  (0 holes, 2 files)
-   26  Chap27  (0 holes, 4 files)
-   27  Chap56  (0 holes, 10 files)
-   28  Chap52  (0 holes, 14 files)
-   29  Chap23  (0 holes, 2 files)
-   30  Chap21  (0 holes, 5 files)
-   31  Chap59  (0 holes, 4 files)
-   32  Chap03  (0 holes, 1 files)
-   33  Chap53  (0 holes, 5 files)
-   34  Chap05  (0 holes, 5 files)
-   35  Chap47  (0 holes, 9 files)
-   36  Chap39  (0 holes, 4 files)
-   37  Chap45  (0 holes, 6 files)
-   38  Chap58  (0 holes, 2 files)
-   39  Chap11  (0 holes, 5 files)
-   40  Chap37  (0 holes, 19 files)
-   41  Chap64  (0 holes, 3 files)
-   42  Chap18  (0 holes, 7 files)
-   43  Chap40  (0 holes, 3 files)
-   44  Chap35  (0 holes, 4 files)
-   45  Chap02  (0 holes, 2 files)
-   46  ParaPairs  (0 holes, 1 files)
+   7  Chap43  (0 holes, 10 files)
+   8  Chap35  (0 holes, 4 files)
+   9  Chap49  (0 holes, 8 files)
+   10  Chap05  (0 holes, 5 files)
+   11  Chap42  (0 holes, 3 files)
+   12  Chap44  (0 holes, 1 files)
+   13  Chap45  (0 holes, 6 files)
+   14  Chap51  (0 holes, 8 files)
+   15  Chap06  (0 holes, 21 files)
+   16  Chap21  (0 holes, 5 files)
+   17  Chap36  (0 holes, 3 files)
+   18  Chap63  (0 holes, 2 files)
+   19  Chap27  (0 holes, 4 files)
+   20  Chap56  (0 holes, 10 files)
+   21  Chap58  (0 holes, 2 files)
+   22  Chap11  (0 holes, 5 files)
+   23  Chap61  (0 holes, 4 files)
+   24  Chap53  (0 holes, 5 files)
+   25  Chap41  (0 holes, 6 files)
+   26  Chap52  (0 holes, 14 files)
+   27  Chap02  (0 holes, 2 files)
+   28  Chap66  (0 holes, 2 files)
+   29  Chap47  (0 holes, 9 files)
+   30  Chap03  (0 holes, 1 files)
+   31  Chap64  (0 holes, 3 files)
+   32  Chap30  (0 holes, 1 files)
+   33  Concurrency  (0 holes, 1 files)
+   34  Chap37  (0 holes, 19 files)
+   35  Chap39  (0 holes, 4 files)
+   36  Chap54  (0 holes, 4 files)
+   37  Chap40  (0 holes, 3 files)
+   38  Chap19  (0 holes, 4 files)
+   39  Chap18  (0 holes, 7 files)
+   40  Chap55  (0 holes, 8 files)
+   41  Chap23  (0 holes, 2 files)
+   42  ParaPairs  (0 holes, 1 files)
+   43  Chap28  (0 holes, 11 files)
+   44  Chap50  (0 holes, 8 files)
+   45  Chap62  (0 holes, 4 files)
+   46  Chap57  (0 holes, 3 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
 =================================================================
 
-   1  src/Chap65/UnionFindStEph.rs  (3 holes)
-   2  src/Chap55/TopoSortStEph.rs  (2 holes)
-   3  src/Chap65/PrimStEph.rs  (2 holes)
+   1  src/Chap65/PrimStEph.rs  (3 holes)
+   2  src/Chap65/UnionFindStEph.rs  (3 holes)
 
 =================================================================
 4.4. Not Verusified
@@ -2631,9 +2638,9 @@ Structural (info only): 220
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 44 clean, 2 holed, 10 holes (global), 244 modules
+Chapter Status — 46 chapters, 45 clean, 1 holed, 9 holes (global), 244 modules
 
-CLEAN CHAPTERS (44)
+CLEAN CHAPTERS (45)
   Chapter        Files
   -------------- -----
   Chap02             2
@@ -2669,6 +2676,7 @@ CLEAN CHAPTERS (44)
   Chap52            14
   Chap53             5
   Chap54             4
+  Chap55             8
   Chap56            10
   Chap57             3
   Chap58             2
@@ -2681,11 +2689,10 @@ CLEAN CHAPTERS (44)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (2) — 10 holes
+HOLED CHAPTERS (1) — 9 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
-  Chap55             4     8  internal  Chap55::TopoSortStEph, Chap55::TopoSortStPer
-  Chap65             6     3  internal  Chap65::UnionFindStEph
+  Chap65             9     3  internal  Chap65::UnionFindStEph
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
@@ -2695,8 +2702,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-26 20:19:25 -07:00
-Ended:     2026-03-26 20:19:27 -07:00
-Duration:  1532ms
+Started:   2026-03-27 08:33:26 -07:00
+Ended:     2026-03-27 08:33:28 -07:00
+Duration:  1838ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log

@@ -21,25 +21,25 @@ Table of Contents:
 =================================================================
 
 ❌ KruskalStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/KruskalStEph.rs:40: error: opaque - #[verifier::opaque]
+/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:40: error: opaque - #[verifier::opaque]
         41 |         pub open spec fn uf_wf_opaque<V: HashOrd>(uf: &UnionFindStEph<V>) -> bool {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/KruskalStEph.rs:49: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:49: error: external_body - #[verifier::external_body]
         50 |         pub fn kruskal_process_edge<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/KruskalStEph.rs:422: error: assume() [algorithmic] - proof { assume(total as int + edge.2 as int <= u64::MAX as i
+/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:422: error: assume() [algorithmic] - proof { assume(total as int + edge.2 as int <= u64::MAX as i
        402 |     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, u64>>) -> (total: u64)
             ...
        420 |                 Some(edge) => {
        421 |                     // accept hole — u64 addition overflow: callers use small test weights.
        423 |                     total = total + edge.2;
        424 |                 },
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/KruskalStEph.rs:232: error: fn_missing_requires - fn sort_edges_by_weight — exec fn should have requires
+/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:232: error: fn_missing_requires - fn sort_edges_by_weight — exec fn should have requires
        224 |         fn verify_mst_size<V: HashOrd>(
             ...
        230 | 
        231 |     /// Sort edges by weight — selection sort.
        233 |         ensures
        234 |             edges@.len() == old(edges)@.len(),
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/KruskalStEph.rs:402: error: fn_missing_ensures - fn mst_weight — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:402: error: fn_missing_ensures - fn mst_weight — exec fn should have ensures
        310 |     pub fn kruskal_mst<V: HashOrd>(
             ...
        400 |     /// - APAS: (no cost stated) — utility function
@@ -52,77 +52,77 @@ Table of Contents:
       1 × opaque
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:61: error: assume() [algorithmic] - assume(x == y);
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:61: error: assume() [algorithmic] - assume(x == y);
         59 |         }
         60 |         proof fn antisymmetric(x: Self, y: Self) {
         62 |         }
         63 |         proof fn total(x: Self, y: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:70: error: assume() [algorithmic] - proof { assume(self == other); }
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:70: error: assume() [algorithmic] - proof { assume(self == other); }
         65 |         fn cmp(&self, other: &Self) -> (c: Ordering) {
             ...
         68 |             } else if self.priority == other.priority {
         69 |                 // Equal priority — antisymmetric axiom handles PQEntry equality.
         71 |                 Ordering::Equal
         72 |             } else {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:352: error: assume() [algorithmic] - proof { assume(total as int + edge.2 as int <= u64::MAX as i
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:352: error: assume() [algorithmic] - proof { assume(total as int + edge.2 as int <= u64::MAX as i
        332 |     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, u64>>) -> (total: u64)
             ...
        350 |                 Some(edge) => {
        351 |                     // accept hole — u64 addition overflow: callers use small test weights.
        353 |                     total = total + edge.2;
        354 |                 },
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:60: error: proof_fn_with_holes - proof fn antisymmetric — contains assume/external_body/admit, needs proof
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:60: error: proof_fn_with_holes - proof fn antisymmetric — contains assume/external_body/admit, needs proof
         58 |         proof fn transitive(x: Self, y: Self, z: Self) {
         59 |         }
         61 |             assume(x == y);
         62 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:104: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:104: error: fn_missing_requires - fn pq_entry_new — exec fn should have requires
         97 |         fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, u64>>) -> u64
             ...
        102 |     /// - APAS: N/A — Verus-specific scaffolding.
        103 |     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
        105 |         ensures entry.priority == priority, entry.vertex == vertex, entry.parent == parent,
        106 |     {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:332: error: fn_missing_ensures - fn mst_weight — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:332: error: fn_missing_ensures - fn mst_weight — exec fn should have ensures
        129 |     pub fn prim_mst<V: HashOrd + Display>(
             ...
        330 |     /// - APAS: (no cost stated) — utility function
        331 |     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
        333 |         requires mst_edges.spec_setsteph_wf(),
        334 |     {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:366: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:366: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        362 |         fn clone(&self) -> (result: Self)
             ...
        364 |         {
        365 |             let result = PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() };
        367 |             result
        368 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:128: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:128: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
    Holes: 3 total
       3 × assume()
    Info: 1 × structural_false_positive
       1 × OPAQUE_EXTERNAL
    Proof functions: 4 total (3 clean, 1 holed)
 ❌ UnionFindStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindStEph.rs:982: error: admit() - admit(); // Overflow: rank bounded by log2(n) < 64 (2^rank t
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:982: error: admit() - admit(); // Overflow: rank bounded by log2(n) < 64 (2^rank t
        914 |     fn union_merge_exec<V: StT + Hash>(
             ...
        980 |                 proof {
        981 |                     assert(strictly_cloned(root_u, ru2));
        983 |                 }
        984 |                 uf.rank.insert(ru2, rank_u + 1);
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindStEph.rs:1078: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1078: error: external_body - #[verifier::external_body]
       1079 |     fn union_merge<V: StT + Hash>(
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindStEph.rs:1308: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1308: error: external_body - #[verifier::external_body]
       1309 |         fn union(&mut self, u: &V, v: &V) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindStEph.rs:914: error: fn_missing_wf_requires - fn union_merge_exec — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:914: error: fn_missing_wf_requires - fn union_merge_exec — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
        890 |     proof fn lemma_union_wf_frame<V: StT + Hash>(
             ...
        912 |     /// the quantified wf proof, keeping Z3 under 4 GB.
        913 |     #[verifier::rlimit(30)]
        915 |         uf: &mut UnionFindStEph<V>,
        916 |         root_u: V,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindStEph.rs:1079: error: fn_missing_wf_requires - fn union_merge — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1079: error: fn_missing_wf_requires - fn union_merge — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
       1005 |     proof fn lemma_union_merge_wf<V: StT + Hash>(
             ...
       1077 |     /// lemma_union_merge_wf to keep &mut encoding out of the proof context.
@@ -196,8 +196,15 @@ Structural (info only): 1
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 08:26:34 -07:00
-Ended:     2026-03-27 08:26:34 -07:00
-Duration:  26ms
+Started:   2026-03-27 08:33:26 -07:00
+Ended:     2026-03-27 08:33:26 -07:00
+Duration:  22ms
+
+Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
+===================================
+
+Started:   2026-03-27 08:33:26 -07:00
+Ended:     2026-03-27 08:33:26 -07:00
+Duration:  22ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
