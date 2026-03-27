@@ -116,8 +116,8 @@ Warnings: 6 total
    1 × assume_eq_clone_workaround
 
 Structural (info only): 2
-   1 × OPAQUE_EXTERNAL
    1 × STD_TRAIT_IMPL
+   1 × OPAQUE_EXTERNAL
 
 No proof holes found! All proofs are complete.
 
@@ -125,12 +125,13 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 08:33:26 -07:00
-Ended:     2026-03-27 08:33:26 -07:00
-Duration:  16ms
+Started:   2026-03-27 09:09:11 -07:00
+Ended:     2026-03-27 09:09:11 -07:00
+Duration:  13ms
 
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
-6-03-27 08:33:26 -07:00
-Duration:  16ms
+6-03-27 09:09:11 -07:00
+Ended:     2026-03-27 09:09:11 -07:00
+Duration:  13ms
 
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log

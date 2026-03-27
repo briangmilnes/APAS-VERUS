@@ -1,4 +1,4 @@
-Chapter Status — 46 chapters, 45 clean, 1 holed, 9 holes (global), 244 modules
+Chapter Status — 46 chapters, 45 clean, 1 holed, 5 holes (global), 244 modules
 
 CLEAN CHAPTERS (45)
   Chapter        Files
@@ -49,10 +49,10 @@ CLEAN CHAPTERS (45)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (1) — 9 holes
+HOLED CHAPTERS (1) — 5 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
-  Chap65             9     3  internal  Chap65::UnionFindStEph
+  Chap65             5     3  internal  Chap65::UnionFindStEph
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
