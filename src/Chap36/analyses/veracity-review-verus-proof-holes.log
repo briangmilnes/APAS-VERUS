@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap36/QuickSortMtEphSlice.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap36/
 Full output: src/Chap36/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,8 +20,12 @@ Table of Contents:
 1. File Holes
 =================================================================
 
+✓ QuickSortMtEph.rs
+   2 clean proof functions
 ✓ QuickSortMtEphSlice.rs
    3 clean proof functions
+✓ QuickSortStEph.rs
+   2 clean proof functions
 
 =================================================================
 2. Depends Upon
@@ -31,34 +35,38 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
+QuickSortMtEph  depends upon only clean modules
 QuickSortMtEphSlice  depends upon only clean modules
+QuickSortStEph  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
+QuickSortMtEph.rs  depends upon only clean modules
 QuickSortMtEphSlice.rs  depends upon only clean modules
+QuickSortStEph.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   1 clean (no holes, no errors; 100%)
+   3 clean (no holes, no errors; 100%)
    0 holed (holes or errors, 0%)
-   1 total
-
-Proof Functions:
-   3 clean (100%)
-   0 holed (0%)
    3 total
 
+Proof Functions:
+   7 clean (100%)
+   0 holed (0%)
+   7 total
+
 Function Specs:
-   12 exec fns with complete spec (requires+ensures) (66%)
+   36 exec fns with complete spec (requires+ensures) (72%)
    0 exec fns missing spec (0%)
-   6 proof/spec fns clean (33%)
+   14 proof/spec fns clean (28%)
    0 proof/spec fns with holes (0%)
-   18 total fns
+   50 total fns
 
 
 Holes Found: 0 (actionable)
@@ -70,8 +78,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 12:48:34 -07:00
-Ended:     2026-03-27 12:48:34 -07:00
-Duration:  10ms
+Started:   2026-03-27 12:52:40 -07:00
+Ended:     2026-03-27 12:52:40 -07:00
+Duration:  32ms
 
 Full output: src/Chap36/analyses/veracity-review-verus-proof-holes.log
+ src/Chap36/analyses/veracity-review-verus-proof-holes.log

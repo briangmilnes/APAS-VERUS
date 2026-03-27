@@ -27,7 +27,7 @@ Table of Contents:
 ✓ AdjMatrixGraphStEph.rs
    3 clean proof functions
 ⚠ AdjMatrixGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjMatrixGraphStPer.rs:477: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:477: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        473 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        475 |         {
@@ -41,7 +41,7 @@ Table of Contents:
 ✓ AdjSeqGraphStEph.rs
    2 clean proof functions
 ⚠ AdjSeqGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjSeqGraphStPer.rs:513: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:513: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        509 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        511 |         {
@@ -49,56 +49,56 @@ Table of Contents:
        514 |             equal
        515 |         }
 ❌ AdjTableGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphMtPer.rs:157: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:157: error: external_body - #[verifier::external_body]
        158 |         fn empty() -> (out: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphMtPer.rs:165: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:165: error: external_body - #[verifier::external_body]
        166 |         fn num_vertices(&self) -> usize { self.adj.size() }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphMtPer.rs:169: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:169: error: external_body - #[verifier::external_body]
        170 |         fn num_edges(&self) -> (m: usize) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphMtPer.rs:187: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:187: error: external_body - #[verifier::external_body]
        188 |         fn has_edge(&self, u: &V, v: &V) -> (found: bool) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphMtPer.rs:196: error: external_body [blocked_by: empty] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:196: error: external_body [blocked_by: empty] - #[verifier::external_body]
        197 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphMtPer.rs:205: error: external_body [blocked_by: out_neighbors] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:205: error: external_body [blocked_by: out_neighbors] - #[verifier::external_body]
        206 |         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphMtPer.rs:209: error: external_body [blocked_by: empty] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:209: error: external_body [blocked_by: empty] - #[verifier::external_body]
        210 |         fn insert_vertex(&self, v: V) -> (updated: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphMtPer.rs:221: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:221: error: external_body - #[verifier::external_body]
        222 |         fn delete_vertex(&self, v: &V) -> (updated: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphMtPer.rs:232: error: external_body [blocked_by: empty] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:232: error: external_body [blocked_by: empty] - #[verifier::external_body]
        233 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphMtPer.rs:252: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:252: error: external_body - #[verifier::external_body]
        253 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphMtPer.rs:269: error: external_body [blocked_by: empty] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:269: error: external_body [blocked_by: empty] - #[verifier::external_body]
        270 |         fn default() -> Self { Self::empty() }
    Holes: 11 total
       11 × external_body
          6 × root cause
          5 × downstream (blocked by root causes)
 ❌ AdjTableGraphStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:173: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:173: error: external_body - #[verifier::external_body]
        174 |         fn empty() -> (out: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:180: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:180: error: external_body - #[verifier::external_body]
        181 |         fn from_table(table: TableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self) { AdjTableGraphStEph { adj: table } }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:184: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:184: error: external_body - #[verifier::external_body]
        185 |         fn num_vertices(&self) -> usize { self.adj.size() }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:188: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:188: error: external_body - #[verifier::external_body]
        189 |         fn num_edges(&self) -> (m: usize) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:206: error: external_body [blocked_by: empty] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:206: error: external_body [blocked_by: empty] - #[verifier::external_body]
        207 |         fn vertices(&self) -> (verts: AVLTreeSetStEph<V>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:221: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:221: error: external_body - #[verifier::external_body]
        222 |         fn has_edge(&self, u: &V, v: &V) -> (found: bool) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:230: error: external_body [blocked_by: empty] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:230: error: external_body [blocked_by: empty] - #[verifier::external_body]
        231 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:239: error: external_body [blocked_by: out_neighbors] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:239: error: external_body [blocked_by: out_neighbors] - #[verifier::external_body]
        240 |         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:243: error: external_body [blocked_by: empty] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:243: error: external_body [blocked_by: empty] - #[verifier::external_body]
        244 |         fn insert_vertex(&mut self, v: V) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:249: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:249: error: external_body - #[verifier::external_body]
        250 |         fn delete_vertex(&mut self, v: &V) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:269: error: external_body [blocked_by: empty] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:269: error: external_body [blocked_by: empty] - #[verifier::external_body]
        270 |         fn insert_edge(&mut self, u: V, v: V) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:286: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:286: error: external_body - #[verifier::external_body]
        287 |         fn delete_edge(&mut self, u: &V, v: &V) {
    Holes: 12 total
       12 × external_body
@@ -106,53 +106,53 @@ Table of Contents:
          5 × downstream (blocked by root causes)
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ AdjTableGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:137: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:137: error: external_body - #[verifier::external_body]
        138 |         fn empty() -> (out: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:144: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:144: error: external_body - #[verifier::external_body]
        145 |         fn from_table(table: TableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self) { AdjTableGraphStPer { adj: table } }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:148: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:148: error: external_body - #[verifier::external_body]
        149 |         fn num_vertices(&self) -> usize { self.adj.size() }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:152: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:152: error: external_body - #[verifier::external_body]
        153 |         fn num_edges(&self) -> (m: usize) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:170: error: external_body [blocked_by: empty] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:170: error: external_body [blocked_by: empty] - #[verifier::external_body]
        171 |         fn vertices(&self) -> (verts: AVLTreeSetStPer<V>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:185: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:185: error: external_body - #[verifier::external_body]
        186 |         fn has_edge(&self, u: &V, v: &V) -> (found: bool) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:194: error: external_body [blocked_by: empty] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:194: error: external_body [blocked_by: empty] - #[verifier::external_body]
        195 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:203: error: external_body [blocked_by: out_neighbors] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:203: error: external_body [blocked_by: out_neighbors] - #[verifier::external_body]
        204 |         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:207: error: external_body [blocked_by: empty] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:207: error: external_body [blocked_by: empty] - #[verifier::external_body]
        208 |         fn insert_vertex(&self, v: V) -> (updated: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:214: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:214: error: external_body - #[verifier::external_body]
        215 |         fn delete_vertex(&self, v: &V) -> (updated: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:235: error: external_body [blocked_by: empty] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:235: error: external_body [blocked_by: empty] - #[verifier::external_body]
        236 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:251: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:251: error: external_body - #[verifier::external_body]
        252 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
    Holes: 12 total
       12 × external_body
          7 × root cause
          5 × downstream (blocked by root causes)
 ❌ EdgeSetGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphMtPer.rs:163: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:163: error: external_body - #[verifier::external_body]
        164 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphMtPer.rs:192: error: external_body [blocked_by: out_neighbors] - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:192: error: external_body [blocked_by: out_neighbors] - #[verifier::external_body]
        193 |         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphMtPer.rs:210: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:210: error: external_body - #[verifier::external_body]
        211 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphMtPer.rs:230: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:230: error: external_body - #[verifier::external_body]
        231 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphMtPer.rs:241: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:241: error: external_body - #[verifier::external_body]
        242 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphMtPer.rs:253: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:253: error: external_body - #[verifier::external_body]
        254 |         fn default() -> Self { Self::empty() }
    Holes: 6 total
       6 × external_body
          5 × root cause
          1 × downstream (blocked by root causes)
 ⚠ EdgeSetGraphStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStEph.rs:406: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:406: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        399 |         fn clone(&self) -> (result: Self)
             ...
        404 |                 edges: self.edges.clone(),
@@ -160,14 +160,14 @@ Table of Contents:
        407 |             result
        408 |         }
 ⚠ EdgeSetGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStPer.rs:375: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:375: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        368 |         fn clone(&self) -> (result: Self)
             ...
        373 |                 edges: self.edges.clone(),
        374 |             };
        376 |             result
        377 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStPer.rs:391: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:391: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        387 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        389 |         {
@@ -252,8 +252,13 @@ Warnings: 5 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 12:18:24 -07:00
-Ended:     2026-03-27 12:18:24 -07:00
-Duration:  50ms
+Started:   2026-03-27 12:52:42 -07:00
+Ended:     2026-03-27 12:52:42 -07:00
+Duration:  64ms
+
+Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
+-03-27 12:52:42 -07:00
+Ended:     2026-03-27 12:52:42 -07:00
+Duration:  64ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
