@@ -7,8 +7,11 @@ pub mod CycleDetectStPer {
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+    #[cfg(verus_keep_ghost)]
     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq};
+    #[cfg(verus_keep_ghost)]
     use crate::Chap55::TopoSortStPer::TopoSortStPer::{spec_is_dag_per, spec_has_edge_per, spec_is_path_per};
+    #[cfg(verus_keep_ghost)]
     use crate::Chap55::CycleDetectStEph::CycleDetectStEph::spec_in_path;
     use crate::Types::Types::*;
 

@@ -241,7 +241,7 @@ fn balbintree_trait_methods() {
     use BalBinTreeTrait;
 
     let leaf = <BalBinTree<usize> as BalBinTreeTrait<usize>>::leaf();
-    assert!(<BalBinTree<N> as BalBinTreeTrait<N>>::is_leaf(&leaf));
+    assert!(<BalBinTree<usize> as BalBinTreeTrait<usize>>::is_leaf(&leaf));
 
     let node = <BalBinTree<usize> as BalBinTreeTrait<usize>>::node(
         <BalBinTree<usize> as BalBinTreeTrait<usize>>::leaf(),
@@ -249,15 +249,15 @@ fn balbintree_trait_methods() {
         <BalBinTree<usize> as BalBinTreeTrait<usize>>::leaf(),
     );
 
-    assert!(!<BalBinTree<N> as BalBinTreeTrait<N>>::is_leaf(&node));
-    assert_eq!(<BalBinTree<N> as BalBinTreeTrait<N>>::size(&node), 1);
-    assert_eq!(<BalBinTree<N> as BalBinTreeTrait<N>>::height(&node), 1);
+    assert!(!<BalBinTree<usize> as BalBinTreeTrait<usize>>::is_leaf(&node));
+    assert_eq!(<BalBinTree<usize> as BalBinTreeTrait<usize>>::size(&node), 1);
+    assert_eq!(<BalBinTree<usize> as BalBinTreeTrait<usize>>::height(&node), 1);
     assert_eq!(
-        <BalBinTree<N> as BalBinTreeTrait<N>>::in_order(&node),
+        <BalBinTree<usize> as BalBinTreeTrait<usize>>::in_order(&node),
         vec![42]
     );
     assert_eq!(
-        <BalBinTree<N> as BalBinTreeTrait<N>>::pre_order(&node),
+        <BalBinTree<usize> as BalBinTreeTrait<usize>>::pre_order(&node),
         vec![42]
     );
 }

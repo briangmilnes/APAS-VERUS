@@ -317,7 +317,7 @@ fn test_iterator_large_tree() {
     let vals = tree.iter().copied().collect::<Vec<usize>>();
     assert_eq!(vals.len(), 100);
     for (i, &val) in vals.iter().enumerate() {
-        assert_eq!(val, (i + 1) as N);
+        assert_eq!(val, (i + 1) as usize);
     }
 }
 
@@ -351,7 +351,7 @@ fn test_values_in_order_large() {
     let vals = tree.values_in_order();
     assert_eq!(vals.len(), 21);
     for (i, &val) in vals.iter().enumerate() {
-        assert_eq!(val, (i + 10) as N);
+        assert_eq!(val, (i + 10) as usize);
     }
 }
 
@@ -458,11 +458,11 @@ fn test_alternating_access_pattern() {
 
     // Access in alternating pattern
     for i in (0..tree.length()).step_by(2) {
-        assert_eq!(*tree.nth(i), (i + 1) as N * 10);
+        assert_eq!(*tree.nth(i), (i + 1) as usize * 10);
     }
 
     for i in (1..tree.length()).step_by(2) {
-        assert_eq!(*tree.nth(i), (i + 1) as N * 10);
+        assert_eq!(*tree.nth(i), (i + 1) as usize * 10);
     }
 }
 

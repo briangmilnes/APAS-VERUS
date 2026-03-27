@@ -416,7 +416,7 @@ fn test_sumop_trait() {
 
 #[test]
 fn test_countop_trait() {
-    assert_eq!(<CountOp<i32> as ReduceOp<i32, N>>::identity(), 0);
-    assert_eq!(<CountOp<i32> as ReduceOp<i32, N>>::combine(3, 7), 10);
-    assert_eq!(<CountOp<i32> as ReduceOp<i32, N>>::lift(&42), 1);
+    assert_eq!(<CountOp<i32> as ReduceOp<i32, usize>>::identity(), 0);
+    assert_eq!(<CountOp<i32> as ReduceOp<i32, usize>>::combine(3, 7), 10);
+    assert_eq!(<CountOp<i32> as ReduceOp<i32, usize>>::lift(&42), 1);
 }

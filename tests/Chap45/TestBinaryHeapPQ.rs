@@ -277,7 +277,7 @@ fn test_heapsort_via_extract() {
     expected.sort();
 
     for (i, &expected_val) in expected.iter().enumerate() {
-        assert_eq!(*sorted.nth(i as N), expected_val);
+        assert_eq!(*sorted.nth(i as usize), expected_val);
     }
 }
 

@@ -9,11 +9,13 @@ pub mod SCCStPer {
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::{AVLTreeSeqStPerS, AVLTreeSeqStPerTrait};
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
+    #[cfg(verus_keep_ghost)]
     use crate::Chap55::TopoSortStEph::TopoSortStEph::{
         spec_num_false, lemma_set_true_decreases_num_false,
         lemma_set_true_num_false_eq, lemma_all_true_num_false_zero,
         lemma_all_false_num_false_eq_len,
     };
+    #[cfg(verus_keep_ghost)]
     use crate::Chap55::TopoSortStPer::TopoSortStPer::spec_toposortstper_wf;
     use crate::Types::Types::*;
 

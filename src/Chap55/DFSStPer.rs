@@ -8,7 +8,9 @@ pub mod DFSStPer {
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
+    #[cfg(verus_keep_ghost)]
     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq, lemma_all_false_num_false_eq_len};
+    #[cfg(verus_keep_ghost)]
     use crate::Chap55::TopoSortStPer::TopoSortStPer::{spec_toposortstper_wf, spec_reachable_per, spec_has_edge_per, spec_is_path_per};
     use crate::Types::Types::*;
 

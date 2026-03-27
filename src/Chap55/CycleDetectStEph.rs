@@ -7,6 +7,7 @@ pub mod CycleDetectStEph {
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
+    #[cfg(verus_keep_ghost)]
     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, spec_toposortsteph_wf, spec_is_dag, spec_has_edge, spec_is_path, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq};
     use crate::Types::Types::*;
 

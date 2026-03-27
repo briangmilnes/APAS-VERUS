@@ -157,7 +157,7 @@ fn test_priority_queue_ordering() {
     }
 
     for (i, &expected) in sorted_elements.iter().enumerate() {
-        assert_eq!(*extracted.nth(i as N), expected);
+        assert_eq!(*extracted.nth(i as usize), expected);
     }
 }
 
@@ -414,7 +414,7 @@ fn test_height() {
         pq = pq.insert(i);
     }
     assert!(pq.height() > 1);
-    assert!(pq.height() <= ((pq.size() as f64).log2().ceil() as N) + 1);
+    assert!(pq.height() <= ((pq.size() as f64).log2().ceil() as usize) + 1);
 }
 
 #[test]

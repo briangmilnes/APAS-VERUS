@@ -9,10 +9,11 @@ pub mod SCCStEph {
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::{AVLTreeSeqStEphS, AVLTreeSeqStEphTrait};
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
+    use crate::Chap55::TopoSortStEph::TopoSortStEph::dfs_finish_order;
+    #[cfg(verus_keep_ghost)]
     use crate::Chap55::TopoSortStEph::TopoSortStEph::{
         spec_toposortsteph_wf, spec_num_false, lemma_set_true_decreases_num_false,
-        lemma_set_true_num_false_eq,
-        dfs_finish_order, lemma_all_true_num_false_zero, lemma_all_false_num_false_eq_len,
+        lemma_set_true_num_false_eq, lemma_all_true_num_false_zero, lemma_all_false_num_false_eq_len,
     };
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full_trigger;

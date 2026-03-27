@@ -328,7 +328,7 @@ fn test_to_seq_conversion() {
     // Should be in sorted order
     let expected = [5, 10, 20, 25, 30];
     for (i, &expected_val) in expected.iter().enumerate() {
-        assert_eq!(seq.nth(i as N), &expected_val);
+        assert_eq!(seq.nth(i as usize), &expected_val);
     }
 }
 
