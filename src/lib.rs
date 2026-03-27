@@ -169,7 +169,7 @@ pub mod experiments {
 //    pub mod verus_vec_iterator;                           // FAILS: precondition not satisfied (exec_invariant)
 //    pub mod verus_vec_iterator_while_basic_proofs;        // FAILS: depends on verus_vec_iterator
 //    pub mod vstd_laws_eq_clone;                           // FAILS: reveal() E0401 on generic types
-    pub mod mut_struct_quantifier_limit;
+//    pub mod mut_struct_quantifier_limit;                   // FAILS: Z3 17.7GB on &mut 4-field struct with quantified maps
 }
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "isolate")))]
