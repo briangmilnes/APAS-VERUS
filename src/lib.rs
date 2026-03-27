@@ -394,7 +394,7 @@ pub mod Chap35 {
 pub mod Chap36 {
     pub mod QuickSortStEph;
     pub mod QuickSortMtEph;
-//    pub mod QuickSortMtEphSlice;  // BROKEN: compiles, 13 verify errors — needs to_vec on ArraySeqMtEphSliceS
+    pub mod QuickSortMtEphSlice;
 }
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap37")))]

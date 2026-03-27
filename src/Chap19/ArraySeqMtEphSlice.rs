@@ -146,6 +146,16 @@ pub mod ArraySeqMtEphSlice {
                 forall|i: int| #![trigger new_seq.spec_index(i)]
                     0 <= i < length ==> new_seq.spec_index(i) == init_value;
 
+        /// Materialize the slice window into a freshly-allocated Vec.
+        fn to_vec(&self) -> (v: Vec<T>)
+            requires
+                self.spec_arrayseqmtephslice_wf(),
+                obeys_feq_clone::<T>(),
+            ensures
+                v@.len() == self.spec_len(),
+                forall|i: int| #![trigger v@[i]]
+                    0 <= i < self.spec_len() ==> v@[i] == self.spec_index(i);
+
         fn iter(&self) -> (it: ArraySeqMtEphSliceIter<'_, T>)
             requires self.spec_arrayseqmtephslice_wf(),
             ensures
@@ -243,6 +253,26 @@ pub mod ArraySeqMtEphSlice {
                 start: 0,
                 len: length,
             }
+        }
+
+        fn to_vec(&self) -> (v: Vec<T>) {
+            let mut v: Vec<T> = Vec::with_capacity(self.len);
+            let mut i: usize = 0;
+            while i < self.len
+                invariant
+                    0 <= i <= self.len,
+                    self.spec_arrayseqmtephslice_wf(),
+                    obeys_feq_clone::<T>(),
+                    v@.len() == i as int,
+                    forall|j: int| #![trigger v@[j]]
+                        0 <= j < i as int ==> v@[j] == self.spec_index(j),
+                decreases self.len - i,
+            {
+                let elem = self.nth_cloned(i);
+                v.push(elem);
+                i = i + 1;
+            }
+            v
         }
 
         fn iter(&self) -> (it: ArraySeqMtEphSliceIter<'_, T>) {
