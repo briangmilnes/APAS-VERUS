@@ -389,7 +389,7 @@ Table of Contents:
       2 × OPAQUE_EXTERNAL
    Proof functions: 4 total (4 clean, 0 holed)
 ✓ src/Chap26/ETSPStEph.rs
-   3 clean proof functions
+   4 clean proof functions
 ✓ src/Chap26/MergeSortMtPer.rs
    4 clean proof functions
 ✓ src/Chap26/MergeSortStPer.rs
@@ -1127,28 +1127,28 @@ Table of Contents:
       2214 |             cloned
       2215 |         }
 ⚠ src/Chap42/TableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:2106: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2102 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:2176: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2172 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      2104 |         {
-      2105 |             let equal = self.entries == other.entries;
-      2107 |             equal
-      2108 |         }
+      2174 |         {
+      2175 |             let equal = self.entries == other.entries;
+      2177 |             equal
+      2178 |         }
 ⚠ src/Chap42/TableStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2182: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2178 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2250: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2246 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      2180 |         {
-      2181 |             let equal = self.entries == other.entries;
-      2183 |             equal
-      2184 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2193: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2188 |         fn clone(&self) -> (cloned: Self)
+      2248 |         {
+      2249 |             let equal = self.entries == other.entries;
+      2251 |             equal
+      2252 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2261: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2256 |         fn clone(&self) -> (cloned: Self)
             ...
-      2191 |             let cloned = TableStPer { entries: self.entries.clone() };
-      2192 |             proof {
-      2194 |                 lemma_seq_map_cloned_view_eq(
-      2195 |                     self.entries.seq@,
+      2259 |             let cloned = TableStPer { entries: self.entries.clone() };
+      2260 |             proof {
+      2262 |                 lemma_seq_map_cloned_view_eq(
+      2263 |                     self.entries.seq@,
 ✓ src/Chap43/AugOrderedTableMtEph.rs
    1 clean proof function
 ⚠ src/Chap43/AugOrderedTableStEph.rs
@@ -1771,34 +1771,28 @@ Table of Contents:
          6 × root cause
          5 × downstream (blocked by root causes)
 ❌ src/Chap52/AdjTableGraphStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:173: error: external_body - #[verifier::external_body]
-       174 |         fn empty() -> (out: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:180: error: external_body - #[verifier::external_body]
-       181 |         fn from_table(table: TableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self) { AdjTableGraphStEph { adj: table } }
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:184: error: external_body - #[verifier::external_body]
-       185 |         fn num_vertices(&self) -> usize { self.adj.size() }
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:188: error: external_body - #[verifier::external_body]
-       189 |         fn num_edges(&self) -> (m: usize) {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:206: error: external_body [blocked_by: empty] - #[verifier::external_body]
-       207 |         fn vertices(&self) -> (verts: AVLTreeSetStEph<V>) {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:221: error: external_body - #[verifier::external_body]
-       222 |         fn has_edge(&self, u: &V, v: &V) -> (found: bool) {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:230: error: external_body [blocked_by: empty] - #[verifier::external_body]
-       231 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>) {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:239: error: external_body [blocked_by: out_neighbors] - #[verifier::external_body]
-       240 |         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:243: error: external_body [blocked_by: empty] - #[verifier::external_body]
-       244 |         fn insert_vertex(&mut self, v: V) {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:249: error: external_body - #[verifier::external_body]
-       250 |         fn delete_vertex(&mut self, v: &V) {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:269: error: external_body [blocked_by: empty] - #[verifier::external_body]
-       270 |         fn insert_edge(&mut self, u: V, v: V) {
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:286: error: external_body - #[verifier::external_body]
-       287 |         fn delete_edge(&mut self, u: &V, v: &V) {
-   Holes: 12 total
-      12 × external_body
-         7 × root cause
-         5 × downstream (blocked by root causes)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:191: error: external_body - #[verifier::external_body]
+       192 |         fn empty() -> (out: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:198: error: external_body - #[verifier::external_body]
+       199 |         fn from_table(table: TableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self) { AdjTableGraphStEph { adj: table } }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:204: error: external_body - #[verifier::external_body]
+       205 |         fn num_edges(&self) -> (m: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:222: error: external_body [blocked_by: empty] - #[verifier::external_body]
+       223 |         fn vertices(&self) -> (verts: AVLTreeSetStEph<V>) {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:247: error: external_body [blocked_by: empty] - #[verifier::external_body]
+       248 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>) {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:264: error: external_body [blocked_by: empty] - #[verifier::external_body]
+       265 |         fn insert_vertex(&mut self, v: V) {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:270: error: external_body - #[verifier::external_body]
+       271 |         fn delete_vertex(&mut self, v: &V) {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:290: error: external_body [blocked_by: empty] - #[verifier::external_body]
+       291 |         fn insert_edge(&mut self, u: V, v: V) {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:307: error: external_body - #[verifier::external_body]
+       308 |         fn delete_edge(&mut self, u: &V, v: &V) {
+   Holes: 9 total
+      9 × external_body
+         5 × root cause
+         4 × downstream (blocked by root causes)
    Proof functions: 1 total (1 clean, 0 holed)
 ❌ src/Chap52/AdjTableGraphStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:137: error: external_body - #[verifier::external_body]
@@ -1830,22 +1824,11 @@ Table of Contents:
          7 × root cause
          5 × downstream (blocked by root causes)
 ❌ src/Chap52/EdgeSetGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:163: error: external_body - #[verifier::external_body]
-       164 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:192: error: external_body [blocked_by: out_neighbors] - #[verifier::external_body]
-       193 |         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:210: error: external_body - #[verifier::external_body]
-       211 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:230: error: external_body - #[verifier::external_body]
-       231 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:241: error: external_body - #[verifier::external_body]
-       242 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:253: error: external_body - #[verifier::external_body]
-       254 |         fn default() -> Self { Self::empty() }
-   Holes: 6 total
-      6 × external_body
-         5 × root cause
-         1 × downstream (blocked by root causes)
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphMtPer.rs:355: error: external_body - #[verifier::external_body]
+       356 |         fn default() -> Self { Self::empty() }
+   Holes: 1 total
+      1 × external_body
+   Proof functions: 1 total (1 clean, 0 holed)
 ⚠ src/Chap52/EdgeSetGraphStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:406: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        399 |         fn clone(&self) -> (result: Self)
@@ -1918,11 +1901,7 @@ Table of Contents:
 ✓ src/Chap58/BellmanFordStEphF64.rs
 ✓ src/Chap58/BellmanFordStEphI64.rs
 ✓ src/Chap59/JohnsonMtEphF64.rs
-❌ src/Chap59/JohnsonMtEphI64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphI64.rs:95: error: external_body - #[verifier::external_body]
-        96 |     fn parallel_dijkstra_all(
-   Holes: 1 total
-      1 × external_body
+✓ src/Chap59/JohnsonMtEphI64.rs
 ✓ src/Chap59/JohnsonStEphF64.rs
 ✓ src/Chap59/JohnsonStEphI64.rs
 ℹ src/Chap61/EdgeContractionMtEph.rs
@@ -1934,11 +1913,7 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap61/VertexMatchingMtEph.rs:156: info: structural_false_positive OPAQUE_EXTERNAL select_edges_recursive — #[verifier::external_body] [medium]
    Info: 2 × structural_false_positive
 ✓ src/Chap61/VertexMatchingStEph.rs
-❌ src/Chap62/StarContractionMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarContractionMtEph.rs:249: error: external_body - #[verifier::external_body]
-       250 |     fn route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
-   Holes: 1 total
-      1 × external_body
+✓ src/Chap62/StarContractionMtEph.rs
 ✓ src/Chap62/StarContractionStEph.rs
 ❌ src/Chap62/StarPartitionMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap62/StarPartitionMtEph.rs:72: error: external_body - #[verifier::external_body]
@@ -1949,12 +1924,10 @@ Table of Contents:
 ✓ src/Chap63/ConnectivityMtEph.rs
 ✓ src/Chap63/ConnectivityStEph.rs
 ❌ src/Chap64/SpanTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:56: error: external_body - #[verifier::external_body]
-        57 |     pub fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:150: error: external_body - #[verifier::external_body]
-       151 |     pub fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(
-   Holes: 2 total
-      2 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:61: error: external_body - #[verifier::external_body]
+        62 |     pub fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
+   Holes: 1 total
+      1 × external_body
 ✓ src/Chap64/SpanTreeStEph.rs
 ✓ src/Chap64/TSPApproxStEph.rs
 ❌ src/Chap65/KruskalStEph.rs
@@ -2570,33 +2543,33 @@ src/ParaPairs.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   228 clean (no holes, no errors; 93%)
-   16 holed (holes or errors, 6%)
+   230 clean (no holes, no errors; 94%)
+   14 holed (holes or errors, 5%)
    244 total
 
 Proof Functions:
-   516 clean (100%)
+   518 clean (100%)
    0 holed (0%)
-   516 total
+   518 total
 
 Function Specs:
-   5303 exec fns with complete spec (requires+ensures) (67%)
-   61 exec fns missing spec (0%)
-   2517 proof/spec fns clean (31%)
+   5307 exec fns with complete spec (requires+ensures) (67%)
+   62 exec fns missing spec (0%)
+   2526 proof/spec fns clean (31%)
    0 proof/spec fns with holes (0%)
-   7881 total fns
+   7895 total fns
 
 
-Holes Found: 52 (actionable)
-   51 × external_body (98%)
-      34 × root cause
-      17 × downstream (blocked by root causes)
-   1 × opaque (1%)
-Real Proof Targets: 52 (all actionable)
+Holes Found: 41 (actionable)
+   40 × external_body (97%)
+      25 × root cause
+      15 × downstream (blocked by root causes)
+   1 × opaque (2%)
+Real Proof Targets: 41 (all actionable)
 
 Per-Chapter Holes:
-  Chap26:  2  Chap52: 41  Chap59:  1
-  Chap62:  2  Chap64:  2  Chap65:  4
+  Chap26:  2  Chap52: 33  Chap62:  1
+  Chap64:  1  Chap65:  4
 
 Warnings: 182 total
    2 × fn_missing_requires
@@ -2612,8 +2585,8 @@ Accepted (reviewed): 62 total
    4 × unsafe_block_accept_hole
    3 × external_accept_hole
    1 × enum_outside_verus_accept_hole
-   1 × struct_outside_verus_accept_hole
    1 × external_type_specification_accept_hole
+   1 × struct_outside_verus_accept_hole
 
 Accepted by Chapter:
   Chap02:  6  Chap11:  6  Chap12: 19
@@ -2638,77 +2611,74 @@ Structural (info only): 221
 4.1. Worst src/* Directories (all dirs, by holes)
 =================================================================
 
-   1  Chap52  (41 holes, 14 files)
+   1  Chap52  (33 holes, 14 files)
    2  Chap65  (4 holes, 3 files)
    3  Chap26  (2 holes, 8 files)
-   4  Chap64  (2 holes, 3 files)
-   5  Chap62  (2 holes, 4 files)
-   6  Chap59  (1 holes, 4 files)
+   4  Chap64  (1 holes, 3 files)
+   5  Chap62  (1 holes, 4 files)
+   6  Chap12  (0 holes, 3 files)
    7  Chap37  (0 holes, 19 files)
-   8  Chap51  (0 holes, 8 files)
-   9  Chap19  (0 holes, 4 files)
-   10  Chap17  (0 holes, 1 files)
-   11  Chap41  (0 holes, 6 files)
-   12  Chap06  (0 holes, 21 files)
-   13  Chap50  (0 holes, 8 files)
-   14  Chap05  (0 holes, 5 files)
-   15  Chap58  (0 holes, 2 files)
-   16  Chap44  (0 holes, 1 files)
-   17  Chap39  (0 holes, 4 files)
-   18  Chap45  (0 holes, 6 files)
-   19  Chap36  (0 holes, 3 files)
-   20  Chap18  (0 holes, 7 files)
-   21  Chap63  (0 holes, 2 files)
-   22  Concurrency  (0 holes, 1 files)
-   23  Chap47  (0 holes, 9 files)
-   24  Chap21  (0 holes, 5 files)
-   25  Chap66  (0 holes, 2 files)
-   26  Chap55  (0 holes, 8 files)
-   27  Chap02  (0 holes, 2 files)
-   28  Chap53  (0 holes, 5 files)
-   29  Chap40  (0 holes, 3 files)
-   30  Chap03  (0 holes, 1 files)
-   31  Chap11  (0 holes, 5 files)
-   32  Chap43  (0 holes, 10 files)
-   33  Chap38  (0 holes, 2 files)
-   34  Chap49  (0 holes, 8 files)
-   35  Chap57  (0 holes, 3 files)
-   36  Chap23  (0 holes, 2 files)
-   37  Chap54  (0 holes, 4 files)
-   38  ParaPairs  (0 holes, 1 files)
-   39  Chap30  (0 holes, 1 files)
-   40  Chap28  (0 holes, 11 files)
-   41  Chap56  (0 holes, 10 files)
-   42  Chap27  (0 holes, 4 files)
-   43  Chap12  (0 holes, 3 files)
-   44  Chap42  (0 holes, 3 files)
-   45  Chap35  (0 holes, 4 files)
-   46  Chap61  (0 holes, 4 files)
+   8  Chap17  (0 holes, 1 files)
+   9  Chap56  (0 holes, 10 files)
+   10  Chap19  (0 holes, 4 files)
+   11  Chap18  (0 holes, 7 files)
+   12  Chap43  (0 holes, 10 files)
+   13  Chap57  (0 holes, 3 files)
+   14  Chap61  (0 holes, 4 files)
+   15  Chap51  (0 holes, 8 files)
+   16  Chap21  (0 holes, 5 files)
+   17  Chap63  (0 holes, 2 files)
+   18  Chap49  (0 holes, 8 files)
+   19  Chap27  (0 holes, 4 files)
+   20  Chap39  (0 holes, 4 files)
+   21  Chap50  (0 holes, 8 files)
+   22  Chap58  (0 holes, 2 files)
+   23  Chap06  (0 holes, 21 files)
+   24  Chap54  (0 holes, 4 files)
+   25  Chap40  (0 holes, 3 files)
+   26  Chap42  (0 holes, 3 files)
+   27  ParaPairs  (0 holes, 1 files)
+   28  Chap35  (0 holes, 4 files)
+   29  Chap28  (0 holes, 11 files)
+   30  Chap05  (0 holes, 5 files)
+   31  Concurrency  (0 holes, 1 files)
+   32  Chap47  (0 holes, 9 files)
+   33  Chap53  (0 holes, 5 files)
+   34  Chap59  (0 holes, 4 files)
+   35  Chap36  (0 holes, 3 files)
+   36  Chap02  (0 holes, 2 files)
+   37  Chap30  (0 holes, 1 files)
+   38  Chap11  (0 holes, 5 files)
+   39  Chap38  (0 holes, 2 files)
+   40  Chap44  (0 holes, 1 files)
+   41  Chap41  (0 holes, 6 files)
+   42  Chap23  (0 holes, 2 files)
+   43  Chap66  (0 holes, 2 files)
+   44  Chap45  (0 holes, 6 files)
+   45  Chap55  (0 holes, 8 files)
+   46  Chap03  (0 holes, 1 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
 =================================================================
 
-   1  src/Chap52/AdjTableGraphStEph.rs  (12 holes)
-   2  src/Chap52/AdjTableGraphStPer.rs  (12 holes)
-   3  src/Chap52/AdjTableGraphMtPer.rs  (11 holes)
-   4  src/Chap52/EdgeSetGraphMtPer.rs  (6 holes)
-   5  src/Chap64/SpanTreeMtEph.rs  (2 holes)
-   6  src/Chap65/UnionFindStEph.rs  (2 holes)
-   7  src/Chap26/ETSPMtEph.rs  (2 holes)
-   8  src/Chap62/StarContractionMtEph.rs  (1 holes)
-   9  src/Chap59/JohnsonMtEphI64.rs  (1 holes)
-   10  src/Chap62/StarPartitionMtEph.rs  (1 holes)
+   1  src/Chap52/AdjTableGraphStPer.rs  (12 holes)
+   2  src/Chap52/AdjTableGraphMtPer.rs  (11 holes)
+   3  src/Chap52/AdjTableGraphStEph.rs  (9 holes)
+   4  src/Chap65/UnionFindStEph.rs  (2 holes)
+   5  src/Chap26/ETSPMtEph.rs  (2 holes)
+   6  src/Chap52/EdgeSetGraphMtPer.rs  (1 holes)
+   7  src/Chap64/SpanTreeMtEph.rs  (1 holes)
+   8  src/Chap62/StarPartitionMtEph.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
 =================================================================
 
-   1  src/Chap52  (41 holes, 14 files)
-   2  src/Chap64  (2 holes, 3 files)
-   3  src/Chap26  (2 holes, 8 files)
-   4  src/Chap62  (2 holes, 4 files)
-   5  src/Chap59  (1 holes, 4 files)
+   1  src/Chap52  (33 holes, 14 files)
+   2  src/Chap26  (2 holes, 8 files)
+   3  src/Chap62  (1 holes, 4 files)
+   4  src/Chap64  (1 holes, 3 files)
 
 =================================================================
 4.4. Not Verusified
@@ -2726,9 +2696,9 @@ Structural (info only): 221
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 40 clean, 6 holed, 52 holes (global), 244 modules
+Chapter Status — 46 chapters, 41 clean, 5 holed, 41 holes (global), 244 modules
 
-CLEAN CHAPTERS (40)
+CLEAN CHAPTERS (41)
   Chapter        Files
   -------------- -----
   Chap02             2
@@ -2766,20 +2736,20 @@ CLEAN CHAPTERS (40)
   Chap56            10
   Chap57             3
   Chap58             2
+  Chap59             4
   Chap61             4
   Chap63             2
   Chap66             2
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (6) — 52 holes
+HOLED CHAPTERS (5) — 41 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
   Chap26             2     8  YES       
-  Chap52            41    14  YES       
-  Chap59             1     4  YES       
-  Chap62             2     4  YES       
-  Chap64             2     3  YES       
+  Chap52            33    14  YES       
+  Chap62             1     4  YES       
+  Chap64             1     3  YES       
   Chap65             4     3  internal  Chap65::UnionFindStEph
 
 DEPENDENCY CHAIN (chapter-level, external only)
@@ -2790,8 +2760,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 12:52:42 -07:00
-Ended:     2026-03-27 12:52:44 -07:00
-Duration:  1948ms
+Started:   2026-03-27 13:43:28 -07:00
+Ended:     2026-03-27 13:43:29 -07:00
+Duration:  1501ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log

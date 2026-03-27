@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap62/StarPartitionMtEph.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap62/
 Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,11 +20,14 @@ Table of Contents:
 1. File Holes
 =================================================================
 
+✓ StarContractionMtEph.rs
+✓ StarContractionStEph.rs
 ❌ StarPartitionMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap62/StarPartitionMtEph.rs:72: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarPartitionMtEph.rs:72: error: external_body - #[verifier::external_body]
         73 |     pub fn parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
    Holes: 1 total
       1 × external_body
+✓ StarPartitionStEph.rs
 
 =================================================================
 2. Depends Upon
@@ -34,22 +37,28 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
+StarContractionMtEph  depends upon only clean modules
+StarContractionStEph  depends upon only clean modules
 StarPartitionMtEph  depends upon only clean modules
+StarPartitionStEph  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
+StarContractionMtEph.rs  depends upon only clean modules
+StarContractionStEph.rs  depends upon only clean modules
 StarPartitionMtEph.rs  depends upon only clean modules
+StarPartitionStEph.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   0 clean (no holes, no errors; 0%)
-   1 holed (holes or errors, 100%)
-   1 total
+   3 clean (no holes, no errors; 75%)
+   1 holed (holes or errors, 25%)
+   4 total
 
 Proof Functions:
    0 clean (0%)
@@ -57,11 +66,11 @@ Proof Functions:
    0 total
 
 Function Specs:
-   2 exec fns with complete spec (requires+ensures) (50%)
+   17 exec fns with complete spec (requires+ensures) (70%)
    0 exec fns missing spec (0%)
-   2 proof/spec fns clean (50%)
+   7 proof/spec fns clean (29%)
    0 proof/spec fns with holes (0%)
-   4 total fns
+   24 total fns
 
 
 Holes Found: 1 (actionable)
@@ -72,8 +81,9 @@ Real Proof Targets: 1 (all actionable)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 13:20:27 -07:00
-Ended:     2026-03-27 13:20:27 -07:00
-Duration:  9ms
+Started:   2026-03-27 13:43:27 -07:00
+Ended:     2026-03-27 13:43:27 -07:00
+Duration:  15ms
 
 Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
