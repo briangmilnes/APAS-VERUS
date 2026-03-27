@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap55/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap55/TopoSortStPer.rs
 Full output: src/Chap55/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,34 +20,12 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-✓ CycleDetectStEph.rs
-   7 clean proof functions
-✓ CycleDetectStPer.rs
-   6 clean proof functions
-✓ DFSStEph.rs
-   7 clean proof functions
-✓ DFSStPer.rs
-   6 clean proof functions
-✓ SCCStEph.rs
-   3 clean proof functions
-✓ SCCStPer.rs
-   2 clean proof functions
-❌ TopoSortStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:478: error: external_body - #[verifier::external_body]
-       479 |     pub fn topological_sort_opt(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (topo_order: Option<AVLTreeSeqStEphS<usize>>)
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStEph.rs:548: error: external_body - #[verifier::external_body]
-       549 |         fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (order: AVLTreeSeqStEphS<usize>)
-   Holes: 2 total
-      2 × external_body
-   Proof functions: 7 total (7 clean, 0 holed)
 ❌ TopoSortStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:338: error: external_body - #[verifier::external_body]
-       339 |     pub fn topological_sort_opt(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (topo_order: Option<AVLTreeSeqStPerS<usize>>)
-/home/milnes/projects/APAS-VERUS/src/Chap55/TopoSortStPer.rs:412: error: external_body - #[verifier::external_body]
-       413 |         fn topo_sort(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (order: AVLTreeSeqStPerS<usize>)
-   Holes: 2 total
-      2 × external_body
-   Proof functions: 2 total (2 clean, 0 holed)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap55/TopoSortStPer.rs:679: error: external_body - #[verifier::external_body]
+       680 |     pub fn topological_sort_opt(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (topo_order: Option<AVLTreeSeqStPerS<usize>>)
+   Holes: 1 total
+      1 × external_body
+   Proof functions: 6 total (6 clean, 0 holed)
 
 =================================================================
 2. Depends Upon
@@ -57,26 +35,12 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
-CycleDetectStEph  depends upon only clean modules
-CycleDetectStPer  depends upon only clean modules
-DFSStEph  depends upon only clean modules
-DFSStPer  depends upon only clean modules
-SCCStEph  depends upon only clean modules
-SCCStPer  depends upon only clean modules
-TopoSortStEph  depends upon only clean modules
 TopoSortStPer  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
-CycleDetectStEph.rs  depends upon only clean modules
-CycleDetectStPer.rs  depends upon only clean modules
-DFSStEph.rs  depends upon only clean modules
-DFSStPer.rs  depends upon only clean modules
-SCCStEph.rs  depends upon only clean modules
-SCCStPer.rs  depends upon only clean modules
-TopoSortStEph.rs  depends upon only clean modules
 TopoSortStPer.rs  depends upon only clean modules
 
 =================================================================
@@ -84,34 +48,33 @@ TopoSortStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   6 clean (no holes, no errors; 75%)
-   2 holed (holes or errors, 25%)
-   8 total
+   0 clean (no holes, no errors; 0%)
+   1 holed (holes or errors, 100%)
+   1 total
 
 Proof Functions:
-   40 clean (100%)
+   6 clean (100%)
    0 holed (0%)
-   40 total
+   6 total
 
 Function Specs:
-   33 exec fns with complete spec (requires+ensures) (33%)
-   2 exec fns missing spec (2%)
-   65 proof/spec fns clean (65%)
+   5 exec fns with complete spec (requires+ensures) (21%)
+   0 exec fns missing spec (0%)
+   18 proof/spec fns clean (78%)
    0 proof/spec fns with holes (0%)
-   100 total fns
+   23 total fns
 
 
-Holes Found: 4 (actionable)
-   4 × external_body (100%)
-Real Proof Targets: 4 (all actionable)
+Holes Found: 1 (actionable)
+   1 × external_body (100%)
+Real Proof Targets: 1 (all actionable)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-26 20:19:25 -07:00
-Ended:     2026-03-26 20:19:25 -07:00
-Duration:  43ms
+Started:   2026-03-26 21:01:33 -07:00
+Ended:     2026-03-26 21:01:33 -07:00
+Duration:  13ms
 
 Full output: src/Chap55/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap55/analyses/veracity-review-verus-proof-holes.log

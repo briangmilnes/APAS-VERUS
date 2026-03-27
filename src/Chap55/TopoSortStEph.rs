@@ -118,6 +118,38 @@ broadcast use {
             ==> c1 < c2)
     }
 
+    /// Whether all neighbors of vertex v are visited.
+    pub open spec fn spec_vertex_neighbors_visited(
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
+        visited: Seq<bool>,
+        v: int,
+    ) -> bool {
+        forall|i: int| 0 <= i < graph@[v].len()
+            ==> visited[#[trigger] graph@[v][i] as int]
+    }
+
+    /// Whether all finish_order elements have their neighbors visited.
+    pub open spec fn spec_neighbors_explored(
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
+        visited: Seq<bool>,
+        finish_order: Seq<usize>,
+    ) -> bool {
+        forall|k: int| 0 <= k < finish_order.len()
+            ==> #[trigger] spec_vertex_neighbors_visited(graph, visited, finish_order[k] as int)
+    }
+
+    /// Edge ordering: for any edge u->v in finish_order, v appears before u.
+    pub open spec fn spec_edge_ordered(
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
+        finish_order: Seq<usize>,
+    ) -> bool {
+        forall|a: int, b: int|
+            #![trigger finish_order[a], finish_order[b]]
+            0 <= a < finish_order.len() && 0 <= b < finish_order.len()
+            && spec_has_edge(graph, finish_order[a] as int, finish_order[b] as int)
+            ==> b < a
+    }
+
     /// Bridge: for ArraySeqStEphS<bool>, view index equals spec_index.
     proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<bool>)
         ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
@@ -210,6 +242,139 @@ broadcast use {
         }
     }
 
+    /// A single edge implies reachability.
+    proof fn lemma_edge_implies_reachable(
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
+        u: int,
+        v: int,
+    )
+        requires
+            spec_has_edge(graph, u, v),
+            spec_toposortsteph_wf(graph),
+        ensures
+            spec_reachable(graph, u, v),
+    {
+        let path = seq![u, v];
+        assert forall|k: int| 0 <= k < path.len()
+            implies 0 <= #[trigger] path[k] < graph@.len() by {
+            if k == 0 {
+            } else {
+                // v is a neighbor, wf gives v < graph@.len().
+                let i = choose|i: int| 0 <= i < graph@[u].len() && (#[trigger] graph@[u][i]) == v;
+                assert(graph@[u][i] < graph@.len());
+            }
+        };
+        assert forall|k: int| #![trigger path[k]] 0 <= k < path.len() - 1
+            implies spec_has_edge(graph, path[k], path[k + 1]) by {};
+        assert(spec_is_path(graph, path));
+        assert(path[0] == u && path.last() == v);
+    }
+
+    /// A vertex is reachable from itself.
+    proof fn lemma_self_reachable(
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
+        u: int,
+    )
+        requires 0 <= u < graph@.len(),
+        ensures spec_reachable(graph, u, u),
+    {
+        let path = seq![u];
+        assert forall|k: int| 0 <= k < path.len()
+            implies 0 <= #[trigger] path[k] < graph@.len() by {};
+        assert forall|k: int| #![trigger path[k]] 0 <= k < path.len() - 1
+            implies spec_has_edge(graph, path[k], path[k + 1]) by {};
+        assert(spec_is_path(graph, path) && path[0] == u && path.last() == u);
+    }
+
+    /// Reachable via an edge: if u->v edge and v reaches w, then u reaches w.
+    proof fn lemma_reachable_via_edge(
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
+        u: int,
+        v: int,
+        w: int,
+    )
+        requires
+            spec_has_edge(graph, u, v),
+            spec_reachable(graph, v, w),
+            spec_toposortsteph_wf(graph),
+        ensures
+            spec_reachable(graph, u, w),
+    {
+        let p = choose|path: Seq<int>|
+            spec_is_path(graph, path) && path[0] == v && #[trigger] path.last() == w;
+        let new_path = seq![u] + p;
+        assert(new_path.len() >= 2);
+        assert(new_path[0] == u);
+        assert(new_path.last() == w) by {
+            assert(new_path[new_path.len() - 1] == p[p.len() - 1]);
+        };
+        assert forall|k: int| 0 <= k < new_path.len()
+            implies 0 <= #[trigger] new_path[k] < graph@.len() by {
+            if k == 0 {
+            } else {
+                assert(new_path[k] == p[k - 1]);
+            }
+        };
+        assert forall|k: int| #![trigger new_path[k]] 0 <= k < new_path.len() - 1
+            implies spec_has_edge(graph, new_path[k], new_path[k + 1]) by {
+            if k == 0 {
+                assert(new_path[0] == u);
+                assert(new_path[1] == p[0]);
+                assert(p[0] == v);
+            } else {
+                assert(new_path[k] == p[k - 1]);
+                assert(new_path[k + 1] == p[k]);
+            }
+        };
+        assert(spec_is_path(graph, new_path));
+    }
+
+    /// If u reaches v and there is an edge v->u, the graph has a cycle (contradicts DAG).
+    proof fn lemma_reachable_edge_contradicts_dag(
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
+        u: int,
+        v: int,
+    )
+        requires
+            spec_toposortsteph_wf(graph),
+            spec_reachable(graph, u, v),
+            spec_has_edge(graph, v, u),
+        ensures
+            !spec_is_dag(graph),
+    {
+        let p = choose|path: Seq<int>|
+            spec_is_path(graph, path) && path[0] == u && #[trigger] path.last() == v;
+        let cycle = p.push(u);
+        assert(cycle.len() >= 2);
+        assert(cycle[0] == u);
+        assert(cycle.last() == u) by {
+            assert(cycle[cycle.len() - 1] == u);
+        };
+        assert forall|k: int| 0 <= k < cycle.len()
+            implies 0 <= #[trigger] cycle[k] < graph@.len() by {
+            if k < p.len() as int {
+                assert(cycle[k] == p[k]);
+            } else {
+                // k == p.len(), cycle[k] == u. spec_has_edge(v, u) + wf → 0 <= u < graph@.len().
+                let i = choose|i: int| 0 <= i < graph@[v].len() && (#[trigger] graph@[v][i]) == u;
+                assert(graph@[v][i] < graph@.len());
+            }
+        };
+        assert forall|k: int| #![trigger cycle[k]] 0 <= k < cycle.len() - 1
+            implies spec_has_edge(graph, cycle[k], cycle[k + 1]) by {
+            if k < p.len() as int - 1 {
+                assert(cycle[k] == p[k]);
+                assert(cycle[k + 1] == p[k + 1]);
+            } else {
+                // k == p.len() - 1: cycle[k] == p.last() == v, cycle[k+1] == u.
+                assert(cycle[k] == p[p.len() - 1]);
+                assert(p[p.len() - 1] == v);
+                assert(cycle[k + 1] == u);
+            }
+        };
+        assert(spec_is_path(graph, cycle) && cycle.len() >= 2 && cycle[0] == cycle.last());
+    }
+
     /// An all-false sequence has num_false equal to its length.
     pub proof fn lemma_all_false_num_false_eq_len(s: Seq<bool>)
         requires forall|j: int| #![trigger s[j]] 0 <= j < s.len() ==> !s[j],
@@ -265,6 +430,45 @@ broadcast use {
             visited@[vertex as int],
             finish_order@.len() + spec_num_false(visited@)
                 == old(finish_order)@.len() + spec_num_false(old(visited)@),
+            // Prefix preservation.
+            forall|k: int| 0 <= k < old(finish_order)@.len()
+                ==> finish_order@[k] == old(finish_order)@[k],
+            // New elements were unvisited at call start.
+            forall|k: int| old(finish_order)@.len() <= k < finish_order@.len()
+                ==> !old(visited)@[#[trigger] finish_order@[k] as int],
+            // Conditional: all elements in finish_order are visited.
+            (forall|k: int| 0 <= k < old(finish_order)@.len()
+                ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])
+                ==> (forall|k: int| 0 <= k < finish_order@.len()
+                    ==> visited@[#[trigger] finish_order@[k] as int]),
+            // Conditional: no duplicates.
+            (old(finish_order)@.no_duplicates()
+                && (forall|k: int| 0 <= k < old(finish_order)@.len()
+                    ==> old(visited)@[#[trigger] old(finish_order)@[k] as int]))
+                ==> finish_order@.no_duplicates(),
+            // Vertex is last when unvisited.
+            !old(visited)@[vertex as int]
+                ==> finish_order@[finish_order@.len() - 1] == vertex,
+            // If vertex was already visited, finish_order is unchanged.
+            old(visited)@[vertex as int]
+                ==> finish_order@.len() == old(finish_order)@.len(),
+            // Conditional: neighbors explored.
+            ((forall|k: int| 0 <= k < old(finish_order)@.len()
+                ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])
+                && spec_neighbors_explored(graph, old(visited)@, old(finish_order)@))
+                ==> spec_neighbors_explored(graph, visited@, finish_order@),
+            // Conditional: edge ordered (needs DAG).
+            (spec_is_dag(graph)
+                && old(finish_order)@.no_duplicates()
+                && (forall|k: int| 0 <= k < old(finish_order)@.len()
+                    ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])
+                && spec_neighbors_explored(graph, old(visited)@, old(finish_order)@)
+                && spec_edge_ordered(graph, old(finish_order)@))
+                ==> spec_edge_ordered(graph, finish_order@),
+            // New elements reachable from vertex.
+            !old(visited)@[vertex as int]
+                ==> (forall|k: int| old(finish_order)@.len() <= k < finish_order@.len()
+                    ==> spec_reachable(graph, vertex as int, #[trigger] finish_order@[k] as int)),
         decreases spec_num_false(old(visited)@),
     {
         proof { lemma_bool_view_eq_spec_index(visited); }
@@ -315,6 +519,25 @@ broadcast use {
         proof { lemma_graph_view_bridge(graph, neighbors, vertex as int); }
         assert(neighbors@ =~= graph@[vertex as int]);
 
+        // Establish neighbors_explored and edge_ordered at loop entry.
+        proof {
+            if (forall|k: int| 0 <= k < old(finish_order)@.len()
+                    ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])
+                && spec_neighbors_explored(graph, old(visited)@, old(finish_order)@)
+            {
+                assert forall|k: int| 0 <= k < finish_order@.len()
+                    implies #[trigger] spec_vertex_neighbors_visited(
+                        graph, visited@, finish_order@[k] as int) by {
+                    assert(spec_vertex_neighbors_visited(
+                        graph, old(visited)@, old(finish_order)@[k] as int));
+                    assert forall|ii: int| 0 <= ii < graph@[finish_order@[k] as int].len()
+                        implies visited@[#[trigger] graph@[finish_order@[k] as int][ii] as int] by {
+                        assert(old(visited)@[graph@[old(finish_order)@[k] as int][ii] as int]);
+                    };
+                };
+            }
+        }
+
         let mut i: usize = 0;
         while i < neighbors_len
             invariant
@@ -336,6 +559,48 @@ broadcast use {
                 visited@[vertex as int],
                 finish_order@.len() + spec_num_false(visited@) + 1
                     == old(finish_order)@.len() + spec_num_false(old(visited)@),
+                // Prefix preservation from outer old.
+                forall|k: int| 0 <= k < old(finish_order)@.len()
+                    ==> finish_order@[k] == old(finish_order)@[k],
+                // New elements since outer old were unvisited then.
+                forall|k: int| old(finish_order)@.len() <= k < finish_order@.len()
+                    ==> !old(visited)@[#[trigger] finish_order@[k] as int],
+                // Conditional: all elements visited.
+                (forall|k: int| 0 <= k < old(finish_order)@.len()
+                    ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])
+                    ==> (forall|k: int| 0 <= k < finish_order@.len()
+                        ==> visited@[#[trigger] finish_order@[k] as int]),
+                // Conditional: no duplicates.
+                (old(finish_order)@.no_duplicates()
+                    && (forall|k: int| 0 <= k < old(finish_order)@.len()
+                        ==> old(visited)@[#[trigger] old(finish_order)@[k] as int]))
+                    ==> finish_order@.no_duplicates(),
+                // Conditional: vertex not in finish_order.
+                (old(finish_order)@.no_duplicates()
+                    && (forall|k: int| 0 <= k < old(finish_order)@.len()
+                        ==> old(visited)@[#[trigger] old(finish_order)@[k] as int]))
+                    ==> (forall|k: int| 0 <= k < finish_order@.len()
+                        ==> finish_order@[k] != vertex),
+                // Neighbors of vertex processed so far are visited.
+                forall|j: int| 0 <= j < i as int
+                    ==> visited@[#[trigger] graph@[vertex as int][j] as int],
+                // Conditional: neighbors explored.
+                ((forall|k: int| 0 <= k < old(finish_order)@.len()
+                    ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])
+                    && spec_neighbors_explored(graph, old(visited)@, old(finish_order)@))
+                    ==> spec_neighbors_explored(graph, visited@, finish_order@),
+                // Conditional: edge ordered.
+                (spec_is_dag(graph)
+                    && old(finish_order)@.no_duplicates()
+                    && (forall|k: int| 0 <= k < old(finish_order)@.len()
+                        ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])
+                    && spec_neighbors_explored(graph, old(visited)@, old(finish_order)@)
+                    && spec_edge_ordered(graph, old(finish_order)@))
+                    ==> spec_edge_ordered(graph, finish_order@),
+                // New elements reachable from vertex.
+                !old(visited)@[vertex as int]
+                    ==> (forall|k: int| old(finish_order)@.len() <= k < finish_order@.len()
+                        ==> spec_reachable(graph, vertex as int, #[trigger] finish_order@[k] as int)),
             decreases neighbors_len - i,
         {
             let neighbor = *neighbors.nth(i);
@@ -344,10 +609,139 @@ broadcast use {
             assert(neighbor == graph@[vertex as int][i as int]);
             assert(graph@[vertex as int][i as int] < graph@.len());
             assert(neighbor < graph@.len());
+            let ghost fo_pre = finish_order@;
+            let ghost vis_pre = visited@;
+            assert(spec_has_edge(graph, vertex as int, neighbor as int)) by {
+                assert(graph@[vertex as int][i as int] == neighbor);
+            };
             dfs_finish_order(graph, visited, finish_order, neighbor);
+            proof {
+                // Chain prefix preservation.
+                assert forall|k: int| 0 <= k < old(finish_order)@.len()
+                    implies finish_order@[k] == old(finish_order)@[k] by {
+                    assert(finish_order@[k] == fo_pre[k]);
+                };
+                // Chain new-elements-unvisited.
+                assert forall|k: int| old(finish_order)@.len() <= k < finish_order@.len()
+                    implies !old(visited)@[#[trigger] finish_order@[k] as int] by {
+                    if k < fo_pre.len() as int {
+                        assert(finish_order@[k] == fo_pre[k]);
+                    } else {
+                        assert(!vis_pre[finish_order@[k] as int]);
+                        if old(visited)@[finish_order@[k] as int] {
+                            assert(vis_pre[finish_order@[k] as int]);
+                        }
+                    }
+                };
+                // Neighbor is visited (monotonicity from recursive call ensures).
+                assert(visited@[neighbor as int]);
+                // Prior neighbors still visited (visited monotonic).
+                assert forall|j: int| 0 <= j < i as int
+                    implies visited@[#[trigger] graph@[vertex as int][j] as int] by {
+                    // vis_pre had this, visited grew.
+                    assert(vis_pre[graph@[vertex as int][j] as int]);
+                };
+                // Reachability: new elements from recursive call reachable from vertex.
+                if !old(visited)@[vertex as int] {
+                    // If neighbor was already visited, the call added no elements.
+                    if vis_pre[neighbor as int] {
+                        assert(finish_order@.len() == fo_pre.len());
+                    }
+                    assert forall|k: int| old(finish_order)@.len() <= k < finish_order@.len()
+                        implies spec_reachable(graph, vertex as int, #[trigger] finish_order@[k] as int) by {
+                        if k < fo_pre.len() as int {
+                            // From loop invariant.
+                        } else {
+                            // New from recursive call. Neighbor must have been unvisited.
+                            assert(!vis_pre[neighbor as int]);
+                            assert(spec_reachable(graph, neighbor as int, finish_order@[k] as int));
+                            lemma_reachable_via_edge(graph, vertex as int, neighbor as int, finish_order@[k] as int);
+                        }
+                    };
+                }
+            }
             i = i + 1;
         }
+        // All neighbors of vertex are visited.
+        assert forall|j: int| 0 <= j < graph@[vertex as int].len()
+            implies visited@[#[trigger] graph@[vertex as int][j] as int] by {};
+        let ghost fo_pre_push = finish_order@;
+        let ghost vis_at_push = visited@;
         finish_order.push(vertex);
+        proof {
+            assert(finish_order@ =~= fo_pre_push.push(vertex));
+            // Neighbors explored for the extended sequence.
+            // For elements at positions < fo_pre_push.len(): same as before (loop invariant).
+            // For vertex (at position fo_pre_push.len()): all neighbors visited (proved above).
+            if (forall|k: int| 0 <= k < old(finish_order)@.len()
+                    ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])
+                && spec_neighbors_explored(graph, old(visited)@, old(finish_order)@)
+            {
+                assert forall|k: int| 0 <= k < finish_order@.len()
+                    implies #[trigger] spec_vertex_neighbors_visited(graph, visited@, finish_order@[k] as int) by {
+                    if k < fo_pre_push.len() as int {
+                        assert(finish_order@[k] == fo_pre_push[k]);
+                        // Loop invariant gave neighbors explored for fo_pre_push.
+                        assert(spec_vertex_neighbors_visited(graph, vis_at_push, fo_pre_push[k] as int));
+                        // visited@ grew from vis_at_push by push (which doesn't change visited).
+                    } else {
+                        // k == fo_pre_push.len(), finish_order@[k] == vertex.
+                        assert(finish_order@[k] == vertex);
+                    }
+                };
+            }
+            // Edge ordered for the extended sequence.
+            if spec_is_dag(graph)
+                && old(finish_order)@.no_duplicates()
+                && (forall|k: int| 0 <= k < old(finish_order)@.len()
+                    ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])
+                && spec_neighbors_explored(graph, old(visited)@, old(finish_order)@)
+                && spec_edge_ordered(graph, old(finish_order)@)
+            {
+                assert forall|a: int, b: int|
+                    0 <= a < finish_order@.len() && 0 <= b < finish_order@.len()
+                    && spec_has_edge(graph, finish_order@[a] as int, finish_order@[b] as int)
+                    implies ({
+                        #[trigger] finish_order@[a]; #[trigger] finish_order@[b];
+                        b < a
+                    }) by {
+                    if a < fo_pre_push.len() as int && b < fo_pre_push.len() as int {
+                        // Both in pre-push range: loop invariant.
+                        assert(finish_order@[a] == fo_pre_push[a]);
+                        assert(finish_order@[b] == fo_pre_push[b]);
+                    } else if a == fo_pre_push.len() as int && b < fo_pre_push.len() as int {
+                        // Edge from vertex to element at b < a. b < a = fo_pre_push.len(). ✓
+                    } else if a < fo_pre_push.len() as int && b == fo_pre_push.len() as int {
+                        // Edge from finish_order@[a] to vertex. Impossible:
+                        let src = finish_order@[a];
+                        assert(finish_order@[b] == vertex);
+                        if a < old(finish_order)@.len() as int {
+                            // Old element: its neighbors are visited in old(visited).
+                            // vertex was !old(visited). So vertex not a neighbor.
+                            assert(spec_vertex_neighbors_visited(graph, old(visited)@, old(finish_order)@[a] as int));
+                            assert(finish_order@[a] == old(finish_order)@[a]);
+                            assert(!old(visited)@[vertex as int]);
+                            // spec_has_edge(src, vertex) means vertex is a neighbor of src.
+                            // But all neighbors of src are visited in old(visited). vertex is not. Contradiction.
+                        } else {
+                            // New element: reachable from vertex. Edge to vertex → cycle → ¬DAG.
+                            assert(spec_reachable(graph, vertex as int, finish_order@[a] as int));
+                            lemma_reachable_edge_contradicts_dag(graph, vertex as int, finish_order@[a] as int);
+                        }
+                    } else {
+                        // Both at fo_pre_push.len(): self-edge on vertex. DAG forbids self-loops.
+                        assert(finish_order@[a] == vertex);
+                        assert(finish_order@[b] == vertex);
+                        lemma_self_reachable(graph, vertex as int);
+                        lemma_reachable_edge_contradicts_dag(graph, vertex as int, vertex as int);
+                    }
+                };
+            }
+            // Reachability: vertex reaches itself (for the push).
+            if !old(visited)@[vertex as int] {
+                lemma_self_reachable(graph, vertex as int);
+            }
+        }
     }
 
     /// Recursive DFS with cycle detection via rec_stack.
@@ -545,7 +939,6 @@ broadcast use {
 
     impl TopoSortStEphTrait for TopoSortStEph {
         /// Returns sequence of vertices in topological order.
-        #[verifier::external_body]
         fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (order: AVLTreeSeqStEphS<usize>)
         {
             let n = graph.length();
@@ -574,20 +967,36 @@ broadcast use {
                         ==> (#[trigger] finish_order@[k] as int) < graph@.len(),
                     finish_order@.len() + spec_num_false(visited@) == n,
                     forall|j: int| #![trigger visited@[j]] 0 <= j < start ==> visited@[j],
+                    // Topo sort invariants.
+                    finish_order@.no_duplicates(),
+                    forall|k: int| 0 <= k < finish_order@.len()
+                        ==> visited@[#[trigger] finish_order@[k] as int],
+                    spec_neighbors_explored(graph, visited@, finish_order@),
+                    spec_is_dag(graph) ==> spec_edge_ordered(graph, finish_order@),
                 decreases n - start,
             {
                 assert(start < visited.spec_len());
                 proof { lemma_bool_view_eq_spec_index(&visited); }
                 if !*visited.nth(start) {
                     let ghost old_visited = visited@;
+                    let ghost old_fo = finish_order@;
                     dfs_finish_order(graph, &mut visited, &mut finish_order, start);
-                    // Monotonicity preserves prior visited entries.
                     proof {
+                        // Monotonicity preserves prior visited entries.
                         assert forall|j: int| #![trigger visited@[j]] 0 <= j < start + 1 implies visited@[j] by {
                             if j < start as int {
                                 assert(old_visited[j]);
                             }
                         };
+                        // Conditional ensures fire because old state satisfied invariants.
+                        // no_duplicates: old had no_dup and elements visited → new has no_dup.
+                        assert(old_fo.no_duplicates());
+                        assert(forall|k: int| 0 <= k < old_fo.len()
+                            ==> old_visited[#[trigger] old_fo[k] as int]);
+                        // elements visited: same condition → new elements visited.
+                        // neighbors_explored: condition + old neighbors explored → new.
+                        assert(spec_neighbors_explored(graph, old_visited, old_fo));
+                        // edge_ordered: DAG + all conditions → new edge ordered.
                     }
                 } else {
                     assert(visited@[start as int]);
@@ -599,6 +1008,7 @@ broadcast use {
             }
             assert(finish_order@.len() == n);
             assert(finish_order@.len() < usize::MAX);
+            let ghost fo_final = finish_order@;
             let result_len = finish_order.len();
             let mut reversed: Vec<usize> = Vec::new();
             let mut k: usize = result_len;
@@ -606,16 +1016,78 @@ broadcast use {
                 invariant
                     k <= result_len,
                     result_len == finish_order@.len(),
+                    result_len == n,
                     result_len < usize::MAX,
                     reversed@.len() == (result_len - k) as nat,
                     reversed@.len() < usize::MAX,
+                    finish_order@ == fo_final,
+                    // Reversal relationship.
+                    forall|m: int| #![trigger reversed@[m]]
+                        0 <= m < reversed@.len()
+                        ==> reversed@[m] == fo_final[(result_len - 1 - m) as int],
                 decreases k,
             {
                 k = k - 1;
                 reversed.push(finish_order[k]);
             }
+            assert(reversed@.len() == n);
             assert(reversed@.len() < usize::MAX);
-            AVLTreeSeqStEphS::from_vec(reversed)
+            // Prove reversed properties from finish_order properties.
+            proof {
+                // reversed is the reverse of fo_final.
+                assert forall|m: int| 0 <= m < reversed@.len()
+                    implies reversed@[m] == fo_final[(n - 1 - m) as int] by {};
+                // reversed has no duplicates (from fo_final no_duplicates + reversal injection).
+                assert(reversed@.no_duplicates()) by {
+                    assert forall|i: int, j: int|
+                        0 <= i < reversed@.len() && 0 <= j < reversed@.len() && i != j
+                        implies reversed@[i] != reversed@[j] by {
+                        assert(reversed@[i] == fo_final[(n - 1 - i) as int]);
+                        assert(reversed@[j] == fo_final[(n - 1 - j) as int]);
+                        // n-1-i != n-1-j since i != j.
+                        // fo_final.no_duplicates() → fo_final[n-1-i] != fo_final[n-1-j].
+                    };
+                };
+                // reversed elements are valid indices.
+                assert forall|m: int| 0 <= m < reversed@.len()
+                    implies (reversed@[m] as int) < graph@.len() by {
+                    assert(reversed@[m] == fo_final[(n - 1 - m) as int]);
+                };
+                // map_values identity for usize.
+                assert(reversed@.map_values(|t: usize| t@) =~= reversed@) by {
+                    assert(reversed@.map_values(|t: usize| t@).len() == reversed@.len());
+                    assert forall|i: int| 0 <= i < reversed@.len()
+                        implies reversed@.map_values(|t: usize| t@)[i] == reversed@[i] by {};
+                };
+            }
+            let order = AVLTreeSeqStEphS::from_vec(reversed);
+            proof {
+                // order@ =~= reversed@ (from from_vec ensures + map_values identity).
+                assert(order@ =~= reversed@);
+                assert(order@.len() == n);
+                // Prove topo_order under DAG assumption.
+                if spec_is_dag(graph) {
+                    assert(spec_edge_ordered(graph, fo_final));
+                    // Edge ordering for reversed: for edge order[i]→order[j], need i < j.
+                    assert forall|i: int, j: int|
+                        #![trigger order@[i], order@[j]]
+                        0 <= i < order@.len() && 0 <= j < order@.len()
+                        && spec_has_edge(graph, order@[i] as int, order@[j] as int)
+                        implies i < j by {
+                        // order@[i] = fo_final[n-1-i], order@[j] = fo_final[n-1-j].
+                        assert(order@[i] == fo_final[(n - 1 - i) as int]);
+                        assert(order@[j] == fo_final[(n - 1 - j) as int]);
+                        // Edge fo_final[n-1-i] → fo_final[n-1-j].
+                        // spec_edge_ordered: (n-1-j) < (n-1-i), so i < j.
+                        let a = (n as int) - 1 - i;
+                        let b = (n as int) - 1 - j;
+                        assert(fo_final[a] == order@[i]);
+                        assert(fo_final[b] == order@[j]);
+                    };
+                    assert(spec_is_topo_order(graph, order@));
+                }
+            }
+            order
         }
     } // impl TopoSortStEphTrait
 
