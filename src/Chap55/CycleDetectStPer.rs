@@ -430,7 +430,7 @@ broadcast use vstd::seq::group_seq_axioms;
                 forall|j: int| 0 <= j < i as int
                     ==> #[trigger] visited@[graph@[vertex as int][j] as int],
                 forall|j: int| 0 <= j < i as int
-                    ==> !old(ancestors)@[graph@[vertex as int][j] as int],
+                    ==> !old(ancestors)@[#[trigger] graph@[vertex as int][j] as int],
                 forall|j: int| 0 <= j < i as int
                     ==> graph@[vertex as int][j] != vertex as int,
             decreases neighbors_len - i,
