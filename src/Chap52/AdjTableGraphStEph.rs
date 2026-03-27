@@ -7,8 +7,13 @@ pub mod AdjTableGraphStEph {
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeSeqStEphTrait;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait;
+    use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     use crate::Chap42::TableStEph::TableStEph::*;
     use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_fulls};
+    #[cfg(verus_keep_ghost)]
+    use vstd::laws_eq::obeys_view_eq;
 
     verus! {
 
@@ -155,7 +160,20 @@ broadcast use {
 
     impl<V: StT + Ord> AdjTableGraphStEphTrait<V> for AdjTableGraphStEph<V> {
         open spec fn spec_adjtablegraphsteph_wf(&self) -> bool {
-            forall|u: <V as View>::V, v: <V as View>::V|
+            // Type-level predicates needed by table and set operations.
+            obeys_view_eq::<V>()
+            && vstd::laws_cmp::obeys_cmp_spec::<V>()
+            && view_ord_consistent::<V>()
+            // Table internal invariant (keys are unique).
+            && spec_keys_no_dups::<V::V, Set<V::V>>(self.adj.entries@)
+            // feq/clone properties needed by table trait-level wf.
+            && obeys_feq_fulls::<V, AVLTreeSetStEph<V>>()
+            && obeys_feq_full::<Pair<V, AVLTreeSetStEph<V>>>()
+            // All stored neighbor sets are well-formed.
+            && forall|k: <V as View>::V| #[trigger] self.adj@.dom().contains(k) ==>
+                self.adj.spec_stored_value(k).spec_avltreesetsteph_wf()
+            // Graph closure: every neighbor is also a vertex.
+            && forall|u: <V as View>::V, v: <V as View>::V|
                 self.spec_adj().dom().contains(u)
                 && #[trigger] self.spec_adj().index(u).contains(v)
                 ==> self.spec_adj().dom().contains(v)
@@ -180,8 +198,6 @@ broadcast use {
         #[verifier::external_body]
         fn from_table(table: TableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self) { AdjTableGraphStEph { adj: table } }
 
-        /// - external_body: TableStEph::size requires spec_tablesteph_wf.
-        #[verifier::external_body]
         fn num_vertices(&self) -> usize { self.adj.size() }
 
         /// - external_body: iterating domain requires feq/eq preconditions on Table and Set.
@@ -217,11 +233,12 @@ broadcast use {
             verts
         }
 
-        /// - external_body: Table::find requires table wf + view_eq; nested Set::find requires set wf.
-        #[verifier::external_body]
         fn has_edge(&self, u: &V, v: &V) -> (found: bool) {
-            match self.adj.find(u) {
-                Some(neighbors) => neighbors.find(v),
+            proof { reveal(obeys_view_eq); }
+            match self.adj.find_ref(u) {
+                Some(neighbors) => {
+                    neighbors.find(v)
+                }
                 None => false,
             }
         }
@@ -235,9 +252,13 @@ broadcast use {
             }
         }
 
-        /// - external_body: delegates to out_neighbors + size, both need wf/cmp preconditions.
-        #[verifier::external_body]
-        fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
+        fn out_degree(&self, u: &V) -> usize {
+            proof { reveal(obeys_view_eq); }
+            match self.adj.find_ref(u) {
+                Some(neighbors) => neighbors.size(),
+                None => 0,
+            }
+        }
 
         /// - external_body: Table::insert requires table wf + view_eq + closure requires.
         #[verifier::external_body]
