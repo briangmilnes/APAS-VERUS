@@ -373,6 +373,10 @@ pub mod TableStPer {
     pub trait TableStPerTrait<K: StT + Ord, V: StT>: Sized + View<V = Map<K::V, V::V>> {
         spec fn spec_tablestper_wf(&self) -> bool;
 
+        /// Returns the concrete stored value for a given key.
+        /// Useful for transferring exec-level properties (e.g., wf) through find_ref.
+        spec fn spec_stored_value(&self, key: K::V) -> V;
+
         /// - APAS Cost Spec 42.5: Work 1, Span 1
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS; cached length.
         fn size(&self) -> (count: usize)
@@ -503,6 +507,18 @@ pub mod TableStPer {
                     None => !self@.contains_key(key@),
                 };
 
+        /// Like find, but returns a reference to the stored value.
+        /// The ensures `*v == self.spec_stored_value(key@)` lets callers transfer
+        /// exec-level properties (e.g., wf) from the stored value to the result.
+        fn find_ref(&self, key: &K) -> (found: Option<&V>)
+            requires self.spec_tablestper_wf(), obeys_view_eq::<K>()
+            ensures
+                match found {
+                    Some(v) => self@.contains_key(key@) && self@[key@] == v@
+                        && *v == self.spec_stored_value(key@),
+                    None => !self@.contains_key(key@),
+                };
+
         /// - APAS Cost Spec 42.5: Work lg |a|, Span lg |a|
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan + clone; disagrees with APAS.
         fn delete(&self, key: &K) -> (updated: Self)
@@ -561,6 +577,12 @@ pub mod TableStPer {
         pub open spec fn spec_tablestper_wf(&self) -> bool {
             spec_keys_no_dups(self.entries@)
         }
+
+        pub open spec fn spec_stored_value(&self, key: K::V) -> V {
+            let i = choose|i: int| 0 <= i < self.entries.seq@.len()
+                && (#[trigger] self.entries.seq@[i]).0@ == key;
+            self.entries.seq@[i].1
+        }
     }
 
     // 9. impls
@@ -568,6 +590,12 @@ pub mod TableStPer {
     impl<K: StT + Ord, V: StT> TableStPerTrait<K, V> for TableStPer<K, V> {
         open spec fn spec_tablestper_wf(&self) -> bool {
             spec_keys_no_dups(self.entries@)
+        }
+
+        open spec fn spec_stored_value(&self, key: K::V) -> V {
+            let i = choose|i: int| 0 <= i < self.entries.seq@.len()
+                && (#[trigger] self.entries.seq@[i]).0@ == key;
+            self.entries.seq@[i].1
         }
 
         fn size(&self) -> (count: usize)
@@ -1468,6 +1496,46 @@ pub mod TableStPer {
                         lemma_entries_to_map_get::<K::V, V::V>(self.entries@, i as int);
                     }
                     return Some(v);
+                }
+                i += 1;
+            }
+            proof {
+                lemma_entries_to_map_no_key::<K::V, V::V>(self.entries@, key@);
+            }
+            None
+        }
+
+        fn find_ref(&self, key: &K) -> (found: Option<&V>)
+        {
+            let mut i: usize = 0;
+            while i < self.entries.length()
+                invariant
+                    i <= self.entries.spec_len(),
+                    self.spec_tablestper_wf(),
+                    forall|j: int| 0 <= j < i as int ==>
+                        (#[trigger] self.entries@[j]).0 != key@,
+                    obeys_view_eq::<K>(),
+                decreases self.entries.spec_len() - i,
+            {
+                let pair = self.entries.nth(i);
+                proof { reveal(obeys_view_eq); }
+                if pair.0.eq(key) {
+                    proof {
+                        lemma_entries_to_map_get::<K::V, V::V>(self.entries@, i as int);
+                        // Prove uniqueness: i is the only index with this key.
+                        assert forall|j: int|
+                            0 <= j < self.entries.seq@.len()
+                            && (#[trigger] self.entries.seq@[j]).0@ == key@
+                            implies j == i as int
+                        by {
+                            if j < i as int {
+                                assert(self.entries@[j].0 != key@);
+                            } else if j > i as int {
+                                assert(self.entries@[i as int].0 != self.entries@[j].0);
+                            }
+                        };
+                    }
+                    return Some(&pair.1);
                 }
                 i += 1;
             }

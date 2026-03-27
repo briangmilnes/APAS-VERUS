@@ -37,7 +37,11 @@
       "Write(/home/milnes/projects/APAS-VERUS*/**)",
       "Write(~/projects/APAS-VERUS*/**)",
       "Write(/tmp/*)",
-      "Write(/tmp/**)"
+      "Write(/tmp/**)",
+      "WebFetch(domain:smtlib.cs.uiowa.edu)",
+      "WebFetch(domain:smt-lib.github.io)",
+      "WebFetch(domain:smt-lib.org)",
+      "WebFetch(domain:microsoft.github.io)"
     ]
   }
 }
