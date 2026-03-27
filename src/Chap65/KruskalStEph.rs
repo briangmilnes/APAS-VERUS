@@ -27,14 +27,64 @@ pub mod KruskalStEph {
 
     pub type T<V> = LabUnDirGraphStEph<V, WrappedF64>;
 
+    /// Nested module isolating UF wf quantifiers from float/LabEdge broadcast groups.
+    /// The broadcast groups in the outer module cause Z3 divergence when combined
+    /// with the 13 quantified conjuncts of spec_unionfindsteph_wf.
+    pub mod uf_opaque_wrappers {
+        use vstd::prelude::*;
+        use crate::vstdplus::float::float::WrappedF64;
+        use crate::Chap05::SetStEph::SetStEph::*;
+        use crate::Types::Types::*;
+        use crate::Chap65::UnionFindStEph::UnionFindStEph::*;
+        use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
+
+        verus! {
+
+        /// Opaque wrapper for UF well-formedness.
+        #[verifier::opaque]
+        pub open spec fn uf_wf_opaque<V: HashOrd>(uf: &UnionFindStEph<V>) -> bool {
+            uf.spec_unionfindsteph_wf()
+        }
+
+        /// Process one edge: if endpoints are in different components, add to MST and union.
+        /// external_body: Z3 diverges on the 13-quantifier wf through equals+union+if.
+        /// Spec is obviously correct: equals preserves wf/dom, union preserves wf/dom,
+        /// insert preserves setsteph_wf.
+        #[verifier::external_body]
+        pub fn kruskal_process_edge<V: HashOrd>(
+            uf: &mut UnionFindStEph<V>,
+            mst_edges: &mut SetStEph<LabEdge<V, WrappedF64>>,
+            edge: LabEdge<V, WrappedF64>,
+        )
+            requires
+                uf_wf_opaque(old(uf)),
+                old(mst_edges).spec_setsteph_wf(),
+                old(uf)@.parent.contains_key(edge@.0),
+                old(uf)@.parent.contains_key(edge@.1),
+            ensures
+                uf_wf_opaque(uf),
+                mst_edges.spec_setsteph_wf(),
+                uf@.parent.dom() =~= old(uf)@.parent.dom(),
+        {
+            let u = edge.0.clone_view();
+            let v = edge.1.clone_view();
+            if !uf.equals(&u, &v) {
+                let _ = mst_edges.insert(edge);
+                uf.union(&u, &v);
+            }
+        }
+
+        } // verus!
+    }
+
+    use uf_opaque_wrappers::*;
+
     verus! {
 
     broadcast use {
         crate::vstdplus::float::float::group_float_finite_total_order,
         crate::Types::Types::group_LabEdge_axioms,
     };
-
-    // 3a. proof fns
 
     // 3a. proof fns
 
@@ -86,8 +136,6 @@ pub mod KruskalStEph {
     // 8. traits
 
     /// Greedy edge-adding phase of Kruskal's algorithm.
-    /// Factored for independent rlimit budget.
-    #[verifier::external_body]
     fn kruskal_greedy_phase<V: HashOrd>(
         uf: &mut UnionFindStEph<V>,
         mst_edges: &mut SetStEph<LabEdge<V, WrappedF64>>,
@@ -117,21 +165,23 @@ pub mod KruskalStEph {
         ensures
             mst_edges.spec_setsteph_wf(),
     {
-        // Capture the initial UF domain. This is preserved by equals and union.
         let ghost initial_dom = uf@.parent.dom();
+
+        // Establish opaque wf for the loop invariant.
+        proof { assert(uf_wf_opaque(uf)) by { reveal(uf_wf_opaque); }; }
 
         let mut i: usize = 0;
         while i < edges_vec.len()
             invariant
                 0 <= i <= edges_vec@.len(),
-                uf.spec_unionfindsteph_wf(),
+                uf_wf_opaque(uf),
                 mst_edges.spec_setsteph_wf(),
                 uf@.parent.dom() =~= initial_dom,
                 forall|v: <V as View>::V| #[trigger] graph_V.contains(v) ==>
                     initial_dom.contains(v),
+                pre_sort.len() == edge_seq.len(),
                 forall|k: int| 0 <= k < edges_vec@.len() ==>
                     pre_sort.contains(#[trigger] edges_vec@[k]),
-                pre_sort.len() == edge_seq.len(),
                 forall|k: int| 0 <= k < pre_sort.len() ==>
                     #[trigger] pre_sort[k]@ == edge_seq[k]@,
                 mapped_es =~= edge_seq.map(|_i: int, e: LabEdge<V, WrappedF64>| e@),
@@ -142,8 +192,6 @@ pub mod KruskalStEph {
             decreases edges_vec@.len() - i,
         {
             let edge = edges_vec[i].clone_view();
-            let u = edge.0.clone_view();
-            let v = edge.1.clone_view();
 
             // Prove endpoints are in UF domain.
             proof {
@@ -153,10 +201,7 @@ pub mod KruskalStEph {
                 );
             }
 
-            if !uf.equals(&u, &v) {
-                let _ = mst_edges.insert(edge);
-                uf.union(&u, &v);
-            }
+            kruskal_process_edge(uf, mst_edges, edge);
             i = i + 1;
         }
     }
