@@ -66,7 +66,7 @@ pub mod VertexMatchingStEph {
             let Edge(u, v) = edge;
 
             if !matched_vertices.mem(u) && !matched_vertices.mem(v) {
-                let _ = matching.insert(edge.clone());
+                let _ = matching.insert(Edge(u.clone(), v.clone()));
                 let _ = matched_vertices.insert(u.clone());
                 let _ = matched_vertices.insert(v.clone());
             }
@@ -101,7 +101,7 @@ pub mod VertexMatchingStEph {
             decreases ne - i,
         {
             let edge = &edge_vec[i];
-            edge_coins.insert(edge.clone(), random_bool_seeded(&mut rng));
+            edge_coins.insert(Edge(edge.0.clone(), edge.1.clone()), random_bool_seeded(&mut rng));
             i = i + 1;
         }
 
@@ -135,7 +135,7 @@ pub mod VertexMatchingStEph {
                     decreases ne - k,
                 {
                     let adj_edge = &edge_vec[k];
-                    if adj_edge != edge {
+                    if !(adj_edge.0 == edge.0 && adj_edge.1 == edge.1) {
                         if graph.incident(adj_edge, u) || graph.incident(adj_edge, v) {
                             let adj_coin = match edge_coins.get(adj_edge) {
                                 Some(val) => *val,
@@ -150,7 +150,7 @@ pub mod VertexMatchingStEph {
                 }
 
                 if all_adjacent_tails {
-                    let _ = matching.insert(edge.clone());
+                    let _ = matching.insert(Edge(edge.0.clone(), edge.1.clone()));
                 }
             }
             j = j + 1;

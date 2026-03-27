@@ -19,6 +19,7 @@ pub mod ConnectivityMtEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
     use crate::vstdplus::clone_plus::clone_plus::*;
+    use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::Chap62::StarContractionMtEph::StarContractionMtEph::star_contract_mt;
 
@@ -39,12 +40,12 @@ pub mod ConnectivityMtEph {
 
         /// Count connected components using parallel star contraction.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
-        fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> usize
+        fn count_components_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> usize
             requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();
 
         /// Find connected components using parallel star contraction.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
-        fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static>(
+        fn connected_components_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
             graph: &UnDirGraphMtEph<V>,
             seed: u64,
         ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
@@ -52,12 +53,12 @@ pub mod ConnectivityMtEph {
 
         /// Count components using higher-order function approach.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
-        fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> usize
+        fn count_components_hof<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> usize
             requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();
 
         /// Find components using higher-order function approach.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
-        fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static>(
+        fn connected_components_hof<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
             graph: &UnDirGraphMtEph<V>,
             seed: u64,
         ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
@@ -80,7 +81,7 @@ pub mod ConnectivityMtEph {
     ///
     /// Returns:
     /// - The number of connected components
-    pub fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> (count: usize)
+    pub fn count_components_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> (count: usize)
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
@@ -104,7 +105,7 @@ pub mod ConnectivityMtEph {
     /// Returns:
     /// - (representatives, component_map): Set of component representatives and
     ///   mapping from each vertex to its component representative
-    pub fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static>(
+    pub fn connected_components_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
     ) -> (result: (SetStEph<V>, HashMapWithViewPlus<V, V>))
@@ -152,7 +153,7 @@ pub mod ConnectivityMtEph {
     ///
     /// - APAS: Work O((n+m) lg n), Span O(lg^2 n) — same as Algorithm 63.2 (parallel)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(m) — delegates to star_contract_mt (inherits merge bottleneck)
-    pub fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> (count: usize)
+    pub fn count_components_hof<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> (count: usize)
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
@@ -172,7 +173,7 @@ pub mod ConnectivityMtEph {
     ///
     /// - APAS: Work O((n+m) lg n), Span O(lg^2 n) — same as Algorithm 63.3 (parallel)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(n lg n) — delegates to star_contract_mt (inherits compose bottleneck)
-    pub fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static>(
+    pub fn connected_components_hof<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
     ) -> (result: (SetStEph<V>, HashMapWithViewPlus<V, V>))

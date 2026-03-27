@@ -97,7 +97,10 @@ pub mod EdgeContractionMtEph {
             }
         }
 
-        let vertex_to_block = Arc::try_unwrap(vertex_to_block).unwrap().into_inner().unwrap();
+        let vertex_to_block = match Arc::try_unwrap(vertex_to_block) {
+            Ok(mutex) => mutex.into_inner().unwrap(),
+            Err(_) => unreachable!(),
+        };
 
         let mut new_vertices: SetStEph<V> = SetLit![];
         for (_, representative) in vertex_to_block.iter() {
