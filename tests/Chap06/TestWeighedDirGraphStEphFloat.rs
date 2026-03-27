@@ -36,8 +36,8 @@ fn test_weigheddirgraphstephfloat_empty() {
 
 #[test]
 fn test_weigheddirgraphstephfloat_basic_operations() {
-    let v: SetStEph<N> = SetLit![0, 1, 2, 3];
-    let a: SetStEph<LabEdge<N, OrderedF64>> = SetLit![
+    let v: SetStEph<usize> = SetLit![0, 1, 2, 3];
+    let a: SetStEph<LabEdge<usize, OrderedF64>> = SetLit![
         LabEdge(0, 1, OrderedFloat(1.5)),
         LabEdge(1, 2, OrderedFloat(2.7)),
         LabEdge(2, 3, OrderedFloat(0.8))
@@ -109,8 +109,8 @@ fn test_weigheddirgraphstephfloat_mutable_operations() {
 #[test]
 fn test_weigheddirgraphstephfloat_weight_variations() {
     // Test with various weight values including negative, zero, and very small/large
-    let v: SetStEph<N> = SetLit![0, 1, 2, 3, 4];
-    let a: SetStEph<LabEdge<N, OrderedF64>> = SetLit![
+    let v: SetStEph<usize> = SetLit![0, 1, 2, 3, 4];
+    let a: SetStEph<LabEdge<usize, OrderedF64>> = SetLit![
         LabEdge(0, 1, OrderedFloat(0.0)),           // Zero weight
         LabEdge(1, 2, OrderedFloat(-1.5)),          // Negative weight
         LabEdge(2, 3, OrderedFloat(1e-10)),         // Very small positive
@@ -140,8 +140,8 @@ fn test_weigheddirgraphstephfloat_weight_variations() {
 #[test]
 fn test_weigheddirgraphstephfloat_nan_handling() {
     // Test with NaN weights (OrderedFloat handles NaN consistently)
-    let v: SetStEph<N> = SetLit![0, 1];
-    let a: SetStEph<LabEdge<N, OrderedF64>> = SetLit![LabEdge(0, 1, OrderedFloat(f64::NAN))];
+    let v: SetStEph<usize> = SetLit![0, 1];
+    let a: SetStEph<LabEdge<usize, OrderedF64>> = SetLit![LabEdge(0, 1, OrderedFloat(f64::NAN))];
     let g = WeighedDirGraphStEphFloat::from_vertices_and_labeled_arcs(v, a);
 
     assert_eq!(g.vertices().size(), 2);
@@ -164,8 +164,8 @@ fn test_weigheddirgraphstephfloat_edge_cases() {
     assert_eq!(empty.get_arc_label(&0, &1), None);
 
     // Test single vertex
-    let v_single: SetStEph<N> = SetLit![42];
-    let a_empty: SetStEph<LabEdge<N, OrderedF64>> = SetLit![];
+    let v_single: SetStEph<usize> = SetLit![42];
+    let a_empty: SetStEph<LabEdge<usize, OrderedF64>> = SetLit![];
     let g_single = WeighedDirGraphStEphFloat::from_vertices_and_labeled_arcs(v_single, a_empty);
 
     assert_eq!(g_single.vertices().size(), 1);
@@ -174,8 +174,8 @@ fn test_weigheddirgraphstephfloat_edge_cases() {
     assert_eq!(g_single.in_neighbors(&42).size(), 0);
 
     // Test self-loop with weight
-    let v_self: SetStEph<N> = SetLit![1];
-    let a_self: SetStEph<LabEdge<N, OrderedF64>> = SetLit![LabEdge(1, 1, OrderedFloat(99.9))];
+    let v_self: SetStEph<usize> = SetLit![1];
+    let a_self: SetStEph<LabEdge<usize, OrderedF64>> = SetLit![LabEdge(1, 1, OrderedFloat(99.9))];
     let g_self = WeighedDirGraphStEphFloat::from_vertices_and_labeled_arcs(v_self, a_self);
 
     assert!(g_self.has_arc(&1, &1));
@@ -186,8 +186,8 @@ fn test_weigheddirgraphstephfloat_edge_cases() {
 
 #[test]
 fn test_weigheddirgraphstephfloat_nonexistent_vertex() {
-    let v: SetStEph<N> = SetLit![0, 1, 2];
-    let a: SetStEph<LabEdge<N, OrderedF64>> = SetLit![LabEdge(0, 1, OrderedFloat(7.77))];
+    let v: SetStEph<usize> = SetLit![0, 1, 2];
+    let a: SetStEph<LabEdge<usize, OrderedF64>> = SetLit![LabEdge(0, 1, OrderedFloat(7.77))];
     let g = WeighedDirGraphStEphFloat::from_vertices_and_labeled_arcs(v, a);
 
     // Query non-existent vertex
@@ -199,8 +199,8 @@ fn test_weigheddirgraphstephfloat_nonexistent_vertex() {
 
 #[test]
 fn test_weigheddirgraphstephfloat_arcs_conversion() {
-    let v: SetStEph<N> = SetLit![0, 1, 2];
-    let a: SetStEph<LabEdge<N, OrderedF64>> =
+    let v: SetStEph<usize> = SetLit![0, 1, 2];
+    let a: SetStEph<LabEdge<usize, OrderedF64>> =
         SetLit![LabEdge(0, 1, OrderedFloat(1.1)), LabEdge(1, 2, OrderedFloat(2.2))];
     let g = WeighedDirGraphStEphFloat::from_vertices_and_labeled_arcs(v, a);
 
@@ -214,8 +214,8 @@ fn test_weigheddirgraphstephfloat_arcs_conversion() {
 
 #[test]
 fn test_weigheddirgraphstephfloat_complex_topology() {
-    let v: SetStEph<N> = SetLit![0, 1, 2, 3];
-    let a: SetStEph<LabEdge<N, OrderedF64>> = SetLit![
+    let v: SetStEph<usize> = SetLit![0, 1, 2, 3];
+    let a: SetStEph<LabEdge<usize, OrderedF64>> = SetLit![
         LabEdge(0, 1, OrderedFloat(1.0)),
         LabEdge(1, 2, OrderedFloat(2.0)),
         LabEdge(2, 3, OrderedFloat(3.0)),

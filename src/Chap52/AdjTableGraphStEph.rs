@@ -99,11 +99,11 @@ broadcast use {
             ensures out.spec_adjtablegraphsteph_wf();
         /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.3]
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; table size.
-        fn num_vertices(&self) -> N
+        fn num_vertices(&self) -> usize
             requires self.spec_adjtablegraphsteph_wf();
         /// - APAS: Work Theta(|V| + |E|), Span Theta(|V| + |E|) [Cost Spec 52.3]
         /// - Claude-Opus-4.6: Work Theta(|V| + |E|), Span Theta(|V| + |E|) — agrees; iterates all adjacency sets.
-        fn num_edges(&self) -> (m: N)
+        fn num_edges(&self) -> (m: usize)
             requires self.spec_adjtablegraphsteph_wf(), self.spec_num_edges() <= usize::MAX as nat
             ensures m as nat == self.spec_num_edges();
         /// - APAS: Work Theta(|V|), Span Theta(|V|) [Cost Spec 52.3]
@@ -120,7 +120,7 @@ broadcast use {
             requires self.spec_adjtablegraphsteph_wf();
         /// - APAS: Work Theta(lg n), Span Theta(lg n) [Cost Spec 52.3]
         /// - Claude-Opus-4.6: Work Theta(lg n), Span Theta(lg n) — agrees; delegates to out_neighbors.
-        fn out_degree(&self, u: &V) -> N
+        fn out_degree(&self, u: &V) -> usize
             requires self.spec_adjtablegraphsteph_wf();
         /// - APAS: Work Theta(lg n), Span Theta(lg n) [Cost Spec 52.3]
         /// - Claude-Opus-4.6: Work Theta(lg n), Span Theta(lg n) — agrees; table insert.
@@ -176,9 +176,9 @@ broadcast use {
 
         fn from_table(table: TableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self) { AdjTableGraphStEph { adj: table } }
 
-        fn num_vertices(&self) -> N { self.adj.size() }
+        fn num_vertices(&self) -> usize { self.adj.size() }
 
-        fn num_edges(&self) -> (m: N) {
+        fn num_edges(&self) -> (m: usize) {
             let domain = self.adj.domain();
             let seq = domain.to_seq();
             let len = seq.length();
@@ -239,7 +239,7 @@ broadcast use {
             }
         }
 
-        fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+        fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
 
         fn insert_vertex(&mut self, v: V)
             ensures self.spec_adj().dom().contains(v@)

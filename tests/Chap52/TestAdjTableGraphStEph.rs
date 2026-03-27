@@ -7,7 +7,7 @@ use apas_verus::Types::Types::*;
 
 #[test]
 fn test_empty() {
-    let g = AdjTableGraphStEph::<N>::empty();
+    let g = AdjTableGraphStEph::<usize>::empty();
     assert_eq!(g.num_vertices(), 0);
     assert_eq!(g.num_edges(), 0);
 }

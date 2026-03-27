@@ -59,7 +59,7 @@ pub mod Algorithm21_6 {
     ///
     /// - APAS: Work Θ(n lg n), Span Θ(lg n)
     /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — sequential StPer; O(|composites|) ninject + O(n) collect.
-    pub fn prime_sieve(n: N) -> (primes: ArraySeqStPerS<N>)
+    pub fn prime_sieve(n: usize) -> (primes: ArraySeqStPerS<usize>)
         requires n < usize::MAX,
         ensures
             n <= 2 ==> primes.spec_len() == 0,
@@ -70,11 +70,11 @@ pub mod Algorithm21_6 {
         if n <= 2 {
             return ArraySeqStPerS::from_vec(Vec::new());
         }
-        let root: N = n.isqrt();
-        let outer_len: N = if root >= 2 { root - 1 } else { 0 };
-        let nested: ArraySeqStPerS<ArraySeqStPerS<N>> =
+        let root: usize = n.isqrt();
+        let outer_len: usize = if root >= 2 { root - 1 } else { 0 };
+        let nested: ArraySeqStPerS<ArraySeqStPerS<usize>> =
             ArraySeqStPerS::tabulate(
-                &(|i0: usize| -> (row: ArraySeqStPerS<N>)
+                &(|i0: usize| -> (row: ArraySeqStPerS<usize>)
                     requires
                         i0 < outer_len,
                         root as int * root as int <= n as int,
@@ -95,7 +95,7 @@ pub mod Algorithm21_6 {
                         }
                     }
                     ArraySeqStPerS::tabulate(
-                        &(|j0: usize| -> (c: N)
+                        &(|j0: usize| -> (c: usize)
                             requires
                                 j0 < len,
                                 i >= 2, i <= root,
@@ -112,7 +112,7 @@ pub mod Algorithm21_6 {
                 }),
                 outer_len,
             );
-        let composites: ArraySeqStPerS<N> = ArraySeqStPerS::flatten(&nested);
+        let composites: ArraySeqStPerS<usize> = ArraySeqStPerS::flatten(&nested);
 
         // Ninject: build boolean sieve of size n+1, mark composites false.
         let mut sieve: Vec<bool> = vec![true; n + 1];
@@ -133,7 +133,7 @@ pub mod Algorithm21_6 {
         }
 
         // Collect primes: indices 2..=n where sieve[i] is true.
-        let mut primes: Vec<N> = Vec::new();
+        let mut primes: Vec<usize> = Vec::new();
         let mut idx: usize = 2;
         while idx <= n
             invariant

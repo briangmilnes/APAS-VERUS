@@ -7,12 +7,6 @@ pub mod Types {
     use std::hash::Hash;
     use vstd::prelude::*;
 
-    /// Verus/Rust really needs usize or an int for indexing and lengths; here we have selected usize.
-    pub type N = usize;
-
-    /// - Data Type 18.1 (Boolean) type used by APAS.
-    /// - But we have converted to using Rust's built in base bool type.
-    pub type B = bool;
 
     /// - Data Type 18.1 (Ordering) relationships used by APAS, using Rust's as it matches.
     /// - Enumerated values in `std::cmp::Ordering` are named: Less, Equal, Greater.

@@ -49,17 +49,17 @@ pub mod AVLTreeSeq {
 
     pub struct AVLTreeNode<T: StT> {
         pub value: T,
-        pub height: N,
-        pub left_size: N,
-        pub right_size: N,
+        pub height: usize,
+        pub left_size: usize,
+        pub right_size: usize,
         pub left: Link<T>,
         pub right: Link<T>,
-        pub index: N,
+        pub index: usize,
     }
 
     pub struct AVLTreeS<T: StT> {
         pub root: Link<T>,
-        pub next_key: N,
+        pub next_key: usize,
     }
 
     #[verifier::reject_recursive_types(T)]
@@ -236,15 +236,15 @@ pub mod AVLTreeSeq {
         fn new() -> (tree: Self)
             ensures tree.spec_avltreeseq_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseq_wf();
 
-        fn length(&self) -> (len: N)
+        fn length(&self) -> (len: usize)
             requires self.spec_avltreeseq_wf(),
             ensures len as nat == self.spec_avltreeseq_seq().len();
 
-        fn nth(&self, index: N) -> (elem: &T)
+        fn nth(&self, index: usize) -> (elem: &T)
             requires self.spec_avltreeseq_wf(), (index as int) < self.spec_avltreeseq_seq().len(),
             ensures elem@ == self.spec_avltreeseq_seq()[index as int];
 
-        fn set(&mut self, index: N, item: T) -> (outcome: Result<(), &'static str>)
+        fn set(&mut self, index: usize, item: T) -> (outcome: Result<(), &'static str>)
             requires old(self).spec_avltreeseq_wf(), (index as int) < old(self).spec_avltreeseq_seq().len(),
             ensures
                 self.spec_avltreeseq_wf(),
@@ -265,7 +265,7 @@ pub mod AVLTreeSeq {
             requires self.spec_avltreeseq_wf(),
             ensures single == (self.spec_avltreeseq_seq().len() == 1);
 
-        fn subseq_copy(&self, start: N, length: N) -> (sub: Self)
+        fn subseq_copy(&self, start: usize, length: usize) -> (sub: Self)
             requires self.spec_avltreeseq_wf(),
             ensures sub.spec_avltreeseq_seq() =~=
                 spec_avltreeseq_subseq(self.spec_avltreeseq_seq(), start as nat, length as nat);
@@ -273,7 +273,7 @@ pub mod AVLTreeSeq {
         fn new_root() -> (tree: Self)
             ensures tree.spec_avltreeseq_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseq_wf();
 
-        fn update(&mut self, index: N, item: T)
+        fn update(&mut self, index: usize, item: T)
             requires
                 old(self).spec_avltreeseq_wf(),
                 (index as int) < old(self).spec_avltreeseq_seq().len(),
@@ -342,7 +342,7 @@ pub mod AVLTreeSeq {
 
     // 9. impls
 
-    fn cached_height<T: StT>(n: &Link<T>) -> (height: N)
+    fn cached_height<T: StT>(n: &Link<T>) -> (height: usize)
         requires spec_avltreeseq_cached_height(n) <= usize::MAX as nat,
         ensures height as nat == spec_avltreeseq_cached_height(n),
     {
@@ -352,7 +352,7 @@ pub mod AVLTreeSeq {
         }
     }
 
-    fn cached_size<T: StT>(n: &Link<T>) -> (size: N)
+    fn cached_size<T: StT>(n: &Link<T>) -> (size: usize)
         requires spec_avltreeseq_cached_size(n) < usize::MAX,
         ensures size as nat == spec_avltreeseq_cached_size(n),
     {
@@ -551,7 +551,7 @@ pub mod AVLTreeSeq {
         n
     }
 
-    pub fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (inserted: Link<T>)
+    pub fn insert_at_link<T: StT>(node: Link<T>, index: usize, value: T, next_key: &mut usize) -> (inserted: Link<T>)
         requires
             spec_avltreeseq_wf(node),
             0 <= index as int <= spec_avltreeseq_inorder(node).len(),
@@ -627,7 +627,7 @@ pub mod AVLTreeSeq {
         }
     }
 
-    fn nth_link<'a, T: StT>(node: &'a Link<T>, index: N) -> (elem: &'a T)
+    fn nth_link<'a, T: StT>(node: &'a Link<T>, index: usize) -> (elem: &'a T)
         requires spec_avltreeseq_wf(*node), (index as int) < spec_avltreeseq_inorder(*node).len(),
         ensures elem@ == spec_avltreeseq_inorder(*node)[index as int],
         decreases *node,
@@ -645,7 +645,7 @@ pub mod AVLTreeSeq {
         }
     }
 
-    fn set_link<T: StT>(node: &mut Link<T>, index: N, value: T) -> (outcome: Result<(), &'static str>)
+    fn set_link<T: StT>(node: &mut Link<T>, index: usize, value: T) -> (outcome: Result<(), &'static str>)
         requires
             spec_avltreeseq_wf(*old(node)),
             (index as int) < spec_avltreeseq_inorder(*old(node)).len(),
@@ -775,17 +775,17 @@ pub mod AVLTreeSeq {
             Self::empty()
         }
 
-        fn length(&self) -> (len: N) {
+        fn length(&self) -> (len: usize) {
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             cached_size(&self.root)
         }
 
-        fn nth(&self, index: N) -> (elem: &T) {
+        fn nth(&self, index: usize) -> (elem: &T) {
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             nth_link(&self.root, index)
         }
 
-        fn set(&mut self, index: N, item: T) -> (outcome: Result<(), &'static str>) {
+        fn set(&mut self, index: usize, item: T) -> (outcome: Result<(), &'static str>) {
             set_link(&mut self.root, index, item)
         }
 
@@ -828,7 +828,7 @@ pub mod AVLTreeSeq {
             self.length() == 1
         }
 
-        fn subseq_copy(&self, start: N, length: N) -> (sub: Self) {
+        fn subseq_copy(&self, start: usize, length: usize) -> (sub: Self) {
             broadcast use Seq::<_>::lemma_push_map_commute;
             assert(self.spec_avltreeseq_wf());
             let n = self.length();
@@ -885,7 +885,7 @@ pub mod AVLTreeSeq {
             Self::empty()
         }
 
-        fn update(&mut self, index: N, item: T) {
+        fn update(&mut self, index: usize, item: T) {
             assert(self.spec_avltreeseq_wf());
             assert((index as int) < self.spec_avltreeseq_seq().len());
             let _ = self.set(index, item);
@@ -998,7 +998,7 @@ pub mod AVLTreeSeq {
             assert(obeys_feq_full::<T>());
             let len = self.length();
             let ghost seq = self.spec_avltreeseq_seq();
-            let mut found_index: Option<N> = None;
+            let mut found_index: Option<usize> = None;
             let mut i: usize = 0;
             while i < len
                 invariant

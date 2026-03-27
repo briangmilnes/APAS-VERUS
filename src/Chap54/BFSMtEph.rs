@@ -23,12 +23,12 @@ pub mod BFSMtEph {
     // 4. type definitions
     pub type T<N> = ArraySeqMtEphS<ArraySeqMtEphS<N>>;
 
-    pub const UNREACHABLE: N = N::MAX;
-    pub const NO_PARENT: N = N::MAX;
+    pub const UNREACHABLE: usize = usize::MAX;
+    pub const NO_PARENT: usize = usize::MAX;
 
     pub struct BFSTreeS {
-        pub parents: ArraySeqMtEphS<N>,
-        pub order: ArraySeqMtEphS<N>,
+        pub parents: ArraySeqMtEphS<usize>,
+        pub order: ArraySeqMtEphS<usize>,
     }
 
     pub struct BFSMtEph;
@@ -36,27 +36,27 @@ pub mod BFSMtEph {
     // 6. spec fns
 
     /// All neighbor indices in the adjacency list are valid vertex indices.
-    pub open spec fn spec_bfsmteph_wf(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>) -> bool {
+    pub open spec fn spec_bfsmteph_wf(graph: &ArraySeqMtEphS<ArraySeqMtEphS<usize>>) -> bool {
         forall|u: int, i: int|
             0 <= u < graph.spec_len() && 0 <= i < graph.spec_index(u).spec_len()
             ==> #[trigger] graph.spec_index(u).spec_index(i) < graph.spec_len()
     }
 
     /// Every distance entry is either UNREACHABLE or bounded by n.
-    pub open spec fn spec_distances_bounded(distances: &ArraySeqMtEphS<N>, n: int) -> bool {
+    pub open spec fn spec_distances_bounded(distances: &ArraySeqMtEphS<usize>, n: int) -> bool {
         forall|j: int| 0 <= j < distances.spec_len() ==>
             #[trigger] distances.spec_index(j) == UNREACHABLE || distances.spec_index(j) < n
     }
 
     /// Every parent entry is either NO_PARENT or a valid vertex index.
-    pub open spec fn spec_parents_bounded(parents: &ArraySeqMtEphS<N>, n: int) -> bool {
+    pub open spec fn spec_parents_bounded(parents: &ArraySeqMtEphS<usize>, n: int) -> bool {
         forall|j: int| 0 <= j < parents.spec_len() ==>
             #[trigger] parents.spec_index(j) == NO_PARENT || parents.spec_index(j) < n
     }
 
     // 7. proof fns
 
-    proof fn lemma_tabulate_all_no_parent(parents: &ArraySeqMtEphS<N>, n: int)
+    proof fn lemma_tabulate_all_no_parent(parents: &ArraySeqMtEphS<usize>, n: int)
         requires
             parents.spec_len() == n,
             forall|i: int| 0 <= i < n ==> #[trigger] parents.spec_index(i) == NO_PARENT,
@@ -65,10 +65,10 @@ pub mod BFSMtEph {
     {}
 
     proof fn lemma_set_preserves_parents_bounded(
-        parents: &ArraySeqMtEphS<N>,
-        old_parents: &ArraySeqMtEphS<N>,
+        parents: &ArraySeqMtEphS<usize>,
+        old_parents: &ArraySeqMtEphS<usize>,
         v: int,
-        new_val: N,
+        new_val: usize,
         n: int,
     )
         requires
@@ -96,8 +96,8 @@ pub mod BFSMtEph {
     }
 
     proof fn lemma_copy_preserves_parents_bounded(
-        original: &ArraySeqMtEphS<N>,
-        copy: &ArraySeqMtEphS<N>,
+        original: &ArraySeqMtEphS<usize>,
+        copy: &ArraySeqMtEphS<usize>,
         n: int,
     )
         requires
@@ -116,7 +116,7 @@ pub mod BFSMtEph {
         }
     }
 
-    proof fn lemma_tabulate_all_unreachable(distances: &ArraySeqMtEphS<N>, n: int)
+    proof fn lemma_tabulate_all_unreachable(distances: &ArraySeqMtEphS<usize>, n: int)
         requires
             distances.spec_len() == n,
             forall|i: int| 0 <= i < n ==>
@@ -127,10 +127,10 @@ pub mod BFSMtEph {
     }
 
     proof fn lemma_set_preserves_bounded(
-        distances: &ArraySeqMtEphS<N>,
-        old_distances: &ArraySeqMtEphS<N>,
+        distances: &ArraySeqMtEphS<usize>,
+        old_distances: &ArraySeqMtEphS<usize>,
         v: int,
-        new_val: N,
+        new_val: usize,
         n: int,
     )
         requires
@@ -158,7 +158,7 @@ pub mod BFSMtEph {
     }
 
     // Builds an owned copy of the distances array with proven spec equality.
-    fn copy_distances(distances: &ArraySeqMtEphS<N>) -> (copied: ArraySeqMtEphS<N>)
+    fn copy_distances(distances: &ArraySeqMtEphS<usize>) -> (copied: ArraySeqMtEphS<usize>)
         requires distances.spec_len() <= usize::MAX,
         ensures
             copied.spec_len() == distances.spec_len(),
@@ -167,7 +167,7 @@ pub mod BFSMtEph {
     {
         let n = distances.length();
         ArraySeqMtEphS::tabulate(
-            &|idx: usize| -> (r: N)
+            &|idx: usize| -> (r: usize)
                 requires idx < n, n == distances.spec_len()
                 ensures r == distances.spec_index(idx as int)
             { *distances.nth(idx) },
@@ -176,7 +176,7 @@ pub mod BFSMtEph {
     }
 
     // Builds an owned copy of the graph with proven spec equality.
-    fn copy_graph(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>) -> (copied: ArraySeqMtEphS<ArraySeqMtEphS<N>>)
+    fn copy_graph(graph: &ArraySeqMtEphS<ArraySeqMtEphS<usize>>) -> (copied: ArraySeqMtEphS<ArraySeqMtEphS<usize>>)
         requires graph.spec_len() <= usize::MAX,
         ensures
             copied.spec_len() == graph.spec_len(),
@@ -188,7 +188,7 @@ pub mod BFSMtEph {
     {
         let n = graph.length();
         ArraySeqMtEphS::tabulate(
-            &|u_idx: usize| -> (r: ArraySeqMtEphS<N>)
+            &|u_idx: usize| -> (r: ArraySeqMtEphS<usize>)
                 requires u_idx < n, n == graph.spec_len()
                 ensures
                     r.spec_len() == graph.spec_index(u_idx as int).spec_len(),
@@ -198,7 +198,7 @@ pub mod BFSMtEph {
                 let adj = graph.nth(u_idx);
                 let adj_len = adj.length();
                 ArraySeqMtEphS::tabulate(
-                    &|k: usize| -> (r: N)
+                    &|k: usize| -> (r: usize)
                         requires k < adj_len, adj_len == adj.spec_len()
                         ensures r == adj.spec_index(k as int)
                     { *adj.nth(k) },
@@ -210,8 +210,8 @@ pub mod BFSMtEph {
     }
 
     proof fn lemma_copy_preserves_wf(
-        original: &ArraySeqMtEphS<ArraySeqMtEphS<N>>,
-        copy: &ArraySeqMtEphS<ArraySeqMtEphS<N>>,
+        original: &ArraySeqMtEphS<ArraySeqMtEphS<usize>>,
+        copy: &ArraySeqMtEphS<ArraySeqMtEphS<usize>>,
     )
         requires
             spec_bfsmteph_wf(original),
@@ -235,8 +235,8 @@ pub mod BFSMtEph {
     }
 
     proof fn lemma_copy_preserves_bounded(
-        original: &ArraySeqMtEphS<N>,
-        copy: &ArraySeqMtEphS<N>,
+        original: &ArraySeqMtEphS<usize>,
+        copy: &ArraySeqMtEphS<usize>,
         n: int,
     )
         requires
@@ -257,10 +257,10 @@ pub mod BFSMtEph {
 
     // 8. traits
     pub trait BFSTreeMtEphTrait {
-        spec fn spec_order(&self) -> ArraySeqMtEphS<N>;
+        spec fn spec_order(&self) -> ArraySeqMtEphS<usize>;
 
         /// Vertices in BFS order (root first, then distance 1, 2, ...).
-        fn top_down_order(&self) -> (order: &ArraySeqMtEphS<N>)
+        fn top_down_order(&self) -> (order: &ArraySeqMtEphS<usize>)
             ensures
                 order.spec_len() == self.spec_order().spec_len(),
                 forall|i: int| 0 <= i < order.spec_len() ==>
@@ -268,7 +268,7 @@ pub mod BFSMtEph {
         ;
 
         /// Vertices in reverse BFS order (furthest from root first).
-        fn bottom_up_order(&self) -> (order: ArraySeqMtEphS<N>)
+        fn bottom_up_order(&self) -> (order: ArraySeqMtEphS<usize>)
             requires self.spec_order().spec_len() <= usize::MAX,
             ensures
                 order.spec_len() == self.spec_order().spec_len(),
@@ -280,7 +280,7 @@ pub mod BFSMtEph {
     pub trait BFSMtEphTrait {
         /// Algorithm 54.5: BFSDistance. Returns distance from source for every vertex.
         /// - APAS: Work O(|V| + |E|), Span O(d·lg n)
-        fn bfs(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>, source: N) -> (traversal: ArraySeqMtEphS<N>)
+        fn bfs(graph: &ArraySeqMtEphS<ArraySeqMtEphS<usize>>, source: usize) -> (traversal: ArraySeqMtEphS<usize>)
             requires
                 source < graph.spec_len(),
                 graph.spec_len() > 0,
@@ -297,7 +297,7 @@ pub mod BFSMtEph {
 
         /// Algorithm 54.6: BFS Tree. Returns parent array and BFS-order vertex sequence.
         /// - APAS: Work O(|V| + |E|), Span O(d·lg n)
-        fn bfs_tree(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>, source: N) -> (traversal: BFSTreeS)
+        fn bfs_tree(graph: &ArraySeqMtEphS<ArraySeqMtEphS<usize>>, source: usize) -> (traversal: BFSTreeS)
             requires
                 source < graph.spec_len(),
                 graph.spec_len() > 0,
@@ -322,11 +322,11 @@ pub mod BFSMtEph {
 
     // Parallel frontier processing via fork-join divide-and-conquer.
     fn process_frontier_parallel(
-        graph: ArraySeqMtEphS<ArraySeqMtEphS<N>>,
-        distances: ArraySeqMtEphS<N>,
-        frontier: Vec<N>,
-        next_dist: N,
-    ) -> (traversal: (Vec<N>, Vec<Pair<N, N>>))
+        graph: ArraySeqMtEphS<ArraySeqMtEphS<usize>>,
+        distances: ArraySeqMtEphS<usize>,
+        frontier: Vec<usize>,
+        next_dist: usize,
+    ) -> (traversal: (Vec<usize>, Vec<Pair<usize, usize>>))
         requires
             graph.spec_len() > 0,
             graph.spec_len() < usize::MAX,
@@ -355,8 +355,8 @@ pub mod BFSMtEph {
             let u = frontier[0];
             let neighbors = graph.nth(u);
             let num_neighbors = neighbors.length();
-            let mut next_verts: Vec<N> = Vec::new();
-            let mut updates: Vec<Pair<N, N>> = Vec::new();
+            let mut next_verts: Vec<usize> = Vec::new();
+            let mut updates: Vec<Pair<usize, usize>> = Vec::new();
             let mut i: usize = 0;
 
             while i < num_neighbors
@@ -403,9 +403,9 @@ pub mod BFSMtEph {
         }
 
         let ghost n_spec: int = graph.spec_len() as int;
-        let ghost dist_fn: spec_fn(int) -> N = |i: int| distances.spec_index(i);
+        let ghost dist_fn: spec_fn(int) -> usize = |i: int| distances.spec_index(i);
 
-        let f1 = move || -> (r: (Vec<N>, Vec<Pair<N, N>>))
+        let f1 = move || -> (r: (Vec<usize>, Vec<Pair<usize, usize>>))
             ensures
                 forall|j: int| #![trigger r.0@[j]] 0 <= j < r.0@.len() ==> (r.0@[j] as int) < n_spec,
                 forall|j: int| #![trigger r.1@[j]] 0 <= j < r.1@.len() ==>
@@ -422,7 +422,7 @@ pub mod BFSMtEph {
             r
         };
 
-        let f2 = move || -> (r: (Vec<N>, Vec<Pair<N, N>>))
+        let f2 = move || -> (r: (Vec<usize>, Vec<Pair<usize, usize>>))
             ensures
                 forall|j: int| #![trigger r.0@[j]] 0 <= j < r.0@.len() ==> (r.0@[j] as int) < n_spec,
                 forall|j: int| #![trigger r.1@[j]] 0 <= j < r.1@.len() ==>
@@ -480,10 +480,10 @@ pub mod BFSMtEph {
 
     // Parallel frontier processing for BFS tree: collects (neighbor, parent) pairs.
     fn process_frontier_tree_parallel(
-        graph: ArraySeqMtEphS<ArraySeqMtEphS<N>>,
-        parents: ArraySeqMtEphS<N>,
-        frontier: Vec<N>,
-    ) -> (traversal: Vec<Pair<N, N>>)
+        graph: ArraySeqMtEphS<ArraySeqMtEphS<usize>>,
+        parents: ArraySeqMtEphS<usize>,
+        frontier: Vec<usize>,
+    ) -> (traversal: Vec<Pair<usize, usize>>)
         requires
             graph.spec_len() > 0,
             graph.spec_len() < usize::MAX,
@@ -509,7 +509,7 @@ pub mod BFSMtEph {
             let u = frontier[0];
             let neighbors = graph.nth(u);
             let num_neighbors = neighbors.length();
-            let mut updates: Vec<Pair<N, N>> = Vec::new();
+            let mut updates: Vec<Pair<usize, usize>> = Vec::new();
             let mut i: usize = 0;
 
             while i < num_neighbors
@@ -551,9 +551,9 @@ pub mod BFSMtEph {
         }
 
         let ghost n_spec: int = graph.spec_len() as int;
-        let ghost parents_fn: spec_fn(int) -> N = |i: int| parents.spec_index(i);
+        let ghost parents_fn: spec_fn(int) -> usize = |i: int| parents.spec_index(i);
 
-        let f1 = move || -> (r: Vec<Pair<N, N>>)
+        let f1 = move || -> (r: Vec<Pair<usize, usize>>)
             ensures
                 forall|j: int| #![trigger r@[j]] 0 <= j < r@.len() ==>
                     ((r@[j]).0 as int) < n_spec
@@ -569,7 +569,7 @@ pub mod BFSMtEph {
             r
         };
 
-        let f2 = move || -> (r: Vec<Pair<N, N>>)
+        let f2 = move || -> (r: Vec<Pair<usize, usize>>)
             ensures
                 forall|j: int| #![trigger r@[j]] 0 <= j < r@.len() ==>
                     ((r@[j]).0 as int) < n_spec
@@ -612,14 +612,14 @@ pub mod BFSMtEph {
     impl BFSMtEphTrait for BFSMtEph {
 
     #[verifier::exec_allows_no_decreases_clause]
-    fn bfs(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>, source: N) -> (traversal: ArraySeqMtEphS<N>)
+    fn bfs(graph: &ArraySeqMtEphS<ArraySeqMtEphS<usize>>, source: usize) -> (traversal: ArraySeqMtEphS<usize>)
     {
         broadcast use vstd::std_specs::vecdeque::group_vec_dequeue_axioms;
 
         let n = graph.length();
 
         let mut distances = ArraySeqMtEphS::tabulate(
-            &|_idx: usize| -> (r: N) ensures r == UNREACHABLE { UNREACHABLE },
+            &|_idx: usize| -> (r: usize) ensures r == UNREACHABLE { UNREACHABLE },
             n,
         );
 
@@ -638,9 +638,9 @@ pub mod BFSMtEph {
             }
         }
 
-        let mut current_layer: Vec<N> = Vec::new();
+        let mut current_layer: Vec<usize> = Vec::new();
         current_layer.push(source);
-        let mut current_dist: N = 0;
+        let mut current_dist: usize = 0;
 
         while current_layer.len() > 0
             invariant
@@ -724,7 +724,7 @@ pub mod BFSMtEph {
                     proof {
                         lemma_set_preserves_bounded(
                             &distances, &pre_inner_set,
-                            v as int, d as N, n as int,
+                            v as int, d as usize, n as int,
                         );
                         assert(distances.spec_index(source as int) == pre_inner_set.spec_index(source as int));
                         assert forall|w: int| 0 <= w < distances.spec_len()
@@ -756,12 +756,12 @@ pub mod BFSMtEph {
 
     /// Algorithm 54.6: BFS Tree with parallel frontier processing.
     #[verifier::exec_allows_no_decreases_clause]
-    fn bfs_tree(graph: &ArraySeqMtEphS<ArraySeqMtEphS<N>>, source: N) -> (traversal: BFSTreeS)
+    fn bfs_tree(graph: &ArraySeqMtEphS<ArraySeqMtEphS<usize>>, source: usize) -> (traversal: BFSTreeS)
     {
         let n = graph.length();
 
         let mut parents = ArraySeqMtEphS::tabulate(
-            &|_idx: usize| -> (r: N) ensures r == NO_PARENT { NO_PARENT },
+            &|_idx: usize| -> (r: usize) ensures r == NO_PARENT { NO_PARENT },
             n,
         );
 
@@ -772,10 +772,10 @@ pub mod BFSMtEph {
 
         proof { lemma_set_preserves_parents_bounded(&parents, &pre_set, source as int, source, n as int); }
 
-        let mut current_layer: Vec<N> = Vec::new();
+        let mut current_layer: Vec<usize> = Vec::new();
         current_layer.push(source);
 
-        let mut order: Vec<N> = Vec::new();
+        let mut order: Vec<usize> = Vec::new();
         order.push(source);
 
         while current_layer.len() > 0
@@ -820,7 +820,7 @@ pub mod BFSMtEph {
             }
 
             // Apply updates with deduplication: first write to each vertex wins.
-            let mut next_layer: Vec<N> = Vec::new();
+            let mut next_layer: Vec<usize> = Vec::new();
             let mut k: usize = 0;
             while k < tree_updates.len()
                 invariant
@@ -883,19 +883,19 @@ pub mod BFSMtEph {
     } // impl BFSMtEphTrait
 
     impl BFSTreeMtEphTrait for BFSTreeS {
-        open spec fn spec_order(&self) -> ArraySeqMtEphS<N> {
+        open spec fn spec_order(&self) -> ArraySeqMtEphS<usize> {
             self.order
         }
 
-        fn top_down_order(&self) -> (order: &ArraySeqMtEphS<N>) {
+        fn top_down_order(&self) -> (order: &ArraySeqMtEphS<usize>) {
             &self.order
         }
 
         /// Vertices in reverse BFS order (furthest from root first).
-        fn bottom_up_order(&self) -> (order: ArraySeqMtEphS<N>) {
+        fn bottom_up_order(&self) -> (order: ArraySeqMtEphS<usize>) {
             let n = self.order.length();
             ArraySeqMtEphS::tabulate(
-                &|i: usize| -> (r: N)
+                &|i: usize| -> (r: usize)
                     requires i < n, n == self.order.spec_len()
                     ensures r == self.order.spec_index((n - 1 - i) as int)
                 { *self.order.nth(n - 1 - i) },

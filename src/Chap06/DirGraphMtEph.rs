@@ -131,13 +131,13 @@ pub mod DirGraphMtEph {
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn sizeV(&self) -> (n: N)
+        fn sizeV(&self) -> (n: usize)
             requires spec_graphview_wf(self@), valid_key_type_for_graph::<V>()
             ensures n == self@.V.len();
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn sizeA(&self) -> (n: N)
+        fn sizeA(&self) -> (n: usize)
             requires spec_graphview_wf(self@), valid_key_type_for_graph::<V>()
             ensures n == self@.A.len();
 
@@ -185,7 +185,7 @@ pub mod DirGraphMtEph {
 
         /// - APAS: Work Θ(|A|), Span Θ(log |A|) — parallel
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(log |A|) — calls n_plus
-        fn out_degree(&self, v: &V) -> (n: N)
+        fn out_degree(&self, v: &V) -> (n: usize)
             requires 
                 spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
@@ -220,7 +220,7 @@ pub mod DirGraphMtEph {
 
         /// - APAS: Work Θ(|A|), Span Θ(log |A|) — parallel
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(log |A|) — calls n_minus
-        fn in_degree(&self, v: &V) -> (n: N)
+        fn in_degree(&self, v: &V) -> (n: usize)
             requires 
                 spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
@@ -253,7 +253,7 @@ pub mod DirGraphMtEph {
 
         /// - APAS: Work Θ(|A|), Span Θ(log |A|) — parallel
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(log |A|) — calls ng
-        fn degree(&self, v: &V) -> (n: N)
+        fn degree(&self, v: &V) -> (n: usize)
             requires 
                 spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
@@ -412,8 +412,8 @@ pub mod DirGraphMtEph {
 
         fn vertices(&self) -> (v: &SetStEph<V>) { &self.V }
         fn arcs(&self) -> (a: &SetStEph<Edge<V>>) { &self.A }
-        fn sizeV(&self) -> (n: N) { self.V.size() }
-        fn sizeA(&self) -> (n: N) { self.A.size() }
+        fn sizeV(&self) -> (n: usize) { self.V.size() }
+        fn sizeA(&self) -> (n: usize) { self.A.size() }
 
         fn neighbor(&self, u: &V, v: &V) -> (b: bool) {
             self.A.mem(&Edge(u.clone_plus(), v.clone_plus()))
@@ -426,16 +426,16 @@ pub mod DirGraphMtEph {
             self.n_plus_par(v.clone_plus(), arcs)
         }
 
-        fn out_degree(&self, v: &V) -> (n: N) { self.n_plus(v).size() }
+        fn out_degree(&self, v: &V) -> (n: usize) { self.n_plus(v).size() }
 
         fn n_minus(&self, v: &V) -> SetStEph<V> {
             let arcs = self.A.clone();
             self.n_minus_par(v.clone_plus(), arcs)
         }
-        fn in_degree(&self, v: &V) -> (n: N) { self.n_minus(v).size() }
+        fn in_degree(&self, v: &V) -> (n: usize) { self.n_minus(v).size() }
 
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) { self.n_plus(v).union(&self.n_minus(v)) }
-        fn degree(&self, v: &V) -> (n: N) { self.ng(v).size() }
+        fn degree(&self, v: &V) -> (n: usize) { self.ng(v).size() }
 
         fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> { self.n_plus_of_vertices_par(u_set.clone()) }
         fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> { self.n_minus_of_vertices_par(u_set.clone()) }
@@ -853,11 +853,11 @@ pub mod DirGraphMtEph {
             requires self.spec_lockeddirgraphmteph_wf()
             ensures a@ == self@.A;
 
-        fn sizeV(&self) -> (n: N)
+        fn sizeV(&self) -> (n: usize)
             requires self.spec_lockeddirgraphmteph_wf()
             ensures n == self@.V.len();
 
-        fn sizeA(&self) -> (n: N)
+        fn sizeA(&self) -> (n: usize)
             requires self.spec_lockeddirgraphmteph_wf()
             ensures n == self@.A.len();
 
@@ -951,7 +951,7 @@ pub mod DirGraphMtEph {
             a
         }
 
-        fn sizeV(&self) -> (n: N) {
+        fn sizeV(&self) -> (n: usize) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
             proof { assume(inner@ == self@); }
@@ -960,7 +960,7 @@ pub mod DirGraphMtEph {
             n
         }
 
-        fn sizeA(&self) -> (n: N) {
+        fn sizeA(&self) -> (n: usize) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
             proof { assume(inner@ == self@); }

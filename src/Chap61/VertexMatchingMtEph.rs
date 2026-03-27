@@ -165,7 +165,7 @@ pub mod VertexMatchingMtEph {
         }
 
         if size == 1 {
-            let edge = edges.nth(start as N);
+            let edge = edges.nth(start as usize);
             if should_select_edge(&graph, edge, &edge_coins) {
                 return ArraySeqStEphS::from_vec(std::vec![edge.clone()]);
             } else {

@@ -23,9 +23,9 @@ fn test_dirgraphstephlit_macro_functionality() {
 
 #[test]
 fn test_digraph_vertices_and_arcs() {
-    let v: SetStEph<N> = SetLit![0, 1, 2, 3];
+    let v: SetStEph<usize> = SetLit![0, 1, 2, 3];
     let a = {
-        let mut s = SetStEph::<Edge<N>>::empty();
+        let mut s = SetStEph::<Edge<usize>>::empty();
         let _ = s.insert(Edge(0, 1));
         let _ = s.insert(Edge(1, 2));
         let _ = s.insert(Edge(2, 3));
@@ -50,9 +50,9 @@ fn test_dirgraph_empty() {
 
 #[test]
 fn test_dirgraph_neighbor() {
-    let v: SetStEph<N> = SetLit![0, 1, 2];
+    let v: SetStEph<usize> = SetLit![0, 1, 2];
     let a = {
-        let mut s = SetStEph::<Edge<N>>::empty();
+        let mut s = SetStEph::<Edge<usize>>::empty();
         let _ = s.insert(Edge(0, 1));
         let _ = s.insert(Edge(1, 2));
         let _ = s.insert(Edge(0, 2));
@@ -71,9 +71,9 @@ fn test_dirgraph_neighbor() {
 
 #[test]
 fn test_dirgraph_ng() {
-    let v: SetStEph<N> = SetLit![0, 1, 2];
+    let v: SetStEph<usize> = SetLit![0, 1, 2];
     let a = {
-        let mut s = SetStEph::<Edge<N>>::empty();
+        let mut s = SetStEph::<Edge<usize>>::empty();
         let _ = s.insert(Edge(0, 1));
         let _ = s.insert(Edge(1, 2));
         s
@@ -91,9 +91,9 @@ fn test_dirgraph_ng() {
 
 #[test]
 fn test_dirgraph_ngofvertices() {
-    let v: SetStEph<N> = SetLit![0, 1, 2];
+    let v: SetStEph<usize> = SetLit![0, 1, 2];
     let a = {
-        let mut s = SetStEph::<Edge<N>>::empty();
+        let mut s = SetStEph::<Edge<usize>>::empty();
         let _ = s.insert(Edge(0, 1));
         let _ = s.insert(Edge(1, 2));
         s
@@ -110,9 +110,9 @@ fn test_dirgraph_ngofvertices() {
 
 #[test]
 fn test_dirgraph_nplus() {
-    let v: SetStEph<N> = SetLit![0, 1, 2];
+    let v: SetStEph<usize> = SetLit![0, 1, 2];
     let a = {
-        let mut s = SetStEph::<Edge<N>>::empty();
+        let mut s = SetStEph::<Edge<usize>>::empty();
         let _ = s.insert(Edge(0, 1));
         let _ = s.insert(Edge(1, 2));
         s
@@ -129,9 +129,9 @@ fn test_dirgraph_nplus() {
 
 #[test]
 fn test_dirgraph_nminus() {
-    let v: SetStEph<N> = SetLit![0, 1, 2];
+    let v: SetStEph<usize> = SetLit![0, 1, 2];
     let a = {
-        let mut s = SetStEph::<Edge<N>>::empty();
+        let mut s = SetStEph::<Edge<usize>>::empty();
         let _ = s.insert(Edge(0, 1));
         let _ = s.insert(Edge(1, 2));
         s
@@ -148,9 +148,9 @@ fn test_dirgraph_nminus() {
 
 #[test]
 fn test_dirgraph_nplusofvertices() {
-    let v: SetStEph<N> = SetLit![0, 1, 2];
+    let v: SetStEph<usize> = SetLit![0, 1, 2];
     let a = {
-        let mut s = SetStEph::<Edge<N>>::empty();
+        let mut s = SetStEph::<Edge<usize>>::empty();
         let _ = s.insert(Edge(0, 1));
         let _ = s.insert(Edge(1, 2));
         s
@@ -166,9 +166,9 @@ fn test_dirgraph_nplusofvertices() {
 
 #[test]
 fn test_dirgraph_nminusofvertices() {
-    let v: SetStEph<N> = SetLit![0, 1, 2];
+    let v: SetStEph<usize> = SetLit![0, 1, 2];
     let a = {
-        let mut s = SetStEph::<Edge<N>>::empty();
+        let mut s = SetStEph::<Edge<usize>>::empty();
         let _ = s.insert(Edge(0, 1));
         let _ = s.insert(Edge(1, 2));
         s
@@ -184,9 +184,9 @@ fn test_dirgraph_nminusofvertices() {
 
 #[test]
 fn test_dirgraph_incident() {
-    let v: SetStEph<N> = SetLit![0, 1, 2];
+    let v: SetStEph<usize> = SetLit![0, 1, 2];
     let a = {
-        let mut s = SetStEph::<Edge<N>>::empty();
+        let mut s = SetStEph::<Edge<usize>>::empty();
         let _ = s.insert(Edge(0, 1));
         let _ = s.insert(Edge(1, 2));
         let _ = s.insert(Edge(2, 0));
@@ -204,9 +204,9 @@ fn test_dirgraph_incident() {
 
 #[test]
 fn test_dirgraph_degree() {
-    let v: SetStEph<N> = SetLit![0, 1, 2];
+    let v: SetStEph<usize> = SetLit![0, 1, 2];
     let a = {
-        let mut s = SetStEph::<Edge<N>>::empty();
+        let mut s = SetStEph::<Edge<usize>>::empty();
         let _ = s.insert(Edge(0, 1));
         let _ = s.insert(Edge(1, 2));
         let _ = s.insert(Edge(2, 0));
@@ -221,9 +221,9 @@ fn test_dirgraph_degree() {
 
 #[test]
 fn test_dirgraph_indegree() {
-    let v: SetStEph<N> = SetLit![0, 1, 2];
+    let v: SetStEph<usize> = SetLit![0, 1, 2];
     let a = {
-        let mut s = SetStEph::<Edge<N>>::empty();
+        let mut s = SetStEph::<Edge<usize>>::empty();
         let _ = s.insert(Edge(0, 1));
         let _ = s.insert(Edge(1, 2));
         let _ = s.insert(Edge(2, 0));
@@ -238,9 +238,9 @@ fn test_dirgraph_indegree() {
 
 #[test]
 fn test_dirgraph_outdegree() {
-    let v: SetStEph<N> = SetLit![0, 1, 2];
+    let v: SetStEph<usize> = SetLit![0, 1, 2];
     let a = {
-        let mut s = SetStEph::<Edge<N>>::empty();
+        let mut s = SetStEph::<Edge<usize>>::empty();
         let _ = s.insert(Edge(0, 1));
         let _ = s.insert(Edge(1, 2));
         let _ = s.insert(Edge(2, 0));
@@ -278,8 +278,8 @@ fn test_dirgraph_empty_graph_edge_cases() {
 
 #[test]
 fn test_dirgraph_single_vertex_edge_cases() {
-    let v: SetStEph<N> = SetLit![42];
-    let a = SetStEph::<Edge<N>>::empty();
+    let v: SetStEph<usize> = SetLit![42];
+    let a = SetStEph::<Edge<usize>>::empty();
     let g = DirGraphStEph::from_sets(v, a);
 
     // Single vertex with no edges
@@ -295,9 +295,9 @@ fn test_dirgraph_single_vertex_edge_cases() {
 
 #[test]
 fn test_dirgraph_selfloop_edge_cases() {
-    let v: SetStEph<N> = SetLit![0];
+    let v: SetStEph<usize> = SetLit![0];
     let a = {
-        let mut s = SetStEph::<Edge<N>>::empty();
+        let mut s = SetStEph::<Edge<usize>>::empty();
         let _ = s.insert(Edge(0, 0));
         s
     };
@@ -317,9 +317,9 @@ fn test_dirgraph_selfloop_edge_cases() {
 
 #[test]
 fn test_dirgraph_nonexistent_vertex_edge_cases() {
-    let v: SetStEph<N> = SetLit![0, 1];
+    let v: SetStEph<usize> = SetLit![0, 1];
     let a = {
-        let mut s = SetStEph::<Edge<N>>::empty();
+        let mut s = SetStEph::<Edge<usize>>::empty();
         let _ = s.insert(Edge(0, 1));
         s
     };
@@ -417,9 +417,9 @@ fn test_dirgraph_large_graph_stress() {
 
 #[test]
 fn test_dirgraph_clone() {
-    let v: SetStEph<N> = SetLit![1, 2, 3];
+    let v: SetStEph<usize> = SetLit![1, 2, 3];
     let a = {
-        let mut s = SetStEph::<Edge<N>>::empty();
+        let mut s = SetStEph::<Edge<usize>>::empty();
         let _ = s.insert(Edge(1, 2));
         let _ = s.insert(Edge(2, 3));
         s
@@ -435,9 +435,9 @@ fn test_dirgraph_clone() {
 
 #[test]
 fn test_dirgraph_debug_display() {
-    let v: SetStEph<N> = SetLit![1, 2];
+    let v: SetStEph<usize> = SetLit![1, 2];
     let a = {
-        let mut s = SetStEph::<Edge<N>>::empty();
+        let mut s = SetStEph::<Edge<usize>>::empty();
         let _ = s.insert(Edge(1, 2));
         s
     };
@@ -452,9 +452,9 @@ fn test_dirgraph_debug_display() {
 
 #[test]
 fn test_dirgraph_equality() {
-    let v1: SetStEph<N> = SetLit![1, 2];
+    let v1: SetStEph<usize> = SetLit![1, 2];
     let a1 = {
-        let mut s = SetStEph::<Edge<N>>::empty();
+        let mut s = SetStEph::<Edge<usize>>::empty();
         let _ = s.insert(Edge(1, 2));
         s
     };
@@ -463,7 +463,7 @@ fn test_dirgraph_equality() {
     let g2 = DirGraphStEph::from_sets(v1, a1);
     assert_eq!(g1, g2);
 
-    let v3: SetStEph<N> = SetLit![1, 2, 3];
+    let v3: SetStEph<usize> = SetLit![1, 2, 3];
     let g3 = DirGraphStEph::from_sets(v3, SetStEph::empty());
     assert_ne!(g1, g3);
 }

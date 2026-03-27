@@ -9,8 +9,8 @@ use apas_verus::Chap53::GraphSearchStPer::GraphSearchStPer::*;
 use apas_verus::Types::Types::*;
 
 // Build test graph as adjacency function
-fn test_graph_1() -> impl Fn(&N) -> AVLTreeSetStPer<N> {
-    |v: &N| match *v {
+fn test_graph_1() -> impl Fn(&usize) -> AVLTreeSetStPer<usize> {
+    |v: &usize| match *v {
         | 1 => AVLTreeSetStPer::singleton(2).union(&AVLTreeSetStPer::singleton(3)),
         | 2 => AVLTreeSetStPer::singleton(4),
         | 3 => AVLTreeSetStPer::singleton(4).union(&AVLTreeSetStPer::singleton(5)),
@@ -22,7 +22,7 @@ fn test_graph_1() -> impl Fn(&N) -> AVLTreeSetStPer<N> {
 
 #[test]
 fn test_empty_graph() {
-    let graph = |_: &N| AVLTreeSetStPer::empty();
+    let graph = |_: &usize| AVLTreeSetStPer::empty();
     let result = graph_search(&graph, 1, &SelectAll, Ghost::assume_new());
     assert_eq!(result.visited.size(), 1);
     assert!(result.visited.find(&1));
@@ -30,7 +30,7 @@ fn test_empty_graph() {
 
 #[test]
 fn test_single_edge() {
-    let graph = |v: &N| {
+    let graph = |v: &usize| {
         if *v == 1 {
             AVLTreeSetStPer::singleton(2)
         } else {
@@ -45,7 +45,7 @@ fn test_single_edge() {
 
 #[test]
 fn test_linear_chain() {
-    let graph = |v: &N| match *v {
+    let graph = |v: &usize| match *v {
         | 1 => AVLTreeSetStPer::singleton(2),
         | 2 => AVLTreeSetStPer::singleton(3),
         | 3 => AVLTreeSetStPer::singleton(4),
@@ -70,7 +70,7 @@ fn test_dag() {
 
 #[test]
 fn test_cycle() {
-    let graph = |v: &N| match *v {
+    let graph = |v: &usize| match *v {
         | 1 => AVLTreeSetStPer::singleton(2),
         | 2 => AVLTreeSetStPer::singleton(3),
         | 3 => AVLTreeSetStPer::singleton(1),
@@ -85,7 +85,7 @@ fn test_cycle() {
 
 #[test]
 fn test_disconnected_component() {
-    let graph = |v: &N| match *v {
+    let graph = |v: &usize| match *v {
         | 1 => AVLTreeSetStPer::singleton(2),
         | 2 => AVLTreeSetStPer::empty(),
         | 3 => AVLTreeSetStPer::singleton(4),

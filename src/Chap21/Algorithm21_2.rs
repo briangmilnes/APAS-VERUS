@@ -43,7 +43,7 @@ pub mod Algorithm21_2 {
     /// - Implemented as: flatten (tabulate_x (flatten (tabulate_y (tabulate_z))))
     /// - APAS: Work Θ(n³), Span Θ(lg n)
     /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — sequential StPer nested tabulate + flatten.
-    pub fn points3d_tab_flat(n: N) -> (points: ArraySeqStPerS<Pair<N, Pair<N, N>>>)
+    pub fn points3d_tab_flat(n: usize) -> (points: ArraySeqStPerS<Pair<usize, Pair<usize, usize>>>)
         requires
             n + 2 <= usize::MAX,
             pow(n as int, 2) <= usize::MAX as int,
@@ -57,9 +57,9 @@ pub mod Algorithm21_2 {
         }
 
         // Build the outer sequence: for each x in 0..n, produce a flattened n² block.
-        let outer: ArraySeqStPerS<ArraySeqStPerS<Pair<N, Pair<N, N>>>> =
+        let outer: ArraySeqStPerS<ArraySeqStPerS<Pair<usize, Pair<usize, usize>>>> =
             ArraySeqStPerS::tabulate(
-                &(|x: usize| -> (block: ArraySeqStPerS<Pair<N, Pair<N, N>>>)
+                &(|x: usize| -> (block: ArraySeqStPerS<Pair<usize, Pair<usize, usize>>>)
                     requires
                         x < n,
                         n > 0,
@@ -70,13 +70,13 @@ pub mod Algorithm21_2 {
                 {
                     proof {
                         // Trigger Pair feq axioms for the nested Pair type.
-                        assert(Pair_feq_trigger::<N, N>());
-                        assert(Pair_feq_trigger::<N, Pair<N, N>>());
+                        assert(Pair_feq_trigger::<usize, usize>());
+                        assert(Pair_feq_trigger::<usize, Pair<usize, usize>>());
                     }
                     // For each y in 0..n, tabulate z values.
-                    let mid: ArraySeqStPerS<ArraySeqStPerS<Pair<N, Pair<N, N>>>> =
+                    let mid: ArraySeqStPerS<ArraySeqStPerS<Pair<usize, Pair<usize, usize>>>> =
                         ArraySeqStPerS::tabulate(
-                            &(|y: usize| -> (row: ArraySeqStPerS<Pair<N, Pair<N, N>>>)
+                            &(|y: usize| -> (row: ArraySeqStPerS<Pair<usize, Pair<usize, usize>>>)
                                 requires
                                     y < n,
                                     x < n,
@@ -86,7 +86,7 @@ pub mod Algorithm21_2 {
                                     row.seq@.len() == n as int,
                             {
                                 ArraySeqStPerS::tabulate(
-                                    &(|z_idx: usize| -> (p: Pair<N, Pair<N, N>>)
+                                    &(|z_idx: usize| -> (p: Pair<usize, Pair<usize, usize>>)
                                         requires z_idx < n, x < n, y < n, n + 2 <= usize::MAX,
                                     {
                                         Pair(x, Pair(y + 1, z_idx + 2))
@@ -99,7 +99,7 @@ pub mod Algorithm21_2 {
 
                     let flat_mid = ArraySeqStPerS::flatten(&mid);
                     proof {
-                        let ghost mapped = mid.seq@.map_values(|inner: ArraySeqStPerS<Pair<N, Pair<N, N>>>| inner.seq@);
+                        let ghost mapped = mid.seq@.map_values(|inner: ArraySeqStPerS<Pair<usize, Pair<usize, usize>>>| inner.seq@);
                         assert forall|i: int| 0 <= i < mapped.len() implies
                             (#[trigger] mapped[i]).len() == n as int by {}
                         lemma_flatten_uniform_len(mapped, n as int);
@@ -111,13 +111,13 @@ pub mod Algorithm21_2 {
             );
 
         proof {
-            assert(Pair_feq_trigger::<N, N>());
-            assert(Pair_feq_trigger::<N, Pair<N, N>>());
+            assert(Pair_feq_trigger::<usize, usize>());
+            assert(Pair_feq_trigger::<usize, Pair<usize, usize>>());
         }
         let flattened = ArraySeqStPerS::flatten(&outer);
         proof {
             let ghost n2 = pow(n as int, 2);
-            let ghost mapped = outer.seq@.map_values(|inner: ArraySeqStPerS<Pair<N, Pair<N, N>>>| inner.seq@);
+            let ghost mapped = outer.seq@.map_values(|inner: ArraySeqStPerS<Pair<usize, Pair<usize, usize>>>| inner.seq@);
             assert forall|i: int| 0 <= i < mapped.len() implies
                 (#[trigger] mapped[i]).len() == n2 by {}
             lemma_flatten_uniform_len(mapped, n2);

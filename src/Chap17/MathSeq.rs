@@ -135,14 +135,14 @@ pub mod MathSeq {
 
             /// - APAS: no cost spec (definitions chapter).
             /// - Claude-Opus-4.6: O(n) — Vec allocation + clone fill.
-            fn new(length: N, init_value: T) -> (new_seq: Self)
+            fn new(length: usize, init_value: T) -> (new_seq: Self)
                 ensures
                     new_seq.spec_len() == length,
                     forall|i: int| #![trigger new_seq.spec_seq()[i]] 0 <= i < length ==> cloned(init_value, new_seq.spec_seq()[i]);
 
             /// - APAS: no cost spec.
             /// - Claude-Opus-4.6: O(1) — direct index write.
-            fn set(&mut self, index: N, value: T) -> (success: bool)
+            fn set(&mut self, index: usize, value: T) -> (success: bool)
                 ensures
                     success ==> index < old(self).spec_len()
                         && self.spec_len() == old(self).spec_len()
@@ -152,12 +152,12 @@ pub mod MathSeq {
 
             /// - APAS: no cost spec.
             /// - Claude-Opus-4.6: O(1).
-            fn length(&self) -> (len: N)
+            fn length(&self) -> (len: usize)
                 ensures len == self.spec_len();
 
             /// - APAS: no cost spec.
             /// - Claude-Opus-4.6: O(1) — direct index read.
-            fn nth(&self, index: N) -> (elem: &T)
+            fn nth(&self, index: usize) -> (elem: &T)
                 requires index < self.spec_len()
                 ensures elem@ == self@[index as int];
 
@@ -208,14 +208,14 @@ pub mod MathSeq {
 
             /// - APAS: no cost spec.
             /// - Claude-Opus-4.6: O(n) — delegates to new.
-            fn with_len(length: N, init_value: T) -> (seq_of_len_value: Self)
+            fn with_len(length: usize, init_value: T) -> (seq_of_len_value: Self)
                 ensures
                     seq_of_len_value.spec_len() == length,
                     forall|i: int| #![trigger seq_of_len_value.spec_seq()[i]] 0 <= i < length ==> cloned(init_value, seq_of_len_value.spec_seq()[i]);
 
             /// - APAS: no cost spec.
             /// - Claude-Opus-4.6: O(1) — returns slice reference.
-            fn subseq(&self, start: N, length: N) -> (subseq: &[T])
+            fn subseq(&self, start: usize, length: usize) -> (subseq: &[T])
                 ensures
                     subseq@.len() <= length,
                 ({
@@ -226,7 +226,7 @@ pub mod MathSeq {
 
             /// - APAS: no cost spec.
             /// - Claude-Opus-4.6: O(length) — copies subrange.
-            fn subseq_copy(&self, start: N, length: N) -> (subseq: Self) where T: Copy
+            fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self) where T: Copy
                 requires
                     start as int + length as int <= self.spec_seq().len(),
                 ensures
@@ -235,7 +235,7 @@ pub mod MathSeq {
 
             /// - APAS: no cost spec.
             /// - Claude-Opus-4.6: O(n) — builds index vector.
-            fn domain(&self) -> (domain: Vec<N>)
+            fn domain(&self) -> (domain: Vec<usize>)
                 ensures
                     domain@.len() == self.spec_len(),
                     forall|i: int| 0 <= i < domain@.len() ==> domain@[i] == i as usize;
@@ -250,7 +250,7 @@ pub mod MathSeq {
 
             /// - APAS: no cost spec.
             /// - Claude-Opus-4.6: O(n) expected — hash map counting, two passes.
-            fn multiset_range(&self) -> (range: Vec<(N, T)>)
+            fn multiset_range(&self) -> (range: Vec<(usize, T)>)
                 requires
                     valid_key_type::<T>(),
                     forall|k1: T, k2: T| k1@ == k2@ ==> k1 == k2,
@@ -294,13 +294,13 @@ pub mod MathSeq {
                 self.data@
             }
 
-            fn new(length: N, init_value: T) -> (new_seq: Self)
+            fn new(length: usize, init_value: T) -> (new_seq: Self)
             {
                 let v = vec![init_value; length];
                 MathSeqS { data: v }
             }
 
-            fn set(&mut self, index: N, value: T) -> (success: bool)
+            fn set(&mut self, index: usize, value: T) -> (success: bool)
             {
                 if index < self.data.len() {
                     self.data.set(index, value);
@@ -310,12 +310,12 @@ pub mod MathSeq {
                 }
             }
 
-            fn length(&self) -> (len: N)
+            fn length(&self) -> (len: usize)
             {
                 self.data.len()
             }
 
-            fn nth(&self, index: N) -> (elem: &T)
+            fn nth(&self, index: usize) -> (elem: &T)
             {
                 &self.data[index]
             }
@@ -355,12 +355,12 @@ pub mod MathSeq {
                 MathSeqS { data }
             }
 
-            fn with_len(length: N, init_value: T) -> (seq_of_len_value: Self)
+            fn with_len(length: usize, init_value: T) -> (seq_of_len_value: Self)
             {
                 Self::new(length, init_value)
             }
 
-            fn subseq(&self, start: N, length: N) -> (subseq: &[T])
+            fn subseq(&self, start: usize, length: usize) -> (subseq: &[T])
             {
                 let n = self.data.len();
                 let s = start.min(n);
@@ -369,7 +369,7 @@ pub mod MathSeq {
                 slice_subrange(slice, s, e)
             }
 
-            fn subseq_copy(&self, start: N, length: N) -> (subseq: Self) where T: Copy
+            fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self) where T: Copy
             {
                 let _n = self.data.len();
                 let end = start + length;
@@ -378,7 +378,7 @@ pub mod MathSeq {
                 MathSeqS { data: vec }
             }
 
-            fn domain(&self) -> (domain: Vec<N>)
+            fn domain(&self) -> (domain: Vec<usize>)
             {
                 let mut v = Vec::new();
                 let len = self.data.len();
@@ -479,9 +479,9 @@ pub mod MathSeq {
                 out
             }
 
-            fn multiset_range(&self) -> (range: Vec<(N, T)>)
+            fn multiset_range(&self) -> (range: Vec<(usize, T)>)
             {
-                let mut counts: HashMapWithView<T, N> = HashMapWithView::with_capacity(self.data.len());
+                let mut counts: HashMapWithView<T, usize> = HashMapWithView::with_capacity(self.data.len());
                 let mut order: Vec<T> = Vec::new();
                 let mut i: usize = 0;
                 let len = self.data.len();
@@ -535,7 +535,7 @@ pub mod MathSeq {
 
                 let ghost final_counts = counts@;
 
-                let mut range: Vec<(N, T)> = Vec::new();
+                let mut range: Vec<(usize, T)> = Vec::new();
                 let mut j: usize = 0;
                 let order_len = order.len();
 

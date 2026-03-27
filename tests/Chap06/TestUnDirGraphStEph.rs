@@ -24,9 +24,9 @@ fn test_undirgraphstephlit_macro_functionality() {
 
 #[test]
 fn test_undigraph_vertices_and_edges() {
-    let v: SetStEph<N> = SetLit![0, 1, 2, 3];
+    let v: SetStEph<usize> = SetLit![0, 1, 2, 3];
     let e = {
-        let mut s = SetStEph::<Edge<N>>::empty();
+        let mut s = SetStEph::<Edge<usize>>::empty();
         let _ = s.insert(Edge(0, 1));
         let _ = s.insert(Edge(1, 2));
         let _ = s.insert(Edge(2, 3));
@@ -42,24 +42,24 @@ fn test_undigraph_vertices_and_edges() {
 
 #[test]
 fn test_sizea() {
-    let v: SetStEph<N> = SetLit![1, 2, 3];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2), Edge(2, 3)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2), Edge(2, 3)];
     let g = UnDirGraphStEph::from_sets(v, e);
     assert_eq!(g.sizeE(), 2);
 }
 
 #[test]
 fn test_arcs() {
-    let v: SetStEph<N> = SetLit![1, 2];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2)];
+    let v: SetStEph<usize> = SetLit![1, 2];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2)];
     let g = UnDirGraphStEph::from_sets(v, e.clone());
     assert_eq!(g.edges(), &e);
 }
 
 #[test]
 fn test_nplus() {
-    let v: SetStEph<N> = SetLit![1, 2, 3];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2)];
     let g = UnDirGraphStEph::from_sets(v, e);
     let nplus = g.ng(&1);
     assert!(nplus.mem(&2));
@@ -67,8 +67,8 @@ fn test_nplus() {
 
 #[test]
 fn test_nminus() {
-    let v: SetStEph<N> = SetLit![1, 2, 3];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2)];
     let g = UnDirGraphStEph::from_sets(v, e);
     let nminus = g.ng(&2);
     assert!(nminus.mem(&1));
@@ -76,16 +76,16 @@ fn test_nminus() {
 
 #[test]
 fn test_indegree() {
-    let v: SetStEph<N> = SetLit![1, 2, 3];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2), Edge(2, 3)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2), Edge(2, 3)];
     let g = UnDirGraphStEph::from_sets(v, e);
     assert_eq!(g.degree(&2), 2);
 }
 
 #[test]
 fn test_outdegree() {
-    let v: SetStEph<N> = SetLit![1, 2, 3];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2), Edge(2, 3)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2), Edge(2, 3)];
     let g = UnDirGraphStEph::from_sets(v, e);
     assert_eq!(g.degree(&2), 2);
 }
@@ -99,8 +99,8 @@ fn test_empty() {
 
 #[test]
 fn test_neighbor() {
-    let v: SetStEph<N> = SetLit![1, 2, 3];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2), Edge(2, 3)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2), Edge(2, 3)];
     let g = UnDirGraphStEph::from_sets(v, e);
 
     assert!(g.neighbor(&1, &2));
@@ -110,8 +110,8 @@ fn test_neighbor() {
 
 #[test]
 fn test_ng() {
-    let v: SetStEph<N> = SetLit![1, 2, 3];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2), Edge(2, 3)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2), Edge(2, 3)];
     let g = UnDirGraphStEph::from_sets(v, e);
 
     let ng2 = g.ng(&2);
@@ -122,11 +122,11 @@ fn test_ng() {
 
 #[test]
 fn test_ngofvertices() {
-    let v: SetStEph<N> = SetLit![1, 2, 3, 4];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2), Edge(2, 3)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3, 4];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2), Edge(2, 3)];
     let g = UnDirGraphStEph::from_sets(v, e);
 
-    let subset: SetStEph<N> = SetLit![1, 2];
+    let subset: SetStEph<usize> = SetLit![1, 2];
     let ng = g.ng_of_vertices(&subset);
     assert!(ng.mem(&1));
     assert!(ng.mem(&2));
@@ -135,22 +135,22 @@ fn test_ngofvertices() {
 
 #[test]
 fn test_nplusofvertices() {
-    let v: SetStEph<N> = SetLit![1, 2, 3];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2), Edge(2, 3)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2), Edge(2, 3)];
     let g = UnDirGraphStEph::from_sets(v, e);
 
-    let subset: SetStEph<N> = SetLit![1];
+    let subset: SetStEph<usize> = SetLit![1];
     let nplus = g.ng_of_vertices(&subset);
     assert!(nplus.mem(&2)); // Neighbor of 1
 }
 
 #[test]
 fn test_nminusofvertices() {
-    let v: SetStEph<N> = SetLit![1, 2, 3];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2), Edge(2, 3)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2), Edge(2, 3)];
     let g = UnDirGraphStEph::from_sets(v, e);
 
-    let subset: SetStEph<N> = SetLit![2];
+    let subset: SetStEph<usize> = SetLit![2];
     let nminus = g.ng_of_vertices(&subset);
     assert!(nminus.mem(&1)); // Neighbor of 2
     assert!(nminus.mem(&3)); // Neighbor of 2
@@ -158,8 +158,8 @@ fn test_nminusofvertices() {
 
 #[test]
 fn test_incident() {
-    let v: SetStEph<N> = SetLit![1, 2, 3];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2)];
     let g = UnDirGraphStEph::from_sets(v, e);
 
     assert!(g.incident(&Edge(1, 2), &1));
@@ -169,8 +169,8 @@ fn test_incident() {
 
 #[test]
 fn test_degree() {
-    let v: SetStEph<N> = SetLit![1, 2, 3];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2), Edge(2, 3)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2), Edge(2, 3)];
     let g = UnDirGraphStEph::from_sets(v, e);
 
     assert_eq!(g.degree(&1), 1);
@@ -180,8 +180,8 @@ fn test_degree() {
 
 #[test]
 fn test_isolated_vertex() {
-    let v: SetStEph<N> = SetLit![1, 2, 3];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2)];
     let g = UnDirGraphStEph::from_sets(v, e);
 
     assert_eq!(g.degree(&3), 0);
@@ -190,8 +190,8 @@ fn test_isolated_vertex() {
 
 #[test]
 fn test_self_loop() {
-    let v: SetStEph<N> = SetLit![1];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 1)];
+    let v: SetStEph<usize> = SetLit![1];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 1)];
     let g = UnDirGraphStEph::from_sets(v, e);
 
     assert!(g.neighbor(&1, &1));
@@ -200,8 +200,8 @@ fn test_self_loop() {
 
 #[test]
 fn test_complete_graph() {
-    let v: SetStEph<N> = SetLit![1, 2, 3];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2), Edge(1, 3), Edge(2, 3)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2), Edge(1, 3), Edge(2, 3)];
     let g = UnDirGraphStEph::from_sets(v, e);
 
     assert_eq!(g.degree(&1), 2);
@@ -211,8 +211,8 @@ fn test_complete_graph() {
 
 #[test]
 fn test_star_graph() {
-    let v: SetStEph<N> = SetLit![0, 1, 2, 3];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(0, 1), Edge(0, 2), Edge(0, 3)];
+    let v: SetStEph<usize> = SetLit![0, 1, 2, 3];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(0, 1), Edge(0, 2), Edge(0, 3)];
     let g = UnDirGraphStEph::from_sets(v, e);
 
     assert_eq!(g.degree(&0), 3);
@@ -223,8 +223,8 @@ fn test_star_graph() {
 
 #[test]
 fn test_path_graph() {
-    let v: SetStEph<N> = SetLit![1, 2, 3, 4];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2), Edge(2, 3), Edge(3, 4)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3, 4];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2), Edge(2, 3), Edge(3, 4)];
     let g = UnDirGraphStEph::from_sets(v, e);
 
     assert_eq!(g.degree(&1), 1);
@@ -235,8 +235,8 @@ fn test_path_graph() {
 
 #[test]
 fn test_cycle_graph() {
-    let v: SetStEph<N> = SetLit![1, 2, 3, 4];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2), Edge(2, 3), Edge(3, 4), Edge(4, 1)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3, 4];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2), Edge(2, 3), Edge(3, 4), Edge(4, 1)];
     let g = UnDirGraphStEph::from_sets(v, e);
 
     for i in 1..=4 {
@@ -246,8 +246,8 @@ fn test_cycle_graph() {
 
 #[test]
 fn test_disconnected_graph() {
-    let v: SetStEph<N> = SetLit![1, 2, 3, 4];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2), Edge(3, 4)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3, 4];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2), Edge(3, 4)];
     let g = UnDirGraphStEph::from_sets(v, e);
 
     assert!(!g.neighbor(&1, &3));
@@ -256,8 +256,8 @@ fn test_disconnected_graph() {
 
 #[test]
 fn test_equality() {
-    let v: SetStEph<N> = SetLit![1, 2];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2)];
+    let v: SetStEph<usize> = SetLit![1, 2];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2)];
     let g1 = UnDirGraphStEph::from_sets(v.clone(), e.clone());
     let g2 = UnDirGraphStEph::from_sets(v, e);
 
@@ -266,8 +266,8 @@ fn test_equality() {
 
 #[test]
 fn test_display() {
-    let v: SetStEph<N> = SetLit![1, 2];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2)];
+    let v: SetStEph<usize> = SetLit![1, 2];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2)];
     let g = UnDirGraphStEph::from_sets(v, e);
 
     let s = format!("{g}");
@@ -276,8 +276,8 @@ fn test_display() {
 
 #[test]
 fn test_debug() {
-    let v: SetStEph<N> = SetLit![1, 2];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2)];
+    let v: SetStEph<usize> = SetLit![1, 2];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2)];
     let g = UnDirGraphStEph::from_sets(v, e);
 
     let s = format!("{g:?}");
@@ -286,8 +286,8 @@ fn test_debug() {
 
 #[test]
 fn test_clone() {
-    let v: SetStEph<N> = SetLit![1, 2];
-    let e: SetStEph<Edge<N>> = SetLit![Edge(1, 2)];
+    let v: SetStEph<usize> = SetLit![1, 2];
+    let e: SetStEph<Edge<usize>> = SetLit![Edge(1, 2)];
     let g1 = UnDirGraphStEph::from_sets(v, e);
     let g2 = g1.clone();
 

@@ -85,7 +85,7 @@ pub mod StarPartitionMtEph {
 
         // Loop 1: build vertex-to-index map.
         // Domain invariant: every key in vertex_to_index came from vertices_vec[0..i].
-        let mut vertex_to_index = HashMapWithViewPlus::<V, N>::new();
+        let mut vertex_to_index = HashMapWithViewPlus::<V, usize>::new();
         let mut i: usize = 0;
         while i < nv
             invariant
@@ -102,7 +102,7 @@ pub mod StarPartitionMtEph {
             decreases nv - i,
         {
             let ghost iv = vertices_vec@[i as int]@;
-            vertex_to_index.insert(vertices_vec[i].clone_view(), i as N);
+            vertex_to_index.insert(vertices_vec[i].clone_view(), i as usize);
             proof {
                 // After inserting vertices_vec[i] -> i, prove invariants for range [0..i+1].
                 assert forall|j: int| 0 <= j < i as int + 1 implies
@@ -182,7 +182,7 @@ pub mod StarPartitionMtEph {
         // Loop 3: build tail-heads edges.
         let edge_vec = graph.E.to_seq();
         let ne = edge_vec.len();
-        let mut th_edges: Vec<(N, V)> = Vec::new();
+        let mut th_edges: Vec<(usize, V)> = Vec::new();
         let mut k: usize = 0;
         while k < ne
             invariant
@@ -245,7 +245,7 @@ pub mod StarPartitionMtEph {
                             assert(!coin_flips@[vertices_vec@[uid as int]@]);
                             assert(coin_flips@[v@]);
                             assert(vertex_to_index@[v@] as usize < nv);
-                            let ghost new_entry: (N, V) = (*u_idx as N, (*v).clone_view());
+                            let ghost new_entry: (usize, V) = (*u_idx as usize, (*v).clone_view());
                             assert forall|s: int| 0 <= s < th_edges@.len() + 1 implies
                                 (th_edges@.push(new_entry)[s].0 as usize) < nv &&
                                 coin_flips@.contains_key(vertices_vec@[(th_edges@.push(new_entry)[s].0 as usize) as int]@) &&
@@ -259,7 +259,7 @@ pub mod StarPartitionMtEph {
                                 }
                             };
                         }
-                        th_edges.push((*u_idx as N, v.clone_view()));
+                        th_edges.push((*u_idx as usize, v.clone_view()));
                     },
                     None => {},
                 }
@@ -276,7 +276,7 @@ pub mod StarPartitionMtEph {
                             assert(!coin_flips@[vertices_vec@[vid as int]@]);
                             assert(coin_flips@[u@]);
                             assert(vertex_to_index@[u@] as usize < nv);
-                            let ghost new_entry: (N, V) = (*v_idx as N, (*u).clone_view());
+                            let ghost new_entry: (usize, V) = (*v_idx as usize, (*u).clone_view());
                             assert forall|s: int| 0 <= s < th_edges@.len() + 1 implies
                                 (th_edges@.push(new_entry)[s].0 as usize) < nv &&
                                 coin_flips@.contains_key(vertices_vec@[(th_edges@.push(new_entry)[s].0 as usize) as int]@) &&
@@ -290,7 +290,7 @@ pub mod StarPartitionMtEph {
                                 }
                             };
                         }
-                        th_edges.push((*v_idx as N, u.clone_view()));
+                        th_edges.push((*v_idx as usize, u.clone_view()));
                     },
                     None => {},
                 }

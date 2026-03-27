@@ -33,7 +33,7 @@ broadcast use {
     // 4. type definitions
 
     pub struct AdjSeqGraphStPer {
-        pub adj: ArraySeqStPerS<ArraySeqStPerS<N>>,
+        pub adj: ArraySeqStPerS<ArraySeqStPerS<usize>>,
     }
 
     // 5. view impls
@@ -84,18 +84,18 @@ broadcast use {
         spec fn spec_num_vertices(&self) -> nat;
         spec fn spec_degree(&self, u: int) -> nat
             recommends 0 <= u < self.spec_num_vertices();
-        spec fn spec_neighbor(&self, u: int, j: int) -> N
+        spec fn spec_neighbor(&self, u: int, j: int) -> usize
             recommends 0 <= u < self.spec_num_vertices(), 0 <= j < self.spec_degree(u);
 
         /// Work Theta(n), Span Theta(n)
-        fn new(n: N) -> (empty: Self)
+        fn new(n: usize) -> (empty: Self)
             ensures
                 empty.spec_adjseqgraphstper_wf(),
                 empty.spec_num_vertices() == n,
                 forall|i: int| 0 <= i < n ==> #[trigger] empty.spec_degree(i) == 0;
 
         /// Work Theta(1), Span Theta(1)
-        fn from_seq(adj: ArraySeqStPerS<ArraySeqStPerS<N>>) -> (constructed: Self)
+        fn from_seq(adj: ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (constructed: Self)
             requires
                 forall|u: int, j: int|
                     0 <= u < adj.spec_len()
@@ -111,12 +111,12 @@ broadcast use {
                     ==> #[trigger] constructed.spec_neighbor(i, j) == adj.spec_index(i).spec_index(j);
 
         /// Work Theta(1), Span Theta(1)
-        fn num_vertices(&self) -> (n: N)
+        fn num_vertices(&self) -> (n: usize)
             requires self.spec_adjseqgraphstper_wf()
             ensures n as nat == self.spec_num_vertices();
 
         /// Work Theta(n + m), Span Theta(n + m)
-        fn num_edges(&self) -> (m: N)
+        fn num_edges(&self) -> (m: usize)
             requires
                 self.spec_adjseqgraphstper_wf(),
                 spec_sum_of(
@@ -130,14 +130,14 @@ broadcast use {
                 );
 
         /// Work Theta(deg(u)), Span Theta(deg(u))
-        fn has_edge(&self, u: N, v: N) -> (found: bool)
+        fn has_edge(&self, u: usize, v: usize) -> (found: bool)
             requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()
             ensures found == exists|j: int|
                 0 <= j < self.spec_degree(u as int)
                 && #[trigger] self.spec_neighbor(u as int, j) == v;
 
         /// Work Theta(1), Span Theta(1)
-        fn out_neighbors(&self, u: N) -> (neighbors: &ArraySeqStPerS<N>)
+        fn out_neighbors(&self, u: usize) -> (neighbors: &ArraySeqStPerS<usize>)
             requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()
             ensures
                 neighbors.spec_len() == self.spec_degree(u as int),
@@ -145,12 +145,12 @@ broadcast use {
                     ==> #[trigger] neighbors.spec_index(j) == self.spec_neighbor(u as int, j);
 
         /// Work Theta(1), Span Theta(1)
-        fn out_degree(&self, u: N) -> (d: N)
+        fn out_degree(&self, u: usize) -> (d: usize)
             requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()
             ensures d as nat == self.spec_degree(u as int);
 
         /// Work Theta(n + deg(u)), Span Theta(n + deg(u))
-        fn insert_edge(&self, u: N, v: N) -> (updated: Self)
+        fn insert_edge(&self, u: usize, v: usize) -> (updated: Self)
             requires
                 self.spec_adjseqgraphstper_wf(),
                 u < self.spec_num_vertices(),
@@ -169,7 +169,7 @@ broadcast use {
                     && #[trigger] updated.spec_neighbor(u as int, j) == v;
 
         /// Work Theta(n + deg(u)), Span Theta(n + deg(u))
-        fn delete_edge(&self, u: N, v: N) -> (updated: Self)
+        fn delete_edge(&self, u: usize, v: usize) -> (updated: Self)
             requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()
             ensures
                 updated.spec_adjseqgraphstper_wf(),
@@ -204,13 +204,13 @@ broadcast use {
             self.adj.spec_index(u).spec_len()
         }
 
-        open spec fn spec_neighbor(&self, u: int, j: int) -> N {
+        open spec fn spec_neighbor(&self, u: int, j: int) -> usize {
             self.adj.spec_index(u).spec_index(j)
         }
 
-        fn new(n: N) -> (empty: Self) {
+        fn new(n: usize) -> (empty: Self) {
             let adj = ArraySeqStPerS::tabulate(
-                &|_i: usize| -> (r: ArraySeqStPerS<N>)
+                &|_i: usize| -> (r: ArraySeqStPerS<usize>)
                     ensures r.spec_len() == 0
                 {
                     ArraySeqStPerS::empty()
@@ -220,15 +220,15 @@ broadcast use {
             AdjSeqGraphStPer { adj }
         }
 
-        fn from_seq(adj: ArraySeqStPerS<ArraySeqStPerS<N>>) -> (constructed: Self) {
+        fn from_seq(adj: ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (constructed: Self) {
             AdjSeqGraphStPer { adj }
         }
 
-        fn num_vertices(&self) -> (n: N) {
+        fn num_vertices(&self) -> (n: usize) {
             self.adj.length()
         }
 
-        fn num_edges(&self) -> (m: N) {
+        fn num_edges(&self) -> (m: usize) {
             let n = self.adj.length();
             let mut count: usize = 0;
             let mut i: usize = 0;
@@ -253,7 +253,7 @@ broadcast use {
             count
         }
 
-        fn has_edge(&self, u: N, v: N) -> (found: bool) {
+        fn has_edge(&self, u: usize, v: usize) -> (found: bool) {
             let neighbors = self.adj.nth(u);
             let len = neighbors.length();
             let mut i: usize = 0;
@@ -278,15 +278,15 @@ broadcast use {
             false
         }
 
-        fn out_neighbors(&self, u: N) -> (neighbors: &ArraySeqStPerS<N>) {
+        fn out_neighbors(&self, u: usize) -> (neighbors: &ArraySeqStPerS<usize>) {
             self.adj.nth(u)
         }
 
-        fn out_degree(&self, u: N) -> (d: N) {
+        fn out_degree(&self, u: usize) -> (d: usize) {
             self.adj.nth(u).length()
         }
 
-        fn insert_edge(&self, u: N, v: N) -> (updated: Self) {
+        fn insert_edge(&self, u: usize, v: usize) -> (updated: Self) {
             let n_v = self.adj.length();
             let src_u = self.adj.nth(u);
             let deg_u = src_u.length();
@@ -317,12 +317,12 @@ broadcast use {
             }
 
             // Build new neighbor list for vertex u
-            let new_neighbors: ArraySeqStPerS<N>;
+            let new_neighbors: ArraySeqStPerS<usize>;
             let ghost mut witness: int = 0;
             if found {
                 // Copy old neighbors unchanged
                 new_neighbors = ArraySeqStPerS::tabulate(
-                    &|i: usize| -> (r: N)
+                    &|i: usize| -> (r: usize)
                         requires i < deg_u
                         ensures r == src_u.spec_index(i as int)
                     { *src_u.nth(i) },
@@ -336,7 +336,7 @@ broadcast use {
                 }
             } else {
                 // Copy old neighbors + append v
-                let mut nvec = Vec::<N>::new();
+                let mut nvec = Vec::<usize>::new();
                 let mut j: usize = 0;
                 while j < deg_u
                     invariant
@@ -363,7 +363,7 @@ broadcast use {
 
             // Build new adj: tabulate copies each row; row u gets new_neighbors.
             let result_adj = ArraySeqStPerS::tabulate(
-                &|k: usize| -> (r: ArraySeqStPerS<N>)
+                &|k: usize| -> (r: ArraySeqStPerS<usize>)
                     requires k < n_v
                     ensures
                         k as int != u as int ==> (
@@ -380,7 +380,7 @@ broadcast use {
                     if k == u {
                         let nn_len = new_neighbors.length();
                         ArraySeqStPerS::tabulate(
-                            &|i: usize| -> (r: N)
+                            &|i: usize| -> (r: usize)
                                 requires i < nn_len
                                 ensures r == new_neighbors.spec_index(i as int)
                             { *new_neighbors.nth(i) },
@@ -390,7 +390,7 @@ broadcast use {
                         let src = self.adj.nth(k);
                         let len = src.length();
                         ArraySeqStPerS::tabulate(
-                            &|i: usize| -> (r: N)
+                            &|i: usize| -> (r: usize)
                                 requires i < len
                                 ensures r == src.spec_index(i as int)
                             { *src.nth(i) },
@@ -408,13 +408,13 @@ broadcast use {
             updated
         }
 
-        fn delete_edge(&self, u: N, v: N) -> (updated: Self) {
+        fn delete_edge(&self, u: usize, v: usize) -> (updated: Self) {
             let n_v = self.adj.length();
             let src_u = self.adj.nth(u);
             let deg_u = src_u.length();
 
             // Build filtered neighbors for vertex u (exclude v)
-            let mut nvec = Vec::<N>::new();
+            let mut nvec = Vec::<usize>::new();
             let mut j: usize = 0;
             while j < deg_u
                 invariant
@@ -439,7 +439,7 @@ broadcast use {
 
             // Build new adj: tabulate copies each row; row u gets new_neighbors.
             let result_adj = ArraySeqStPerS::tabulate(
-                &|k: usize| -> (r: ArraySeqStPerS<N>)
+                &|k: usize| -> (r: ArraySeqStPerS<usize>)
                     requires k < n_v
                     ensures
                         k as int != u as int ==> (
@@ -456,7 +456,7 @@ broadcast use {
                     if k == u {
                         let nn_len = new_neighbors.length();
                         ArraySeqStPerS::tabulate(
-                            &|i: usize| -> (r: N)
+                            &|i: usize| -> (r: usize)
                                 requires i < nn_len
                                 ensures r == new_neighbors.spec_index(i as int)
                             { *new_neighbors.nth(i) },
@@ -466,7 +466,7 @@ broadcast use {
                         let src = self.adj.nth(k);
                         let len = src.length();
                         ArraySeqStPerS::tabulate(
-                            &|i: usize| -> (r: N)
+                            &|i: usize| -> (r: usize)
                                 requires i < len
                                 ensures r == src.spec_index(i as int)
                             { *src.nth(i) },

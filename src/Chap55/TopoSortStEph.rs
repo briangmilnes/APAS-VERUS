@@ -46,37 +46,37 @@ broadcast use {
     }
 
     /// Well-formed adjacency list: all neighbor indices are valid vertex indices.
-    pub open spec fn spec_toposortsteph_wf(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> bool {
+    pub open spec fn spec_toposortsteph_wf(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> bool {
         forall|v: int, i: int|
             0 <= v < graph@.len() && 0 <= i < graph@[v].len()
             ==> (#[trigger] graph@[v][i]) < graph@.len()
     }
 
     /// Whether there is a directed edge from u to v in the graph.
-    pub open spec fn spec_has_edge(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, u: int, v: int) -> bool {
+    pub open spec fn spec_has_edge(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, u: int, v: int) -> bool {
         0 <= u < graph@.len()
         && exists|i: int| 0 <= i < graph@[u].len() && (#[trigger] graph@[u][i]) == v
     }
 
     /// Whether a sequence of vertex indices forms a valid path in the graph.
-    pub open spec fn spec_is_path(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, path: Seq<int>) -> bool {
+    pub open spec fn spec_is_path(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, path: Seq<int>) -> bool {
         path.len() >= 1
         && (forall|k: int| 0 <= k < path.len() ==> 0 <= #[trigger] path[k] < graph@.len())
         && (forall|k: int| #![trigger path[k]] 0 <= k < path.len() - 1 ==> spec_has_edge(graph, path[k], path[k + 1]))
     }
 
     /// Whether vertex v is reachable from vertex u (Definition 55.3, reachability).
-    pub open spec fn spec_reachable(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, u: int, v: int) -> bool {
+    pub open spec fn spec_reachable(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, u: int, v: int) -> bool {
         exists|path: Seq<int>| spec_is_path(graph, path) && path[0] == u && #[trigger] path.last() == v
     }
 
     /// Whether the graph is a directed acyclic graph (Definition 55.11).
-    pub open spec fn spec_is_dag(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> bool {
+    pub open spec fn spec_is_dag(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> bool {
         !exists|path: Seq<int>| spec_is_path(graph, path) && path.len() >= 2 && path[0] == #[trigger] path.last()
     }
 
     /// Whether a sequence is a valid topological ordering (Definition 55.12).
-    pub open spec fn spec_is_topo_order(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, order: Seq<usize>) -> bool {
+    pub open spec fn spec_is_topo_order(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, order: Seq<usize>) -> bool {
         order.len() == graph@.len()
         && order.no_duplicates()
         && (forall|k: int| 0 <= k < order.len() ==> (#[trigger] order[k] as int) < graph@.len())
@@ -87,7 +87,7 @@ broadcast use {
     }
 
     /// Whether a set of vertices is strongly connected (Definition 55.14).
-    pub open spec fn spec_strongly_connected(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, vertices: Set<int>) -> bool {
+    pub open spec fn spec_strongly_connected(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, vertices: Set<int>) -> bool {
         forall|u: int, v: int| #![trigger vertices.contains(u), vertices.contains(v)]
             vertices.contains(u) && vertices.contains(v)
             ==> spec_reachable(graph, u, v)
@@ -99,7 +99,7 @@ broadcast use {
     }
 
     /// Whether components form a valid SCC decomposition in topological order (Definition 55.17).
-    pub open spec fn spec_is_scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, components: Seq<Set<int>>) -> bool {
+    pub open spec fn spec_is_scc(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, components: Seq<Set<int>>) -> bool {
         // Each component is strongly connected.
         (forall|c: int| 0 <= c < components.len()
             ==> #[trigger] spec_strongly_connected(graph, components[c]))
@@ -126,7 +126,7 @@ broadcast use {
     }
 
     /// Bridge: for ArraySeqStEphS<usize>, view index equals spec_index.
-    proof fn lemma_usize_view_eq_spec_index(a: &ArraySeqStEphS<N>)
+    proof fn lemma_usize_view_eq_spec_index(a: &ArraySeqStEphS<usize>)
         ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
     {
         assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
@@ -134,8 +134,8 @@ broadcast use {
 
     /// Bridge: graph adjacency list view at vertex equals spec_index view.
     proof fn lemma_graph_view_bridge(
-        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
-        neighbors: &ArraySeqStEphS<N>,
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
+        neighbors: &ArraySeqStEphS<usize>,
         vertex: int,
     )
         requires
@@ -227,7 +227,7 @@ broadcast use {
         /// Computes topological sort of a DAG (Algorithm 55.13).
         /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|) [Exercise 55.6]
         /// - Claude-Opus-4.6: Work O(|V| + |E|), Span O(|V| + |E|) — agrees with APAS.
-        fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (order: AVLTreeSeqStEphS<N>)
+        fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (order: AVLTreeSeqStEphS<usize>)
             requires
                 spec_toposortsteph_wf(graph),
                 graph@.len() < usize::MAX,
@@ -242,10 +242,10 @@ broadcast use {
     /// Recursive DFS that appends vertices in finish order.
     /// Also used by SCCStEph::compute_finish_order.
     pub fn dfs_finish_order(
-        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         visited: &mut ArraySeqStEphS<bool>,
-        finish_order: &mut Vec<N>,
-        vertex: N,
+        finish_order: &mut Vec<usize>,
+        vertex: usize,
     )
         requires
             vertex < old(visited)@.len(),
@@ -353,11 +353,11 @@ broadcast use {
     /// Recursive DFS with cycle detection via rec_stack.
     /// Returns true if no cycle found, false if cycle detected.
     fn dfs_finish_order_cycle_detect(
-        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         visited: &mut ArraySeqStEphS<bool>,
         rec_stack: &mut ArraySeqStEphS<bool>,
-        finish_order: &mut Vec<N>,
-        vertex: N,
+        finish_order: &mut Vec<usize>,
+        vertex: usize,
     ) -> (cycle_free: bool)
         requires
             vertex < old(visited)@.len(),
@@ -476,7 +476,7 @@ broadcast use {
 
     /// Returns Some(sequence) if graph is acyclic, None if contains a cycle.
     #[verifier::external_body]
-    pub fn topological_sort_opt(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (topo_order: Option<AVLTreeSeqStEphS<N>>)
+    pub fn topological_sort_opt(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (topo_order: Option<AVLTreeSeqStEphS<usize>>)
         requires
             spec_toposortsteph_wf(graph),
             graph@.len() < usize::MAX,
@@ -488,7 +488,7 @@ broadcast use {
         let f_false = |_x: usize| -> (r: bool) ensures !r { false };
         let mut visited = ArraySeqStEphS::tabulate(&f_false, n);
         let mut rec_stack = ArraySeqStEphS::tabulate(&f_false, n);
-        let mut finish_order: Vec<N> = Vec::new();
+        let mut finish_order: Vec<usize> = Vec::new();
 
         proof {
             assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {
@@ -525,7 +525,7 @@ broadcast use {
         assert(finish_order@.len() <= n);
         assert(finish_order@.len() < usize::MAX);
         let result_len = finish_order.len();
-        let mut reversed: Vec<N> = Vec::new();
+        let mut reversed: Vec<usize> = Vec::new();
         let mut k: usize = result_len;
         while k > 0
             invariant
@@ -546,12 +546,12 @@ broadcast use {
     impl TopoSortStEphTrait for TopoSortStEph {
         /// Returns sequence of vertices in topological order.
         #[verifier::external_body]
-        fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (order: AVLTreeSeqStEphS<N>)
+        fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (order: AVLTreeSeqStEphS<usize>)
         {
             let n = graph.length();
             let f_false = |_x: usize| -> (r: bool) ensures !r { false };
             let mut visited = ArraySeqStEphS::tabulate(&f_false, n);
-            let mut finish_order: Vec<N> = Vec::new();
+            let mut finish_order: Vec<usize> = Vec::new();
 
             proof {
                 assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {
@@ -600,7 +600,7 @@ broadcast use {
             assert(finish_order@.len() == n);
             assert(finish_order@.len() < usize::MAX);
             let result_len = finish_order.len();
-            let mut reversed: Vec<N> = Vec::new();
+            let mut reversed: Vec<usize> = Vec::new();
             let mut k: usize = result_len;
             while k > 0
                 invariant

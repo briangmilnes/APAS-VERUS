@@ -30,7 +30,7 @@ broadcast use {
     // 4. type definitions
 
     pub struct AdjSeqGraphMtEph {
-        pub adj: ArraySeqMtEphS<ArraySeqMtEphS<N>>,
+        pub adj: ArraySeqMtEphS<ArraySeqMtEphS<usize>>,
     }
 
     // 5. view impls
@@ -81,23 +81,23 @@ broadcast use {
         spec fn spec_num_vertices(&self) -> nat;
         spec fn spec_degree(&self, u: int) -> nat
             recommends 0 <= u < self.spec_num_vertices();
-        spec fn spec_neighbor(&self, u: int, j: int) -> N
+        spec fn spec_neighbor(&self, u: int, j: int) -> usize
             recommends 0 <= u < self.spec_num_vertices(), 0 <= j < self.spec_degree(u);
 
         /// Work Theta(n), Span Theta(1)
-        fn new(n: N) -> (empty: Self)
+        fn new(n: usize) -> (empty: Self)
             ensures
                 empty.spec_adjseqgraphmteph_wf(),
                 empty.spec_num_vertices() == n,
                 forall|i: int| 0 <= i < n ==> #[trigger] empty.spec_degree(i) == 0;
 
         /// Work Theta(1), Span Theta(1)
-        fn num_vertices(&self) -> (n: N)
+        fn num_vertices(&self) -> (n: usize)
             requires self.spec_adjseqgraphmteph_wf()
             ensures n as nat == self.spec_num_vertices();
 
         /// Work Theta(n + m), Span Theta(lg n)
-        fn num_edges(&self) -> (m: N)
+        fn num_edges(&self) -> (m: usize)
             requires
                 self.spec_adjseqgraphmteph_wf(),
                 spec_sum_of(
@@ -111,14 +111,14 @@ broadcast use {
                 );
 
         /// Work Theta(deg(u)), Span Theta(deg(u))
-        fn has_edge(&self, u: N, v: N) -> (found: bool)
+        fn has_edge(&self, u: usize, v: usize) -> (found: bool)
             requires self.spec_adjseqgraphmteph_wf(), u < self.spec_num_vertices()
             ensures found == exists|j: int|
                 0 <= j < self.spec_degree(u as int)
                 && #[trigger] self.spec_neighbor(u as int, j) == v;
 
         /// Work Theta(1), Span Theta(1)
-        fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqMtEphS<N>)
+        fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqMtEphS<usize>)
             requires self.spec_adjseqgraphmteph_wf(), u < self.spec_num_vertices()
             ensures
                 neighbors.spec_len() == self.spec_degree(u as int),
@@ -126,12 +126,12 @@ broadcast use {
                     ==> #[trigger] neighbors.spec_index(j) == self.spec_neighbor(u as int, j);
 
         /// Work Theta(1), Span Theta(1)
-        fn out_degree(&self, u: N) -> (d: N)
+        fn out_degree(&self, u: usize) -> (d: usize)
             requires self.spec_adjseqgraphmteph_wf(), u < self.spec_num_vertices()
             ensures d as nat == self.spec_degree(u as int);
 
         /// Work Theta(deg(u)), Span Theta(deg(u))
-        fn set_edge(&mut self, u: N, v: N, exists: bool)
+        fn set_edge(&mut self, u: usize, v: usize, exists: bool)
             requires
                 old(self).spec_adjseqgraphmteph_wf(),
                 u < old(self).spec_num_vertices(),
@@ -172,13 +172,13 @@ broadcast use {
             self.adj.spec_index(u).spec_len()
         }
 
-        open spec fn spec_neighbor(&self, u: int, j: int) -> N {
+        open spec fn spec_neighbor(&self, u: int, j: int) -> usize {
             self.adj.spec_index(u).spec_index(j)
         }
 
-        fn new(n: N) -> (empty: Self) {
+        fn new(n: usize) -> (empty: Self) {
             let adj = ArraySeqMtEphS::tabulate(
-                &|_i: usize| -> (r: ArraySeqMtEphS<N>)
+                &|_i: usize| -> (r: ArraySeqMtEphS<usize>)
                     ensures r.spec_len() == 0
                 {
                     ArraySeqMtEphS::empty()
@@ -188,11 +188,11 @@ broadcast use {
             AdjSeqGraphMtEph { adj }
         }
 
-        fn num_vertices(&self) -> (n: N) {
+        fn num_vertices(&self) -> (n: usize) {
             self.adj.length()
         }
 
-        fn num_edges(&self) -> (m: N) {
+        fn num_edges(&self) -> (m: usize) {
             let n = self.adj.length();
             let mut count: usize = 0;
             let mut i: usize = 0;
@@ -217,7 +217,7 @@ broadcast use {
             count
         }
 
-        fn has_edge(&self, u: N, v: N) -> (found: bool) {
+        fn has_edge(&self, u: usize, v: usize) -> (found: bool) {
             let neighbors = self.adj.nth(u);
             let len = neighbors.length();
             let mut i: usize = 0;
@@ -242,11 +242,11 @@ broadcast use {
             false
         }
 
-        fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqMtEphS<N>) {
+        fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqMtEphS<usize>) {
             let src = self.adj.nth(u);
             let len = src.length();
             ArraySeqMtEphS::tabulate(
-                &|i: usize| -> (r: N)
+                &|i: usize| -> (r: usize)
                     requires i < len
                     ensures r == src.spec_index(i as int)
                 {
@@ -256,11 +256,11 @@ broadcast use {
             )
         }
 
-        fn out_degree(&self, u: N) -> (d: N) {
+        fn out_degree(&self, u: usize) -> (d: usize) {
             self.adj.nth(u).length()
         }
 
-        fn set_edge(&mut self, u: N, v: N, exists: bool) {
+        fn set_edge(&mut self, u: usize, v: usize, exists: bool) {
             let ghost old_degree = self.spec_degree(u as int);
             let ghost old_neighbors_view = Seq::new(old_degree, |j: int| self.spec_neighbor(u as int, j));
             let ghost adj_len = self.adj.spec_len();
@@ -290,7 +290,7 @@ broadcast use {
                 }
 
                 if !found {
-                    let mut new_vec = Vec::<N>::new();
+                    let mut new_vec = Vec::<usize>::new();
                     let mut j: usize = 0;
                     while j < old_len
                         invariant
@@ -326,7 +326,7 @@ broadcast use {
                 }
             } else {
                 let old_len = self.adj.nth(u).length();
-                let mut new_vec = Vec::<N>::new();
+                let mut new_vec = Vec::<usize>::new();
                 let mut j: usize = 0;
                 while j < old_len
                     invariant

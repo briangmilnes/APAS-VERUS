@@ -40,7 +40,7 @@ pub mod SCCStPer {
     // 6. spec fns
 
     /// Bridge: for ArraySeqStPerS<usize>, view index equals spec_index.
-    proof fn lemma_usize_per_view_eq_spec_index(a: &ArraySeqStPerS<N>)
+    proof fn lemma_usize_per_view_eq_spec_index(a: &ArraySeqStPerS<usize>)
         ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
     {
         assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
@@ -48,8 +48,8 @@ pub mod SCCStPer {
 
     /// Bridge: persistent graph adjacency list view at vertex.
     proof fn lemma_graph_per_view_bridge(
-        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
-        neighbors: &ArraySeqStPerS<N>,
+        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
+        neighbors: &ArraySeqStPerS<usize>,
         vertex: int,
     )
         requires
@@ -65,7 +65,7 @@ pub mod SCCStPer {
     pub trait SCCStPerTrait {
         /// Finds strongly connected components in a directed graph (Algorithm 55.18)
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (components: AVLTreeSeqStPerS<AVLTreeSetStPer<N>>)
+        fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (components: AVLTreeSeqStPerS<AVLTreeSetStPer<usize>>)
             requires
                 spec_toposortstper_wf(graph),
                 graph@.len() < usize::MAX,
@@ -78,10 +78,10 @@ pub mod SCCStPer {
 
     /// Recursive DFS that appends vertices in finish order.
     fn dfs_finish_order(
-        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
+        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
         visited: &mut Vec<bool>,
-        finish_order: &mut Vec<N>,
-        vertex: N,
+        finish_order: &mut Vec<usize>,
+        vertex: usize,
     )
         requires
             vertex < old(visited)@.len(),
@@ -170,7 +170,7 @@ pub mod SCCStPer {
     }
 
     /// Computes the finish order for SCC (decreasing finish times).
-    fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (result: AVLTreeSeqStPerS<N>)
+    fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (result: AVLTreeSeqStPerS<usize>)
         requires
             spec_toposortstper_wf(graph),
             graph@.len() < usize::MAX,
@@ -182,7 +182,7 @@ pub mod SCCStPer {
     {
         let n = graph.length();
         let mut visited: Vec<bool> = Vec::new();
-        let mut finish_order: Vec<N> = Vec::new();
+        let mut finish_order: Vec<usize> = Vec::new();
         let mut j: usize = 0;
         while j < n
             invariant
@@ -234,7 +234,7 @@ pub mod SCCStPer {
             lemma_all_true_num_false_zero(visited@);
         }
         let result_len = finish_order.len();
-        let mut reversed: Vec<N> = Vec::new();
+        let mut reversed: Vec<usize> = Vec::new();
         let mut k: usize = result_len;
         while k > 0
             invariant
@@ -258,14 +258,14 @@ pub mod SCCStPer {
     }
 
     /// Transposes a directed graph (reverses all edges).
-    fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (transposed: ArraySeqStPerS<ArraySeqStPerS<N>>)
+    fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (transposed: ArraySeqStPerS<ArraySeqStPerS<usize>>)
         requires spec_toposortstper_wf(graph),
         ensures
             transposed@.len() == graph@.len(),
             spec_toposortstper_wf(&transposed),
     {
         let n = graph.length();
-        let mut adj_vecs: Vec<Vec<N>> = Vec::new();
+        let mut adj_vecs: Vec<Vec<usize>> = Vec::new();
         let mut k: usize = 0;
         while k < n
             invariant
@@ -336,7 +336,7 @@ pub mod SCCStPer {
             u = u + 1;
         }
 
-        let mut result_vecs: Vec<ArraySeqStPerS<N>> = Vec::new();
+        let mut result_vecs: Vec<ArraySeqStPerS<usize>> = Vec::new();
         let mut m: usize = 0;
         while m < n
             invariant
@@ -384,7 +384,7 @@ pub mod SCCStPer {
 
     /// Runtime check that all neighbor indices are valid vertex indices.
     // veracity: no_requires
-    fn check_wf_adj_list_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (valid: bool)
+    fn check_wf_adj_list_per(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (valid: bool)
         ensures valid ==> spec_toposortstper_wf(graph),
     {
         let n = graph.length();
@@ -440,11 +440,11 @@ pub mod SCCStPer {
     /// DFS reachability using Vec<bool> for termination and persistent set
     /// for component accumulation (same pattern as DFSStPer::dfs_recursive).
     fn dfs_reach(
-        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
+        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
         visited_bool: &mut Vec<bool>,
-        component: AVLTreeSetStPer<N>,
-        vertex: N,
-    ) -> (out: AVLTreeSetStPer<N>)
+        component: AVLTreeSetStPer<usize>,
+        vertex: usize,
+    ) -> (out: AVLTreeSetStPer<usize>)
         requires
             vertex < old(visited_bool)@.len(),
             old(visited_bool)@.len() == graph@.len(),
@@ -541,7 +541,7 @@ pub mod SCCStPer {
 
     impl SCCStPerTrait for SCCStPer {
         /// Finds strongly connected components in a directed graph.
-        fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<N>>
+        fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<usize>>
         {
             let finish_order = compute_finish_order(graph);
             let transposed = transpose_graph(graph);
@@ -565,7 +565,7 @@ pub mod SCCStPer {
             }
 
             let finish_len = finish_order.length();
-            let mut components_vec: Vec<AVLTreeSetStPer<N>> = Vec::new();
+            let mut components_vec: Vec<AVLTreeSetStPer<usize>> = Vec::new();
 
             if finish_len > 0 {
                 // Handle first vertex to guarantee at least one component.

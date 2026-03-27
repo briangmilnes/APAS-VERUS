@@ -52,28 +52,28 @@ pub mod DivConReduceMtPer {
     //		4. spec fns
 
     /// Wrapping addition for usize — matches vstd wrapping_add spec with in-range casts.
-    pub open spec fn spec_wrapping_add(x: N, y: N) -> N {
+    pub open spec fn spec_wrapping_add(x: usize, y: usize) -> usize {
         if x + y > usize::MAX as int {
-            ((x + y) - (usize::MAX as int + 1)) as N
+            ((x + y) - (usize::MAX as int + 1)) as usize
         } else {
-            (x + y) as N
+            (x + y) as usize
         }
     }
 
     /// Wrapping multiplication for usize — matches vstd wrapping_mul spec with in-range casts.
-    pub open spec fn spec_wrapping_mul(x: N, y: N) -> N {
-        ((x as nat * y as nat) % (usize::MAX as nat + 1)) as N
+    pub open spec fn spec_wrapping_mul(x: usize, y: usize) -> usize {
+        ((x as nat * y as nat) % (usize::MAX as nat + 1)) as usize
     }
 
-    pub open spec fn spec_sum_fn() -> spec_fn(N, N) -> N { |x: N, y: N| spec_wrapping_add(x, y) }
+    pub open spec fn spec_sum_fn() -> spec_fn(usize, usize) -> usize { |x: usize, y: usize| spec_wrapping_add(x, y) }
 
-    pub open spec fn spec_product_fn() -> spec_fn(N, N) -> N { |x: N, y: N| spec_wrapping_mul(x, y) }
+    pub open spec fn spec_product_fn() -> spec_fn(usize, usize) -> usize { |x: usize, y: usize| spec_wrapping_mul(x, y) }
 
     pub open spec fn spec_or_fn() -> spec_fn(bool, bool) -> bool { |x: bool, y: bool| x || y }
 
     pub open spec fn spec_and_fn() -> spec_fn(bool, bool) -> bool { |x: bool, y: bool| x && y }
 
-    pub open spec fn spec_max_fn() -> spec_fn(N, N) -> N { |x: N, y: N| if x >= y { x } else { y } }
+    pub open spec fn spec_max_fn() -> spec_fn(usize, usize) -> usize { |x: usize, y: usize| if x >= y { x } else { y } }
 
 
     //		7. proof fns/broadcast groups
@@ -81,7 +81,7 @@ pub mod DivConReduceMtPer {
     //		9. impls
 
     /// Helper: establish fold_left one-step decomposition via lemma_fold_left_split.
-    proof fn lemma_fold_left_step(s: Seq<N>, acc: N)
+    proof fn lemma_fold_left_step(s: Seq<usize>, acc: usize)
         requires s.len() > 0,
         ensures s.fold_left(acc, spec_max_fn())
             == s.subrange(1, s.len() as int).fold_left(
@@ -94,7 +94,7 @@ pub mod DivConReduceMtPer {
     }
 
     /// fold_left(s, acc, max) >= acc and every s[i] <= fold_left result.
-    proof fn lemma_max_fold_left_bound(s: Seq<N>, acc: N)
+    proof fn lemma_max_fold_left_bound(s: Seq<usize>, acc: usize)
         ensures
             s.fold_left(acc, spec_max_fn()) >= acc,
             forall|i: int| #![trigger s[i]] 0 <= i < s.len()
@@ -119,7 +119,7 @@ pub mod DivConReduceMtPer {
     }
 
     /// fold_left(s, acc, max) is either acc itself or some element of s.
-    proof fn lemma_max_fold_left_achievable(s: Seq<N>, acc: N)
+    proof fn lemma_max_fold_left_achievable(s: Seq<usize>, acc: usize)
         ensures
             s.fold_left(acc, spec_max_fn()) == acc
             || exists|i: int| #![trigger s[i]] 0 <= i < s.len()
@@ -156,7 +156,7 @@ pub mod DivConReduceMtPer {
         /// Pattern: reduce max identity (parallel)
         /// - APAS: Work Θ(n), Span Θ(lg n) — Example 26.2, D&C reduce with constant-time op.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
-        fn max_element_parallel(a: &ArraySeqMtPerS<N>) -> (max: Option<N>)
+        fn max_element_parallel(a: &ArraySeqMtPerS<usize>) -> (max: Option<usize>)
             requires a.spec_len() <= usize::MAX,
             ensures
                 a.spec_len() == 0 ==> max is None,
@@ -172,7 +172,7 @@ pub mod DivConReduceMtPer {
         /// Pattern: reduce (+) 0 identity (parallel)
         /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
-        fn sum_parallel(a: &ArraySeqMtPerS<N>) -> (total: N)
+        fn sum_parallel(a: &ArraySeqMtPerS<usize>) -> (total: usize)
             requires
                 a.spec_len() <= usize::MAX,
                 spec_monoid(spec_sum_fn(), 0),
@@ -184,7 +184,7 @@ pub mod DivConReduceMtPer {
         /// Pattern: reduce (*) 1 identity (parallel)
         /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
-        fn product_parallel(a: &ArraySeqMtPerS<N>) -> (total: N)
+        fn product_parallel(a: &ArraySeqMtPerS<usize>) -> (total: usize)
             requires
                 a.spec_len() <= usize::MAX,
                 spec_monoid(spec_product_fn(), 1),
@@ -220,23 +220,23 @@ pub mod DivConReduceMtPer {
 
     //		9. impls
 
-    impl DivConReduceMtTrait for ArraySeqMtPerS<N> {
-        fn max_element_parallel(a: &ArraySeqMtPerS<N>) -> (max: Option<N>) {
+    impl DivConReduceMtTrait for ArraySeqMtPerS<usize> {
+        fn max_element_parallel(a: &ArraySeqMtPerS<usize>) -> (max: Option<usize>) {
             let len = a.length();
             if len == 0 {
                 return None;
             }
 
             proof {
-                assert forall|x: N| #[trigger] spec_max_fn()(0 as N, x) == x by {}
-                assert forall|x: N| #[trigger] spec_max_fn()(x, 0 as N) == x by {}
-                assert forall|x: N, y: N, z: N|
+                assert forall|x: usize| #[trigger] spec_max_fn()(0 as usize, x) == x by {}
+                assert forall|x: usize| #[trigger] spec_max_fn()(x, 0 as usize) == x by {}
+                assert forall|x: usize, y: usize, z: usize|
                     #[trigger] spec_max_fn()(spec_max_fn()(x, y), z)
                     == spec_max_fn()(x, spec_max_fn()(y, z)) by {}
             }
 
             let max_val = ArraySeqMtPerS::reduce(a,
-                &(|x: &N, y: &N| -> (ret: N)
+                &(|x: &usize, y: &usize| -> (ret: usize)
                     ensures ret == spec_max_fn()(*x, *y)
                 { if *x >= *y { *x } else { *y } }),
                 Ghost(spec_max_fn()), 0);
@@ -245,7 +245,7 @@ pub mod DivConReduceMtPer {
                 let s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
                 lemma_max_fold_left_bound(s, 0);
                 lemma_max_fold_left_achievable(s, 0);
-                assert(max_val == s.fold_left(0 as N, spec_max_fn()));
+                assert(max_val == s.fold_left(0 as usize, spec_max_fn()));
                 assert forall|i: int| #![trigger a.spec_index(i)]
                     0 <= i < a.spec_len() implies a.spec_index(i) <= max_val
                 by {
@@ -256,17 +256,17 @@ pub mod DivConReduceMtPer {
             Some(max_val)
         }
 
-        fn sum_parallel(a: &ArraySeqMtPerS<N>) -> (total: N) {
+        fn sum_parallel(a: &ArraySeqMtPerS<usize>) -> (total: usize) {
             ArraySeqMtPerS::reduce(a,
-                &(|x: &N, y: &N| -> (ret: N)
+                &(|x: &usize, y: &usize| -> (ret: usize)
                     ensures ret == spec_wrapping_add(*x, *y)
                 { (*x).wrapping_add(*y) }),
                 Ghost(spec_sum_fn()), 0)
         }
 
-        fn product_parallel(a: &ArraySeqMtPerS<N>) -> (total: N) {
+        fn product_parallel(a: &ArraySeqMtPerS<usize>) -> (total: usize) {
             ArraySeqMtPerS::reduce(a,
-                &(|x: &N, y: &N| -> (ret: N)
+                &(|x: &usize, y: &usize| -> (ret: usize)
                     ensures ret == spec_wrapping_mul(*x, *y)
                 { (*x).wrapping_mul(*y) }),
                 Ghost(spec_product_fn()), 1)

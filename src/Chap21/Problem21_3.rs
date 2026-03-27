@@ -34,7 +34,7 @@ pub mod Problem21_3 {
     /// Generate points (x, y, z) with 0 ≤ x < n, 1 ≤ y ≤ n, 2 ≤ z ≤ n+1.
     /// - APAS: Work Θ(n³), Span Θ(n³)
     /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³)
-    pub fn points3d_loops(n: N) -> (points: ArraySeqStPerS<Pair<N, Pair<N, N>>>)
+    pub fn points3d_loops(n: usize) -> (points: ArraySeqStPerS<Pair<usize, Pair<usize, usize>>>)
         requires
             n + 2 <= usize::MAX,
             n as int * n as int <= usize::MAX as int,
@@ -52,7 +52,7 @@ pub mod Problem21_3 {
         }
         let nn: usize = n * n;
         let nnn: usize = nn * n;
-        let mut v = Vec::<Pair<N, Pair<N, N>>>::with_capacity(nnn);
+        let mut v = Vec::<Pair<usize, Pair<usize, usize>>>::with_capacity(nnn);
         let mut x: usize = 0;
         while x < n
             invariant

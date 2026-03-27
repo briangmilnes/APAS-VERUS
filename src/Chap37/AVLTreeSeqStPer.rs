@@ -55,8 +55,8 @@ pub mod AVLTreeSeqStPer {
     #[verifier::reject_recursive_types(T)]
     pub struct Node<T: StT> {
         pub value: T,
-        pub height: N,
-        pub size: N,
+        pub height: usize,
+        pub size: usize,
         pub left: Link<T>,
         pub right: Link<T>,
     }
@@ -239,11 +239,11 @@ pub mod AVLTreeSeqStPer {
         fn singleton(item: T) -> (tree: Self)
             ensures tree.spec_seq() =~= seq![item@], tree.spec_avltreeseqstper_wf();
 
-        fn length(&self) -> (len: N)
+        fn length(&self) -> (len: usize)
             requires self.spec_avltreeseqstper_wf(),
             ensures len as nat == self.spec_seq().len();
 
-        fn nth(&self, index: N) -> (elem: &T)
+        fn nth(&self, index: usize) -> (elem: &T)
             requires self.spec_avltreeseqstper_wf(), (index as int) < self.spec_seq().len(),
             ensures elem@ == self.spec_seq()[index as int];
 
@@ -255,7 +255,7 @@ pub mod AVLTreeSeqStPer {
             requires self.spec_avltreeseqstper_wf(),
             ensures single == (self.spec_seq().len() == 1);
 
-        fn set(&self, index: N, item: T) -> (outcome: Result<Self, &'static str>)
+        fn set(&self, index: usize, item: T) -> (outcome: Result<Self, &'static str>)
             requires
                 self.spec_avltreeseqstper_wf(),
                 (index as int) < self.spec_seq().len(),
@@ -265,7 +265,7 @@ pub mod AVLTreeSeqStPer {
                 outcome.unwrap().spec_avltreeseqstper_wf(),
                 outcome.unwrap().spec_seq() =~= self.spec_seq().update(index as int, item@);
 
-        fn subseq_copy(&self, start: N, length: N) -> (sub: Self)
+        fn subseq_copy(&self, start: usize, length: usize) -> (sub: Self)
             requires self.spec_avltreeseqstper_wf(),
             ensures sub.spec_avltreeseqstper_wf();
 
@@ -294,7 +294,7 @@ pub mod AVLTreeSeqStPer {
 
     // 9. impls
 
-    fn height_fn<T: StT>(n: &Link<T>) -> (h: N)
+    fn height_fn<T: StT>(n: &Link<T>) -> (h: usize)
         requires spec_cached_height(n) <= usize::MAX as nat,
         ensures h as nat == spec_cached_height(n),
     {
@@ -304,7 +304,7 @@ pub mod AVLTreeSeqStPer {
         }
     }
 
-    fn size_fn<T: StT>(n: &Link<T>) -> (sz: N)
+    fn size_fn<T: StT>(n: &Link<T>) -> (sz: usize)
         requires spec_cached_size(n) <= usize::MAX as nat,
         ensures sz as nat == spec_cached_size(n),
     {
@@ -316,8 +316,8 @@ pub mod AVLTreeSeqStPer {
 
     fn mk<T: StT>(value: T, left: Link<T>, right: Link<T>) -> (node: Arc<Node<T>>)
         requires
-            1 + spec_cached_size(&left) + spec_cached_size(&right) < N::MAX as nat,
-            1 + spec_nat_max(spec_cached_height(&left), spec_cached_height(&right)) <= N::MAX as nat,
+            1 + spec_cached_size(&left) + spec_cached_size(&right) < usize::MAX as nat,
+            1 + spec_nat_max(spec_cached_height(&left), spec_cached_height(&right)) <= usize::MAX as nat,
         ensures
             spec_inorder(Some(node)) =~= spec_inorder(left) + seq![value@] + spec_inorder(right),
             node.size as nat == 1 + spec_cached_size(&left) + spec_cached_size(&right),
@@ -356,11 +356,11 @@ pub mod AVLTreeSeqStPer {
             // For first mk (new_y = mk(y_val, B, C)):
             //   1 + size(B) + size(C) <= 2 + size(A) + size(B) + size(C) - 1 < usize::MAX.
             lemma_size_lt_usize_max::<T>(&y.left);  // x.size < usize::MAX
-            assert(1 + spec_cached_size(&x.right) + spec_cached_size(&y.right) < N::MAX as nat);
+            assert(1 + spec_cached_size(&x.right) + spec_cached_size(&y.right) < usize::MAX as nat);
             // Height: h(B) <= x.height-1, h(C) <= y.height-1.
             // max(h(B), h(C)) < y.height. So 1 + max(h(B), h(C)) <= y.height <= N::MAX.
             assert(1 + spec_nat_max(
-                spec_cached_height(&x.right), spec_cached_height(&y.right)) <= N::MAX as nat);
+                spec_cached_height(&x.right), spec_cached_height(&y.right)) <= usize::MAX as nat);
         }
         let t2 = x.right.clone();
         let y_val = y.value.clone_plus();
@@ -368,11 +368,11 @@ pub mod AVLTreeSeqStPer {
         proof {
             // new_y.size = 1 + size(B) + size(C) < usize::MAX (from above).
             // 1 + size(A) + new_y.size = 2 + size(A) + size(B) + size(C) < usize::MAX.
-            assert(1 + spec_cached_size(&x.left) + spec_cached_size(&Some(new_y)) < N::MAX as nat);
+            assert(1 + spec_cached_size(&x.left) + spec_cached_size(&Some(new_y)) < usize::MAX as nat);
             lemma_height_le_size::<T>(&x.left);
             lemma_height_le_size::<T>(&Some(new_y));
             assert(1 + spec_nat_max(
-                spec_cached_height(&x.left), spec_cached_height(&Some(new_y))) <= N::MAX as nat);
+                spec_cached_height(&x.left), spec_cached_height(&Some(new_y))) <= usize::MAX as nat);
         }
         let x_val = x.value.clone_plus();
         let result = mk(x_val, x.left.clone(), Some(new_y));
@@ -400,9 +400,9 @@ pub mod AVLTreeSeqStPer {
             // For first mk (new_x = mk(x_val, A, B)):
             //   1 + size(A) + size(B) <= 2 + size(A) + size(B) + size(C) - 1 < usize::MAX.
             lemma_size_lt_usize_max::<T>(&x.right);  // y.size < usize::MAX
-            assert(1 + spec_cached_size(&x.left) + spec_cached_size(&y.left) < N::MAX as nat);
+            assert(1 + spec_cached_size(&x.left) + spec_cached_size(&y.left) < usize::MAX as nat);
             assert(1 + spec_nat_max(
-                spec_cached_height(&x.left), spec_cached_height(&y.left)) <= N::MAX as nat);
+                spec_cached_height(&x.left), spec_cached_height(&y.left)) <= usize::MAX as nat);
         }
         let t2 = y.left.clone();
         let x_val = x.value.clone_plus();
@@ -410,11 +410,11 @@ pub mod AVLTreeSeqStPer {
         proof {
             // new_x.size = 1 + size(A) + size(B) < usize::MAX (from above).
             // 1 + new_x.size + size(C) = 2 + size(A) + size(B) + size(C) < usize::MAX.
-            assert(1 + spec_cached_size(&Some(new_x)) + spec_cached_size(&y.right) < N::MAX as nat);
+            assert(1 + spec_cached_size(&Some(new_x)) + spec_cached_size(&y.right) < usize::MAX as nat);
             lemma_height_le_size::<T>(&Some(new_x));
             lemma_height_le_size::<T>(&y.right);
             assert(1 + spec_nat_max(
-                spec_cached_height(&Some(new_x)), spec_cached_height(&y.right)) <= N::MAX as nat);
+                spec_cached_height(&Some(new_x)), spec_cached_height(&y.right)) <= usize::MAX as nat);
         }
         let y_val = y.value.clone_plus();
         let result = mk(y_val, Some(new_x), y.right.clone());
@@ -451,7 +451,7 @@ pub mod AVLTreeSeqStPer {
                     assert(spec_cached_size(&Some(rotated)) == left_size);
                     // n.size < usize::MAX (wf), n.size = 1 + left_size + right_size.
                     // 1 + left_size + right_size = 1 + rotated_size + right_size < usize::MAX.
-                    assert(1 + left_size + spec_cached_size(&n.right) < N::MAX as nat);
+                    assert(1 + left_size + spec_cached_size(&n.right) < usize::MAX as nat);
                     lemma_height_le_size::<T>(&Some(rotated));
                     lemma_height_le_size::<T>(&n.right);
                 }
@@ -479,7 +479,7 @@ pub mod AVLTreeSeqStPer {
                 proof {
                     assert(spec_cached_size(&Some(rotated)) == right_size);
                     // n.size < usize::MAX (wf), n.size = 1 + left_size + right_size.
-                    assert(1 + spec_cached_size(&n.left) + right_size < N::MAX as nat);
+                    assert(1 + spec_cached_size(&n.left) + right_size < usize::MAX as nat);
                     lemma_height_le_size::<T>(&n.left);
                     lemma_height_le_size::<T>(&Some(rotated));
                 }
@@ -493,7 +493,7 @@ pub mod AVLTreeSeqStPer {
         n
     }
 
-    fn nth_ref<'a, T: StT>(cur: &'a Link<T>, index: N) -> (elem: &'a T)
+    fn nth_ref<'a, T: StT>(cur: &'a Link<T>, index: usize) -> (elem: &'a T)
         requires spec_avltreeseqstper_wf(*cur), (index as int) < spec_inorder(*cur).len(),
         ensures elem@ == spec_inorder(*cur)[index as int],
         decreases *cur,
@@ -511,7 +511,7 @@ pub mod AVLTreeSeqStPer {
         }
     }
 
-    fn set_rec<T: StT>(cur: &Link<T>, index: N, value: T) -> (outcome: Result<Link<T>, &'static str>)
+    fn set_rec<T: StT>(cur: &Link<T>, index: usize, value: T) -> (outcome: Result<Link<T>, &'static str>)
         requires
             spec_avltreeseqstper_wf(*cur),
             (index as int) < spec_inorder(*cur).len(),
@@ -695,12 +695,12 @@ pub mod AVLTreeSeqStPer {
             }
         }
 
-        fn length(&self) -> (len: N) {
+        fn length(&self) -> (len: usize) {
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             size_fn(&self.root)
         }
 
-        fn nth(&self, index: N) -> (elem: &T) {
+        fn nth(&self, index: usize) -> (elem: &T) {
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             nth_ref(&self.root, index)
         }
@@ -713,14 +713,14 @@ pub mod AVLTreeSeqStPer {
             self.length() == 1
         }
 
-        fn set(&self, index: N, item: T) -> (outcome: Result<Self, &'static str>) {
+        fn set(&self, index: usize, item: T) -> (outcome: Result<Self, &'static str>) {
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             Ok(AVLTreeSeqStPerS {
                 root: set_rec(&self.root, index, item)?,
             })
         }
 
-        fn subseq_copy(&self, start: N, length: N) -> (sub: Self) {
+        fn subseq_copy(&self, start: usize, length: usize) -> (sub: Self) {
             let n = self.length();
             proof {
                 lemma_size_eq_inorder_len::<T>(&self.root);

@@ -39,7 +39,7 @@ pub mod ConnectivityMtEph {
 
         /// Count connected components using parallel star contraction.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
-        fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N
+        fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> usize
             requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();
 
         /// Find connected components using parallel star contraction.
@@ -52,7 +52,7 @@ pub mod ConnectivityMtEph {
 
         /// Count components using higher-order function approach.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
-        fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> N
+        fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> usize
             requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();
 
         /// Find components using higher-order function approach.
@@ -80,7 +80,7 @@ pub mod ConnectivityMtEph {
     ///
     /// Returns:
     /// - The number of connected components
-    pub fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> (count: N)
+    pub fn count_components_mt<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> (count: usize)
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
@@ -152,18 +152,18 @@ pub mod ConnectivityMtEph {
     ///
     /// - APAS: Work O((n+m) lg n), Span O(lg^2 n) — same as Algorithm 63.2 (parallel)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O(m) — delegates to star_contract_mt (inherits merge bottleneck)
-    pub fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> (count: N)
+    pub fn count_components_hof<V: StT + MtT + Hash + Ord + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> (count: usize)
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
         ensures graph@.A.is_empty() ==> count as nat == graph@.V.len(),
     {
-        let base = |vertices: &SetStEph<V>| -> (n: N)
+        let base = |vertices: &SetStEph<V>| -> (n: usize)
             requires vertices.spec_setsteph_wf()
             ensures n as nat == vertices@.len()
         { vertices.size() };
 
-        let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, r: N| -> (result: N) { r };
+        let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, r: usize| -> (result: usize) { r };
 
         star_contract_mt(graph, seed, &base, &expand)
     }

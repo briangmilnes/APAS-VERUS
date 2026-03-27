@@ -41,18 +41,18 @@ pub mod ScanDCMtPer {
     //		4. spec fns
 
     /// Wrapping addition for usize — matches vstd wrapping_add spec with in-range casts.
-    pub open spec fn spec_wrapping_add(x: N, y: N) -> N {
+    pub open spec fn spec_wrapping_add(x: usize, y: usize) -> usize {
         if x + y > usize::MAX as int {
-            ((x + y) - (usize::MAX as int + 1)) as N
+            ((x + y) - (usize::MAX as int + 1)) as usize
         } else {
-            (x + y) as N
+            (x + y) as usize
         }
     }
 
-    pub open spec fn spec_sum_fn() -> spec_fn(N, N) -> N { |x: N, y: N| spec_wrapping_add(x, y) }
+    pub open spec fn spec_sum_fn() -> spec_fn(usize, usize) -> usize { |x: usize, y: usize| spec_wrapping_add(x, y) }
 
     /// Spec function: exclusive prefix scan result at position i is the fold of elements [0..i).
-    pub open spec fn spec_scan_at(s: Seq<N>, spec_f: spec_fn(N, N) -> N, id: N, i: int) -> N
+    pub open spec fn spec_scan_at(s: Seq<usize>, spec_f: spec_fn(usize, usize) -> usize, id: usize, i: int) -> usize
         recommends 0 <= i <= s.len(),
     {
         s.take(i).fold_left(id, spec_f)
@@ -60,8 +60,8 @@ pub mod ScanDCMtPer {
 
     /// Spec function: full exclusive scan postcondition.
     pub open spec fn spec_scan_post(
-        input: Seq<N>, spec_f: spec_fn(N, N) -> N, id: N,
-        prefixes: Seq<N>, total: N,
+        input: Seq<usize>, spec_f: spec_fn(usize, usize) -> usize, id: usize,
+        prefixes: Seq<usize>, total: usize,
     ) -> bool {
         &&& prefixes.len() == input.len()
         &&& forall|i: int| #![trigger prefixes[i]]
@@ -72,7 +72,7 @@ pub mod ScanDCMtPer {
     //		7. proof fns
 
     // Monoid fold_left lemma: fold_left(s, x, f) == f(x, fold_left(s, id, f)) for monoids.
-    proof fn lemma_fold_left_monoid(s: Seq<N>, x: N, f: spec_fn(N, N) -> N, id: N)
+    proof fn lemma_fold_left_monoid(s: Seq<usize>, x: usize, f: spec_fn(usize, usize) -> usize, id: usize)
         requires spec_monoid(f, id),
         ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),
         decreases s.len(),
@@ -92,7 +92,7 @@ pub mod ScanDCMtPer {
         /// Returns (prefixes, total) where prefixes[i] = sum(a[0], ..., a[i-1]).
         /// - APAS: Work Θ(n lg n), Span Θ(lg n) — Algorithm 26.5 with parallel recursive calls.
         /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n) — parallel recursion via join(), sequential Θ(n) combine: S(n) = S(n/2) + Θ(n) = Θ(n).
-        fn prefix_sums_dc_parallel(a: &ArraySeqMtPerS<N>) -> (sums: (ArraySeqMtPerS<N>, N))
+        fn prefix_sums_dc_parallel(a: &ArraySeqMtPerS<usize>) -> (sums: (ArraySeqMtPerS<usize>, usize))
             requires a.spec_len() <= usize::MAX,
             ensures
                 spec_scan_post(
@@ -107,7 +107,7 @@ pub mod ScanDCMtPer {
     /// Parallel prefix sums inner recursion. Structural logic verified, recursion parallelized.
     /// - APAS: Work Θ(n lg n), Span Θ(lg n) — Algorithm 26.5, parallel recursive calls + O(n)/O(1) combine.
     /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n) — parallel recursion via join(), sequential Θ(n) combine: S(n) = S(n/2) + Θ(n) = Θ(n).
-    fn prefix_sums_dc_inner(a: &ArraySeqMtPerS<N>) -> (sums: (ArraySeqMtPerS<N>, N))
+    fn prefix_sums_dc_inner(a: &ArraySeqMtPerS<usize>) -> (sums: (ArraySeqMtPerS<usize>, usize))
         requires a.spec_len() <= usize::MAX,
         ensures
             spec_scan_post(
@@ -124,7 +124,7 @@ pub mod ScanDCMtPer {
         if n == 0 {
             proof {
                 reveal(Seq::fold_left);
-                assert(input =~= Seq::<N>::empty());
+                assert(input =~= Seq::<usize>::empty());
             }
             return (ArraySeqMtPerS::empty(), 0);
         }
@@ -133,11 +133,11 @@ pub mod ScanDCMtPer {
             proof {
                 reveal(Seq::fold_left);
                 assert(input.len() == 1);
-                assert(input.drop_last() =~= Seq::<N>::empty());
+                assert(input.drop_last() =~= Seq::<usize>::empty());
                 assert(input.last() == a.spec_index(0));
-                assert(Seq::<N>::empty().fold_left(0 as N, spec_f) == 0 as N);
-                assert(input.fold_left(0 as N, spec_f) == spec_f(0 as N, a.spec_index(0)));
-                assert(input.take(0) =~= Seq::<N>::empty());
+                assert(Seq::<usize>::empty().fold_left(0 as usize, spec_f) == 0 as usize);
+                assert(input.fold_left(0 as usize, spec_f) == spec_f(0 as usize, a.spec_index(0)));
+                assert(input.take(0) =~= Seq::<usize>::empty());
             }
             return (ArraySeqMtPerS::singleton(0), total);
         }
@@ -145,7 +145,7 @@ pub mod ScanDCMtPer {
         let mid = n / 2;
 
         // Build left half.
-        let mut left_vec: Vec<N> = Vec::with_capacity(mid);
+        let mut left_vec: Vec<usize> = Vec::with_capacity(mid);
         let mut i: usize = 0;
         while i < mid
             invariant
@@ -161,7 +161,7 @@ pub mod ScanDCMtPer {
 
         // Build right half.
         let right_len = n - mid;
-        let mut right_vec: Vec<N> = Vec::with_capacity(right_len);
+        let mut right_vec: Vec<usize> = Vec::with_capacity(right_len);
         let mut i: usize = 0;
         while i < right_len
             invariant
@@ -186,11 +186,11 @@ pub mod ScanDCMtPer {
         }
 
         // Parallel recursive calls via help-first scheduler.
-        let f1 = move || -> (r: (ArraySeqMtPerS<N>, N))
+        let f1 = move || -> (r: (ArraySeqMtPerS<usize>, usize))
             ensures spec_scan_post(left_input, spec_sum_fn(), 0, Seq::new(r.0.spec_len(), |i: int| r.0.spec_index(i)), r.1)
         { prefix_sums_dc_inner(&left) };
 
-        let f2 = move || -> (r: (ArraySeqMtPerS<N>, N))
+        let f2 = move || -> (r: (ArraySeqMtPerS<usize>, usize))
             ensures spec_scan_post(right_input, spec_sum_fn(), 0, Seq::new(r.0.spec_len(), |i: int| r.0.spec_index(i)), r.1)
         { prefix_sums_dc_inner(&right) };
 
@@ -209,13 +209,13 @@ pub mod ScanDCMtPer {
         let ghost r_pv = r_pref_view;
         let lt = l_total;
 
-        let copy_left = move || -> (r: Vec<N>)
+        let copy_left = move || -> (r: Vec<usize>)
             ensures
                 r@.len() == l_pv.len(),
                 forall|j: int| #![trigger r@[j]] 0 <= j < r@.len() ==> r@[j] == l_pv[j],
         {
             let ll = l_prefixes.length();
-            let mut v: Vec<N> = Vec::with_capacity(ll);
+            let mut v: Vec<usize> = Vec::with_capacity(ll);
             let mut i: usize = 0;
             while i < ll
                 invariant
@@ -231,14 +231,14 @@ pub mod ScanDCMtPer {
             v
         };
 
-        let adjust_right = move || -> (r: Vec<N>)
+        let adjust_right = move || -> (r: Vec<usize>)
             ensures
                 r@.len() == r_pv.len(),
                 forall|j: int| #![trigger r@[j]] 0 <= j < r@.len()
                     ==> r@[j] == spec_wrapping_add(l_total, r_pv[j]),
         {
             let rl = r_prefixes.length();
-            let mut v: Vec<N> = Vec::with_capacity(rl);
+            let mut v: Vec<usize> = Vec::with_capacity(rl);
             let mut i: usize = 0;
             while i < rl
                 invariant
@@ -261,7 +261,7 @@ pub mod ScanDCMtPer {
         let (left_part, right_part) = join(copy_left, adjust_right);
 
         // Sequential concatenation of the two halves.
-        let mut result_vec: Vec<N> = left_part;
+        let mut result_vec: Vec<usize> = left_part;
         let mut i: usize = 0;
         while i < r_len
             invariant
@@ -298,13 +298,13 @@ pub mod ScanDCMtPer {
             assert(right_input =~= input.subrange(mid as int, n as int));
 
             // Prove total == input.fold_left(0, spec_f).
-            input.lemma_fold_left_split(0 as N, spec_f, mid as int);
-            lemma_fold_left_monoid(right_input, l_total, spec_f, 0 as N);
+            input.lemma_fold_left_split(0 as usize, spec_f, mid as int);
+            lemma_fold_left_monoid(right_input, l_total, spec_f, 0 as usize);
 
             // Prove each prefix position.
             assert forall|i: int| #![trigger result_view[i]]
                 0 <= i < n as int implies
-                result_view[i] == spec_scan_at(input, spec_f, 0 as N, i)
+                result_view[i] == spec_scan_at(input, spec_f, 0 as usize, i)
             by {
                 if i < mid as int {
                     assert(result_view[i] == l_pref_view[i]);
@@ -313,10 +313,10 @@ pub mod ScanDCMtPer {
                     let j = i - mid as int;
                     assert(i == l_len as int + j);
                     assert(result_view[l_len as int + j] == spec_wrapping_add(l_total, r_pref_view[j]));
-                    lemma_fold_left_monoid(right_input.take(j), l_total, spec_f, 0 as N);
+                    lemma_fold_left_monoid(right_input.take(j), l_total, spec_f, 0 as usize);
                     assert(input.take(i).subrange(0, mid as int) =~= left_input);
                     assert(input.take(i).subrange(mid as int, i as int) =~= right_input.take(j));
-                    input.take(i).lemma_fold_left_split(0 as N, spec_f, mid as int);
+                    input.take(i).lemma_fold_left_split(0 as usize, spec_f, mid as int);
                 }
             }
         }
@@ -324,8 +324,8 @@ pub mod ScanDCMtPer {
         (result_prefixes, total)
     }
 
-    impl ScanDCMtTrait for ArraySeqMtPerS<N> {
-        fn prefix_sums_dc_parallel(a: &ArraySeqMtPerS<N>) -> (sums: (ArraySeqMtPerS<N>, N)) {
+    impl ScanDCMtTrait for ArraySeqMtPerS<usize> {
+        fn prefix_sums_dc_parallel(a: &ArraySeqMtPerS<usize>) -> (sums: (ArraySeqMtPerS<usize>, usize)) {
             prefix_sums_dc_inner(a)
         }
     }

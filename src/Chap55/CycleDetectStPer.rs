@@ -33,7 +33,7 @@ broadcast use vstd::seq::group_seq_axioms;
     // 6. spec fns
 
     /// Well-formed adjacency list for persistent graph representation.
-    pub open spec fn spec_cycledetectstper_wf(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> bool {
+    pub open spec fn spec_cycledetectstper_wf(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> bool {
         forall|v: int, i: int|
             0 <= v < graph@.len() && 0 <= i < graph@[v].len()
             ==> (#[trigger] graph@[v][i]) < graph@.len()
@@ -41,7 +41,7 @@ broadcast use vstd::seq::group_seq_axioms;
 
     /// An acyclic ordering of finished vertices (persistent variant).
     pub open spec fn spec_acyclic_ord_per(
-        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
+        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
         ord: Map<int, nat>,
         next_time: nat,
     ) -> bool {
@@ -55,7 +55,7 @@ broadcast use vstd::seq::group_seq_axioms;
 
     /// Whether an ordering map is a valid DFS completion witness (persistent variant).
     pub open spec fn spec_is_valid_ord_per(
-        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
+        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
         visited: Seq<bool>,
         ancestors: Seq<bool>,
         prev_ord: Map<int, nat>,
@@ -74,7 +74,7 @@ broadcast use vstd::seq::group_seq_axioms;
     }
 
     /// Bridge: for ArraySeqStPerS<usize>, view index equals spec_index.
-    proof fn lemma_usize_per_view_eq_spec_index(a: &ArraySeqStPerS<N>)
+    proof fn lemma_usize_per_view_eq_spec_index(a: &ArraySeqStPerS<usize>)
         ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
     {
         assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
@@ -82,8 +82,8 @@ broadcast use vstd::seq::group_seq_axioms;
 
     /// Bridge: persistent graph adjacency list view at vertex equals spec_index view.
     proof fn lemma_graph_per_view_bridge(
-        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
-        neighbors: &ArraySeqStPerS<N>,
+        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
+        neighbors: &ArraySeqStPerS<usize>,
         vertex: int,
     )
         requires
@@ -98,7 +98,7 @@ broadcast use vstd::seq::group_seq_axioms;
 
     /// If a path has a repeated vertex, the graph (persistent) is not a DAG.
     proof fn lemma_cycle_not_dag_per(
-        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
+        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
         dfs_path: Seq<int>,
         vertex: int,
     )
@@ -140,7 +140,7 @@ broadcast use vstd::seq::group_seq_axioms;
 
     /// Extract a concrete ordering witness from an existential (persistent variant).
     proof fn lemma_extract_ord_per(
-        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
+        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
         visited: Seq<bool>,
         ancestors: Seq<bool>,
         prev_ord: Map<int, nat>,
@@ -177,7 +177,7 @@ broadcast use vstd::seq::group_seq_axioms;
 
     /// Along any path in an acyclic ordering, ordering strictly decreases (persistent variant).
     proof fn lemma_path_ord_decreases_per(
-        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
+        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
         ord: Map<int, nat>,
         next_time: nat,
         path: Seq<int>,
@@ -222,7 +222,7 @@ broadcast use vstd::seq::group_seq_axioms;
 
     /// If an acyclic ordering covers all vertices, the graph is a DAG (persistent variant).
     proof fn lemma_acyclic_ord_implies_dag_per(
-        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
+        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
         ord: Map<int, nat>,
         next_time: nat,
     )
@@ -249,7 +249,7 @@ broadcast use vstd::seq::group_seq_axioms;
     pub trait CycleDetectStPerTrait {
         /// Detects if a directed graph contains a cycle (Algorithm 55.10)
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (has_cycle: bool)
+        fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (has_cycle: bool)
             requires
                 spec_cycledetectstper_wf(graph),
             ensures
@@ -262,10 +262,10 @@ broadcast use vstd::seq::group_seq_axioms;
     /// Recursive DFS cycle detection using Vec<bool> ancestor tracking.
     /// Ghost parameters: dfs_path for cycle witness, ord/next_time for completeness ordering.
     fn dfs_check_cycle(
-        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
+        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
         visited: &mut Vec<bool>,
         ancestors: &mut Vec<bool>,
-        vertex: N,
+        vertex: usize,
         Ghost(dfs_path): Ghost<Seq<int>>,
         Ghost(ord): Ghost<Map<int, nat>>,
         Ghost(next_time): Ghost<nat>,
@@ -597,7 +597,7 @@ broadcast use vstd::seq::group_seq_axioms;
     impl CycleDetectStPerTrait for CycleDetectStPer {
         /// Detects if a directed graph contains a cycle.
         /// Returns true if a cycle exists, false otherwise.
-        fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>) -> (has_cycle: bool)
+        fn has_cycle(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (has_cycle: bool)
         {
             let n = graph.length();
             let mut visited: Vec<bool> = Vec::new();

@@ -39,7 +39,7 @@ broadcast use vstd::seq::group_seq_axioms;
     /// finished, v is also finished and has a strictly smaller ordering value.
     /// This is the DFS finish-time ordering property that implies DAG-ness.
     pub open spec fn spec_acyclic_ord(
-        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         ord: Map<int, nat>,
         next_time: nat,
     ) -> bool {
@@ -59,7 +59,7 @@ broadcast use vstd::seq::group_seq_axioms;
     }
 
     /// Bridge: for ArraySeqStEphS<usize>, view index equals spec_index.
-    proof fn lemma_usize_view_eq_spec_index(a: &ArraySeqStEphS<N>)
+    proof fn lemma_usize_view_eq_spec_index(a: &ArraySeqStEphS<usize>)
         ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
     {
         assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
@@ -67,8 +67,8 @@ broadcast use vstd::seq::group_seq_axioms;
 
     /// Bridge: graph adjacency list view at vertex equals spec_index view.
     proof fn lemma_graph_view_bridge(
-        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
-        neighbors: &ArraySeqStEphS<N>,
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
+        neighbors: &ArraySeqStEphS<usize>,
         vertex: int,
     )
         requires
@@ -83,7 +83,7 @@ broadcast use vstd::seq::group_seq_axioms;
 
     /// If a path has a repeated vertex, the graph is not a DAG.
     proof fn lemma_cycle_not_dag(
-        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         dfs_path: Seq<int>,
         vertex: int,
     )
@@ -132,7 +132,7 @@ broadcast use vstd::seq::group_seq_axioms;
     /// Along any valid path where all vertices are in an acyclic ordering,
     /// the ordering strictly decreases from first to last vertex.
     proof fn lemma_path_ord_decreases(
-        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         ord: Map<int, nat>,
         next_time: nat,
         path: Seq<int>,
@@ -178,7 +178,7 @@ broadcast use vstd::seq::group_seq_axioms;
     /// Whether an ordering map is a valid DFS completion witness.
     /// Wrapping in a spec fn gives choose a usable trigger on the map argument.
     pub open spec fn spec_is_valid_ord(
-        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         visited: Seq<bool>,
         ancestors: Seq<bool>,
         prev_ord: Map<int, nat>,
@@ -198,7 +198,7 @@ broadcast use vstd::seq::group_seq_axioms;
 
     /// Extract a concrete ordering witness from an existential.
     proof fn lemma_extract_ord(
-        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         visited: Seq<bool>,
         ancestors: Seq<bool>,
         prev_ord: Map<int, nat>,
@@ -235,7 +235,7 @@ broadcast use vstd::seq::group_seq_axioms;
 
     /// If an acyclic ordering covers all vertices, the graph is a DAG.
     proof fn lemma_acyclic_ord_implies_dag(
-        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         ord: Map<int, nat>,
         next_time: nat,
     )
@@ -263,7 +263,7 @@ broadcast use vstd::seq::group_seq_axioms;
         /// Detects if a directed graph contains a cycle (Algorithm 55.10).
         /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|) [Cost Spec 55.8, array sequences]
         /// - Claude-Opus-4.6: Work O(|V| + |E|), Span O(|V| + |E|) — agrees with APAS.
-        fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (has_cycle: bool)
+        fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (has_cycle: bool)
             requires
                 spec_toposortsteph_wf(graph),
             ensures
@@ -277,10 +277,10 @@ broadcast use vstd::seq::group_seq_axioms;
     /// Returns true if a cycle is found.
     /// Ghost parameters: dfs_path for cycle witness, ord/next_time for completeness ordering.
     fn dfs_check_cycle(
-        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         visited: &mut ArraySeqStEphS<bool>,
         ancestors: &mut ArraySeqStEphS<bool>,
-        vertex: N,
+        vertex: usize,
         Ghost(dfs_path): Ghost<Seq<int>>,
         Ghost(ord): Ghost<Map<int, nat>>,
         Ghost(next_time): Ghost<nat>,
@@ -768,7 +768,7 @@ broadcast use vstd::seq::group_seq_axioms;
     impl CycleDetectStEphTrait for CycleDetectStEph {
         /// Detects if a directed graph contains a cycle.
         /// Returns true if a cycle exists, false otherwise.
-        fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (has_cycle: bool)
+        fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (has_cycle: bool)
         {
             let n = graph.length();
             let f_false = |_x: usize| -> (r: bool) ensures !r { false };

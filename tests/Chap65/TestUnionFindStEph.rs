@@ -8,7 +8,7 @@ use apas_verus::Types::Types::*;
 
 #[test]
 fn test_union_find_basic() {
-    let mut uf = UnionFindStEph::<N>::new();
+    let mut uf = UnionFindStEph::<usize>::new();
 
     // Insert vertices
     uf.insert(0);
@@ -47,7 +47,7 @@ fn test_union_find_basic() {
 
 #[test]
 fn test_union_find_path_compression() {
-    let mut uf = UnionFindStEph::<N>::new();
+    let mut uf = UnionFindStEph::<usize>::new();
 
     // Create a long chain: 0-1-2-3-4
     for i in 0..5 {
@@ -70,13 +70,13 @@ fn test_union_find_path_compression() {
 
 #[test]
 fn test_union_find_empty() {
-    let mut uf = UnionFindStEph::<N>::new();
+    let mut uf = UnionFindStEph::<usize>::new();
     assert_eq!(uf.num_sets(), 0);
 }
 
 #[test]
 fn test_union_find_single() {
-    let mut uf = UnionFindStEph::<N>::new();
+    let mut uf = UnionFindStEph::<usize>::new();
     uf.insert(42);
     assert_eq!(uf.num_sets(), 1);
     assert!(uf.equals(&42, &42));
@@ -84,7 +84,7 @@ fn test_union_find_single() {
 
 #[test]
 fn test_union_find_duplicate_insert() {
-    let mut uf = UnionFindStEph::<N>::new();
+    let mut uf = UnionFindStEph::<usize>::new();
     uf.insert(1);
     uf.insert(1);
     uf.insert(2);
@@ -112,7 +112,7 @@ fn test_union_find_string_vertices() {
 
 #[test]
 fn test_union_find_already_unioned() {
-    let mut uf = UnionFindStEph::<N>::new();
+    let mut uf = UnionFindStEph::<usize>::new();
 
     uf.insert(1);
     uf.insert(2);
@@ -127,7 +127,7 @@ fn test_union_find_already_unioned() {
 
 #[test]
 fn test_find_root() {
-    let mut uf = UnionFindStEph::<N>::new();
+    let mut uf = UnionFindStEph::<usize>::new();
     uf.insert(1);
     uf.insert(2);
     uf.insert(3);
@@ -143,7 +143,7 @@ fn test_find_root() {
 
 #[test]
 fn test_large_union_find() {
-    let mut uf = UnionFindStEph::<N>::new();
+    let mut uf = UnionFindStEph::<usize>::new();
 
     for i in 0..100 {
         uf.insert(i);
@@ -180,7 +180,7 @@ fn test_large_union_find() {
 
 #[test]
 fn test_union_find_reflexive() {
-    let mut uf = UnionFindStEph::<N>::new();
+    let mut uf = UnionFindStEph::<usize>::new();
     uf.insert(5);
 
     assert!(uf.equals(&5, &5));
@@ -188,7 +188,7 @@ fn test_union_find_reflexive() {
 
 #[test]
 fn test_union_find_symmetric() {
-    let mut uf = UnionFindStEph::<N>::new();
+    let mut uf = UnionFindStEph::<usize>::new();
     uf.insert(1);
     uf.insert(2);
 
@@ -199,7 +199,7 @@ fn test_union_find_symmetric() {
 
 #[test]
 fn test_union_find_transitive() {
-    let mut uf = UnionFindStEph::<N>::new();
+    let mut uf = UnionFindStEph::<usize>::new();
     uf.insert(1);
     uf.insert(2);
     uf.insert(3);
@@ -212,7 +212,7 @@ fn test_union_find_transitive() {
 
 #[test]
 fn test_multiple_components() {
-    let mut uf = UnionFindStEph::<N>::new();
+    let mut uf = UnionFindStEph::<usize>::new();
 
     // Create 3 components
     for i in 0..9 {
@@ -244,7 +244,7 @@ fn test_multiple_components() {
 
 #[test]
 fn test_star_pattern() {
-    let mut uf = UnionFindStEph::<N>::new();
+    let mut uf = UnionFindStEph::<usize>::new();
 
     // Create star with center 0
     for i in 0..10 {
@@ -266,7 +266,7 @@ fn test_star_pattern() {
 
 #[test]
 fn test_rank_based_union_smaller_to_larger() {
-    let mut uf = UnionFindStEph::<N>::new();
+    let mut uf = UnionFindStEph::<usize>::new();
 
     // Build tree with rank 2
     uf.insert(0);

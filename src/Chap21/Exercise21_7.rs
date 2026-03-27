@@ -45,7 +45,7 @@ pub mod Exercise21_7 {
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     // veracity: no_requires
-    pub fn is_even(x: &N) -> (r: bool)
+    pub fn is_even(x: &usize) -> (r: bool)
         ensures r == spec_is_even(*x as int)
     { *x % 2 == 0 }
 
@@ -75,28 +75,28 @@ pub mod Exercise21_7 {
     /// - APAS: Work Θ(|a|·|b|), Span Θ(lg |a|)
     /// - Claude-Opus-4.6: Work Θ(|a|·|b|), Span Θ(|a|·|b|) — sequential StPer filter + tabulate + flatten.
     pub fn pair_even_with_vowels(
-        a: &ArraySeqStPerS<N>,
+        a: &ArraySeqStPerS<usize>,
         b: &ArraySeqStPerS<char>,
-    ) -> (pairs: ArraySeqStPerS<Pair<N, char>>)
+    ) -> (pairs: ArraySeqStPerS<Pair<usize, char>>)
        requires 
             obeys_feq_clone::<char>(),
-            obeys_feq_clone::<Pair<N, char>>(),
+            obeys_feq_clone::<Pair<usize, char>>(),
             a.seq@.len() as int * b.seq@.len() as int <= usize::MAX as int,
        ensures
             pairs.seq@.len() <= a.seq@.len() as int * b.seq@.len() as int,
     {
-        let pred_even = |x: &N| -> (r: bool) ensures r == spec_is_even(*x as int) { is_even(x) };
+        let pred_even = |x: &usize| -> (r: bool) ensures r == spec_is_even(*x as int) { is_even(x) };
         let pred_vowel = |y: &char| -> (r: bool) ensures r == spec_is_vowel(*y) { is_vowel(y) };
-        let ghost spec_even: spec_fn(N) -> bool = |x: N| spec_is_even(x as int);
+        let ghost spec_even: spec_fn(usize) -> bool = |x: usize| spec_is_even(x as int);
         let ghost spec_vowel: spec_fn(char) -> bool = |c: char| spec_is_vowel(c);
-        let filtered_a: ArraySeqStPerS<N> = ArraySeqStPerS::filter(a, &pred_even, Ghost(spec_even));
+        let filtered_a: ArraySeqStPerS<usize> = ArraySeqStPerS::filter(a, &pred_even, Ghost(spec_even));
         let filtered_b: ArraySeqStPerS<char> = ArraySeqStPerS::filter(b, &pred_vowel, Ghost(spec_vowel));
 
         let fa_len = filtered_a.length();
         let fb_len = filtered_b.length();
 
-        let nested: ArraySeqStPerS<ArraySeqStPerS<Pair<N, char>>> = ArraySeqStPerS::tabulate(
-            &(|i: usize| -> (row: ArraySeqStPerS<Pair<N, char>>)
+        let nested: ArraySeqStPerS<ArraySeqStPerS<Pair<usize, char>>> = ArraySeqStPerS::tabulate(
+            &(|i: usize| -> (row: ArraySeqStPerS<Pair<usize, char>>)
                 requires
                     i < fa_len,
                     fa_len == filtered_a.seq@.len(),
@@ -106,7 +106,7 @@ pub mod Exercise21_7 {
             {
                 let x = filtered_a.nth(i);
                 ArraySeqStPerS::tabulate(
-                    &(|j: usize| -> (p: Pair<N, char>)
+                    &(|j: usize| -> (p: Pair<usize, char>)
                         requires
                             j < fb_len,
                             fb_len == filtered_b.seq@.len(),
@@ -121,7 +121,7 @@ pub mod Exercise21_7 {
         let pairs = ArraySeqStPerS::flatten(&nested);
         proof {
             let ghost mapped = nested.seq@.map_values(
-                |inner: ArraySeqStPerS<Pair<N, char>>| inner.seq@);
+                |inner: ArraySeqStPerS<Pair<usize, char>>| inner.seq@);
             assert forall|i: int| 0 <= i < mapped.len() implies
                 (#[trigger] mapped[i]).len() == fb_len as int by {}
             lemma_flatten_uniform_len(mapped, fb_len as int);

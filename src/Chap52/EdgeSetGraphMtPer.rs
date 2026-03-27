@@ -62,10 +62,10 @@ pub mod EdgeSetGraphMtPer {
                     ==> v@.contains(u) && v@.contains(w),
             ensures out.spec_edgesetgraphmtper_wf();
         /// Work Theta(1), Span Theta(1)
-        fn num_vertices(&self) -> N
+        fn num_vertices(&self) -> usize
             requires self.spec_edgesetgraphmtper_wf();
         /// Work Theta(1), Span Theta(1)
-        fn num_edges(&self) -> N
+        fn num_edges(&self) -> usize
             requires self.spec_edgesetgraphmtper_wf();
         /// Work Theta(1), Span Theta(1)
         fn vertices(&self) -> &AVLTreeSetMtPer<V>
@@ -81,7 +81,7 @@ pub mod EdgeSetGraphMtPer {
             requires self.spec_edgesetgraphmtper_wf()
             ensures neighbors@ == Set::new(|v: <V as View>::V| self.edges@.contains((u@, v)));
         /// Work Theta(|E|), Span Theta(log |E|)
-        fn out_degree(&self, u: &V) -> N
+        fn out_degree(&self, u: &V) -> usize
             requires self.spec_edgesetgraphmtper_wf();
         /// Work Theta(log |V|), Span Theta(log |V|)
         fn insert_vertex(&self, v: V) -> (updated: Self)
@@ -123,9 +123,9 @@ pub mod EdgeSetGraphMtPer {
             EdgeSetGraphMtPer { vertices: v, edges: e }
         }
 
-        fn num_vertices(&self) -> N { self.vertices.size() }
+        fn num_vertices(&self) -> usize { self.vertices.size() }
 
-        fn num_edges(&self) -> N { self.edges.size() }
+        fn num_edges(&self) -> usize { self.edges.size() }
 
         fn vertices(&self) -> &AVLTreeSetMtPer<V> { &self.vertices }
 
@@ -201,7 +201,7 @@ pub mod EdgeSetGraphMtPer {
 
         /// - APAS: Work Θ(m), Span Θ(lg n) [Cost Spec 52.1]
         /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — delegates to out_neighbors.
-        fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+        fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
 
         fn insert_vertex(&self, v: V) -> (updated: Self) {
             EdgeSetGraphMtPer {

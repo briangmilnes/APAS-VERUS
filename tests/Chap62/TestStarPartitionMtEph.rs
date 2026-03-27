@@ -8,7 +8,7 @@ use apas_verus::Chap62::StarPartitionMtEph::StarPartitionMtEph::*;
 use apas_verus::SetLit;
 use apas_verus::Types::Types::*;
 
-fn create_cycle_graph(n: N) -> UnDirGraphMtEph<N> {
+fn create_cycle_graph(n: usize) -> UnDirGraphMtEph<usize> {
     let mut vertices = SetLit![];
     for i in 0..n {
         let _ = vertices.insert(i);
@@ -19,12 +19,12 @@ fn create_cycle_graph(n: N) -> UnDirGraphMtEph<N> {
         let v = (i + 1) % n;
         let _ = edges.insert(Edge(u, v));
     }
-    <UnDirGraphMtEph<N> as UnDirGraphMtEphTrait<N>>::from_sets(vertices, edges)
+    <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edges)
 }
 
-fn create_star_graph(n: N) -> UnDirGraphMtEph<N> {
+fn create_star_graph(n: usize) -> UnDirGraphMtEph<usize> {
     if n == 0 {
-        return <UnDirGraphMtEph<N> as UnDirGraphMtEphTrait<N>>::empty();
+        return <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::empty();
     }
     let mut vertices = SetLit![0]; // Center vertex
     for i in 1..n {
@@ -34,7 +34,7 @@ fn create_star_graph(n: N) -> UnDirGraphMtEph<N> {
     for i in 1..n {
         let _ = edges.insert(Edge(0, i)); // Edges from center to satellites
     }
-    <UnDirGraphMtEph<N> as UnDirGraphMtEphTrait<N>>::from_sets(vertices, edges)
+    <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edges)
 }
 
 #[test]

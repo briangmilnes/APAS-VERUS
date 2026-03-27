@@ -77,17 +77,17 @@ pub mod AVLTreeSeqStEph {
 
     pub struct AVLTreeNode<T: StT> {
         pub value: T,
-        pub height: N,
-        pub left_size: N,
-        pub right_size: N,
+        pub height: usize,
+        pub left_size: usize,
+        pub right_size: usize,
         pub left: Link<T>,
         pub right: Link<T>,
-        pub index: N,
+        pub index: usize,
     }
 
     pub struct AVLTreeSeqStEphS<T: StT> {
         pub root: Link<T>,
-        pub next_key: N,
+        pub next_key: usize,
     }
 
     #[verifier::reject_recursive_types(T)]
@@ -270,15 +270,15 @@ pub mod AVLTreeSeqStEph {
         fn new() -> (tree: Self)
             ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseqsteph_wf();
 
-        fn length(&self) -> (len: N)
+        fn length(&self) -> (len: usize)
             requires self.spec_avltreeseqsteph_wf(),
             ensures len as nat == self.spec_seq().len();
 
-        fn nth(&self, index: N) -> (elem: &T)
+        fn nth(&self, index: usize) -> (elem: &T)
             requires self.spec_avltreeseqsteph_wf(), (index as int) < self.spec_seq().len(),
             ensures elem@ == self.spec_seq()[index as int];
 
-        fn set(&mut self, index: N, item: T) -> (outcome: Result<(), &'static str>)
+        fn set(&mut self, index: usize, item: T) -> (outcome: Result<(), &'static str>)
             requires old(self).spec_avltreeseqsteph_wf(), (index as int) < old(self).spec_seq().len(),
             ensures
                 outcome is Ok,
@@ -299,14 +299,14 @@ pub mod AVLTreeSeqStEph {
             requires self.spec_avltreeseqsteph_wf(),
             ensures single == (self.spec_seq().len() == 1);
 
-        fn subseq_copy(&self, start: N, length: N) -> (sub: Self)
+        fn subseq_copy(&self, start: usize, length: usize) -> (sub: Self)
             requires self.spec_avltreeseqsteph_wf(),self.spec_seq().len() < usize::MAX,
             ensures sub.spec_seq() =~= spec_subseq(self.spec_seq(), start as nat, length as nat);
 
         fn new_root() -> (tree: Self)
             ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseqsteph_wf();
 
-        fn update(&mut self, index: N, item: T)
+        fn update(&mut self, index: usize, item: T)
             requires
                 old(self).spec_avltreeseqsteph_wf(),
                 (index as int) < old(self).spec_seq().len(),
@@ -376,7 +376,7 @@ pub mod AVLTreeSeqStEph {
 
     // 9. impls
 
-    fn h_fn<T: StT>(n: &Link<T>) -> (height: N)
+    fn h_fn<T: StT>(n: &Link<T>) -> (height: usize)
         requires spec_cached_height(n) <= usize::MAX as nat,
         ensures height as nat == spec_cached_height(n),
     {
@@ -386,7 +386,7 @@ pub mod AVLTreeSeqStEph {
         }
     }
 
-    fn size_link_fn<T: StT>(n: &Link<T>) -> (size: N)
+    fn size_link_fn<T: StT>(n: &Link<T>) -> (size: usize)
         requires spec_avltreeseqsteph_wf(*n),
         ensures size as nat == spec_cached_size(n),
     {
@@ -563,7 +563,7 @@ pub mod AVLTreeSeqStEph {
         n
     }
 
-    pub fn insert_at_link<T: StT>(node: Link<T>, index: N, value: T, next_key: &mut N) -> (inserted: Link<T>)
+    pub fn insert_at_link<T: StT>(node: Link<T>, index: usize, value: T, next_key: &mut usize) -> (inserted: Link<T>)
         requires
             spec_avltreeseqsteph_wf(node),
             0 <= index as int <= spec_inorder(node).len(),
@@ -627,7 +627,7 @@ pub mod AVLTreeSeqStEph {
         }
     }
 
-    fn nth_link<'a, T: StT>(node: &'a Link<T>, index: N) -> (elem: &'a T)
+    fn nth_link<'a, T: StT>(node: &'a Link<T>, index: usize) -> (elem: &'a T)
         requires spec_avltreeseqsteph_wf(*node), (index as int) < spec_inorder(*node).len(),
         ensures elem@ == spec_inorder(*node)[index as int],
         decreases *node,
@@ -645,7 +645,7 @@ pub mod AVLTreeSeqStEph {
         }
     }
 
-    fn set_link<T: StT>(node: &mut Link<T>, index: N, value: T) -> (outcome: Result<(), &'static str>)
+    fn set_link<T: StT>(node: &mut Link<T>, index: usize, value: T) -> (outcome: Result<(), &'static str>)
         requires
             spec_avltreeseqsteph_wf(*old(node)),
             (index as int) < spec_inorder(*old(node)).len(),
@@ -777,17 +777,17 @@ pub mod AVLTreeSeqStEph {
             Self::empty()
         }
 
-        fn length(&self) -> (len: N) {
+        fn length(&self) -> (len: usize) {
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             size_link_fn(&self.root)
         }
 
-        fn nth(&self, index: N) -> (elem: &T) {
+        fn nth(&self, index: usize) -> (elem: &T) {
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             nth_link(&self.root, index)
         }
 
-        fn set(&mut self, index: N, item: T) -> (outcome: Result<(), &'static str>) {
+        fn set(&mut self, index: usize, item: T) -> (outcome: Result<(), &'static str>) {
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             set_link(&mut self.root, index, item)
         }
@@ -808,7 +808,7 @@ pub mod AVLTreeSeqStEph {
             self.length() == 1
         }
 
-        fn subseq_copy(&self, start: N, length: N) -> (sub: Self) {
+        fn subseq_copy(&self, start: usize, length: usize) -> (sub: Self) {
             assert(self.spec_avltreeseqsteph_wf());
             assert(obeys_feq_full::<T>());
             let n = self.length();
@@ -857,7 +857,7 @@ pub mod AVLTreeSeqStEph {
             Self::empty()
         }
 
-        fn update(&mut self, index: N, item: T) {
+        fn update(&mut self, index: usize, item: T) {
             assert(self.spec_avltreeseqsteph_wf());
             assert((index as int) < self.spec_seq().len());
             let _ = self.set(index, item);

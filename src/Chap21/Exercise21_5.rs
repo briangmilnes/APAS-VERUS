@@ -69,16 +69,16 @@ pub mod Exercise21_5 {
     /// Exercise 21.5: Generate all contiguous subsequences using nested tabulate + flatten.
     /// - APAS: Work Θ(n²), Span Θ(lg n)
     /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — sequential StPer; subseq_copy is O(k) not O(1).
-    pub fn all_contiguous_subseqs(a: &ArraySeqStPerS<N>) -> (subseqs: ArraySeqStPerS<ArraySeqStPerS<N>>)
-         requires obeys_feq_clone::<ArraySeqStPerS<N>>()
+    pub fn all_contiguous_subseqs(a: &ArraySeqStPerS<usize>) -> (subseqs: ArraySeqStPerS<ArraySeqStPerS<usize>>)
+         requires obeys_feq_clone::<ArraySeqStPerS<usize>>()
          ensures
             a.spec_len() == 0 ==> subseqs.spec_len() == 0,
             a.spec_len() > 0 ==> subseqs.spec_len() * 2 == a.spec_len() * (a.spec_len() + 1),
     {
         let n = a.length();
-        let nested: ArraySeqStPerS<ArraySeqStPerS<ArraySeqStPerS<N>>> =
+        let nested: ArraySeqStPerS<ArraySeqStPerS<ArraySeqStPerS<usize>>> =
             ArraySeqStPerS::tabulate(
-                &(|i: usize| -> (row: ArraySeqStPerS<ArraySeqStPerS<N>>)
+                &(|i: usize| -> (row: ArraySeqStPerS<ArraySeqStPerS<usize>>)
                     requires
                         i < n,
                         n == a.seq@.len(),
@@ -86,7 +86,7 @@ pub mod Exercise21_5 {
                         row.seq@.len() == n - i,
                 {
                     ArraySeqStPerS::tabulate(
-                        &(|j: usize| -> (sub: ArraySeqStPerS<N>)
+                        &(|j: usize| -> (sub: ArraySeqStPerS<usize>)
                             requires
                                 j < n - i,
                                 i < n,
@@ -99,11 +99,11 @@ pub mod Exercise21_5 {
                 }),
                 n,
             );
-        let mid: ArraySeqStPerS<ArraySeqStPerS<N>> =
+        let mid: ArraySeqStPerS<ArraySeqStPerS<usize>> =
             ArraySeqStPerS::flatten(&nested);
         proof {
             let ghost mapped = nested.seq@.map_values(
-                |inner: ArraySeqStPerS<ArraySeqStPerS<N>>| inner.seq@);
+                |inner: ArraySeqStPerS<ArraySeqStPerS<usize>>| inner.seq@);
             assert forall|i: int| 0 <= i < mapped.len() implies
                 (#[trigger] mapped[i]).len() == n as int - i by {}
             lemma_flatten_len_is_inner_lens_sum(mapped);

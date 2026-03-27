@@ -142,13 +142,13 @@ verus! {
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn sizeV(&self) -> (n: N)
+        fn sizeV(&self) -> (n: usize)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>()
             ensures n == self@.V.len();
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn sizeA(&self) -> (n: N)
+        fn sizeA(&self) -> (n: usize)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>()
             ensures n == self@.A.len();
 
@@ -202,19 +202,19 @@ verus! {
 
         /// - APAS: Work Θ(|A|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential filter
-        fn degree(&self, v: &V) -> (n: N)
+        fn degree(&self, v: &V) -> (n: usize)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures n == self.spec_degree(v@);
 
         /// - APAS: Work Θ(|A|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential filter
-        fn in_degree(&self, v: &V) -> (n: N)
+        fn in_degree(&self, v: &V) -> (n: usize)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures n == self.spec_n_minus(v@).len();
 
         /// - APAS: Work Θ(|A|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential filter
-        fn out_degree(&self, v: &V) -> (n: N)
+        fn out_degree(&self, v: &V) -> (n: usize)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures n == self.spec_n_plus(v@).len();
     }
@@ -246,9 +246,9 @@ verus! {
 
         fn arcs(&self) -> (a: &SetStEph<Edge<V>>) { &self.A }
 
-        fn sizeV(&self) -> (n: N) { self.V.size() }
+        fn sizeV(&self) -> (n: usize) { self.V.size() }
 
-        fn sizeA(&self) -> (n: N) { self.A.size() }
+        fn sizeA(&self) -> (n: usize) { self.A.size() }
 
         fn neighbor(&self, u: &V, v: &V) -> (b: bool) { self.A.mem(&Edge(u.clone_plus(), v.clone_plus())) }
 
@@ -525,15 +525,15 @@ verus! {
 
         fn incident(&self, e: &Edge<V>, v: &V) -> (b: bool) { feq(&e.0, v) || feq(&e.1, v) }
 
-        fn degree(&self, v: &V) -> (n: N)
+        fn degree(&self, v: &V) -> (n: usize)
             ensures n == self.spec_degree(v@)
         { self.ng(v).size() }
 
-        fn in_degree(&self, v: &V) -> (n: N)
+        fn in_degree(&self, v: &V) -> (n: usize)
             ensures n == self.spec_n_minus(v@).len()
         { self.n_minus(v).size() }
 
-        fn out_degree(&self, v: &V) -> (n: N)
+        fn out_degree(&self, v: &V) -> (n: usize)
             ensures n == self.spec_n_plus(v@).len()
         { self.n_plus(v).size() }
     }

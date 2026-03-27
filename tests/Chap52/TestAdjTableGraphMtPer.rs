@@ -8,7 +8,7 @@ use apas_verus::Types::Types::*;
 
 #[test]
 fn test_empty() {
-    let g = AdjTableGraphMtPer::<N>::empty();
+    let g = AdjTableGraphMtPer::<usize>::empty();
     assert_eq!(g.num_vertices(), 0);
     assert_eq!(g.num_edges(), 0);
 }

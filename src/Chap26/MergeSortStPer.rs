@@ -53,24 +53,24 @@ pub mod MergeSortStPer {
     //		4. spec functions
 
     /// Spec function: result is a sorted permutation of the input.
-    pub open spec fn spec_sorted(s: Seq<N>) -> bool {
+    pub open spec fn spec_sorted(s: Seq<usize>) -> bool {
         forall|i: int, j: int| 0 <= i < j < s.len() ==> s[i] <= s[j]
     }
 
     /// Spec function: s2 is a permutation of s1 (same multiset of elements).
-    pub open spec fn spec_is_permutation(s1: Seq<N>, s2: Seq<N>) -> bool {
+    pub open spec fn spec_is_permutation(s1: Seq<usize>, s2: Seq<usize>) -> bool {
         s1.to_multiset() =~= s2.to_multiset()
     }
 
     /// Spec function: result of merge of two sorted sequences is sorted and a permutation.
-    pub open spec fn spec_merge_post(left: Seq<N>, right: Seq<N>, merged: Seq<N>) -> bool {
+    pub open spec fn spec_merge_post(left: Seq<usize>, right: Seq<usize>, merged: Seq<usize>) -> bool {
         &&& merged.len() == left.len() + right.len()
         &&& spec_sorted(merged)
         &&& spec_is_permutation(left.add(right), merged)
     }
 
     /// Spec function: result of merge_sort is sorted and a permutation.
-    pub open spec fn spec_sort_post(input: Seq<N>, sorted: Seq<N>) -> bool {
+    pub open spec fn spec_sort_post(input: Seq<usize>, sorted: Seq<usize>) -> bool {
         &&& sorted.len() == input.len()
         &&& spec_sorted(sorted)
         &&& spec_is_permutation(input, sorted)
@@ -82,7 +82,7 @@ pub mod MergeSortStPer {
     //		9. impls
 
     /// Helper: pushing an element >= all existing elements preserves sorted.
-    pub proof fn lemma_push_sorted(s: Seq<N>, v: N)
+    pub proof fn lemma_push_sorted(s: Seq<usize>, v: usize)
         requires
             spec_sorted(s),
             s.len() > 0 ==> s.last() <= v,
@@ -113,7 +113,7 @@ pub mod MergeSortStPer {
         /// Merge two sorted sequences into one sorted sequence.
         /// - APAS: Work Θ(n), Span Θ(lg n) — parallel merge assumed for merge sort analysis.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential two-pointer merge, Span = Work.
-        fn merge(left: &ArraySeqStPerS<N>, right: &ArraySeqStPerS<N>) -> (merged: ArraySeqStPerS<N>)
+        fn merge(left: &ArraySeqStPerS<usize>, right: &ArraySeqStPerS<usize>) -> (merged: ArraySeqStPerS<usize>)
             requires
                 spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),
                 spec_sorted(Seq::new(right.spec_len(), |i: int| right.spec_index(i))),
@@ -127,7 +127,7 @@ pub mod MergeSortStPer {
         /// Sort a sequence using merge sort. Algorithm 26.4.
         /// - APAS: Work Θ(n lg n), Span Θ(lg² n) — with parallel merge and recursive parallelism.
         /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — sequential merge sort, Span = Work.
-        fn merge_sort(a: &ArraySeqStPerS<N>) -> (sorted: ArraySeqStPerS<N>)
+        fn merge_sort(a: &ArraySeqStPerS<usize>) -> (sorted: ArraySeqStPerS<usize>)
             requires a.spec_len() <= usize::MAX,
             ensures
                 spec_sort_post(
@@ -138,15 +138,15 @@ pub mod MergeSortStPer {
 
     //		9. impls
 
-    impl MergeSortStTrait for ArraySeqStPerS<N> {
-        fn merge(left: &ArraySeqStPerS<N>, right: &ArraySeqStPerS<N>) -> (merged: ArraySeqStPerS<N>) {
+    impl MergeSortStTrait for ArraySeqStPerS<usize> {
+        fn merge(left: &ArraySeqStPerS<usize>, right: &ArraySeqStPerS<usize>) -> (merged: ArraySeqStPerS<usize>) {
             let n_left = left.length();
             let n_right = right.length();
             let total = n_left + n_right;
             let ghost sl = Seq::new(left.spec_len(), |i: int| left.spec_index(i));
             let ghost sr = Seq::new(right.spec_len(), |i: int| right.spec_index(i));
 
-            let mut out: Vec<N> = Vec::with_capacity(total);
+            let mut out: Vec<usize> = Vec::with_capacity(total);
             let mut li: usize = 0;
             let mut ri: usize = 0;
 
@@ -205,7 +205,7 @@ pub mod MergeSortStPer {
             merged_result
         }
 
-        fn merge_sort(a: &ArraySeqStPerS<N>) -> (sorted: ArraySeqStPerS<N>)
+        fn merge_sort(a: &ArraySeqStPerS<usize>) -> (sorted: ArraySeqStPerS<usize>)
             decreases a.spec_len(),
         {
             let n = a.length();
@@ -213,7 +213,7 @@ pub mod MergeSortStPer {
 
             if n == 0 {
                 proof {
-                    assert(sa =~= Seq::<N>::empty());
+                    assert(sa =~= Seq::<usize>::empty());
                 }
                 return ArraySeqStPerS::empty();
             }
@@ -232,7 +232,7 @@ pub mod MergeSortStPer {
             let mid = n / 2;
 
             // Build left half [0..mid)
-            let mut left_vec: Vec<N> = Vec::with_capacity(mid);
+            let mut left_vec: Vec<usize> = Vec::with_capacity(mid);
             let mut i: usize = 0;
             while i < mid
                 invariant
@@ -248,7 +248,7 @@ pub mod MergeSortStPer {
 
             // Build right half [mid..n)
             let right_len = n - mid;
-            let mut right_vec: Vec<N> = Vec::with_capacity(right_len);
+            let mut right_vec: Vec<usize> = Vec::with_capacity(right_len);
             let mut i: usize = 0;
             while i < right_len
                 invariant

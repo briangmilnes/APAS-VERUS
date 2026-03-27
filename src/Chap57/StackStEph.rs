@@ -93,7 +93,7 @@ broadcast use {
 
         /// - APAS: (no cost stated) — standard stack.
         /// - Claude-Opus-4.6: Work O(1), Span O(1).
-        fn size(&self) -> (count: N)
+        fn size(&self) -> (count: usize)
             requires self.spec_stacksteph_wf();
     }
 
@@ -129,7 +129,7 @@ broadcast use {
             ensures is_empty == (self@.len() == 0),
         { self.elements.is_empty() }
 
-        fn size(&self) -> (count: N)
+        fn size(&self) -> (count: usize)
             ensures count == self@.len(),
         { self.elements.len() }
     }

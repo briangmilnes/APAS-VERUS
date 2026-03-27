@@ -37,8 +37,8 @@ fn test_weighedundirgraphmtephint_empty() {
 
 #[test]
 fn test_weighedundirgraphmtephint_basic_operations() {
-    let v: SetStEph<N> = SetLit![0, 1, 2, 3];
-    let a: SetStEph<LabEdge<N, i32>> = SetLit![LabEdge(0, 1, 10), LabEdge(1, 2, 20), LabEdge(2, 3, 30)];
+    let v: SetStEph<usize> = SetLit![0, 1, 2, 3];
+    let a: SetStEph<LabEdge<usize, i32>> = SetLit![LabEdge(0, 1, 10), LabEdge(1, 2, 20), LabEdge(2, 3, 30)];
     let g = WeighedUnDirGraphMtEphInt::from_vertices_and_labeled_edges(v, a);
 
     assert_eq!(g.vertices().size(), 4);
@@ -87,8 +87,8 @@ fn test_weighedundirgraphmtephint_basic_operations() {
 
 #[test]
 fn test_weighedundirgraphmtephint_incident_operations() {
-    let v: SetStEph<N> = SetLit![0, 1, 2];
-    let a: SetStEph<LabEdge<N, i32>> = SetLit![LabEdge(0, 1, 100), LabEdge(1, 2, 200), LabEdge(0, 2, 300)];
+    let v: SetStEph<usize> = SetLit![0, 1, 2];
+    let a: SetStEph<LabEdge<usize, i32>> = SetLit![LabEdge(0, 1, 100), LabEdge(1, 2, 200), LabEdge(0, 2, 300)];
     let _g = WeighedUnDirGraphMtEphInt::from_vertices_and_labeled_edges(v, a);
 
     // Test incident edges (each edge is incident to both endpoints)
@@ -104,11 +104,11 @@ fn test_weighedundirgraphmtephint_incident_operations() {
 
 #[test]
 fn test_weighedundirgraphmtephint_ngofvertices() {
-    let v: SetStEph<N> = SetLit![0, 1, 2, 3];
-    let a: SetStEph<LabEdge<N, i32>> = SetLit![LabEdge(0, 1, 1), LabEdge(1, 2, 2), LabEdge(2, 3, 3), LabEdge(0, 3, 4)];
+    let v: SetStEph<usize> = SetLit![0, 1, 2, 3];
+    let a: SetStEph<LabEdge<usize, i32>> = SetLit![LabEdge(0, 1, 1), LabEdge(1, 2, 2), LabEdge(2, 3, 3), LabEdge(0, 3, 4)];
     let _g = WeighedUnDirGraphMtEphInt::from_vertices_and_labeled_edges(v, a);
 
-    let _vertices_subset: SetStEph<N> = SetLit![0, 1];
+    let _vertices_subset: SetStEph<usize> = SetLit![0, 1];
     // let _ng_subset = g.ng_of_vertices(&vertices_subset); // TODO: method not available
 
     // Neighbors of {0, 1} should include all vertices connected to 0 or 1
@@ -120,8 +120,8 @@ fn test_weighedundirgraphmtephint_ngofvertices() {
 
 #[test]
 fn test_weighedundirgraphmtephint_nplusminusofvertices() {
-    let v: SetStEph<N> = SetLit![0, 1, 2, 3];
-    let a: SetStEph<LabEdge<N, i32>> = SetLit![
+    let v: SetStEph<usize> = SetLit![0, 1, 2, 3];
+    let a: SetStEph<LabEdge<usize, i32>> = SetLit![
         LabEdge(0, 1, 5),
         LabEdge(1, 2, 15),
         LabEdge(2, 0, 25),
@@ -129,7 +129,7 @@ fn test_weighedundirgraphmtephint_nplusminusofvertices() {
     ];
     let _g = WeighedUnDirGraphMtEphInt::from_vertices_and_labeled_edges(v, a);
 
-    let _vertices_subset: SetStEph<N> = SetLit![0, 1];
+    let _vertices_subset: SetStEph<usize> = SetLit![0, 1];
 
     // In undirected graphs, NPlus and NMinus should be the same as NG
     // let nplus_subset = g.n_plus_of_vertices(&vertices_subset); // TODO: method not available
@@ -156,8 +156,8 @@ fn test_weighedundirgraphmtephint_edge_cases() {
     assert_eq!(empty.vertex_degree(&0), 0);
 
     // Test single vertex
-    let v_single: SetStEph<N> = SetLit![42];
-    let a_empty: SetStEph<LabEdge<N, i32>> = SetLit![];
+    let v_single: SetStEph<usize> = SetLit![42];
+    let a_empty: SetStEph<LabEdge<usize, i32>> = SetLit![];
     let g_single = WeighedUnDirGraphMtEphInt::from_vertices_and_labeled_edges(v_single, a_empty);
 
     assert_eq!(g_single.vertices().size(), 1);
@@ -166,8 +166,8 @@ fn test_weighedundirgraphmtephint_edge_cases() {
     assert_eq!(g_single.neighbors(&42).size(), 0);
 
     // Test self-loop with weight
-    let v_self: SetStEph<N> = SetLit![1];
-    let a_self: SetStEph<LabEdge<N, i32>> = SetLit![LabEdge(1, 1, 999)];
+    let v_self: SetStEph<usize> = SetLit![1];
+    let a_self: SetStEph<LabEdge<usize, i32>> = SetLit![LabEdge(1, 1, 999)];
     let g_self = WeighedUnDirGraphMtEphInt::from_vertices_and_labeled_edges(v_self, a_self);
 
     assert!(g_self.has_edge(&1, &1));
@@ -177,8 +177,8 @@ fn test_weighedundirgraphmtephint_edge_cases() {
 
 #[test]
 fn test_weighedundirgraphmtephint_nonexistent_vertex() {
-    let v: SetStEph<N> = SetLit![0, 1, 2];
-    let a: SetStEph<LabEdge<N, i32>> = SetLit![LabEdge(0, 1, 777)];
+    let v: SetStEph<usize> = SetLit![0, 1, 2];
+    let a: SetStEph<LabEdge<usize, i32>> = SetLit![LabEdge(0, 1, 777)];
     let g = WeighedUnDirGraphMtEphInt::from_vertices_and_labeled_edges(v, a);
 
     // Query non-existent vertex
@@ -192,8 +192,8 @@ fn test_weighedundirgraphmtephint_nonexistent_vertex() {
 #[test]
 fn test_weighedundirgraphmtephint_weight_variations() {
     // Test with various integer weight values including negative, zero, and extremes
-    let v: SetStEph<N> = SetLit![0, 1, 2, 3, 4];
-    let a: SetStEph<LabEdge<N, i32>> = SetLit![
+    let v: SetStEph<usize> = SetLit![0, 1, 2, 3, 4];
+    let a: SetStEph<LabEdge<usize, i32>> = SetLit![
         LabEdge(0, 1, 0),        // Zero weight
         LabEdge(1, 2, -100),     // Negative weight
         LabEdge(2, 3, 1),        // Small positive
@@ -228,8 +228,8 @@ fn test_weighedundirgraphmtephint_weight_variations() {
 #[test]
 fn test_weighedundirgraphmtephint_large_weights() {
     // Test with large integer weights to ensure no overflow issues
-    let v: SetStEph<N> = SetLit![0, 1, 2];
-    let a: SetStEph<LabEdge<N, i32>> = SetLit![
+    let v: SetStEph<usize> = SetLit![0, 1, 2];
+    let a: SetStEph<LabEdge<usize, i32>> = SetLit![
         LabEdge(0, 1, 1_000_000),
         LabEdge(1, 2, -1_000_000),
         LabEdge(2, 0, 999_999_999)
@@ -257,8 +257,8 @@ fn test_weighedundirgraphmtephint_large_weights() {
 
 #[test]
 fn test_weighedundirgraphmtephint_concurrent_access() {
-    let v: SetStEph<N> = SetLit![0, 1, 2, 3, 4];
-    let a: SetStEph<LabEdge<N, i32>> = SetLit![
+    let v: SetStEph<usize> = SetLit![0, 1, 2, 3, 4];
+    let a: SetStEph<LabEdge<usize, i32>> = SetLit![
         LabEdge(0, 1, 11),
         LabEdge(1, 2, 22),
         LabEdge(2, 3, 33),
@@ -308,8 +308,8 @@ fn test_weighedundirgraphmtephint_concurrent_access() {
 #[test]
 fn test_weighedundirgraphmtephint_completegraph() {
     // Test complete graph K4 with integer weights
-    let v: SetStEph<N> = SetLit![0, 1, 2, 3];
-    let a: SetStEph<LabEdge<N, i32>> = SetLit![
+    let v: SetStEph<usize> = SetLit![0, 1, 2, 3];
+    let a: SetStEph<LabEdge<usize, i32>> = SetLit![
         LabEdge(0, 1, 1),
         LabEdge(0, 2, 2),
         LabEdge(0, 3, 3),

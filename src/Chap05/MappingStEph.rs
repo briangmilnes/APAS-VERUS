@@ -189,7 +189,7 @@ verus! {
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn size(&self) -> (size: N)
+        fn size(&self) -> (size: usize)
             requires self.spec_mappingsteph_wf()
             ensures size == self@.dom().len();
 
@@ -422,7 +422,7 @@ verus! {
             result
         }
 
-        fn size(&self) -> (size: N) {
+        fn size(&self) -> (size: usize) {
             let size = self.mapping.size();
             proof {
                 let s = self.mapping@;

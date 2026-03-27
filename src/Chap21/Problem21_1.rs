@@ -31,7 +31,7 @@ pub mod Problem21_1 {
     /// ordered by x major, then y.
     /// - APAS: Work Θ(n²), Span Θ(n²) (sequential due to imperative loops)
     /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²)
-    pub fn points2d(n: N) -> (points: ArraySeqStPerS<Pair<N, N>>)
+    pub fn points2d(n: usize) -> (points: ArraySeqStPerS<Pair<usize, usize>>)
         requires
             n as int * (n as int - 1) <= usize::MAX as int,
         ensures
@@ -46,7 +46,7 @@ pub mod Problem21_1 {
             return ArraySeqStPerS { seq: Vec::new() };
         }
         let len = n * (n - 1);
-        let mut v = Vec::<Pair<N, N>>::with_capacity(len);
+        let mut v = Vec::<Pair<usize, usize>>::with_capacity(len);
         let mut x: usize = 0;
         while x < n
             invariant

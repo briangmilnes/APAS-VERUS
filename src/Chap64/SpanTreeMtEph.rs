@@ -162,7 +162,7 @@ pub mod SpanTreeMtEph {
                 if graph@.V.len() > 0 { (graph@.V.len() - 1) as nat } else { 0nat }),
     {
         let n = graph.sizeV();
-        let expected_edges: N = if n > 0 { (n - 1) as N } else { 0 };
+        let expected_edges: usize = if n > 0 { (n - 1) as usize } else { 0 };
 
         if tree_edges.size() != expected_edges {
             return false;

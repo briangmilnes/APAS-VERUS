@@ -33,7 +33,7 @@ broadcast use vstd::seq::group_seq_axioms;
     // 6. spec fns
 
     /// Bridge: for ArraySeqStPerS<usize>, view index equals spec_index.
-    proof fn lemma_usize_per_view_eq_spec_index(a: &ArraySeqStPerS<N>)
+    proof fn lemma_usize_per_view_eq_spec_index(a: &ArraySeqStPerS<usize>)
         ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
     {
         assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
@@ -41,8 +41,8 @@ broadcast use vstd::seq::group_seq_axioms;
 
     /// Bridge: for persistent graph adjacency list, the view at vertex equals the spec_index view.
     proof fn lemma_graph_per_view_bridge(
-        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
-        neighbors: &ArraySeqStPerS<N>,
+        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
+        neighbors: &ArraySeqStPerS<usize>,
         vertex: int,
     )
         requires
@@ -56,7 +56,7 @@ broadcast use vstd::seq::group_seq_axioms;
     // 7. proof fns
 
     /// A vertex is trivially reachable from itself (persistent graph variant).
-    proof fn lemma_reachable_self_per(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, v: int)
+    proof fn lemma_reachable_self_per(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>, v: int)
         requires 0 <= v < graph@.len(),
         ensures spec_reachable_per(graph, v, v),
     {
@@ -70,7 +70,7 @@ broadcast use vstd::seq::group_seq_axioms;
 
     /// If there is an edge u→v and v can reach w, then u can reach w (persistent variant).
     proof fn lemma_reachable_step_per(
-        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
+        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
         u: int, v: int, w: int,
     )
         requires
@@ -111,7 +111,7 @@ broadcast use vstd::seq::group_seq_axioms;
     /// If visited is neighbor-closed and path[0] is visited, all vertices on the path are visited
     /// (persistent variant).
     proof fn lemma_neighbor_closed_path_per(
-        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
+        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
         visited: Seq<bool>,
         path: Seq<int>,
     )
@@ -162,7 +162,7 @@ broadcast use vstd::seq::group_seq_axioms;
     /// If visited is neighbor-closed and source is visited, every vertex reachable from source
     /// is visited (persistent variant).
     proof fn lemma_neighbor_closed_implies_reachable_per(
-        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
+        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
         visited: Seq<bool>,
         source: int,
         target: int,
@@ -190,7 +190,7 @@ broadcast use vstd::seq::group_seq_axioms;
     pub trait DFSStPerTrait {
         /// Performs DFS from source vertex s on adjacency list graph G
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn dfs(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> (reachable: AVLTreeSetStPer<N>)
+        fn dfs(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>, source: usize) -> (reachable: AVLTreeSetStPer<usize>)
             requires
                 source < graph@.len(),
                 spec_toposortstper_wf(graph),
@@ -209,12 +209,12 @@ broadcast use vstd::seq::group_seq_axioms;
     /// an AVLTreeSetStPer for persistent result accumulation.
     /// Ghost parameter `gray` tracks vertices on the recursion stack.
     fn dfs_recursive(
-        graph: &ArraySeqStPerS<ArraySeqStPerS<N>>,
+        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
         visited_bool: &mut Vec<bool>,
-        reachable: AVLTreeSetStPer<N>,
-        vertex: N,
+        reachable: AVLTreeSetStPer<usize>,
+        vertex: usize,
         Ghost(gray): Ghost<Set<int>>,
-    ) -> (out: AVLTreeSetStPer<N>)
+    ) -> (out: AVLTreeSetStPer<usize>)
         requires
             vertex < old(visited_bool)@.len(),
             old(visited_bool)@.len() == graph@.len(),
@@ -410,7 +410,7 @@ broadcast use vstd::seq::group_seq_axioms;
     impl DFSStPerTrait for DFSStPer {
         /// Performs DFS from source vertex s on adjacency list graph G.
         /// Returns the set of all vertices reachable from s.
-        fn dfs(graph: &ArraySeqStPerS<ArraySeqStPerS<N>>, source: N) -> (reachable: AVLTreeSetStPer<N>)
+        fn dfs(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>, source: usize) -> (reachable: AVLTreeSetStPer<usize>)
         {
             let n = graph.length();
             let mut visited_bool: Vec<bool> = Vec::new();

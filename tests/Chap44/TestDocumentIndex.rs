@@ -402,7 +402,7 @@ fn test_create_finder() {
 
     // Demonstrates staged computation pattern
     let words = vec!["hello", "world", "programming"];
-    let results: Vec<N> = words
+    let results: Vec<usize> = words
         .iter()
         .map(|word| {
             let docs = find_fn(&word.to_string());

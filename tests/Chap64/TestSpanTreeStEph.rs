@@ -7,7 +7,7 @@ use apas_verus::Chap64::SpanTreeStEph::SpanTreeStEph::*;
 use apas_verus::SetLit;
 use apas_verus::Types::Types::*;
 
-fn create_cycle_graph(n: N) -> UnDirGraphStEph<N> {
+fn create_cycle_graph(n: usize) -> UnDirGraphStEph<usize> {
     let mut vertices = SetLit![];
     for i in 0..n {
         let _ = vertices.insert(i);
@@ -16,10 +16,10 @@ fn create_cycle_graph(n: N) -> UnDirGraphStEph<N> {
     for i in 0..n {
         let _ = edges.insert(Edge(i, (i + 1) % n));
     }
-    <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::from_sets(vertices, edges)
+    <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges)
 }
 
-fn create_connected_graph() -> UnDirGraphStEph<N> {
+fn create_connected_graph() -> UnDirGraphStEph<usize> {
     let mut vertices = SetLit![];
     for i in 0..6 {
         let _ = vertices.insert(i);
@@ -32,7 +32,7 @@ fn create_connected_graph() -> UnDirGraphStEph<N> {
     let _ = edges.insert(Edge(4, 5));
     let _ = edges.insert(Edge(5, 0));
     let _ = edges.insert(Edge(1, 4));
-    <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::from_sets(vertices, edges)
+    <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges)
 }
 
 #[test]
@@ -57,7 +57,7 @@ fn test_spanning_tree_connected() {
 fn test_spanning_tree_empty() {
     let vertices = SetLit![];
     let edges = SetLit![];
-    let graph = <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::from_sets(vertices, edges);
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
     let tree = spanning_tree_star_contraction(&graph);
 
     assert_eq!(tree.size(), 0);
@@ -67,7 +67,7 @@ fn test_spanning_tree_empty() {
 fn test_spanning_tree_single_vertex() {
     let vertices = SetLit![0];
     let edges = SetLit![];
-    let graph = <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::from_sets(vertices, edges);
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
     let tree = spanning_tree_star_contraction(&graph);
 
     assert_eq!(tree.size(), 0);

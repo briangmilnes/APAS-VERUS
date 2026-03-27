@@ -276,7 +276,7 @@ pub mod StarContractionMtEph {
         }
 
         if size == 1 {
-            let edge = edges.nth(start as N);
+            let edge = edges.nth(start as usize);
             let Edge(u, v) = edge;
 
             // Prove u and v are graph vertices so partition_map covers them.

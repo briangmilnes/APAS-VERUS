@@ -143,13 +143,13 @@ pub mod UnDirGraphMtEph {
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn sizeV(&self) -> (n: N)
+        fn sizeV(&self) -> (n: usize)
             requires spec_graphview_wf(self@), valid_key_type_for_graph::<V>()
             ensures n == self@.V.len();
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn sizeE(&self) -> (n: N)
+        fn sizeE(&self) -> (n: usize)
             requires spec_graphview_wf(self@), valid_key_type_for_graph::<V>()
             ensures n == self@.A.len();
 
@@ -207,7 +207,7 @@ pub mod UnDirGraphMtEph {
 
         /// - APAS: Work Θ(|E|), Span Θ(log |E|) — parallel
         /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(log |E|) — calls ng
-        fn degree(&self, v: &V) -> (n: N)
+        fn degree(&self, v: &V) -> (n: usize)
             requires
                 spec_graphview_wf(self@),
                 valid_key_type_for_graph::<V>(),
@@ -260,9 +260,9 @@ pub mod UnDirGraphMtEph {
 
         fn edges(&self) -> (e: &SetStEph<Edge<V>>) { &self.E }
 
-        fn sizeV(&self) -> (n: N) { self.V.size() }
+        fn sizeV(&self) -> (n: usize) { self.V.size() }
 
-        fn sizeE(&self) -> (n: N) { self.E.size() }
+        fn sizeE(&self) -> (n: usize) { self.E.size() }
 
         fn neighbor(&self, u: &V, v: &V) -> (b: bool) {
             self.E.mem(&Edge(u.clone_plus(), v.clone_plus())) || self.E.mem(&Edge(v.clone_plus(), u.clone_plus()))
@@ -281,7 +281,7 @@ pub mod UnDirGraphMtEph {
             feq(&e.0, v) || feq(&e.1, v)
         }
 
-        fn degree(&self, v: &V) -> (n: N) {
+        fn degree(&self, v: &V) -> (n: usize) {
             self.ng(v).size()
         }
 
@@ -610,11 +610,11 @@ pub mod UnDirGraphMtEph {
             requires self.spec_lockedundirgraphmteph_wf()
             ensures e@ == self@.A;
 
-        fn sizeV(&self) -> (n: N)
+        fn sizeV(&self) -> (n: usize)
             requires self.spec_lockedundirgraphmteph_wf()
             ensures n == self@.V.len();
 
-        fn sizeE(&self) -> (n: N)
+        fn sizeE(&self) -> (n: usize)
             requires self.spec_lockedundirgraphmteph_wf()
             ensures n == self@.A.len();
 
@@ -674,7 +674,7 @@ pub mod UnDirGraphMtEph {
             e
         }
 
-        fn sizeV(&self) -> (n: N) {
+        fn sizeV(&self) -> (n: usize) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
             proof { assume(inner@ == self@); }
@@ -683,7 +683,7 @@ pub mod UnDirGraphMtEph {
             n
         }
 
-        fn sizeE(&self) -> (n: N) {
+        fn sizeE(&self) -> (n: usize) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
             proof { assume(inner@ == self@); }

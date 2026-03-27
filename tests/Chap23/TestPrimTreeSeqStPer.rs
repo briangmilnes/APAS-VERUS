@@ -6,7 +6,7 @@ use vstd::prelude::Ghost;
 
 #[test]
 fn expose_zero_returns_zero() {
-    let seq = PrimTreeSeqStS::<N>::empty();
+    let seq = PrimTreeSeqStS::<usize>::empty();
     assert!(matches!(seq.expose(), PrimTreeSeqStTree::Zero));
 }
 
@@ -36,7 +36,7 @@ fn expose_two_splits_sequence() {
 
 #[test]
 fn join_zero_creates_empty_sequence() {
-    let seq = PrimTreeSeqStS::<N>::join(PrimTreeSeqStTree::Zero);
+    let seq = PrimTreeSeqStS::<usize>::join(PrimTreeSeqStTree::Zero);
     assert_eq!(seq.length(), 0);
 }
 
@@ -59,7 +59,7 @@ fn expose_then_join_roundtrip() {
 
 #[test]
 fn test_empty_constructor() {
-    let empty = PrimTreeSeqStS::<N>::empty();
+    let empty = PrimTreeSeqStS::<usize>::empty();
     assert_eq!(empty.length(), 0);
     assert!(empty.as_slice().is_empty());
 }
@@ -98,7 +98,7 @@ fn test_as_slice_view() {
 
 #[test]
 fn test_length_method() {
-    let empty = PrimTreeSeqStS::<N>::empty();
+    let empty = PrimTreeSeqStS::<usize>::empty();
     assert_eq!(empty.length(), 0);
 
     let single = PrimTreeSeqStS::singleton(1);
@@ -144,8 +144,8 @@ fn test_join_one_variant() {
 
 #[test]
 fn test_join_empty_sequences() {
-    let left = PrimTreeSeqStS::<N>::empty();
-    let right = PrimTreeSeqStS::<N>::empty();
+    let left = PrimTreeSeqStS::<usize>::empty();
+    let right = PrimTreeSeqStS::<usize>::empty();
     let joined = PrimTreeSeqStS::join(PrimTreeSeqStTree::Two(left, right));
     assert_eq!(joined.length(), 0);
     assert!(joined.as_slice().is_empty());
@@ -190,8 +190,8 @@ fn test_equality_comparison() {
 
 #[test]
 fn test_tree_enum_equality() {
-    let tree1 = PrimTreeSeqStTree::<N>::Zero;
-    let tree2 = PrimTreeSeqStTree::<N>::Zero;
+    let tree1 = PrimTreeSeqStTree::<usize>::Zero;
+    let tree2 = PrimTreeSeqStTree::<usize>::Zero;
     assert_eq!(tree1, tree2);
 
     let tree3 = PrimTreeSeqStTree::One(42);
@@ -209,7 +209,7 @@ fn test_tree_enum_equality() {
 
 #[test]
 fn test_large_sequence_expose_join() {
-    let large_seq = PrimTreeSeqStS::from_vec((0..1000).collect::<Vec<N>>());
+    let large_seq = PrimTreeSeqStS::from_vec((0..1000).collect::<Vec<usize>>());
     let exposed = large_seq.expose();
     let reconstructed = PrimTreeSeqStS::join(exposed);
 
@@ -518,7 +518,7 @@ fn test_flatten_with_empty_inner() {
     assert_eq!(flat.as_slice(), &[1, 2]);
 }
 
-fn generic_length<T: StT, S: PrimTreeSeqStTrait<T>>(seq: &S) -> N { seq.length() }
+fn generic_length<T: StT, S: PrimTreeSeqStTrait<T>>(seq: &S) -> usize { seq.length() }
 
 fn generic_expose<T: StT, S: PrimTreeSeqStTrait<T>>(seq: &S) -> PrimTreeSeqStTree<T> { seq.expose() }
 

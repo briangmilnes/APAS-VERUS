@@ -7,14 +7,14 @@ use apas_verus::Types::Types::*;
 
 #[test]
 fn test_empty_graph() {
-    let g = EdgeSetGraphStPer::<N>::empty();
+    let g = EdgeSetGraphStPer::<usize>::empty();
     assert_eq!(g.num_vertices(), 0);
     assert_eq!(g.num_edges(), 0);
 }
 
 #[test]
 fn test_insert_vertex() {
-    let g = EdgeSetGraphStPer::<N>::empty();
+    let g = EdgeSetGraphStPer::<usize>::empty();
     let g1 = g.insert_vertex(1);
     let g2 = g1.insert_vertex(2);
     assert_eq!(g2.num_vertices(), 2);
@@ -23,7 +23,7 @@ fn test_insert_vertex() {
 
 #[test]
 fn test_insert_edge() {
-    let g = EdgeSetGraphStPer::<N>::empty();
+    let g = EdgeSetGraphStPer::<usize>::empty();
     let g1 = g.insert_edge(1, 2);
     assert_eq!(g1.num_vertices(), 2);
     assert_eq!(g1.num_edges(), 1);
@@ -33,7 +33,7 @@ fn test_insert_edge() {
 
 #[test]
 fn test_delete_edge() {
-    let g = EdgeSetGraphStPer::<N>::empty();
+    let g = EdgeSetGraphStPer::<usize>::empty();
     let g1 = g.insert_edge(1, 2).insert_edge(1, 3);
     assert_eq!(g1.num_edges(), 2);
     let g2 = g1.delete_edge(&1, &2);
@@ -44,7 +44,7 @@ fn test_delete_edge() {
 
 #[test]
 fn test_out_neighbors() {
-    let g = EdgeSetGraphStPer::<N>::empty();
+    let g = EdgeSetGraphStPer::<usize>::empty();
     let g1 = g.insert_edge(1, 2).insert_edge(1, 3).insert_edge(2, 3);
     let neighbors = g1.out_neighbors(&1);
     assert_eq!(neighbors.size(), 2);
@@ -54,7 +54,7 @@ fn test_out_neighbors() {
 
 #[test]
 fn test_out_degree() {
-    let g = EdgeSetGraphStPer::<N>::empty();
+    let g = EdgeSetGraphStPer::<usize>::empty();
     let g1 = g.insert_edge(1, 2).insert_edge(1, 3);
     assert_eq!(g1.out_degree(&1), 2);
     assert_eq!(g1.out_degree(&2), 0);
@@ -62,7 +62,7 @@ fn test_out_degree() {
 
 #[test]
 fn test_delete_vertex() {
-    let g = EdgeSetGraphStPer::<N>::empty();
+    let g = EdgeSetGraphStPer::<usize>::empty();
     let g1 = g.insert_edge(1, 2).insert_edge(2, 3).insert_edge(3, 1);
     assert_eq!(g1.num_vertices(), 3);
     assert_eq!(g1.num_edges(), 3);

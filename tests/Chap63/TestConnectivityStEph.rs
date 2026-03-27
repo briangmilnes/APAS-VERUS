@@ -8,7 +8,7 @@ use apas_verus::Chap63::ConnectivityStEph::ConnectivityStEph::*;
 use apas_verus::SetLit;
 use apas_verus::Types::Types::*;
 
-fn create_connected_graph() -> UnDirGraphStEph<N> {
+fn create_connected_graph() -> UnDirGraphStEph<usize> {
     let mut vertices = SetLit![];
     for i in 0..6 {
         let _ = vertices.insert(i);
@@ -18,10 +18,10 @@ fn create_connected_graph() -> UnDirGraphStEph<N> {
     for i in 0..6 {
         let _ = edges.insert(Edge(i, (i + 1) % 6));
     }
-    <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::from_sets(vertices, edges)
+    <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges)
 }
 
-fn create_multi_component_graph() -> UnDirGraphStEph<N> {
+fn create_multi_component_graph() -> UnDirGraphStEph<usize> {
     let mut vertices = SetLit![];
     for i in 0..8 {
         let _ = vertices.insert(i);
@@ -35,7 +35,7 @@ fn create_multi_component_graph() -> UnDirGraphStEph<N> {
     // Component 3: 5-6-7
     let _ = edges.insert(Edge(5, 6));
     let _ = edges.insert(Edge(6, 7));
-    <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::from_sets(vertices, edges)
+    <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges)
 }
 
 #[test]
@@ -56,7 +56,7 @@ fn test_count_components_multiple() {
 fn test_count_components_empty() {
     let vertices = SetLit![];
     let edges = SetLit![];
-    let graph = <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::from_sets(vertices, edges);
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
     let count = count_components(&graph);
     assert_eq!(count, 0);
 }

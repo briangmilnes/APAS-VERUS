@@ -95,11 +95,11 @@ broadcast use {
             ensures out.spec_edgesetgraphsteph_wf();
         /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.1]
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; vertex set size.
-        fn num_vertices(&self) -> N
+        fn num_vertices(&self) -> usize
             requires self.spec_edgesetgraphsteph_wf();
         /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.1]
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; edge set size.
-        fn num_edges(&self) -> N
+        fn num_edges(&self) -> usize
             requires self.spec_edgesetgraphsteph_wf();
         /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.1]
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; returns reference.
@@ -120,7 +120,7 @@ broadcast use {
             ensures neighbors@ == self.spec_out_neighbors(u@), neighbors.spec_avltreesetsteph_wf();
         /// - APAS: Work Theta(m), Span Theta(m) [Cost Spec 52.1]
         /// - Claude-Opus-4.6: Work Theta(m lg n), Span Theta(m lg n) — delegates to out_neighbors.
-        fn out_degree(&self, u: &V) -> N
+        fn out_degree(&self, u: &V) -> usize
             requires self.spec_edgesetgraphsteph_wf();
         /// - APAS: Work Theta(lg n), Span Theta(lg n) [Cost Spec 52.1]
         /// - Claude-Opus-4.6: Work Theta(lg n), Span Theta(lg n) — agrees; AVL set insert.
@@ -187,9 +187,9 @@ broadcast use {
             EdgeSetGraphStEph { vertices: v, edges: e }
         }
 
-        fn num_vertices(&self) -> N { self.vertices.size() }
+        fn num_vertices(&self) -> usize { self.vertices.size() }
 
-        fn num_edges(&self) -> N { self.edges.size() }
+        fn num_edges(&self) -> usize { self.edges.size() }
 
         fn vertices(&self) -> &AVLTreeSetStEph<V> { &self.vertices }
 
@@ -285,7 +285,7 @@ broadcast use {
 
         /// - APAS: Work Θ(m), Span Θ(lg n) [Cost Spec 52.1]
         /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — delegates to out_neighbors which is sequential.
-        fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+        fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
 
         fn insert_vertex(&mut self, v: V) {
             self.vertices.insert(v);

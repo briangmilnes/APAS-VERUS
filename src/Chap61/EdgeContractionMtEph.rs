@@ -140,7 +140,7 @@ pub mod EdgeContractionMtEph {
         }
 
         if size == 1 {
-            let edge = edges.nth(start as N);
+            let edge = edges.nth(start as usize);
             let Edge(u, v) = edge;
             let block_u = match vertex_map.get(u) {
                 Some(val) => val.clone(),

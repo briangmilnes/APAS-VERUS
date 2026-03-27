@@ -67,10 +67,10 @@ broadcast use {
                     ==> table@.dom().contains(v),
             ensures out.spec_adjtablegraphstper_wf();
         /// Work Theta(1), Span Theta(1)
-        fn num_vertices(&self) -> N
+        fn num_vertices(&self) -> usize
             requires self.spec_adjtablegraphstper_wf();
         /// Work Theta(|V| + |E|), Span Theta(|V| + |E|)
-        fn num_edges(&self) -> (m: N)
+        fn num_edges(&self) -> (m: usize)
             requires self.spec_adjtablegraphstper_wf(), self.spec_num_edges() <= usize::MAX as nat
             ensures m as nat == self.spec_num_edges();
         /// Work Theta(|V|), Span Theta(|V|)
@@ -88,7 +88,7 @@ broadcast use {
                 self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],
                 !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty();
         /// Work Theta(log |V|), Span Theta(log |V|)
-        fn out_degree(&self, u: &V) -> N
+        fn out_degree(&self, u: &V) -> usize
             requires self.spec_adjtablegraphstper_wf();
         /// Work Theta(log |V|), Span Theta(log |V|)
         fn insert_vertex(&self, v: V) -> (updated: Self)
@@ -140,9 +140,9 @@ broadcast use {
 
         fn from_table(table: TableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self) { AdjTableGraphStPer { adj: table } }
 
-        fn num_vertices(&self) -> N { self.adj.size() }
+        fn num_vertices(&self) -> usize { self.adj.size() }
 
-        fn num_edges(&self) -> (m: N) {
+        fn num_edges(&self) -> (m: usize) {
             let domain = self.adj.domain();
             let seq = domain.to_seq();
             let len = seq.length();
@@ -203,7 +203,7 @@ broadcast use {
             }
         }
 
-        fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+        fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
 
         fn insert_vertex(&self, v: V) -> (updated: Self)
             ensures updated.spec_adj().dom().contains(v@)

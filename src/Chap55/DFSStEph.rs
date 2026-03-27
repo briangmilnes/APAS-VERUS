@@ -39,7 +39,7 @@ broadcast use vstd::seq::group_seq_axioms;
     }
 
     /// Bridge: for ArraySeqStEphS<usize>, view index equals spec_index.
-    proof fn lemma_usize_view_eq_spec_index(a: &ArraySeqStEphS<N>)
+    proof fn lemma_usize_view_eq_spec_index(a: &ArraySeqStEphS<usize>)
         ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
     {
         assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
@@ -47,8 +47,8 @@ broadcast use vstd::seq::group_seq_axioms;
 
     /// Bridge: for graph adjacency list, the view at vertex equals the spec_index view.
     proof fn lemma_graph_view_bridge(
-        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
-        neighbors: &ArraySeqStEphS<N>,
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
+        neighbors: &ArraySeqStEphS<usize>,
         vertex: int,
     )
         requires
@@ -62,7 +62,7 @@ broadcast use vstd::seq::group_seq_axioms;
     // 7. proof fns
 
     /// A vertex is trivially reachable from itself.
-    proof fn lemma_reachable_self(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, v: int)
+    proof fn lemma_reachable_self(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, v: int)
         requires 0 <= v < graph@.len(),
         ensures spec_reachable(graph, v, v),
     {
@@ -76,7 +76,7 @@ broadcast use vstd::seq::group_seq_axioms;
 
     /// If there is an edge u→v and v can reach w, then u can reach w.
     proof fn lemma_reachable_step(
-        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         u: int, v: int, w: int,
     )
         requires
@@ -116,7 +116,7 @@ broadcast use vstd::seq::group_seq_axioms;
 
     /// If visited is neighbor-closed and path[0] is visited, all vertices on the path are visited.
     proof fn lemma_neighbor_closed_path(
-        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         visited: Seq<bool>,
         path: Seq<int>,
     )
@@ -167,7 +167,7 @@ broadcast use vstd::seq::group_seq_axioms;
     /// If visited is neighbor-closed and source is visited, every vertex reachable from source
     /// is visited.
     proof fn lemma_neighbor_closed_implies_reachable(
-        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         visited: Seq<bool>,
         source: int,
         target: int,
@@ -196,7 +196,7 @@ broadcast use vstd::seq::group_seq_axioms;
         /// Performs DFS from source vertex s on adjacency list graph G.
         /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|) [Cost Spec 55.8, array sequences]
         /// - Claude-Opus-4.6: Work O(|V| + |E|), Span O(|V| + |E|) — agrees with APAS.
-        fn dfs(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> (reachable: AVLTreeSetStEph<N>)
+        fn dfs(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, source: usize) -> (reachable: AVLTreeSetStEph<usize>)
             requires
                 source < graph@.len(),
                 spec_toposortsteph_wf(graph),
@@ -216,10 +216,10 @@ broadcast use vstd::seq::group_seq_axioms;
     /// fully processed). Neighbor-closure and visited-reachable are guaranteed for all
     /// visited vertices NOT in gray.
     fn dfs_recursive(
-        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         visited: &mut ArraySeqStEphS<bool>,
-        reachable: &mut AVLTreeSetStEph<N>,
-        vertex: N,
+        reachable: &mut AVLTreeSetStEph<usize>,
+        vertex: usize,
         Ghost(gray): Ghost<Set<int>>,
     )
         requires
@@ -454,7 +454,7 @@ broadcast use vstd::seq::group_seq_axioms;
     impl DFSStEphTrait for DFSStEph {
         /// Performs DFS from source vertex s on adjacency list graph G.
         /// Returns the set of all vertices reachable from s.
-        fn dfs(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>, source: N) -> (reachable: AVLTreeSetStEph<N>)
+        fn dfs(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, source: usize) -> (reachable: AVLTreeSetStEph<usize>)
         {
             let n = graph.length();
             let init_false = |_x: usize| -> (r: bool)

@@ -18,7 +18,7 @@ fn test_mappinglit_macro_functionality() {
 
 #[test]
 fn test_empty_mapping() {
-    let m: MappingStEph<N, &str> = MappingLit![];
+    let m: MappingStEph<usize, &str> = MappingLit![];
     assert_eq!(m.size(), 0);
     assert_eq!(m.domain().size(), 0);
     assert_eq!(m.range().size(), 0);
@@ -26,7 +26,7 @@ fn test_empty_mapping() {
 
 #[test]
 fn test_empty_mapping_trait() {
-    let m: MappingStEph<N, &str> = <MappingStEph<N, &str> as MappingStEphTrait<N, &str>>::empty();
+    let m: MappingStEph<usize, &str> = <MappingStEph<usize, &str> as MappingStEphTrait<usize, &str>>::empty();
     assert_eq!(m.size(), 0);
     assert_eq!(m.domain().size(), 0);
     assert_eq!(m.range().size(), 0);
@@ -53,8 +53,8 @@ fn test_from_vec_duplicate_keys() {
 fn test_from_relation() {
     // Relation with unique keys
     let pairs_set = SetLit![PairLit!(1, "one"), PairLit!(2, "two"), PairLit!(3, "three")];
-    let rel = <RelationStEph<N, &str> as RelationStEphTrait<N, &str>>::from_set(pairs_set);
-    let m = <MappingStEph<N, &str> as MappingStEphTrait<N, &str>>::from_relation(&rel);
+    let rel = <RelationStEph<usize, &str> as RelationStEphTrait<usize, &str>>::from_set(pairs_set);
+    let m = <MappingStEph<usize, &str> as MappingStEphTrait<usize, &str>>::from_relation(&rel);
 
     assert_eq!(m.size(), 3);
     assert!(m.mem(&Pair(1, "one")));
@@ -107,7 +107,7 @@ fn test_mem_comprehensive() {
 
 #[test]
 fn test_empty_mapping_operations() {
-    let m: MappingStEph<N, &str> = MappingLit![];
+    let m: MappingStEph<usize, &str> = MappingLit![];
 
     assert_eq!(m.size(), 0);
     assert_eq!(m.domain().size(), 0);

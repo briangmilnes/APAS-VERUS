@@ -11,8 +11,8 @@ use apas_verus::Types::Types::*;
 use ordered_float::OrderedFloat;
 
 fn create_triangle_graph() -> (
-    LabUnDirGraphStEph<N, OrderedFloat<f64>>,
-    SetStEph<LabEdge<N, OrderedFloat<f64>>>,
+    LabUnDirGraphStEph<usize, OrderedFloat<f64>>,
+    SetStEph<LabEdge<usize, OrderedFloat<f64>>>,
 ) {
     let vertices = SetLit![0, 1, 2];
     let edges = SetLit![
@@ -20,7 +20,7 @@ fn create_triangle_graph() -> (
         LabEdge(1, 2, OrderedFloat(2.0)),
         LabEdge(2, 0, OrderedFloat(3.0))
     ];
-    let graph = <LabUnDirGraphStEph<N, OrderedFloat<f64>> as LabUnDirGraphStEphTrait<N, OrderedFloat<f64>>>::from_vertices_and_labeled_edges(vertices, edges.clone());
+    let graph = <LabUnDirGraphStEph<usize, OrderedFloat<f64>> as LabUnDirGraphStEphTrait<usize, OrderedFloat<f64>>>::from_vertices_and_labeled_edges(vertices, edges.clone());
 
     let spanning_tree = SetLit![LabEdge(0, 1, OrderedFloat(1.0)), LabEdge(1, 2, OrderedFloat(2.0))];
 

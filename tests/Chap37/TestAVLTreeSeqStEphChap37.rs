@@ -9,7 +9,7 @@ use apas_verus::Types::Types::*;
 
 #[test]
 fn test_avl_ephemeral_basic() {
-    let mut t = AVLTreeSeqStEphS::<N>::new();
+    let mut t = AVLTreeSeqStEphS::<usize>::new();
     assert_eq!(t.length(), 0);
     t.push_back(1);
     t.push_back(2);
@@ -24,12 +24,12 @@ fn test_avl_ephemeral_basic() {
 // Tests for remaining 15% untested AVLTreeSeqStEph methods
 #[test]
 fn test_avl_empty_constructor() {
-    let empty = AVLTreeSeqStEphS::<N>::empty();
+    let empty = AVLTreeSeqStEphS::<usize>::empty();
     assert_eq!(empty.length(), 0);
     assert!(empty.isEmpty());
     assert!(!empty.isSingleton());
 
-    let new_empty = AVLTreeSeqStEphS::<N>::new();
+    let new_empty = AVLTreeSeqStEphS::<usize>::new();
     assert_eq!(new_empty.length(), 0);
     assert!(new_empty.isEmpty());
     assert!(!new_empty.isSingleton());
@@ -55,7 +55,7 @@ fn test_avl_from_vec_constructor() {
     }
 
     // Test empty vec
-    let empty_tree = AVLTreeSeqStEphS::<N>::from_vec(vec![]);
+    let empty_tree = AVLTreeSeqStEphS::<usize>::from_vec(vec![]);
     assert_eq!(empty_tree.length(), 0);
     assert!(empty_tree.isEmpty());
 }
@@ -231,17 +231,17 @@ fn test_avl_iterator() {
     let tree = AVLTreeSeqStEphS::from_vec(vec![1, 2, 3, 4, 5]);
 
     // Test iterator collects values in order
-    let collected = tree.iter().cloned().collect::<Vec<N>>();
+    let collected = tree.iter().cloned().collect::<Vec<usize>>();
     assert_eq!(collected, vec![1, 2, 3, 4, 5]);
 
     // Test empty tree iterator
     let empty = AVLTreeSeqStEphS::new();
-    let empty_collected = empty.iter().cloned().collect::<Vec<N>>();
+    let empty_collected = empty.iter().cloned().collect::<Vec<usize>>();
     assert_eq!(empty_collected, vec![]);
 
     // Test single element iterator
     let single = AVLTreeSeqStEphS::singleton(42);
-    let single_collected = single.iter().cloned().collect::<Vec<N>>();
+    let single_collected = single.iter().cloned().collect::<Vec<usize>>();
     assert_eq!(single_collected, vec![42]);
 }
 
@@ -256,7 +256,7 @@ fn test_avl_to_arrayseq() {
     }
 
     // Test empty tree conversion
-    let empty_tree = AVLTreeSeqStEphS::<N>::new();
+    let empty_tree = AVLTreeSeqStEphS::<usize>::new();
     let empty_array = empty_tree.to_arrayseq();
     assert_eq!(empty_array.length(), 0);
 }
@@ -271,8 +271,8 @@ fn test_avl_equality() {
     assert!(tree1 != tree3);
 
     // Test empty trees
-    let empty1 = AVLTreeSeqStEphS::<N>::new();
-    let empty2 = AVLTreeSeqStEphS::<N>::new();
+    let empty1 = AVLTreeSeqStEphS::<usize>::new();
+    let empty2 = AVLTreeSeqStEphS::<usize>::new();
     assert!(empty1 == empty2);
 
     // Test different lengths
@@ -292,7 +292,7 @@ fn test_avl_macro_literal() {
     use apas_verus::AVLTreeSeqStEphLit;
 
     // Test empty macro
-    let empty: AVLTreeSeqStEphS<N> = AVLTreeSeqStEphLit![];
+    let empty: AVLTreeSeqStEphS<usize> = AVLTreeSeqStEphLit![];
     assert_eq!(empty.length(), 0);
 
     // Test single element macro
@@ -318,7 +318,7 @@ fn test_avl_macro_literal() {
 #[test]
 fn test_avl_large_tree_operations() {
     // Test with larger tree to stress balancing
-    let values = (1..=20).collect::<Vec<N>>();
+    let values = (1..=20).collect::<Vec<usize>>();
     let mut tree = AVLTreeSeqStEphS::from_vec(values.clone());
 
     assert_eq!(tree.length(), 20);
@@ -373,7 +373,7 @@ fn test_avl_stress_operations() {
 
     // Verify tree integrity after deletions
     assert!(tree.length() <= 10);
-    let collected = tree.iter().cloned().collect::<Vec<N>>();
+    let collected = tree.iter().cloned().collect::<Vec<usize>>();
 
     // Verify iterator still works - just check that we can collect all values
     // and that the tree maintains its basic properties
@@ -389,18 +389,18 @@ fn test_avl_stress_operations() {
 
 #[test]
 fn test_tabulate_and_map() {
-    let t: AVLTreeSeqStEphS<N> = AVLTreeSeqStEphLit![0, 1, 2, 3, 4];
-    let mapped_v = t.iter().map(|x| *x * 2).collect::<Vec<N>>();
-    let m = AVLTreeSeqStEphS::<N>::from_vec(mapped_v);
+    let t: AVLTreeSeqStEphS<usize> = AVLTreeSeqStEphLit![0, 1, 2, 3, 4];
+    let mapped_v = t.iter().map(|x| *x * 2).collect::<Vec<usize>>();
+    let m = AVLTreeSeqStEphS::<usize>::from_vec(mapped_v);
     assert_eq!(m.to_arrayseq(), ArraySeqStEphSLit![0, 2, 4, 6, 8]);
 }
 
 #[test]
 fn test_select_and_append() {
-    let a: AVLTreeSeqStEphS<N> = AVLTreeSeqStEphLit![0, 1, 2];
-    let b: AVLTreeSeqStEphS<N> = AVLTreeSeqStEphLit![3, 4, 5];
+    let a: AVLTreeSeqStEphS<usize> = AVLTreeSeqStEphLit![0, 1, 2];
+    let b: AVLTreeSeqStEphS<usize> = AVLTreeSeqStEphLit![3, 4, 5];
     // emulate select behavior
-    let select = |a: &AVLTreeSeqStEphS<N>, b: &AVLTreeSeqStEphS<N>, i: N| -> Option<N> {
+    let select = |a: &AVLTreeSeqStEphS<usize>, b: &AVLTreeSeqStEphS<usize>, i: usize| -> Option<usize> {
         if i < a.length() {
             Some(*a.nth(i))
         } else {
@@ -411,7 +411,7 @@ fn test_select_and_append() {
     assert_eq!(select(&a, &b, 0), Some(0));
     assert_eq!(select(&a, &b, 4), Some(4));
     assert_eq!(select(&a, &b, 6), None);
-    let mut vals = a.iter().copied().collect::<Vec<N>>();
+    let mut vals = a.iter().copied().collect::<Vec<usize>>();
     for x in b.iter() {
         if !vals.contains(x) {
             vals.push(*x);
@@ -423,14 +423,14 @@ fn test_select_and_append() {
 
 #[test]
 fn test_deflate_and_filter() {
-    let t: AVLTreeSeqStEphS<N> = AVLTreeSeqStEphLit![0, 1, 2, 3, 4, 5];
+    let t: AVLTreeSeqStEphS<usize> = AVLTreeSeqStEphLit![0, 1, 2, 3, 4, 5];
     let d = if 2 % 2 == 0 {
         AVLTreeSeqStEphLit![2]
     } else {
         AVLTreeSeqStEphLit![]
     };
     assert_eq!(d.to_arrayseq(), ArraySeqStEphSLit![2]);
-    let kept = t.iter().filter(|x| **x < 3).copied().collect::<Vec<N>>();
+    let kept = t.iter().filter(|x| **x < 3).copied().collect::<Vec<usize>>();
     let f = AVLTreeSeqStEphS::from_vec(kept);
     assert_eq!(f.to_arrayseq(), ArraySeqStEphSLit![0, 1, 2]);
 }

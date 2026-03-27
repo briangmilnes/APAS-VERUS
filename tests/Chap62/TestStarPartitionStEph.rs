@@ -9,7 +9,7 @@ use apas_verus::SetLit;
 use apas_verus::Types::Types::*;
 use apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
 
-fn create_cycle_graph(n: N) -> UnDirGraphStEph<N> {
+fn create_cycle_graph(n: usize) -> UnDirGraphStEph<usize> {
     let mut vertices = SetLit![];
     for i in 0..n {
         let _ = vertices.insert(i);
@@ -20,12 +20,12 @@ fn create_cycle_graph(n: N) -> UnDirGraphStEph<N> {
         let v = (i + 1) % n;
         let _ = edges.insert(Edge(u, v));
     }
-    <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::from_sets(vertices, edges)
+    <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges)
 }
 
-fn create_star_graph(n: N) -> UnDirGraphStEph<N> {
+fn create_star_graph(n: usize) -> UnDirGraphStEph<usize> {
     if n == 0 {
-        return <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::empty();
+        return <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::empty();
     }
     let mut vertices = SetLit![0]; // Center vertex
     for i in 1..n {
@@ -35,7 +35,7 @@ fn create_star_graph(n: N) -> UnDirGraphStEph<N> {
     for i in 1..n {
         let _ = edges.insert(Edge(0, i)); // Edges from center to satellites
     }
-    <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::from_sets(vertices, edges)
+    <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges)
 }
 
 #[test]
@@ -99,7 +99,7 @@ fn test_partition_properties() {
 
 #[test]
 fn test_empty_graph() {
-    let graph = <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::empty();
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::empty();
     let (centers, partition_map) = sequential_star_partition(&graph);
 
     assert_eq!(centers.size(), 0);
@@ -110,7 +110,7 @@ fn test_empty_graph() {
 fn test_single_vertex() {
     let vertices = SetLit![0];
     let edges = SetLit![];
-    let graph = <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::from_sets(vertices, edges);
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
 
     let (centers, partition_map) = sequential_star_partition(&graph);
 

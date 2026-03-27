@@ -23,12 +23,12 @@ pub mod BFSMtPer {
     // 4. type definitions
     pub type T<N> = ArraySeqMtPerS<ArraySeqMtPerS<N>>;
 
-    pub const UNREACHABLE: N = N::MAX;
-    pub const NO_PARENT: N = N::MAX;
+    pub const UNREACHABLE: usize = usize::MAX;
+    pub const NO_PARENT: usize = usize::MAX;
 
     pub struct BFSTreeS {
-        pub parents: ArraySeqMtPerS<N>,
-        pub order: ArraySeqMtPerS<N>,
+        pub parents: ArraySeqMtPerS<usize>,
+        pub order: ArraySeqMtPerS<usize>,
     }
 
     pub struct BFSMtPer;
@@ -36,27 +36,27 @@ pub mod BFSMtPer {
     // 6. spec fns
 
     /// All neighbor indices in the adjacency list are valid vertex indices.
-    pub open spec fn spec_bfsmtper_wf(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>) -> bool {
+    pub open spec fn spec_bfsmtper_wf(graph: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>) -> bool {
         forall|u: int, i: int|
             0 <= u < graph.spec_len() && 0 <= i < graph.spec_index(u).spec_len()
             ==> #[trigger] graph.spec_index(u).spec_index(i) < graph.spec_len()
     }
 
     /// Every distance entry is either UNREACHABLE or bounded by n.
-    pub open spec fn spec_distances_bounded(distances: &ArraySeqMtPerS<N>, n: int) -> bool {
+    pub open spec fn spec_distances_bounded(distances: &ArraySeqMtPerS<usize>, n: int) -> bool {
         forall|j: int| 0 <= j < distances.spec_len() ==>
             #[trigger] distances.spec_index(j) == UNREACHABLE || distances.spec_index(j) < n
     }
 
     /// Every parent entry is either NO_PARENT or a valid vertex index.
-    pub open spec fn spec_parents_bounded(parents: &ArraySeqMtPerS<N>, n: int) -> bool {
+    pub open spec fn spec_parents_bounded(parents: &ArraySeqMtPerS<usize>, n: int) -> bool {
         forall|j: int| 0 <= j < parents.spec_len() ==>
             #[trigger] parents.spec_index(j) == NO_PARENT || parents.spec_index(j) < n
     }
 
     // 7. proof fns
 
-    proof fn lemma_tabulate_all_no_parent(parents: &ArraySeqMtPerS<N>, n: int)
+    proof fn lemma_tabulate_all_no_parent(parents: &ArraySeqMtPerS<usize>, n: int)
         requires
             parents.spec_len() == n,
             forall|i: int| 0 <= i < n ==> #[trigger] parents.spec_index(i) == NO_PARENT,
@@ -65,10 +65,10 @@ pub mod BFSMtPer {
     {}
 
     proof fn lemma_update_preserves_parents_bounded(
-        parents: &ArraySeqMtPerS<N>,
-        old_parents: &ArraySeqMtPerS<N>,
+        parents: &ArraySeqMtPerS<usize>,
+        old_parents: &ArraySeqMtPerS<usize>,
         v: int,
-        new_val: N,
+        new_val: usize,
         n: int,
     )
         requires
@@ -96,8 +96,8 @@ pub mod BFSMtPer {
     }
 
     proof fn lemma_copy_preserves_parents_bounded(
-        original: &ArraySeqMtPerS<N>,
-        copy: &ArraySeqMtPerS<N>,
+        original: &ArraySeqMtPerS<usize>,
+        copy: &ArraySeqMtPerS<usize>,
         n: int,
     )
         requires
@@ -116,7 +116,7 @@ pub mod BFSMtPer {
         }
     }
 
-    proof fn lemma_tabulate_all_unreachable(distances: &ArraySeqMtPerS<N>, n: int)
+    proof fn lemma_tabulate_all_unreachable(distances: &ArraySeqMtPerS<usize>, n: int)
         requires
             distances.spec_len() == n,
             forall|i: int| 0 <= i < n ==>
@@ -127,10 +127,10 @@ pub mod BFSMtPer {
     }
 
     proof fn lemma_update_preserves_bounded(
-        distances: &ArraySeqMtPerS<N>,
-        old_distances: &ArraySeqMtPerS<N>,
+        distances: &ArraySeqMtPerS<usize>,
+        old_distances: &ArraySeqMtPerS<usize>,
         v: int,
-        new_val: N,
+        new_val: usize,
         n: int,
     )
         requires
@@ -158,7 +158,7 @@ pub mod BFSMtPer {
     }
 
     // Builds an owned copy of the distances array with proven spec equality.
-    fn copy_distances(distances: &ArraySeqMtPerS<N>) -> (copied: ArraySeqMtPerS<N>)
+    fn copy_distances(distances: &ArraySeqMtPerS<usize>) -> (copied: ArraySeqMtPerS<usize>)
         requires distances.spec_len() <= usize::MAX,
         ensures
             copied.spec_len() == distances.spec_len(),
@@ -167,7 +167,7 @@ pub mod BFSMtPer {
     {
         let n = distances.length();
         ArraySeqMtPerS::tabulate(
-            &|idx: usize| -> (r: N)
+            &|idx: usize| -> (r: usize)
                 requires idx < n, n == distances.spec_len()
                 ensures r == distances.spec_index(idx as int)
             { *distances.nth(idx) },
@@ -176,7 +176,7 @@ pub mod BFSMtPer {
     }
 
     // Builds an owned copy of the graph with proven spec equality.
-    fn copy_graph(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>) -> (copied: ArraySeqMtPerS<ArraySeqMtPerS<N>>)
+    fn copy_graph(graph: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>) -> (copied: ArraySeqMtPerS<ArraySeqMtPerS<usize>>)
         requires graph.spec_len() <= usize::MAX,
         ensures
             copied.spec_len() == graph.spec_len(),
@@ -188,7 +188,7 @@ pub mod BFSMtPer {
     {
         let n = graph.length();
         ArraySeqMtPerS::tabulate(
-            &|u_idx: usize| -> (r: ArraySeqMtPerS<N>)
+            &|u_idx: usize| -> (r: ArraySeqMtPerS<usize>)
                 requires u_idx < n, n == graph.spec_len()
                 ensures
                     r.spec_len() == graph.spec_index(u_idx as int).spec_len(),
@@ -198,7 +198,7 @@ pub mod BFSMtPer {
                 let adj = graph.nth(u_idx);
                 let adj_len = adj.length();
                 ArraySeqMtPerS::tabulate(
-                    &|k: usize| -> (r: N)
+                    &|k: usize| -> (r: usize)
                         requires k < adj_len, adj_len == adj.spec_len()
                         ensures r == adj.spec_index(k as int)
                     { *adj.nth(k) },
@@ -211,8 +211,8 @@ pub mod BFSMtPer {
 
     // Proves that spec_bfsmtper_wf holds for a graph copy with matching spec values.
     proof fn lemma_copy_preserves_wf(
-        original: &ArraySeqMtPerS<ArraySeqMtPerS<N>>,
-        copy: &ArraySeqMtPerS<ArraySeqMtPerS<N>>,
+        original: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>,
+        copy: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>,
     )
         requires
             spec_bfsmtper_wf(original),
@@ -237,8 +237,8 @@ pub mod BFSMtPer {
 
     // Proves that spec_distances_bounded holds for a distances copy with matching spec values.
     proof fn lemma_copy_preserves_bounded(
-        original: &ArraySeqMtPerS<N>,
-        copy: &ArraySeqMtPerS<N>,
+        original: &ArraySeqMtPerS<usize>,
+        copy: &ArraySeqMtPerS<usize>,
         n: int,
     )
         requires
@@ -259,10 +259,10 @@ pub mod BFSMtPer {
 
     // 8. traits
     pub trait BFSTreeMtPerTrait {
-        spec fn spec_order(&self) -> ArraySeqMtPerS<N>;
+        spec fn spec_order(&self) -> ArraySeqMtPerS<usize>;
 
         /// Vertices in BFS order (root first, then distance 1, 2, ...).
-        fn top_down_order(&self) -> (order: &ArraySeqMtPerS<N>)
+        fn top_down_order(&self) -> (order: &ArraySeqMtPerS<usize>)
             ensures
                 order.spec_len() == self.spec_order().spec_len(),
                 forall|i: int| 0 <= i < order.spec_len() ==>
@@ -270,7 +270,7 @@ pub mod BFSMtPer {
         ;
 
         /// Vertices in reverse BFS order (furthest from root first).
-        fn bottom_up_order(&self) -> (order: ArraySeqMtPerS<N>)
+        fn bottom_up_order(&self) -> (order: ArraySeqMtPerS<usize>)
             requires self.spec_order().spec_len() <= usize::MAX,
             ensures
                 order.spec_len() == self.spec_order().spec_len(),
@@ -282,7 +282,7 @@ pub mod BFSMtPer {
     pub trait BFSMtPerTrait {
         /// Algorithm 54.5: BFSDistance. Returns distance from source for every vertex.
         /// - APAS: Work O(|V| + |E|), Span O(d·lg n)
-        fn bfs(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>, source: N) -> (traversal: ArraySeqMtPerS<N>)
+        fn bfs(graph: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>, source: usize) -> (traversal: ArraySeqMtPerS<usize>)
             requires
                 source < graph.spec_len(),
                 graph.spec_len() > 0,
@@ -299,7 +299,7 @@ pub mod BFSMtPer {
 
         /// Algorithm 54.6: BFS Tree. Returns parent array and BFS-order vertex sequence.
         /// - APAS: Work O(|V| + |E|), Span O(d·lg n)
-        fn bfs_tree(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>, source: N) -> (traversal: BFSTreeS)
+        fn bfs_tree(graph: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>, source: usize) -> (traversal: BFSTreeS)
             requires
                 source < graph.spec_len(),
                 graph.spec_len() > 0,
@@ -325,11 +325,11 @@ pub mod BFSMtPer {
     // Parallel frontier processing via fork-join divide-and-conquer.
     // Splits the frontier in half, processes each half in parallel via join().
     fn process_frontier_parallel(
-        graph: ArraySeqMtPerS<ArraySeqMtPerS<N>>,
-        distances: ArraySeqMtPerS<N>,
-        frontier: Vec<N>,
-        next_dist: N,
-    ) -> (traversal: (Vec<N>, Vec<Pair<N, N>>))
+        graph: ArraySeqMtPerS<ArraySeqMtPerS<usize>>,
+        distances: ArraySeqMtPerS<usize>,
+        frontier: Vec<usize>,
+        next_dist: usize,
+    ) -> (traversal: (Vec<usize>, Vec<Pair<usize, usize>>))
         requires
             graph.spec_len() > 0,
             graph.spec_len() < usize::MAX,
@@ -358,8 +358,8 @@ pub mod BFSMtPer {
             let u = frontier[0];
             let neighbors = graph.nth(u);
             let num_neighbors = neighbors.length();
-            let mut next_verts: Vec<N> = Vec::new();
-            let mut updates: Vec<Pair<N, N>> = Vec::new();
+            let mut next_verts: Vec<usize> = Vec::new();
+            let mut updates: Vec<Pair<usize, usize>> = Vec::new();
             let mut i: usize = 0;
 
             while i < num_neighbors
@@ -408,10 +408,10 @@ pub mod BFSMtPer {
 
         // Ghost views from the originals for connecting closure ensures back.
         let ghost n_spec: int = graph.spec_len() as int;
-        let ghost dist_fn: spec_fn(int) -> N = |i: int| distances.spec_index(i);
+        let ghost dist_fn: spec_fn(int) -> usize = |i: int| distances.spec_index(i);
 
         // f1 processes the left half using copies.
-        let f1 = move || -> (r: (Vec<N>, Vec<Pair<N, N>>))
+        let f1 = move || -> (r: (Vec<usize>, Vec<Pair<usize, usize>>))
             ensures
                 forall|j: int| 0 <= j < r.0@.len() ==> (#[trigger] r.0@[j] as int) < n_spec,
                 forall|j: int| #![trigger r.1@[j]] 0 <= j < r.1@.len() ==>
@@ -432,7 +432,7 @@ pub mod BFSMtPer {
         };
 
         // f2 processes the right half using originals (moved).
-        let f2 = move || -> (r: (Vec<N>, Vec<Pair<N, N>>))
+        let f2 = move || -> (r: (Vec<usize>, Vec<Pair<usize, usize>>))
             ensures
                 forall|j: int| 0 <= j < r.0@.len() ==> (#[trigger] r.0@[j] as int) < n_spec,
                 forall|j: int| #![trigger r.1@[j]] 0 <= j < r.1@.len() ==>
@@ -492,10 +492,10 @@ pub mod BFSMtPer {
 
     // Parallel frontier processing for BFS tree: collects (neighbor, parent) pairs.
     fn process_frontier_tree_parallel(
-        graph: ArraySeqMtPerS<ArraySeqMtPerS<N>>,
-        parents: ArraySeqMtPerS<N>,
-        frontier: Vec<N>,
-    ) -> (traversal: Vec<Pair<N, N>>)
+        graph: ArraySeqMtPerS<ArraySeqMtPerS<usize>>,
+        parents: ArraySeqMtPerS<usize>,
+        frontier: Vec<usize>,
+    ) -> (traversal: Vec<Pair<usize, usize>>)
         requires
             graph.spec_len() > 0,
             graph.spec_len() < usize::MAX,
@@ -521,7 +521,7 @@ pub mod BFSMtPer {
             let u = frontier[0];
             let neighbors = graph.nth(u);
             let num_neighbors = neighbors.length();
-            let mut updates: Vec<Pair<N, N>> = Vec::new();
+            let mut updates: Vec<Pair<usize, usize>> = Vec::new();
             let mut i: usize = 0;
 
             while i < num_neighbors
@@ -563,9 +563,9 @@ pub mod BFSMtPer {
         }
 
         let ghost n_spec: int = graph.spec_len() as int;
-        let ghost parents_fn: spec_fn(int) -> N = |i: int| parents.spec_index(i);
+        let ghost parents_fn: spec_fn(int) -> usize = |i: int| parents.spec_index(i);
 
-        let f1 = move || -> (r: Vec<Pair<N, N>>)
+        let f1 = move || -> (r: Vec<Pair<usize, usize>>)
             ensures
                 forall|j: int| #![trigger r@[j]] 0 <= j < r@.len() ==>
                     (r@[j].0 as int) < n_spec
@@ -581,7 +581,7 @@ pub mod BFSMtPer {
             r
         };
 
-        let f2 = move || -> (r: Vec<Pair<N, N>>)
+        let f2 = move || -> (r: Vec<Pair<usize, usize>>)
             ensures
                 forall|j: int| #![trigger r@[j]] 0 <= j < r@.len() ==>
                     (r@[j].0 as int) < n_spec
@@ -624,12 +624,12 @@ pub mod BFSMtPer {
     impl BFSMtPerTrait for BFSMtPer {
 
     #[verifier::exec_allows_no_decreases_clause]
-    fn bfs(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>, source: N) -> (traversal: ArraySeqMtPerS<N>)
+    fn bfs(graph: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>, source: usize) -> (traversal: ArraySeqMtPerS<usize>)
     {
         let n = graph.length();
 
         let mut distances = ArraySeqMtPerS::tabulate(
-            &|_idx: usize| -> (r: N) ensures r == UNREACHABLE { UNREACHABLE },
+            &|_idx: usize| -> (r: usize) ensures r == UNREACHABLE { UNREACHABLE },
             n,
         );
 
@@ -640,9 +640,9 @@ pub mod BFSMtPer {
 
         proof { lemma_update_preserves_bounded(&distances, &old_d, source as int, 0, n as int); }
 
-        let mut current_layer: Vec<N> = Vec::new();
+        let mut current_layer: Vec<usize> = Vec::new();
         current_layer.push(source);
-        let mut current_dist: N = 0;
+        let mut current_dist: usize = 0;
 
         while current_layer.len() > 0
             invariant
@@ -765,12 +765,12 @@ pub mod BFSMtPer {
 
     /// Algorithm 54.6: BFS Tree with parallel frontier processing.
     #[verifier::exec_allows_no_decreases_clause]
-    fn bfs_tree(graph: &ArraySeqMtPerS<ArraySeqMtPerS<N>>, source: N) -> (traversal: BFSTreeS)
+    fn bfs_tree(graph: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>, source: usize) -> (traversal: BFSTreeS)
     {
         let n = graph.length();
 
         let mut parents = ArraySeqMtPerS::tabulate(
-            &|_idx: usize| -> (r: N) ensures r == NO_PARENT { NO_PARENT },
+            &|_idx: usize| -> (r: usize) ensures r == NO_PARENT { NO_PARENT },
             n,
         );
 
@@ -781,10 +781,10 @@ pub mod BFSMtPer {
 
         proof { lemma_update_preserves_parents_bounded(&parents, &old_p, source as int, source, n as int); }
 
-        let mut current_layer: Vec<N> = Vec::new();
+        let mut current_layer: Vec<usize> = Vec::new();
         current_layer.push(source);
 
-        let mut order: Vec<N> = Vec::new();
+        let mut order: Vec<usize> = Vec::new();
         order.push(source);
 
         while current_layer.len() > 0
@@ -829,7 +829,7 @@ pub mod BFSMtPer {
             }
 
             // Apply updates with deduplication: first write to each vertex wins.
-            let mut next_layer: Vec<N> = Vec::new();
+            let mut next_layer: Vec<usize> = Vec::new();
             let mut k: usize = 0;
             while k < tree_updates.len()
                 invariant
@@ -892,18 +892,18 @@ pub mod BFSMtPer {
     } // impl BFSMtPerTrait
 
     impl BFSTreeMtPerTrait for BFSTreeS {
-        open spec fn spec_order(&self) -> ArraySeqMtPerS<N> {
+        open spec fn spec_order(&self) -> ArraySeqMtPerS<usize> {
             self.order
         }
 
-        fn top_down_order(&self) -> (order: &ArraySeqMtPerS<N>) {
+        fn top_down_order(&self) -> (order: &ArraySeqMtPerS<usize>) {
             &self.order
         }
 
-        fn bottom_up_order(&self) -> (order: ArraySeqMtPerS<N>) {
+        fn bottom_up_order(&self) -> (order: ArraySeqMtPerS<usize>) {
             let n = self.order.length();
             ArraySeqMtPerS::tabulate(
-                &|i: usize| -> (r: N)
+                &|i: usize| -> (r: usize)
                     requires i < n, n == self.order.spec_len()
                     ensures r == self.order.spec_index((n - 1 - i) as int)
                 { *self.order.nth(n - 1 - i) },

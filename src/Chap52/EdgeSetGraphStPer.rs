@@ -98,10 +98,10 @@ broadcast use {
                     ==> v@.contains(u) && v@.contains(w),
             ensures out.spec_edgesetgraphstper_wf();
         /// Work Theta(1), Span Theta(1)
-        fn num_vertices(&self) -> N
+        fn num_vertices(&self) -> usize
             requires self.spec_edgesetgraphstper_wf();
         /// Work Theta(1), Span Theta(1)
-        fn num_edges(&self) -> N
+        fn num_edges(&self) -> usize
             requires self.spec_edgesetgraphstper_wf();
         /// Work Theta(1), Span Theta(1)
         fn vertices(&self) -> &AVLTreeSetStPer<V>
@@ -117,7 +117,7 @@ broadcast use {
             requires self.spec_edgesetgraphstper_wf()
             ensures neighbors@ == self.spec_out_neighbors(u@), neighbors.spec_avltreesetstper_wf();
         /// Work Theta(|E|), Span Theta(|E|)
-        fn out_degree(&self, u: &V) -> N
+        fn out_degree(&self, u: &V) -> usize
             requires self.spec_edgesetgraphstper_wf();
         /// Work Theta(log |V|), Span Theta(log |V|)
         fn insert_vertex(&self, v: V) -> (updated: Self)
@@ -180,9 +180,9 @@ broadcast use {
             EdgeSetGraphStPer { vertices: v, edges: e }
         }
 
-        fn num_vertices(&self) -> N { self.vertices.size() }
+        fn num_vertices(&self) -> usize { self.vertices.size() }
 
-        fn num_edges(&self) -> N { self.edges.size() }
+        fn num_edges(&self) -> usize { self.edges.size() }
 
         fn vertices(&self) -> &AVLTreeSetStPer<V> { &self.vertices }
 
@@ -275,7 +275,7 @@ broadcast use {
 
         /// - APAS: Work Θ(m), Span Θ(lg n) [Cost Spec 52.1, degree of vertex]
         /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — delegates to out_neighbors which is sequential.
-        fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+        fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
 
         fn insert_vertex(&self, v: V) -> (updated: Self) {
             let new_vertices = self.vertices.insert(v);

@@ -38,7 +38,7 @@ pub mod BSTSplayStEph {
 
     pub struct Node<T: TotalOrder + Clone> {
         pub key: T,
-        pub size: N,
+        pub size: usize,
         pub left: Link<T>,
         pub right: Link<T>,
     }
@@ -197,13 +197,13 @@ pub mod BSTSplayStEph {
                 tree.spec_bstsplaysteph_wf(),
                 tree.spec_size() == 0,
                 forall|x: T| !tree.spec_contains(x);
-        fn size(&self) -> (n: N)
+        fn size(&self) -> (n: usize)
             requires self.spec_bstsplaysteph_wf(),
             ensures n as nat == self.spec_size();
         fn is_empty(&self) -> (b: bool)
             requires self.spec_bstsplaysteph_wf(),
             ensures b == (self.spec_size() == 0);
-        fn height(&self) -> (h: N)
+        fn height(&self) -> (h: usize)
             requires
                 self.spec_bstsplaysteph_wf(),
                 self.spec_height() < usize::MAX as nat,
@@ -267,7 +267,7 @@ pub mod BSTSplayStEph {
     /// - APAS: N/A -- Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1) -- cached size field.
     // veracity: no_requires
-    fn size_link<T: TotalOrder + Clone>(link: &Link<T>) -> (size: N)
+    fn size_link<T: TotalOrder + Clone>(link: &Link<T>) -> (size: usize)
         ensures size as nat == spec_size_link(link),
     {
         proof { reveal(spec_size_link); }
@@ -279,7 +279,7 @@ pub mod BSTSplayStEph {
 
     /// - APAS: (no cost stated)
     /// - Claude-Opus-4.6: Work O(n), Span O(n) -- recursive tree traversal.
-    fn height_link<T: TotalOrder + Clone>(link: &Link<T>) -> (height: N)
+    fn height_link<T: TotalOrder + Clone>(link: &Link<T>) -> (height: usize)
         requires spec_height_link(link) < usize::MAX as nat,
         ensures height as nat == spec_height_link(link),
         decreases *link,
@@ -1644,7 +1644,7 @@ pub mod BSTSplayStEph {
 
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- cached size field.
-        fn size(&self) -> (n: N) { size_link(&self.root) }
+        fn size(&self) -> (n: usize) { size_link(&self.root) }
 
         /// - APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- compares cached size.
@@ -1652,7 +1652,7 @@ pub mod BSTSplayStEph {
 
         /// - APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- recursive tree traversal.
-        fn height(&self) -> (h: N) {
+        fn height(&self) -> (h: usize) {
             height_link(&self.root)
         }
 

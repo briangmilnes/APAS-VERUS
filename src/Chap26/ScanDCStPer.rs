@@ -53,7 +53,7 @@ pub mod ScanDCStPer {
     //		4. spec functions
 
     /// Spec function: exclusive prefix scan result at position i is the fold of elements [0..i).
-    pub open spec fn spec_scan_at(s: Seq<N>, spec_f: spec_fn(N, N) -> N, id: N, i: int) -> N
+    pub open spec fn spec_scan_at(s: Seq<usize>, spec_f: spec_fn(usize, usize) -> usize, id: usize, i: int) -> usize
         recommends 0 <= i <= s.len(),
     {
         s.take(i).fold_left(id, spec_f)
@@ -61,8 +61,8 @@ pub mod ScanDCStPer {
 
     /// Spec function: full exclusive scan postcondition.
     pub open spec fn spec_scan_post(
-        input: Seq<N>, spec_f: spec_fn(N, N) -> N, id: N,
-        prefixes: Seq<N>, total: N,
+        input: Seq<usize>, spec_f: spec_fn(usize, usize) -> usize, id: usize,
+        prefixes: Seq<usize>, total: usize,
     ) -> bool {
         &&& prefixes.len() == input.len()
         &&& forall|i: int| #![trigger prefixes[i]]
@@ -77,7 +77,7 @@ pub mod ScanDCStPer {
 
     /// Monoid fold_left lemma: fold_left(s, x, f) == f(x, fold_left(s, id, f))
     /// when (f, id) is a monoid.
-    pub proof fn lemma_fold_left_monoid(s: Seq<N>, x: N, f: spec_fn(N, N) -> N, id: N)
+    pub proof fn lemma_fold_left_monoid(s: Seq<usize>, x: usize, f: spec_fn(usize, usize) -> usize, id: usize)
         requires spec_monoid(f, id),
         ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),
         decreases s.len(),
@@ -100,12 +100,12 @@ pub mod ScanDCStPer {
         /// Returns (prefixes, total) where prefixes[i] = f(id, a[0], ..., a[i-1]).
         /// - APAS: Work Θ(n lg n), Span Θ(lg n) — Algorithm 26.5 with parallel recursive calls and O(n)/O(1) combine.
         /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — sequential implementation, Span = Work.
-        fn scan_dc<F: Fn(&N, &N) -> N>(a: &ArraySeqStPerS<N>, f: &F, Ghost(spec_f): Ghost<spec_fn(N, N) -> N>, id: N) -> (scanned: (ArraySeqStPerS<N>, N))
+        fn scan_dc<F: Fn(&usize, &usize) -> usize>(a: &ArraySeqStPerS<usize>, f: &F, Ghost(spec_f): Ghost<spec_fn(usize, usize) -> usize>, id: usize) -> (scanned: (ArraySeqStPerS<usize>, usize))
             requires
                 a.spec_len() <= usize::MAX,
                 spec_monoid(spec_f, id),
-                forall|x: &N, y: &N| #[trigger] f.requires((x, y)),
-                forall|x: N, y: N, ret: N| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+                forall|x: &usize, y: &usize| #[trigger] f.requires((x, y)),
+                forall|x: usize, y: usize, ret: usize| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
                 spec_scan_post(
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
@@ -117,7 +117,7 @@ pub mod ScanDCStPer {
         /// Convenience: scan_dc with (+, 0).
         /// - APAS: Work Θ(n lg n), Span Θ(lg n) — same as scan_dc.
         /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — delegates to sequential scan_dc.
-        fn prefix_sums_dc(a: &ArraySeqStPerS<N>) -> (sums: (ArraySeqStPerS<N>, N))
+        fn prefix_sums_dc(a: &ArraySeqStPerS<usize>) -> (sums: (ArraySeqStPerS<usize>, usize))
             requires a.spec_len() <= usize::MAX,
             ensures
                 spec_scan_post(
@@ -130,8 +130,8 @@ pub mod ScanDCStPer {
 
     //		9. impls
 
-    impl ScanDCStTrait for ArraySeqStPerS<N> {
-        fn scan_dc<F: Fn(&N, &N) -> N>(a: &ArraySeqStPerS<N>, f: &F, Ghost(spec_f): Ghost<spec_fn(N, N) -> N>, id: N) -> (scanned: (ArraySeqStPerS<N>, N))
+    impl ScanDCStTrait for ArraySeqStPerS<usize> {
+        fn scan_dc<F: Fn(&usize, &usize) -> usize>(a: &ArraySeqStPerS<usize>, f: &F, Ghost(spec_f): Ghost<spec_fn(usize, usize) -> usize>, id: usize) -> (scanned: (ArraySeqStPerS<usize>, usize))
             decreases a.spec_len(),
         {
             let n = a.length();
@@ -140,7 +140,7 @@ pub mod ScanDCStPer {
             if n == 0 {
                 proof {
                     reveal(Seq::fold_left);
-                    assert(input =~= Seq::<N>::empty());
+                    assert(input =~= Seq::<usize>::empty());
                 }
                 return (ArraySeqStPerS::empty(), id);
             }
@@ -149,11 +149,11 @@ pub mod ScanDCStPer {
                 proof {
                     reveal(Seq::fold_left);
                     assert(input.len() == 1);
-                    assert(input.drop_last() =~= Seq::<N>::empty());
+                    assert(input.drop_last() =~= Seq::<usize>::empty());
                     assert(input.last() == a.spec_index(0));
-                    assert(Seq::<N>::empty().fold_left(id, spec_f) == id);
+                    assert(Seq::<usize>::empty().fold_left(id, spec_f) == id);
                     assert(input.fold_left(id, spec_f) == spec_f(id, a.spec_index(0)));
-                    assert(input.take(0) =~= Seq::<N>::empty());
+                    assert(input.take(0) =~= Seq::<usize>::empty());
                 }
                 return (ArraySeqStPerS::singleton(id), total);
             }
@@ -161,7 +161,7 @@ pub mod ScanDCStPer {
             let mid = n / 2;
 
             // Build left half
-            let mut left_vec: Vec<N> = Vec::with_capacity(mid);
+            let mut left_vec: Vec<usize> = Vec::with_capacity(mid);
             let mut i: usize = 0;
             while i < mid
                 invariant
@@ -177,7 +177,7 @@ pub mod ScanDCStPer {
 
             // Build right half
             let right_len = n - mid;
-            let mut right_vec: Vec<N> = Vec::with_capacity(right_len);
+            let mut right_vec: Vec<usize> = Vec::with_capacity(right_len);
             let mut i: usize = 0;
             while i < right_len
                 invariant
@@ -210,7 +210,7 @@ pub mod ScanDCStPer {
 
             // Adjust right prefixes: r_adjusted[j] = f(l_total, r_prefixes[j])
             let r_len = r_prefixes.length();
-            let mut adj_vec: Vec<N> = Vec::with_capacity(r_len);
+            let mut adj_vec: Vec<usize> = Vec::with_capacity(r_len);
             let mut i: usize = 0;
             while i < r_len
                 invariant
@@ -218,8 +218,8 @@ pub mod ScanDCStPer {
                     r_len == r_prefixes.spec_len(),
                     r_pref_view.len() == r_len as int,
                     adj_vec@.len() == i as int,
-                    forall|x: &N, y: &N| #[trigger] f.requires((x, y)),
-                    forall|x: N, y: N, ret: N| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+                    forall|x: &usize, y: &usize| #[trigger] f.requires((x, y)),
+                    forall|x: usize, y: usize, ret: usize| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
                     forall|j: int| #![trigger r_pref_view[j]] 0 <= j < r_len as int
                         ==> r_pref_view[j] == r_prefixes.spec_index(j),
                     forall|j: int| #![trigger adj_vec@[j]] 0 <= j < i as int
@@ -234,7 +234,7 @@ pub mod ScanDCStPer {
 
             // Concatenate l_prefixes and adjusted right
             let l_len = l_prefixes.length();
-            let mut result_vec: Vec<N> = Vec::with_capacity(n);
+            let mut result_vec: Vec<usize> = Vec::with_capacity(n);
             let mut i: usize = 0;
             while i < l_len
                 invariant
@@ -318,9 +318,9 @@ pub mod ScanDCStPer {
             (result_prefixes, total)
         }
 
-        fn prefix_sums_dc(a: &ArraySeqStPerS<N>) -> (sums: (ArraySeqStPerS<N>, N)) {
+        fn prefix_sums_dc(a: &ArraySeqStPerS<usize>) -> (sums: (ArraySeqStPerS<usize>, usize)) {
             Self::scan_dc(a,
-                &(|x: &N, y: &N| -> (ret: N)
+                &(|x: &usize, y: &usize| -> (ret: usize)
                     ensures ret == spec_wrapping_add(*x, *y)
                 { (*x).wrapping_add(*y) }),
                 Ghost(spec_sum_fn()), 0)

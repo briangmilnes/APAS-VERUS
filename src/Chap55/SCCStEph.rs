@@ -48,7 +48,7 @@ pub mod SCCStEph {
     }
 
     /// Bridge: for ArraySeqStEphS<usize>, view index equals spec_index.
-    proof fn lemma_usize_view_eq_spec_index(a: &ArraySeqStEphS<N>)
+    proof fn lemma_usize_view_eq_spec_index(a: &ArraySeqStEphS<usize>)
         ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
     {
         assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
@@ -56,8 +56,8 @@ pub mod SCCStEph {
 
     /// Bridge: graph adjacency list view at vertex equals spec_index view.
     proof fn lemma_graph_view_bridge(
-        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
-        neighbors: &ArraySeqStEphS<N>,
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
+        neighbors: &ArraySeqStEphS<usize>,
         vertex: int,
     )
         requires
@@ -74,7 +74,7 @@ pub mod SCCStEph {
         /// Finds strongly connected components in a directed graph (Algorithm 55.18).
         /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|) [inherits from DFS cost]
         /// - Claude-Opus-4.6: Work O(|V| + |E|), Span O(|V| + |E|) — agrees with APAS.
-        fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (components: AVLTreeSeqStEphS<AVLTreeSetStEph<N>>)
+        fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (components: AVLTreeSeqStEphS<AVLTreeSetStEph<usize>>)
             requires
                 spec_toposortsteph_wf(graph),
                 graph@.len() < usize::MAX,
@@ -86,7 +86,7 @@ pub mod SCCStEph {
     // 9. impls
 
     /// Computes the finish order for SCC (decreasing finish times).
-    fn compute_finish_order(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (result: AVLTreeSeqStEphS<N>)
+    fn compute_finish_order(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (result: AVLTreeSeqStEphS<usize>)
         requires
             spec_toposortsteph_wf(graph),
             graph@.len() < usize::MAX,
@@ -101,7 +101,7 @@ pub mod SCCStEph {
             ensures !r
         { false };
         let mut visited = ArraySeqStEphS::tabulate(&init_false, n);
-        let mut finish_order: Vec<N> = Vec::new();
+        let mut finish_order: Vec<usize> = Vec::new();
 
         proof {
             assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {
@@ -155,7 +155,7 @@ pub mod SCCStEph {
             lemma_all_true_num_false_zero(visited@);
         }
         let result_len = finish_order.len();
-        let mut reversed: Vec<N> = Vec::new();
+        let mut reversed: Vec<usize> = Vec::new();
         let mut k: usize = result_len;
         while k > 0
             invariant
@@ -179,14 +179,14 @@ pub mod SCCStEph {
     }
 
     /// Transposes a directed graph (reverses all edges).
-    fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (transposed: ArraySeqStEphS<ArraySeqStEphS<N>>)
+    fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (transposed: ArraySeqStEphS<ArraySeqStEphS<usize>>)
         requires spec_toposortsteph_wf(graph),
         ensures
             transposed@.len() == graph@.len(),
             spec_toposortsteph_wf(&transposed),
     {
         let n = graph.length();
-        let mut adj_vecs: Vec<Vec<N>> = Vec::new();
+        let mut adj_vecs: Vec<Vec<usize>> = Vec::new();
         let mut k: usize = 0;
         while k < n
             invariant
@@ -257,7 +257,7 @@ pub mod SCCStEph {
             u = u + 1;
         }
 
-        let mut result_vecs: Vec<ArraySeqStEphS<N>> = Vec::new();
+        let mut result_vecs: Vec<ArraySeqStEphS<usize>> = Vec::new();
         let mut m: usize = 0;
         while m < n
             invariant
@@ -309,7 +309,7 @@ pub mod SCCStEph {
 
     /// Runtime check that all neighbor indices are valid vertex indices.
     // veracity: no_requires
-    fn check_wf_adj_list_eph(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> (valid: bool)
+    fn check_wf_adj_list_eph(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (valid: bool)
         ensures valid ==> spec_toposortsteph_wf(graph),
     {
         let n = graph.length();
@@ -363,10 +363,10 @@ pub mod SCCStEph {
     }
 
     fn dfs_reach(
-        graph: &ArraySeqStEphS<ArraySeqStEphS<N>>,
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         visited: &mut ArraySeqStEphS<bool>,
-        component: &mut AVLTreeSetStEph<N>,
-        vertex: N,
+        component: &mut AVLTreeSetStEph<usize>,
+        vertex: usize,
     )
         requires
             vertex < old(visited)@.len(),
@@ -481,7 +481,7 @@ pub mod SCCStEph {
 
     impl SCCStEphTrait for SCCStEph {
         /// Finds strongly connected components in a directed graph.
-        fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<N>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<N>>
+        fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<usize>>
         {
             let finish_order = compute_finish_order(graph);
             let transposed = transpose_graph(graph);
@@ -491,7 +491,7 @@ pub mod SCCStEph {
                 ensures !r
             { false };
             let mut visited = ArraySeqStEphS::tabulate(&init_false, n);
-            let mut components_vec: Vec<AVLTreeSetStEph<N>> = Vec::new();
+            let mut components_vec: Vec<AVLTreeSetStEph<usize>> = Vec::new();
 
             proof {
                 assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {
@@ -559,7 +559,7 @@ pub mod SCCStEph {
             }
             assert(components_vec@.len() >= 1 || graph@.len() == 0);
             assert(components_vec@.len() < usize::MAX);
-            proof { assert(obeys_feq_full_trigger::<AVLTreeSetStEph<N>>()); }
+            proof { assert(obeys_feq_full_trigger::<AVLTreeSetStEph<usize>>()); }
             AVLTreeSeqStEphS::from_vec(components_vec)
         }
     } // impl SCCStEphTrait

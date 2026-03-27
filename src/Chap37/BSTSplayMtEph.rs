@@ -45,7 +45,7 @@ pub mod BSTSplayMtEph {
     #[verifier::reject_recursive_types(T)]
     pub struct Node<T: StTInMtT + Ord + TotalOrder> {
         pub key: T,
-        pub size: N,
+        pub size: usize,
         pub left: Option<Box<Node<T>>>,
         pub right: Option<Box<Node<T>>>,
     }
@@ -152,7 +152,7 @@ pub mod BSTSplayMtEph {
     }
 
     // veracity: no_requires
-    fn size_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (size: N)
+    fn size_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (size: usize)
         ensures size as nat == link_spec_size(*link),
     {
         proof { reveal(link_spec_size); }
@@ -1705,7 +1705,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    fn height_rec<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (h: N)
+    fn height_rec<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (h: usize)
         requires link_height(*link) <= usize::MAX as nat,
         ensures h as nat == link_height(*link),
         decreases *link,
@@ -1795,7 +1795,7 @@ pub mod BSTSplayMtEph {
             requires self.spec_bstsplaymteph_wf(),
             ensures found == link_contains(self@, *target);
 
-        fn size(&self) -> (n: N)
+        fn size(&self) -> (n: usize)
             requires self.spec_bstsplaymteph_wf(),
             ensures n as nat == link_spec_size(self@);
 
@@ -1803,7 +1803,7 @@ pub mod BSTSplayMtEph {
             requires self.spec_bstsplaymteph_wf(),
             ensures b == (self@ is None);
 
-        fn height(&self) -> (h: N)
+        fn height(&self) -> (h: usize)
             requires self.spec_bstsplaymteph_wf(),
             ensures h as nat == link_height(self@);
 
@@ -1888,7 +1888,7 @@ pub mod BSTSplayMtEph {
         }
 
         // Reader: assume return value matches ghost.
-        fn size(&self) -> (n: N) {
+        fn size(&self) -> (n: usize) {
             let handle = self.root.acquire_read();
             let n = size_link(handle.borrow());
             proof { assume(n as nat == link_spec_size(self@)); }
@@ -1906,7 +1906,7 @@ pub mod BSTSplayMtEph {
         }
 
         // Reader: height bounded by node count from lock predicate.
-        fn height(&self) -> (h: N) {
+        fn height(&self) -> (h: usize) {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
             proof {

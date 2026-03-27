@@ -124,13 +124,13 @@ verus! {
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn sizeV(&self) -> (n: N)
+        fn sizeV(&self) -> (n: usize)
             requires valid_key_type_Edge::<V>()
             ensures n == self@.V.len();
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn sizeE(&self) -> (n: N)
+        fn sizeE(&self) -> (n: usize)
             requires valid_key_type_Edge::<V>()
             ensures n == self@.A.len();
 
@@ -174,7 +174,7 @@ verus! {
 
         /// - APAS: Work Θ(|E|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) -- sequential filter
-        fn degree(&self, v: &V) -> (n: N)
+        fn degree(&self, v: &V) -> (n: usize)
             requires 
                 spec_graphview_wf(self@),
                 valid_key_type_Edge::<V>(),
@@ -199,9 +199,9 @@ verus! {
 
         fn edges(&self) -> (e: &SetStEph<Edge<V>>) { &self.E }
 
-        fn sizeV(&self) -> (n: N) { self.V.size() }
+        fn sizeV(&self) -> (n: usize) { self.V.size() }
 
-        fn sizeE(&self) -> (n: N) { self.E.size() }
+        fn sizeE(&self) -> (n: usize) { self.E.size() }
 
         fn neighbor(&self, u: &V, v: &V) -> (b: bool) {
             self.E.mem(&Edge(u.clone_plus(), v.clone_plus())) || 
@@ -325,7 +325,7 @@ verus! {
             feq(&e.0, v) || feq(&e.1, v) 
         }
 
-        fn degree(&self, v: &V) -> (n: N) { self.ng(v).size() }
+        fn degree(&self, v: &V) -> (n: usize) { self.ng(v).size() }
     }
 
     #[cfg(verus_keep_ghost)]

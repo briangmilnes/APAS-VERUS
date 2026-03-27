@@ -26,7 +26,7 @@ fn test_avltreesetmtperlit_macro_type_safety() {
 
 #[test]
 fn test_empty_set() {
-    let s = AVLTreeSetMtPer::<N>::empty();
+    let s = AVLTreeSetMtPer::<usize>::empty();
     assert_eq!(s.size(), 0);
 }
 

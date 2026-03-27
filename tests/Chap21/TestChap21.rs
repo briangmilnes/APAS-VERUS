@@ -134,7 +134,7 @@ fn prime_sieve_matches_primes_bf() {
 #[test]
 fn all_contiguous_subseqs_empty() {
     use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
-    let a = ArraySeqStPerS::<N>::from_vec(Vec::new());
+    let a = ArraySeqStPerS::<usize>::from_vec(Vec::new());
     let result = all_contiguous_subseqs(&a);
     assert_eq!(result.length(), 0);
 }
@@ -276,7 +276,7 @@ fn cartesian_loops_basic() {
 #[test]
 fn cartesian_loops_empty() {
     use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
-    let a = ArraySeqStPerS::<N>::from_vec(Vec::new());
+    let a = ArraySeqStPerS::<usize>::from_vec(Vec::new());
     let b = ArraySeqStPerS::from_vec(vec![1, 2, 3]);
     let result = cartesian_loops(&a, &b);
     assert_eq!(result.length(), 0);

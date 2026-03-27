@@ -117,7 +117,7 @@ verus! {
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn size(&self) -> (size: N)
+        fn size(&self) -> (size: usize)
             requires self.spec_relationsteph_wf()
             ensures size == self@.len();
 
@@ -178,7 +178,7 @@ verus! {
         fn from_vec(v: Vec<Pair<X, Y>>) -> RelationStEph<X, Y> {
             RelationStEph { pairs: SetStEph::from_vec(v), } }
 
-        fn size(&self) -> N { self.pairs.size() }
+        fn size(&self) -> usize { self.pairs.size() }
 
         fn domain(&self) -> SetStEph<X> {
             let mut out = SetStEph::<X>::empty();

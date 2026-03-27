@@ -47,7 +47,7 @@ pub mod BSTRBMtEph {
     pub struct Node<T: StTInMtT + Ord + TotalOrder> {
         pub key: T,
         pub color: Color,
-        pub size: N,
+        pub size: usize,
         pub left: Option<Box<Node<T>>>,
         pub right: Option<Box<Node<T>>>,
     }
@@ -158,7 +158,7 @@ pub mod BSTRBMtEph {
     }
 
     // veracity: no_requires
-    fn size_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (size: N)
+    fn size_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (size: usize)
         ensures
             (link is None) ==> size == 0,
     {
@@ -851,7 +851,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn height_rec<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (h: N)
+    fn height_rec<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (h: usize)
         requires link_height(*link) <= usize::MAX as nat,
         ensures h as nat == link_height(*link),
         decreases *link,
@@ -944,7 +944,7 @@ pub mod BSTRBMtEph {
             requires self.spec_bstrbmteph_wf(),
             ensures found == link_contains(self@, *target);
 
-        fn size(&self) -> (n: N)
+        fn size(&self) -> (n: usize)
             requires self.spec_bstrbmteph_wf(),
             ensures n as nat == link_spec_size(self@);
 
@@ -952,7 +952,7 @@ pub mod BSTRBMtEph {
             requires self.spec_bstrbmteph_wf(),
             ensures b == (self@ is None);
 
-        fn height(&self) -> (h: N)
+        fn height(&self) -> (h: usize)
             requires self.spec_bstrbmteph_wf(),
             ensures h as nat == link_height(self@);
 
@@ -1050,7 +1050,7 @@ pub mod BSTRBMtEph {
         }
 
         // Reader: link_spec_size from lock predicate, assume return matches ghost.
-        fn size(&self) -> (n: N) {
+        fn size(&self) -> (n: usize) {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
             // link_spec_size(*data) <= usize::MAX from lock predicate via acquire_read.
@@ -1070,7 +1070,7 @@ pub mod BSTRBMtEph {
         }
 
         // Reader: height bounded by size from lock predicate.
-        fn height(&self) -> (h: N) {
+        fn height(&self) -> (h: usize) {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
             proof {

@@ -7,7 +7,7 @@ use apas_verus::Types::Types::*;
 
 #[test]
 fn test_avltreeseq_empty_constructor() {
-    let empty: AVLTreeS<N> = <AVLTreeS<N> as AVLTreeSeq<N>>::empty();
+    let empty: AVLTreeS<usize> = <AVLTreeS<usize> as AVLTreeSeq<usize>>::empty();
     assert_eq!(empty.length(), 0);
     assert!(empty.isEmpty());
     assert!(!empty.isSingleton());
@@ -15,7 +15,7 @@ fn test_avltreeseq_empty_constructor() {
 
 #[test]
 fn test_avltreeseq_new_constructor() {
-    let new_tree: AVLTreeS<N> = <AVLTreeS<N> as AVLTreeSeq<N>>::new();
+    let new_tree: AVLTreeS<usize> = <AVLTreeS<usize> as AVLTreeSeq<usize>>::new();
     assert_eq!(new_tree.length(), 0);
     assert!(new_tree.isEmpty());
     assert!(!new_tree.isSingleton());
@@ -23,7 +23,7 @@ fn test_avltreeseq_new_constructor() {
 
 #[test]
 fn test_avltreeseq_singleton_constructor() {
-    let single: AVLTreeS<N> = <AVLTreeS<N> as AVLTreeSeq<N>>::singleton(42);
+    let single: AVLTreeS<usize> = <AVLTreeS<usize> as AVLTreeSeq<usize>>::singleton(42);
     assert_eq!(single.length(), 1);
     assert!(!single.isEmpty());
     assert!(single.isSingleton());
@@ -32,36 +32,36 @@ fn test_avltreeseq_singleton_constructor() {
 
 #[test]
 fn test_avltreeseq_length_method() {
-    let empty: AVLTreeS<N> = <AVLTreeS<N> as AVLTreeSeq<N>>::empty();
+    let empty: AVLTreeS<usize> = <AVLTreeS<usize> as AVLTreeSeq<usize>>::empty();
     assert_eq!(empty.length(), 0);
 
-    let single: AVLTreeS<N> = <AVLTreeS<N> as AVLTreeSeq<N>>::singleton(10);
+    let single: AVLTreeS<usize> = <AVLTreeS<usize> as AVLTreeSeq<usize>>::singleton(10);
     assert_eq!(single.length(), 1);
 }
 
 #[test]
 fn test_avltreeseq_nth_method() {
-    let single: AVLTreeS<N> = <AVLTreeS<N> as AVLTreeSeq<N>>::singleton(99);
+    let single: AVLTreeS<usize> = <AVLTreeS<usize> as AVLTreeSeq<usize>>::singleton(99);
     assert_eq!(*single.nth(0), 99);
 }
 
 #[test]
 #[should_panic]
 fn test_avltreeseq_nth_panic_outofbounds() {
-    let single: AVLTreeS<N> = <AVLTreeS<N> as AVLTreeSeq<N>>::singleton(42);
+    let single: AVLTreeS<usize> = <AVLTreeS<usize> as AVLTreeSeq<usize>>::singleton(42);
     let _ = single.nth(1); // Index 1 is out of bounds for single element
 }
 
 #[test]
 #[should_panic]
 fn test_avltreeseq_nth_panic_empty() {
-    let empty: AVLTreeS<N> = <AVLTreeS<N> as AVLTreeSeq<N>>::empty();
+    let empty: AVLTreeS<usize> = <AVLTreeS<usize> as AVLTreeSeq<usize>>::empty();
     let _ = empty.nth(0); // Any index on empty tree should panic
 }
 
 #[test]
 fn test_avltreeseq_set_method() {
-    let mut single: AVLTreeS<N> = <AVLTreeS<N> as AVLTreeSeq<N>>::singleton(42);
+    let mut single: AVLTreeS<usize> = <AVLTreeS<usize> as AVLTreeSeq<usize>>::singleton(42);
     let result = single.set(0, 99);
     assert!(result.is_ok());
     assert_eq!(*single.nth(0), 99);
@@ -80,18 +80,18 @@ fn test_avltreeseq_set_method() {
 #[test]
 fn test_avltreeseq_predicates() {
     // Test isEmpty
-    let empty: AVLTreeS<N> = <AVLTreeS<N> as AVLTreeSeq<N>>::empty();
+    let empty: AVLTreeS<usize> = <AVLTreeS<usize> as AVLTreeSeq<usize>>::empty();
     assert!(empty.isEmpty());
     assert!(!empty.isSingleton());
 
-    let single: AVLTreeS<N> = <AVLTreeS<N> as AVLTreeSeq<N>>::singleton(42);
+    let single: AVLTreeS<usize> = <AVLTreeS<usize> as AVLTreeSeq<usize>>::singleton(42);
     assert!(!single.isEmpty());
     assert!(single.isSingleton());
 }
 
 #[test]
 fn test_avltreeseq_subseq_copy() {
-    let single: AVLTreeS<N> = <AVLTreeS<N> as AVLTreeSeq<N>>::singleton(42);
+    let single: AVLTreeS<usize> = <AVLTreeS<usize> as AVLTreeSeq<usize>>::singleton(42);
 
     // Full subseq
     let full_subseq = single.subseq_copy(0, 1);
@@ -111,7 +111,7 @@ fn test_avltreeseq_subseq_copy() {
 
 #[test]
 fn test_avltreeseq_empty_operations_comprehensive() {
-    let empty: AVLTreeS<N> = <AVLTreeS<N> as AVLTreeSeq<N>>::empty();
+    let empty: AVLTreeS<usize> = <AVLTreeS<usize> as AVLTreeSeq<usize>>::empty();
 
     // Basic properties
     assert_eq!(empty.length(), 0);
@@ -165,7 +165,7 @@ fn test_avltreeseq_empty_operations_comprehensive() {
 #[test]
 fn test_avltreeseq_zero_length_operations() {
     // Test zero-length subseq operations
-    let single: AVLTreeS<N> = <AVLTreeS<N> as AVLTreeSeq<N>>::singleton(42);
+    let single: AVLTreeS<usize> = <AVLTreeS<usize> as AVLTreeSeq<usize>>::singleton(42);
 
     // Zero-length subseq at start
     let zero_start = single.subseq_copy(0, 0);
@@ -183,7 +183,7 @@ fn test_avltreeseq_zero_length_operations() {
     assert!(zero_beyond.isEmpty());
 
     // Test with empty tree
-    let empty: AVLTreeS<N> = <AVLTreeS<N> as AVLTreeSeq<N>>::empty();
+    let empty: AVLTreeS<usize> = <AVLTreeS<usize> as AVLTreeSeq<usize>>::empty();
     let zero_empty = empty.subseq_copy(0, 0);
     assert_eq!(zero_empty.length(), 0);
     assert!(zero_empty.isEmpty());
@@ -197,9 +197,9 @@ fn test_avltreeseq_zero_length_operations() {
 
 #[test]
 fn test_avltreeseq_equality_comparison() {
-    let tree1: AVLTreeS<N> = <AVLTreeS<N> as AVLTreeSeq<N>>::singleton(42);
-    let tree2: AVLTreeS<N> = <AVLTreeS<N> as AVLTreeSeq<N>>::singleton(42);
-    let tree3: AVLTreeS<N> = <AVLTreeS<N> as AVLTreeSeq<N>>::singleton(43);
+    let tree1: AVLTreeS<usize> = <AVLTreeS<usize> as AVLTreeSeq<usize>>::singleton(42);
+    let tree2: AVLTreeS<usize> = <AVLTreeS<usize> as AVLTreeSeq<usize>>::singleton(42);
+    let tree3: AVLTreeS<usize> = <AVLTreeS<usize> as AVLTreeSeq<usize>>::singleton(43);
 
     // Note: AVLTreeS may not implement PartialEq, so we compare properties
     assert_eq!(tree1.length(), tree2.length());
@@ -208,8 +208,8 @@ fn test_avltreeseq_equality_comparison() {
     assert_eq!(tree1.length(), tree3.length());
     assert_ne!(*tree1.nth(0), *tree3.nth(0));
 
-    let empty1: AVLTreeS<N> = <AVLTreeS<N> as AVLTreeSeq<N>>::empty();
-    let empty2: AVLTreeS<N> = <AVLTreeS<N> as AVLTreeSeq<N>>::empty();
+    let empty1: AVLTreeS<usize> = <AVLTreeS<usize> as AVLTreeSeq<usize>>::empty();
+    let empty2: AVLTreeS<usize> = <AVLTreeS<usize> as AVLTreeSeq<usize>>::empty();
     assert_eq!(empty1.length(), empty2.length());
     assert_eq!(empty1.isEmpty(), empty2.isEmpty());
 }

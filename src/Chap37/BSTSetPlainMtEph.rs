@@ -66,7 +66,7 @@ pub mod BSTSetPlainMtEph {
         fn singleton(value: T) -> (set: Self)
             requires obeys_feq_clone::<T>()
             ensures set.spec_bstsetplainmteph_wf();
-        fn size(&self) -> (n: N)
+        fn size(&self) -> (n: usize)
             requires self.spec_bstsetplainmteph_wf()
             ensures true;
         fn is_empty(&self) -> (b: bool)
@@ -208,7 +208,7 @@ pub mod BSTSetPlainMtEph {
             Self { tree }
         }
 
-        fn size(&self) -> N { self.tree.size() }
+        fn size(&self) -> usize { self.tree.size() }
 
         fn is_empty(&self) -> bool { self.tree.is_empty() }
 

@@ -110,7 +110,7 @@ pub mod Exercise21_8 {
         requires k >= 0, n >= 2,
         ensures spec_filter_len(
             Seq::new(k as nat, |i: int| (n % (i + 1) == 0)),
-            |v: B| v,
+            |v: bool| v,
         ) == spec_divisor_count(n, 1, k + 1),
         decreases k,
     {
@@ -161,7 +161,7 @@ pub mod Exercise21_8 {
 
     /// - APAS: Work Θ(1), Span Θ(1)
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    pub fn is_divisible(n: N, i: N) -> (divides: bool)
+    pub fn is_divisible(n: usize, i: usize) -> (divides: bool)
         requires i > 0
         ensures divides == (n as int % i as int == 0)
     {
@@ -174,13 +174,13 @@ pub mod Exercise21_8 {
     /// - APAS: Work Θ(√n), Span Θ(lg n)
     /// - Claude-Opus-4.6: Work Θ(√n), Span Θ(√n) — sequential StEph tabulate + filter.
     // veracity: no_requires
-    pub fn is_prime(n: N) -> (prime: bool)
+    pub fn is_prime(n: usize) -> (prime: bool)
         ensures prime == spec_is_prime(n as int)
     {
         if n < 2 {
             return false;
         }
-        let k: N = n.isqrt();
+        let k: usize = n.isqrt();
 
         // Tabulate: all[i] = (n % (i+1) == 0) for i in 0..k
         let all: ArraySeqStEphS<bool> = ArraySeqStEphS::tabulate(

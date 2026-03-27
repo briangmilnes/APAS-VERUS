@@ -40,8 +40,8 @@ fn test_weighedundirgraphmtephfloat_empty() {
 
 #[test]
 fn test_weighedundirgraphmtephfloat_basic_operations() {
-    let v: SetStEph<N> = SetLit![0, 1, 2, 3];
-    let a: SetStEph<LabEdge<N, OrderedFloat<f64>>> = SetLit![
+    let v: SetStEph<usize> = SetLit![0, 1, 2, 3];
+    let a: SetStEph<LabEdge<usize, OrderedFloat<f64>>> = SetLit![
         LabEdge(0, 1, OrderedFloat(1.5)),
         LabEdge(1, 2, OrderedFloat(2.7)),
         LabEdge(2, 3, OrderedFloat(0.8))
@@ -93,8 +93,8 @@ fn test_weighedundirgraphmtephfloat_basic_operations() {
 
 #[test]
 fn test_weighedundirgraphmtephfloat_incident_operations() {
-    let v: SetStEph<N> = SetLit![0, 1, 2];
-    let a: SetStEph<LabEdge<N, OrderedFloat<f64>>> = SetLit![
+    let v: SetStEph<usize> = SetLit![0, 1, 2];
+    let a: SetStEph<LabEdge<usize, OrderedFloat<f64>>> = SetLit![
         LabEdge(0, 1, OrderedFloat(PI)),
         LabEdge(1, 2, OrderedFloat(E)),
         LabEdge(0, 2, OrderedFloat(SQRT_2))
@@ -114,8 +114,8 @@ fn test_weighedundirgraphmtephfloat_incident_operations() {
 
 #[test]
 fn test_weighedundirgraphmtephfloat_ngofvertices() {
-    let v: SetStEph<N> = SetLit![0, 1, 2, 3];
-    let a: SetStEph<LabEdge<N, OrderedFloat<f64>>> = SetLit![
+    let v: SetStEph<usize> = SetLit![0, 1, 2, 3];
+    let a: SetStEph<LabEdge<usize, OrderedFloat<f64>>> = SetLit![
         LabEdge(0, 1, OrderedFloat(1.0)),
         LabEdge(1, 2, OrderedFloat(2.0)),
         LabEdge(2, 3, OrderedFloat(3.0)),
@@ -123,7 +123,7 @@ fn test_weighedundirgraphmtephfloat_ngofvertices() {
     ];
     let _g = WeighedUnDirGraphMtEphFloat::from_vertices_and_labeled_edges(v, a);
 
-    let _vertices_subset: SetStEph<N> = SetLit![0, 1];
+    let _vertices_subset: SetStEph<usize> = SetLit![0, 1];
     // let ng_subset = g.ng_of_vertices(&vertices_subset); // TODO: method not available
 
     // Neighbors of {0, 1} should include all vertices connected to 0 or 1
@@ -135,8 +135,8 @@ fn test_weighedundirgraphmtephfloat_ngofvertices() {
 
 #[test]
 fn test_weighedundirgraphmtephfloat_nplusminusofvertices() {
-    let v: SetStEph<N> = SetLit![0, 1, 2, 3];
-    let a: SetStEph<LabEdge<N, OrderedFloat<f64>>> = SetLit![
+    let v: SetStEph<usize> = SetLit![0, 1, 2, 3];
+    let a: SetStEph<LabEdge<usize, OrderedFloat<f64>>> = SetLit![
         LabEdge(0, 1, OrderedFloat(0.5)),
         LabEdge(1, 2, OrderedFloat(1.5)),
         LabEdge(2, 0, OrderedFloat(2.5)),
@@ -144,7 +144,7 @@ fn test_weighedundirgraphmtephfloat_nplusminusofvertices() {
     ];
     let _g = WeighedUnDirGraphMtEphFloat::from_vertices_and_labeled_edges(v, a);
 
-    let _vertices_subset: SetStEph<N> = SetLit![0, 1];
+    let _vertices_subset: SetStEph<usize> = SetLit![0, 1];
 
     // In undirected graphs, NPlus and NMinus should be the same as NG
     // let nplus_subset = g.n_plus_of_vertices(&vertices_subset); // TODO: method not available
@@ -171,8 +171,8 @@ fn test_weighedundirgraphmtephfloat_edge_cases() {
     assert_eq!(empty.vertex_degree(&0), 0);
 
     // Test single vertex
-    let v_single: SetStEph<N> = SetLit![42];
-    let a_empty: SetStEph<LabEdge<N, OrderedFloat<f64>>> = SetLit![];
+    let v_single: SetStEph<usize> = SetLit![42];
+    let a_empty: SetStEph<LabEdge<usize, OrderedFloat<f64>>> = SetLit![];
     let g_single = WeighedUnDirGraphMtEphFloat::from_vertices_and_labeled_edges(v_single, a_empty);
 
     assert_eq!(g_single.vertices().size(), 1);
@@ -181,8 +181,8 @@ fn test_weighedundirgraphmtephfloat_edge_cases() {
     assert_eq!(g_single.neighbors(&42).size(), 0);
 
     // Test self-loop with weight
-    let v_self: SetStEph<N> = SetLit![1];
-    let a_self: SetStEph<LabEdge<N, OrderedFloat<f64>>> = SetLit![LabEdge(1, 1, OrderedFloat(99.9))];
+    let v_self: SetStEph<usize> = SetLit![1];
+    let a_self: SetStEph<LabEdge<usize, OrderedFloat<f64>>> = SetLit![LabEdge(1, 1, OrderedFloat(99.9))];
     let g_self = WeighedUnDirGraphMtEphFloat::from_vertices_and_labeled_edges(v_self, a_self);
 
     assert!(g_self.has_edge(&1, &1));
@@ -192,8 +192,8 @@ fn test_weighedundirgraphmtephfloat_edge_cases() {
 
 #[test]
 fn test_weighedundirgraphmtephfloat_nonexistent_vertex() {
-    let v: SetStEph<N> = SetLit![0, 1, 2];
-    let a: SetStEph<LabEdge<N, OrderedFloat<f64>>> = SetLit![LabEdge(0, 1, OrderedFloat(7.77))];
+    let v: SetStEph<usize> = SetLit![0, 1, 2];
+    let a: SetStEph<LabEdge<usize, OrderedFloat<f64>>> = SetLit![LabEdge(0, 1, OrderedFloat(7.77))];
     let g = WeighedUnDirGraphMtEphFloat::from_vertices_and_labeled_edges(v, a);
 
     // Query non-existent vertex
@@ -207,8 +207,8 @@ fn test_weighedundirgraphmtephfloat_nonexistent_vertex() {
 #[test]
 fn test_weighedundirgraphmtephfloat_weight_variations() {
     // Test with various weight values including negative, zero, and very small/large
-    let v: SetStEph<N> = SetLit![0, 1, 2, 3, 4];
-    let a: SetStEph<LabEdge<N, OrderedFloat<f64>>> = SetLit![
+    let v: SetStEph<usize> = SetLit![0, 1, 2, 3, 4];
+    let a: SetStEph<LabEdge<usize, OrderedFloat<f64>>> = SetLit![
         LabEdge(0, 1, OrderedFloat(0.0)),           // Zero weight
         LabEdge(1, 2, OrderedFloat(-1.5)),          // Negative weight
         LabEdge(2, 3, OrderedFloat(1e-10)),         // Very small positive
@@ -242,8 +242,8 @@ fn test_weighedundirgraphmtephfloat_weight_variations() {
 
 #[test]
 fn test_weighedundirgraphmtephfloat_concurrent_access() {
-    let v: SetStEph<N> = SetLit![0, 1, 2, 3, 4];
-    let a: SetStEph<LabEdge<N, OrderedFloat<f64>>> = SetLit![
+    let v: SetStEph<usize> = SetLit![0, 1, 2, 3, 4];
+    let a: SetStEph<LabEdge<usize, OrderedFloat<f64>>> = SetLit![
         LabEdge(0, 1, OrderedFloat(1.1)),
         LabEdge(1, 2, OrderedFloat(2.2)),
         LabEdge(2, 3, OrderedFloat(3.3)),
@@ -299,8 +299,8 @@ fn test_weighedundirgraphmtephfloat_concurrent_access() {
 #[test]
 fn test_weighedundirgraphmtephfloat_complete_graph() {
     // Test complete graph K4 with weights
-    let v: SetStEph<N> = SetLit![0, 1, 2, 3];
-    let a: SetStEph<LabEdge<N, OrderedFloat<f64>>> = SetLit![
+    let v: SetStEph<usize> = SetLit![0, 1, 2, 3];
+    let a: SetStEph<LabEdge<usize, OrderedFloat<f64>>> = SetLit![
         LabEdge(0, 1, OrderedFloat(0.1)),
         LabEdge(0, 2, OrderedFloat(0.2)),
         LabEdge(0, 3, OrderedFloat(0.3)),

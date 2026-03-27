@@ -10,17 +10,17 @@ use apas_verus::Chap65::PrimStEph::PrimStEph::*;
 use apas_verus::SetLit;
 use apas_verus::Types::Types::*;
 
-fn build_triangle_graph() -> LabUnDirGraphStEph<N, OrderedFloat<f64>> {
+fn build_triangle_graph() -> LabUnDirGraphStEph<usize, OrderedFloat<f64>> {
     let vertices = SetLit![0, 1, 2];
     let edges = SetLit![
         LabEdge(0, 1, OrderedFloat(1.0)),
         LabEdge(1, 2, OrderedFloat(2.0)),
         LabEdge(0, 2, OrderedFloat(3.0))
     ];
-    <LabUnDirGraphStEph<N, OrderedFloat<f64>> as LabUnDirGraphStEphTrait<N, OrderedFloat<f64>>>::from_vertices_and_labeled_edges(vertices, edges)
+    <LabUnDirGraphStEph<usize, OrderedFloat<f64>> as LabUnDirGraphStEphTrait<usize, OrderedFloat<f64>>>::from_vertices_and_labeled_edges(vertices, edges)
 }
 
-fn build_square_graph() -> LabUnDirGraphStEph<N, OrderedFloat<f64>> {
+fn build_square_graph() -> LabUnDirGraphStEph<usize, OrderedFloat<f64>> {
     let vertices = SetLit![0, 1, 2, 3];
     let edges = SetLit![
         LabEdge(0, 1, OrderedFloat(1.0)),
@@ -29,7 +29,7 @@ fn build_square_graph() -> LabUnDirGraphStEph<N, OrderedFloat<f64>> {
         LabEdge(0, 3, OrderedFloat(4.0)),
         LabEdge(0, 2, OrderedFloat(5.0))
     ];
-    <LabUnDirGraphStEph<N, OrderedFloat<f64>> as LabUnDirGraphStEphTrait<N, OrderedFloat<f64>>>::from_vertices_and_labeled_edges(vertices, edges)
+    <LabUnDirGraphStEph<usize, OrderedFloat<f64>> as LabUnDirGraphStEphTrait<usize, OrderedFloat<f64>>>::from_vertices_and_labeled_edges(vertices, edges)
 }
 
 #[test]
@@ -63,7 +63,7 @@ fn test_prim_square() {
 fn test_prim_single_vertex() {
     let vertices = SetLit![0];
     let edges = SetLit![];
-    let graph = <LabUnDirGraphStEph<N, OrderedFloat<f64>> as LabUnDirGraphStEphTrait<N, OrderedFloat<f64>>>::from_vertices_and_labeled_edges(vertices, edges);
+    let graph = <LabUnDirGraphStEph<usize, OrderedFloat<f64>> as LabUnDirGraphStEphTrait<usize, OrderedFloat<f64>>>::from_vertices_and_labeled_edges(vertices, edges);
 
     let mst = prim_mst(&graph, &0);
     assert_eq!(mst.size(), 0);
@@ -90,7 +90,7 @@ fn test_prim_star_graph() {
         LabEdge(0, 2, OrderedFloat(3.0)),
         LabEdge(0, 3, OrderedFloat(7.0))
     ];
-    let graph = <LabUnDirGraphStEph<N, OrderedFloat<f64>> as LabUnDirGraphStEphTrait<N, OrderedFloat<f64>>>::from_vertices_and_labeled_edges(vertices, edges);
+    let graph = <LabUnDirGraphStEph<usize, OrderedFloat<f64>> as LabUnDirGraphStEphTrait<usize, OrderedFloat<f64>>>::from_vertices_and_labeled_edges(vertices, edges);
 
     let mst = prim_mst(&graph, &0);
     assert_eq!(mst.size(), 3);
@@ -108,7 +108,7 @@ fn test_prim_complete_graph() {
         LabEdge(1, 3, OrderedFloat(5.0)),
         LabEdge(2, 3, OrderedFloat(6.0))
     ];
-    let graph = <LabUnDirGraphStEph<N, OrderedFloat<f64>> as LabUnDirGraphStEphTrait<N, OrderedFloat<f64>>>::from_vertices_and_labeled_edges(vertices, edges);
+    let graph = <LabUnDirGraphStEph<usize, OrderedFloat<f64>> as LabUnDirGraphStEphTrait<usize, OrderedFloat<f64>>>::from_vertices_and_labeled_edges(vertices, edges);
 
     let mst = prim_mst(&graph, &0);
     assert_eq!(mst.size(), 3);

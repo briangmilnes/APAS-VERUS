@@ -149,7 +149,7 @@ pub mod Algorithm21_1 {
     /// - Generates all 2D points (x, y) where 0 ≤ x < n and 1 ≤ y < n.
     /// - APAS: Work Θ(n²), Span Θ(lg n)
     /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential StPer tabulate + flatten.
-    pub fn points2d_tab_flat(n: N) -> (points: ArraySeqStPerS<Pair<N, N>>)
+    pub fn points2d_tab_flat(n: usize) -> (points: ArraySeqStPerS<Pair<usize, usize>>)
         requires
             n <= usize::MAX,
             n as int * (n as int - 1) <= usize::MAX as int,
@@ -162,9 +162,9 @@ pub mod Algorithm21_1 {
         }
 
         // Build the outer sequence: for each x in 0..n, create inner sequence of pairs.
-        let inner: ArraySeqStPerS<ArraySeqStPerS<Pair<N, N>>> =
+        let inner: ArraySeqStPerS<ArraySeqStPerS<Pair<usize, usize>>> =
             ArraySeqStPerS::tabulate(
-                &(|x: usize| -> (row: ArraySeqStPerS<Pair<N, N>>)
+                &(|x: usize| -> (row: ArraySeqStPerS<Pair<usize, usize>>)
                     requires
                         x < n,
                         n > 0,
@@ -172,7 +172,7 @@ pub mod Algorithm21_1 {
                         row.seq@.len() == n - 1,
                 {
                     ArraySeqStPerS::tabulate(
-                        &(|y: usize| -> (p: Pair<N, N>)
+                        &(|y: usize| -> (p: Pair<usize, usize>)
                             requires
                                 y < n - 1,
                                 x < n,

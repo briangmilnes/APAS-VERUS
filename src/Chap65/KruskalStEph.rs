@@ -439,7 +439,7 @@ pub mod KruskalStEph {
     /// - APAS: (no cost stated) — validation utility
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     pub fn verify_mst_size<V: HashOrd>(
-        n_vertices: N,
+        n_vertices: usize,
         mst_edges: &SetStEph<LabEdge<V, WrappedF64>>,
     ) -> (result: bool)
         requires mst_edges.spec_setsteph_wf(),

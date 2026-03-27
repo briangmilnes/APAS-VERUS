@@ -19,7 +19,7 @@ fn inorder_and_preorder_traversals_match_definitions() {
 
 #[test]
 fn balbintree_empty_leaf_operations() {
-    let leaf = BalBinTree::<N>::leaf();
+    let leaf = BalBinTree::<usize>::leaf();
     assert_eq!(leaf.size(), 0);
     assert_eq!(leaf.height(), 0);
     assert_eq!(leaf.in_order().len(), 0);
@@ -58,7 +58,7 @@ fn balbintree_complex_structure() {
 
 #[test]
 fn balbintree_height_calculation() {
-    let leaf = BalBinTree::<N>::leaf();
+    let leaf = BalBinTree::<usize>::leaf();
     assert_eq!(leaf.height(), 0);
 
     let single = BalBinTree::node(BalBinTree::leaf(), 1, BalBinTree::leaf());
@@ -81,7 +81,7 @@ fn balbintree_height_calculation() {
 
 #[test]
 fn balbintree_size_calculation() {
-    let leaf = BalBinTree::<N>::leaf();
+    let leaf = BalBinTree::<usize>::leaf();
     assert_eq!(leaf.size(), 0);
 
     let single = BalBinTree::node(BalBinTree::leaf(), 1, BalBinTree::leaf());
@@ -122,7 +122,7 @@ fn balbintree_traversal_consistency() {
 
 #[test]
 fn balbintree_is_leaf_check() {
-    let leaf = BalBinTree::<N>::leaf();
+    let leaf = BalBinTree::<usize>::leaf();
     assert!(leaf.is_leaf());
 
     let single = BalBinTree::node(BalBinTree::leaf(), 42, BalBinTree::leaf());
@@ -240,13 +240,13 @@ fn balbintree_only_right_children() {
 fn balbintree_trait_methods() {
     use BalBinTreeTrait;
 
-    let leaf = <BalBinTree<N> as BalBinTreeTrait<N>>::leaf();
+    let leaf = <BalBinTree<usize> as BalBinTreeTrait<usize>>::leaf();
     assert!(<BalBinTree<N> as BalBinTreeTrait<N>>::is_leaf(&leaf));
 
-    let node = <BalBinTree<N> as BalBinTreeTrait<N>>::node(
-        <BalBinTree<N> as BalBinTreeTrait<N>>::leaf(),
+    let node = <BalBinTree<usize> as BalBinTreeTrait<usize>>::node(
+        <BalBinTree<usize> as BalBinTreeTrait<usize>>::leaf(),
         42,
-        <BalBinTree<N> as BalBinTreeTrait<N>>::leaf(),
+        <BalBinTree<usize> as BalBinTreeTrait<usize>>::leaf(),
     );
 
     assert!(!<BalBinTree<N> as BalBinTreeTrait<N>>::is_leaf(&node));
@@ -285,7 +285,7 @@ fn inorder_iter_collects_correctly() {
         2,
         BalBinTree::node(BalBinTree::leaf(), 3, BalBinTree::leaf()),
     );
-    let collected: Vec<N> = tree.iter_in_order().collect();
+    let collected: Vec<usize> = tree.iter_in_order().collect();
     assert_eq!(collected, vec![1, 2, 3]);
 }
 
@@ -296,35 +296,35 @@ fn preorder_iter_collects_correctly() {
         2,
         BalBinTree::node(BalBinTree::leaf(), 3, BalBinTree::leaf()),
     );
-    let collected: Vec<N> = tree.iter_pre_order().collect();
+    let collected: Vec<usize> = tree.iter_pre_order().collect();
     assert_eq!(collected, vec![2, 1, 3]);
 }
 
 #[test]
 fn inorder_iter_leaf_is_empty() {
-    let leaf = BalBinTree::<N>::leaf();
-    let collected: Vec<N> = leaf.iter_in_order().collect();
+    let leaf = BalBinTree::<usize>::leaf();
+    let collected: Vec<usize> = leaf.iter_in_order().collect();
     assert!(collected.is_empty());
 }
 
 #[test]
 fn preorder_iter_leaf_is_empty() {
-    let leaf = BalBinTree::<N>::leaf();
-    let collected: Vec<N> = leaf.iter_pre_order().collect();
+    let leaf = BalBinTree::<usize>::leaf();
+    let collected: Vec<usize> = leaf.iter_pre_order().collect();
     assert!(collected.is_empty());
 }
 
 #[test]
 fn inorder_iter_single_node() {
     let single = BalBinTree::node(BalBinTree::leaf(), 42, BalBinTree::leaf());
-    let collected: Vec<N> = single.iter_in_order().collect();
+    let collected: Vec<usize> = single.iter_in_order().collect();
     assert_eq!(collected, vec![42]);
 }
 
 #[test]
 fn preorder_iter_single_node() {
     let single = BalBinTree::node(BalBinTree::leaf(), 42, BalBinTree::leaf());
-    let collected: Vec<N> = single.iter_pre_order().collect();
+    let collected: Vec<usize> = single.iter_pre_order().collect();
     assert_eq!(collected, vec![42]);
 }
 
@@ -343,7 +343,7 @@ fn inorder_iter_complex() {
             BalBinTree::node(BalBinTree::leaf(), 7, BalBinTree::leaf()),
         ),
     );
-    let collected: Vec<N> = tree.iter_in_order().collect();
+    let collected: Vec<usize> = tree.iter_in_order().collect();
     assert_eq!(collected, vec![1, 2, 3, 4, 5, 6, 7]);
 }
 
@@ -362,7 +362,7 @@ fn preorder_iter_complex() {
             BalBinTree::node(BalBinTree::leaf(), 7, BalBinTree::leaf()),
         ),
     );
-    let collected: Vec<N> = tree.iter_pre_order().collect();
+    let collected: Vec<usize> = tree.iter_pre_order().collect();
     assert_eq!(collected, vec![4, 2, 1, 3, 6, 5, 7]);
 }
 

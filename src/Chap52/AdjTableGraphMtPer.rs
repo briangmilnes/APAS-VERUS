@@ -88,10 +88,10 @@ broadcast use {
                 view_ord_consistent::<V>(),
             ensures out.spec_adjtablegraphmtper_wf();
         /// Work Theta(1), Span Theta(1)
-        fn num_vertices(&self) -> N
+        fn num_vertices(&self) -> usize
             requires self.spec_adjtablegraphmtper_wf();
         /// Work Theta(|V| + |E|), Span Theta(log |V| * log |E|)
-        fn num_edges(&self) -> (m: N)
+        fn num_edges(&self) -> (m: usize)
             requires self.spec_adjtablegraphmtper_wf(), self.spec_num_edges() <= usize::MAX as nat
             ensures m as nat == self.spec_num_edges();
         /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
@@ -105,7 +105,7 @@ broadcast use {
                 self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],
                 !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty();
         /// Work Theta(log |V|), Span Theta(log |V|)
-        fn out_degree(&self, u: &V) -> N
+        fn out_degree(&self, u: &V) -> usize
             requires self.spec_adjtablegraphmtper_wf();
         /// Work Theta(log |V|), Span Theta(log |V|)
         fn insert_vertex(&self, v: V) -> (updated: Self)
@@ -156,9 +156,9 @@ broadcast use {
             }
         }
 
-        fn num_vertices(&self) -> N { self.adj.size() }
+        fn num_vertices(&self) -> usize { self.adj.size() }
 
-        fn num_edges(&self) -> (m: N)
+        fn num_edges(&self) -> (m: usize)
             requires self.spec_num_edges() <= usize::MAX as nat
             ensures m as nat == self.spec_num_edges()
         {
@@ -199,7 +199,7 @@ broadcast use {
             }
         }
 
-        fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+        fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
 
         fn insert_vertex(&self, v: V) -> (updated: Self)
             ensures updated.spec_adj().dom().contains(v@)

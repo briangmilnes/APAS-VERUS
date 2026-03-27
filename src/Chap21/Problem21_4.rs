@@ -38,9 +38,9 @@ pub mod Problem21_4 {
     /// - APAS: Work Θ(|a|·|b|), Span Θ(|a|·|b|)
     /// - Claude-Opus-4.6: Work Θ(|a|·|b|), Span Θ(|a|·|b|)
     pub fn cartesian_loops(
-        a: &ArraySeqStPerS<N>,
-        b: &ArraySeqStPerS<N>,
-    ) -> (pairs: ArraySeqStPerS<Pair<N, N>>)
+        a: &ArraySeqStPerS<usize>,
+        b: &ArraySeqStPerS<usize>,
+    ) -> (pairs: ArraySeqStPerS<Pair<usize, usize>>)
         requires
             a.seq@.len() as int * b.seq@.len() as int <= usize::MAX as int,
         ensures
@@ -49,7 +49,7 @@ pub mod Problem21_4 {
         let alen = a.length();
         let blen = b.length();
         let cap = alen * blen;
-        let mut v = Vec::<Pair<N, N>>::with_capacity(cap);
+        let mut v = Vec::<Pair<usize, usize>>::with_capacity(cap);
         let mut i: usize = 0;
         while i < alen
             invariant
@@ -90,9 +90,9 @@ pub mod Problem21_4 {
     /// - APAS: Work Θ(|a|·|b|), Span Θ(lg |a|)
     /// - Claude-Opus-4.6: Work Θ(|a|·|b|), Span Θ(|a|·|b|) — sequential StPer tabulate + flatten.
     pub fn cartesian_tab_flat(
-        a: &ArraySeqStPerS<N>,
-        b: &ArraySeqStPerS<N>,
-    ) -> (pairs: ArraySeqStPerS<Pair<N, N>>)
+        a: &ArraySeqStPerS<usize>,
+        b: &ArraySeqStPerS<usize>,
+    ) -> (pairs: ArraySeqStPerS<Pair<usize, usize>>)
         requires
             a.seq@.len() as int * b.seq@.len() as int <= usize::MAX as int,
         ensures
@@ -105,8 +105,8 @@ pub mod Problem21_4 {
         let alen = a.length();
         let blen = b.length();
 
-        let nested: ArraySeqStPerS<ArraySeqStPerS<Pair<N, N>>> = ArraySeqStPerS::tabulate(
-            &(|i: usize| -> (row: ArraySeqStPerS<Pair<N, N>>)
+        let nested: ArraySeqStPerS<ArraySeqStPerS<Pair<usize, usize>>> = ArraySeqStPerS::tabulate(
+            &(|i: usize| -> (row: ArraySeqStPerS<Pair<usize, usize>>)
                 requires
                     i < alen,
                     alen == a.seq@.len(),
@@ -120,7 +120,7 @@ pub mod Problem21_4 {
             {
                 let x = *a.nth(i);
                 let row = ArraySeqStPerS::tabulate(
-                    &(|j: usize| -> (p: Pair<N, N>)
+                    &(|j: usize| -> (p: Pair<usize, usize>)
                         requires
                             j < blen,
                             blen == b.seq@.len(),
@@ -144,16 +144,16 @@ pub mod Problem21_4 {
             alen,
         );
 
-        proof { assert(Pair_feq_trigger::<N, N>()); }
+        proof { assert(Pair_feq_trigger::<usize, usize>()); }
         let pairs = ArraySeqStPerS::flatten(&nested);
         proof {
             let ghost mapped = nested.seq@.map_values(
-                |inner: ArraySeqStPerS<Pair<N, N>>| inner.seq@);
+                |inner: ArraySeqStPerS<Pair<usize, usize>>| inner.seq@);
             assert forall|i: int| 0 <= i < mapped.len() implies
                 (#[trigger] mapped[i]).len() == blen as int by {}
             lemma_flatten_uniform_len(mapped, blen as int);
 
-            let ghost pred = |p: Pair<N, N>|
+            let ghost pred = |p: Pair<usize, usize>|
                 a.seq@.contains(p.0) && b.seq@.contains(p.1);
             assert forall|i: int, j: int|
                 0 <= i < mapped.len() && 0 <= j < mapped[i].len()

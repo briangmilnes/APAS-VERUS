@@ -34,24 +34,24 @@ pub mod DivConReduceStPer {
     //		4. spec functions
 
     /// Wrapping addition for usize — matches vstd wrapping_add spec with in-range casts.
-    pub open spec fn spec_wrapping_add(x: N, y: N) -> N {
+    pub open spec fn spec_wrapping_add(x: usize, y: usize) -> usize {
         if x + y > usize::MAX as int {
-            ((x + y) - (usize::MAX as int + 1)) as N
+            ((x + y) - (usize::MAX as int + 1)) as usize
         } else {
-            (x + y) as N
+            (x + y) as usize
         }
     }
 
     /// Wrapping multiplication for usize — matches vstd wrapping_mul spec with in-range casts.
-    pub open spec fn spec_wrapping_mul(x: N, y: N) -> N {
-        ((x as nat * y as nat) % (usize::MAX as nat + 1)) as N
+    pub open spec fn spec_wrapping_mul(x: usize, y: usize) -> usize {
+        ((x as nat * y as nat) % (usize::MAX as nat + 1)) as usize
     }
 
-    pub open spec fn spec_sum_fn() -> spec_fn(N, N) -> N { |x: N, y: N| spec_wrapping_add(x, y) }
-    pub open spec fn spec_product_fn() -> spec_fn(N, N) -> N { |x: N, y: N| spec_wrapping_mul(x, y) }
+    pub open spec fn spec_sum_fn() -> spec_fn(usize, usize) -> usize { |x: usize, y: usize| spec_wrapping_add(x, y) }
+    pub open spec fn spec_product_fn() -> spec_fn(usize, usize) -> usize { |x: usize, y: usize| spec_wrapping_mul(x, y) }
     pub open spec fn spec_or_fn() -> spec_fn(bool, bool) -> bool { |x: bool, y: bool| x || y }
     pub open spec fn spec_and_fn() -> spec_fn(bool, bool) -> bool { |x: bool, y: bool| x && y }
-    pub open spec fn spec_max_fn() -> spec_fn(N, N) -> N { |x: N, y: N| if x >= y { x } else { y } }
+    pub open spec fn spec_max_fn() -> spec_fn(usize, usize) -> usize { |x: usize, y: usize| if x >= y { x } else { y } }
 
     //		8. traits
 
@@ -60,7 +60,7 @@ pub mod DivConReduceStPer {
         /// Pattern: reduce max identity
         /// - APAS: Work Θ(n), Span Θ(lg n) — Example 26.2, D&C reduce with constant-time op.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential while loop, Span = Work.
-        fn max_element(a: &ArraySeqStPerS<N>) -> (max: Option<N>)
+        fn max_element(a: &ArraySeqStPerS<usize>) -> (max: Option<usize>)
             requires a.spec_len() <= usize::MAX,
             ensures
                 a.spec_len() == 0 ==> max is None,
@@ -76,7 +76,7 @@ pub mod DivConReduceStPer {
         /// Pattern: reduce (+) 0 identity
         /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential reduce, Span = Work.
-        fn sum(a: &ArraySeqStPerS<N>) -> (total: N)
+        fn sum(a: &ArraySeqStPerS<usize>) -> (total: usize)
             requires
                 a.spec_len() <= usize::MAX,
                 spec_monoid(spec_sum_fn(), 0),
@@ -88,7 +88,7 @@ pub mod DivConReduceStPer {
         /// Pattern: reduce (*) 1 identity
         /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential reduce, Span = Work.
-        fn product(a: &ArraySeqStPerS<N>) -> (total: N)
+        fn product(a: &ArraySeqStPerS<usize>) -> (total: usize)
             requires
                 a.spec_len() <= usize::MAX,
                 spec_monoid(spec_product_fn(), 1),
@@ -123,14 +123,14 @@ pub mod DivConReduceStPer {
 
     //		9. impls
 
-    impl DivConReduceStTrait for ArraySeqStPerS<N> {
-        fn max_element(a: &ArraySeqStPerS<N>) -> (max: Option<N>) {
+    impl DivConReduceStTrait for ArraySeqStPerS<usize> {
+        fn max_element(a: &ArraySeqStPerS<usize>) -> (max: Option<usize>) {
             let len = a.length();
             if len == 0 {
                 return None;
             }
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
-            let mut best: N = *a.nth(0);
+            let mut best: usize = *a.nth(0);
             let mut i: usize = 1;
             while i < len
                 invariant
@@ -152,17 +152,17 @@ pub mod DivConReduceStPer {
             Some(best)
         }
 
-        fn sum(a: &ArraySeqStPerS<N>) -> (total: N) {
+        fn sum(a: &ArraySeqStPerS<usize>) -> (total: usize) {
             ArraySeqStPerS::reduce(a,
-                &(|x: &N, y: &N| -> (ret: N)
+                &(|x: &usize, y: &usize| -> (ret: usize)
                     ensures ret == spec_wrapping_add(*x, *y)
                 { (*x).wrapping_add(*y) }),
                 Ghost(spec_sum_fn()), 0)
         }
 
-        fn product(a: &ArraySeqStPerS<N>) -> (total: N) {
+        fn product(a: &ArraySeqStPerS<usize>) -> (total: usize) {
             ArraySeqStPerS::reduce(a,
-                &(|x: &N, y: &N| -> (ret: N)
+                &(|x: &usize, y: &usize| -> (ret: usize)
                     ensures ret == spec_wrapping_mul(*x, *y)
                 { (*x).wrapping_mul(*y) }),
                 Ghost(spec_product_fn()), 1)

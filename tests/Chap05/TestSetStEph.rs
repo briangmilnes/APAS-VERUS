@@ -43,11 +43,11 @@ fn test_setlit_macro_type_safety() {
 
 #[test]
 fn test_cartesian_product_example_5_1() {
-    let a: SetStEph<N> = SetLit![0, 1, 2, 3];
+    let a: SetStEph<usize> = SetLit![0, 1, 2, 3];
     let b: SetStEph<char> = SetLit!['a', 'b'];
     let prod = a.cartesian_product(&b);
 
-    let expect: SetStEph<Pair<N, char>> = SetLit![
+    let expect: SetStEph<Pair<usize, char>> = SetLit![
         PairLit!(0, 'a'),
         PairLit!(0, 'b'),
         PairLit!(1, 'a'),
@@ -63,28 +63,28 @@ fn test_cartesian_product_example_5_1() {
 
 #[test]
 fn test_partition_example_5_2_true() {
-    let a: SetStEph<N> = SetLit![1, 2, 3, 4, 5, 6];
-    let odd: SetStEph<N> = SetLit![1, 3, 5];
-    let even: SetStEph<N> = SetLit![2, 4, 6];
-    let p: SetStEph<SetStEph<N>> = SetLit![odd, even];
+    let a: SetStEph<usize> = SetLit![1, 2, 3, 4, 5, 6];
+    let odd: SetStEph<usize> = SetLit![1, 3, 5];
+    let even: SetStEph<usize> = SetLit![2, 4, 6];
+    let p: SetStEph<SetStEph<usize>> = SetLit![odd, even];
     assert!(a.partition(&p));
 }
 
 #[test]
 fn test_partition_example_5_2_false_due_to_overlap() {
-    let a: SetStEph<N> = SetLit![1, 2, 3, 4, 5, 6];
-    let odd_with_6: SetStEph<N> = SetLit![1, 3, 5, 6];
-    let even_with_6: SetStEph<N> = SetLit![2, 4, 6];
-    let q: SetStEph<SetStEph<N>> = SetLit![odd_with_6, even_with_6];
+    let a: SetStEph<usize> = SetLit![1, 2, 3, 4, 5, 6];
+    let odd_with_6: SetStEph<usize> = SetLit![1, 3, 5, 6];
+    let even_with_6: SetStEph<usize> = SetLit![2, 4, 6];
+    let q: SetStEph<SetStEph<usize>> = SetLit![odd_with_6, even_with_6];
     assert!(!a.partition(&q));
 }
 
 #[test]
 fn test_partition_false_due_to_missing_element() {
-    let a: SetStEph<N> = SetLit![1, 2, 3];
-    let s1: SetStEph<N> = SetLit![1];
-    let s2: SetStEph<N> = SetLit![2];
-    let parts: SetStEph<SetStEph<N>> = SetLit![s1, s2];
+    let a: SetStEph<usize> = SetLit![1, 2, 3];
+    let s1: SetStEph<usize> = SetLit![1];
+    let s2: SetStEph<usize> = SetLit![2];
+    let parts: SetStEph<SetStEph<usize>> = SetLit![s1, s2];
     assert!(!a.partition(&parts));
 }
 

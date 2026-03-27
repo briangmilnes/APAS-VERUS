@@ -40,7 +40,7 @@ pub mod ConnectivityStEph {
 
         /// Count connected components using star contraction.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn count_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N
+        fn count_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> usize
             requires Self::spec_connectivitysteph_wf(graph), valid_key_type_Edge::<V>();
 
         /// Find connected components using star contraction.
@@ -50,7 +50,7 @@ pub mod ConnectivityStEph {
 
         /// Count components using higher-order function approach.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> N
+        fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> usize
             requires Self::spec_connectivitysteph_wf(graph), valid_key_type_Edge::<V>();
 
         /// Find components using higher-order function approach.
@@ -74,7 +74,7 @@ pub mod ConnectivityStEph {
     ///
     /// Returns:
     /// - The number of connected components
-    pub fn count_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (count: N)
+    pub fn count_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (count: usize)
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
@@ -164,20 +164,20 @@ pub mod ConnectivityStEph {
     ///
     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — same as Algorithm 63.2
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
-    pub fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (count: N)
+    pub fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (count: usize)
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
         ensures graph@.A.is_empty() ==> count as nat == graph@.V.len(),
     {
-        let base = |vertices: &SetStEph<V>| -> (n: N)
+        let base = |vertices: &SetStEph<V>| -> (n: usize)
             requires vertices.spec_setsteph_wf()
             ensures n as nat == vertices@.len()
         { vertices.size() };
 
-        let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, r: N| -> (result: N) { r };
+        let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, r: usize| -> (result: usize) { r };
 
-        star_contract(graph, &base, &expand, Ghost(|r: N| true))
+        star_contract(graph, &base, &expand, Ghost(|r: usize| true))
     }
 
     /// Exercise 63.2: Connected Components using star_contract higher-order function

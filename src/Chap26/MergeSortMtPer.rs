@@ -57,24 +57,24 @@ pub mod MergeSortMtPer {
     //		4. spec fns
 
     /// Spec function: result is a sorted permutation of the input.
-    pub open spec fn spec_sorted(s: Seq<N>) -> bool {
+    pub open spec fn spec_sorted(s: Seq<usize>) -> bool {
         forall|i: int, j: int| 0 <= i < j < s.len() ==> s[i] <= s[j]
     }
 
     /// Spec function: s2 is a permutation of s1 (same multiset of elements).
-    pub open spec fn spec_is_permutation(s1: Seq<N>, s2: Seq<N>) -> bool {
+    pub open spec fn spec_is_permutation(s1: Seq<usize>, s2: Seq<usize>) -> bool {
         s1.to_multiset() =~= s2.to_multiset()
     }
 
     /// Spec function: result of merge of two sorted sequences is sorted and a permutation.
-    pub open spec fn spec_merge_post(left: Seq<N>, right: Seq<N>, merged: Seq<N>) -> bool {
+    pub open spec fn spec_merge_post(left: Seq<usize>, right: Seq<usize>, merged: Seq<usize>) -> bool {
         &&& merged.len() == left.len() + right.len()
         &&& spec_sorted(merged)
         &&& spec_is_permutation(left.add(right), merged)
     }
 
     /// Spec function: result of merge_sort is sorted and a permutation.
-    pub open spec fn spec_sort_post(input: Seq<N>, sorted: Seq<N>) -> bool {
+    pub open spec fn spec_sort_post(input: Seq<usize>, sorted: Seq<usize>) -> bool {
         &&& sorted.len() == input.len()
         &&& spec_sorted(sorted)
         &&& spec_is_permutation(input, sorted)
@@ -86,7 +86,7 @@ pub mod MergeSortMtPer {
     //		7. proof fns
 
     /// If s.to_multiset().count(x) > 0, then x appears somewhere in s.
-    proof fn lemma_multiset_count_positive_implies_exists(s: Seq<N>, x: N)
+    proof fn lemma_multiset_count_positive_implies_exists(s: Seq<usize>, x: usize)
         requires s.to_multiset().count(x) > 0,
         ensures exists|j: int| #![trigger s[j]] 0 <= j < s.len() && s[j] == x,
         decreases s.len(),
@@ -105,7 +105,7 @@ pub mod MergeSortMtPer {
     }
 
     /// A permutation of a sequence bounded above by `bound` is itself bounded above.
-    proof fn lemma_all_le_preserved_by_permutation(a: Seq<N>, b: Seq<N>, bound: N)
+    proof fn lemma_all_le_preserved_by_permutation(a: Seq<usize>, b: Seq<usize>, bound: usize)
         requires
             a.to_multiset() =~= b.to_multiset(),
             forall|i: int| #![trigger b[i]] 0 <= i < b.len() ==> b[i] <= bound,
@@ -122,7 +122,7 @@ pub mod MergeSortMtPer {
     }
 
     /// A permutation of a sequence bounded below by `bound` is itself bounded below.
-    proof fn lemma_all_ge_preserved_by_permutation(a: Seq<N>, b: Seq<N>, bound: N)
+    proof fn lemma_all_ge_preserved_by_permutation(a: Seq<usize>, b: Seq<usize>, bound: usize)
         requires
             a.to_multiset() =~= b.to_multiset(),
             forall|i: int| #![trigger b[i]] 0 <= i < b.len() ==> b[i] >= bound,
@@ -140,7 +140,7 @@ pub mod MergeSortMtPer {
 
     /// Concatenating sorted_left ++ [pivot] ++ sorted_right yields a sorted sequence
     /// when all of left ≤ pivot and all of right ≥ pivot.
-    proof fn lemma_sorted_concat_pivot(a: Seq<N>, pivot: N, c: Seq<N>)
+    proof fn lemma_sorted_concat_pivot(a: Seq<usize>, pivot: usize, c: Seq<usize>)
         requires
             spec_sorted(a),
             spec_sorted(c),
@@ -176,7 +176,7 @@ pub mod MergeSortMtPer {
         /// Merge two sorted sequences using parallel binary-search divide and conquer.
         /// - APAS: Work Θ(n), Span Θ(lg n) — assumed for merge sort Span analysis.
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — parallel D&C merge via join(); Vec concat at each level is Θ(n), dominating span. Θ(lg² n) requires O(1) concat (balanced tree).
-        fn merge_parallel(left: &ArraySeqMtPerS<N>, right: &ArraySeqMtPerS<N>) -> (merged: ArraySeqMtPerS<N>)
+        fn merge_parallel(left: &ArraySeqMtPerS<usize>, right: &ArraySeqMtPerS<usize>) -> (merged: ArraySeqMtPerS<usize>)
             requires
                 spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),
                 spec_sorted(Seq::new(right.spec_len(), |i: int| right.spec_index(i))),
@@ -190,7 +190,7 @@ pub mod MergeSortMtPer {
         /// Sort a sequence using parallel merge sort. Algorithm 26.4.
         /// - APAS: Work Θ(n lg n), Span Θ(lg² n) — with O(lg n)-span merge.
         /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n) — parallel recursion via join(), Θ(n) merge: S(n) = S(n/2) + Θ(n) = Θ(n).
-        fn merge_sort_parallel(a: &ArraySeqMtPerS<N>) -> (sorted: ArraySeqMtPerS<N>)
+        fn merge_sort_parallel(a: &ArraySeqMtPerS<usize>) -> (sorted: ArraySeqMtPerS<usize>)
             requires a.spec_len() <= usize::MAX,
             ensures
                 spec_sort_post(
@@ -206,7 +206,7 @@ pub mod MergeSortMtPer {
     /// Binary search in a sorted array: find the count of elements <= pivot.
     /// - APAS: Work Θ(lg n), Span Θ(lg n) — standard binary search.
     /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
-    fn binary_search_upper_bound(arr: &ArraySeqMtPerS<N>, pivot: N) -> (pos: usize)
+    fn binary_search_upper_bound(arr: &ArraySeqMtPerS<usize>, pivot: usize) -> (pos: usize)
         requires spec_sorted(Seq::new(arr.spec_len(), |i: int| arr.spec_index(i))),
         ensures
             pos as int <= arr.spec_len(),
@@ -265,7 +265,7 @@ pub mod MergeSortMtPer {
     /// then recursively merges both halves in parallel via join().
     /// - APAS: Work Θ(n), Span Θ(lg n) — parallel merge via binary search and recursive halving.
     /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — Vec concat at each level is Θ(n), dominating span.
-    fn merge_dc(left: &ArraySeqMtPerS<N>, right: &ArraySeqMtPerS<N>) -> (merged: ArraySeqMtPerS<N>)
+    fn merge_dc(left: &ArraySeqMtPerS<usize>, right: &ArraySeqMtPerS<usize>) -> (merged: ArraySeqMtPerS<usize>)
         requires
             spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),
             spec_sorted(Seq::new(right.spec_len(), |i: int| right.spec_index(i))),
@@ -284,7 +284,7 @@ pub mod MergeSortMtPer {
 
         // Base: left empty — return copy of right.
         if nl == 0 {
-            let mut v: Vec<N> = Vec::with_capacity(nr);
+            let mut v: Vec<usize> = Vec::with_capacity(nr);
             let mut i: usize = 0;
             while i < nr
                 invariant
@@ -303,7 +303,7 @@ pub mod MergeSortMtPer {
         }
         // Base: right empty — return copy of left.
         if nr == 0 {
-            let mut v: Vec<N> = Vec::with_capacity(nl);
+            let mut v: Vec<usize> = Vec::with_capacity(nl);
             let mut i: usize = 0;
             while i < nl
                 invariant
@@ -327,7 +327,7 @@ pub mod MergeSortMtPer {
         let pos = binary_search_upper_bound(right, pivot);
 
         // Build 4 subarrays.
-        let mut ll_vec: Vec<N> = Vec::with_capacity(mid);
+        let mut ll_vec: Vec<usize> = Vec::with_capacity(mid);
         let mut i: usize = 0;
         while i < mid
             invariant
@@ -339,7 +339,7 @@ pub mod MergeSortMtPer {
         let left_l = ArraySeqMtPerS { seq: ll_vec };
 
         let lr_len = nl - mid - 1;
-        let mut lr_vec: Vec<N> = Vec::with_capacity(lr_len);
+        let mut lr_vec: Vec<usize> = Vec::with_capacity(lr_len);
         let mut i: usize = 0;
         while i < lr_len
             invariant
@@ -351,7 +351,7 @@ pub mod MergeSortMtPer {
         { lr_vec.push(*left.nth(mid + 1 + i)); i += 1; }
         let left_r = ArraySeqMtPerS { seq: lr_vec };
 
-        let mut rl_vec: Vec<N> = Vec::with_capacity(pos);
+        let mut rl_vec: Vec<usize> = Vec::with_capacity(pos);
         let mut i: usize = 0;
         while i < pos
             invariant
@@ -363,7 +363,7 @@ pub mod MergeSortMtPer {
         let right_l = ArraySeqMtPerS { seq: rl_vec };
 
         let rr_len = nr - pos;
-        let mut rr_vec: Vec<N> = Vec::with_capacity(rr_len);
+        let mut rr_vec: Vec<usize> = Vec::with_capacity(rr_len);
         let mut i: usize = 0;
         while i < rr_len
             invariant
@@ -419,11 +419,11 @@ pub mod MergeSortMtPer {
         }
 
         // Parallel recursive merge via join().
-        let f1 = move || -> (r: ArraySeqMtPerS<N>)
+        let f1 = move || -> (r: ArraySeqMtPerS<usize>)
             ensures spec_merge_post(sl_l, sr_l, Seq::new(r.spec_len(), |i: int| r.spec_index(i)))
         { merge_dc(&left_l, &right_l) };
 
-        let f2 = move || -> (r: ArraySeqMtPerS<N>)
+        let f2 = move || -> (r: ArraySeqMtPerS<usize>)
             ensures spec_merge_post(sl_r, sr_r, Seq::new(r.spec_len(), |i: int| r.spec_index(i)))
         { merge_dc(&left_r, &right_r) };
 
@@ -436,7 +436,7 @@ pub mod MergeSortMtPer {
         let ml_len = merged_l.length();
         let mr_len = merged_r.length();
         let total = ml_len + 1 + mr_len;
-        let mut out: Vec<N> = Vec::with_capacity(total);
+        let mut out: Vec<usize> = Vec::with_capacity(total);
 
         let mut i: usize = 0;
         while i < ml_len
@@ -565,13 +565,13 @@ pub mod MergeSortMtPer {
         merged
     }
 
-    impl MergeSortMtTrait for ArraySeqMtPerS<N> {
-        fn merge_parallel(left: &ArraySeqMtPerS<N>, right: &ArraySeqMtPerS<N>) -> (merged: ArraySeqMtPerS<N>) {
+    impl MergeSortMtTrait for ArraySeqMtPerS<usize> {
+        fn merge_parallel(left: &ArraySeqMtPerS<usize>, right: &ArraySeqMtPerS<usize>) -> (merged: ArraySeqMtPerS<usize>) {
             merge_dc(left, right)
         }
 
         // Verified parallel merge sort: structural logic proven, recursion parallelized.
-        fn merge_sort_parallel(a: &ArraySeqMtPerS<N>) -> (sorted: ArraySeqMtPerS<N>)
+        fn merge_sort_parallel(a: &ArraySeqMtPerS<usize>) -> (sorted: ArraySeqMtPerS<usize>)
             decreases a.spec_len(),
         {
             let n = a.length();
@@ -579,7 +579,7 @@ pub mod MergeSortMtPer {
 
             if n == 0 {
                 proof {
-                    assert(sa =~= Seq::<N>::empty());
+                    assert(sa =~= Seq::<usize>::empty());
                 }
                 return ArraySeqMtPerS::empty();
             }
@@ -598,7 +598,7 @@ pub mod MergeSortMtPer {
             let mid = n / 2;
 
             // Build left half [0..mid).
-            let mut left_vec: Vec<N> = Vec::with_capacity(mid);
+            let mut left_vec: Vec<usize> = Vec::with_capacity(mid);
             let mut i: usize = 0;
             while i < mid
                 invariant
@@ -614,7 +614,7 @@ pub mod MergeSortMtPer {
 
             // Build right half [mid..n).
             let right_len = n - mid;
-            let mut right_vec: Vec<N> = Vec::with_capacity(right_len);
+            let mut right_vec: Vec<usize> = Vec::with_capacity(right_len);
             let mut i: usize = 0;
             while i < right_len
                 invariant
@@ -634,13 +634,13 @@ pub mod MergeSortMtPer {
             let ghost right_view = Seq::new(right.spec_len(), |i: int| right.spec_index(i));
 
             // Parallel recursive sort via help-first scheduler.
-            let f1 = move || -> (r: ArraySeqMtPerS<N>)
+            let f1 = move || -> (r: ArraySeqMtPerS<usize>)
                 ensures spec_sort_post(left_view, Seq::new(r.spec_len(), |i: int| r.spec_index(i)))
-            { <ArraySeqMtPerS<N> as MergeSortMtTrait>::merge_sort_parallel(&left) };
+            { <ArraySeqMtPerS<usize> as MergeSortMtTrait>::merge_sort_parallel(&left) };
 
-            let f2 = move || -> (r: ArraySeqMtPerS<N>)
+            let f2 = move || -> (r: ArraySeqMtPerS<usize>)
                 ensures spec_sort_post(right_view, Seq::new(r.spec_len(), |i: int| r.spec_index(i)))
-            { <ArraySeqMtPerS<N> as MergeSortMtTrait>::merge_sort_parallel(&right) };
+            { <ArraySeqMtPerS<usize> as MergeSortMtTrait>::merge_sort_parallel(&right) };
 
             let (sorted_left, sorted_right) = join(f1, f2);
 

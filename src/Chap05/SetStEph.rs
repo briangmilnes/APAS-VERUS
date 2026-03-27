@@ -157,7 +157,7 @@ verus! {
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Hash set len().
-        fn size(&self)                       -> (size: N)
+        fn size(&self)                       -> (size: usize)
             requires self.spec_setsteph_wf()
             ensures size == self@.len();
 
@@ -373,7 +373,7 @@ verus! {
             SetStEph { elements: s }
         }
 
-        fn size(&self) -> (size: N)
+        fn size(&self) -> (size: usize)
             ensures size == self@.len()
         { self.elements.len() }
 
@@ -578,7 +578,7 @@ verus! {
             let ghost parts_seq = parts_it@.1;
             let ghost parts_view = parts@;
             let ghost x_view = x@;
-            let mut count: N = 0;
+            let mut count: usize = 0;
             let ghost mut found_index: Option<int> = None;
 
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]

@@ -8,7 +8,7 @@ use apas_verus::Chap63::ConnectivityMtEph::ConnectivityMtEph::*;
 use apas_verus::SetLit;
 use apas_verus::Types::Types::*;
 
-fn create_connected_graph() -> UnDirGraphMtEph<N> {
+fn create_connected_graph() -> UnDirGraphMtEph<usize> {
     let mut vertices = SetLit![];
     for i in 0..6 {
         let _ = vertices.insert(i);
@@ -17,10 +17,10 @@ fn create_connected_graph() -> UnDirGraphMtEph<N> {
     for i in 0..6 {
         let _ = edges.insert(Edge(i, (i + 1) % 6));
     }
-    <UnDirGraphMtEph<N> as UnDirGraphMtEphTrait<N>>::from_sets(vertices, edges)
+    <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edges)
 }
 
-fn create_multi_component_graph() -> UnDirGraphMtEph<N> {
+fn create_multi_component_graph() -> UnDirGraphMtEph<usize> {
     let mut vertices = SetLit![];
     for i in 0..8 {
         let _ = vertices.insert(i);
@@ -31,7 +31,7 @@ fn create_multi_component_graph() -> UnDirGraphMtEph<N> {
     let _ = edges.insert(Edge(3, 4));
     let _ = edges.insert(Edge(5, 6));
     let _ = edges.insert(Edge(6, 7));
-    <UnDirGraphMtEph<N> as UnDirGraphMtEphTrait<N>>::from_sets(vertices, edges)
+    <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edges)
 }
 
 #[test]

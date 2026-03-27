@@ -28,7 +28,7 @@ broadcast use {
     // 4. type definitions
 
     pub struct AdjSeqGraphStEph {
-        pub adj: ArraySeqStEphS<ArraySeqStEphS<N>>,
+        pub adj: ArraySeqStEphS<ArraySeqStEphS<usize>>,
     }
 
     // 5. view impls
@@ -81,12 +81,12 @@ broadcast use {
         spec fn spec_num_vertices(&self) -> nat;
         spec fn spec_degree(&self, u: int) -> nat
             recommends 0 <= u < self.spec_num_vertices();
-        spec fn spec_neighbor(&self, u: int, j: int) -> N
+        spec fn spec_neighbor(&self, u: int, j: int) -> usize
             recommends 0 <= u < self.spec_num_vertices(), 0 <= j < self.spec_degree(u);
 
         /// - APAS: Work Theta(n), Span Theta(n) [Cost Spec 52.5]
         /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — agrees; tabulate over n empty sequences.
-        fn new(n: N) -> (empty: Self)
+        fn new(n: usize) -> (empty: Self)
             ensures
                 empty.spec_adjseqgraphsteph_wf(),
                 empty.spec_num_vertices() == n,
@@ -94,7 +94,7 @@ broadcast use {
 
         /// - APAS: Work Theta(1), Span Theta(1)
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — wraps existing array.
-        fn from_seq(adj: ArraySeqStEphS<ArraySeqStEphS<N>>) -> (constructed: Self)
+        fn from_seq(adj: ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (constructed: Self)
             requires
                 forall|u: int, j: int|
                     0 <= u < adj.spec_len()
@@ -111,13 +111,13 @@ broadcast use {
 
         /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.5]
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; array length.
-        fn num_vertices(&self) -> (n: N)
+        fn num_vertices(&self) -> (n: usize)
             requires self.spec_adjseqgraphsteph_wf()
             ensures n as nat == self.spec_num_vertices();
 
         /// - APAS: Work Theta(n + m), Span Theta(n + m)
         /// - Claude-Opus-4.6: Work Theta(n + m), Span Theta(n + m) — agrees; sums all neighbor lengths.
-        fn num_edges(&self) -> (m: N)
+        fn num_edges(&self) -> (m: usize)
             requires
                 self.spec_adjseqgraphsteph_wf(),
                 spec_sum_of(
@@ -132,7 +132,7 @@ broadcast use {
 
         /// - APAS: Work Theta(deg(u)), Span Theta(deg(u)) [Cost Spec 52.5]
         /// - Claude-Opus-4.6: Work Theta(deg(u)), Span Theta(deg(u)) — agrees; linear scan of neighbor list.
-        fn has_edge(&self, u: N, v: N) -> (found: bool)
+        fn has_edge(&self, u: usize, v: usize) -> (found: bool)
             requires self.spec_adjseqgraphsteph_wf(), u < self.spec_num_vertices()
             ensures found == exists|j: int|
                 0 <= j < self.spec_degree(u as int)
@@ -140,7 +140,7 @@ broadcast use {
 
         /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.5]
         /// - Claude-Opus-4.6: Work Theta(deg(u)), Span Theta(deg(u)) — tabulate copies neighbor list.
-        fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqStEphS<N>)
+        fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqStEphS<usize>)
             requires self.spec_adjseqgraphsteph_wf(), u < self.spec_num_vertices()
             ensures
                 neighbors.spec_len() == self.spec_degree(u as int),
@@ -149,13 +149,13 @@ broadcast use {
 
         /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.5]
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; neighbor array length.
-        fn out_degree(&self, u: N) -> (d: N)
+        fn out_degree(&self, u: usize) -> (d: usize)
             requires self.spec_adjseqgraphsteph_wf(), u < self.spec_num_vertices()
             ensures d as nat == self.spec_degree(u as int);
 
         /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.5]
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; single array set.
-        fn set_neighbors(&mut self, v: N, neighbors: ArraySeqStEphS<N>)
+        fn set_neighbors(&mut self, v: usize, neighbors: ArraySeqStEphS<usize>)
             requires
                 old(self).spec_adjseqgraphsteph_wf(),
                 v < old(self).spec_num_vertices(),
@@ -176,7 +176,7 @@ broadcast use {
 
         /// - APAS: Work Theta(deg(u)), Span Theta(deg(u)) [Cost Spec 52.5]
         /// - Claude-Opus-4.6: Work Theta(deg(u)), Span Theta(deg(u)) — agrees; rebuilds neighbor list.
-        fn set_edge(&mut self, u: N, v: N, exists: bool)
+        fn set_edge(&mut self, u: usize, v: usize, exists: bool)
             requires
                 old(self).spec_adjseqgraphsteph_wf(),
                 u < old(self).spec_num_vertices(),
@@ -217,13 +217,13 @@ broadcast use {
             self.adj.spec_index(u).spec_len()
         }
 
-        open spec fn spec_neighbor(&self, u: int, j: int) -> N {
+        open spec fn spec_neighbor(&self, u: int, j: int) -> usize {
             self.adj.spec_index(u).spec_index(j)
         }
 
-        fn new(n: N) -> (empty: Self) {
+        fn new(n: usize) -> (empty: Self) {
             let adj = ArraySeqStEphS::tabulate(
-                &|_i: usize| -> (r: ArraySeqStEphS<N>)
+                &|_i: usize| -> (r: ArraySeqStEphS<usize>)
                     ensures r.spec_len() == 0
                 {
                     ArraySeqStEphS::empty()
@@ -233,15 +233,15 @@ broadcast use {
             AdjSeqGraphStEph { adj }
         }
 
-        fn from_seq(adj: ArraySeqStEphS<ArraySeqStEphS<N>>) -> (constructed: Self) {
+        fn from_seq(adj: ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (constructed: Self) {
             AdjSeqGraphStEph { adj }
         }
 
-        fn num_vertices(&self) -> (n: N) {
+        fn num_vertices(&self) -> (n: usize) {
             self.adj.length()
         }
 
-        fn num_edges(&self) -> (m: N) {
+        fn num_edges(&self) -> (m: usize) {
             let n = self.adj.length();
             let mut count: usize = 0;
             let mut i: usize = 0;
@@ -266,7 +266,7 @@ broadcast use {
             count
         }
 
-        fn has_edge(&self, u: N, v: N) -> (found: bool) {
+        fn has_edge(&self, u: usize, v: usize) -> (found: bool) {
             let neighbors = self.adj.nth(u);
             let len = neighbors.length();
             let mut i: usize = 0;
@@ -291,11 +291,11 @@ broadcast use {
             false
         }
 
-        fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqStEphS<N>) {
+        fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqStEphS<usize>) {
             let src = self.adj.nth(u);
             let len = src.length();
             ArraySeqStEphS::tabulate(
-                &|i: usize| -> (r: N)
+                &|i: usize| -> (r: usize)
                     requires i < len
                     ensures r == src.spec_index(i as int)
                 {
@@ -305,11 +305,11 @@ broadcast use {
             )
         }
 
-        fn out_degree(&self, u: N) -> (d: N) {
+        fn out_degree(&self, u: usize) -> (d: usize) {
             self.adj.nth(u).length()
         }
 
-        fn set_neighbors(&mut self, v: N, neighbors: ArraySeqStEphS<N>) {
+        fn set_neighbors(&mut self, v: usize, neighbors: ArraySeqStEphS<usize>) {
             let _ = self.adj.set(v, neighbors);
             assert forall|u: int, j: int|
                 0 <= u < self.adj.spec_len()
@@ -322,7 +322,7 @@ broadcast use {
             }
         }
 
-        fn set_edge(&mut self, u: N, v: N, exists: bool) {
+        fn set_edge(&mut self, u: usize, v: usize, exists: bool) {
             let ghost old_degree = self.spec_degree(u as int);
             let ghost old_neighbors_view = Seq::new(old_degree, |j: int| self.spec_neighbor(u as int, j));
             let ghost adj_len = self.adj.spec_len();
@@ -352,7 +352,7 @@ broadcast use {
                 }
 
                 if !found {
-                    let mut new_vec = Vec::<N>::new();
+                    let mut new_vec = Vec::<usize>::new();
                     let mut j: usize = 0;
                     while j < old_len
                         invariant
@@ -388,7 +388,7 @@ broadcast use {
                 }
             } else {
                 let old_len = self.adj.nth(u).length();
-                let mut new_vec = Vec::<N>::new();
+                let mut new_vec = Vec::<usize>::new();
                 let mut j: usize = 0;
                 while j < old_len
                     invariant

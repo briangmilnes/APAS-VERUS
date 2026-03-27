@@ -9,8 +9,8 @@ use apas_verus::SetLit;
 
 #[test]
 fn test_from_weighed_edges() {
-    let v: SetStEph<N> = SetLit![1, 2, 3];
-    let edges: SetStEph<WeightedEdge<N, u32>> = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(2, 3, 20)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3];
+    let edges: SetStEph<WeightedEdge<usize, u32>> = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(2, 3, 20)];
     let g = WeightedDirGraphStEphU32::from_weighed_edges(v, edges);
 
     assert_eq!(g.vertices().size(), 3);
@@ -19,8 +19,8 @@ fn test_from_weighed_edges() {
 
 #[test]
 fn test_add_weighed_edge() {
-    let v: SetStEph<N> = SetLit![1, 2, 3];
-    let edges: SetStEph<WeightedEdge<N, u32>> = SetLit![];
+    let v: SetStEph<usize> = SetLit![1, 2, 3];
+    let edges: SetStEph<WeightedEdge<usize, u32>> = SetLit![];
     let mut g = WeightedDirGraphStEphU32::from_weighed_edges(v, edges);
 
     g.add_weighed_edge(1, 2, 15);
@@ -32,8 +32,8 @@ fn test_add_weighed_edge() {
 
 #[test]
 fn test_get_edge_weight() {
-    let v: SetStEph<N> = SetLit![1, 2, 3];
-    let edges: SetStEph<WeightedEdge<N, u32>> = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(2, 3, 20)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3];
+    let edges: SetStEph<WeightedEdge<usize, u32>> = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(2, 3, 20)];
     let g = WeightedDirGraphStEphU32::from_weighed_edges(v, edges);
 
     assert_eq!(g.get_edge_weight(&1, &2), Some(10));
@@ -43,8 +43,8 @@ fn test_get_edge_weight() {
 
 #[test]
 fn test_weighed_edges() {
-    let v: SetStEph<N> = SetLit![1, 2, 3];
-    let edges: SetStEph<WeightedEdge<N, u32>> = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(2, 3, 20)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3];
+    let edges: SetStEph<WeightedEdge<usize, u32>> = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(2, 3, 20)];
     let g = WeightedDirGraphStEphU32::from_weighed_edges(v, edges.clone());
 
     let result = g.weighed_edges();
@@ -55,8 +55,8 @@ fn test_weighed_edges() {
 
 #[test]
 fn test_out_neighbors_weighed() {
-    let v: SetStEph<N> = SetLit![1, 2, 3, 4];
-    let edges: SetStEph<WeightedEdge<N, u32>> = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(1, 3, 15), WeightedEdge(2, 4, 20)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3, 4];
+    let edges: SetStEph<WeightedEdge<usize, u32>> = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(1, 3, 15), WeightedEdge(2, 4, 20)];
     let g = WeightedDirGraphStEphU32::from_weighed_edges(v, edges);
 
     let out1 = g.out_neighbors_weighed(&1);
@@ -71,8 +71,8 @@ fn test_out_neighbors_weighed() {
 
 #[test]
 fn test_in_neighbors_weighed() {
-    let v: SetStEph<N> = SetLit![1, 2, 3, 4];
-    let edges: SetStEph<WeightedEdge<N, u32>> = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(3, 2, 15), WeightedEdge(2, 4, 20)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3, 4];
+    let edges: SetStEph<WeightedEdge<usize, u32>> = SetLit![WeightedEdge(1, 2, 10), WeightedEdge(3, 2, 15), WeightedEdge(2, 4, 20)];
     let g = WeightedDirGraphStEphU32::from_weighed_edges(v, edges);
 
     let in2 = g.in_neighbors_weighed(&2);
@@ -87,8 +87,8 @@ fn test_in_neighbors_weighed() {
 
 #[test]
 fn test_zero_weight() {
-    let v: SetStEph<N> = SetLit![1, 2];
-    let edges: SetStEph<WeightedEdge<N, u32>> = SetLit![WeightedEdge(1, 2, 0)];
+    let v: SetStEph<usize> = SetLit![1, 2];
+    let edges: SetStEph<WeightedEdge<usize, u32>> = SetLit![WeightedEdge(1, 2, 0)];
     let g = WeightedDirGraphStEphU32::from_weighed_edges(v, edges);
 
     assert_eq!(g.get_edge_weight(&1, &2), Some(0));
@@ -96,8 +96,8 @@ fn test_zero_weight() {
 
 #[test]
 fn test_isolated_vertex() {
-    let v: SetStEph<N> = SetLit![1, 2, 3];
-    let edges: SetStEph<WeightedEdge<N, u32>> = SetLit![WeightedEdge(1, 2, 10)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3];
+    let edges: SetStEph<WeightedEdge<usize, u32>> = SetLit![WeightedEdge(1, 2, 10)];
     let g = WeightedDirGraphStEphU32::from_weighed_edges(v, edges);
 
     let out3 = g.out_neighbors_weighed(&3);
@@ -109,8 +109,8 @@ fn test_isolated_vertex() {
 
 #[test]
 fn test_self_loop() {
-    let v: SetStEph<N> = SetLit![1, 2];
-    let edges: SetStEph<WeightedEdge<N, u32>> = SetLit![WeightedEdge(1, 1, 5), WeightedEdge(1, 2, 10)];
+    let v: SetStEph<usize> = SetLit![1, 2];
+    let edges: SetStEph<WeightedEdge<usize, u32>> = SetLit![WeightedEdge(1, 1, 5), WeightedEdge(1, 2, 10)];
     let g = WeightedDirGraphStEphU32::from_weighed_edges(v, edges);
 
     assert_eq!(g.get_edge_weight(&1, &1), Some(5));
@@ -120,8 +120,8 @@ fn test_self_loop() {
 
 #[test]
 fn test_complete_graph_weighted() {
-    let v: SetStEph<N> = SetLit![1, 2, 3];
-    let edges: SetStEph<WeightedEdge<N, u32>> = SetLit![
+    let v: SetStEph<usize> = SetLit![1, 2, 3];
+    let edges: SetStEph<WeightedEdge<usize, u32>> = SetLit![
         WeightedEdge(1, 2, 10),
         WeightedEdge(1, 3, 11),
         WeightedEdge(2, 1, 20),
@@ -136,8 +136,8 @@ fn test_complete_graph_weighted() {
 
 #[test]
 fn test_empty_graph() {
-    let v: SetStEph<N> = SetLit![];
-    let edges: SetStEph<WeightedEdge<N, u32>> = SetLit![];
+    let v: SetStEph<usize> = SetLit![];
+    let edges: SetStEph<WeightedEdge<usize, u32>> = SetLit![];
     let g = WeightedDirGraphStEphU32::from_weighed_edges(v, edges);
 
     assert_eq!(g.vertices().size(), 0);
@@ -146,8 +146,8 @@ fn test_empty_graph() {
 
 #[test]
 fn test_no_edges_graph() {
-    let v: SetStEph<N> = SetLit![1, 2, 3];
-    let edges: SetStEph<WeightedEdge<N, u32>> = SetLit![];
+    let v: SetStEph<usize> = SetLit![1, 2, 3];
+    let edges: SetStEph<WeightedEdge<usize, u32>> = SetLit![];
     let g = WeightedDirGraphStEphU32::from_weighed_edges(v, edges);
 
     assert_eq!(g.vertices().size(), 3);
@@ -156,8 +156,8 @@ fn test_no_edges_graph() {
 
 #[test]
 fn test_weighted_path() {
-    let v: SetStEph<N> = SetLit![1, 2, 3, 4];
-    let edges: SetStEph<WeightedEdge<N, u32>> = SetLit![WeightedEdge(1, 2, 5), WeightedEdge(2, 3, 10), WeightedEdge(3, 4, 15)];
+    let v: SetStEph<usize> = SetLit![1, 2, 3, 4];
+    let edges: SetStEph<WeightedEdge<usize, u32>> = SetLit![WeightedEdge(1, 2, 5), WeightedEdge(2, 3, 10), WeightedEdge(3, 4, 15)];
     let g = WeightedDirGraphStEphU32::from_weighed_edges(v, edges);
 
     assert_eq!(g.out_neighbors_weighed(&1).size(), 1);
@@ -166,8 +166,8 @@ fn test_weighted_path() {
 
 #[test]
 fn test_weighted_star() {
-    let v: SetStEph<N> = SetLit![0, 1, 2, 3];
-    let edges: SetStEph<WeightedEdge<N, u32>> = SetLit![WeightedEdge(0, 1, 10), WeightedEdge(0, 2, 20), WeightedEdge(0, 3, 30)];
+    let v: SetStEph<usize> = SetLit![0, 1, 2, 3];
+    let edges: SetStEph<WeightedEdge<usize, u32>> = SetLit![WeightedEdge(0, 1, 10), WeightedEdge(0, 2, 20), WeightedEdge(0, 3, 30)];
     let g = WeightedDirGraphStEphU32::from_weighed_edges(v, edges);
 
     let out0 = g.out_neighbors_weighed(&0);

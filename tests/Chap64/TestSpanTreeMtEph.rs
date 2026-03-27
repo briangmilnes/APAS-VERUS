@@ -9,7 +9,7 @@ use apas_verus::Chap64::SpanTreeMtEph::SpanTreeMtEph::*;
 use apas_verus::SetLit;
 use apas_verus::Types::Types::*;
 
-fn create_cycle_graph(n: N) -> UnDirGraphMtEph<N> {
+fn create_cycle_graph(n: usize) -> UnDirGraphMtEph<usize> {
     let mut vertices = SetLit![];
     for i in 0..n {
         let _ = vertices.insert(i);
@@ -18,7 +18,7 @@ fn create_cycle_graph(n: N) -> UnDirGraphMtEph<N> {
     for i in 0..n {
         let _ = edges.insert(Edge(i, (i + 1) % n));
     }
-    <UnDirGraphMtEph<N> as UnDirGraphMtEphTrait<N>>::FromSets(vertices, edges)
+    <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::FromSets(vertices, edges)
 }
 
 #[test]
@@ -43,7 +43,7 @@ fn test_spanning_tree_mt_larger() {
 fn test_spanning_tree_mt_empty() {
     let vertices = SetLit![];
     let edges = SetLit![];
-    let graph = <UnDirGraphMtEph<N> as UnDirGraphMtEphTrait<N>>::FromSets(vertices, edges);
+    let graph = <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::FromSets(vertices, edges);
     let tree = spanning_tree_star_contraction_mt(&graph, 789);
 
     assert_eq!(tree.size(), 0);

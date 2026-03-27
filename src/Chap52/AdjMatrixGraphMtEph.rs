@@ -29,7 +29,7 @@ broadcast use {
 
     pub struct AdjMatrixGraphMtEph {
         pub matrix: ArraySeqMtEphS<ArraySeqMtEphS<bool>>,
-        pub n: N,
+        pub n: usize,
     }
 
     // 5. view impls
@@ -108,7 +108,7 @@ broadcast use {
             recommends 0 <= u < self.spec_n(), 0 <= v < self.spec_n();
 
         /// Work Theta(n^2), Span Theta(n^2)
-        fn new(n: N) -> (empty: Self)
+        fn new(n: usize) -> (empty: Self)
             ensures
                 empty.spec_adjmatrixgraphmteph_wf(),
                 empty.spec_n() == n,
@@ -128,12 +128,12 @@ broadcast use {
                     ==> #[trigger] constructed.spec_edge(u, v) == matrix.spec_index(u).spec_index(v);
 
         /// Work Theta(1), Span Theta(1)
-        fn num_vertices(&self) -> (n: N)
+        fn num_vertices(&self) -> (n: usize)
             requires self.spec_adjmatrixgraphmteph_wf()
             ensures n as nat == self.spec_n();
 
         /// Work Theta(n^2), Span Theta(n^2)
-        fn num_edges(&self) -> (m: N)
+        fn num_edges(&self) -> (m: usize)
             requires
                 self.spec_adjmatrixgraphmteph_wf(),
                 spec_sum_of(
@@ -147,12 +147,12 @@ broadcast use {
                 );
 
         /// Work Theta(1), Span Theta(1)
-        fn has_edge(&self, u: N, v: N) -> (found: bool)
+        fn has_edge(&self, u: usize, v: usize) -> (found: bool)
             requires self.spec_adjmatrixgraphmteph_wf(), u < self.spec_n(), v < self.spec_n()
             ensures found == self.spec_edge(u as int, v as int);
 
         /// Work Theta(n), Span Theta(n)
-        fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqMtEphS<N>)
+        fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqMtEphS<usize>)
             requires self.spec_adjmatrixgraphmteph_wf(), u < self.spec_n()
             ensures
                 forall|k: int| 0 <= k < neighbors.spec_len()
@@ -160,10 +160,10 @@ broadcast use {
                         && self.spec_edge(u as int, neighbors.spec_index(k) as int),
                 forall|v: int| 0 <= v < self.spec_n() && #[trigger] self.spec_edge(u as int, v)
                     ==> exists|k: int|
-                        0 <= k < neighbors.spec_len() && #[trigger] neighbors.spec_index(k) == v as N;
+                        0 <= k < neighbors.spec_len() && #[trigger] neighbors.spec_index(k) == v as usize;
 
         /// Work Theta(n), Span Theta(n)
-        fn out_degree(&self, u: N) -> (d: N)
+        fn out_degree(&self, u: usize) -> (d: usize)
             requires self.spec_adjmatrixgraphmteph_wf(), u < self.spec_n()
             ensures d as nat == spec_count_true(
                 |v: int| self.spec_edge(u as int, v),
@@ -171,7 +171,7 @@ broadcast use {
             );
 
         /// Work Theta(1), Span Theta(1)
-        fn set_edge(&mut self, u: N, v: N, exists: bool)
+        fn set_edge(&mut self, u: usize, v: usize, exists: bool)
             requires
                 old(self).spec_adjmatrixgraphmteph_wf(),
                 u < old(self).spec_n(),
@@ -212,7 +212,7 @@ broadcast use {
             self.matrix.spec_index(u).spec_index(v)
         }
 
-        fn new(n: N) -> (empty: Self) {
+        fn new(n: usize) -> (empty: Self) {
             let false_row = ArraySeqMtEphS::tabulate(
                 &|_j: usize| -> (r: bool) ensures !r { false },
                 n,
@@ -238,9 +238,9 @@ broadcast use {
             AdjMatrixGraphMtEph { matrix, n }
         }
 
-        fn num_vertices(&self) -> (n: N) { self.n }
+        fn num_vertices(&self) -> (n: usize) { self.n }
 
-        fn num_edges(&self) -> (m: N) {
+        fn num_edges(&self) -> (m: usize) {
             let n = self.n;
             let mut total: usize = 0;
             let mut u: usize = 0;
@@ -285,14 +285,14 @@ broadcast use {
             total
         }
 
-        fn has_edge(&self, u: N, v: N) -> (found: bool) {
+        fn has_edge(&self, u: usize, v: usize) -> (found: bool) {
             *self.matrix.nth(u).nth(v)
         }
 
-        fn out_neighbors(&self, u: N) -> (neighbors: ArraySeqMtEphS<N>) {
+        fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqMtEphS<usize>) {
             let n = self.n;
             let row = self.matrix.nth(u);
-            let mut nvec = Vec::<N>::new();
+            let mut nvec = Vec::<usize>::new();
             let mut v: usize = 0;
             while v < n
                 invariant
@@ -307,7 +307,7 @@ broadcast use {
                             && self.spec_edge(u as int, nvec@[k] as int),
                     forall|j: int| 0 <= j < v && #[trigger] self.spec_edge(u as int, j)
                         ==> exists|k: int|
-                            0 <= k < nvec@.len() as int && #[trigger] nvec@[k] == j as N,
+                            0 <= k < nvec@.len() as int && #[trigger] nvec@[k] == j as usize,
                 decreases n - v
             {
                 let val = *row.nth(v);
@@ -322,13 +322,13 @@ broadcast use {
                         implies nvec@[k] == #[trigger] pre_push[k]
                     by {};
                     assert forall|j: int| 0 <= j < (v as int + 1) && self.spec_edge(u as int, j)
-                        implies exists|k: int| 0 <= k < nvec@.len() as int && nvec@[k] == j as N
+                        implies exists|k: int| 0 <= k < nvec@.len() as int && nvec@[k] == j as usize
                     by {
                         if j < v as int {
-                            let witness = choose|k: int| 0 <= k < old_nvec_len as int && pre_push[k] == j as N;
-                            assert(nvec@[witness] == j as N);
+                            let witness = choose|k: int| 0 <= k < old_nvec_len as int && pre_push[k] == j as usize;
+                            assert(nvec@[witness] == j as usize);
                         } else {
-                            assert(nvec@[old_nvec_len as int] == v as N);
+                            assert(nvec@[old_nvec_len as int] == v as usize);
                         }
                     }
                 }
@@ -338,16 +338,16 @@ broadcast use {
             let neighbors = ArraySeqMtEphS::from_vec(nvec);
             proof {
                 assert forall|j: int| 0 <= j < (n as int) && self.spec_edge(u as int, j)
-                    implies exists|k: int| 0 <= k < neighbors.spec_len() && neighbors.spec_index(k) == j as N
+                    implies exists|k: int| 0 <= k < neighbors.spec_len() && neighbors.spec_index(k) == j as usize
                 by {
-                    let witness = choose|k: int| 0 <= k < nvec_view.len() as int && nvec_view[k] == j as N;
+                    let witness = choose|k: int| 0 <= k < nvec_view.len() as int && nvec_view[k] == j as usize;
                     assert(neighbors.spec_index(witness) == nvec_view[witness]);
                 }
             }
             neighbors
         }
 
-        fn out_degree(&self, u: N) -> (d: N) {
+        fn out_degree(&self, u: usize) -> (d: usize) {
             let n = self.n;
             let row = self.matrix.nth(u);
             let mut count: usize = 0;
@@ -375,7 +375,7 @@ broadcast use {
             count
         }
 
-        fn set_edge(&mut self, u: N, v: N, exists: bool) {
+        fn set_edge(&mut self, u: usize, v: usize, exists: bool) {
             let n = self.n;
             let new_row = ArraySeqMtEphS::tabulate(
                 &|j: usize| -> (r: bool)
