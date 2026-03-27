@@ -348,7 +348,7 @@ pub mod Chap26 {
     pub mod MergeSortStPer;
     pub mod ScanDCStPer;
 //    pub mod ETSPStEph;  // FIX: rlimit — matching loop on spec_edges_form_cycle trigger
-//    pub mod ETSPMtEph;  // BROKEN: type mismatch + stale API
+    pub mod ETSPMtEph;
     pub mod DivConReduceMtPer;
     pub mod MergeSortMtPer;
     pub mod ScanDCMtPer;
@@ -623,7 +623,7 @@ pub mod Chap58 {
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap59")))]
 pub mod Chap59 {
     pub mod JohnsonStEphI64;
-//    pub mod JohnsonMtEphI64;  // BROKEN
+    pub mod JohnsonMtEphI64;
 //    pub mod JohnsonStEphF64;  // BROKEN
 //    pub mod JohnsonMtEphF64;  // BROKEN
 }
