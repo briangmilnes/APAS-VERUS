@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap52/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap52/EdgeSetGraphMtPer.rs
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,62 +20,23 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-✓ AdjMatrixGraphMtEph.rs
-   3 clean proof functions
-✓ AdjMatrixGraphMtPer.rs
-   3 clean proof functions
-✓ AdjMatrixGraphStEph.rs
-   3 clean proof functions
-⚠ AdjMatrixGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:477: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       473 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       475 |         {
-       476 |             let equal = self.matrix == other.matrix && self.n == other.n;
-       478 |             equal
-       479 |         }
-✓ AdjSeqGraphMtEph.rs
-   2 clean proof functions
-✓ AdjSeqGraphMtPer.rs
-   2 clean proof functions
-✓ AdjSeqGraphStEph.rs
-   2 clean proof functions
-⚠ AdjSeqGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:513: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       509 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       511 |         {
-       512 |             let equal = self.adj == other.adj;
-       514 |             equal
-       515 |         }
-✓ AdjTableGraphMtPer.rs
-✓ AdjTableGraphStEph.rs
-   1 clean proof function
-✓ AdjTableGraphStPer.rs
-✓ EdgeSetGraphMtPer.rs
-⚠ EdgeSetGraphStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:406: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       399 |         fn clone(&self) -> (result: Self)
-            ...
-       404 |                 edges: self.edges.clone(),
-       405 |             };
-       407 |             result
-       408 |         }
-⚠ EdgeSetGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:375: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       368 |         fn clone(&self) -> (result: Self)
-            ...
-       373 |                 edges: self.edges.clone(),
-       374 |             };
-       376 |             result
-       377 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:391: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       387 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       389 |         {
-       390 |             let equal = self.vertices == other.vertices && self.edges == other.edges;
-       392 |             equal
-       393 |         }
+❌ EdgeSetGraphMtPer.rs
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/EdgeSetGraphMtPer.rs:164: error: external_body - #[verifier::external_body]
+       165 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/EdgeSetGraphMtPer.rs:193: error: external_body [blocked_by: out_neighbors] - #[verifier::external_body]
+       194 |         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/EdgeSetGraphMtPer.rs:211: error: external_body - #[verifier::external_body]
+       212 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/EdgeSetGraphMtPer.rs:231: error: external_body - #[verifier::external_body]
+       232 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/EdgeSetGraphMtPer.rs:242: error: external_body - #[verifier::external_body]
+       243 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/EdgeSetGraphMtPer.rs:254: error: external_body - #[verifier::external_body]
+       255 |         fn default() -> Self { Self::empty() }
+   Holes: 6 total
+      6 × external_body
+         5 × root cause
+         1 × downstream (blocked by root causes)
 
 =================================================================
 2. Depends Upon
@@ -85,77 +46,48 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
-AdjMatrixGraphMtEph  depends upon only clean modules
-AdjMatrixGraphMtPer  depends upon only clean modules
-AdjMatrixGraphStEph  depends upon only clean modules
-AdjMatrixGraphStPer  depends upon only clean modules
-AdjSeqGraphMtEph  depends upon only clean modules
-AdjSeqGraphMtPer  depends upon only clean modules
-AdjSeqGraphStEph  depends upon only clean modules
-AdjSeqGraphStPer  depends upon only clean modules
-AdjTableGraphMtPer  depends upon only clean modules
-AdjTableGraphStEph  depends upon only clean modules
-AdjTableGraphStPer  depends upon only clean modules
 EdgeSetGraphMtPer  depends upon only clean modules
-EdgeSetGraphStEph  depends upon only clean modules
-EdgeSetGraphStPer  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
-AdjMatrixGraphMtEph.rs  depends upon only clean modules
-AdjMatrixGraphMtPer.rs  depends upon only clean modules
-AdjMatrixGraphStEph.rs  depends upon only clean modules
-AdjMatrixGraphStPer.rs  depends upon only clean modules
-AdjSeqGraphMtEph.rs  depends upon only clean modules
-AdjSeqGraphMtPer.rs  depends upon only clean modules
-AdjSeqGraphStEph.rs  depends upon only clean modules
-AdjSeqGraphStPer.rs  depends upon only clean modules
-AdjTableGraphMtPer.rs  depends upon only clean modules
-AdjTableGraphStEph.rs  depends upon only clean modules
-AdjTableGraphStPer.rs  depends upon only clean modules
 EdgeSetGraphMtPer.rs  depends upon only clean modules
-EdgeSetGraphStEph.rs  depends upon only clean modules
-EdgeSetGraphStPer.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   14 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
-   14 total
+   0 clean (no holes, no errors; 0%)
+   1 holed (holes or errors, 100%)
+   1 total
 
 Proof Functions:
-   23 clean (100%)
+   0 clean (0%)
    0 holed (0%)
-   23 total
+   0 total
 
 Function Specs:
-   291 exec fns with complete spec (requires+ensures) (65%)
+   27 exec fns with complete spec (requires+ensures) (79%)
    0 exec fns missing spec (0%)
-   154 proof/spec fns clean (34%)
+   7 proof/spec fns clean (20%)
    0 proof/spec fns with holes (0%)
-   445 total fns
+   34 total fns
 
 
-Holes Found: 0 (actionable)
-Real Proof Targets: 0 (all actionable)
-
-Warnings: 5 total
-   5 × assume_eq_clone_workaround
-
-No proof holes found! All proofs are complete.
+Holes Found: 6 (actionable)
+   6 × external_body (100%)
+      5 × root cause
+      1 × downstream (blocked by root causes)
+Real Proof Targets: 6 (all actionable)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 09:09:11 -07:00
-Ended:     2026-03-27 09:09:11 -07:00
-Duration:  52ms
+Started:   2026-03-27 10:40:52 -07:00
+Ended:     2026-03-27 10:40:52 -07:00
+Duration:  7ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
-c/Chap52/analyses/veracity-review-verus-proof-holes.log
