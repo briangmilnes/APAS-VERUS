@@ -347,7 +347,7 @@ pub mod Chap26 {
     pub mod DivConReduceStPer;
     pub mod MergeSortStPer;
     pub mod ScanDCStPer;
-//    pub mod ETSPStEph;  // FIX: rlimit — matching loop on spec_edges_form_cycle trigger
+    pub mod ETSPStEph;
     pub mod ETSPMtEph;
     pub mod DivConReduceMtPer;
     pub mod MergeSortMtPer;

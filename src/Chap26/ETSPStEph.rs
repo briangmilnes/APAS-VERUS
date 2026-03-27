@@ -105,17 +105,36 @@ pub mod ETSPStEph {
             && spec_point_in_seq(edges[k].to, points)
     }
 
+    /// The from-point of the next edge in a tour (mod wrap). Closed to prevent
+    /// Z3 matching loops: `tour[i]` trigger would otherwise chain through
+    /// `tour[(i+1) % n]`, producing unbounded instantiations.
+    pub closed spec fn spec_next_edge_from(tour: Seq<Edge>, i: int) -> Point {
+        tour[((i + 1) % (tour.len() as int))].from
+    }
+
     /// Edges form a Hamiltonian cycle: each edge's destination is the next edge's source.
     pub open spec fn spec_edges_form_cycle(tour: Seq<Edge>) -> bool {
         tour.len() > 0 ==>
         forall|i: int| #![trigger tour[i]] 0 <= i < tour.len() ==>
-            spec_point_eq(tour[i].to, tour[((i + 1) % (tour.len() as int))].from)
+            spec_point_eq(tour[i].to, spec_next_edge_from(tour, i))
     }
 
 
     //		7. proof fns/broadcast groups
 
     //		7. proof fns
+
+    /// Reveal spec_next_edge_from for a single index. Call this instead of
+    /// reveal(spec_next_edge_from) to avoid re-enabling the matching loop.
+    pub proof fn lemma_next_edge_from_eq(tour: Seq<Edge>, i: int)
+        requires
+            tour.len() > 0,
+            0 <= i < tour.len(),
+        ensures
+            spec_next_edge_from(tour, i) == tour[((i + 1) % (tour.len() as int))].from,
+    {
+        reveal(spec_next_edge_from);
+    }
 
     /// If point p is in sub, and every element of sub is in sup, then p is in sup.
     pub proof fn lemma_point_in_seq_transitive(p: Point, sub: Seq<Point>, sup: Seq<Point>)
@@ -181,10 +200,12 @@ pub mod ETSPStEph {
     {
         let n = ln_i + rn_i;
 
-        // Modular arithmetic helpers for case analysis below.
         assert forall|i: int| #![trigger combined[i]] 0 <= i < n implies
-            spec_point_eq(combined[i].to, combined[((i + 1) % n)].from)
+            spec_point_eq(combined[i].to, spec_next_edge_from(combined, i))
         by {
+            // Reveal combined's next-edge so Z3 sees the concrete target.
+            lemma_next_edge_from_eq(combined, i);
+
             let next_i = (i + 1) % n;
 
             if i + 1 < n {
@@ -200,17 +221,17 @@ pub mod ETSPStEph {
                 let k = i;
                 assert(combined[k] == lt[((best_li + 1 + k) % ln_i)]);
                 let li = (best_li + 1 + k) % ln_i;
+                // Selectively reveal lt's cycle at index li (no matching loop).
+                lemma_next_edge_from_eq(lt, li);
                 assert(spec_point_eq(lt[li].to, lt[((li + 1) % ln_i)].from));
                 assert(combined[i] == lt[li]);
                 if i < ln_i - 2 {
-                    // next_i = i+1 still in left segment; forall applies.
                     lemma_small_mod(1, ln_i as nat);
                     lemma_add_mod_noop(best_li + 1 + i, 1, ln_i);
                     assert(combined[(i + 1)] == lt[((best_li + 1 + (i + 1)) % ln_i)]);
                     assert((best_li + 1 + (i + 1)) % ln_i == (li + 1) % ln_i);
                     assert(combined[next_i] == lt[((li + 1) % ln_i)]);
                 } else {
-                    // i == ln_i - 2, next_i == ln_i - 1 is bridge.
                     assert(i == ln_i - 2);
                     assert(next_i == ln_i - 1);
                     assert(combined[next_i] == (Edge { from: el_from, to: er_to }));
@@ -229,6 +250,8 @@ pub mod ETSPStEph {
                 // Bridge: left -> right.
                 assert(combined[i].to == er_to);
                 assert(er_to == rt[best_ri].to);
+                // Selectively reveal rt's cycle at best_ri.
+                lemma_next_edge_from_eq(rt, best_ri);
                 assert(spec_point_eq(rt[best_ri].to, rt[((best_ri + 1) % rn_i)].from));
                 assert(next_i == ln_i);
                 let m: int = 0;
@@ -241,6 +264,8 @@ pub mod ETSPStEph {
                 let m = i - ln_i;
                 assert(combined[(ln_i + m)] == rt[((best_ri + 1 + m) % rn_i)]);
                 let ri = (best_ri + 1 + m) % rn_i;
+                // Selectively reveal rt's cycle at ri.
+                lemma_next_edge_from_eq(rt, ri);
                 assert(spec_point_eq(rt[ri].to, rt[((ri + 1) % rn_i)].from));
                 assert(combined[(ln_i + m)] == rt[ri]);
                 if m < rn_i - 2 {
@@ -271,6 +296,8 @@ pub mod ETSPStEph {
                 assert(i == ln_i + rn_i - 1);
                 assert(combined[i].to == el_to);
                 assert(el_to == lt[best_li].to);
+                // Selectively reveal lt's cycle at best_li.
+                lemma_next_edge_from_eq(lt, best_li);
                 assert(spec_point_eq(lt[best_li].to, lt[((best_li + 1) % ln_i)].from));
                 assert(next_i == 0);
                 let k: int = 0;
@@ -326,6 +353,7 @@ pub mod ETSPStEph {
             tour.push(Edge { from: points[0], to: points[1] });
             tour.push(Edge { from: points[1], to: points[0] });
             proof {
+                reveal(spec_next_edge_from);
                 assert(spec_point_eq(tour@[0].from, points@[0]));
                 assert(spec_point_eq(tour@[0].to, points@[1]));
                 assert(spec_point_eq(tour@[1].from, points@[1]));
@@ -343,6 +371,7 @@ pub mod ETSPStEph {
             tour.push(Edge { from: points[1], to: points[2] });
             tour.push(Edge { from: points[2], to: points[0] });
             proof {
+                reveal(spec_next_edge_from);
                 assert(spec_point_eq(tour@[0].from, points@[0]));
                 assert(spec_point_eq(tour@[0].to, points@[1]));
                 assert(spec_point_eq(tour@[1].from, points@[1]));
