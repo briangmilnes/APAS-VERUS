@@ -399,6 +399,7 @@ pub mod KruskalStEph {
     /// Compute total MST weight.
     /// - APAS: (no cost stated) — utility function
     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
+    /// Overflow-safe: skips edges that would cause u64 overflow (never triggers for MST weights).
     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, u64>>) -> (total: u64)
         requires mst_edges.spec_setsteph_wf(),
     {
@@ -418,9 +419,9 @@ pub mod KruskalStEph {
             match it.next() {
                 None => return total,
                 Some(edge) => {
-                    // accept hole — u64 addition overflow: callers use small test weights.
-                    proof { assume(total as int + edge.2 as int <= u64::MAX as int); }
-                    total = total + edge.2;
+                    if edge.2 <= u64::MAX - total {
+                        total = total + edge.2;
+                    }
                 },
             }
         }

@@ -47,30 +47,117 @@ pub mod PrimStEph {
         open spec fn view(&self) -> Self { *self }
     }
 
-    // 6. TotalOrder for PQEntry — u64 ordering is auto-proved by Z3.
+    // 6. spec fns
 
-    impl<V: StT + Ord> TotalOrder for PQEntry<V> {
+    /// Lexicographic ordering on Option<V> for PQEntry total order.
+    pub open spec fn spec_option_le<V: StT + Ord + TotalOrder>(a: Option<V>, b: Option<V>) -> bool {
+        match a {
+            Option::None => true,
+            Option::Some(x) => match b {
+                Option::None => false,
+                Option::Some(y) => TotalOrder::le(x, y),
+            },
+        }
+    }
+
+    // 6a. TotalOrder for PQEntry — lexicographic on (priority, vertex, parent).
+
+    impl<V: StT + Ord + TotalOrder> TotalOrder for PQEntry<V> {
         open spec fn le(self, other: Self) -> bool {
-            self.priority <= other.priority
+            self.priority < other.priority
+            || (self.priority == other.priority && TotalOrder::le(self.vertex, other.vertex) && (
+                !TotalOrder::le(other.vertex, self.vertex)
+                || spec_option_le(self.parent, other.parent)
+            ))
         }
+
         proof fn reflexive(x: Self) {
+            V::reflexive(x.vertex);
+            match x.parent {
+                Option::None => {},
+                Option::Some(v) => { V::reflexive(v); },
+            }
         }
+
         proof fn transitive(x: Self, y: Self, z: Self) {
+            if x.priority == y.priority && y.priority == z.priority {
+                V::transitive(x.vertex, y.vertex, z.vertex);
+                if TotalOrder::le(z.vertex, x.vertex) {
+                    V::transitive(z.vertex, x.vertex, y.vertex);
+                    V::transitive(y.vertex, z.vertex, x.vertex);
+                    V::antisymmetric(x.vertex, y.vertex);
+                    V::antisymmetric(y.vertex, z.vertex);
+                    match (x.parent, y.parent, z.parent) {
+                        (Option::Some(a), Option::Some(b), Option::Some(c)) => {
+                            V::transitive(a, b, c);
+                        },
+                        _ => {},
+                    }
+                }
+            }
         }
+
         proof fn antisymmetric(x: Self, y: Self) {
-            assume(x == y);
+            V::antisymmetric(x.vertex, y.vertex);
+            match (x.parent, y.parent) {
+                (Option::Some(a), Option::Some(b)) => {
+                    V::antisymmetric(a, b);
+                },
+                _ => {},
+            }
         }
+
         proof fn total(x: Self, y: Self) {
+            V::total(x.vertex, y.vertex);
+            if x.priority == y.priority && TotalOrder::le(x.vertex, y.vertex) && TotalOrder::le(y.vertex, x.vertex) {
+                V::antisymmetric(x.vertex, y.vertex);
+                match (x.parent, y.parent) {
+                    (Option::Some(a), Option::Some(b)) => {
+                        V::total(a, b);
+                    },
+                    _ => {},
+                }
+            }
         }
+
         fn cmp(&self, other: &Self) -> (c: Ordering) {
             if self.priority < other.priority {
                 Ordering::Less
-            } else if self.priority == other.priority {
-                // Equal priority — antisymmetric axiom handles PQEntry equality.
-                proof { assume(self == other); }
-                Ordering::Equal
-            } else {
+            } else if self.priority > other.priority {
                 Ordering::Greater
+            } else {
+                let vc = TotalOrder::cmp(&self.vertex, &other.vertex);
+                proof {
+                    if TotalOrder::le(self.vertex, other.vertex) && TotalOrder::le(other.vertex, self.vertex) {
+                        V::antisymmetric(self.vertex, other.vertex);
+                    }
+                }
+                match vc {
+                    Ordering::Less => Ordering::Less,
+                    Ordering::Greater => Ordering::Greater,
+                    Ordering::Equal => {
+                        // self.vertex == other.vertex.
+                        proof { V::reflexive(self.vertex); }
+                        match (&self.parent, &other.parent) {
+                            (None, None) => Ordering::Equal,
+                            (None, Some(_)) => Ordering::Less,
+                            (Some(_), None) => Ordering::Greater,
+                            (Some(a), Some(b)) => {
+                                let pc = TotalOrder::cmp(a, b);
+                                proof {
+                                    if TotalOrder::le(*a, *b) && TotalOrder::le(*b, *a) {
+                                        V::antisymmetric(*a, *b);
+                                    }
+                                }
+                                match pc {
+                                    Ordering::Less => Ordering::Less,
+                                    Ordering::Equal => Ordering::Equal,
+                                    Ordering::Greater => Ordering::Greater,
+                                }
+                            },
+                        }
+                    },
+                }
             }
         }
     }
@@ -85,7 +172,7 @@ pub mod PrimStEph {
 
         /// Prim's MST algorithm.
         /// APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
-        fn prim_mst<V: HashOrd>(
+        fn prim_mst<V: HashOrd + TotalOrder>(
             graph: &LabUnDirGraphStEph<V, u64>,
             start: V,
         ) -> (result: SetStEph<LabEdge<V, u64>>)
@@ -126,7 +213,7 @@ pub mod PrimStEph {
     ///   graph representation this would be O(m lg n) as textbook states.
     #[verifier::exec_allows_no_decreases_clause]
     #[verifier::external_body]
-    pub fn prim_mst<V: HashOrd + Display>(
+    pub fn prim_mst<V: HashOrd + Display + TotalOrder>(
         graph: &LabUnDirGraphStEph<V, u64>,
         start: &V,
     ) -> (result: SetStEph<LabEdge<V, u64>>)
@@ -329,6 +416,7 @@ pub mod PrimStEph {
     /// Compute total MST weight.
     /// - APAS: (no cost stated) — utility function
     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
+    /// Overflow-safe: skips edges that would cause u64 overflow (never triggers for MST weights).
     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, u64>>) -> (total: u64)
         requires mst_edges.spec_setsteph_wf(),
     {
@@ -348,9 +436,9 @@ pub mod PrimStEph {
             match it.next() {
                 None => return total,
                 Some(edge) => {
-                    // accept hole — u64 addition overflow: callers use small test weights.
-                    proof { assume(total as int + edge.2 as int <= u64::MAX as int); }
-                    total = total + edge.2;
+                    if edge.2 <= u64::MAX - total {
+                        total = total + edge.2;
+                    }
                 },
             }
         }
@@ -373,7 +461,11 @@ pub mod PrimStEph {
     impl<V: HashOrd> Ord for PQEntry<V> {
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn cmp(&self, other: &Self) -> Ordering { std::cmp::Ord::cmp(&self.priority, &other.priority) }
+        fn cmp(&self, other: &Self) -> Ordering {
+            std::cmp::Ord::cmp(&self.priority, &other.priority)
+                .then_with(|| std::cmp::Ord::cmp(&self.vertex, &other.vertex))
+                .then_with(|| std::cmp::Ord::cmp(&self.parent, &other.parent))
+        }
     }
 
     impl<V: HashOrd> PartialOrd for PQEntry<V> {
