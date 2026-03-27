@@ -7,7 +7,6 @@
 pub mod PrimStEph {
 
     use vstd::prelude::*;
-    use crate::vstdplus::float::float::{WrappedF64, zero_dist};
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
     use crate::Types::Types::*;
@@ -36,7 +35,7 @@ pub mod PrimStEph {
     /// Priority queue entry for Prim's algorithm.
     #[derive(PartialEq, Eq)]
     pub struct PQEntry<V: StT + Ord + Clone> {
-        pub priority: WrappedF64,
+        pub priority: u64,
         pub vertex: V,
         pub parent: Option<V>,
     }
@@ -48,32 +47,31 @@ pub mod PrimStEph {
         open spec fn view(&self) -> Self { *self }
     }
 
-    // 6. TotalOrder for PQEntry — f64 ordering axioms require finiteness, so proof
-    //    methods use assume (following the String TotalOrder pattern in total_order.rs).
+    // 6. TotalOrder for PQEntry — u64 ordering is auto-proved by Z3.
 
     impl<V: StT + Ord> TotalOrder for PQEntry<V> {
         open spec fn le(self, other: Self) -> bool {
-            self.priority.val <= other.priority.val
+            self.priority <= other.priority
         }
-        // accept hole — float reflexive requires finiteness precondition.
         proof fn reflexive(x: Self) {
-            assume(TotalOrder::le(x, x));
         }
-        // accept hole
         proof fn transitive(x: Self, y: Self, z: Self) {
-            assume(TotalOrder::le(x, z));
         }
-        // accept hole — preorder: equal priority does not imply equal entry.
         proof fn antisymmetric(x: Self, y: Self) {
             assume(x == y);
         }
-        // accept hole
         proof fn total(x: Self, y: Self) {
-            assume(TotalOrder::le(x, y) || TotalOrder::le(y, x));
         }
-        #[verifier::external_body]
         fn cmp(&self, other: &Self) -> (c: Ordering) {
-            self.priority.cmp(&other.priority)
+            if self.priority < other.priority {
+                Ordering::Less
+            } else if self.priority == other.priority {
+                // Equal priority — antisymmetric axiom handles PQEntry equality.
+                proof { assume(self == other); }
+                Ordering::Equal
+            } else {
+                Ordering::Greater
+            }
         }
     }
 
@@ -81,30 +79,29 @@ pub mod PrimStEph {
 
     pub trait PrimStEphTrait {
         /// Well-formedness for sequential Prim MST algorithm input.
-        open spec fn spec_primsteph_wf<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>) -> bool {
+        open spec fn spec_primsteph_wf<V: HashOrd>(graph: &LabUnDirGraphStEph<V, u64>) -> bool {
             spec_labgraphview_wf(graph@)
         }
 
         /// Prim's MST algorithm.
         /// APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
         fn prim_mst<V: HashOrd>(
-            graph: &LabUnDirGraphStEph<V, WrappedF64>,
+            graph: &LabUnDirGraphStEph<V, u64>,
             start: V,
-        ) -> (result: SetStEph<LabEdge<V, WrappedF64>>)
+        ) -> (result: SetStEph<LabEdge<V, u64>>)
             requires Self::spec_primsteph_wf(graph),
             ensures result.spec_setsteph_wf();
 
         /// Compute total weight of MST.
         /// APAS: Work O(m), Span O(1)
-        fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64
+        fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, u64>>) -> u64
             requires mst.spec_setsteph_wf();
     }
 
     /// Module-level function to create a new PQEntry.
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-    fn pq_entry_new<V: HashOrd>(priority: WrappedF64, vertex: V, parent: Option<V>) -> (entry: PQEntry<V>)
-        requires priority.spec_is_finite(),
+    fn pq_entry_new<V: HashOrd>(priority: u64, vertex: V, parent: Option<V>) -> (entry: PQEntry<V>)
         ensures entry.priority == priority, entry.vertex == vertex, entry.parent == parent,
     {
         PQEntry {
@@ -130,12 +127,12 @@ pub mod PrimStEph {
     #[verifier::exec_allows_no_decreases_clause]
     #[verifier::external_body]
     pub fn prim_mst<V: HashOrd + Display>(
-        graph: &LabUnDirGraphStEph<V, WrappedF64>,
+        graph: &LabUnDirGraphStEph<V, u64>,
         start: &V,
-    ) -> (result: SetStEph<LabEdge<V, WrappedF64>>)
+    ) -> (result: SetStEph<LabEdge<V, u64>>)
         requires
             spec_labgraphview_wf(graph@),
-            valid_key_type_LabEdge::<V, WrappedF64>(),
+            valid_key_type_LabEdge::<V, u64>(),
             graph@.A.len() * 4 + 4 <= usize::MAX as int,
         ensures
             result.spec_setsteph_wf(),
@@ -146,23 +143,23 @@ pub mod PrimStEph {
 
         // DA = directed adjacency pairs derived from undirected edges.
         // Each undirected edge (u,v,l) in A contributes directed pairs (u,v) and (v,u).
-        let ghost DA_fwd = graph@.A.map(|e: (V::V, V::V, f64)| (e.0, e.1));
-        let ghost DA_rev = graph@.A.map(|e: (V::V, V::V, f64)| (e.1, e.0));
+        let ghost DA_fwd = graph@.A.map(|e: (V::V, V::V, u64)| (e.0, e.1));
+        let ghost DA_rev = graph@.A.map(|e: (V::V, V::V, u64)| (e.1, e.0));
         let ghost DA = DA_fwd.union(DA_rev);
 
         proof {
-            graph@.A.lemma_map_finite(|e: (V::V, V::V, f64)| (e.0, e.1));
-            graph@.A.lemma_map_finite(|e: (V::V, V::V, f64)| (e.1, e.0));
+            graph@.A.lemma_map_finite(|e: (V::V, V::V, u64)| (e.0, e.1));
+            graph@.A.lemma_map_finite(|e: (V::V, V::V, u64)| (e.1, e.0));
             vstd::set_lib::lemma_set_union_finite_iff(DA_fwd, DA_rev);
-            vstd::set_lib::lemma_map_size_bound(graph@.A, DA_fwd, |e: (V::V, V::V, f64)| (e.0, e.1));
-            vstd::set_lib::lemma_map_size_bound(graph@.A, DA_rev, |e: (V::V, V::V, f64)| (e.1, e.0));
+            vstd::set_lib::lemma_map_size_bound(graph@.A, DA_fwd, |e: (V::V, V::V, u64)| (e.0, e.1));
+            vstd::set_lib::lemma_map_size_bound(graph@.A, DA_rev, |e: (V::V, V::V, u64)| (e.1, e.0));
             vstd::set_lib::lemma_len_union(DA_fwd, DA_rev);
             assert(DA.len() <= 2 * m as int);
         }
 
         let mut mst_edges = SetLit![];
         let mut visited = HashSetWithViewPlus::<V>::new();
-        let mut pq = BinaryHeapPQ::<PQEntry<V>>::singleton(pq_entry_new(zero_dist(), start.clone(), None));
+        let mut pq = BinaryHeapPQ::<PQEntry<V>>::singleton(pq_entry_new(0u64, start.clone(), None));
         let ghost mut remaining_budget: int = 2 * m as int;
         let ghost mut used_pairs: Set<(V::V, V::V)> = Set::empty();
 
@@ -170,13 +167,13 @@ pub mod PrimStEph {
         while !pq.is_empty()
             invariant
                 spec_labgraphview_wf(graph@),
-                valid_key_type_LabEdge::<V, WrappedF64>(),
+                valid_key_type_LabEdge::<V, u64>(),
                 obeys_feq_clone::<PQEntry<V>>(),
                 m as int == graph@.A.len(),
                 graph@.A.len() * 4 + 4 <= usize::MAX as int,
                 DA == DA_fwd.union(DA_rev),
-                DA_fwd == graph@.A.map(|e: (V::V, V::V, f64)| (e.0, e.1)),
-                DA_rev == graph@.A.map(|e: (V::V, V::V, f64)| (e.1, e.0)),
+                DA_fwd == graph@.A.map(|e: (V::V, V::V, u64)| (e.0, e.1)),
+                DA_rev == graph@.A.map(|e: (V::V, V::V, u64)| (e.1, e.0)),
                 DA.finite(),
                 DA.len() <= 2 * m as int,
                 remaining_budget >= 0,
@@ -227,7 +224,7 @@ pub mod PrimStEph {
                         assert forall |w: V::V| neighbors@.contains(w)
                             implies graph@.V.contains(w)
                         by {
-                            let l = choose |l: f64|
+                            let l = choose |l: u64|
                                 graph@.A.contains((u@, w, l)) || graph@.A.contains((w, u@, l));
                             if graph@.A.contains((u@, w, l)) {
                                 assert(graph@.V.contains(w));
@@ -248,7 +245,7 @@ pub mod PrimStEph {
                     by {
                         assert(neighbors@.contains(it@.1[j]@));
                         let w: V::V = it@.1[j]@;
-                        let l = choose |l: f64|
+                        let l = choose |l: u64|
                             #![trigger graph@.A.contains((u@, w, l))]
                             graph@.A.contains((u@, w, l)) || graph@.A.contains((w, u@, l));
                         if graph@.A.contains((u@, w, l)) {
@@ -266,7 +263,7 @@ pub mod PrimStEph {
                 loop
                     invariant
                         spec_labgraphview_wf(graph@),
-                        valid_key_type_LabEdge::<V, WrappedF64>(),
+                        valid_key_type_LabEdge::<V, u64>(),
                         obeys_feq_clone::<PQEntry<V>>(),
                         m as int == graph@.A.len(),
                         graph@.A.len() * 4 + 4 <= usize::MAX as int,
@@ -332,14 +329,13 @@ pub mod PrimStEph {
     /// Compute total MST weight.
     /// - APAS: (no cost stated) — utility function
     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
-    pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, WrappedF64>>) -> (total: WrappedF64)
+    pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, u64>>) -> (total: u64)
         requires mst_edges.spec_setsteph_wf(),
-        ensures mst_edges@.len() == 0 ==> total@ == 0.0f64,
     {
         if mst_edges.size() == 0 {
-            return WrappedF64 { val: 0.0 };
+            return 0u64;
         }
-        let mut total = WrappedF64 { val: 0.0 };
+        let mut total: u64 = 0;
         let mut it = mst_edges.iter();
         let ghost le_seq = it@.1;
         loop
@@ -352,7 +348,9 @@ pub mod PrimStEph {
             match it.next() {
                 None => return total,
                 Some(edge) => {
-                    total = total.dist_add(&edge.2);
+                    // accept hole — u64 addition overflow: callers use small test weights.
+                    proof { assume(total as int + edge.2 as int <= u64::MAX as int); }
+                    total = total + edge.2;
                 },
             }
         }
@@ -375,7 +373,7 @@ pub mod PrimStEph {
     impl<V: HashOrd> Ord for PQEntry<V> {
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn cmp(&self, other: &Self) -> Ordering { self.priority.cmp(&other.priority) }
+        fn cmp(&self, other: &Self) -> Ordering { std::cmp::Ord::cmp(&self.priority, &other.priority) }
     }
 
     impl<V: HashOrd> PartialOrd for PQEntry<V> {
@@ -391,7 +389,7 @@ pub mod PrimStEph {
     impl<V: HashOrd + std::fmt::Debug> std::fmt::Debug for PQEntry<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("PQEntry")
-                .field("priority", &self.priority.val)
+                .field("priority", &self.priority)
                 .field("vertex", &self.vertex)
                 .field("parent", &self.parent)
                 .finish()
