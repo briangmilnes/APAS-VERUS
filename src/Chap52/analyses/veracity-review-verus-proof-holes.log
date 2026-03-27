@@ -53,10 +53,29 @@ Table of Contents:
    1 clean proof function
 ✓ AdjTableGraphStPer.rs
 ✓ EdgeSetGraphMtPer.rs
-✓ EdgeSetGraphStEph.rs
-   1 clean proof function
-✓ EdgeSetGraphStPer.rs
-   1 clean proof function
+⚠ EdgeSetGraphStEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:406: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       399 |         fn clone(&self) -> (result: Self)
+            ...
+       404 |                 edges: self.edges.clone(),
+       405 |             };
+       407 |             result
+       408 |         }
+⚠ EdgeSetGraphStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:375: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       368 |         fn clone(&self) -> (result: Self)
+            ...
+       373 |                 edges: self.edges.clone(),
+       374 |             };
+       376 |             result
+       377 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:391: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       387 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       389 |         {
+       390 |             let equal = self.vertices == other.vertices && self.edges == other.edges;
+       392 |             equal
+       393 |         }
 
 =================================================================
 2. Depends Upon
@@ -115,18 +134,18 @@ Proof Functions:
    23 total
 
 Function Specs:
-   288 exec fns with complete spec (requires+ensures) (65%)
+   291 exec fns with complete spec (requires+ensures) (65%)
    0 exec fns missing spec (0%)
-   152 proof/spec fns clean (34%)
+   154 proof/spec fns clean (34%)
    0 proof/spec fns with holes (0%)
-   440 total fns
+   445 total fns
 
 
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
-Warnings: 2 total
-   2 × assume_eq_clone_workaround
+Warnings: 5 total
+   5 × assume_eq_clone_workaround
 
 No proof holes found! All proofs are complete.
 
@@ -134,11 +153,11 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-26 15:50:23 -07:00
-Ended:     2026-03-26 15:50:23 -07:00
-Duration:  42ms
+Started:   2026-03-26 20:19:25 -07:00
+Ended:     2026-03-26 20:19:25 -07:00
+Duration:  44ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
-Duration:  42ms
+Duration:  44ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
