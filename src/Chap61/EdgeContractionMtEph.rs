@@ -220,7 +220,9 @@ pub mod EdgeContractionMtEph {
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
     ) -> (contracted: UnDirGraphMtEph<V>)
-        requires valid_key_type_Edge::<V>(),
+        requires
+            valid_key_type_Edge::<V>(),
+            graph.E.spec_setsteph_wf(),
         ensures true,
     {
         let matching = parallel_matching_mt(graph, seed);
