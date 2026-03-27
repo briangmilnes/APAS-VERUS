@@ -381,6 +381,16 @@ pub mod ETSPStEph {
                 assert(spec_point_eq(tour@[0].to, tour@[1].from));
                 assert(spec_point_eq(tour@[1].to, tour@[2].from));
                 assert(spec_point_eq(tour@[2].to, tour@[0].from));
+                // Conjunction flakiness fix: assert each conjunct then the whole.
+                let c1 = tour@.len() == points@.len();
+                let c2 = spec_sources_valid(tour@, points@);
+                let c3 = spec_targets_valid(tour@, points@);
+                let c4 = spec_edges_form_cycle(tour@);
+                assert(c1);
+                assert(c2);
+                assert(c3);
+                assert(c4);
+                assert(spec_etsp(tour@, points@) == (c1 && c2 && c3 && c4));
             }
             return tour;
         }
