@@ -21,12 +21,10 @@ Table of Contents:
 =================================================================
 
 ❌ SpanTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:56: error: external_body - #[verifier::external_body]
-        57 |     pub fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
-/home/milnes/projects/APAS-VERUS/src/Chap64/SpanTreeMtEph.rs:150: error: external_body - #[verifier::external_body]
-       151 |     pub fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(
-   Holes: 2 total
-      2 × external_body
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap64/SpanTreeMtEph.rs:61: error: external_body - #[verifier::external_body]
+        62 |     pub fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
+   Holes: 1 total
+      1 × external_body
 ✓ SpanTreeStEph.rs
 ✓ TSPApproxStEph.rs
 
@@ -72,17 +70,16 @@ Function Specs:
    23 total fns
 
 
-Holes Found: 2 (actionable)
-   2 × external_body (100%)
-Real Proof Targets: 2 (all actionable)
+Holes Found: 1 (actionable)
+   1 × external_body (100%)
+Real Proof Targets: 1 (all actionable)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 12:52:42 -07:00
-Ended:     2026-03-27 12:52:42 -07:00
-Duration:  9ms
+Started:   2026-03-27 13:17:29 -07:00
+Ended:     2026-03-27 13:17:29 -07:00
+Duration:  8ms
 
 Full output: src/Chap64/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap64/analyses/veracity-review-verus-proof-holes.log

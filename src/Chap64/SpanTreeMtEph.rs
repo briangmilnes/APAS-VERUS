@@ -11,10 +11,12 @@ pub mod SpanTreeMtEph {
     use crate::Types::Types::*;
 
     use std::hash::Hash;
+    #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
     use crate::Chap62::StarContractionMtEph::StarContractionMtEph::star_contract_mt;
     use crate::SetLit;
 
@@ -53,6 +55,9 @@ pub mod SpanTreeMtEph {
     /// - APAS: Work O((n+m) lg n), Span O(lg² n)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — expand closure
     ///   is sequential; parallelism comes from star_contract_mt framework.
+    // external_body: star_contract_mt lacks r_inv ghost predicate (unlike StEph's
+    // star_contract), so it cannot propagate result.spec_setsteph_wf() through the
+    // recursion. Fixing this requires adding r_inv to StarContractionMtEph (Chap62).
     #[verifier::external_body]
     pub fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
@@ -66,21 +71,28 @@ pub mod SpanTreeMtEph {
         // Base: no edges means no spanning tree edges.
         let base = |_vertices: &SetStEph<V>| -> (result: SetStEph<Edge<V>>)
             requires valid_key_type_Edge::<V>()
+            ensures result.spec_setsteph_wf()
         {
             SetLit![]
         };
 
         // Expand: add star partition edges and map quotient tree edges back.
+        // Uses elements.iter() (HashSetWithViewPlus iter, no wf required) instead
+        // of SetStEph::iter() so the closure has only type-level requires.
         let expand = |_v: &SetStEph<V>,
                       original_edges: &SetStEph<Edge<V>>,
                       _centers: &SetStEph<V>,
                       partition_map: &HashMapWithViewPlus<V, V>,
                       quotient_tree: SetStEph<Edge<V>>|
             -> (result: SetStEph<Edge<V>>)
+            requires
+                valid_key_type_Edge::<V>(),
+                obeys_key_model::<V>(),
+            ensures result.spec_setsteph_wf()
         {
             let mut spanning_edges: SetStEph<Edge<V>> = SetLit![];
 
-            // Part 1: Collect edges from partition map (vertex → center edges).
+            // Part 1: Collect edges from partition map (vertex -> center edges).
             let it_pm = partition_map.iter();
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             for pair in iter: it_pm
@@ -100,7 +112,8 @@ pub mod SpanTreeMtEph {
             }
 
             // Part 2: Map quotient tree edges back to original edges.
-            let it_qt = quotient_tree.iter();
+            // Use elements.iter() to avoid needing quotient_tree.spec_setsteph_wf().
+            let it_qt = quotient_tree.elements.iter();
             let ghost qt_seq = it_qt@.1;
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             for qe in iter: it_qt
@@ -109,10 +122,10 @@ pub mod SpanTreeMtEph {
                     spanning_edges.spec_setsteph_wf(),
                     valid_key_type_Edge::<V>(),
                     obeys_key_model::<V>(),
-                    original_edges.spec_setsteph_wf(),
             {
                 let Edge(c1, c2) = qe;
-                let mut it_oe = original_edges.iter();
+                // Use elements.iter() to avoid needing original_edges.spec_setsteph_wf().
+                let mut it_oe = original_edges.elements.iter();
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
                 loop
                     invariant
@@ -147,7 +160,6 @@ pub mod SpanTreeMtEph {
     ///
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(|V| + |E_tree|), Span O(|E_tree|).
-    #[verifier::external_body]
     pub fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(
         graph: &UnDirGraphMtEph<V>,
         tree_edges: &SetStEph<Edge<V>>,
@@ -171,10 +183,13 @@ pub mod SpanTreeMtEph {
         let it = tree_edges.iter();
         let ghost edge_seq = it@.1;
 
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
         for edge in iter: it
             invariant
                 iter.elements == edge_seq,
                 edge_seq.map(|i: int, e: Edge<V>| e@).to_set() == tree_edges@,
+                graph_edges.spec_setsteph_wf(),
+                valid_key_type_Edge::<V>(),
         {
             if !graph_edges.mem(edge) {
                 let rev = Edge(edge.1.clone_plus(), edge.0.clone_plus());
