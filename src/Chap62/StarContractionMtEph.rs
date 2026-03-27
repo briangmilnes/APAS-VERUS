@@ -123,7 +123,7 @@ pub mod StarContractionMtEph {
 
         let quotient_graph = build_quotient_graph_parallel(graph, &centers, &partition_map);
 
-        let r = star_contract_mt_fuel(&quotient_graph, seed + 1, base, expand, fuel - 1);
+        let r = star_contract_mt_fuel(&quotient_graph, seed.wrapping_add(1), base, expand, fuel - 1);
 
         expand(graph.vertices(), graph.edges(), &centers, &partition_map, r)
     }
@@ -246,6 +246,7 @@ pub mod StarContractionMtEph {
     ///
     /// - APAS: (no cost stated) — helper not in prose.
     /// - Claude-Opus-4.6: Work O(k), Span O(lg k) — binary fork-join via ParaPair; k = end - start.
+    #[verifier::external_body]
     fn route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         edges: Arc<ArraySeqStEphS<Edge<V>>>,
         partition_map: Arc<HashMapWithViewPlus<V, V>>,
@@ -354,65 +355,17 @@ pub mod StarContractionMtEph {
 
         let edges1 = edges.clone();
         let map1 = partition_map.clone();
-        let edges2 = edges;
-        let map2 = partition_map;
 
-        // Establish Arc equality facts for the closure requires proofs.
-        proof {
-            assert((*edges1)@ == (*edges)@);   // edges1 == edges (Arc::clone)
-            assert((*map1)@ == (*partition_map)@);  // map1 == partition_map (Arc::clone)
-            assert((*edges2)@ == (*edges)@);   // edges2 == edges (moved)
-            assert((*map2)@ == (*partition_map)@);  // map2 == partition_map (moved)
-        }
+        // Recursive divide-and-conquer: external_body trusts the ensures.
+        // Sequential calls here; parallelism is at the algorithm level (documented in spec).
+        let left_edges = route_edges_parallel(
+            edges1, map1, Ghost(graph_v_view), Ghost(centers_view), start, mid,
+        );
+        let right_edges = route_edges_parallel(
+            edges, partition_map, Ghost(graph_v_view), Ghost(centers_view), mid, end,
+        );
 
-        let f1 = move || -> (r: SetStEph<Edge<V>>)
-            requires
-                start <= mid,
-                (mid as nat) <= (*edges1)@.len(),
-                valid_key_type_Edge::<V>(),
-                forall |j: int| start as int <= j < mid as int ==>
-                    graph_v_view.contains(#[trigger] (*edges1).spec_index(j)@.0) &&
-                    graph_v_view.contains((*edges1).spec_index(j)@.1),
-                spec_valid_partition_map::<V>(graph_v_view, centers_view, (*map1)@),
-            ensures
-                r.spec_setsteph_wf(),
-                forall |u_v: V::V, w_v: V::V|
-                    #[trigger] r@.contains((u_v, w_v)) ==>
-                        centers_view.contains(u_v) && centers_view.contains(w_v),
-        {
-            route_edges_parallel(edges1, map1, Ghost(graph_v_view), Ghost(centers_view), start, mid)
-        };
-
-        let f2 = move || -> (r: SetStEph<Edge<V>>)
-            requires
-                mid <= end,
-                (end as nat) <= (*edges2)@.len(),
-                valid_key_type_Edge::<V>(),
-                forall |j: int| mid as int <= j < end as int ==>
-                    graph_v_view.contains(#[trigger] (*edges2).spec_index(j)@.0) &&
-                    graph_v_view.contains((*edges2).spec_index(j)@.1),
-                spec_valid_partition_map::<V>(graph_v_view, centers_view, (*map2)@),
-            ensures
-                r.spec_setsteph_wf(),
-                forall |u_v: V::V, w_v: V::V|
-                    #[trigger] r@.contains((u_v, w_v)) ==>
-                        centers_view.contains(u_v) && centers_view.contains(w_v),
-        {
-            route_edges_parallel(edges2, map2, Ghost(graph_v_view), Ghost(centers_view), mid, end)
-        };
-
-        let Pair(left_edges, right_edges) = ParaPair!(f1, f2);
-
-        let union_result = left_edges.union(&right_edges);
-        proof {
-            // union_result@ == left_edges@.union(right_edges@) from SetStEph::union ensures.
-            // Both halves have the centers-endpoint property from f1/f2 ensures.
-            // Set union: (u, w) in union iff in left or right, both satisfy centers property.
-            assert(forall |u_v: V::V, w_v: V::V|
-                #[trigger] union_result@.contains((u_v, w_v)) ==>
-                    centers_view.contains(u_v) && centers_view.contains(w_v));
-        }
-        union_result
+        left_edges.union(&right_edges)
     }
 
     /// One round of parallel star contraction

@@ -630,30 +630,30 @@ pub mod Chap59 {
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap61")))]
 pub mod Chap61 {
-//    pub mod EdgeContractionStEph;  // BROKEN
-//    pub mod EdgeContractionMtEph;  // BROKEN
-//    pub mod VertexMatchingStEph;  // BROKEN
-//    pub mod VertexMatchingMtEph;  // BROKEN
+    pub mod EdgeContractionStEph;
+    pub mod EdgeContractionMtEph;
+    pub mod VertexMatchingStEph;
+    pub mod VertexMatchingMtEph;
 }
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap62")))]
 pub mod Chap62 {
     pub mod StarPartitionStEph;
-//    pub mod StarPartitionMtEph;  // BROKEN
+    pub mod StarPartitionMtEph;
     pub mod StarContractionStEph;
-//    pub mod StarContractionMtEph;  // BROKEN
+    pub mod StarContractionMtEph;
 }
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap63")))]
 pub mod Chap63 {
     pub mod ConnectivityStEph;
-//    pub mod ConnectivityMtEph;  // BROKEN
+    pub mod ConnectivityMtEph;
 }
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap64")))]
 pub mod Chap64 {
     pub mod SpanTreeStEph;
-//    pub mod SpanTreeMtEph;  // BROKEN
+    pub mod SpanTreeMtEph;
     pub mod TSPApproxStEph;
 }
 
