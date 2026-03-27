@@ -170,7 +170,8 @@ pub mod experiments {
 //    pub mod verus_vec_iterator_while_basic_proofs;        // FAILS: depends on verus_vec_iterator
 //    pub mod vstd_laws_eq_clone;                           // FAILS: reveal() E0401 on generic types
 //    pub mod mut_struct_quantifier_limit;                   // FAILS: Z3 17.7GB on &mut 4-field struct with quantified maps
-    pub mod f64_ieee_total_order;  // PARTIAL: exec ieee_le verifies, proof fns fail (Z3 IEEE only in exec)
+//    pub mod f64_ieee_total_order;  // FAILS: f64 by(bit_vector) crashes Verus c78aa4958 — bitvector_to_air.rs:424
+//    pub mod f32_ieee_total_order;
 }
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "isolate")))]
