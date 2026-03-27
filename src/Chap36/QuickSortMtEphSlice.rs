@@ -28,6 +28,7 @@ pub mod QuickSortMtEphSlice {
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use crate::vstdplus::rand::rand::random_usize_range;
     use crate::vstdplus::feq::feq::obeys_feq_clone;
+    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use vstd::relations::*;
 
     // 3. broadcast use
@@ -269,7 +270,9 @@ pub mod QuickSortMtEphSlice {
             mid: &Vec<T>,
             right: &Vec<T>,
         ) -> (out: Vec<T>)
-            requires left@.len() + mid@.len() + right@.len() <= usize::MAX,
+            requires
+                left@.len() + mid@.len() + right@.len() <= usize::MAX,
+                obeys_feq_clone::<T>(),
             ensures out@ =~= left@ + mid@ + right@;
     }
 
@@ -360,12 +363,13 @@ pub mod QuickSortMtEphSlice {
                 invariant
                     0 <= j <= sl, sl == left@.len(), el == mid@.len(),
                     sr == right@.len(), sl + el + sr <= usize::MAX,
+                    obeys_feq_clone::<T>(),
                     out@.len() == j as nat,
                     forall|k: int| 0 <= k < j as int ==>
                         #[trigger] out@[k] == left@[k],
                 decreases sl - j,
             {
-                out.push(left[j].clone());
+                out.push(left[j].clone_plus());
                 j = j + 1;
             }
 
@@ -374,6 +378,7 @@ pub mod QuickSortMtEphSlice {
                 invariant
                     0 <= j <= el, sl == left@.len(), el == mid@.len(),
                     sr == right@.len(), sl + el + sr <= usize::MAX,
+                    obeys_feq_clone::<T>(),
                     out@.len() == (sl + j) as nat,
                     forall|k: int| 0 <= k < sl as int ==>
                         #[trigger] out@[k] == left@[k],
@@ -381,7 +386,7 @@ pub mod QuickSortMtEphSlice {
                         #[trigger] out@[(sl + k) as int] == mid@[k],
                 decreases el - j,
             {
-                out.push(mid[j].clone());
+                out.push(mid[j].clone_plus());
                 j = j + 1;
             }
 
@@ -390,6 +395,7 @@ pub mod QuickSortMtEphSlice {
                 invariant
                     0 <= j <= sr, sl == left@.len(), el == mid@.len(),
                     sr == right@.len(), sl + el + sr <= usize::MAX,
+                    obeys_feq_clone::<T>(),
                     out@.len() == (sl + el + j) as nat,
                     forall|k: int| 0 <= k < sl as int ==>
                         #[trigger] out@[k] == left@[k],
@@ -399,7 +405,7 @@ pub mod QuickSortMtEphSlice {
                         #[trigger] out@[(sl + el + k) as int] == right@[k],
                 decreases sr - j,
             {
-                out.push(right[j].clone());
+                out.push(right[j].clone_plus());
                 j = j + 1;
             }
 
@@ -520,11 +526,19 @@ pub mod QuickSortMtEphSlice {
                 ensures r@ =~= left_view.sort_by(spec_leq::<T>())
             {
                 let mut la = left_a;
-                Self::quick_sort_first(&mut la);
-                let ghost sorted_elems = elements(la);
-                let v = (*la.data).clone();
                 proof {
-                    assert(v@ =~= sorted_elems);
+                    lemma_total_ordering::<T>();
+                    lemma_elements_from_vec::<T>(left_view, la);
+                }
+                let ghost pre_elems = elements(la);
+                Self::quick_sort_first(&mut la);
+                let v = la.to_vec();
+                proof {
+                    assert(elements(la) =~= pre_elems.sort_by(spec_leq::<T>()));
+                    assert forall|i: int| 0 <= i < la.spec_len()
+                        implies v@[i] == #[trigger] elements(la)[i] by
+                    { assert(v@[i] == la.spec_index(i)); };
+                    assert(v@ =~= elements(la));
                 }
                 v
             };
@@ -532,11 +546,19 @@ pub mod QuickSortMtEphSlice {
                 ensures r@ =~= right_view.sort_by(spec_leq::<T>())
             {
                 let mut ra = right_a;
-                Self::quick_sort_first(&mut ra);
-                let ghost sorted_elems = elements(ra);
-                let v = (*ra.data).clone();
                 proof {
-                    assert(v@ =~= sorted_elems);
+                    lemma_total_ordering::<T>();
+                    lemma_elements_from_vec::<T>(right_view, ra);
+                }
+                let ghost pre_elems = elements(ra);
+                Self::quick_sort_first(&mut ra);
+                let v = ra.to_vec();
+                proof {
+                    assert(elements(ra) =~= pre_elems.sort_by(spec_leq::<T>()));
+                    assert forall|i: int| 0 <= i < ra.spec_len()
+                        implies v@[i] == #[trigger] elements(ra)[i] by
+                    { assert(v@[i] == ra.spec_index(i)); };
+                    assert(v@ =~= elements(ra));
                 }
                 v
             };
@@ -546,8 +568,19 @@ pub mod QuickSortMtEphSlice {
                 lemma_total_ordering::<T>();
                 left_view.lemma_sort_by_ensures(leq);
                 right_view.lemma_sort_by_ensures(leq);
-                assert(sorted_left@.len() == left_view.len());
-                assert(sorted_right@.len() == right_view.len());
+                assert(sorted_left@ =~= left_view.sort_by(spec_leq::<T>()));
+                assert(sorted_right@ =~= right_view.sort_by(spec_leq::<T>()));
+                assert(sorted_left@.len() == left_view.sort_by(leq).len());
+                assert(left_view.sort_by(leq).len() == left_view.len()) by {
+                    assert(left_view.sort_by(leq).to_multiset() =~= left_view.to_multiset());
+                    assert(left_view.sort_by(leq).to_multiset().len() == left_view.sort_by(leq).len());
+                    assert(left_view.to_multiset().len() == left_view.len());
+                };
+                assert(right_view.sort_by(leq).len() == right_view.len()) by {
+                    assert(right_view.sort_by(leq).to_multiset() =~= right_view.to_multiset());
+                    assert(right_view.sort_by(leq).to_multiset().len() == right_view.sort_by(leq).len());
+                    assert(right_view.to_multiset().len() == right_view.len());
+                };
             }
 
             let sorted = Self::concat_three_vecs(&sorted_left, &equals, &sorted_right);
@@ -653,11 +686,19 @@ pub mod QuickSortMtEphSlice {
                 ensures r@ =~= left_view.sort_by(spec_leq::<T>())
             {
                 let mut la = left_a;
-                Self::quick_sort_median3(&mut la);
-                let ghost sorted_elems = elements(la);
-                let v = (*la.data).clone();
                 proof {
-                    assert(v@ =~= sorted_elems);
+                    lemma_total_ordering::<T>();
+                    lemma_elements_from_vec::<T>(left_view, la);
+                }
+                let ghost pre_elems = elements(la);
+                Self::quick_sort_median3(&mut la);
+                let v = la.to_vec();
+                proof {
+                    assert(elements(la) =~= pre_elems.sort_by(spec_leq::<T>()));
+                    assert forall|i: int| 0 <= i < la.spec_len()
+                        implies v@[i] == #[trigger] elements(la)[i] by
+                    { assert(v@[i] == la.spec_index(i)); };
+                    assert(v@ =~= elements(la));
                 }
                 v
             };
@@ -665,11 +706,19 @@ pub mod QuickSortMtEphSlice {
                 ensures r@ =~= right_view.sort_by(spec_leq::<T>())
             {
                 let mut ra = right_a;
-                Self::quick_sort_median3(&mut ra);
-                let ghost sorted_elems = elements(ra);
-                let v = (*ra.data).clone();
                 proof {
-                    assert(v@ =~= sorted_elems);
+                    lemma_total_ordering::<T>();
+                    lemma_elements_from_vec::<T>(right_view, ra);
+                }
+                let ghost pre_elems = elements(ra);
+                Self::quick_sort_median3(&mut ra);
+                let v = ra.to_vec();
+                proof {
+                    assert(elements(ra) =~= pre_elems.sort_by(spec_leq::<T>()));
+                    assert forall|i: int| 0 <= i < ra.spec_len()
+                        implies v@[i] == #[trigger] elements(ra)[i] by
+                    { assert(v@[i] == ra.spec_index(i)); };
+                    assert(v@ =~= elements(ra));
                 }
                 v
             };
@@ -679,8 +728,19 @@ pub mod QuickSortMtEphSlice {
                 lemma_total_ordering::<T>();
                 left_view.lemma_sort_by_ensures(leq);
                 right_view.lemma_sort_by_ensures(leq);
-                assert(sorted_left@.len() == left_view.len());
-                assert(sorted_right@.len() == right_view.len());
+                assert(sorted_left@ =~= left_view.sort_by(spec_leq::<T>()));
+                assert(sorted_right@ =~= right_view.sort_by(spec_leq::<T>()));
+                assert(sorted_left@.len() == left_view.sort_by(leq).len());
+                assert(left_view.sort_by(leq).len() == left_view.len()) by {
+                    assert(left_view.sort_by(leq).to_multiset() =~= left_view.to_multiset());
+                    assert(left_view.sort_by(leq).to_multiset().len() == left_view.sort_by(leq).len());
+                    assert(left_view.to_multiset().len() == left_view.len());
+                };
+                assert(right_view.sort_by(leq).len() == right_view.len()) by {
+                    assert(right_view.sort_by(leq).to_multiset() =~= right_view.to_multiset());
+                    assert(right_view.sort_by(leq).to_multiset().len() == right_view.sort_by(leq).len());
+                    assert(right_view.to_multiset().len() == right_view.len());
+                };
             }
 
             let sorted = Self::concat_three_vecs(&sorted_left, &equals, &sorted_right);
@@ -786,11 +846,19 @@ pub mod QuickSortMtEphSlice {
                 ensures r@ =~= left_view.sort_by(spec_leq::<T>())
             {
                 let mut la = left_a;
-                Self::quick_sort_random(&mut la);
-                let ghost sorted_elems = elements(la);
-                let v = (*la.data).clone();
                 proof {
-                    assert(v@ =~= sorted_elems);
+                    lemma_total_ordering::<T>();
+                    lemma_elements_from_vec::<T>(left_view, la);
+                }
+                let ghost pre_elems = elements(la);
+                Self::quick_sort_random(&mut la);
+                let v = la.to_vec();
+                proof {
+                    assert(elements(la) =~= pre_elems.sort_by(spec_leq::<T>()));
+                    assert forall|i: int| 0 <= i < la.spec_len()
+                        implies v@[i] == #[trigger] elements(la)[i] by
+                    { assert(v@[i] == la.spec_index(i)); };
+                    assert(v@ =~= elements(la));
                 }
                 v
             };
@@ -798,11 +866,19 @@ pub mod QuickSortMtEphSlice {
                 ensures r@ =~= right_view.sort_by(spec_leq::<T>())
             {
                 let mut ra = right_a;
-                Self::quick_sort_random(&mut ra);
-                let ghost sorted_elems = elements(ra);
-                let v = (*ra.data).clone();
                 proof {
-                    assert(v@ =~= sorted_elems);
+                    lemma_total_ordering::<T>();
+                    lemma_elements_from_vec::<T>(right_view, ra);
+                }
+                let ghost pre_elems = elements(ra);
+                Self::quick_sort_random(&mut ra);
+                let v = ra.to_vec();
+                proof {
+                    assert(elements(ra) =~= pre_elems.sort_by(spec_leq::<T>()));
+                    assert forall|i: int| 0 <= i < ra.spec_len()
+                        implies v@[i] == #[trigger] elements(ra)[i] by
+                    { assert(v@[i] == ra.spec_index(i)); };
+                    assert(v@ =~= elements(ra));
                 }
                 v
             };
@@ -812,8 +888,19 @@ pub mod QuickSortMtEphSlice {
                 lemma_total_ordering::<T>();
                 left_view.lemma_sort_by_ensures(leq);
                 right_view.lemma_sort_by_ensures(leq);
-                assert(sorted_left@.len() == left_view.len());
-                assert(sorted_right@.len() == right_view.len());
+                assert(sorted_left@ =~= left_view.sort_by(spec_leq::<T>()));
+                assert(sorted_right@ =~= right_view.sort_by(spec_leq::<T>()));
+                assert(sorted_left@.len() == left_view.sort_by(leq).len());
+                assert(left_view.sort_by(leq).len() == left_view.len()) by {
+                    assert(left_view.sort_by(leq).to_multiset() =~= left_view.to_multiset());
+                    assert(left_view.sort_by(leq).to_multiset().len() == left_view.sort_by(leq).len());
+                    assert(left_view.to_multiset().len() == left_view.len());
+                };
+                assert(right_view.sort_by(leq).len() == right_view.len()) by {
+                    assert(right_view.sort_by(leq).to_multiset() =~= right_view.to_multiset());
+                    assert(right_view.sort_by(leq).to_multiset().len() == right_view.sort_by(leq).len());
+                    assert(right_view.to_multiset().len() == right_view.len());
+                };
             }
 
             let sorted = Self::concat_three_vecs(&sorted_left, &equals, &sorted_right);
