@@ -20,9 +20,17 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-✓ StarContractionMtEph.rs
+❌ StarContractionMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap62/StarContractionMtEph.rs:249: error: external_body - #[verifier::external_body]
+       250 |     fn route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
+   Holes: 1 total
+      1 × external_body
 ✓ StarContractionStEph.rs
-✓ StarPartitionMtEph.rs
+❌ StarPartitionMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap62/StarPartitionMtEph.rs:72: error: external_body - #[verifier::external_body]
+        73 |     pub fn parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
+   Holes: 1 total
+      1 × external_body
 ✓ StarPartitionStEph.rs
 
 =================================================================
@@ -52,8 +60,8 @@ StarPartitionStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   4 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   2 clean (no holes, no errors; 50%)
+   2 holed (holes or errors, 50%)
    4 total
 
 Proof Functions:
@@ -62,25 +70,23 @@ Proof Functions:
    0 total
 
 Function Specs:
-   15 exec fns with complete spec (requires+ensures) (75%)
+   17 exec fns with complete spec (requires+ensures) (70%)
    0 exec fns missing spec (0%)
-   5 proof/spec fns clean (25%)
+   7 proof/spec fns clean (29%)
    0 proof/spec fns with holes (0%)
-   20 total fns
+   24 total fns
 
 
-Holes Found: 0 (actionable)
-Real Proof Targets: 0 (all actionable)
-
-No proof holes or warnings found! All proofs are complete.
+Holes Found: 2 (actionable)
+   2 × external_body (100%)
+Real Proof Targets: 2 (all actionable)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 09:09:11 -07:00
-Ended:     2026-03-27 09:09:11 -07:00
-Duration:  17ms
+Started:   2026-03-27 10:36:57 -07:00
+Ended:     2026-03-27 10:36:57 -07:00
+Duration:  15ms
 
 Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
-Chap62/analyses/veracity-review-verus-proof-holes.log
