@@ -29,8 +29,10 @@ pub mod KruskalStEph {
 
     verus! {
 
-    broadcast use crate::vstdplus::float::float::group_float_finite_total_order,
-        crate::Types::Types::group_LabEdge_axioms;
+    broadcast use {
+        crate::vstdplus::float::float::group_float_finite_total_order,
+        crate::Types::Types::group_LabEdge_axioms,
+    };
 
     // 3a. proof fns
 
