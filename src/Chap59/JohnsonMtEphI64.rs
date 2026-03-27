@@ -23,6 +23,9 @@ pub mod JohnsonMtEphI64 {
     use crate::Chap56::SSSPResultStEphI64::SSSPResultStEphI64::*;
     use crate::Types::Types::*;
 
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_clone;
+
     use crate::Chap57::DijkstraStEphU64::DijkstraStEphU64::dijkstra;
     use crate::Chap58::BellmanFordStEphI64::BellmanFordStEphI64::bellman_ford;
 
@@ -30,9 +33,39 @@ pub mod JohnsonMtEphI64 {
         pub trait JohnsonMtEphI64Trait {
             /// Parallel Johnson's all-pairs shortest path algorithm
             /// APAS: Work O(mn log n), Span O(m log n) where n = |V|, m = |E|
-            fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> AllPairsResultStEphI64;
+            fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> (result: AllPairsResultStEphI64)
+                requires
+                    graph@.V.len() > 0,
+                    graph@.V.len() < usize::MAX as nat,
+                    spec_labgraphview_wf(graph@),
+                    valid_key_type_WeightedEdge::<usize, i128>(),
+                    forall|v: usize| graph@.V.contains(v) <==> v < graph@.V.len(),
+                    graph@.A.len() * 2 + 2 <= usize::MAX as int,
+                    obeys_feq_clone::<ArraySeqStEphS<i64>>(),
+                    obeys_feq_clone::<ArraySeqStEphS<usize>>(),
+                ensures
+                    result.spec_n() as nat == graph@.V.len();
         }
     pub type T = WeightedDirGraphStEphI128<usize>;
+
+    /// Adjust reweighted distance back to original weights.
+    /// d(u,v) = d'(u,v) - h(u) + h(v), using i128 to avoid overflow.
+    ///
+    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Claude-Opus-4.6: Work O(1), Span O(1).
+    // veracity: no_requires
+    fn adjust_distance(d_prime: i64, h_u: i64, h_v: i64) -> (result: i64)
+        ensures
+            d_prime == i64::MAX ==> result == i64::MAX,
+    {
+        if d_prime == i64::MAX { i64::MAX }
+        else {
+            let sum: i128 = (d_prime as i128) - (h_u as i128) + (h_v as i128);
+            if sum >= i64::MAX as i128 { i64::MAX }
+            else if sum < i64::MIN as i128 { i64::MIN }
+            else { sum as i64 }
+        }
+    }
 
     /// Algorithm 59.1: Johnson's All-Pairs Shortest Paths (Parallel)
     ///
@@ -51,6 +84,8 @@ pub mod JohnsonMtEphI64 {
             valid_key_type_WeightedEdge::<usize, i128>(),
             forall|v: usize| graph@.V.contains(v) <==> v < graph@.V.len(),
             graph@.A.len() * 2 + 2 <= usize::MAX as int,
+            obeys_feq_clone::<ArraySeqStEphS<i64>>(),
+            obeys_feq_clone::<ArraySeqStEphS<usize>>(),
         ensures
             result.spec_n() as nat == graph@.V.len(),
     {
@@ -90,9 +125,6 @@ pub mod JohnsonMtEphI64 {
     ///
     /// - APAS: N/A — internal helper, not named in prose.
     /// - Claude-Opus-4.6: Work O(k * m log n), Span O(m log n) where k = end - start — binary split with ParaPair! gives log k depth, each leaf runs Dijkstra O(m log n)
-    // BYPASSED: external_body — feq_clone preconditions on ArraySeqStEphS::singleton/append
-    // and i64 overflow in distance adjustment. Proof body preserved below.
-    #[verifier::external_body]
     fn parallel_dijkstra_all(
         graph: &WeightedDirGraphStEphI128<usize>,
         potentials: &ArraySeqStEphS<i64>,
@@ -114,6 +146,8 @@ pub mod JohnsonMtEphI64 {
             valid_key_type_WeightedEdge::<usize, i128>(),
             forall|v: usize| graph@.V.contains(v) <==> v < n,
             graph@.A.len() * 2 + 2 <= usize::MAX as int,
+            obeys_feq_clone::<ArraySeqStEphS<i64>>(),
+            obeys_feq_clone::<ArraySeqStEphS<usize>>(),
         ensures
             result.0.seq@.len() == (end - start) as int,
             result.1.seq@.len() == (end - start) as int,
@@ -130,16 +164,18 @@ pub mod JohnsonMtEphI64 {
             let dijkstra_result = dijkstra(graph, u);
 
             let p_u = *potentials.nth(u);
+            let ghost pot_len = potentials.seq@.len();
             let adjusted_row = ArraySeqStEphS::tabulate(
-                &|v| {
+                &(|v: usize| -> (r: i64)
+                    requires
+                        v < n,
+                        potentials.seq@.len() == n as int,
+                        n as nat == graph@.V.len(),
+                    ensures true,
+                {
                     let d_prime = dijkstra_result.get_distance(v);
-                    if d_prime == i64::MAX {
-                        i64::MAX
-                    } else {
-                        let p_v = *potentials.nth(v);
-                        d_prime - p_u + p_v
-                    }
-                },
+                    adjust_distance(d_prime, p_u, *potentials.nth(v))
+                }),
                 n,
             );
 
@@ -166,6 +202,8 @@ pub mod JohnsonMtEphI64 {
                 valid_key_type_WeightedEdge::<usize, i128>(),
                 forall|v: usize| graph_left@.V.contains(v) <==> v < n,
                 graph_left@.A.len() * 2 + 2 <= usize::MAX as int,
+                obeys_feq_clone::<ArraySeqStEphS<i64>>(),
+                obeys_feq_clone::<ArraySeqStEphS<usize>>(),
             ensures
                 r.0.seq@.len() == (mid - start) as int,
                 r.1.seq@.len() == (mid - start) as int,
@@ -185,6 +223,8 @@ pub mod JohnsonMtEphI64 {
                 valid_key_type_WeightedEdge::<usize, i128>(),
                 forall|v: usize| graph_right@.V.contains(v) <==> v < n,
                 graph_right@.A.len() * 2 + 2 <= usize::MAX as int,
+                obeys_feq_clone::<ArraySeqStEphS<i64>>(),
+                obeys_feq_clone::<ArraySeqStEphS<usize>>(),
             ensures
                 r.0.seq@.len() == (end - mid) as int,
                 r.1.seq@.len() == (end - mid) as int,
