@@ -52,14 +52,20 @@ pub mod VertexMatchingStEph {
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
-        ensures true,
-    {
+            graph.E.spec_setsteph_wf(),
+        ensures
+            matching.spec_setsteph_wf(),
+        {
         let mut matching: SetStEph<Edge<V>> = SetLit![];
         let mut matched_vertices: SetStEph<V> = SetLit![];
 
-        for edge in graph.edges().iter()
+        let edges_ref = graph.edges();
+        let edges_it = edges_ref.iter();
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+        for edge in iter: edges_it
             invariant
                 valid_key_type_Edge::<V>(),
+                graph.E.spec_setsteph_wf(),
                 matching.spec_setsteph_wf(),
                 matched_vertices.spec_setsteph_wf(),
         {
@@ -80,7 +86,9 @@ pub mod VertexMatchingStEph {
     /// - APAS: (no cost stated — sequential baseline of Algorithm 61.4)
     /// - Claude-Opus-4.6: Work Θ(|E|²), Span Θ(|E|²)
     pub fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>, seed: u64) -> (matching: SetStEph<Edge<V>>)
-        requires valid_key_type_Edge::<V>(),
+        requires
+            valid_key_type_Edge::<V>(),
+            graph.E.spec_setsteph_wf(),
         ensures true,
     {
         let mut matching: SetStEph<Edge<V>> = SetLit![];

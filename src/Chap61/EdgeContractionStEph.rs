@@ -62,21 +62,34 @@ pub mod EdgeContractionStEph {
         graph: &UnDirGraphStEph<V>,
         matching: &SetStEph<Edge<V>>,
     ) -> (contracted: UnDirGraphStEph<V>)
-        requires valid_key_type_Edge::<V>(),
+        requires
+            valid_key_type_Edge::<V>(),
+            matching.spec_setsteph_wf(),
+            graph.E.spec_setsteph_wf(),
+            graph.V.spec_setsteph_wf(),
         ensures true,
     {
         let mut vertex_to_block = HashMapWithViewPlus::<V, V>::new();
 
-        for edge in matching.iter()
-            invariant valid_key_type_Edge::<V>(),
+        let matching_it = matching.iter();
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+        for edge in iter: matching_it
+            invariant
+                valid_key_type_Edge::<V>(),
+                matching.spec_setsteph_wf(),
         {
             let Edge(u, v) = edge;
             vertex_to_block.insert(u.clone(), u.clone());
             vertex_to_block.insert(v.clone(), u.clone());
         }
 
-        for vertex in graph.vertices().iter()
-            invariant valid_key_type_Edge::<V>(),
+        let vertices_ref = graph.vertices();
+        let vertices_it = vertices_ref.iter();
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+        for vertex in iter: vertices_it
+            invariant
+                valid_key_type_Edge::<V>(),
+                graph.V.spec_setsteph_wf(),
         {
             if !vertex_to_block.contains_key(vertex) {
                 vertex_to_block.insert(vertex.clone(), vertex.clone());
@@ -86,6 +99,7 @@ pub mod EdgeContractionStEph {
         let mut new_vertices: SetStEph<V> = SetLit![];
         let mut new_edges: SetStEph<Edge<V>> = SetLit![];
 
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
         for (_, representative) in vertex_to_block.iter()
             invariant
                 valid_key_type_Edge::<V>(),
@@ -94,9 +108,13 @@ pub mod EdgeContractionStEph {
             let _ = new_vertices.insert(representative.clone());
         }
 
-        for edge in graph.edges().iter()
+        let edges_ref = graph.edges();
+        let edges_it = edges_ref.iter();
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+        for edge in iter: edges_it
             invariant
                 valid_key_type_Edge::<V>(),
+                graph.E.spec_setsteph_wf(),
                 new_edges.spec_setsteph_wf(),
         {
             let Edge(u, v) = edge;
@@ -132,6 +150,8 @@ pub mod EdgeContractionStEph {
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
+            graph.E.spec_setsteph_wf(),
+            graph.V.spec_setsteph_wf(),
         ensures true,
     {
         let matching = greedy_matching(graph);

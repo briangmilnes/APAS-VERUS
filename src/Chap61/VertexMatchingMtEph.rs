@@ -65,7 +65,9 @@ pub mod VertexMatchingMtEph {
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
     ) -> (result: SetStEph<Edge<V>>)
-        requires valid_key_type_Edge::<V>(),
+        requires
+            valid_key_type_Edge::<V>(),
+            graph.E.spec_setsteph_wf(),
         ensures true,
     {
         let edges_vec = graph.E.to_seq();
@@ -205,7 +207,9 @@ pub mod VertexMatchingMtEph {
         edge: &Edge<V>,
         edge_coins: &HashMapWithViewPlus<Edge<V>, bool>,
     ) -> (selected: bool)
-        requires valid_key_type_Edge::<V>(),
+        requires
+            valid_key_type_Edge::<V>(),
+            graph.E.spec_setsteph_wf(),
         ensures true,
     {
         let Edge(u, v) = edge;
@@ -218,8 +222,13 @@ pub mod VertexMatchingMtEph {
             return false;
         }
 
-        for adj_edge in graph.edges().iter()
-            invariant valid_key_type_Edge::<V>(),
+        let edges_ref = graph.edges();
+        let edges_it = edges_ref.iter();
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+        for adj_edge in iter: edges_it
+            invariant
+                valid_key_type_Edge::<V>(),
+                graph.E.spec_setsteph_wf(),
         {
             if !(adj_edge.0 == edge.0 && adj_edge.1 == edge.1) {
                 if graph.incident(adj_edge, u) || graph.incident(adj_edge, v) {
