@@ -603,8 +603,8 @@ pub mod Chap56 {
     pub mod SSSPResultStPerF64;
     pub mod AllPairsResultStEphF64;
     pub mod AllPairsResultStPerF64;
-//    pub mod Example56_1;  // BROKEN: uses ordered_float (removed)
-//    pub mod Example56_3;  // BROKEN: uses ordered_float (removed)
+    pub mod Example56_1;
+    pub mod Example56_3;
 }
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap57")))]

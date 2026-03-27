@@ -12,7 +12,6 @@ pub mod Example56_1 {
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap56::PathWeightUtilsStEph::PathWeightUtilsStEph::*;
-    use crate::vstdplus::float::float::*;
 
     verus! {
 
@@ -31,8 +30,8 @@ pub mod Example56_1 {
         /// Example demonstrating path weight computation with integer weights.
         fn example_path_weight_int();
 
-        /// Example demonstrating path weight computation with floating-point weights.
-        fn example_path_weight_float();
+        /// Example demonstrating path weight computation with different integer weights.
+        fn example_path_weight_i64();
 
         /// Example with negative edge weights.
         fn example_negative_weights();
@@ -60,29 +59,20 @@ pub mod Example56_1 {
         }
     }
 
-    /// Example demonstrating path weight computation with floating-point weights.
+    /// Example demonstrating path weight computation with different integer weights.
     /// - APAS: N/A — demonstration code.
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — constant-sized example graph.
-    fn example_path_weight_float() {
-        let inf = unreachable_dist();
+    fn example_path_weight_i64() {
         let weights = ArraySeqStEphS::from_vec(vec![
-            ArraySeqStEphS::from_vec(vec![
-                dist(0.0), dist(2.5), dist(5.0), inf,
-            ]),
-            ArraySeqStEphS::from_vec(vec![
-                inf, dist(0.0), dist(1.5), inf,
-            ]),
-            ArraySeqStEphS::from_vec(vec![
-                inf, inf, dist(0.0), dist(0.5),
-            ]),
-            ArraySeqStEphS::from_vec(vec![
-                inf, inf, inf, dist(0.0),
-            ]),
+            ArraySeqStEphS::from_vec(vec![0, 3, 5, i64::MAX]),
+            ArraySeqStEphS::from_vec(vec![i64::MAX, 0, 2, i64::MAX]),
+            ArraySeqStEphS::from_vec(vec![i64::MAX, i64::MAX, 0, 1]),
+            ArraySeqStEphS::from_vec(vec![i64::MAX, i64::MAX, i64::MAX, 0]),
         ]);
 
         let path = ArraySeqStPerS::from_vec(vec![0, 1, 2, 3]);
-        match PathWeightUtilsStEphS::path_weight_float(&path, &weights) {
-            | Some(w) => println!("Path 0→1→2→3 has weight: {:.1}", w.val),
+        match PathWeightUtilsStEphS::path_weight_int(&path, &weights) {
+            | Some(w) => println!("Path 0→1→2→3 has weight: {w}"),
             | None => println!("Invalid path"),
         }
     }
