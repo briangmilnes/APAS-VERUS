@@ -121,11 +121,13 @@ pub mod ConnectivityMtEph {
     ///
     /// - APAS: N/A — helper function, Line 10 of Algorithm 63.3.
     /// - Claude-Opus-4.6: Work O(|P|), Span O(|P|) — currently sequential despite "parallel" name
-    fn compose_maps_parallel<V: StT + MtT + Hash + Ord + 'static>(
+    fn compose_maps_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         partition_map: &HashMapWithViewPlus<V, V>,
         component_map: &HashMapWithViewPlus<V, V>,
     ) -> (result: HashMapWithViewPlus<V, V>)
-        requires obeys_key_model::<V>(),
+        requires
+            obeys_key_model::<V>(),
+            forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
         ensures
             forall|k: V::V| #[trigger] result@.contains_key(k) ==> partition_map@.contains_key(k),
     {
@@ -139,11 +141,17 @@ pub mod ConnectivityMtEph {
                 forall|k: V::V| #[trigger] result@.contains_key(k) ==> partition_map@.contains_key(k),
         {
             let (u_ref, v_ref) = pair;
-            let component = match component_map.get(v_ref) {
-                Some(c) => c.clone_plus(),
-                None => v_ref.clone_plus(),
-            };
-            let _ = result.insert(u_ref.clone_plus(), component);
+            let u_key = u_ref.clone_view();
+            // contains_key ensures: is_in == partition_map@.contains_key(u_ref@).
+            // Always true since u_ref came from iterating partition_map.
+            let is_in = partition_map.contains_key(u_ref);
+            if is_in {
+                let component = match component_map.get(v_ref) {
+                    Some(c) => c.clone_plus(),
+                    None => v_ref.clone_plus(),
+                };
+                let _ = result.insert(u_key, component);
+            }
         }
 
         result
