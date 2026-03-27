@@ -8,6 +8,8 @@ pub mod TopoSortStEph {
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap55::CycleDetectStEph::CycleDetectStEph::{CycleDetectStEph, CycleDetectStEphTrait};
     use crate::Types::Types::*;
 
     verus! {
@@ -869,7 +871,6 @@ broadcast use {
     }
 
     /// Returns Some(sequence) if graph is acyclic, None if contains a cycle.
-    #[verifier::external_body]
     pub fn topological_sort_opt(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (topo_order: Option<AVLTreeSeqStEphS<usize>>)
         requires
             spec_toposortsteph_wf(graph),
@@ -878,63 +879,17 @@ broadcast use {
             topo_order.is_some() <==> spec_is_dag(graph),
             topo_order.is_some() ==> spec_is_topo_order(graph, topo_order.unwrap()@),
     {
-        let n = graph.length();
-        let f_false = |_x: usize| -> (r: bool) ensures !r { false };
-        let mut visited = ArraySeqStEphS::tabulate(&f_false, n);
-        let mut rec_stack = ArraySeqStEphS::tabulate(&f_false, n);
-        let mut finish_order: Vec<usize> = Vec::new();
-
-        proof {
-            assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {
-                // tabulate ensures: f_false.ensures((j as usize,), visited.seq@[j])
-                // f_false.ensures(_, r) <==> !r, so visited.seq@[j] == false.
-                assert(!visited.seq@[j]);
-                assert(visited@[j] == visited.seq@[j]@);
-            }
-            lemma_all_false_num_false_eq_len(visited@);
+        // Delegate to proved has_cycle (CycleDetect) and topo_sort (TopoSort).
+        if CycleDetectStEph::has_cycle(graph) {
+            // has_cycle ensures: has_cycle == !spec_is_dag(graph).
+            // So !spec_is_dag(graph) holds here. Return None.
+            None
+        } else {
+            // !has_cycle means spec_is_dag(graph).
+            let order = TopoSortStEph::topo_sort(graph);
+            // topo_sort ensures: spec_is_dag(graph) ==> spec_is_topo_order(graph, order@).
+            Some(order)
         }
-
-        let mut start: usize = 0;
-        while start < n
-            invariant
-                start <= n,
-                n == graph@.len(),
-                n < usize::MAX,
-                visited@.len() == n,
-                visited.spec_len() == visited@.len(),
-                rec_stack@.len() == n,
-                rec_stack.spec_len() == rec_stack@.len(),
-                spec_toposortsteph_wf(graph),
-                finish_order@.len() + spec_num_false(visited@) <= n,
-            decreases n - start,
-        {
-            assert(start < visited.spec_len());
-            if !*visited.nth(start) {
-                if !dfs_finish_order_cycle_detect(graph, &mut visited, &mut rec_stack, &mut finish_order, start) {
-                    return None;
-                }
-            }
-            start = start + 1;
-        }
-        assert(finish_order@.len() <= n);
-        assert(finish_order@.len() < usize::MAX);
-        let result_len = finish_order.len();
-        let mut reversed: Vec<usize> = Vec::new();
-        let mut k: usize = result_len;
-        while k > 0
-            invariant
-                k <= result_len,
-                result_len == finish_order@.len(),
-                result_len < usize::MAX,
-                reversed@.len() == (result_len - k) as nat,
-                reversed@.len() < usize::MAX,
-            decreases k,
-        {
-            k = k - 1;
-            reversed.push(finish_order[k]);
-        }
-        assert(reversed@.len() < usize::MAX);
-        Some(AVLTreeSeqStEphS::from_vec(reversed))
     }
 
     impl TopoSortStEphTrait for TopoSortStEph {

@@ -10,6 +10,8 @@ pub mod TopoSortStPer {
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::{AVLTreeSeqStPerS, AVLTreeSeqStPerTrait};
     #[cfg(verus_keep_ghost)]
     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq, lemma_all_false_num_false_eq_len, lemma_all_true_num_false_zero};
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap55::CycleDetectStPer::CycleDetectStPer::{CycleDetectStPer, CycleDetectStPerTrait, spec_cycledetectstper_wf};
     use crate::Types::Types::*;
 
     verus! {
@@ -676,7 +678,6 @@ pub mod TopoSortStPer {
     }
 
     /// Returns Some(sequence) if graph is acyclic, None if contains a cycle.
-    #[verifier::external_body]
     pub fn topological_sort_opt(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (topo_order: Option<AVLTreeSeqStPerS<usize>>)
         requires
             spec_toposortstper_wf(graph),
@@ -685,67 +686,17 @@ pub mod TopoSortStPer {
             topo_order.is_some() <==> spec_is_dag_per(graph),
             topo_order.is_some() ==> spec_is_topo_order_per(graph, topo_order.unwrap()@),
     {
-        let n = graph.length();
-        let mut visited: Vec<bool> = Vec::new();
-        let mut rec_stack: Vec<bool> = Vec::new();
-        let mut finish_order: Vec<usize> = Vec::new();
-        let mut j: usize = 0;
-        while j < n
-            invariant
-                j <= n,
-                visited@.len() == j as int,
-                rec_stack@.len() == j as int,
-                forall|k: int| 0 <= k < visited@.len() ==> !#[trigger] visited@[k],
-                forall|k: int| 0 <= k < rec_stack@.len() ==> !#[trigger] rec_stack@[k],
-            decreases n - j,
-        {
-            visited.push(false);
-            rec_stack.push(false);
-            j = j + 1;
+        // Bridge: spec_toposortstper_wf and spec_cycledetectstper_wf have identical definitions.
+        proof { assert(spec_cycledetectstper_wf(graph)); }
+        // Delegate to proved has_cycle (CycleDetect) and topo_sort (TopoSort).
+        if CycleDetectStPer::has_cycle(graph) {
+            // has_cycle ensures: has_cycle == !spec_is_dag_per(graph).
+            None
+        } else {
+            // !has_cycle means spec_is_dag_per(graph).
+            let order = TopoSortStPer::topo_sort(graph);
+            Some(order)
         }
-
-        proof {
-            lemma_all_false_num_false_eq_len(visited@);
-        }
-
-        let mut start: usize = 0;
-        while start < n
-            invariant
-                start <= n,
-                n == graph@.len(),
-                n < usize::MAX,
-                visited@.len() == n,
-                rec_stack@.len() == n,
-                spec_toposortstper_wf(graph),
-                finish_order@.len() + spec_num_false(visited@) <= n,
-            decreases n - start,
-        {
-            if !visited[start] {
-                if !dfs_finish_order_cycle_detect(graph, &mut visited, &mut rec_stack, &mut finish_order, start) {
-                    return None;
-                }
-            }
-            start = start + 1;
-        }
-        assert(finish_order@.len() <= n);
-        assert(finish_order@.len() < usize::MAX);
-        let result_len = finish_order.len();
-        let mut reversed: Vec<usize> = Vec::new();
-        let mut k: usize = result_len;
-        while k > 0
-            invariant
-                k <= result_len,
-                result_len == finish_order@.len(),
-                result_len < usize::MAX,
-                reversed@.len() == (result_len - k) as nat,
-                reversed@.len() < usize::MAX,
-            decreases k,
-        {
-            k = k - 1;
-            reversed.push(finish_order[k]);
-        }
-        assert(reversed@.len() < usize::MAX);
-        Some(AVLTreeSeqStPerS::from_vec(reversed))
     }
 
     impl TopoSortStPerTrait for TopoSortStPer {

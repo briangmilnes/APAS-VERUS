@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap55/TopoSortStPer.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap55/
 Full output: src/Chap55/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,12 +20,22 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ TopoSortStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap55/TopoSortStPer.rs:679: error: external_body - #[verifier::external_body]
-       680 |     pub fn topological_sort_opt(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (topo_order: Option<AVLTreeSeqStPerS<usize>>)
-   Holes: 1 total
-      1 × external_body
-   Proof functions: 6 total (6 clean, 0 holed)
+✓ CycleDetectStEph.rs
+   7 clean proof functions
+✓ CycleDetectStPer.rs
+   6 clean proof functions
+✓ DFSStEph.rs
+   7 clean proof functions
+✓ DFSStPer.rs
+   6 clean proof functions
+✓ SCCStEph.rs
+   3 clean proof functions
+✓ SCCStPer.rs
+   2 clean proof functions
+✓ TopoSortStEph.rs
+   11 clean proof functions
+✓ TopoSortStPer.rs
+   6 clean proof functions
 
 =================================================================
 2. Depends Upon
@@ -35,12 +45,26 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
+CycleDetectStEph  depends upon only clean modules
+CycleDetectStPer  depends upon only clean modules
+DFSStEph  depends upon only clean modules
+DFSStPer  depends upon only clean modules
+SCCStEph  depends upon only clean modules
+SCCStPer  depends upon only clean modules
+TopoSortStEph  depends upon only clean modules
 TopoSortStPer  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
+CycleDetectStEph.rs  depends upon only clean modules
+CycleDetectStPer.rs  depends upon only clean modules
+DFSStEph.rs  depends upon only clean modules
+DFSStPer.rs  depends upon only clean modules
+SCCStEph.rs  depends upon only clean modules
+SCCStPer.rs  depends upon only clean modules
+TopoSortStEph.rs  depends upon only clean modules
 TopoSortStPer.rs  depends upon only clean modules
 
 =================================================================
@@ -48,33 +72,34 @@ TopoSortStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   0 clean (no holes, no errors; 0%)
-   1 holed (holes or errors, 100%)
-   1 total
+   8 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
+   8 total
 
 Proof Functions:
-   6 clean (100%)
+   48 clean (100%)
    0 holed (0%)
-   6 total
+   48 total
 
 Function Specs:
-   5 exec fns with complete spec (requires+ensures) (21%)
-   0 exec fns missing spec (0%)
-   18 proof/spec fns clean (78%)
+   33 exec fns with complete spec (requires+ensures) (28%)
+   2 exec fns missing spec (1%)
+   79 proof/spec fns clean (69%)
    0 proof/spec fns with holes (0%)
-   23 total fns
+   114 total fns
 
 
-Holes Found: 1 (actionable)
-   1 × external_body (100%)
-Real Proof Targets: 1 (all actionable)
+Holes Found: 0 (actionable)
+Real Proof Targets: 0 (all actionable)
+
+No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-26 21:01:33 -07:00
-Ended:     2026-03-26 21:01:33 -07:00
-Duration:  13ms
+Started:   2026-03-27 08:19:53 -07:00
+Ended:     2026-03-27 08:19:53 -07:00
+Duration:  58ms
 
 Full output: src/Chap55/analyses/veracity-review-verus-proof-holes.log
