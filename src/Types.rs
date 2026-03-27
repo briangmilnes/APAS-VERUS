@@ -8,12 +8,7 @@ pub mod Types {
     use vstd::prelude::*;
 
 
-    /// - Data Type 18.1 (Ordering) relationships used by APAS, using Rust's as it matches.
-    /// - Enumerated values in `std::cmp::Ordering` are named: Less, Equal, Greater.
-    pub use std::cmp::Ordering as O;
-
     // Note: bool already implements Display, Debug, Not, etc.
-    // No custom implementations needed when B = bool
 
     verus! {
 
