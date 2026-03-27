@@ -33,7 +33,6 @@ pub mod EdgeSetGraphMtPer {
 
     // 4. type definitions
 
-    #[derive(Clone)]
     #[verifier::reject_recursive_types(V)]
     pub struct EdgeSetGraphMtPer<V: StTInMtT + Ord + 'static> {
         pub vertices: AVLTreeSetMtPer<V>,

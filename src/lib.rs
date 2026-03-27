@@ -394,7 +394,7 @@ pub mod Chap35 {
 pub mod Chap36 {
     pub mod QuickSortStEph;
     pub mod QuickSortMtEph;
-//    pub mod QuickSortMtEphSlice;  // FIX: waiting for -V new-mut-ref migration + vstd split_at_mut
+//    pub mod QuickSortMtEphSlice;  // BROKEN: compiles, 13 verify errors — needs to_vec on ArraySeqMtEphSliceS
 }
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap37")))]
@@ -554,8 +554,8 @@ pub mod Chap52 {
     pub mod AdjMatrixGraphStPer;
     pub mod AdjMatrixGraphMtEph;
     pub mod AdjMatrixGraphMtPer;
-//    pub mod AdjTableGraphStEph;  // FIX: switched to Table but Verus sst_to_air bug + Table wf gap
-//    pub mod AdjTableGraphStPer;  // FIX: same
+//    pub mod AdjTableGraphStEph;  // BROKEN: sst_to_air bug GONE, needs Table API proof work
+//    pub mod AdjTableGraphStPer;  // BROKEN: same
     pub mod AdjTableGraphMtPer;
     pub mod EdgeSetGraphStEph;
     pub mod EdgeSetGraphStPer;

@@ -275,7 +275,7 @@ pub mod QuickSortMtEphSlice {
 
     // 9. impls
 
-    impl<T: TotalOrder + Eq + Clone + Send + 'static> QuickSortMtEphSliceTrait<T>
+    impl<T: TotalOrder + Eq + Clone + Send + Sync + 'static> QuickSortMtEphSliceTrait<T>
         for ArraySeqMtEphSliceS<T>
     {
         fn median_of_three(a: T, b: T, c: T) -> (median: T) {
@@ -522,7 +522,7 @@ pub mod QuickSortMtEphSlice {
                 let mut la = left_a;
                 Self::quick_sort_first(&mut la);
                 let ghost sorted_elems = elements(la);
-                let v = la.to_vec();
+                let v = (*la.data).clone();
                 proof {
                     assert(v@ =~= sorted_elems);
                 }
@@ -534,7 +534,7 @@ pub mod QuickSortMtEphSlice {
                 let mut ra = right_a;
                 Self::quick_sort_first(&mut ra);
                 let ghost sorted_elems = elements(ra);
-                let v = ra.to_vec();
+                let v = (*ra.data).clone();
                 proof {
                     assert(v@ =~= sorted_elems);
                 }
@@ -655,7 +655,7 @@ pub mod QuickSortMtEphSlice {
                 let mut la = left_a;
                 Self::quick_sort_median3(&mut la);
                 let ghost sorted_elems = elements(la);
-                let v = la.to_vec();
+                let v = (*la.data).clone();
                 proof {
                     assert(v@ =~= sorted_elems);
                 }
@@ -667,7 +667,7 @@ pub mod QuickSortMtEphSlice {
                 let mut ra = right_a;
                 Self::quick_sort_median3(&mut ra);
                 let ghost sorted_elems = elements(ra);
-                let v = ra.to_vec();
+                let v = (*ra.data).clone();
                 proof {
                     assert(v@ =~= sorted_elems);
                 }
@@ -788,7 +788,7 @@ pub mod QuickSortMtEphSlice {
                 let mut la = left_a;
                 Self::quick_sort_random(&mut la);
                 let ghost sorted_elems = elements(la);
-                let v = la.to_vec();
+                let v = (*la.data).clone();
                 proof {
                     assert(v@ =~= sorted_elems);
                 }
@@ -800,7 +800,7 @@ pub mod QuickSortMtEphSlice {
                 let mut ra = right_a;
                 Self::quick_sort_random(&mut ra);
                 let ghost sorted_elems = elements(ra);
-                let v = ra.to_vec();
+                let v = (*ra.data).clone();
                 proof {
                     assert(v@ =~= sorted_elems);
                 }
