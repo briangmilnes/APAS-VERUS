@@ -523,6 +523,32 @@ broadcast use {
                 && (#[trigger] self.entries.seq@[i]).0@ == key;
             self.entries.seq@[i].1
         }
+
+        /// The view of spec_stored_value(k) equals the map value self@[k].
+        pub proof fn lemma_spec_stored_value_view(&self, k: K::V)
+            requires self.spec_tablesteph_wf(), self@.contains_key(k)
+            ensures self.spec_stored_value(k)@ == self@[k]
+        {
+            // Get the choose index from spec_stored_value.
+            lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
+            let view_idx = choose|i: int| 0 <= i < self.entries@.len()
+                && (#[trigger] self.entries@[i]).0 == k;
+            // entries@[view_idx].0 == k, i.e., entries.seq@[view_idx].0@ == k.
+            self.entries.lemma_view_index(view_idx);
+            // spec_stored_value chooses sv_idx with entries.seq@[sv_idx].0@ == k.
+            let sv_idx = choose|i: int| 0 <= i < self.entries.seq@.len()
+                && (#[trigger] self.entries.seq@[i]).0@ == k;
+            // By no_dups: both indices have the same key, so they must be equal.
+            assert(self.entries@[sv_idx].0 == k) by {
+                self.entries.lemma_view_index(sv_idx);
+            };
+            assert(self.entries@[view_idx].0 == k);
+            // lemma_entries_to_map_get tells us self@[k] == entries@[sv_idx].1.
+            lemma_entries_to_map_get::<K::V, V::V>(self.entries@, sv_idx);
+            // entries@[sv_idx].1 == entries.seq@[sv_idx].1@ (from View for Pair).
+            self.entries.lemma_view_index(sv_idx);
+            // spec_stored_value(k) == entries.seq@[sv_idx].1, so spec_stored_value(k)@ == self@[k].
+        }
     }
 
     // 9. impls

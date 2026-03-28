@@ -422,17 +422,52 @@ broadcast use {
                         assert(old_adj.index(v@).contains(w));
                     }
                 };
-                // Stored-value wf blocked by clone gap.
-                assume(forall|k: <V as View>::V| #[trigger] updated.adj@.dom().contains(k) ==>
-                    updated.adj.spec_stored_value(k).spec_avltreesetstper_wf());
+                // Stored-value wf: proved via lemma_spec_stored_value_view.
+                assert forall|k: <V as View>::V| #[trigger] updated.adj@.dom().contains(k) implies
+                    updated.adj.spec_stored_value(k).spec_avltreesetstper_wf()
+                by {
+                    updated.adj.lemma_spec_stored_value_view(k);
+                    if k != v@ {
+                        assert(old_adj.dom().contains(k));
+                        assert(updated.adj@[k] == old_adj[k]);
+                        self.adj.lemma_spec_stored_value_view(k);
+                        let old_sv = self.adj.spec_stored_value(k);
+                        assert(old_sv.spec_avltreesetstper_wf());
+                        assert(updated.adj.spec_stored_value(k).tree@ =~= old_sv.tree@);
+                    } else if !old_dom.contains(v@) {
+                        // New key: stored value is empty, which is wf.
+                    } else {
+                        // Existing key: combine returned clone with same view.
+                        assert(old_adj.dom().contains(v@));
+                        self.adj.lemma_spec_stored_value_view(v@);
+                        let old_sv = self.adj.spec_stored_value(v@);
+                        assert(old_sv.spec_avltreesetstper_wf());
+                    }
+                };
             }
             updated
         }
 
         fn delete_vertex(&self, v: &V) -> (updated: Self) {
             proof { reveal(obeys_view_eq); }
+            let ghost old_adj = self.spec_adj();
+            let ghost old_dom = old_adj.dom();
             // Step 1: Remove v as a key from the adjacency table.
             let new_adj = self.adj.delete(v);
+            let ghost adj_after_delete = new_adj@;
+            // Prove stored-value wf after delete (initial loop invariant).
+            proof {
+                assert forall|k: <V as View>::V| #[trigger] new_adj@.dom().contains(k) implies
+                    new_adj.spec_stored_value(k).spec_avltreesetstper_wf()
+                by {
+                    new_adj.lemma_spec_stored_value_view(k);
+                    assert(old_adj.dom().contains(k));
+                    self.adj.lemma_spec_stored_value_view(k);
+                    let old_sv = self.adj.spec_stored_value(k);
+                    assert(old_sv.spec_avltreesetstper_wf());
+                    assert(new_adj.spec_stored_value(k).tree@ =~= old_sv.tree@);
+                };
+            }
             // Obtain domain sequence from table with v removed.
             let domain = new_adj.domain();
             let seq = domain.to_seq();
@@ -451,26 +486,84 @@ broadcast use {
                     obeys_feq_fulls::<V, AVLTreeSetStPer<V>>(),
                     obeys_feq_full::<Pair<V, AVLTreeSetStPer<V>>>(),
                     !result_adj@.dom().contains(v@),
+                    // Stored-value wf invariant.
+                    forall|k: <V as View>::V| #[trigger] result_adj@.dom().contains(k) ==>
+                        result_adj.spec_stored_value(k).spec_avltreesetstper_wf(),
+                    // Domain unchanged through loop.
+                    result_adj@.dom() =~= adj_after_delete.dom(),
+                    // For all keys: neighbor sets are subsets of adj_after_delete values.
+                    forall|k: <V as View>::V| #[trigger] result_adj@.dom().contains(k) ==>
+                        result_adj@[k].subset_of(adj_after_delete[k]),
                 decreases len - i,
             {
                 let u = seq.nth(i).clone();
                 if let Some(neighbors) = result_adj.find(&u) {
                     proof {
-                        // Neighbor-set wf from find requires quantifier over domain.
-                        // blocked by Verus ICE
-                        assume(neighbors.spec_avltreesetstper_wf());
+                        // Prove neighbors.spec_avltreesetstper_wf() from stored-value-wf.
+                        // find ensures neighbors@ == result_adj@[u@].
+                        // lemma gives spec_stored_value(u@)@ == result_adj@[u@].
+                        // So neighbors@ == spec_stored_value(u@)@, i.e., neighbors.tree@ == sv.tree@.
+                        // From invariant: sv.spec_avltreesetstper_wf(). Same tree@ ⟹ same wf.
+                        result_adj.lemma_spec_stored_value_view(u@);
+                        let sv = result_adj.spec_stored_value(u@);
+                        assert(sv.spec_avltreesetstper_wf());
+                        assert(neighbors@ == sv@);
+                        assert(neighbors.tree@ =~= sv.tree@);
                     }
                     let new_neighbors = neighbors.delete(v);
-                    result_adj = result_adj.insert(u, new_neighbors, |_old, new| new.clone());
+                    let ghost nn_view = new_neighbors@;
+                    let ghost pre_insert = result_adj@;
+                    let ghost pre_insert_adj = result_adj;
+                    result_adj = result_adj.insert(u, new_neighbors,
+                        |_old: &AVLTreeSetStPer<V>, new: &AVLTreeSetStPer<V>| -> (r: AVLTreeSetStPer<V>)
+                            ensures r@ == new@
+                        { new.clone() });
+                    proof {
+                        // Help Z3 with the insert_edge existential ensures.
+                        assert(pre_insert.dom().contains(u@));
+                        // Prove stored-value wf after insert.
+                        assert forall|k: <V as View>::V| #[trigger] result_adj@.dom().contains(k) implies
+                            result_adj.spec_stored_value(k).spec_avltreesetstper_wf()
+                        by {
+                            result_adj.lemma_spec_stored_value_view(k);
+                            if k == u@ {
+                                // insert ensures for existing key: updated@[key@] == r@ where
+                                // combine.ensures((&old_v, &value), r) gives r@ == new_neighbors@.
+                                assert(result_adj.spec_stored_value(k).tree@ =~= new_neighbors.tree@);
+                            } else {
+                                assert(pre_insert.dom().contains(k));
+                                pre_insert_adj.lemma_spec_stored_value_view(k);
+                                let old_sv = pre_insert_adj.spec_stored_value(k);
+                                assert(old_sv.spec_avltreesetstper_wf());
+                                assert(result_adj.spec_stored_value(k).tree@ =~= old_sv.tree@);
+                            }
+                        };
+                        // Domain unchanged.
+                        assert(result_adj@.dom() =~= adj_after_delete.dom());
+                        // Subset invariant.
+                        assert forall|k: <V as View>::V| #[trigger] result_adj@.dom().contains(k) implies
+                            result_adj@[k].subset_of(adj_after_delete[k])
+                        by {
+                            if k == u@ {
+                                // insert ensures for existing key: r@ == new_neighbors@.
+                                // new_neighbors@ ⊆ neighbors@ ⊆ pre_insert[u@] ⊆ adj_after_delete[u@].
+                            } else {
+                                assert(pre_insert.dom().contains(k));
+                            }
+                        };
+                    }
                 }
                 i += 1;
             }
             let updated = AdjTableGraphStPer { adj: result_adj };
             proof {
-                // Graph-level wf (neighbor-set wf + graph closure) requires
-                // quantifying over Map<V::V, Set<V::V>> which triggers Verus ICE.
-                // blocked by Verus ICE
-                assume(updated.spec_adjtablegraphstper_wf());
+                // Stored-value wf, type predicates, table wf: from loop invariants.
+                // Graph closure: targeted assume (loop removed v@ from each set,
+                // but tracking this through Map indexing in assert-forall hits Z3 limits).
+                assume(forall|u: <V as View>::V, w: <V as View>::V|
+                    updated.spec_adj().dom().contains(u)
+                    && #[trigger] updated.spec_adj().index(u).contains(w)
+                    ==> updated.spec_adj().dom().contains(w));
             }
             updated
         }
@@ -555,9 +648,24 @@ broadcast use {
                         assert(old_adj.index(x).contains(w));
                     }
                 };
-                // Stored-value wf blocked by clone gap.
-                assume(forall|k: <V as View>::V| #[trigger] updated.adj@.dom().contains(k) ==>
-                    updated.adj.spec_stored_value(k).spec_avltreesetstper_wf());
+                // Stored-value wf: proved via lemma_spec_stored_value_view.
+                assert forall|k: <V as View>::V| #[trigger] updated.adj@.dom().contains(k) implies
+                    updated.adj.spec_stored_value(k).spec_avltreesetstper_wf()
+                by {
+                    updated.adj.lemma_spec_stored_value_view(k);
+                    if k == u_view {
+                        assert(updated.adj@[u_view] == neighbors_view);
+                        assert(updated.adj.spec_stored_value(k).tree@ =~= neighbors.tree@);
+                    } else if k == v_view && !old_dom.contains(v_view) {
+                        // v@ was new: stored value is empty, which is wf.
+                    } else {
+                        assert(old_adj.dom().contains(k));
+                        self.adj.lemma_spec_stored_value_view(k);
+                        let old_sv = self.adj.spec_stored_value(k);
+                        assert(old_sv.spec_avltreesetstper_wf());
+                        assert(updated.adj.spec_stored_value(k).tree@ =~= old_sv.tree@);
+                    }
+                };
             }
             updated
         }
@@ -594,20 +702,48 @@ broadcast use {
                             assert(old_adj.index(x).contains(w));
                         }
                     };
-                    // Stored-value wf blocked by clone gap.
-                    assume(forall|k: <V as View>::V| #[trigger] updated.adj@.dom().contains(k) ==>
-                        updated.adj.spec_stored_value(k).spec_avltreesetstper_wf());
+                    // Stored-value wf: proved via lemma_spec_stored_value_view.
+                    assert forall|k: <V as View>::V| #[trigger] updated.adj@.dom().contains(k) implies
+                        updated.adj.spec_stored_value(k).spec_avltreesetstper_wf()
+                    by {
+                        updated.adj.lemma_spec_stored_value_view(k);
+                        if k == u_view {
+                            assert(new_adj@[u_view] == nn_view);
+                            assert(updated.adj.spec_stored_value(k).tree@ =~= new_neighbors.tree@);
+                        } else {
+                            assert(old_adj.dom().contains(k));
+                            self.adj.lemma_spec_stored_value_view(k);
+                            let old_sv = self.adj.spec_stored_value(k);
+                            assert(old_sv.spec_avltreesetstper_wf());
+                            assert(updated.adj.spec_stored_value(k).tree@ =~= old_sv.tree@);
+                        }
+                    };
                 }
                 updated
             } else {
                 // u@ not in domain: return unchanged via adj clone (view-preserving).
                 let cloned_adj = self.adj.clone();
-                // TableStPer::clone ensures cloned_adj.entries@ == self.adj.entries@,
-                // so cloned_adj@ == self.adj@ and !dom.contains(u@) carries through.
                 let updated = AdjTableGraphStPer { adj: cloned_adj };
                 proof {
-                    // wf needs forall over Set<V::V> (ICE) + stored-value wf (clone gap).
-                    assume(updated.spec_adjtablegraphstper_wf());
+                    // Stored-value wf: clone preserves entries, so same stored values.
+                    assert forall|k: <V as View>::V| #[trigger] updated.adj@.dom().contains(k) implies
+                        updated.adj.spec_stored_value(k).spec_avltreesetstper_wf()
+                    by {
+                        updated.adj.lemma_spec_stored_value_view(k);
+                        self.adj.lemma_spec_stored_value_view(k);
+                        let old_sv = self.adj.spec_stored_value(k);
+                        assert(old_sv.spec_avltreesetstper_wf());
+                        assert(updated.adj.spec_stored_value(k).tree@ =~= old_sv.tree@);
+                    };
+                    // Graph closure: unchanged from old wf.
+                    assert forall|x: <V as View>::V, w: <V as View>::V|
+                        updated.spec_adj().dom().contains(x)
+                        && #[trigger] updated.spec_adj().index(x).contains(w)
+                        implies updated.spec_adj().dom().contains(w)
+                    by {
+                        assert(old_adj.dom().contains(x));
+                        assert(old_adj.index(x).contains(w));
+                    };
                 }
                 updated
             }
