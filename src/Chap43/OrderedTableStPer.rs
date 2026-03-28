@@ -479,6 +479,8 @@ broadcast use {
                 self@.dom().len() + 1 < usize::MAX as nat,
             ensures
                 table@.dom() =~= self@.dom().insert(k@),
+                table@[k@] == v@,
+                forall|k2: K::V| k2 != k@ && #[trigger] self@.contains_key(k2) ==> table@[k2] == self@[k2],
                 table.spec_orderedtablestper_wf();
         /// Like insert, but additionally ensures the inserted value mapping.
         fn insert_wf(&self, k: K, v: V) -> (table: Self)
@@ -917,6 +919,10 @@ broadcast use {
                         lemma_pair_set_to_map_dom_finite(tree@);
                         let ghost new_map = spec_pair_set_to_map(tree@);
                         assert(new_map =~= old_map.remove(k@).insert(k@, v@));
+                        assert(new_map[k@] == v@);
+                        assert forall|k2: K::V| k2 != k@ && #[trigger] old_map.dom().contains(k2)
+                            implies new_map[k2] == old_map[k2]
+                        by {};
                         assert(new_map.dom() =~= old_map.dom().insert(k@)) by {
                             assert(old_map.dom().contains(k@));
                             assert(old_map.remove(k@).insert(k@, v@).dom()
@@ -936,13 +942,18 @@ broadcast use {
                         lemma_key_unique_insert(old_tree_view, k@, v@);
                         lemma_pair_set_to_map_len(old_tree_view);
                         assert(tree@.len() < usize::MAX as nat);
+                        let ghost new_map = spec_pair_set_to_map(tree@);
+                        assert(new_map =~= old_map.insert(k@, v@));
+                        assert(new_map[k@] == v@);
+                        assert forall|k2: K::V| k2 != k@ && #[trigger] old_map.dom().contains(k2)
+                            implies new_map[k2] == old_map[k2]
+                        by {};
                     }
                 },
             }
             OrderedTableStPer { tree }
         }
 
-        #[verifier::external_body]
         fn insert_wf(&self, k: K, v: V) -> (table: Self) {
             self.insert(k, v)
         }
@@ -977,9 +988,16 @@ broadcast use {
             OrderedTableStPer { tree }
         }
 
-        #[verifier::external_body]
         fn delete_wf(&self, k: &K) -> (table: Self) {
-            self.delete(k)
+            let table = self.delete(k);
+            proof {
+                assert forall|k2: K::V| k2 != k@ && #[trigger] self@.contains_key(k2)
+                    implies table@[k2] == self@[k2]
+                by {
+                    assert(table@ == self@.remove(k@));
+                };
+            }
+            table
         }
 
         fn domain(&self) -> (domain: ArraySetStEph<K>) {
