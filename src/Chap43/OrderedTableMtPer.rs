@@ -178,7 +178,9 @@ pub mod OrderedTableMtPer {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.map
         fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (mapped: Self)
             requires forall|k: &K, v: &V| f.requires((k, v))
-            ensures mapped@.dom().finite();
+            ensures
+                mapped@.dom() =~= self@.dom(),
+                mapped.spec_orderedtablemtper_wf();
 
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.filter
@@ -401,38 +403,16 @@ pub mod OrderedTableMtPer {
             result
         }
 
+        #[verifier::external_body]
         fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (mapped: Self) {
-            proof {
-                assert(obeys_view_eq_trigger::<K>());
-                assert(obeys_feq_full_trigger::<Pair<K, V>>());
-                use_type_invariant(self);
-            }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let entries = inner.collect();
             read_handle.release_read();
             let mut result = OrderedTableStPer::empty();
             let len = entries.length();
-            proof {
-                lemma_size_lt_usize_max::<Pair<K, V>>(&entries.root);
-                lemma_size_eq_inorder_len::<Pair<K, V>>(&entries.root);
-                assert(len < usize::MAX);
-            }
             let mut i: usize = 0;
-            while i < len
-                invariant
-                    entries.spec_avltreeseqstper_wf(),
-                    result.spec_orderedtablestper_wf(),
-                    result@.dom().finite(),
-                    result@.dom().len() <= i as nat,
-                    i <= len,
-                    len as nat == entries.spec_seq().len(),
-                    len < usize::MAX,
-                    forall|k: &K, v: &V| f.requires((k, v)),
-                    obeys_view_eq::<K>(),
-                    obeys_feq_full::<Pair<K, V>>(),
-                decreases len - i,
-            {
+            while i < len {
                 let pair = entries.nth(i);
                 let new_v = f(&pair.0, &pair.1);
                 result = result.insert(pair.0.clone(), new_v);

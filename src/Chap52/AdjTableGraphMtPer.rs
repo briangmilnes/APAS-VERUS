@@ -354,13 +354,15 @@ broadcast use {
             });
             let updated = AdjTableGraphMtPer { adj: cleaned };
             proof {
-                // Graph wf + domain exclusion: delete ensures updated@ == self@.remove(v@),
-                // but map() only ensures mapped@.dom().finite(). Cannot prove graph closure
-                // or value-level properties through map. Algorithmic logic is correct: v
-                // deleted from table, v removed from each neighbor set.
-                // blocked by weak OrderedTableMtPer::map value ensures
+                // delete ensures: without_v@ == self.adj@.remove(v@)
+                // map ensures: cleaned@.dom() =~= without_v@.dom()
+                // Map::remove(k).dom() == dom().remove(k), so v@ not in cleaned@.dom().
+                assert(without_v@ == self.adj@.remove(v@));
+                assert(cleaned@.dom() =~= without_v@.dom());
+                assert(!updated.spec_adj().dom().contains(v@));
+                // Graph closure still needs map value ensures to prove neighbor sets
+                // had v removed, so every neighbor is still in domain.
                 assume(updated.spec_adjtablegraphmtper_wf()); // algorithmic: needs map value ensures
-                assume(!updated.spec_adj().dom().contains(v@)); // algorithmic: needs delete+map dom ensures
             }
             updated
         }
