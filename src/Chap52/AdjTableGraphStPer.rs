@@ -73,6 +73,14 @@ broadcast use {
         /// Work Theta(1), Span Theta(1)
         fn from_table(table: TableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self)
             requires
+                table.spec_tablestper_wf(),
+                obeys_view_eq::<V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
+                obeys_feq_fulls::<V, AVLTreeSetStPer<V>>(),
+                obeys_feq_full::<Pair<V, AVLTreeSetStPer<V>>>(),
+                forall|k: <V as View>::V| #[trigger] table@.dom().contains(k) ==>
+                    table.spec_stored_value(k).spec_avltreesetstper_wf(),
                 forall|u: <V as View>::V, v: <V as View>::V|
                     table@.dom().contains(u)
                     && #[trigger] table@.index(u).contains(v)
@@ -176,8 +184,8 @@ broadcast use {
                 assert(obeys_feq_full_trigger::<AVLTreeSetStPer<V>>());
                 assert(obeys_feq_full_trigger::<Pair<V, AVLTreeSetStPer<V>>>());
                 assert(obeys_view_eq_trigger::<V>());
-                // Table internals and stored-value wf not in requires. Verus ICE on Set<V::V>.
-                assume(out.spec_adjtablegraphstper_wf());
+                // All wf conjuncts follow from requires: table wf → keys_no_dups;
+                // feq + type-level predicates; stored-value wf; graph closure.
             }
             out
         }
@@ -234,19 +242,14 @@ broadcast use {
             proof { reveal(obeys_view_eq); }
             match self.adj.find(u) {
                 Some(ns) => {
-                    proof {
-                        // Verus ICE on Set<V::V> prevents proving ns@ == self.spec_adj()[u@].
-                        assume(self.spec_adj().dom().contains(u@) ==> ns@ == self.spec_adj()[u@]);
-                    }
+                    // Table::find ensures: self.adj@.contains_key(u@) && self.adj@[u@] == ns@.
+                    // Since spec_adj() == self.adj@, both postconditions follow directly.
                     ns
                 }
                 None => {
-                    let empty = AVLTreeSetStPer::empty();
-                    proof {
-                        assume(!self.spec_adj().dom().contains(u@)
-                            ==> empty@ == Set::<<V as View>::V>::empty());
-                    }
-                    empty
+                    // Table::find ensures: !self.adj@.contains_key(u@).
+                    // AVLTreeSetStPer::empty() ensures: empty@ == Set::empty().
+                    AVLTreeSetStPer::empty()
                 }
             }
         }
@@ -264,7 +267,7 @@ broadcast use {
             let new_adj = self.adj.insert(v, AVLTreeSetStPer::empty(), |old, _new| old.clone());
             let updated = AdjTableGraphStPer { adj: new_adj };
             proof {
-                // Clone gap + graph closure: Verus ICE on Set<V::V> in proof bodies.
+                // Blocked by Verus ICE: wf requires assert forall over Map<V::V, Set<V::V>>.
                 assume(updated.spec_adjtablegraphstper_wf());
             }
             updated
@@ -296,7 +299,8 @@ broadcast use {
             let neighbors = match self.adj.find_ref(&u) {
                 Some(ns_ref) => {
                     proof {
-                        // Capacity: stored sets have len < usize::MAX.
+                        // Capacity: neighbors ⊆ domain by graph closure, but subset
+                        // cardinality proof blocked by Verus ICE on Set<V::V> quantifiers.
                         assume(ns_ref@.len() + 1 < usize::MAX as nat);
                     }
                     ns_ref.clone_wf().insert(v.clone())
@@ -311,10 +315,9 @@ broadcast use {
             };
             let updated = AdjTableGraphStPer { adj: final_adj };
             proof {
-                // Clone gap + graph closure + postconditions: Verus ICE on Set<V::V>.
+                // Graph closure blocked by Verus ICE on quantifiers over Map<V::V, Set<V::V>>.
                 assume(updated.spec_adjtablegraphstper_wf());
-                assume(updated.spec_adj().dom().contains(u@));
-                assume(updated.spec_adj().dom().contains(v@));
+                // adj[u@].contains(v@) requires clone-preserves-view chain through Table::insert combine.
                 assume(updated.spec_adj()[u@].contains(v@));
             }
             updated
@@ -331,8 +334,11 @@ broadcast use {
                 None => self.clone(),
             };
             proof {
-                // Clone gap + graph closure + postcondition: Verus ICE on Set<V::V>.
+                // Graph closure blocked by Verus ICE on quantifiers over Map<V::V, Set<V::V>>.
                 assume(updated.spec_adjtablegraphstper_wf());
+                // Postcondition: either u not in dom (clone branch, unchanged), or
+                // adj[u@] no longer contains v@ (delete + insert chain). Requires
+                // clone-preserves-view through Table::insert combine.
                 assume(!updated.spec_adj().dom().contains(u@)
                     || !updated.spec_adj()[u@].contains(v@));
             }

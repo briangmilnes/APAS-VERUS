@@ -112,7 +112,9 @@ broadcast use {
             requires self.spec_adjtablegraphmtper_wf();
         /// Work Theta(log |V|), Span Theta(log |V|)
         fn insert_vertex(&self, v: V) -> (updated: Self)
-            requires self.spec_adjtablegraphmtper_wf()
+            requires
+                self.spec_adjtablegraphmtper_wf(),
+                self.spec_adj().dom().len() + 1 < usize::MAX as nat,
             ensures updated.spec_adjtablegraphmtper_wf(), updated.spec_adj().dom().contains(v@);
         /// Work Theta((|V| + |E|) log |V|), Span Theta(log^2 |V| + log |E|)
         fn delete_vertex(&self, v: &V) -> (updated: Self)
@@ -164,8 +166,9 @@ broadcast use {
             let adj = OrderedTableMtPer::empty();
             let out = AdjTableGraphMtPer { adj };
             proof {
-                // Empty map: graph closure holds vacuously.
-                assume(out.spec_adjtablegraphmtper_wf());
+                // Type-level predicates from requires; graph closure vacuous on empty map.
+                assert(out.adj@ == Map::<<V as View>::V, Set<<V as View>::V>>::empty());
+                assert(out.spec_adj().dom() =~= Set::<<V as View>::V>::empty());
             }
             out
         }
@@ -195,12 +198,14 @@ broadcast use {
         fn has_edge(&self, u: &V, v: &V) -> (found: bool) {
             let found = match self.adj.find(u) {
                 Some(neighbors) => {
+                    // Blocked by OrderedTableMtPer weak ensures: find lacks wf in ensures.
                     proof { assume(neighbors.spec_avltreesetmtper_wf()); }
                     neighbors.find(v)
                 }
                 None => false,
             };
             proof {
+                // Blocked by OrderedTableMtPer weak ensures: find lacks functional spec.
                 assume(found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@)));
             }
             found
@@ -212,6 +217,7 @@ broadcast use {
                 None => AVLTreeSetMtPer::empty(),
             };
             proof {
+                // Blocked by OrderedTableMtPer weak ensures: find lacks functional spec.
                 assume(self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@]);
                 assume(!self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty());
             }
@@ -220,6 +226,7 @@ broadcast use {
 
         fn out_degree(&self, u: &V) -> usize {
             let ns = self.out_neighbors(u);
+            // Blocked by OrderedTableMtPer weak ensures: find (in out_neighbors) lacks wf ensures.
             proof { assume(ns.spec_avltreesetmtper_wf()); }
             ns.size()
         }
@@ -228,12 +235,12 @@ broadcast use {
             let updated = if self.adj.find(&v).is_some() {
                 self.clone()
             } else {
-                proof { assume(self.adj@.dom().len() + 1 < usize::MAX as nat); }
                 AdjTableGraphMtPer {
                     adj: self.adj.insert(v, AVLTreeSetMtPer::empty()),
                 }
             };
             proof {
+                // Blocked by OrderedTableMtPer weak ensures (find, insert lack functional specs).
                 assume(updated.spec_adjtablegraphmtper_wf());
                 assume(updated.spec_adj().dom().contains(v@));
             }
@@ -254,6 +261,7 @@ broadcast use {
         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             let mut new_adj = self.adj.clone();
             if new_adj.find(&u).is_none() {
+                // Blocked by OrderedTableMtPer weak ensures: clone/insert don't track dom.len().
                 proof { assume(new_adj@.dom().len() + 1 < usize::MAX as nat); }
                 new_adj = new_adj.insert(u.clone(), AVLTreeSetMtPer::empty());
             }
@@ -266,15 +274,19 @@ broadcast use {
                 None => AVLTreeSetMtPer::empty(),
             };
             proof {
+                // Blocked by OrderedTableMtPer weak ensures (find lacks wf in ensures).
                 assume(u_neighbors.spec_avltreesetmtper_wf());
+                // Neighbor set capacity: blocked without subset reasoning (neighbors ⊆ domain).
                 assume(u_neighbors@.len() + 1 < usize::MAX as nat);
             }
             let new_u_neighbors = u_neighbors.insert(v);
+            // Blocked by OrderedTableMtPer weak ensures: insert doesn't track dom.len().
             proof { assume(new_adj@.dom().len() + 1 < usize::MAX as nat); }
             let updated = AdjTableGraphMtPer {
                 adj: new_adj.insert(u, new_u_neighbors),
             };
             proof {
+                // Blocked by OrderedTableMtPer weak ensures + Verus ICE on Map<V::V, Set<V::V>> quantifiers.
                 assume(updated.spec_adjtablegraphmtper_wf());
                 assume(updated.spec_adj().dom().contains(u@));
                 assume(updated.spec_adj().dom().contains(v@));
@@ -287,7 +299,9 @@ broadcast use {
             let updated = match self.adj.find(u) {
                 Some(u_neighbors) => {
                     proof {
+                        // Blocked by OrderedTableMtPer weak ensures (find lacks wf in ensures).
                         assume(u_neighbors.spec_avltreesetmtper_wf());
+                        // Blocked by OrderedTableMtPer weak ensures: insert requires dom capacity.
                         assume(self.adj@.dom().len() + 1 < usize::MAX as nat);
                     }
                     let new_u_neighbors = u_neighbors.delete(v);
@@ -298,6 +312,7 @@ broadcast use {
                 None => self.clone(),
             };
             proof {
+                // Blocked by OrderedTableMtPer weak ensures + Verus ICE on Map<V::V, Set<V::V>> quantifiers.
                 assume(updated.spec_adjtablegraphmtper_wf());
                 assume(!updated.spec_adj().dom().contains(u@)
                     || !updated.spec_adj()[u@].contains(v@));

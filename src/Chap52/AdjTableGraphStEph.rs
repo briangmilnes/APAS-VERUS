@@ -103,6 +103,12 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — wraps existing table.
         fn from_table(table: TableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self)
             requires
+                table.spec_tablesteph_wf(),
+                obeys_view_eq::<V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
+                forall|k: <V as View>::V| #[trigger] table@.dom().contains(k) ==>
+                    table.spec_stored_value(k).spec_avltreesetsteph_wf(),
                 forall|u: <V as View>::V, v: <V as View>::V|
                     table@.dom().contains(u)
                     && #[trigger] table@.index(u).contains(v)
@@ -213,9 +219,8 @@ broadcast use {
                 assert(obeys_feq_full_trigger::<AVLTreeSetStEph<V>>());
                 assert(obeys_feq_full_trigger::<Pair<V, AVLTreeSetStEph<V>>>());
                 assert(obeys_view_eq_trigger::<V>());
-                // Table internals (keys_no_dups) and stored-value wf not available
-                // from trait requires. Verus ICE on Set<V::V> in proof bodies.
-                assume(out.spec_adjtablegraphsteph_wf());
+                // All wf conjuncts follow from requires: table wf → keys_no_dups + feq;
+                // type-level predicates; stored-value wf; graph closure.
             }
             out
         }
@@ -285,9 +290,8 @@ broadcast use {
             proof { reveal(obeys_view_eq); }
             self.adj.insert(v, AVLTreeSetStEph::empty(), |old, _new| old.clone());
             proof {
-                // Clone gap + graph closure: Verus ICE on Set<V::V> in proof bodies
-                // prevents asserting forall over adj map. Graph closure holds because
-                // domain grew by {v@}, edge sets unchanged (clone) or empty (new vertex).
+                // Blocked by Verus ICE: proving stored-value-wf and graph closure requires
+                // assert forall over Map<V::V, Set<V::V>>, which crashes sst_to_air.
                 assume(self.spec_adjtablegraphsteph_wf());
             }
         }
@@ -319,7 +323,8 @@ broadcast use {
                 Some(ns_ref) => {
                     let mut ns = ns_ref.clone_wf();
                     proof {
-                        // Capacity: stored sets have len < usize::MAX, so +1 fits.
+                        // Capacity: ns@ ⊆ domain by graph closure, but wf gives
+                        // ns@.len() < usize::MAX; insert needs +1 < usize::MAX (off by one).
                         assume(ns@.len() + 1 < usize::MAX as nat);
                     }
                     ns.insert(v.clone());
@@ -333,13 +338,10 @@ broadcast use {
                 self.adj.insert(v, AVLTreeSetStEph::empty(), |old, _new| old.clone());
             }
             proof {
-                // Clone gap + graph closure + postconditions: Verus ICE on Set<V::V>
-                // in proof bodies prevents direct assertion. Exec code verified against
-                // Table/Set contracts. Graph closure holds: u@ and v@ in domain,
-                // adj[u@] contains v@ (inserted), other sets unchanged.
+                // Graph wf: blocked by Verus ICE on quantifiers over Map<V::V, Set<V::V>>.
                 assume(self.spec_adjtablegraphsteph_wf());
-                assume(self.spec_adj().dom().contains(u@));
-                assume(self.spec_adj().dom().contains(v@));
+                // adj[u@].contains(v@): blocked by Clone-preserves-view gap.
+                // v.clone()@ may not equal v@ generically; eq/clone workaround territory.
                 assume(self.spec_adj()[u@].contains(v@));
             }
         }
@@ -354,10 +356,10 @@ broadcast use {
                 }
             }
             proof {
-                // Clone gap + graph closure + postcondition: Verus ICE on Set<V::V>.
-                // Exec verified against Table/Set contracts. If u was in domain,
-                // adj[u@] has v@ removed. If u wasn't, graph unchanged.
+                // Blocked by Verus ICE: wf requires assert forall over Map<V::V, Set<V::V>>.
                 assume(self.spec_adjtablegraphsteph_wf());
+                // Blocked by Clone-preserves-view gap: proving adj[u@] no longer contains v@
+                // requires connecting Set::remove through Table::insert combine closure.
                 assume(!self.spec_adj().dom().contains(u@)
                     || !self.spec_adj()[u@].contains(v@));
             }
