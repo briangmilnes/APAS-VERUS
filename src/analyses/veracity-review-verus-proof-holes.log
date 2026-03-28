@@ -1295,82 +1295,79 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:899: info: structural_false_positive UNSAFE_SEND_SYNC OrderedTableMtEph — unsafe impl<K: MtKey, V: MtVal + Ord> Send for OrderedTableMtEph<K, V> {} [high]
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:900: info: structural_false_positive UNSAFE_SEND_SYNC OrderedTableMtEph — unsafe impl<K: MtKey, V: MtVal + Ord> Sync for OrderedTableMtEph<K, V> {} [high]
 ❌ src/Chap43/OrderedTableMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:307: error: external_body - #[verifier::external_body]
-       308 |         fn find(&self, k: &K) -> (found: Option<V>) {
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:316: error: external_body - #[verifier::external_body]
-       317 |         fn insert(&self, k: K, v: V) -> (updated: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:329: error: external_body - #[verifier::external_body]
-       330 |         fn insert_wf(&self, k: K, v: V) -> (updated: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:342: error: external_body - #[verifier::external_body]
-       343 |         fn delete(&self, k: &K) -> (updated: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:355: error: external_body - #[verifier::external_body]
-       356 |         fn delete_wf(&self, k: &K) -> (updated: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:618: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       613 |         fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:309: error: external_body - #[verifier::external_body]
+       310 |         fn find(&self, k: &K) -> (found: Option<V>) {
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:318: error: external_body - #[verifier::external_body]
+       319 |         fn insert(&self, k: K, v: V) -> (updated: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:331: error: external_body - #[verifier::external_body]
+       332 |         fn insert_wf(&self, k: K, v: V) -> (updated: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:344: error: external_body - #[verifier::external_body]
+       345 |         fn delete(&self, k: &K) -> (updated: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:357: error: external_body - #[verifier::external_body]
+       358 |         fn delete_wf(&self, k: &K) -> (updated: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:406: error: external_body [blocked_by: insert] - #[verifier::external_body]
+       407 |         fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (mapped: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:598: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       593 |         fn clone(&self) -> (cloned: Self)
             ...
-       616 |             let read_handle = self.locked_table.acquire_read();
-       617 |             let inner = read_handle.borrow().clone();
-       619 |             read_handle.release_read();
-       620 |             let ghost view = inner@;
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:622: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       613 |         fn clone(&self) -> (cloned: Self)
+       596 |             let read_handle = self.locked_table.acquire_read();
+       597 |             let inner = read_handle.borrow().clone();
+       599 |             read_handle.release_read();
+       600 |             let ghost view = inner@;
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:602: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       593 |         fn clone(&self) -> (cloned: Self)
             ...
-       620 |             let ghost view = inner@;
-       621 |             proof {
-       623 |                 assume(inner.spec_orderedtablestper_wf());
-       624 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:623: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       613 |         fn clone(&self) -> (cloned: Self)
+       600 |             let ghost view = inner@;
+       601 |             proof {
+       603 |                 assume(inner.spec_orderedtablestper_wf());
+       604 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:603: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       593 |         fn clone(&self) -> (cloned: Self)
             ...
-       621 |             proof {
-       622 |                 assume(view.dom().finite());
-       624 |             }
-       625 |             OrderedTableMtPer {
+       601 |             proof {
+       602 |                 assume(view.dom().finite());
+       604 |             }
+       605 |             OrderedTableMtPer {
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:82: info: structural_false_positive RWLOCK_GHOST from_st_table — assume(inner.spec_orderedtablestper_wf()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:283: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.dom().len()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:491: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:502: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:513: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:524: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:549: info: structural_false_positive RWLOCK_GHOST join_key — assume(self_inner@.dom().len() == self@.dom().len()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:550: info: structural_false_positive RWLOCK_GHOST join_key — assume(other_inner@.dom().len() == other@.dom().len()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:583: info: structural_false_positive RWLOCK_GHOST rank_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:595: info: structural_false_positive RWLOCK_GHOST select_key — proof { assume(inner@ =~= self@); } [medium]
-   Holes: 5 total
-      5 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:285: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.dom().len()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:471: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:482: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:493: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:504: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:529: info: structural_false_positive RWLOCK_GHOST join_key — assume(self_inner@.dom().len() == self@.dom().len()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:530: info: structural_false_positive RWLOCK_GHOST join_key — assume(other_inner@.dom().len() == other@.dom().len()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:563: info: structural_false_positive RWLOCK_GHOST rank_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:575: info: structural_false_positive RWLOCK_GHOST select_key — proof { assume(inner@ =~= self@); } [medium]
+   Holes: 6 total
+      6 × external_body
+         5 × root cause
+         1 × downstream (blocked by root causes)
    Info: 10 × structural_false_positive
       10 × RWLOCK_GHOST
 ✓ src/Chap43/OrderedTableStEph.rs
    14 clean proof functions
-❌ src/Chap43/OrderedTableStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:945: error: external_body - #[verifier::external_body]
-       946 |         fn insert_wf(&self, k: K, v: V) -> (table: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:980: error: external_body - #[verifier::external_body]
-       981 |         fn delete_wf(&self, k: &K) -> (table: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3400: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      3396 |         fn eq(&self, other: &Self) -> (equal: bool)
+⚠ src/Chap43/OrderedTableStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3418: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      3414 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      3398 |         {
-      3399 |             let equal = self.tree.size() == other.tree.size();
-      3401 |             equal
-      3402 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3412: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      3406 |         fn clone(&self) -> (copy: Self)
+      3416 |         {
+      3417 |             let equal = self.tree.size() == other.tree.size();
+      3419 |             equal
+      3420 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3430: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      3424 |         fn clone(&self) -> (copy: Self)
             ...
-      3410 |                 tree: self.tree.clone(),
-      3411 |             };
-      3413 |             copy
-      3414 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3417: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include result.spec_orderedtablestper_wf() for return type OrderedTableStPer
-      3406 |         fn clone(&self) -> (copy: Self)
+      3428 |                 tree: self.tree.clone(),
+      3429 |             };
+      3431 |             copy
+      3432 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3435: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include result.spec_orderedtablestper_wf() for return type OrderedTableStPer
+      3424 |         fn clone(&self) -> (copy: Self)
             ...
-      3415 |     }
-      3416 | 
-      3418 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
-      3419 |     ) -> (result: OrderedTableStPer<K, V>)
-   Holes: 2 total
-      2 × external_body
-   Proof functions: 12 total (12 clean, 0 holed)
+      3433 |     }
+      3434 | 
+      3436 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
+      3437 |     ) -> (result: OrderedTableStPer<K, V>)
 ⚠ src/Chap44/DocumentIndex.rs
 /home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:37: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         33 |             fn clone(&self) -> (cloned: Self)
@@ -1827,29 +1824,15 @@ Table of Contents:
        239 |                 // ensures don't provide.
        241 |             }
        242 |             count
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:362: error: assume() [rwlock:predicate] - assume(updated.spec_adjtablegraphmtper_wf()); // algorithmic
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:365: error: assume() [rwlock:predicate] - assume(updated.spec_adjtablegraphmtper_wf()); // algorithmic
        349 |         fn delete_vertex(&self, v: &V) -> (updated: Self) {
             ...
-       360 |                 // deleted from table, v removed from each neighbor set.
-       361 |                 // blocked by weak OrderedTableMtPer::map value ensures
-       363 |                 assume(!updated.spec_adj().dom().contains(v@)); // algorithmic: needs delete+map dom ensures
-       364 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:363: error: assume() [algorithmic] - assume(!updated.spec_adj().dom().contains(v@)); // algorithm
-       349 |         fn delete_vertex(&self, v: &V) -> (updated: Self) {
-            ...
-       361 |                 // blocked by weak OrderedTableMtPer::map value ensures
-       362 |                 assume(updated.spec_adjtablegraphmtper_wf()); // algorithmic: needs map value ensures
-       364 |             }
-       365 |             updated
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:463: error: assume() [algorithmic] - proof { assume(new_adj@.dom().len() + 1 < usize::MAX as nat)
-       368 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
-            ...
-       461 |             let new_u_neighbors = u_neighbors.insert(v);
-       462 |             // insert ensures: new_u_neighbors@ == u_neighbors@.insert(v@), wf preserved.
-       464 |             let updated = AdjTableGraphMtPer {
-       465 |                 adj: new_adj.insert_wf(u, new_u_neighbors),
-   Holes: 5 total
-      5 × assume()
+       363 |                 // Graph closure still needs map value ensures to prove neighbor sets
+       364 |                 // had v removed, so every neighbor is still in domain.
+       366 |             }
+       367 |             updated
+   Holes: 3 total
+      3 × assume()
 ❌ src/Chap52/AdjTableGraphStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:473: error: assume() [algorithmic] - assume(forall|k: <V as View>::V| #[trigger] self.adj@.dom().
        441 |         fn insert_vertex(&mut self, v: V) {
@@ -2235,12 +2218,12 @@ Chap42::TableStEph  depends upon only clean modules
 Chap42::TableStPer  depends upon only clean modules
 Chap43::AugOrderedTableMtEph  depends upon only clean modules
 Chap43::AugOrderedTableStEph  depends upon only clean modules
-Chap43::AugOrderedTableStPer  depends upon holed modules: Chap43::OrderedTableStPer
+Chap43::AugOrderedTableStPer  depends upon only clean modules
 Chap43::OrderedSetMtEph  depends upon only clean modules
 Chap43::OrderedSetStEph  depends upon only clean modules
 Chap43::OrderedSetStPer  depends upon only clean modules
 Chap43::OrderedTableMtEph  depends upon only clean modules
-Chap43::OrderedTableMtPer  depends upon holed modules: Chap43::OrderedTableStPer
+Chap43::OrderedTableMtPer  depends upon only clean modules
 Chap43::OrderedTableStEph  depends upon only clean modules
 Chap43::OrderedTableStPer  depends upon only clean modules
 Chap44::DocumentIndex  depends upon only clean modules
@@ -2486,12 +2469,12 @@ src/Chap42/TableStEph.rs  depends upon only clean modules
 src/Chap42/TableStPer.rs  depends upon only clean modules
 src/Chap43/AugOrderedTableMtEph.rs  depends upon only clean modules
 src/Chap43/AugOrderedTableStEph.rs  depends upon only clean modules
-src/Chap43/AugOrderedTableStPer.rs  depends upon holed modules: Chap43::OrderedTableStPer
+src/Chap43/AugOrderedTableStPer.rs  depends upon only clean modules
 src/Chap43/OrderedSetMtEph.rs  depends upon only clean modules
 src/Chap43/OrderedSetStEph.rs  depends upon only clean modules
 src/Chap43/OrderedSetStPer.rs  depends upon only clean modules
 src/Chap43/OrderedTableMtEph.rs  depends upon only clean modules
-src/Chap43/OrderedTableMtPer.rs  depends upon holed modules: Chap43::OrderedTableStPer
+src/Chap43/OrderedTableMtPer.rs  depends upon only clean modules
 src/Chap43/OrderedTableStEph.rs  depends upon only clean modules
 src/Chap43/OrderedTableStPer.rs  depends upon only clean modules
 src/Chap44/DocumentIndex.rs  depends upon only clean modules
@@ -2629,15 +2612,17 @@ Function Specs:
    7973 total fns
 
 
-Holes Found: 28 (actionable)
-   15 × assume() [algorithmic] (53%)
-   1 × assume() [rwlock:predicate] (3%)
-   11 × external_body (39%)
-   1 × opaque (3%)
-Real Proof Targets: 27 (28 total - 1 rwlock)
+Holes Found: 25 (actionable)
+   13 × assume() [algorithmic] (52%)
+   1 × assume() [rwlock:predicate] (4%)
+   10 × external_body (40%)
+      9 × root cause
+      1 × downstream (blocked by root causes)
+   1 × opaque (4%)
+Real Proof Targets: 24 (25 total - 1 rwlock)
 
 Per-Chapter Holes:
-  Chap43:  7  Chap52: 16  Chap62:  1
+  Chap43:  6  Chap52: 14  Chap62:  1
   Chap65:  4
 
 Warnings: 183 total
@@ -2653,8 +2638,8 @@ Accepted (reviewed): 67 total
    4 × unsafe_block_accept_hole
    3 × external_accept_hole
    1 × external_type_specification_accept_hole
-   1 × struct_outside_verus_accept_hole
    1 × enum_outside_verus_accept_hole
+   1 × struct_outside_verus_accept_hole
 
 Accepted by Chapter:
   Chap02:  6  Chap11:  6  Chap12: 19
@@ -2679,59 +2664,59 @@ Structural (info only): 222
 4.1. Worst src/* Directories (all dirs, by holes)
 =================================================================
 
-   1  Chap52  (16 holes, 14 files)
-   2  Chap43  (7 holes, 10 files)
+   1  Chap52  (14 holes, 14 files)
+   2  Chap43  (6 holes, 10 files)
    3  Chap65  (4 holes, 3 files)
    4  Chap62  (1 holes, 4 files)
-   5  Chap23  (0 holes, 2 files)
-   6  Chap30  (0 holes, 1 files)
-   7  Chap54  (0 holes, 4 files)
-   8  Chap44  (0 holes, 1 files)
-   9  Chap12  (0 holes, 3 files)
-   10  Chap57  (0 holes, 3 files)
+   5  Chap63  (0 holes, 2 files)
+   6  Chap06  (0 holes, 21 files)
+   7  Chap26  (0 holes, 8 files)
+   8  Chap35  (0 holes, 4 files)
+   9  Chap30  (0 holes, 1 files)
+   10  Chap19  (0 holes, 4 files)
    11  Chap27  (0 holes, 4 files)
-   12  Chap56  (0 holes, 10 files)
-   13  Chap19  (0 holes, 4 files)
-   14  Chap64  (0 holes, 3 files)
-   15  Chap17  (0 holes, 1 files)
-   16  Chap66  (0 holes, 2 files)
-   17  Chap47  (0 holes, 9 files)
-   18  Chap58  (0 holes, 2 files)
-   19  Chap41  (0 holes, 6 files)
-   20  Chap36  (0 holes, 3 files)
-   21  Concurrency  (0 holes, 1 files)
-   22  Chap40  (0 holes, 3 files)
-   23  Chap42  (0 holes, 3 files)
-   24  Chap51  (0 holes, 8 files)
-   25  Chap61  (0 holes, 4 files)
-   26  Chap03  (0 holes, 1 files)
-   27  Chap28  (0 holes, 11 files)
-   28  Chap50  (0 holes, 8 files)
-   29  Chap45  (0 holes, 6 files)
-   30  Chap63  (0 holes, 2 files)
-   31  Chap53  (0 holes, 5 files)
-   32  Chap38  (0 holes, 2 files)
-   33  Chap39  (0 holes, 4 files)
-   34  Chap37  (0 holes, 19 files)
-   35  Chap35  (0 holes, 4 files)
-   36  Chap55  (0 holes, 8 files)
-   37  Chap26  (0 holes, 8 files)
-   38  Chap59  (0 holes, 4 files)
-   39  Chap49  (0 holes, 8 files)
-   40  Chap06  (0 holes, 21 files)
-   41  Chap02  (0 holes, 2 files)
-   42  Chap18  (0 holes, 7 files)
-   43  Chap21  (0 holes, 5 files)
-   44  Chap05  (0 holes, 5 files)
-   45  Chap11  (0 holes, 5 files)
-   46  ParaPairs  (0 holes, 1 files)
+   12  Chap05  (0 holes, 5 files)
+   13  Chap36  (0 holes, 3 files)
+   14  ParaPairs  (0 holes, 1 files)
+   15  Chap55  (0 holes, 8 files)
+   16  Chap59  (0 holes, 4 files)
+   17  Chap02  (0 holes, 2 files)
+   18  Chap17  (0 holes, 1 files)
+   19  Chap56  (0 holes, 10 files)
+   20  Chap40  (0 holes, 3 files)
+   21  Chap38  (0 holes, 2 files)
+   22  Chap51  (0 holes, 8 files)
+   23  Chap61  (0 holes, 4 files)
+   24  Chap12  (0 holes, 3 files)
+   25  Chap39  (0 holes, 4 files)
+   26  Chap21  (0 holes, 5 files)
+   27  Chap54  (0 holes, 4 files)
+   28  Chap47  (0 holes, 9 files)
+   29  Chap23  (0 holes, 2 files)
+   30  Chap58  (0 holes, 2 files)
+   31  Concurrency  (0 holes, 1 files)
+   32  Chap49  (0 holes, 8 files)
+   33  Chap45  (0 holes, 6 files)
+   34  Chap53  (0 holes, 5 files)
+   35  Chap18  (0 holes, 7 files)
+   36  Chap03  (0 holes, 1 files)
+   37  Chap42  (0 holes, 3 files)
+   38  Chap44  (0 holes, 1 files)
+   39  Chap57  (0 holes, 3 files)
+   40  Chap41  (0 holes, 6 files)
+   41  Chap28  (0 holes, 11 files)
+   42  Chap64  (0 holes, 3 files)
+   43  Chap37  (0 holes, 19 files)
+   44  Chap50  (0 holes, 8 files)
+   45  Chap66  (0 holes, 2 files)
+   46  Chap11  (0 holes, 5 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
 =================================================================
 
-   1  src/Chap52/AdjTableGraphStEph.rs  (5 holes)
-   2  src/Chap43/OrderedTableStPer.rs  (2 holes)
+   1  src/Chap43/OrderedTableMtPer.rs  (6 holes)
+   2  src/Chap52/AdjTableGraphStEph.rs  (5 holes)
    3  src/Chap65/UnionFindStEph.rs  (2 holes)
    4  src/Chap62/StarPartitionMtEph.rs  (1 holes)
 
@@ -2739,7 +2724,8 @@ Structural (info only): 222
 4.3. Next Target Directories
 =================================================================
 
-   1  src/Chap62  (1 holes, 4 files)
+   1  src/Chap43  (6 holes, 10 files)
+   2  src/Chap62  (1 holes, 4 files)
 
 =================================================================
 4.4. Not Verusified
@@ -2757,7 +2743,7 @@ Structural (info only): 222
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 42 clean, 4 holed, 28 holes (global), 244 modules
+Chapter Status — 46 chapters, 42 clean, 4 holed, 25 holes (global), 244 modules
 
 CLEAN CHAPTERS (42)
   Chapter        Files
@@ -2805,11 +2791,11 @@ CLEAN CHAPTERS (42)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (4) — 28 holes
+HOLED CHAPTERS (4) — 25 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
-  Chap43             7    10  internal  Chap43::OrderedTableStPer
-  Chap52            16    14  NO        Chap43::OrderedTableMtPer
+  Chap43             6    10  YES       
+  Chap52            14    14  NO        Chap43::OrderedTableMtPer
   Chap62             1     4  YES       
   Chap65             4     3  internal  Chap65::UnionFindStEph
 
@@ -2822,8 +2808,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-28 13:04:07 -07:00
-Ended:     2026-03-28 13:04:08 -07:00
-Duration:  1632ms
+Started:   2026-03-28 13:57:19 -07:00
+Ended:     2026-03-28 13:57:21 -07:00
+Duration:  1915ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log
