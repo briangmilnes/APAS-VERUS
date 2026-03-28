@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap58/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap58/BellmanFordStEphF64.rs
 Full output: src/Chap58/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -21,7 +21,6 @@ Table of Contents:
 =================================================================
 
 ✓ BellmanFordStEphF64.rs
-✓ BellmanFordStEphI64.rs
 
 =================================================================
 2. Depends Upon
@@ -32,23 +31,21 @@ Table of Contents:
 =================================================================
 
 BellmanFordStEphF64  depends upon only clean modules
-BellmanFordStEphI64  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
 BellmanFordStEphF64.rs  depends upon only clean modules
-BellmanFordStEphI64.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   2 clean (no holes, no errors; 100%)
+   1 clean (no holes, no errors; 100%)
    0 holed (holes or errors, 0%)
-   2 total
+   1 total
 
 Proof Functions:
    0 clean (0%)
@@ -56,11 +53,11 @@ Proof Functions:
    0 total
 
 Function Specs:
-   4 exec fns with complete spec (requires+ensures) (80%)
-   1 exec fns missing spec (20%)
+   3 exec fns with complete spec (requires+ensures) (100%)
+   0 exec fns missing spec (0%)
    0 proof/spec fns clean (0%)
    0 proof/spec fns with holes (0%)
-   5 total fns
+   3 total fns
 
 
 Holes Found: 0 (actionable)
@@ -72,12 +69,8 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 17:53:02 -07:00
-Ended:     2026-03-27 17:53:02 -07:00
-Duration:  7ms
-
-Full output: src/Chap58/analyses/veracity-review-verus-proof-holes.log
-
-Duration:  7ms
+Started:   2026-03-27 18:42:48 -07:00
+Ended:     2026-03-27 18:42:48 -07:00
+Duration:  6ms
 
 Full output: src/Chap58/analyses/veracity-review-verus-proof-holes.log
