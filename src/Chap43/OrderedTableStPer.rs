@@ -498,6 +498,16 @@ broadcast use {
                 obeys_feq_clone::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
             ensures table@ == self@.remove(k@), table.spec_orderedtablestper_wf();
+        /// Like delete, but additionally ensures value preservation for remaining keys.
+        fn delete_wf(&self, k: &K) -> (table: Self)
+            requires
+                self.spec_orderedtablestper_wf(),
+                obeys_feq_clone::<Pair<K, V>>(),
+                obeys_view_eq::<K>(),
+            ensures
+                table@ == self@.remove(k@),
+                forall|k2: K::V| k2 != k@ && #[trigger] self@.contains_key(k2) ==> table@[k2] == self@[k2],
+                table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(n), Span Θ(n)
         fn domain(&self) -> (keys: ArraySetStEph<K>)
             requires self.spec_orderedtablestper_wf(), obeys_feq_clone::<K>()
@@ -965,6 +975,11 @@ broadcast use {
                 },
             }
             OrderedTableStPer { tree }
+        }
+
+        #[verifier::external_body]
+        fn delete_wf(&self, k: &K) -> (table: Self) {
+            self.delete(k)
         }
 
         fn domain(&self) -> (domain: ArraySetStEph<K>) {

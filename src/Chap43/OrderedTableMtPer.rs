@@ -162,6 +162,13 @@ pub mod OrderedTableMtPer {
                 updated@ == self@.remove(k@),
                 updated.spec_orderedtablemtper_wf();
 
+        /// Like delete, but additionally ensures value preservation for remaining keys.
+        fn delete_wf(&self, k: &K) -> (updated: Self)
+            ensures
+                updated@ == self@.remove(k@),
+                forall|k2: K::V| k2 != k@ && #[trigger] self@.contains_key(k2) ==> updated@[k2] == self@[k2],
+                updated.spec_orderedtablemtper_wf();
+
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.domain
         fn domain(&self) -> (domain: OrderedSetMtEph<K>)
@@ -337,6 +344,19 @@ pub mod OrderedTableMtPer {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let result = inner.delete(k);
+            read_handle.release_read();
+            let ghost view = result@;
+            OrderedTableMtPer {
+                locked_table: RwLock::new(result, Ghost(OrderedTableMtPerInv)),
+                ghost_locked_table: Ghost(view),
+            }
+        }
+
+        #[verifier::external_body]
+        fn delete_wf(&self, k: &K) -> (updated: Self) {
+            let read_handle = self.locked_table.acquire_read();
+            let inner = read_handle.borrow();
+            let result = inner.delete_wf(k);
             read_handle.release_read();
             let ghost view = result@;
             OrderedTableMtPer {
