@@ -46,6 +46,8 @@ verus! {
     pub trait LabUnDirGraphStEphTrait<V: HashOrd, L: StT + Hash>:
     View<V = LabGraphView<<V as View>::V, <L as View>::V>> + Sized {
 
+        spec fn spec_labundirgraphsteph_wf(&self) -> bool;
+
         open spec fn spec_finite(&self) -> bool {
             self@.V.finite() && self@.A.finite()
         }
@@ -139,6 +141,10 @@ verus! {
     }
 
     impl<V: HashOrd, L: StT + Hash> LabUnDirGraphStEphTrait<V, L> for LabUnDirGraphStEph<V, L> {
+
+        open spec fn spec_labundirgraphsteph_wf(&self) -> bool {
+            spec_labgraphview_wf(self@)
+        }
 
         fn empty() -> (g: LabUnDirGraphStEph<V, L>) {
             LabUnDirGraphStEph { vertices: SetStEph::empty(), labeled_edges: SetStEph::empty() }

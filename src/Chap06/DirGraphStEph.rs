@@ -75,6 +75,8 @@ verus! {
     pub trait DirGraphStEphTrait<V: StT + Hash>:
          View<V = GraphView<<V as View>::V>> + Sized {
 
+        spec fn spec_dirgraphsteph_wf(&self) -> bool;
+
         open spec fn spec_n_plus(&self, v: V::V) -> Set<V::V>
             recommends spec_graphview_wf(self@), self@.V.contains(v)
         { Set::new(|w: V::V| self@.A.contains((v, w))) }
@@ -237,6 +239,10 @@ verus! {
     }
 
     impl<V: StT + Hash> DirGraphStEphTrait<V> for DirGraphStEph<V> {
+
+        open spec fn spec_dirgraphsteph_wf(&self) -> bool {
+            spec_graphview_wf(self@)
+        }
 
         fn empty() -> (g: DirGraphStEph<V>) { DirGraphStEph { V: SetStEph::empty(), A: SetStEph::empty() } }
 

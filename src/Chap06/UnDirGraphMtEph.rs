@@ -588,7 +588,7 @@ pub mod UnDirGraphMtEph {
     }
 
     pub trait LockedUnDirGraphMtEphTrait<V: StTInMtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
-        spec fn spec_lockedundirgraphmteph_wf(&self) -> bool;
+        spec fn spec_undirgraphmteph_wf(&self) -> bool;
 
         fn new(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> (s: Self)
             requires
@@ -598,36 +598,36 @@ pub mod UnDirGraphMtEph {
                 forall |u: V::V, w: V::V|
                     #[trigger] E@.contains((u, w)) ==> V@.contains(u) && V@.contains(w),
             ensures
-                s.spec_lockedundirgraphmteph_wf(),
+                s.spec_undirgraphmteph_wf(),
                 s@.V == V@,
                 s@.A == E@;
 
         fn vertices(&self) -> (v: SetStEph<V>)
-            requires self.spec_lockedundirgraphmteph_wf()
+            requires self.spec_undirgraphmteph_wf()
             ensures v@ == self@.V;
 
         fn edges(&self) -> (e: SetStEph<Edge<V>>)
-            requires self.spec_lockedundirgraphmteph_wf()
+            requires self.spec_undirgraphmteph_wf()
             ensures e@ == self@.A;
 
         fn sizeV(&self) -> (n: usize)
-            requires self.spec_lockedundirgraphmteph_wf()
+            requires self.spec_undirgraphmteph_wf()
             ensures n == self@.V.len();
 
         fn sizeE(&self) -> (n: usize)
-            requires self.spec_lockedundirgraphmteph_wf()
+            requires self.spec_undirgraphmteph_wf()
             ensures n == self@.A.len();
 
         fn neighbor(&self, u: &V, v: &V) -> (b: bool)
             requires
-                self.spec_lockedundirgraphmteph_wf(),
+                self.spec_undirgraphmteph_wf(),
                 self@.V.contains(u@),
                 self@.V.contains(v@),
             ensures b == (self@.A.contains((u@, v@)) || self@.A.contains((v@, u@)));
 
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
             requires
-                self.spec_lockedundirgraphmteph_wf(),
+                self.spec_undirgraphmteph_wf(),
                 self@.V.contains(v@),
             ensures
                 neighbors.spec_setsteph_wf(),
@@ -635,7 +635,7 @@ pub mod UnDirGraphMtEph {
 
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>)
             requires
-                self.spec_lockedundirgraphmteph_wf(),
+                self.spec_undirgraphmteph_wf(),
                 u_set@ <= self@.V,
             ensures
                 neighbors.spec_setsteph_wf(),
@@ -643,7 +643,7 @@ pub mod UnDirGraphMtEph {
     }
 
     impl<V: StTInMtT + Hash + 'static> LockedUnDirGraphMtEphTrait<V> for LockedUnDirGraphMtEph<V> {
-        open spec fn spec_lockedundirgraphmteph_wf(&self) -> bool {
+        open spec fn spec_undirgraphmteph_wf(&self) -> bool {
             spec_graphview_wf(self@)
         }
 

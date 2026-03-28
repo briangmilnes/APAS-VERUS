@@ -74,6 +74,8 @@ verus! {
     pub trait UnDirGraphStEphTrait<V: StT + Hash>:
     View<V = GraphView<<V as View>::V>> + Sized {
 
+        spec fn spec_undirgraphsteph_wf(&self) -> bool;
+
         open spec fn spec_ng(&self, v: V::V) -> Set<V::V> 
             recommends spec_graphview_wf(self@), self@.V.contains(v)
         { 
@@ -186,6 +188,10 @@ verus! {
     //		9. impls
 
     impl<V: StT + Hash> UnDirGraphStEphTrait<V> for UnDirGraphStEph<V> {
+
+        open spec fn spec_undirgraphsteph_wf(&self) -> bool {
+            spec_graphview_wf(self@)
+        }
 
         fn empty() -> (g: UnDirGraphStEph<V>) {
             UnDirGraphStEph { V: SetStEph::empty(), E: SetStEph::empty() }

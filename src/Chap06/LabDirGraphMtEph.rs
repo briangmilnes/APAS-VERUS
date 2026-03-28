@@ -747,7 +747,7 @@ pub mod LabDirGraphMtEph {
     pub trait LockedLabDirGraphMtEphTrait<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static>
         : View<V = LabGraphView<<V as View>::V, <L as View>::V>> + Sized
     {
-        spec fn spec_lockedlabdirgraphmteph_wf(&self) -> bool;
+        spec fn spec_labdirgraphmteph_wf(&self) -> bool;
 
         fn new(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (s: Self)
             requires
@@ -757,23 +757,23 @@ pub mod LabDirGraphMtEph {
                 forall |u: V::V, w: V::V, l: L::V|
                     #[trigger] labeled_arcs@.contains((u, w, l)) ==> vertices@.contains(u) && vertices@.contains(w),
             ensures
-                s.spec_lockedlabdirgraphmteph_wf(),
+                s.spec_labdirgraphmteph_wf(),
                 s@.V == vertices@,
                 s@.A == labeled_arcs@;
 
         fn add_vertex(&mut self, v: V) -> (r: std::result::Result<(), ()>)
-            requires old(self).spec_lockedlabdirgraphmteph_wf()
+            requires old(self).spec_labdirgraphmteph_wf()
             ensures
-                self.spec_lockedlabdirgraphmteph_wf(),
+                self.spec_labdirgraphmteph_wf(),
                 match r {
                     Ok(_) => self@.V == old(self)@.V.insert(v@) && self@.A == old(self)@.A,
                     Err(_) => self@ == old(self)@,
                 };
 
         fn add_labeled_arc(&mut self, from: V, to: V, label: L) -> (r: std::result::Result<(), ()>)
-            requires old(self).spec_lockedlabdirgraphmteph_wf()
+            requires old(self).spec_labdirgraphmteph_wf()
             ensures
-                self.spec_lockedlabdirgraphmteph_wf(),
+                self.spec_labdirgraphmteph_wf(),
                 match r {
                     Ok(_) => self@.V == old(self)@.V.insert(from@).insert(to@)
                           && self@.A == old(self)@.A.insert((from@, to@, label@)),
@@ -782,7 +782,7 @@ pub mod LabDirGraphMtEph {
 
         fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>)
             requires
-                self.spec_lockedlabdirgraphmteph_wf(),
+                self.spec_labdirgraphmteph_wf(),
                 self@.V.contains(v@),
             ensures
                 n_plus.spec_setsteph_wf(),
@@ -790,7 +790,7 @@ pub mod LabDirGraphMtEph {
 
         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>)
             requires
-                self.spec_lockedlabdirgraphmteph_wf(),
+                self.spec_labdirgraphmteph_wf(),
                 self@.V.contains(v@),
             ensures
                 n_minus.spec_setsteph_wf(),
@@ -798,7 +798,7 @@ pub mod LabDirGraphMtEph {
     }
 
     impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> LockedLabDirGraphMtEphTrait<V, L> for LockedLabDirGraphMtEph<V, L> {
-        open spec fn spec_lockedlabdirgraphmteph_wf(&self) -> bool {
+        open spec fn spec_labdirgraphmteph_wf(&self) -> bool {
             spec_labgraphview_wf(self@)
         }
 
