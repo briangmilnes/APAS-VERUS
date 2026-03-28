@@ -76,8 +76,8 @@ verus! {
         /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(|V| + |E|) — sequential
         fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> (g: LabUnDirGraphStEph<V, L>)
             requires
-                forall |u: V::V, w: V::V, l: L::V| 
-                    #[trigger] labeled_edges@.contains((u, w, l)) ==> 
+                forall |u: V::V, w: V::V, l: L::V|
+                    #[trigger] labeled_edges@.contains((u, w, l)) ==>
                         vertices@.contains(u) && vertices@.contains(w),
             ensures
                 spec_labgraphview_wf(g@),
@@ -146,12 +146,16 @@ verus! {
             spec_labgraphview_wf(self@)
         }
 
-        fn empty() -> (g: LabUnDirGraphStEph<V, L>) {
+        fn empty() -> (g: LabUnDirGraphStEph<V, L>)
+            ensures g.spec_labundirgraphsteph_wf()
+        {
             LabUnDirGraphStEph { vertices: SetStEph::empty(), labeled_edges: SetStEph::empty() }
         }
 
-        fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> (g: LabUnDirGraphStEph<V, L>) { 
-            LabUnDirGraphStEph { vertices, labeled_edges } 
+        fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> (g: LabUnDirGraphStEph<V, L>)
+            ensures g.spec_labundirgraphsteph_wf()
+        {
+            LabUnDirGraphStEph { vertices, labeled_edges }
         }
 
         fn vertices(&self) -> (v: &SetStEph<V>) { &self.vertices }

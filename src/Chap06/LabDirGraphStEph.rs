@@ -80,8 +80,8 @@ verus! {
         /// - Claude-Opus-4.6: Work Θ(|V| + |A|), Span Θ(|V| + |A|), Parallelism Θ(1) - sequential
         fn from_vertices_and_labeled_arcs(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (g: LabDirGraphStEph<V, L>)
             requires
-                forall |u: V::V, w: V::V, l: L::V| 
-                    #[trigger] labeled_arcs@.contains((u, w, l)) ==> 
+                forall |u: V::V, w: V::V, l: L::V|
+                    #[trigger] labeled_arcs@.contains((u, w, l)) ==>
                         vertices@.contains(u) && vertices@.contains(w),
             ensures
                 spec_labgraphview_wf(g@),
@@ -153,12 +153,16 @@ verus! {
             spec_labgraphview_wf(self@)
         }
 
-        fn empty() -> (g: LabDirGraphStEph<V, L>) {
+        fn empty() -> (g: LabDirGraphStEph<V, L>)
+            ensures g.spec_labdirgraphsteph_wf()
+        {
             LabDirGraphStEph { vertices: SetStEph::empty(), labeled_arcs: SetStEph::empty() }
         }
 
-        fn from_vertices_and_labeled_arcs(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (g: LabDirGraphStEph<V, L>) { 
-            LabDirGraphStEph { vertices, labeled_arcs } 
+        fn from_vertices_and_labeled_arcs(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (g: LabDirGraphStEph<V, L>)
+            ensures g.spec_labdirgraphsteph_wf()
+        {
+            LabDirGraphStEph { vertices, labeled_arcs }
         }
 
         fn vertices(&self) -> (v: &SetStEph<V>) { &self.vertices }

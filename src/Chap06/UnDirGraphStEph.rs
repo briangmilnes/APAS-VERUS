@@ -107,7 +107,7 @@ verus! {
         /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(|V| + |E|) -- sequential
         fn from_sets(vertices: SetStEph<V>, edges: SetStEph<Edge<V>>) -> (g: UnDirGraphStEph<V>)
             requires
-                forall |u: V::V, w: V::V| 
+                forall |u: V::V, w: V::V|
                     #[trigger] edges@.contains((u, w)) ==> vertices@.contains(u) && vertices@.contains(w),
             ensures
                 spec_graphview_wf(g@),
@@ -193,12 +193,16 @@ verus! {
             spec_graphview_wf(self@)
         }
 
-        fn empty() -> (g: UnDirGraphStEph<V>) {
+        fn empty() -> (g: UnDirGraphStEph<V>)
+            ensures g.spec_undirgraphsteph_wf()
+        {
             UnDirGraphStEph { V: SetStEph::empty(), E: SetStEph::empty() }
         }
 
-        fn from_sets(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> (g: UnDirGraphStEph<V>) { 
-            UnDirGraphStEph { V, E } 
+        fn from_sets(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> (g: UnDirGraphStEph<V>)
+            ensures g.spec_undirgraphsteph_wf()
+        {
+            UnDirGraphStEph { V, E }
         }
 
         fn vertices(&self) -> (v: &SetStEph<V>) { &self.V }
