@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap57/DijkstraStEphU64.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap57/
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,11 +20,13 @@ Table of Contents:
 1. File Holes
 =================================================================
 
+✓ DijkstraStEphF64.rs
 ℹ DijkstraStEphU64.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:112: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:129: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphU64.rs:112: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphU64.rs:129: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
    Info: 2 × structural_false_positive
    4 clean proof functions
+✓ StackStEph.rs
 
 =================================================================
 2. Depends Upon
@@ -34,22 +36,26 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
+DijkstraStEphF64  depends upon only clean modules
 DijkstraStEphU64  depends upon only clean modules
+StackStEph  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
+DijkstraStEphF64.rs  depends upon only clean modules
 DijkstraStEphU64.rs  depends upon only clean modules
+StackStEph.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   1 clean (no holes, no errors; 100%)
+   3 clean (no holes, no errors; 100%)
    0 holed (holes or errors, 0%)
-   1 total
+   3 total
 
 Proof Functions:
    4 clean (100%)
@@ -57,11 +63,11 @@ Proof Functions:
    4 total
 
 Function Specs:
-   6 exec fns with complete spec (requires+ensures) (40%)
-   1 exec fns missing spec (6%)
-   8 proof/spec fns clean (53%)
+   21 exec fns with complete spec (requires+ensures) (63%)
+   1 exec fns missing spec (3%)
+   11 proof/spec fns clean (33%)
    0 proof/spec fns with holes (0%)
-   15 total fns
+   33 total fns
 
 
 Holes Found: 0 (actionable)
@@ -76,8 +82,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 18:40:26 -07:00
-Ended:     2026-03-27 18:40:26 -07:00
+Started:   2026-03-27 18:50:03 -07:00
+Ended:     2026-03-27 18:50:03 -07:00
 Duration:  5ms
 
+Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log

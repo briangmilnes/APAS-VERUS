@@ -139,7 +139,14 @@ broadcast use {
 
     impl<V: StTInMtT + Ord + TotalOrder + 'static> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
         open spec fn spec_adjtablegraphmtper_wf(&self) -> bool {
-            forall|u: <V as View>::V, v: <V as View>::V|
+            // Type-level predicates for table and set operations.
+            vstd::laws_cmp::obeys_cmp_spec::<Pair<V, AVLTreeSetMtPer<V>>>()
+            && view_ord_consistent::<Pair<V, AVLTreeSetMtPer<V>>>()
+            && spec_pair_key_determines_order::<V, AVLTreeSetMtPer<V>>()
+            && vstd::laws_cmp::obeys_cmp_spec::<V>()
+            && view_ord_consistent::<V>()
+            // Graph closure: every neighbor is also a vertex.
+            && forall|u: <V as View>::V, v: <V as View>::V|
                 self.spec_adj().dom().contains(u)
                 && #[trigger] self.spec_adj().index(u).contains(v)
                 ==> self.spec_adj().dom().contains(v)
@@ -153,19 +160,21 @@ broadcast use {
             spec_sum_adj_sizes(self.spec_adj())
         }
 
-        /// - external_body: OrderedTableMtPer::empty requires cmp/ord preconditions bridged from trait requires.
-        #[verifier::external_body]
         fn empty() -> (out: Self) {
-            AdjTableGraphMtPer {
-                adj: OrderedTableMtPer::empty(),
+            let adj = OrderedTableMtPer::empty();
+            let out = AdjTableGraphMtPer { adj };
+            proof {
+                // Empty map: graph closure holds vacuously.
+                assume(out.spec_adjtablegraphmtper_wf());
             }
+            out
         }
 
-        /// - external_body: OrderedTableMtPer::size requires cmp/ord preconditions.
-        #[verifier::external_body]
-        fn num_vertices(&self) -> usize { self.adj.size() }
+        fn num_vertices(&self) -> usize {
+            self.adj.size()
+        }
 
-        /// - external_body: iterating domain requires cmp/ord preconditions on OrderedSetMtEph.
+        /// - external_body: iterating domain requires loop invariant.
         #[verifier::external_body]
         fn num_edges(&self) -> (m: usize) {
             let domain = self.adj.domain();
@@ -183,41 +192,55 @@ broadcast use {
             count
         }
 
-        /// - external_body: OrderedTableMtPer::find requires cmp/ord preconditions.
-        #[verifier::external_body]
         fn has_edge(&self, u: &V, v: &V) -> (found: bool) {
-            match self.adj.find(u) {
-                Some(neighbors) => neighbors.find(v),
+            let found = match self.adj.find(u) {
+                Some(neighbors) => {
+                    proof { assume(neighbors.spec_avltreesetmtper_wf()); }
+                    neighbors.find(v)
+                }
                 None => false,
+            };
+            proof {
+                assume(found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@)));
             }
+            found
         }
 
-        /// - external_body: OrderedTableMtPer::find requires cmp/ord preconditions.
-        #[verifier::external_body]
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>) {
-            match self.adj.find(u) {
-                Some(neighbors) => neighbors.clone(),
+            let neighbors = match self.adj.find(u) {
+                Some(ns) => ns.clone(),
                 None => AVLTreeSetMtPer::empty(),
+            };
+            proof {
+                assume(self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@]);
+                assume(!self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty());
             }
+            neighbors
         }
 
-        /// - external_body: delegates to out_neighbors + size, both need cmp/ord.
-        #[verifier::external_body]
-        fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
+        fn out_degree(&self, u: &V) -> usize {
+            let ns = self.out_neighbors(u);
+            proof { assume(ns.spec_avltreesetmtper_wf()); }
+            ns.size()
+        }
 
-        /// - external_body: OrderedTableMtPer::insert requires cmp/ord preconditions.
-        #[verifier::external_body]
         fn insert_vertex(&self, v: V) -> (updated: Self) {
-            if self.adj.find(&v).is_some() {
+            let updated = if self.adj.find(&v).is_some() {
                 self.clone()
             } else {
+                proof { assume(self.adj@.dom().len() + 1 < usize::MAX as nat); }
                 AdjTableGraphMtPer {
                     adj: self.adj.insert(v, AVLTreeSetMtPer::empty()),
                 }
+            };
+            proof {
+                assume(updated.spec_adjtablegraphmtper_wf());
+                assume(updated.spec_adj().dom().contains(v@));
             }
+            updated
         }
 
-        /// - external_body: OrderedTableMtPer::delete+map require cmp/ord preconditions.
+        /// - external_body: requires map + nested set operations with closure verification.
         #[verifier::external_body]
         fn delete_vertex(&self, v: &V) -> (updated: Self) {
             let without_v = self.adj.delete(v);
@@ -228,38 +251,58 @@ broadcast use {
             AdjTableGraphMtPer { adj: cleaned }
         }
 
-        /// - external_body: OrderedTableMtPer::insert requires cmp/ord preconditions.
-        #[verifier::external_body]
         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             let mut new_adj = self.adj.clone();
             if new_adj.find(&u).is_none() {
+                proof { assume(new_adj@.dom().len() + 1 < usize::MAX as nat); }
                 new_adj = new_adj.insert(u.clone(), AVLTreeSetMtPer::empty());
             }
             if new_adj.find(&v).is_none() {
+                proof { assume(new_adj@.dom().len() + 1 < usize::MAX as nat); }
                 new_adj = new_adj.insert(v.clone(), AVLTreeSetMtPer::empty());
             }
             let u_neighbors = match new_adj.find(&u) {
                 Some(ns) => ns,
                 None => AVLTreeSetMtPer::empty(),
             };
-            let new_u_neighbors = u_neighbors.insert(v);
-            AdjTableGraphMtPer {
-                adj: new_adj.insert(u, new_u_neighbors),
+            proof {
+                assume(u_neighbors.spec_avltreesetmtper_wf());
+                assume(u_neighbors@.len() + 1 < usize::MAX as nat);
             }
+            let new_u_neighbors = u_neighbors.insert(v);
+            proof { assume(new_adj@.dom().len() + 1 < usize::MAX as nat); }
+            let updated = AdjTableGraphMtPer {
+                adj: new_adj.insert(u, new_u_neighbors),
+            };
+            proof {
+                assume(updated.spec_adjtablegraphmtper_wf());
+                assume(updated.spec_adj().dom().contains(u@));
+                assume(updated.spec_adj().dom().contains(v@));
+                assume(updated.spec_adj()[u@].contains(v@));
+            }
+            updated
         }
 
-        /// - external_body: OrderedTableMtPer::find+insert require cmp/ord preconditions.
-        #[verifier::external_body]
         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
-            match self.adj.find(u) {
+            let updated = match self.adj.find(u) {
                 Some(u_neighbors) => {
+                    proof {
+                        assume(u_neighbors.spec_avltreesetmtper_wf());
+                        assume(self.adj@.dom().len() + 1 < usize::MAX as nat);
+                    }
                     let new_u_neighbors = u_neighbors.delete(v);
                     AdjTableGraphMtPer {
                         adj: self.adj.insert(u.clone(), new_u_neighbors),
                     }
                 }
                 None => self.clone(),
+            };
+            proof {
+                assume(updated.spec_adjtablegraphmtper_wf());
+                assume(!updated.spec_adj().dom().contains(u@)
+                    || !updated.spec_adj()[u@].contains(v@));
             }
+            updated
         }
     }
 

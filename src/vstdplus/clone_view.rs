@@ -87,6 +87,17 @@ pub mod clone_view {
         }
     }
 
+    /// Trait for types whose clone preserves well-formedness.
+    /// Same category as the eq/clone workaround — Clone preserves structural
+    /// invariants (sorted, balanced, no-dup) that Verus cannot derive generically.
+    pub trait ClonePreservesWf: Clone + View + Sized {
+        spec fn spec_wf(&self) -> bool;
+
+        fn clone_wf(&self) -> (result: Self)
+            requires self.spec_wf(),
+            ensures result.spec_wf(), result@ == self@;
+    }
+
     } // verus!
 }
 
@@ -99,5 +110,10 @@ pub mod clone_view {
 
     impl<T: Clone> ClonePreservesView for T {
         fn clone_view(&self) -> Self { self.clone() }
+    }
+
+    /// Trait for types whose clone preserves well-formedness.
+    pub trait ClonePreservesWf: Clone + Sized {
+        fn clone_wf(&self) -> Self;
     }
 }

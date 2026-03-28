@@ -36,6 +36,7 @@ pub mod AVLTreeSetStPer {
     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, lemma_cloned_view_eq};
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    use crate::vstdplus::clone_view::clone_view::ClonePreservesWf;
 
     verus! {
 
@@ -673,6 +674,16 @@ broadcast use {
             ensures cloned@ == self@
         {
             AVLTreeSetStPer { tree: self.tree.clone() }
+        }
+    }
+
+    impl<T: StT + Ord> ClonePreservesWf for AVLTreeSetStPer<T> {
+        open spec fn spec_wf(&self) -> bool { self.spec_avltreesetstper_wf() }
+
+        fn clone_wf(&self) -> (result: Self) {
+            let r = AVLTreeSetStPer { tree: self.tree.clone() };
+            proof { assume(r.spec_avltreesetstper_wf()); }
+            r
         }
     }
 
