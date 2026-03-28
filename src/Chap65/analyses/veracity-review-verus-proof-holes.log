@@ -21,22 +21,33 @@ Table of Contents:
 =================================================================
 
 ❌ KruskalStEph.rs
+<<<<<<< HEAD
 /home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:40: error: opaque - #[verifier::opaque]
         41 |         pub open spec fn uf_wf_opaque<V: HashOrd>(uf: &UnionFindStEph<V>) -> bool {
 /home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:49: error: external_body - #[verifier::external_body]
+=======
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/KruskalStEph.rs:40: error: opaque - #[verifier::opaque]
+        41 |         pub open spec fn uf_wf_opaque<V: HashOrd>(uf: &UnionFindStEph<V>) -> bool {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/KruskalStEph.rs:49: error: external_body - #[verifier::external_body]
+>>>>>>> agent3/ready
         50 |         pub fn kruskal_process_edge<V: HashOrd>(
    Holes: 2 total
       1 × external_body
       1 × opaque
    Proof functions: 1 total (1 clean, 0 holed)
 ⚠ PrimStEph.rs
+<<<<<<< HEAD
 /home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:457: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+=======
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/PrimStEph.rs:457: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+>>>>>>> agent3/ready
        453 |         fn clone(&self) -> (result: Self)
             ...
        455 |         {
        456 |             let result = PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() };
        458 |             result
        459 |         }
+<<<<<<< HEAD
 /home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:217: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
 ❌ UnionFindStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1087: error: external_body - #[verifier::external_body]
@@ -44,13 +55,26 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1315: error: external_body - #[verifier::external_body]
       1316 |         fn union(&mut self, u: &V, v: &V) {
 /home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:914: error: fn_missing_wf_requires - fn union_merge_exec — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
+=======
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/PrimStEph.rs:217: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
+❌ UnionFindStEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:1087: error: external_body - #[verifier::external_body]
+      1088 |     fn union_merge<V: StT + Hash>(
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:1315: error: external_body - #[verifier::external_body]
+      1316 |         fn union(&mut self, u: &V, v: &V) {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:914: error: fn_missing_wf_requires - fn union_merge_exec — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
+>>>>>>> agent3/ready
        890 |     proof fn lemma_union_wf_frame<V: StT + Hash>(
             ...
        912 |     /// the quantified wf proof, keeping Z3 under 4 GB.
        913 |     #[verifier::rlimit(30)]
        915 |         uf: &mut UnionFindStEph<V>,
        916 |         root_u: V,
+<<<<<<< HEAD
 /home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1088: error: fn_missing_wf_requires - fn union_merge — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
+=======
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:1088: error: fn_missing_wf_requires - fn union_merge — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
+>>>>>>> agent3/ready
       1014 |     proof fn lemma_union_merge_wf<V: StT + Hash>(
             ...
       1086 |     /// lemma_union_merge_wf to keep &mut encoding out of the proof context.
@@ -120,6 +144,7 @@ Structural (info only): 1
 =================================================================
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 Started:   2026-03-28 10:21:17 -07:00
 Ended:     2026-03-28 10:21:17 -07:00
 Duration:  23ms
@@ -134,3 +159,11 @@ Duration:  25ms
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
 >>>>>>> agent1/ready
+=======
+Started:   2026-03-28 10:47:32 -07:00
+Ended:     2026-03-28 10:47:33 -07:00
+Duration:  28ms
+
+Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
+ll output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
+>>>>>>> agent3/ready
