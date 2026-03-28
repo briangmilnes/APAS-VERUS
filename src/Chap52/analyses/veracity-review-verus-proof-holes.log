@@ -27,7 +27,7 @@ Table of Contents:
 ✓ AdjMatrixGraphStEph.rs
    3 clean proof functions
 ⚠ AdjMatrixGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjMatrixGraphStPer.rs:477: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:477: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        473 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        475 |         {
@@ -41,7 +41,7 @@ Table of Contents:
 ✓ AdjSeqGraphStEph.rs
    2 clean proof functions
 ⚠ AdjSeqGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjSeqGraphStPer.rs:513: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:513: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        509 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        511 |         {
@@ -49,159 +49,159 @@ Table of Contents:
        514 |             equal
        515 |         }
 ❌ AdjTableGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:211: error: assume() [rwlock:predicate] - assume(neighbors.spec_avltreesetmtper_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:211: error: assume() [rwlock:predicate] - assume(neighbors.spec_avltreesetmtper_wf());
        191 |         fn num_edges(&self) -> (m: usize) {
             ...
        209 |                         // find() has no ensures — cannot prove wf of returned set.
        210 |                         // blocked by weak OrderedTableMtPer::find ensures
        212 |                         // Overflow: partial sum + current size <= total edges.
        213 |                         // blocked by weak OrderedTableMtPer::find/domain ensures
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:214: error: assume() [algorithmic] - assume(count as nat + neighbors@.len() <= self.spec_num_edge
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:214: error: assume() [algorithmic] - assume(count as nat + neighbors@.len() <= self.spec_num_edge
        191 |         fn num_edges(&self) -> (m: usize) {
             ...
        212 |                         // Overflow: partial sum + current size <= total edges.
        213 |                         // blocked by weak OrderedTableMtPer::find/domain ensures
        215 |                     }
        216 |                     count = count + neighbors.size();
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:227: error: assume() [algorithmic] - assume(count as nat == self.spec_num_edges());
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:227: error: assume() [algorithmic] - assume(count as nat == self.spec_num_edges());
        191 |         fn num_edges(&self) -> (m: usize) {
             ...
        225 |                 // spec_sum_adj_sizes requires both domain and find specs.
        226 |                 // blocked by weak OrderedTableMtPer domain/find ensures
        228 |             }
        229 |             count
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:235: error: assume() [rwlock:predicate] - proof { assume(neighbors.spec_avltreesetmtper_wf()); }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:235: error: assume() [rwlock:predicate] - proof { assume(neighbors.spec_avltreesetmtper_wf()); }
        232 |         fn has_edge(&self, u: &V, v: &V) -> (found: bool) {
             ...
        233 |             let found = match self.adj.find(u) {
        234 |                 Some(neighbors) => {
        236 |                     neighbors.find(v)
        237 |                 }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:241: error: assume() [algorithmic] - assume(found == (self.spec_adj().dom().contains(u@) && self.
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:241: error: assume() [algorithmic] - assume(found == (self.spec_adj().dom().contains(u@) && self.
        232 |         fn has_edge(&self, u: &V, v: &V) -> (found: bool) {
             ...
        239 |             };
        240 |             proof {
        242 |             }
        243 |             found
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:252: error: assume() [algorithmic] - assume(self.spec_adj().dom().contains(u@) ==> neighbors@ == 
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:252: error: assume() [algorithmic] - assume(self.spec_adj().dom().contains(u@) ==> neighbors@ == 
        246 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>) {
             ...
        250 |             };
        251 |             proof {
        253 |                 assume(!self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty());
        254 |             }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:253: error: assume() [algorithmic] - assume(!self.spec_adj().dom().contains(u@) ==> neighbors@ ==
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:253: error: assume() [algorithmic] - assume(!self.spec_adj().dom().contains(u@) ==> neighbors@ ==
        246 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>) {
             ...
        251 |             proof {
        252 |                 assume(self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@]);
        254 |             }
        255 |             neighbors
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:260: error: assume() [rwlock:predicate] - proof { assume(ns.spec_avltreesetmtper_wf()); }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:260: error: assume() [rwlock:predicate] - proof { assume(ns.spec_avltreesetmtper_wf()); }
        258 |         fn out_degree(&self, u: &V) -> usize {
        259 |             let ns = self.out_neighbors(u);
        261 |             ns.size()
        262 |         }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:273: error: assume() [rwlock:predicate] - assume(updated.spec_adjtablegraphmtper_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:273: error: assume() [rwlock:predicate] - assume(updated.spec_adjtablegraphmtper_wf());
        264 |         fn insert_vertex(&self, v: V) -> (updated: Self) {
             ...
        271 |             };
        272 |             proof {
        274 |                 assume(updated.spec_adj().dom().contains(v@));
        275 |             }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:274: error: assume() [algorithmic] - assume(updated.spec_adj().dom().contains(v@));
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:274: error: assume() [algorithmic] - assume(updated.spec_adj().dom().contains(v@));
        264 |         fn insert_vertex(&self, v: V) -> (updated: Self) {
             ...
        272 |             proof {
        273 |                 assume(updated.spec_adjtablegraphmtper_wf());
        275 |             }
        276 |             updated
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:293: error: assume() [rwlock:predicate] - assume(updated.spec_adjtablegraphmtper_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:293: error: assume() [rwlock:predicate] - assume(updated.spec_adjtablegraphmtper_wf());
        279 |         fn delete_vertex(&self, v: &V) -> (updated: Self) {
             ...
        291 |                 // from table, v removed from each neighbor set via map.
        292 |                 // blocked by Verus ICE + weak OrderedTableMtPer ensures
        294 |                 assume(!updated.spec_adj().dom().contains(v@));
        295 |             }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:294: error: assume() [algorithmic] - assume(!updated.spec_adj().dom().contains(v@));
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:294: error: assume() [algorithmic] - assume(!updated.spec_adj().dom().contains(v@));
        279 |         fn delete_vertex(&self, v: &V) -> (updated: Self) {
             ...
        292 |                 // blocked by Verus ICE + weak OrderedTableMtPer ensures
        293 |                 assume(updated.spec_adjtablegraphmtper_wf());
        295 |             }
        296 |             updated
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:305: error: assume() [algorithmic] - proof { assume(new_adj@.dom().len() + 1 < usize::MAX as nat)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:305: error: assume() [algorithmic] - proof { assume(new_adj@.dom().len() + 1 < usize::MAX as nat)
        299 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             ...
        303 |             }
        304 |             if new_adj.find(&v).is_none() {
        306 |                 new_adj = new_adj.insert(v.clone(), AVLTreeSetMtPer::empty());
        307 |             }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:313: error: assume() [rwlock:predicate] - assume(u_neighbors.spec_avltreesetmtper_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:313: error: assume() [rwlock:predicate] - assume(u_neighbors.spec_avltreesetmtper_wf());
        299 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             ...
        311 |             };
        312 |             proof {
        314 |                 assume(u_neighbors@.len() + 1 < usize::MAX as nat);
        315 |             }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:314: error: assume() [algorithmic] - assume(u_neighbors@.len() + 1 < usize::MAX as nat);
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:314: error: assume() [algorithmic] - assume(u_neighbors@.len() + 1 < usize::MAX as nat);
        299 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             ...
        312 |             proof {
        313 |                 assume(u_neighbors.spec_avltreesetmtper_wf());
        315 |             }
        316 |             let new_u_neighbors = u_neighbors.insert(v);
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:317: error: assume() [algorithmic] - proof { assume(new_adj@.dom().len() + 1 < usize::MAX as nat)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:317: error: assume() [algorithmic] - proof { assume(new_adj@.dom().len() + 1 < usize::MAX as nat)
        299 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             ...
        315 |             }
        316 |             let new_u_neighbors = u_neighbors.insert(v);
        318 |             let updated = AdjTableGraphMtPer {
        319 |                 adj: new_adj.insert(u, new_u_neighbors),
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:322: error: assume() [rwlock:predicate] - assume(updated.spec_adjtablegraphmtper_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:322: error: assume() [rwlock:predicate] - assume(updated.spec_adjtablegraphmtper_wf());
        299 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             ...
        320 |             };
        321 |             proof {
        323 |                 assume(updated.spec_adj().dom().contains(u@));
        324 |                 assume(updated.spec_adj().dom().contains(v@));
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:323: error: assume() [algorithmic] - assume(updated.spec_adj().dom().contains(u@));
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:323: error: assume() [algorithmic] - assume(updated.spec_adj().dom().contains(u@));
        299 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             ...
        321 |             proof {
        322 |                 assume(updated.spec_adjtablegraphmtper_wf());
        324 |                 assume(updated.spec_adj().dom().contains(v@));
        325 |                 assume(updated.spec_adj()[u@].contains(v@));
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:324: error: assume() [algorithmic] - assume(updated.spec_adj().dom().contains(v@));
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:324: error: assume() [algorithmic] - assume(updated.spec_adj().dom().contains(v@));
        299 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             ...
        322 |                 assume(updated.spec_adjtablegraphmtper_wf());
        323 |                 assume(updated.spec_adj().dom().contains(u@));
        325 |                 assume(updated.spec_adj()[u@].contains(v@));
        326 |             }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:325: error: assume() [algorithmic] - assume(updated.spec_adj()[u@].contains(v@));
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:325: error: assume() [algorithmic] - assume(updated.spec_adj()[u@].contains(v@));
        299 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             ...
        323 |                 assume(updated.spec_adj().dom().contains(u@));
        324 |                 assume(updated.spec_adj().dom().contains(v@));
        326 |             }
        327 |             updated
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:334: error: assume() [rwlock:predicate] - assume(u_neighbors.spec_avltreesetmtper_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:334: error: assume() [rwlock:predicate] - assume(u_neighbors.spec_avltreesetmtper_wf());
        330 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
             ...
        332 |                 Some(u_neighbors) => {
        333 |                     proof {
        335 |                     }
        336 |                     let new_u_neighbors = u_neighbors.delete(v);
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:344: error: assume() [rwlock:predicate] - assume(updated.spec_adjtablegraphmtper_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:344: error: assume() [rwlock:predicate] - assume(updated.spec_adjtablegraphmtper_wf());
        330 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
             ...
        342 |             };
        343 |             proof {
        345 |                 assume(!updated.spec_adj().dom().contains(u@)
        346 |                     || !updated.spec_adj()[u@].contains(v@));
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphMtPer.rs:345: error: assume() [algorithmic] - assume(!updated.spec_adj().dom().contains(u@)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:345: error: assume() [algorithmic] - assume(!updated.spec_adj().dom().contains(u@)
        330 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
             ...
        343 |             proof {
@@ -211,115 +211,94 @@ Table of Contents:
    Holes: 23 total
       23 × assume()
 ❌ AdjTableGraphStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphStEph.rs:448: error: assume() [algorithmic] - assume(self.spec_adjtablegraphsteph_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:448: error: assume() [algorithmic] - assume(self.spec_adjtablegraphsteph_wf());
        441 |         fn insert_vertex(&mut self, v: V) {
             ...
        446 |                 // prevents asserting forall over adj map. Graph closure holds because
        447 |                 // domain grew by {v@}, edge sets unchanged (clone) or empty (new vertex).
        449 |             }
        450 |         }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphStEph.rs:481: error: assume() [algorithmic] - assume(ns_ref.spec_avltreesetsteph_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:481: error: assume() [algorithmic] - assume(ns_ref.spec_avltreesetsteph_wf());
        452 |         fn delete_vertex(&mut self, v: &V) {
             ...
        479 |                         // that triggers Verus ICE on Set<V::V>.
        480 |                         // blocked by Verus ICE
        482 |                     }
        483 |                     let mut neighbors = ns_ref.clone_wf();
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphStEph.rs:495: error: assume() [algorithmic] - assume(self.spec_adjtablegraphsteph_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:495: error: assume() [algorithmic] - assume(self.spec_adjtablegraphsteph_wf());
        452 |         fn delete_vertex(&mut self, v: &V) {
             ...
        493 |                 // from each remaining neighbor set via loop.
        494 |                 // blocked by Verus ICE
        496 |             }
        497 |         }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphStEph.rs:543: error: assume() [algorithmic] - assume(self.spec_adjtablegraphsteph_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:550: error: assume() [algorithmic] - assume(self.spec_adjtablegraphsteph_wf());
        499 |         fn insert_edge(&mut self, u: V, v: V) {
             ...
-       541 |                 // Blocked: adj[u@].contains(v@) needs v.clone()@ == v@ (generic clone gap).
-       542 |                 // Blocked: wf needs forall over Set<V::V> (ICE) + stored-value wf (clone gap).
-       544 |                 assume(self.spec_adj()[u_view].contains(v_view));
-       545 |             }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphStEph.rs:544: error: assume() [algorithmic] - assume(self.spec_adj()[u_view].contains(v_view));
-       499 |         fn insert_edge(&mut self, u: V, v: V) {
+       548 |                 assert(self.spec_adj()[u_view].contains(v_view));
+       549 |                 // Blocked: wf needs forall over Set<V::V> (ICE) + stored-value wf.
+       551 |             }
+       552 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStEph.rs:569: error: assume() [algorithmic] - assume(self.spec_adjtablegraphsteph_wf());
+       554 |         fn delete_edge(&mut self, u: &V, v: &V) {
             ...
-       542 |                 // Blocked: wf needs forall over Set<V::V> (ICE) + stored-value wf (clone gap).
-       543 |                 assume(self.spec_adjtablegraphsteph_wf());
-       545 |             }
-       546 |         }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphStEph.rs:565: error: assume() [algorithmic] - assume(self.spec_adjtablegraphsteph_wf());
-       548 |         fn delete_edge(&mut self, u: &V, v: &V) {
-            ...
-       563 |             proof {
-       564 |                 // Clone gap + graph closure: Verus ICE on Set<V::V>.
-       566 |                 // If u@ not in domain: no changes, !dom.contains(u@) holds.
-       567 |                 // If u@ in domain: adj[u@] had v@ removed, !adj[u@].contains(v@) holds.
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphStEph.rs:571: error: assume() [algorithmic] - assume(!self.spec_adj().dom().contains(u_view)
-       548 |         fn delete_edge(&mut self, u: &V, v: &V) {
-            ...
-       569 |                 // that clone preserves the !contains(v@) property requires reasoning
-       570 |                 // through combine.ensures. Leave as assume for now.
-       572 |                     || !self.spec_adj()[u_view].contains(v_view));
-       573 |             }
-   Holes: 7 total
-      7 × assume()
+       567 |             }
+       568 |             proof {
+       570 |             }
+       571 |         }
+   Holes: 5 total
+      5 × assume()
    Proof functions: 3 total (3 clean, 0 holed)
 ❌ AdjTableGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphStPer.rs:404: error: assume() [algorithmic] - assume(updated.spec_adjtablegraphstper_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:404: error: assume() [algorithmic] - assume(updated.spec_adjtablegraphstper_wf());
        398 |         fn insert_vertex(&self, v: V) -> (updated: Self) {
             ...
        402 |             proof {
        403 |                 // Clone gap + graph closure: Verus ICE on Set<V::V> in proof bodies.
        405 |             }
        406 |             updated
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphStPer.rs:438: error: assume() [algorithmic] - assume(neighbors.spec_avltreesetstper_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:438: error: assume() [algorithmic] - assume(neighbors.spec_avltreesetstper_wf());
        409 |         fn delete_vertex(&self, v: &V) -> (updated: Self) {
             ...
        436 |                         // Neighbor-set wf from find requires quantifier over domain.
        437 |                         // blocked by Verus ICE
        439 |                     }
        440 |                     let new_neighbors = neighbors.delete(v);
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphStPer.rs:450: error: assume() [algorithmic] - assume(updated.spec_adjtablegraphstper_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:450: error: assume() [algorithmic] - assume(updated.spec_adjtablegraphstper_wf());
        409 |         fn delete_vertex(&self, v: &V) -> (updated: Self) {
             ...
        448 |                 // quantifying over Map<V::V, Set<V::V>> which triggers Verus ICE.
        449 |                 // blocked by Verus ICE
        451 |             }
        452 |             updated
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphStPer.rs:490: error: assume() [algorithmic] - assume(updated.spec_adjtablegraphstper_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:497: error: assume() [algorithmic] - assume(updated.spec_adjtablegraphstper_wf());
        455 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             ...
-       488 |                 assert(updated.spec_adj().dom().contains(v_view));
-       489 |                 // Clone gap + graph closure: Verus ICE on Set<V::V> prevents proving wf.
-       491 |                 assume(updated.spec_adj()[u_view].contains(v_view));
-       492 |             }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphStPer.rs:491: error: assume() [algorithmic] - assume(updated.spec_adj()[u_view].contains(v_view));
-       455 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
+       495 |                 assert(updated.spec_adj()[u_view].contains(v_view));
+       496 |                 // Blocked: wf needs forall over Set<V::V> (ICE) + stored-value wf.
+       498 |             }
+       499 |             updated
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:511: error: assume() [algorithmic] - proof { assume(updated.spec_adjtablegraphstper_wf()); }
+       502 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
             ...
-       489 |                 // Clone gap + graph closure: Verus ICE on Set<V::V> prevents proving wf.
-       490 |                 assume(updated.spec_adjtablegraphstper_wf());
-       492 |             }
-       493 |             updated
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphStPer.rs:514: error: assume() [algorithmic] - assume(updated.spec_adjtablegraphstper_wf());
-       496 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
+       509 |                 // same_adj@ =~= self.adj@.remove(u@) =~= self.adj@ (u@ absent).
+       510 |                 let updated = AdjTableGraphStPer { adj: same_adj };
+       512 |                 return updated;
+       513 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphStPer.rs:524: error: assume() [algorithmic] - assume(updated.spec_adjtablegraphstper_wf());
+       502 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
             ...
-       512 |             proof {
-       513 |                 // Clone gap + graph closure: Verus ICE on Set<V::V>.
-       515 |                 // Proving the postcondition requires clone view preservation through
-       516 |                 // the combine closure. Leave as assume for now.
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/AdjTableGraphStPer.rs:517: error: assume() [algorithmic] - assume(!updated.spec_adj().dom().contains(u_view)
-       496 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
-            ...
-       515 |                 // Proving the postcondition requires clone view preservation through
-       516 |                 // the combine closure. Leave as assume for now.
-       518 |                     || !updated.spec_adj()[u_view].contains(v_view));
-       519 |             }
-   Holes: 7 total
-      7 × assume()
+       522 |             proof {
+       523 |                 assert(!updated.adj@[u_view].contains(v_view));
+       525 |             }
+       526 |             updated
+   Holes: 6 total
+      6 × assume()
    Proof functions: 3 total (3 clean, 0 holed)
 ✓ EdgeSetGraphMtPer.rs
    1 clean proof function
 ⚠ EdgeSetGraphStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/EdgeSetGraphStEph.rs:406: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:406: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        399 |         fn clone(&self) -> (result: Self)
             ...
        404 |                 edges: self.edges.clone(),
@@ -327,14 +306,14 @@ Table of Contents:
        407 |             result
        408 |         }
 ⚠ EdgeSetGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/EdgeSetGraphStPer.rs:375: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:375: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        368 |         fn clone(&self) -> (result: Self)
             ...
        373 |                 edges: self.edges.clone(),
        374 |             };
        376 |             result
        377 |         }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap52/EdgeSetGraphStPer.rs:391: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:391: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        387 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        389 |         {
@@ -406,10 +385,10 @@ Function Specs:
    454 total fns
 
 
-Holes Found: 37 (actionable)
-   28 × assume() [algorithmic] (75%)
-   9 × assume() [rwlock:predicate] (24%)
-Real Proof Targets: 28 (37 total - 9 rwlock)
+Holes Found: 34 (actionable)
+   25 × assume() [algorithmic] (73%)
+   9 × assume() [rwlock:predicate] (26%)
+Real Proof Targets: 25 (34 total - 9 rwlock)
 
 Warnings: 5 total
    5 × assume_eq_clone_workaround
@@ -418,8 +397,15 @@ Warnings: 5 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-28 10:28:46 -07:00
-Ended:     2026-03-28 10:28:46 -07:00
-Duration:  170ms
+Started:   2026-03-28 10:53:56 -07:00
+Ended:     2026-03-28 10:53:56 -07:00
+Duration:  129ms
+
+Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
+====================
+
+Started:   2026-03-28 10:53:56 -07:00
+Ended:     2026-03-28 10:53:56 -07:00
+Duration:  129ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log

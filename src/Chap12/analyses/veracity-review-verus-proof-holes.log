@@ -21,7 +21,6 @@ Table of Contents:
 =================================================================
 
 ℹ Exercise12_1.rs
-<<<<<<< HEAD
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:20: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:60: info: external_body_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_1.rs:68: info: external_body_accept_hole
@@ -44,30 +43,6 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:124: info: unsafe_block_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:126: info: unsafe_block_accept_hole
 /home/milnes/projects/APAS-VERUS/src/Chap12/Exercise12_5.rs:161: info: unsafe_block_accept_hole
-=======
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap12/Exercise12_1.rs:20: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap12/Exercise12_1.rs:60: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap12/Exercise12_1.rs:68: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap12/Exercise12_1.rs:76: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap12/Exercise12_1.rs:81: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap12/Exercise12_1.rs:93: info: external_body_accept_hole
-   Info: 6 total
-✓ Exercise12_2.rs
-ℹ Exercise12_5.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap12/Exercise12_5.rs:30: info: external_accept_hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap12/Exercise12_5.rs:38: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap12/Exercise12_5.rs:53: info: trivial_spec_wf
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap12/Exercise12_5.rs:96: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap12/Exercise12_5.rs:103: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap12/Exercise12_5.rs:117: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap12/Exercise12_5.rs:132: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap12/Exercise12_5.rs:137: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap12/Exercise12_5.rs:154: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap12/Exercise12_5.rs:113: info: unsafe_block_accept_hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap12/Exercise12_5.rs:124: info: unsafe_block_accept_hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap12/Exercise12_5.rs:126: info: unsafe_block_accept_hole
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap12/Exercise12_5.rs:161: info: unsafe_block_accept_hole
->>>>>>> agent3/ready
    Info: 13 total
 
 =================================================================
@@ -118,8 +93,8 @@ Real Proof Targets: 0 (all actionable)
 Accepted (reviewed): 19 total
    13 × external_body_accept_hole
    4 × unsafe_block_accept_hole
-   1 × trivial_spec_wf
    1 × external_accept_hole
+   1 × trivial_spec_wf
 
 No proof holes or warnings found! All proofs are complete.
 
@@ -127,32 +102,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-Started:   2026-03-28 10:21:15 -07:00
-Ended:     2026-03-28 10:21:15 -07:00
-Duration:  4ms
-
-Full output: src/Chap12/analyses/veracity-review-verus-proof-holes.log
-15 -07:00
-Duration:  4ms
-=======
-Started:   2026-03-28 10:32:15 -07:00
-Ended:     2026-03-28 10:32:15 -07:00
-Duration:  5ms
+Started:   2026-03-28 10:53:53 -07:00
+Ended:     2026-03-28 10:53:53 -07:00
+Duration:  13ms
 
 Full output: src/Chap12/analyses/veracity-review-verus-proof-holes.log
 
-Duration:  5ms
->>>>>>> agent1/ready
-=======
-Started:   2026-03-28 10:47:30 -07:00
-Ended:     2026-03-28 10:47:30 -07:00
-Duration:  3ms
-
-Full output: src/Chap12/analyses/veracity-review-verus-proof-holes.log
- 10:47:30 -07:00
-Duration:  3ms
->>>>>>> agent3/ready
-
-Full output: src/Chap12/analyses/veracity-review-verus-proof-holes.log

@@ -21,35 +21,22 @@ Table of Contents:
 =================================================================
 
 ⚠ BSTParaMtEph.rs
-<<<<<<< HEAD
 /home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:648: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-=======
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:648: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
->>>>>>> agent3/ready
        641 |         fn clone(&self) -> (cloned: Self)
             ...
        646 |                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
        647 |             };
        649 |             cloned
        650 |         }
-<<<<<<< HEAD
 /home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:663: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-=======
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:663: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
->>>>>>> agent3/ready
        654 |         fn clone(&self) -> (cloned: Self)
             ...
        661 |                 right: self.right.clone(),
        662 |             };
        664 |             cloned
        665 |         }
-<<<<<<< HEAD
 /home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1650: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
 /home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1651: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
-=======
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:1650: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap38/BSTParaMtEph.rs:1651: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
->>>>>>> agent3/ready
 ✓ BSTParaStEph.rs
    5 clean proof functions
 
@@ -108,23 +95,15 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-Started:   2026-03-28 10:21:16 -07:00
-Ended:     2026-03-28 10:21:16 -07:00
-Duration:  33ms
-=======
-Started:   2026-03-28 10:32:15 -07:00
-Ended:     2026-03-28 10:32:15 -07:00
-Duration:  43ms
->>>>>>> agent1/ready
-=======
-Started:   2026-03-28 10:47:31 -07:00
-Ended:     2026-03-28 10:47:31 -07:00
-Duration:  68ms
+Started:   2026-03-28 10:53:54 -07:00
+Ended:     2026-03-28 10:53:54 -07:00
+Duration:  85ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
-Duration:  68ms
->>>>>>> agent3/ready
+===============
+
+Started:   2026-03-28 10:53:54 -07:00
+Ended:     2026-03-28 10:53:54 -07:00
+Duration:  85ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
