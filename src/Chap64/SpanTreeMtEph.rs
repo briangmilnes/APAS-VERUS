@@ -55,10 +55,6 @@ pub mod SpanTreeMtEph {
     /// - APAS: Work O((n+m) lg n), Span O(lg² n)
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — expand closure
     ///   is sequential; parallelism comes from star_contract_mt framework.
-    // external_body: star_contract_mt lacks r_inv ghost predicate (unlike StEph's
-    // star_contract), so it cannot propagate result.spec_setsteph_wf() through the
-    // recursion. Fixing this requires adding r_inv to StarContractionMtEph (Chap62).
-    #[verifier::external_body]
     pub fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
@@ -153,7 +149,7 @@ pub mod SpanTreeMtEph {
             spanning_edges
         };
 
-        star_contract_mt(graph, seed, &base, &expand)
+        star_contract_mt(graph, seed, &base, &expand, Ghost(|r: SetStEph<Edge<V>>| r.spec_setsteph_wf()))
     }
 
     /// Verify that result is a valid spanning tree.
