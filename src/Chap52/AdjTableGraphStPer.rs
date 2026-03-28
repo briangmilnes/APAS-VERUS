@@ -397,11 +397,34 @@ broadcast use {
 
         fn insert_vertex(&self, v: V) -> (updated: Self) {
             proof { reveal(obeys_view_eq); }
-            let new_adj = self.adj.insert(v, AVLTreeSetStPer::empty(), |old, _new| old.clone());
+            let ghost old_adj = self.spec_adj();
+            let ghost old_dom = old_adj.dom();
+            let new_adj = self.adj.insert(v, AVLTreeSetStPer::empty(),
+                |old: &AVLTreeSetStPer<V>, _new: &AVLTreeSetStPer<V>| -> (r: AVLTreeSetStPer<V>)
+                    ensures r@ == old@
+                { old.clone() });
             let updated = AdjTableGraphStPer { adj: new_adj };
             proof {
-                // Clone gap + graph closure: Verus ICE on Set<V::V> in proof bodies.
-                assume(updated.spec_adjtablegraphstper_wf());
+                // Graph closure: domain grew by {v@}, edge sets unchanged or empty.
+                assert forall|u: <V as View>::V, w: <V as View>::V|
+                    updated.spec_adj().dom().contains(u)
+                    && #[trigger] updated.spec_adj().index(u).contains(w)
+                    implies updated.spec_adj().dom().contains(w)
+                by {
+                    if u != v@ {
+                        assert(old_adj.dom().contains(u));
+                        assert(old_adj.index(u).contains(w));
+                    } else if !old_dom.contains(v@) {
+                        // v@ new: adj[v@] == Set::empty().
+                    } else {
+                        // v@ existed: adj[v@] == old_adj[v@] (combine ensures r@ == old@).
+                        assert(old_adj.dom().contains(v@));
+                        assert(old_adj.index(v@).contains(w));
+                    }
+                };
+                // Stored-value wf blocked by clone gap.
+                assume(forall|k: <V as View>::V| #[trigger] updated.adj@.dom().contains(k) ==>
+                    updated.adj.spec_stored_value(k).spec_avltreesetstper_wf());
             }
             updated
         }
@@ -456,6 +479,11 @@ broadcast use {
             proof { reveal(obeys_view_eq); }
             let ghost u_view: <V as View>::V = u@;
             let ghost v_view: <V as View>::V = v@;
+            let ghost old_adj = self.spec_adj();
+            let ghost old_dom = old_adj.dom();
+            // Clone v with view equality proof for the neighbor set.
+            let vc = v.clone_plus();
+            proof { lemma_cloned_view_eq::<V>(v, vc); }
             let neighbors = match self.adj.find_ref(&u) {
                 Some(ns_ref) => {
                     proof {
@@ -469,26 +497,67 @@ broadcast use {
                         lemma_entries_to_map_finite::<V::V, Set<V::V>>(self.adj.entries@);
                         vstd::set_lib::lemma_len_subset(ns_ref@, dom);
                     }
-                    ns_ref.clone_wf().insert(v.clone())
+                    ns_ref.clone_wf().insert(vc)
                 }
-                None => AVLTreeSetStPer::singleton(v.clone()),
+                None => AVLTreeSetStPer::singleton(vc),
             };
-            let new_adj = self.adj.insert(u, neighbors, |_old, new| new.clone());
-            // After first insert: dom contains u@.
-            proof { assert(new_adj@.dom().contains(u_view)); }
+            let ghost neighbors_view = neighbors@;
+            proof {
+                assert(neighbors_view.subset_of(old_dom.insert(v_view))) by {
+                    assert forall|w: <V as View>::V| #[trigger] neighbors_view.contains(w)
+                        implies old_dom.insert(v_view).contains(w)
+                    by {
+                        if w != v_view {
+                            assert(old_adj.dom().contains(u_view));
+                            assert(old_adj.index(u_view).contains(w));
+                        }
+                    };
+                };
+            }
+            let new_adj = self.adj.insert(u, neighbors,
+                |_old: &AVLTreeSetStPer<V>, new: &AVLTreeSetStPer<V>| -> (r: AVLTreeSetStPer<V>)
+                    ensures r@ == new@
+                { new.clone() });
+            proof {
+                assert(new_adj@.dom().contains(u_view));
+                assert(new_adj@[u_view] == neighbors_view);
+            }
             let final_adj = if new_adj.find_ref(&v).is_none() {
-                new_adj.insert(v, AVLTreeSetStPer::empty(), |old, _new| old.clone())
+                let ghost pre_second = new_adj@;
+                let result = new_adj.insert(v, AVLTreeSetStPer::empty(), |old, _new| old.clone());
+                proof {
+                    assert(!pre_second.dom().contains(v_view));
+                    assert(pre_second.dom().contains(u_view));
+                    assert(u_view != v_view);
+                    assert(result@[u_view] == pre_second[u_view]);
+                }
+                result
             } else {
                 new_adj
             };
             let updated = AdjTableGraphStPer { adj: final_adj };
             proof {
-                // After conditional second insert: dom contains both u@ and v@.
                 assert(updated.spec_adj().dom().contains(u_view));
                 assert(updated.spec_adj().dom().contains(v_view));
-                // Clone gap + graph closure: Verus ICE on Set<V::V> prevents proving wf.
-                assume(updated.spec_adjtablegraphstper_wf());
-                assume(updated.spec_adj()[u_view].contains(v_view));
+                assert(neighbors_view.contains(v_view));
+                assert(updated.spec_adj()[u_view].contains(v_view));
+                // Graph closure: all neighbors of any vertex are in the domain.
+                assert forall|x: <V as View>::V, w: <V as View>::V|
+                    updated.spec_adj().dom().contains(x)
+                    && #[trigger] updated.spec_adj().index(x).contains(w)
+                    implies updated.spec_adj().dom().contains(w)
+                by {
+                    if x == u_view {
+                        assert(neighbors_view.contains(w));
+                        assert(old_dom.insert(v_view).contains(w));
+                    } else {
+                        assert(old_adj.dom().contains(x));
+                        assert(old_adj.index(x).contains(w));
+                    }
+                };
+                // Stored-value wf blocked by clone gap.
+                assume(forall|k: <V as View>::V| #[trigger] updated.adj@.dom().contains(k) ==>
+                    updated.adj.spec_stored_value(k).spec_avltreesetstper_wf());
             }
             updated
         }
@@ -497,27 +566,51 @@ broadcast use {
             proof { reveal(obeys_view_eq); }
             let ghost u_view: <V as View>::V = u@;
             let ghost v_view: <V as View>::V = v@;
-            let updated = match self.adj.find_ref(u) {
-                Some(neighbors) => {
-                    let new_neighbors = neighbors.clone_wf().delete(v);
-                    // new_neighbors@ == old_ns@.remove(v@), so !new_neighbors@.contains(v@).
-                    let new_adj = self.adj.insert(u.clone(), new_neighbors, |_old, new| new.clone());
-                    AdjTableGraphStPer { adj: new_adj }
+            let ghost old_adj = self.spec_adj();
+            if self.adj.find_ref(u).is_some() {
+                let ns_ref = self.adj.find_ref(u).unwrap();
+                let new_neighbors = ns_ref.clone_wf().delete(v);
+                let ghost nn_view = new_neighbors@;
+                let uc = u.clone_plus();
+                proof { lemma_cloned_view_eq::<V>(*u, uc); }
+                let new_adj = self.adj.insert(uc, new_neighbors,
+                    |_old: &AVLTreeSetStPer<V>, new: &AVLTreeSetStPer<V>| -> (r: AVLTreeSetStPer<V>)
+                        ensures r@ == new@
+                    { new.clone() });
+                let updated = AdjTableGraphStPer { adj: new_adj };
+                proof {
+                    assert(new_adj@[u_view] == nn_view);
+                    assert(!updated.spec_adj()[u_view].contains(v_view));
+                    // Graph closure: nn_view ⊆ old_adj[u@] ⊆ old_dom == dom.
+                    assert forall|x: <V as View>::V, w: <V as View>::V|
+                        updated.spec_adj().dom().contains(x)
+                        && #[trigger] updated.spec_adj().index(x).contains(w)
+                        implies updated.spec_adj().dom().contains(w)
+                    by {
+                        if x == u_view {
+                            assert(old_adj.index(u_view).contains(w));
+                        } else {
+                            assert(old_adj.dom().contains(x));
+                            assert(old_adj.index(x).contains(w));
+                        }
+                    };
+                    // Stored-value wf blocked by clone gap.
+                    assume(forall|k: <V as View>::V| #[trigger] updated.adj@.dom().contains(k) ==>
+                        updated.adj.spec_stored_value(k).spec_avltreesetstper_wf());
                 }
-                None => {
-                    // u@ not in domain: no changes needed.
-                    self.clone()
+                updated
+            } else {
+                // u@ not in domain: return unchanged via adj clone (view-preserving).
+                let cloned_adj = self.adj.clone();
+                // TableStPer::clone ensures cloned_adj.entries@ == self.adj.entries@,
+                // so cloned_adj@ == self.adj@ and !dom.contains(u@) carries through.
+                let updated = AdjTableGraphStPer { adj: cloned_adj };
+                proof {
+                    // wf needs forall over Set<V::V> (ICE) + stored-value wf (clone gap).
+                    assume(updated.spec_adjtablegraphstper_wf());
                 }
-            };
-            proof {
-                // Clone gap + graph closure: Verus ICE on Set<V::V>.
-                assume(updated.spec_adjtablegraphstper_wf());
-                // Proving the postcondition requires clone view preservation through
-                // the combine closure. Leave as assume for now.
-                assume(!updated.spec_adj().dom().contains(u_view)
-                    || !updated.spec_adj()[u_view].contains(v_view));
+                updated
             }
-            updated
         }
     }
 

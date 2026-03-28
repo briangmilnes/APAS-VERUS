@@ -440,12 +440,38 @@ broadcast use {
 
         fn insert_vertex(&mut self, v: V) {
             proof { reveal(obeys_view_eq); }
-            self.adj.insert(v, AVLTreeSetStEph::empty(), |old, _new| old.clone());
+            let ghost old_adj = self.spec_adj();
+            let ghost old_dom = old_adj.dom();
+            self.adj.insert(v, AVLTreeSetStEph::empty(),
+                |old: &AVLTreeSetStEph<V>, _new: &AVLTreeSetStEph<V>| -> (r: AVLTreeSetStEph<V>)
+                    ensures r@ == old@
+                { old.clone() });
             proof {
-                // Clone gap + graph closure: Verus ICE on Set<V::V> in proof bodies
-                // prevents asserting forall over adj map. Graph closure holds because
-                // domain grew by {v@}, edge sets unchanged (clone) or empty (new vertex).
-                assume(self.spec_adjtablegraphsteph_wf());
+                // Type-level predicates: from old wf.
+                // keys_no_dups: from Table::insert ensures (spec_tablesteph_wf()).
+                // feq: from old wf.
+                // Graph closure: domain grew by {v@}, edge sets unchanged or empty.
+                assert forall|u: <V as View>::V, w: <V as View>::V|
+                    self.spec_adj().dom().contains(u)
+                    && #[trigger] self.spec_adj().index(u).contains(w)
+                    implies self.spec_adj().dom().contains(w)
+                by {
+                    if u != v@ {
+                        // adj[u] == old_adj[u] (view preserved), old closure gives old_dom.contains(w).
+                        assert(old_adj.dom().contains(u));
+                        assert(old_adj.index(u).contains(w));
+                    } else if !old_dom.contains(v@) {
+                        // v@ was new: adj[v@] == Set::empty(), no w exists.
+                    } else {
+                        // v@ existed: adj[v@] == old.clone()@ == old_adj[v@] (from combine ensures).
+                        assert(old_adj.dom().contains(v@));
+                        assert(old_adj.index(v@).contains(w));
+                    }
+                };
+                // Stored-value wf blocked by clone gap: Table::insert doesn't preserve
+                // exec-level spec_stored_value identity for existing keys (combine clone).
+                assume(forall|k: <V as View>::V| #[trigger] self.adj@.dom().contains(k) ==>
+                    self.adj.spec_stored_value(k).spec_avltreesetsteph_wf());
             }
         }
 
@@ -500,7 +526,12 @@ broadcast use {
             proof { reveal(obeys_view_eq); }
             let ghost u_view: <V as View>::V = u@;
             let ghost v_view: <V as View>::V = v@;
-            // Build new neighbor set for u: old neighbors + v, or singleton(v).
+            let ghost old_adj = self.spec_adj();
+            let ghost old_dom = old_adj.dom();
+            // Clone v with view equality proof for the neighbor set.
+            let vc = v.clone_plus();
+            proof { lemma_cloned_view_eq::<V>(v, vc); }
+            // Build new neighbor set for u: old neighbors + vc, or singleton(vc).
             let neighbors = match self.adj.find_ref(&u) {
                 Some(ns_ref) => {
                     let mut ns = ns_ref.clone_wf();
@@ -515,33 +546,71 @@ broadcast use {
                         lemma_entries_to_map_finite::<V::V, Set<V::V>>(self.adj.entries@);
                         vstd::set_lib::lemma_len_subset(ns@, dom);
                     }
-                    ns.insert(v.clone());
+                    ns.insert(vc);
                     ns
                 }
-                None => AVLTreeSetStEph::singleton(v.clone()),
+                None => AVLTreeSetStEph::singleton(vc),
             };
-            self.adj.insert(u, neighbors, |_old, new| new.clone());
-            // First insert ensures: dom contains u@.
-            proof { assert(self.adj@.dom().contains(u_view)); }
+            let ghost neighbors_view = neighbors@;
+            // neighbors_view ⊆ old_dom ∪ {v@}: elements are from old_adj[u@] (⊆ old_dom) plus v@.
+            proof {
+                assert(neighbors_view.subset_of(old_dom.insert(v_view))) by {
+                    assert forall|w: <V as View>::V| #[trigger] neighbors_view.contains(w)
+                        implies old_dom.insert(v_view).contains(w)
+                    by {
+                        if w != v_view {
+                            // w was in old_adj[u@] (from graph closure).
+                            assert(old_adj.dom().contains(u_view));
+                            assert(old_adj.index(u_view).contains(w));
+                        }
+                    };
+                };
+            }
+            self.adj.insert(u, neighbors,
+                |_old: &AVLTreeSetStEph<V>, new: &AVLTreeSetStEph<V>| -> (r: AVLTreeSetStEph<V>)
+                    ensures r@ == new@
+                { new.clone() });
+            // First insert ensures: dom contains u@, and adj[u@] == neighbors_view.
+            proof {
+                assert(self.adj@.dom().contains(u_view));
+                assert(self.adj@[u_view] == neighbors_view);
+            }
+            let ghost adj_after_first = self.adj@;
             // Ensure v is in the domain.
             if self.adj.find_ref(&v).is_none() {
                 let ghost pre_second = self.adj@;
                 self.adj.insert(v, AVLTreeSetStEph::empty(), |old, _new| old.clone());
                 proof {
-                    // v@ not in domain (find_ref None) but u@ is (just inserted).
                     assert(!pre_second.dom().contains(v_view));
                     assert(pre_second.dom().contains(u_view));
                     assert(u_view != v_view);
+                    assert(self.adj@[u_view] == pre_second[u_view]);
                 }
             }
             proof {
-                // Domain: u@ from first insert, v@ from second or already present.
                 assert(self.spec_adj().dom().contains(u_view));
                 assert(self.spec_adj().dom().contains(v_view));
-                // Blocked: adj[u@].contains(v@) needs v.clone()@ == v@ (generic clone gap).
-                // Blocked: wf needs forall over Set<V::V> (ICE) + stored-value wf (clone gap).
-                assume(self.spec_adjtablegraphsteph_wf());
-                assume(self.spec_adj()[u_view].contains(v_view));
+                assert(neighbors_view.contains(v_view));
+                assert(self.spec_adj()[u_view].contains(v_view));
+                // Graph closure: all neighbors of any vertex are in the domain.
+                assert forall|x: <V as View>::V, w: <V as View>::V|
+                    self.spec_adj().dom().contains(x)
+                    && #[trigger] self.spec_adj().index(x).contains(w)
+                    implies self.spec_adj().dom().contains(w)
+                by {
+                    if x == u_view {
+                        // adj[u@] == neighbors_view ⊆ old_dom ∪ {v@} ⊆ final_dom.
+                        assert(neighbors_view.contains(w));
+                        assert(old_dom.insert(v_view).contains(w));
+                    } else {
+                        // adj[x] == old_adj[x] (view preserved through both inserts).
+                        assert(old_adj.dom().contains(x));
+                        assert(old_adj.index(x).contains(w));
+                    }
+                };
+                // Stored-value wf blocked by clone gap.
+                assume(forall|k: <V as View>::V| #[trigger] self.adj@.dom().contains(k) ==>
+                    self.adj.spec_stored_value(k).spec_avltreesetsteph_wf());
             }
         }
 
@@ -549,28 +618,44 @@ broadcast use {
             proof { reveal(obeys_view_eq); }
             let ghost u_view: <V as View>::V = u@;
             let ghost v_view: <V as View>::V = v@;
-            let ghost old_dom = self.adj@.dom();
+            let ghost old_adj = self.spec_adj();
+            let ghost old_dom = old_adj.dom();
             if self.adj.find_ref(u).is_some() {
-                // u@ is in domain (from find_ref ensures).
                 if let Some(ns_ref) = self.adj.find_ref(u) {
                     let mut neighbors = ns_ref.clone_wf();
                     neighbors.delete(v);
-                    // neighbors@ == old_ns@.remove(v@), so !neighbors@.contains(v@).
-                    proof { assert(!neighbors@.contains(v_view)); }
-                    self.adj.insert(u.clone(), neighbors, |_old, new| new.clone());
+                    let ghost neighbors_view = neighbors@;
+                    proof { assert(!neighbors_view.contains(v_view)); }
+                    let uc = u.clone_plus();
+                    proof { lemma_cloned_view_eq::<V>(*u, uc); }
+                    self.adj.insert(uc, neighbors,
+                        |_old: &AVLTreeSetStEph<V>, new: &AVLTreeSetStEph<V>| -> (r: AVLTreeSetStEph<V>)
+                            ensures r@ == new@
+                        { new.clone() });
+                    proof {
+                        assert(self.adj@[u_view] == neighbors_view);
+                        assert(!self.spec_adj()[u_view].contains(v_view));
+                        // Graph closure: neighbors_view ⊆ old_adj[u@] ⊆ old_dom == dom.
+                        assert forall|x: <V as View>::V, w: <V as View>::V|
+                            self.spec_adj().dom().contains(x)
+                            && #[trigger] self.spec_adj().index(x).contains(w)
+                            implies self.spec_adj().dom().contains(w)
+                        by {
+                            if x == u_view {
+                                // adj[u@] = old_adj[u@].remove(v@) ⊆ old_adj[u@].
+                                assert(old_adj.index(u_view).contains(w));
+                            } else {
+                                assert(old_adj.dom().contains(x));
+                                assert(old_adj.index(x).contains(w));
+                            }
+                        };
+                        // Stored-value wf blocked by clone gap.
+                        assume(forall|k: <V as View>::V| #[trigger] self.adj@.dom().contains(k) ==>
+                            self.adj.spec_stored_value(k).spec_avltreesetsteph_wf());
+                    }
                 }
             }
-            proof {
-                // Clone gap + graph closure: Verus ICE on Set<V::V>.
-                assume(self.spec_adjtablegraphsteph_wf());
-                // If u@ not in domain: no changes, !dom.contains(u@) holds.
-                // If u@ in domain: adj[u@] had v@ removed, !adj[u@].contains(v@) holds.
-                // But the insert uses combine |_old, new| new.clone(), and proving
-                // that clone preserves the !contains(v@) property requires reasoning
-                // through combine.ensures. Leave as assume for now.
-                assume(!self.spec_adj().dom().contains(u_view)
-                    || !self.spec_adj()[u_view].contains(v_view));
-            }
+            // No-mutation branch: postcondition from old wf (u@ not in domain).
         }
     }
 
