@@ -41,6 +41,7 @@ pub mod ETSPMtEph {
     use crate::vstdplus::float::float::{
         f64_add, f64_add_spec, f64_sub, f64_sub_spec,
         f64_mul, f64_mul_spec, f64_sqrt, f64_sqrt_spec,
+        unreachable_dist,
     };
 
 
@@ -667,7 +668,6 @@ pub mod ETSPMtEph {
     /// Parallel find-best-swap: recursively splits the outer loop over left_tour
     /// and runs both halves in parallel via HFScheduler join().
     /// Work Θ(n·m), Span Θ(m·lg n) where n = left_tour.len(), m = right_tour.len().
-    #[verifier::external_body]
     pub fn find_best_swap_impl(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (result: (usize, usize))
         requires
             left_tour@.len() >= 1,
@@ -684,7 +684,6 @@ pub mod ETSPMtEph {
         (li, ri)
     }
 
-    #[verifier::external_body]
     fn find_best_swap_par(
         left_tour: Arc<Vec<Edge>>, right_tour: Arc<Vec<Edge>>, lo: usize, hi: usize,
     ) -> (result: (usize, usize, f64))
@@ -699,13 +698,13 @@ pub mod ETSPMtEph {
     {
         let lv: &Vec<Edge> = arc_deref(&left_tour);
         let rv: &Vec<Edge> = arc_deref(&right_tour);
-        // *lv == *left_tour, *rv == *right_tour, so lv@.len() == (*left_tour)@.len().
+        let sentinel = unreachable_dist().val;
 
         if hi <= lo {
-            return (0, 0, f64::MAX);
+            return (0, 0, sentinel);
         }
         if hi - lo <= 16 {
-            let mut best_cost = f64::MAX;
+            let mut best_cost = sentinel;
             let mut best_li: usize = 0;
             let mut best_ri: usize = 0;
             let mut li: usize = lo;
@@ -734,8 +733,11 @@ pub mod ETSPMtEph {
                 {
                     let el: &Edge = &lv[li];
                     let er: &Edge = &rv[ri];
-                    let cost = el.from.distance(&er.to) + er.from.distance(&el.to)
-                             - el.from.distance(&el.to) - er.from.distance(&er.to);
+                    let d1 = point_distance(&el.from, &er.to);
+                    let d2 = point_distance(&er.from, &el.to);
+                    let d3 = point_distance(&el.from, &el.to);
+                    let d4 = point_distance(&er.from, &er.to);
+                    let cost = f64_sub(f64_add(d1, d2), f64_add(d3, d4));
                     if cost < best_cost {
                         best_cost = cost;
                         best_li = li;
@@ -748,15 +750,12 @@ pub mod ETSPMtEph {
             (best_li, best_ri, best_cost)
         } else {
             let mid = lo + (hi - lo) / 2;
-            // Ghost lengths before moving into closures.
-            let ghost ll: nat = lv@.len();   // == (*left_tour)@.len()
-            let ghost rl: nat = rv@.len();   // == (*right_tour)@.len()
+            let ghost ll: nat = lv@.len();
+            let ghost rl: nat = rv@.len();
 
             let lt1 = Arc::clone(&left_tour);
             let rt1 = Arc::clone(&right_tour);
 
-            // lt1 == left_tour and rt1 == right_tour from Arc::clone spec.
-            // Ghost captures from the clones for use inside f1.
             let ghost lt1_ll: nat = (*lt1)@.len();
             let ghost rt1_rl: nat = (*rt1)@.len();
             assert(lt1_ll == ll);
@@ -765,7 +764,6 @@ pub mod ETSPMtEph {
             assert(rl >= 1);
             assert(mid <= ll);
 
-            // Prove decreasing argument for both recursive calls.
             assert(mid - lo < hi - lo) by { assert(hi - lo > 16usize); };
             assert(hi - mid < hi - lo) by { assert(hi - lo > 16usize); };
 
@@ -798,7 +796,6 @@ pub mod ETSPMtEph {
             let (left_res, right_res) = join(f1, f2);
 
             proof {
-                // lt1_ll == ll, so left_res.0 < lt1_ll implies left_res.0 < ll.
                 assert(left_res.0 < ll);
                 assert(left_res.1 < rl);
             }

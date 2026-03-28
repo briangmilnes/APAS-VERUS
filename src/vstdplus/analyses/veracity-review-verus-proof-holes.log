@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/vstdplus/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/vstdplus/float.rs
 Full output: src/vstdplus/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -28,39 +28,3 @@ Table of Contents:
 =================================================================
 2.1. By Module
 =================================================================
-
-
-=================================================================
-2.2. By File
-=================================================================
-
-
-=================================================================
-3. Summary of Holes
-=================================================================
-
-Modules:
-   0 clean (no holes, no errors; 0%)
-   0 holed (holes or errors, 0%)
-   0 total
-
-Proof Functions:
-   0 clean (0%)
-   0 holed (0%)
-   0 total
-
-
-Holes Found: 0 (actionable)
-Real Proof Targets: 0 (all actionable)
-
-No proof holes or warnings found! All proofs are complete.
-
-=================================================================
-5. Started/Ended/Duration
-=================================================================
-
-Started:   2026-03-22 22:05:23 -07:00
-Ended:     2026-03-22 22:05:23 -07:00
-Duration:  0ms
-
-Full output: src/vstdplus/analyses/veracity-review-verus-proof-holes.log
