@@ -181,8 +181,9 @@ pub mod PrimStEph {
 
         /// Compute total weight of MST.
         /// APAS: Work O(m), Span O(1)
-        fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, u64>>) -> u64
-            requires mst.spec_setsteph_wf();
+        fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, u64>>) -> (total: u64)
+            requires mst.spec_setsteph_wf(),
+            ensures mst@.len() == 0 ==> total == 0;
     }
 
     /// Module-level function to create a new PQEntry.
@@ -420,6 +421,7 @@ pub mod PrimStEph {
     /// Overflow-safe: skips edges that would cause u64 overflow (never triggers for MST weights).
     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, u64>>) -> (total: u64)
         requires mst_edges.spec_setsteph_wf(),
+        ensures mst_edges@.len() == 0 ==> total == 0,
     {
         if mst_edges.size() == 0 {
             return 0u64;

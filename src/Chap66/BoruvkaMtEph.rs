@@ -193,11 +193,13 @@ pub mod BoruvkaMtEph {
         round: usize,
         start: usize,
         end: usize,
-    ) -> HashMapWithViewPlus<V, bool>
+    ) -> (result: HashMapWithViewPlus<V, bool>)
         requires
             start <= end, end <= vertices@.len(),
             obeys_key_model::<V>(),
             forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+        ensures
+            start == end ==> result@.len() == 0,
         decreases end - start,
     {
         let size = end - start;
@@ -261,8 +263,9 @@ pub mod BoruvkaMtEph {
         partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
         start: usize,
         end: usize,
-    ) -> Vec<V>
+    ) -> (result: Vec<V>)
         requires start <= end, end <= vertices@.len(),
+        ensures result@.len() <= (end - start) as int,
         decreases end - start,
     {
         let size = end - start;
@@ -288,12 +291,14 @@ pub mod BoruvkaMtEph {
 
         let f1 = move || -> (r: Vec<V>)
             requires start <= mid, mid <= v1@.len(),
+            ensures r@.len() <= (mid - start) as int,
         {
             compute_remaining_mt(v1, p1, start, mid)
         };
 
         let f2 = move || -> (r: Vec<V>)
             requires mid <= end, end <= v2@.len(),
+            ensures r@.len() <= (end - mid) as int,
         {
             compute_remaining_mt(v2, p2, mid, end)
         };
@@ -301,10 +306,14 @@ pub mod BoruvkaMtEph {
         let Pair(mut left, right) = crate::ParaPair!(f1, f2);
 
         // Merge right into left.
+        let ghost left_init_len = left@.len() as int;
         let mut i: usize = 0;
         while i < right.len()
             invariant
                 0 <= i <= right@.len(),
+                left@.len() == left_init_len + i as int,
+                left_init_len <= (mid - start) as int,
+                right@.len() <= (end - mid) as int,
             decreases right@.len() - i,
         {
             left.push(right[i].clone());
@@ -321,8 +330,9 @@ pub mod BoruvkaMtEph {
         partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
         start: usize,
         end: usize,
-    ) -> Vec<usize>
+    ) -> (result: Vec<usize>)
         requires start <= end, end <= keys@.len(),
+        ensures result@.len() <= (end - start) as int,
         decreases end - start,
     {
         let size = end - start;
@@ -347,12 +357,14 @@ pub mod BoruvkaMtEph {
 
         let f1 = move || -> (r: Vec<usize>)
             requires start <= mid, mid <= k1@.len(),
+            ensures r@.len() <= (mid - start) as int,
         {
             collect_mst_labels_mt(k1, p1, start, mid)
         };
 
         let f2 = move || -> (r: Vec<usize>)
             requires mid <= end, end <= k2@.len(),
+            ensures r@.len() <= (end - mid) as int,
         {
             collect_mst_labels_mt(k2, p2, mid, end)
         };
@@ -360,10 +372,14 @@ pub mod BoruvkaMtEph {
         let Pair(mut left, right) = crate::ParaPair!(f1, f2);
 
         // Merge right into left.
+        let ghost left_init_len = left@.len() as int;
         let mut i: usize = 0;
         while i < right.len()
             invariant
                 0 <= i <= right@.len(),
+                left@.len() == left_init_len + i as int,
+                left_init_len <= (mid - start) as int,
+                right@.len() <= (end - mid) as int,
             decreases right@.len() - i,
         {
             left.push(right[i]);
@@ -381,11 +397,13 @@ pub mod BoruvkaMtEph {
         partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
         start: usize,
         end: usize,
-    ) -> HashMapWithViewPlus<V, V>
+    ) -> (result: HashMapWithViewPlus<V, V>)
         requires
             start <= end, end <= vertices@.len(),
             obeys_key_model::<V>(),
             forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+        ensures
+            start == end ==> result@.len() == 0,
         decreases end - start,
     {
         let size = end - start;
@@ -635,11 +653,13 @@ pub mod BoruvkaMtEph {
         coin_flips: Arc<HashMapWithViewPlus<V, bool>>,
         start: usize,
         end: usize,
-    ) -> HashMapWithViewPlus<V, (V, WrappedF64, usize)>
+    ) -> (result: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)
         requires
             start <= end, end <= vertices@.len(),
             obeys_key_model::<V>(),
             forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+        ensures
+            start == end ==> result@.len() == 0,
         decreases end - start,
     {
         let size = end - start;
