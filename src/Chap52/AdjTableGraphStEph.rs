@@ -258,7 +258,9 @@ broadcast use {
         /// - APAS: Work Theta(lg n + lg m), Span Theta(lg n + lg m) [Cost Spec 52.3]
         /// - Claude-Opus-4.6: Work Theta(lg n + lg m), Span Theta(lg n + lg m) — agrees; table find + set insert.
         fn insert_edge(&mut self, u: V, v: V)
-            requires old(self).spec_adjtablegraphsteph_wf()
+            requires
+                old(self).spec_adjtablegraphsteph_wf(),
+                old(self).spec_adj().dom().len() + 1 < usize::MAX as nat,
             ensures
                 self.spec_adjtablegraphsteph_wf(),
                 self.spec_adj().dom().contains(u@),
@@ -501,8 +503,15 @@ broadcast use {
                 Some(ns_ref) => {
                     let mut ns = ns_ref.clone_wf();
                     proof {
-                        // Capacity: stored sets have len < usize::MAX, so +1 fits.
-                        assume(ns@.len() + 1 < usize::MAX as nat);
+                        // Capacity: graph closure ⇒ ns@ ⊆ domain ⇒ ns@.len() ≤ dom.len().
+                        let dom = self.spec_adj().dom();
+                        assert(ns@.subset_of(dom)) by {
+                            assert forall|w: <V as View>::V| #[trigger] ns@.contains(w) implies dom.contains(w) by {
+                                assert(self.spec_adj().index(u@).contains(w));
+                            };
+                        };
+                        lemma_entries_to_map_finite::<V::V, Set<V::V>>(self.adj.entries@);
+                        vstd::set_lib::lemma_len_subset(ns@, dom);
                     }
                     ns.insert(v.clone());
                     ns
