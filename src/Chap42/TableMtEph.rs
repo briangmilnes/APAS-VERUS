@@ -629,7 +629,8 @@ broadcast use {
         /// - APAS Cost Spec 42.5: Work lg |a|, Span lg |a|
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan + rebuild; disagrees with APAS.
         fn delete(&mut self, key: &K)
-            ensures self@ =~= old(self)@.remove(key@);
+            requires old(self).spec_tablemteph_wf()
+            ensures self@ =~= old(self)@.remove(key@), self.spec_tablemteph_wf();
         /// - APAS Cost Spec 42.5: Work lg |a|, Span lg |a|
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan + rebuild; disagrees with APAS.
         fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, key: K, value: V, combine: F)
@@ -639,6 +640,7 @@ broadcast use {
                 obeys_view_eq::<K>(),
                 obeys_feq_clone::<K>(),
             ensures
+                self.spec_tablemteph_wf(),
                 self@.contains_key(key@),
                 self@.dom() =~= old(self)@.dom().insert(key@),
                 forall|k: K::V| k != key@ && #[trigger] old(self)@.contains_key(k) ==> self@[k] == old(self)@[k],
@@ -1670,7 +1672,6 @@ broadcast use {
 
         #[verifier::loop_isolation(false)]
         fn delete(&mut self, key: &K)
-            ensures self@ =~= old(self)@.remove(key@)
         {
             proof {
                 assert(obeys_feq_full_trigger::<K>());
@@ -1763,6 +1764,17 @@ broadcast use {
                 by {
                     lemma_entries_to_map_subseq_value::<K::V, V::V>(
                         old_view, self.entries@, src, k);
+                };
+                // Prove spec_keys_no_dups for wf ensures.
+                assert(spec_keys_no_dups(self.entries@)) by {
+                    assert forall|a: int, b: int|
+                        0 <= a < b < self.entries@.len()
+                        implies (#[trigger] self.entries@[a]).0 != (#[trigger] self.entries@[b]).0
+                    by {
+                        assert(self.entries@[a] == old_view[src[a]]);
+                        assert(self.entries@[b] == old_view[src[b]]);
+                        assert(src[a] < src[b]);
+                    };
                 };
             }
         }
