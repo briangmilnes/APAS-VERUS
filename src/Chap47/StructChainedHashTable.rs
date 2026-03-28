@@ -126,12 +126,12 @@ pub mod StructChainedHashTable {
             chain: Option<Box<Node<Key, Value>>>,
             key: Key,
             value: Value,
-        ) -> (result: (Option<Box<Node<Key, Value>>>, bool))
+        ) -> (inserted: (Option<Box<Node<Key, Value>>>, bool))
             ensures
-                result.0 is Some,
-                spec_chain_to_map(result.0) == spec_chain_to_map(chain).insert(key, value),
-                result.1 == spec_chain_to_map(chain).dom().contains(key),
-                spec_chain_keys_unique(chain) ==> spec_chain_keys_unique(result.0),
+                inserted.0 is Some,
+                spec_chain_to_map(inserted.0) == spec_chain_to_map(chain).insert(key, value),
+                inserted.1 == spec_chain_to_map(chain).dom().contains(key),
+                spec_chain_keys_unique(chain) ==> spec_chain_keys_unique(inserted.0),
             decreases chain,
         {
             match chain {

@@ -788,7 +788,7 @@ broadcast use {
     impl<T: StT + Ord> ClonePreservesWf for AVLTreeSetStEph<T> {
         open spec fn spec_wf(&self) -> bool { self.spec_avltreesetsteph_wf() }
 
-        fn clone_wf(&self) -> (result: Self) {
+        fn clone_wf(&self) -> (cloned: Self) {
             let r = AVLTreeSetStEph { tree: self.tree.clone() };
             proof {
                 assert(r.tree@ == self.tree@);

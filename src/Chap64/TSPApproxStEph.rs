@@ -247,9 +247,9 @@ pub mod TSPApproxStEph {
     ///
     /// Returns:
     /// - Vector of vertices with each vertex appearing exactly once (except start/end)
-    pub fn shortcut_tour<V: HashOrd>(euler_tour: &[V]) -> (result: Vec<V>)
+    pub fn shortcut_tour<V: HashOrd>(euler_tour: &[V]) -> (tour: Vec<V>)
         requires valid_key_type::<V>(),
-        ensures euler_tour@.len() == 0 ==> result@.len() == 0,
+        ensures euler_tour@.len() == 0 ==> tour@.len() == 0,
     {
         if euler_tour.len() == 0 {
             return Vec::new();
@@ -383,13 +383,13 @@ pub mod TSPApproxStEph {
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         spanning_tree: &SetStEph<LabEdge<V, WrappedF64>>,
         start: &V,
-    ) -> (result: (Vec<V>, WrappedF64))
+    ) -> (tour_and_weight: (Vec<V>, WrappedF64))
         requires
             spec_labgraphview_wf(graph@),
             valid_key_type::<V>(),
             valid_key_type_LabEdge::<V, WrappedF64>(),
             spanning_tree.spec_setsteph_wf(),
-        ensures result.0@.len() <= 1 ==> result.1@ == 0.0f64,
+        ensures tour_and_weight.0@.len() <= 1 ==> tour_and_weight.1@ == 0.0f64,
     {
         let euler = euler_tour(graph, start, spanning_tree);
         let tour = shortcut_tour(&euler);

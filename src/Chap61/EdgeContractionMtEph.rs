@@ -127,13 +127,13 @@ pub mod EdgeContractionMtEph {
         vertex_map: Arc<HashMapWithViewPlus<V, V>>,
         start: usize,
         end: usize,
-    ) -> (result: SetStEph<Edge<V>>)
+    ) -> (contracted: SetStEph<Edge<V>>)
         requires
             start <= end,
             end as nat <= (*edges)@.len(),
             valid_key_type_Edge::<V>(),
         ensures
-            result.spec_setsteph_wf(),
+            contracted.spec_setsteph_wf(),
         decreases end - start,
     {
         let size = end - start;

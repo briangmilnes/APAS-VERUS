@@ -175,9 +175,9 @@ pub mod PrimStEph {
         fn prim_mst<V: HashOrd + TotalOrder>(
             graph: &LabUnDirGraphStEph<V, u64>,
             start: V,
-        ) -> (result: SetStEph<LabEdge<V, u64>>)
+        ) -> (mst: SetStEph<LabEdge<V, u64>>)
             requires Self::spec_primsteph_wf(graph),
-            ensures result.spec_setsteph_wf();
+            ensures mst.spec_setsteph_wf();
 
         /// Compute total weight of MST.
         /// APAS: Work O(m), Span O(1)
@@ -218,13 +218,13 @@ pub mod PrimStEph {
     pub fn prim_mst<V: HashOrd + Display + TotalOrder>(
         graph: &LabUnDirGraphStEph<V, u64>,
         start: &V,
-    ) -> (result: SetStEph<LabEdge<V, u64>>)
+    ) -> (mst: SetStEph<LabEdge<V, u64>>)
         requires
             spec_labgraphview_wf(graph@),
             valid_key_type_LabEdge::<V, u64>(),
             graph@.A.len() * 4 + 4 <= usize::MAX as int,
         ensures
-            result.spec_setsteph_wf(),
+            mst.spec_setsteph_wf(),
     {
         let m = graph.labeled_edges.size();
         assert(m as int == graph@.A.len());
@@ -450,12 +450,12 @@ pub mod PrimStEph {
     // 12. derive impls in verus!
 
     impl<V: StT + Ord + Clone> Clone for PQEntry<V> {
-        fn clone(&self) -> (result: Self)
-            ensures result@ == self@,
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@,
         {
-            let result = PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() };
-            proof { assume(result@ == self@); }
-            result
+            let cloned = PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() };
+            proof { assume(cloned@ == self@); }
+            cloned
         }
     }
 

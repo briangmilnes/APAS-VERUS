@@ -64,7 +64,7 @@ pub mod VertexMatchingMtEph {
     pub fn parallel_matching_mt<V: StT + MtT + Hash + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
-    ) -> (result: SetStEph<Edge<V>>)
+    ) -> (matching: SetStEph<Edge<V>>)
         requires
             valid_key_type_Edge::<V>(),
             graph.E.spec_setsteph_wf(),
@@ -90,7 +90,7 @@ pub mod VertexMatchingMtEph {
     fn flip_coins_parallel<V: StT + MtT + Hash + 'static>(
         edges: &ArraySeqStEphS<Edge<V>>,
         seed: u64,
-    ) -> (result: ArraySeqStEphS<bool>)
+    ) -> (coins: ArraySeqStEphS<bool>)
         requires valid_key_type_Edge::<V>(),
         ensures true,
     {

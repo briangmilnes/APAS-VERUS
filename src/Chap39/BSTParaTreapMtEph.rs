@@ -477,7 +477,7 @@ pub mod BSTParaTreapMtEph {
     }
 
     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority (treap heap).
-    fn join_with_priority<T: MtKey + ClonePreservesView + 'static>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> (result: ParamTreap<T>)
+    fn join_with_priority<T: MtKey + ClonePreservesView + 'static>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> (joined: ParamTreap<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
@@ -487,7 +487,7 @@ pub mod BSTParaTreapMtEph {
             left@.len() + right@.len() < usize::MAX as nat,
             forall|t: T| (#[trigger] left@.contains(t@)) ==> t.cmp_spec(&key) == Less,
             forall|t: T| (#[trigger] right@.contains(t@)) ==> t.cmp_spec(&key) == Greater,
-        ensures result@ =~= left@.union(right@).insert(key@), result@.finite(),
+        ensures joined@ =~= left@.union(right@).insert(key@), joined@.finite(),
         decreases left@.len() + right@.len(),
     {
         let left_priority = tree_priority_internal(&left);
@@ -1104,13 +1104,13 @@ pub mod BSTParaTreapMtEph {
                     assert(a@ == alv.union(arv).insert(akv));
                     assert(blv.union(brv) == b@.remove(akv));
                 }
-                let f1 = move || -> (result: ParamTreap<T>)
-                    ensures result@.finite(), result@ == al@.union(bl@)
+                let f1 = move || -> (merged: ParamTreap<T>)
+                    ensures merged@.finite(), merged@ == al@.union(bl@)
                 {
                     union_inner(&al, &bl)
                 };
-                let f2 = move || -> (result: ParamTreap<T>)
-                    ensures result@.finite(), result@ == ar@.union(br@)
+                let f2 = move || -> (merged: ParamTreap<T>)
+                    ensures merged@.finite(), merged@ == ar@.union(br@)
                 {
                     union_inner(&ar, &br)
                 };
@@ -1273,11 +1273,11 @@ pub mod BSTParaTreapMtEph {
                         assert(ar@.contains(t@));
                     };
                 }
-                let f1 = move || -> (result: ParamTreap<T>)
-                    ensures result@.finite(), result@ == al@.intersect(bl@)
+                let f1 = move || -> (common: ParamTreap<T>)
+                    ensures common@.finite(), common@ == al@.intersect(bl@)
                 { intersect_inner(&al, &bl) };
-                let f2 = move || -> (result: ParamTreap<T>)
-                    ensures result@.finite(), result@ == ar@.intersect(br@)
+                let f2 = move || -> (common: ParamTreap<T>)
+                    ensures common@.finite(), common@ == ar@.intersect(br@)
                 { intersect_inner(&ar, &br) };
                 let Pair(left_res, right_res) = crate::ParaPair!(f1, f2);
                 let ghost lrv = left_res@;
@@ -1450,11 +1450,11 @@ pub mod BSTParaTreapMtEph {
                     };
                     assert(blv.union(brv) == bv.remove(akv));
                 }
-                let f1 = move || -> (result: ParamTreap<T>)
-                    ensures result@.finite(), result@ == al@.difference(bl@)
+                let f1 = move || -> (diff: ParamTreap<T>)
+                    ensures diff@.finite(), diff@ == al@.difference(bl@)
                 { difference_inner(&al, &bl) };
-                let f2 = move || -> (result: ParamTreap<T>)
-                    ensures result@.finite(), result@ == ar@.difference(br@)
+                let f2 = move || -> (diff: ParamTreap<T>)
+                    ensures diff@.finite(), diff@ == ar@.difference(br@)
                 { difference_inner(&ar, &br) };
                 let Pair(left_res, right_res) = crate::ParaPair!(f1, f2);
                 let ghost lrv = left_res@;
@@ -1575,7 +1575,7 @@ pub mod BSTParaTreapMtEph {
         tree: &ParamTreap<T>,
         predicate: &Arc<F>,
         Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
-    ) -> (result: ParamTreap<T>)
+    ) -> (filtered: ParamTreap<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
@@ -1584,12 +1584,12 @@ pub mod BSTParaTreapMtEph {
                 ==> keep == spec_pred(x@),
             tree@.len() < usize::MAX as nat,
         ensures
-            result@.finite(),
-            result@.subset_of(tree@),
-            forall|v: T::V| #[trigger] result@.contains(v)
+            filtered@.finite(),
+            filtered@.subset_of(tree@),
+            forall|v: T::V| #[trigger] filtered@.contains(v)
                 ==> tree@.contains(v) && spec_pred(v),
             forall|v: T::V| #[trigger] tree@.contains(v) && spec_pred(v)
-                ==> result@.contains(v),
+                ==> filtered@.contains(v),
         decreases tree@.len(),
     {
         proof { use_type_invariant(tree); }
@@ -1778,7 +1778,7 @@ pub mod BSTParaTreapMtEph {
         filter_inner(tree, &predicate, Ghost(spec_pred))
     }
 
-    fn reduce_inner<T: MtKey + ClonePreservesView + 'static, F>(tree: &ParamTreap<T>, op: &Arc<F>, identity: T) -> (result: T)
+    fn reduce_inner<T: MtKey + ClonePreservesView + 'static, F>(tree: &ParamTreap<T>, op: &Arc<F>, identity: T) -> (reduced: T)
     where
         F: Fn(T, T) -> T + Send + Sync + 'static,
         requires
@@ -1786,7 +1786,7 @@ pub mod BSTParaTreapMtEph {
             view_ord_consistent::<T>(),
             tree@.finite(),
             forall|a: T, b: T| #[trigger] op.requires((a, b)),
-        ensures tree@.len() == 0 ==> result == identity,
+        ensures tree@.len() == 0 ==> reduced == identity,
         decreases tree@.len(),
     {
         match expose_internal(tree) {
@@ -1812,14 +1812,14 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    fn reduce_parallel<T: MtKey + ClonePreservesView + 'static, F>(tree: &ParamTreap<T>, op: F, base: T) -> (result: T)
+    fn reduce_parallel<T: MtKey + ClonePreservesView + 'static, F>(tree: &ParamTreap<T>, op: F, base: T) -> (reduced: T)
     where
         F: Fn(T, T) -> T + Send + Sync + 'static,
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
             forall|a: T, b: T| #[trigger] op.requires((a, b)),
-        ensures tree@.len() == 0 ==> result == base,
+        ensures tree@.len() == 0 ==> reduced == base,
     {
         proof { use_type_invariant(tree); }
         let op = Arc::new(op);

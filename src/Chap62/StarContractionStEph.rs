@@ -44,7 +44,7 @@ pub mod StarContractionStEph {
         fn star_contract<V, R, F, G>(
             graph: &UnDirGraphStEph<V>, base: &F, expand: &G,
             Ghost(r_inv): Ghost<spec_fn(R) -> bool>,
-        ) -> (result: R)
+        ) -> (contracted: R)
         where
             V: HashOrd,
             F: Fn(&SetStEph<V>) -> R,
@@ -59,7 +59,7 @@ pub mod StarContractionStEph {
                 ==> #[trigger] expand.requires((v, e, c, p, r)),
             forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R, out: R|
                 #[trigger] expand.ensures((v, e, c, p, r), out) ==> r_inv(out),
-        ensures r_inv(result);
+        ensures r_inv(contracted);
 
         /// Contract graph to just vertices (no edges).
         /// APAS: Work O((n + m) lg n), Span O((n + m) lg n)
@@ -75,7 +75,7 @@ pub mod StarContractionStEph {
     fn star_contract_fuel<V, R, F, G>(
         graph: &UnDirGraphStEph<V>, base: &F, expand: &G, fuel: usize,
         Ghost(r_inv): Ghost<spec_fn(R) -> bool>,
-    ) -> (result: R)
+    ) -> (contracted: R)
     where
         V: HashOrd,
         F: Fn(&SetStEph<V>) -> R,
@@ -91,9 +91,9 @@ pub mod StarContractionStEph {
         forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R, out: R|
             #[trigger] expand.ensures((v, e, c, p, r), out) ==> r_inv(out),
     ensures
-        r_inv(result),
+        r_inv(contracted),
         (graph@.A.is_empty() || fuel == 0) ==>
-            exists|s: &SetStEph<V>| s@ == graph@.V && #[trigger] s.spec_setsteph_wf() && base.ensures((s,), result),
+            exists|s: &SetStEph<V>| s@ == graph@.V && #[trigger] s.spec_setsteph_wf() && base.ensures((s,), contracted),
     decreases fuel,
     {
         if graph.sizeE() == 0 || fuel == 0 {
@@ -161,7 +161,7 @@ pub mod StarContractionStEph {
     pub fn star_contract<V, R, F, G>(
         graph: &UnDirGraphStEph<V>, base: &F, expand: &G,
         Ghost(r_inv): Ghost<spec_fn(R) -> bool>,
-    ) -> (result: R)
+    ) -> (contracted: R)
     where
         V: HashOrd,
         F: Fn(&SetStEph<V>) -> R,
@@ -177,9 +177,9 @@ pub mod StarContractionStEph {
         forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R, out: R|
             #[trigger] expand.ensures((v, e, c, p, r), out) ==> r_inv(out),
     ensures
-        r_inv(result),
+        r_inv(contracted),
         graph@.A.is_empty() ==>
-            exists|s: &SetStEph<V>| s@ == graph@.V && #[trigger] s.spec_setsteph_wf() && base.ensures((s,), result),
+            exists|s: &SetStEph<V>| s@ == graph@.V && #[trigger] s.spec_setsteph_wf() && base.ensures((s,), contracted),
     {
         let fuel = graph.sizeV();
         let result = star_contract_fuel(graph, base, expand, fuel, Ghost(r_inv));
@@ -316,7 +316,7 @@ pub mod StarContractionStEph {
     ///
     /// - APAS: Work O((n + m) lg n), Span O((n + m) lg n)
     /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — agrees with APAS.
-    pub fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (result: SetStEph<V>)
+    pub fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (vertices: SetStEph<V>)
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),

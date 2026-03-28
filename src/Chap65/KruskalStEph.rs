@@ -437,9 +437,9 @@ pub mod KruskalStEph {
     pub fn verify_mst_size<V: HashOrd>(
         n_vertices: usize,
         mst_edges: &SetStEph<LabEdge<V, u64>>,
-    ) -> (result: bool)
+    ) -> (valid: bool)
         requires mst_edges.spec_setsteph_wf(),
-        ensures result == (mst_edges@.len() == (if n_vertices > 0 { (n_vertices - 1) as nat } else { 0nat })),
+        ensures valid == (mst_edges@.len() == (if n_vertices > 0 { (n_vertices - 1) as nat } else { 0nat })),
     {
         let expected_edges = if n_vertices > 0 { n_vertices - 1 } else { 0 };
         mst_edges.size() == expected_edges

@@ -1606,7 +1606,7 @@ pub mod BSTTreapStEph {
     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority.
     fn join_with_priority_st<T: StT + Ord + IsLtTransitive>(
         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
-    ) -> (result: BSTTreapStEph<T>)
+    ) -> (joined: BSTTreapStEph<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent_st::<T>(),
@@ -1618,9 +1618,9 @@ pub mod BSTTreapStEph {
             forall|t: T| (#[trigger] right@.contains(t@)) ==> t.cmp_spec(&key) == Greater,
             spec_param_wf_link(&left.root), spec_param_wf_link(&right.root),
             left.spec_bsttreapsteph_wf(), right.spec_bsttreapsteph_wf(),
-        ensures result@ =~= left@.union(right@).insert(key@), result@.finite(),
-            spec_param_wf_link(&result.root),
-            result.spec_bsttreapsteph_wf(),
+        ensures joined@ =~= left@.union(right@).insert(key@), joined@.finite(),
+            spec_param_wf_link(&joined.root),
+            joined.spec_bsttreapsteph_wf(),
         decreases left@.len() + right@.len(),
     {
         let left_priority = tree_priority_st(&left);
@@ -2545,7 +2545,7 @@ pub mod BSTTreapStEph {
         tree: BSTTreapStEph<T>,
         predicate: &F,
         Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
-    ) -> (result: BSTTreapStEph<T>)
+    ) -> (filtered: BSTTreapStEph<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent_st::<T>(),
@@ -2556,14 +2556,14 @@ pub mod BSTTreapStEph {
             spec_param_wf_link(&tree.root),
             tree.spec_bsttreapsteph_wf(),
         ensures
-            result@.finite(),
-            result@.subset_of(tree@),
-            forall|v: T::V| #[trigger] result@.contains(v)
+            filtered@.finite(),
+            filtered@.subset_of(tree@),
+            forall|v: T::V| #[trigger] filtered@.contains(v)
                 ==> tree@.contains(v) && spec_pred(v),
             forall|v: T::V| #[trigger] tree@.contains(v) && spec_pred(v)
-                ==> result@.contains(v),
-            spec_param_wf_link(&result.root),
-            result.spec_bsttreapsteph_wf(),
+                ==> filtered@.contains(v),
+            spec_param_wf_link(&filtered.root),
+            filtered.spec_bsttreapsteph_wf(),
         decreases tree@.len(),
     {
         match expose_to_parts_st(tree) {
@@ -2677,7 +2677,7 @@ pub mod BSTTreapStEph {
 
     fn reduce_inner_st<T: StT + Ord + IsLtTransitive, F: Fn(T, T) -> T>(
         tree: BSTTreapStEph<T>, op: &F, identity: T,
-    ) -> (result: T)
+    ) -> (reduced: T)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent_st::<T>(),
@@ -2686,7 +2686,7 @@ pub mod BSTTreapStEph {
             spec_param_wf_link(&tree.root),
             tree.spec_bsttreapsteph_wf(),
             forall|a: T, b: T| #[trigger] op.requires((a, b)),
-        ensures tree@.len() == 0 ==> result == identity,
+        ensures tree@.len() == 0 ==> reduced == identity,
         decreases tree@.len(),
     {
         match expose_to_parts_st(tree) {

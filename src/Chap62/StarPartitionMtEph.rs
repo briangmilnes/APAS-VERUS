@@ -73,13 +73,13 @@ pub mod StarPartitionMtEph {
     pub fn parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
-    ) -> (result: (SetStEph<V>, HashMapWithViewPlus<V, V>))
+    ) -> (partition: (SetStEph<V>, HashMapWithViewPlus<V, V>))
         requires
             valid_key_type_Edge::<V>(),
             spec_graphview_wf(graph@),
         ensures
-            result.0.spec_setsteph_wf(),
-            spec_valid_partition_map::<V>(graph@.V, result.0@, result.1@),
+            partition.0.spec_setsteph_wf(),
+            spec_valid_partition_map::<V>(graph@.V, partition.0@, partition.1@),
     {
         let vertices_vec = graph.V.to_seq();
         let nv = vertices_vec.len();

@@ -66,13 +66,13 @@ pub mod StarPartitionStEph {
     ///
     /// - APAS: Work Θ(n + m), Span Θ(n + m)
     /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — agrees with APAS.
-    pub fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (result: (SetStEph<V>, HashMapWithViewPlus<V, V>))
+    pub fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (partition: (SetStEph<V>, HashMapWithViewPlus<V, V>))
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
         ensures
-            result.0.spec_setsteph_wf(),
-            spec_valid_partition_map::<V>(graph.V@, result.0@, result.1@),
+            partition.0.spec_setsteph_wf(),
+            spec_valid_partition_map::<V>(graph.V@, partition.0@, partition.1@),
     {
         let mut partition_map = HashMapWithViewPlus::<V, V>::new();
         let mut centers: SetStEph<V> = SetLit![];

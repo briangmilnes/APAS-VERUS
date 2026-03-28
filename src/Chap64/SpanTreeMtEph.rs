@@ -58,16 +58,16 @@ pub mod SpanTreeMtEph {
     pub fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
-    ) -> (result: SetStEph<Edge<V>>)
+    ) -> (tree_edges: SetStEph<Edge<V>>)
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
-        ensures result.spec_setsteph_wf(),
+        ensures tree_edges.spec_setsteph_wf(),
     {
         // Base: no edges means no spanning tree edges.
-        let base = |_vertices: &SetStEph<V>| -> (result: SetStEph<Edge<V>>)
+        let base = |_vertices: &SetStEph<V>| -> (empty_edges: SetStEph<Edge<V>>)
             requires valid_key_type_Edge::<V>()
-            ensures result.spec_setsteph_wf()
+            ensures empty_edges.spec_setsteph_wf()
         {
             SetLit![]
         };
@@ -80,11 +80,11 @@ pub mod SpanTreeMtEph {
                       _centers: &SetStEph<V>,
                       partition_map: &HashMapWithViewPlus<V, V>,
                       quotient_tree: SetStEph<Edge<V>>|
-            -> (result: SetStEph<Edge<V>>)
+            -> (span_edges: SetStEph<Edge<V>>)
             requires
                 valid_key_type_Edge::<V>(),
                 obeys_key_model::<V>(),
-            ensures result.spec_setsteph_wf()
+            ensures span_edges.spec_setsteph_wf()
         {
             let mut spanning_edges: SetStEph<Edge<V>> = SetLit![];
 
@@ -159,13 +159,13 @@ pub mod SpanTreeMtEph {
     pub fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(
         graph: &UnDirGraphMtEph<V>,
         tree_edges: &SetStEph<Edge<V>>,
-    ) -> (result: bool)
+    ) -> (valid: bool)
         requires
             spec_graphview_wf(graph@),
             valid_key_type_for_graph::<V>(),
             tree_edges.spec_setsteph_wf(),
         ensures
-            result ==> tree_edges@.len() == (
+            valid ==> tree_edges@.len() == (
                 if graph@.V.len() > 0 { (graph@.V.len() - 1) as nat } else { 0nat }),
     {
         let n = graph.sizeV();

@@ -752,7 +752,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn in_order_parallel<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (result: Vec<T>)
+    fn in_order_parallel<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (elements: Vec<T>)
         requires link_spec_size(*link) <= usize::MAX as nat,
         ensures true,
     {
@@ -761,7 +761,7 @@ pub mod BSTRBMtEph {
         out
     }
 
-    fn pre_order_parallel<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (result: Vec<T>)
+    fn pre_order_parallel<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (elements: Vec<T>)
         requires link_spec_size(*link) <= usize::MAX as nat,
         ensures true,
     {
@@ -796,7 +796,7 @@ pub mod BSTRBMtEph {
         Some(node)
     }
 
-    fn filter_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, predicate: &Arc<F>) -> (result: Vec<T>)
+    fn filter_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, predicate: &Arc<F>) -> (filtered: Vec<T>)
         where
             F: Fn(&T) -> bool + Send + Sync,
         requires
@@ -825,7 +825,7 @@ pub mod BSTRBMtEph {
         }
     }
 
-    fn reduce_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (result: T)
+    fn reduce_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (reduced: T)
         where
             F: Fn(T, T) -> T + Send + Sync,
         requires

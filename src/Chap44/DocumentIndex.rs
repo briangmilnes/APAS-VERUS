@@ -30,12 +30,12 @@ pub mod DocumentIndex {
         }
 
         impl Clone for DocumentIndex {
-            fn clone(&self) -> (result: Self)
-                ensures result == *self
+            fn clone(&self) -> (cloned: Self)
+                ensures cloned == *self
             {
-                let result = DocumentIndex { word_to_docs: self.word_to_docs.clone() };
-                proof { assume(result == *self); }
-                result
+                let cloned = DocumentIndex { word_to_docs: self.word_to_docs.clone() };
+                proof { assume(cloned == *self); }
+                cloned
             }
         }
 
