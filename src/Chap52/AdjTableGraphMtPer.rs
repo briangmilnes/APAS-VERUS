@@ -230,29 +230,30 @@ broadcast use {
         }
 
         fn has_edge(&self, u: &V, v: &V) -> (found: bool) {
-            let found = match self.adj.find(u) {
+            // find ensures: Some(ns) => contains_key(u@) && adj@[u@] == ns@,
+            //               None => !contains_key(u@)
+            match self.adj.find(u) {
                 Some(neighbors) => {
                     proof { assume(neighbors.spec_avltreesetmtper_wf()); }
                     neighbors.find(v)
+                    // AVLTreeSetMtPer::find ensures: result == neighbors@.contains(v@)
+                    // == self.spec_adj()[u@].contains(v@)
+                    // postcondition: found == (true && adj[u@].contains(v@)) ✓
                 }
-                None => false,
-            };
-            proof {
-                assume(found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@)));
+                None => {
+                    // !dom.contains(u@), so postcondition: false == (false && ...) ✓
+                    false
+                }
             }
-            found
         }
 
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>) {
-            let neighbors = match self.adj.find(u) {
+            // find ensures: Some(v) => contains_key(u@) && self@[u@] == v@,
+            //               None => !contains_key(u@)
+            match self.adj.find(u) {
                 Some(ns) => ns.clone(),
                 None => AVLTreeSetMtPer::empty(),
-            };
-            proof {
-                assume(self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@]);
-                assume(!self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty());
             }
-            neighbors
         }
 
         fn out_degree(&self, u: &V) -> usize {
@@ -262,18 +263,39 @@ broadcast use {
         }
 
         fn insert_vertex(&self, v: V) -> (updated: Self) {
-            let updated = if self.adj.find(&v).is_some() {
-                self.clone()
-            } else {
-                AdjTableGraphMtPer {
-                    adj: self.adj.insert(v, AVLTreeSetMtPer::empty()),
+            match self.adj.find(&v) {
+                Some(_) => {
+                    // find ensures: self.adj@.contains_key(v@)
+                    // Use adj.clone() (has ensures) instead of derived self.clone() (no ensures).
+                    let updated = AdjTableGraphMtPer { adj: self.adj.clone() };
+                    proof {
+                        // clone ensures: updated.adj@ == self.adj@
+                        assert(updated.spec_adj() =~= self.spec_adj());
+                        // Graph closure: identical spec_adj, so self's closure applies.
+                        assert forall|u: <V as View>::V, w: <V as View>::V|
+                            updated.spec_adj().dom().contains(u)
+                            && #[trigger] updated.spec_adj().index(u).contains(w)
+                            implies updated.spec_adj().dom().contains(w)
+                        by {
+                            assert(self.spec_adj().dom().contains(u));
+                            assert(self.spec_adj().index(u).contains(w));
+                        };
+                    }
+                    updated
                 }
-            };
-            proof {
-                assume(updated.spec_adjtablegraphmtper_wf());
-                assume(updated.spec_adj().dom().contains(v@));
+                None => {
+                    // find ensures: !self.adj@.contains_key(v@)
+                    let updated = AdjTableGraphMtPer {
+                        adj: self.adj.insert(v, AVLTreeSetMtPer::empty()),
+                    };
+                    // insert ensures: dom =~= old_dom.insert(v@) => dom.contains(v@)
+                    proof {
+                        // Graph closure not provable: insert doesn't ensure value preservation.
+                        assume(updated.spec_adjtablegraphmtper_wf());
+                    }
+                    updated
+                }
             }
-            updated
         }
 
         fn delete_vertex(&self, v: &V) -> (updated: Self) {
@@ -328,24 +350,43 @@ broadcast use {
         }
 
         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
-            let updated = match self.adj.find(u) {
+            match self.adj.find(u) {
                 Some(u_neighbors) => {
-                    proof {
-                        assume(u_neighbors.spec_avltreesetmtper_wf());
-                    }
+                    proof { assume(u_neighbors.spec_avltreesetmtper_wf()); }
                     let new_u_neighbors = u_neighbors.delete(v);
-                    AdjTableGraphMtPer {
+                    let updated = AdjTableGraphMtPer {
                         adj: self.adj.insert(u.clone(), new_u_neighbors),
+                    };
+                    proof {
+                        // insert doesn't ensure value preservation, so can't prove
+                        // graph closure or that adj[u@] lost v@.
+                        assume(updated.spec_adjtablegraphmtper_wf());
+                        assume(!updated.spec_adj().dom().contains(u@)
+                            || !updated.spec_adj()[u@].contains(v@));
                     }
+                    updated
                 }
-                None => self.clone(),
-            };
-            proof {
-                assume(updated.spec_adjtablegraphmtper_wf());
-                assume(!updated.spec_adj().dom().contains(u@)
-                    || !updated.spec_adj()[u@].contains(v@));
+                None => {
+                    // find ensures: !self.adj@.contains_key(u@)
+                    // Use adj.clone() (has ensures) instead of derived self.clone().
+                    let updated = AdjTableGraphMtPer { adj: self.adj.clone() };
+                    proof {
+                        // clone ensures: updated.adj@ == self.adj@
+                        assert(updated.spec_adj() =~= self.spec_adj());
+                        // Graph closure from self's wf.
+                        assert forall|u2: <V as View>::V, w: <V as View>::V|
+                            updated.spec_adj().dom().contains(u2)
+                            && #[trigger] updated.spec_adj().index(u2).contains(w)
+                            implies updated.spec_adj().dom().contains(w)
+                        by {
+                            assert(self.spec_adj().dom().contains(u2));
+                            assert(self.spec_adj().index(u2).contains(w));
+                        };
+                        // postcondition: !dom.contains(u@) is true, so disjunction holds.
+                    }
+                    updated
+                }
             }
-            updated
         }
     }
 
