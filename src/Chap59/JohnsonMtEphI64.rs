@@ -33,7 +33,7 @@ pub mod JohnsonMtEphI64 {
         pub trait JohnsonMtEphI64Trait {
             /// Parallel Johnson's all-pairs shortest path algorithm
             /// APAS: Work O(mn log n), Span O(m log n) where n = |V|, m = |E|
-            fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> (result: AllPairsResultStEphI64)
+            fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> (apsp: AllPairsResultStEphI64)
                 requires
                     graph@.V.len() > 0,
                     graph@.V.len() < usize::MAX as nat,
@@ -44,7 +44,7 @@ pub mod JohnsonMtEphI64 {
                     obeys_feq_clone::<ArraySeqStEphS<i64>>(),
                     obeys_feq_clone::<ArraySeqStEphS<usize>>(),
                 ensures
-                    result.spec_n() as nat == graph@.V.len();
+                    apsp.spec_n() as nat == graph@.V.len();
         }
     pub type T = WeightedDirGraphStEphI128<usize>;
 
@@ -54,9 +54,9 @@ pub mod JohnsonMtEphI64 {
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1).
     // veracity: no_requires
-    fn adjust_distance(d_prime: i64, h_u: i64, h_v: i64) -> (result: i64)
+    fn adjust_distance(d_prime: i64, h_u: i64, h_v: i64) -> (adjusted: i64)
         ensures
-            d_prime == i64::MAX ==> result == i64::MAX,
+            d_prime == i64::MAX ==> adjusted == i64::MAX,
     {
         if d_prime == i64::MAX { i64::MAX }
         else {
@@ -76,7 +76,7 @@ pub mod JohnsonMtEphI64 {
     ///
     /// - APAS: Work O(mn log n), Span O(m log n), Parallelism Θ(n)
     /// - Claude-Opus-4.6: Work O(mn log n), Span O(m log n) — agrees with APAS; ParaPair! recursion achieves Θ(n) parallelism in Phase 3
-    pub fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> (result: AllPairsResultStEphI64)
+    pub fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> (apsp: AllPairsResultStEphI64)
         requires
             graph@.V.len() > 0,
             graph@.V.len() < usize::MAX as nat,
@@ -87,7 +87,7 @@ pub mod JohnsonMtEphI64 {
             obeys_feq_clone::<ArraySeqStEphS<i64>>(),
             obeys_feq_clone::<ArraySeqStEphS<usize>>(),
         ensures
-            result.spec_n() as nat == graph@.V.len(),
+            apsp.spec_n() as nat == graph@.V.len(),
     {
         let n = graph.vertices().size();
         assert(n as nat == graph@.V.len());
@@ -131,7 +131,7 @@ pub mod JohnsonMtEphI64 {
         start: usize,
         end: usize,
         n: usize,
-    ) -> (result: (
+    ) -> (dist_pred: (
         ArraySeqStEphS<ArraySeqStEphS<i64>>,
         ArraySeqStEphS<ArraySeqStEphS<usize>>,
     ))
@@ -149,8 +149,8 @@ pub mod JohnsonMtEphI64 {
             obeys_feq_clone::<ArraySeqStEphS<i64>>(),
             obeys_feq_clone::<ArraySeqStEphS<usize>>(),
         ensures
-            result.0.seq@.len() == (end - start) as int,
-            result.1.seq@.len() == (end - start) as int,
+            dist_pred.0.seq@.len() == (end - start) as int,
+            dist_pred.1.seq@.len() == (end - start) as int,
         decreases end - start,
     {
         let range_size = end - start;
@@ -454,13 +454,13 @@ pub mod JohnsonMtEphI64 {
     ///
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — builds n×n distance and predecessor matrices
-    fn create_negative_cycle_result(n: usize) -> (result: AllPairsResultStEphI64)
+    fn create_negative_cycle_result(n: usize) -> (neg_cycle_apsp: AllPairsResultStEphI64)
         requires
             n < usize::MAX,
         ensures
-            result.n == n,
-            result.distances.seq@.len() == n as int,
-            result.predecessors.seq@.len() == n as int,
+            neg_cycle_apsp.n == n,
+            neg_cycle_apsp.distances.seq@.len() == n as int,
+            neg_cycle_apsp.predecessors.seq@.len() == n as int,
     {
         let ghost n_int = n as int;
         let inner_dist = |_i: usize| -> (r: i64) ensures r == i64::MAX { i64::MAX };

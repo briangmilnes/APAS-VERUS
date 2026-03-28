@@ -55,7 +55,7 @@ pub mod JohnsonStEphF64 {
         /// - APAS: Work O(mn log n), Span O(m log n) where n = |V|, m = |E|.
         /// - Claude-Opus-4.6: Work O(mn log n), Span O(mn log n) — sequential n Dijkstras.
         fn johnson_apsp(graph: &WeightedDirGraphStEphF64<usize>)
-            -> (result: AllPairsResultStEphF64)
+            -> (apsp: AllPairsResultStEphF64)
             requires
                 graph@.V.len() > 0,
                 graph@.V.len() < usize::MAX as nat,
@@ -64,7 +64,7 @@ pub mod JohnsonStEphF64 {
                 forall|v: usize| graph@.V.contains(v) <==> v < graph@.V.len(),
                 graph@.A.len() * 2 + 2 <= usize::MAX as int,
             ensures
-                result.spec_n() as nat == graph@.V.len();
+                apsp.spec_n() as nat == graph@.V.len();
     }
 
     // 9. impls
@@ -74,9 +74,9 @@ pub mod JohnsonStEphF64 {
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1).
     // veracity: no_requires
-    fn adjust_distance(d_prime: WrappedF64, h_u: WrappedF64, h_v: WrappedF64) -> (result: WrappedF64)
+    fn adjust_distance(d_prime: WrappedF64, h_u: WrappedF64, h_v: WrappedF64) -> (adjusted: WrappedF64)
         ensures
-            !d_prime.spec_is_finite() ==> !result.spec_is_finite(),
+            !d_prime.spec_is_finite() ==> !adjusted.spec_is_finite(),
     {
         if !d_prime.is_finite() { unreachable_dist() }
         else {
@@ -88,7 +88,7 @@ pub mod JohnsonStEphF64 {
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1).
     // veracity: no_requires
-    fn reweight_edge(weight: WrappedF64, h_u: WrappedF64, h_v: WrappedF64) -> (result: WrappedF64)
+    fn reweight_edge(weight: WrappedF64, h_u: WrappedF64, h_v: WrappedF64) -> (reweighted: WrappedF64)
         ensures true,
     {
         weight.dist_add(&h_u).dist_sub(&h_v)
@@ -328,10 +328,10 @@ pub mod JohnsonStEphF64 {
     /// Create all-unreachable result for negative cycle detection.
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2).
-    fn create_negative_cycle_result(n: usize) -> (result: AllPairsResultStEphF64)
+    fn create_negative_cycle_result(n: usize) -> (neg_cycle_apsp: AllPairsResultStEphF64)
         requires n < usize::MAX,
         ensures
-            result.spec_n() == n,
+            neg_cycle_apsp.spec_n() == n,
     {
         AllPairsResultStEphF64::new(n)
     }
@@ -348,7 +348,7 @@ pub mod JohnsonStEphF64 {
     /// - APAS: Work O(mn log n), Span O(m log n) where n = |V|, m = |E|.
     /// - Claude-Opus-4.6: Work O(mn log n), Span O(mn log n) — sequential n Dijkstras.
     pub fn johnson_apsp(graph: &WeightedDirGraphStEphF64<usize>)
-        -> (result: AllPairsResultStEphF64)
+        -> (apsp: AllPairsResultStEphF64)
         requires
             graph@.V.len() > 0,
             graph@.V.len() < usize::MAX as nat,
@@ -357,7 +357,7 @@ pub mod JohnsonStEphF64 {
             forall|v: usize| graph@.V.contains(v) <==> v < graph@.V.len(),
             graph@.A.len() * 2 + 2 <= usize::MAX as int,
         ensures
-            result.spec_n() as nat == graph@.V.len(),
+            apsp.spec_n() as nat == graph@.V.len(),
     {
         let n = graph.vertices().size();
         assert(n as nat == graph@.V.len());
