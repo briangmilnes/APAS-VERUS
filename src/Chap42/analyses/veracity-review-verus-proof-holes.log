@@ -21,14 +21,14 @@ Table of Contents:
 =================================================================
 
 ⚠ TableMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2216: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableMtEph.rs:2216: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       2212 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       2214 |         {
       2215 |             let equal = self.entries == other.entries;
       2217 |             equal
       2218 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2228: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableMtEph.rs:2228: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       2222 |         fn clone(&self) -> (cloned: Self)
             ...
       2226 |                 entries: self.entries.clone(),
@@ -36,28 +36,28 @@ Table of Contents:
       2229 |             cloned
       2230 |         }
 ⚠ TableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:2230: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2226 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableStEph.rs:2520: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2516 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      2228 |         {
-      2229 |             let equal = self.entries == other.entries;
-      2231 |             equal
-      2232 |         }
+      2518 |         {
+      2519 |             let equal = self.entries == other.entries;
+      2521 |             equal
+      2522 |         }
 ⚠ TableStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2279: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2275 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableStPer.rs:2581: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2577 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      2277 |         {
-      2278 |             let equal = self.entries == other.entries;
-      2280 |             equal
-      2281 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2290: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2285 |         fn clone(&self) -> (cloned: Self)
+      2579 |         {
+      2580 |             let equal = self.entries == other.entries;
+      2582 |             equal
+      2583 |         }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableStPer.rs:2592: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2587 |         fn clone(&self) -> (cloned: Self)
             ...
-      2288 |             let cloned = TableStPer { entries: self.entries.clone() };
-      2289 |             proof {
-      2291 |                 lemma_seq_map_cloned_view_eq(
-      2292 |                     self.entries.seq@,
+      2590 |             let cloned = TableStPer { entries: self.entries.clone() };
+      2591 |             proof {
+      2593 |                 lemma_seq_map_cloned_view_eq(
+      2594 |                     self.entries.seq@,
 
 =================================================================
 2. Depends Upon
@@ -94,11 +94,11 @@ Proof Functions:
    31 total
 
 Function Specs:
-   108 exec fns with complete spec (requires+ensures) (62%)
+   112 exec fns with complete spec (requires+ensures) (63%)
    3 exec fns missing spec (1%)
    62 proof/spec fns clean (35%)
    0 proof/spec fns with holes (0%)
-   173 total fns
+   177 total fns
 
 
 Holes Found: 0 (actionable)
@@ -113,15 +113,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-28 11:51:16 -07:00
-Ended:     2026-03-28 11:51:17 -07:00
-Duration:  215ms
+Started:   2026-03-28 12:31:45 -07:00
+Ended:     2026-03-28 12:31:46 -07:00
+Duration:  92ms
 
 Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
-============
-
-Started:   2026-03-28 11:51:16 -07:00
-Ended:     2026-03-28 11:51:17 -07:00
-Duration:  215ms
-
-Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap42/analyses/veracity-review-verus-proof-holes.log

@@ -16,6 +16,8 @@ pub mod AdjTableGraphMtPer {
     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     #[cfg(verus_keep_ghost)]
     use crate::Chap43::OrderedTableStPer::OrderedTableStPer::spec_pair_key_determines_order;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
 
     verus! {
 
@@ -345,20 +347,57 @@ broadcast use {
 
         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             let mut new_adj = self.adj.clone();
-            if new_adj.find(&u).is_none() {
-                new_adj = new_adj.insert(u.clone(), AVLTreeSetMtPer::empty());
+            // clone ensures: new_adj@ == self.adj@
+            let ghost orig_dom_len = self.adj@.dom().len();
+
+            proof {
+                // Establish feq axioms for V so clone preserves view.
+                assert(obeys_feq_full_trigger::<V>());
             }
-            if new_adj.find(&v).is_none() {
-                proof { assume(new_adj@.dom().len() + 1 < usize::MAX as nat); }
-                new_adj = new_adj.insert(v.clone(), AVLTreeSetMtPer::empty());
+
+            // Ensure u is in domain.
+            match new_adj.find(&u) {
+                Some(_) => {
+                    // find Some ensures: new_adj@.contains_key(u@) → dom.contains(u@).
+                    // Domain unchanged: len == orig_dom_len.
+                    assert(new_adj@.dom().len() <= orig_dom_len);
+                }
+                None => {
+                    let u_clone = u.clone();
+                    proof {
+                        // cloned(u, u_clone) + obeys_feq_full → u@ == u_clone@
+                        crate::vstdplus::feq::feq::lemma_cloned_view_eq::<V>(u, u_clone);
+                    }
+                    new_adj = new_adj.insert(u_clone, AVLTreeSetMtPer::empty());
+                    // insert ensures: dom =~= old_dom.insert(u@). len grew by 1.
+                    assert(new_adj@.dom().contains(u@));
+                    assert(new_adj@.dom().len() <= orig_dom_len + 1);
+                }
             }
+            // After first match: dom.len() <= orig_dom_len + 1.
+
+            // Ensure v is in domain.
+            match new_adj.find(&v) {
+                Some(_) => {
+                    // find Some ensures: new_adj@.contains_key(v@) → dom.contains(v@).
+                }
+                None => {
+                    // Capacity: dom.len() <= orig_dom_len + 1, and
+                    // orig_dom_len + 2 < usize::MAX, so dom.len() + 1 < usize::MAX.
+                    let v_clone = v.clone();
+                    proof {
+                        crate::vstdplus::feq::feq::lemma_cloned_view_eq::<V>(v, v_clone);
+                    }
+                    new_adj = new_adj.insert(v_clone, AVLTreeSetMtPer::empty());
+                    assert(new_adj@.dom().contains(v@));
+                }
+            }
+
             let u_neighbors = match new_adj.find(&u) {
                 Some(ns) => ns,
                 None => AVLTreeSetMtPer::empty(),
             };
             proof {
-                // ns wf: new_adj is a modified clone (up to two inserts). Graph closure
-                // doesn't hold on intermediate table, so cannot prove ns@ ⊆ dom.
                 // blocked by weak OrderedTableMtPer::insert value ensures
                 assume(u_neighbors.spec_avltreesetmtper_wf());
                 assume(u_neighbors@.len() + 1 < usize::MAX as nat);
@@ -369,13 +408,11 @@ broadcast use {
                 adj: new_adj.insert(u, new_u_neighbors),
             };
             proof {
-                // Graph wf + postcondition: insert ensures only give domain info,
-                // not what values are at each key. Cannot prove graph closure or
-                // edge membership without value-level ensures.
+                // insert ensures: updated.adj@.dom() =~= new_adj@.dom().insert(u@).
+                // s.insert(a).contains(a) is always true (set axiom) → u@ in dom.
+                // v@ ∈ new_adj@.dom() (from second match) → v@ ∈ dom.insert(u@).
                 // blocked by weak OrderedTableMtPer::insert value ensures
                 assume(updated.spec_adjtablegraphmtper_wf());
-                assume(updated.spec_adj().dom().contains(u@));
-                assume(updated.spec_adj().dom().contains(v@));
                 assume(updated.spec_adj()[u@].contains(v@));
             }
             updated
