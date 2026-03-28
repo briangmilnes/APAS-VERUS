@@ -52,7 +52,7 @@ pub mod JohnsonStEphI64 {
         /// - APAS: Work O(mn log n), Span O(m log n) where n = |V|, m = |E|.
         /// - Claude-Opus-4.6: Work O(mn log n), Span O(mn log n) — sequential n Dijkstras.
         fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>)
-            -> (result: AllPairsResultStEphI64)
+            -> (apsp: AllPairsResultStEphI64)
             requires
                 graph@.V.len() > 0,
                 graph@.V.len() < usize::MAX as nat,
@@ -61,7 +61,7 @@ pub mod JohnsonStEphI64 {
                 forall|v: usize| graph@.V.contains(v) <==> v < graph@.V.len(),
                 graph@.A.len() * 2 + 2 <= usize::MAX as int,
             ensures
-                result.spec_n() as nat == graph@.V.len();
+                apsp.spec_n() as nat == graph@.V.len();
     }
 
     // 9. impls
@@ -71,9 +71,9 @@ pub mod JohnsonStEphI64 {
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1).
     // veracity: no_requires
-    fn adjust_distance(d_prime: i64, h_u: i64, h_v: i64) -> (result: i64)
+    fn adjust_distance(d_prime: i64, h_u: i64, h_v: i64) -> (adjusted: i64)
         ensures
-            d_prime == UNREACHABLE ==> result == UNREACHABLE,
+            d_prime == UNREACHABLE ==> adjusted == UNREACHABLE,
     {
         if d_prime == UNREACHABLE { UNREACHABLE }
         else {
@@ -88,7 +88,7 @@ pub mod JohnsonStEphI64 {
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1).
     // veracity: no_requires
-    fn reweight_edge(weight: i128, h_u: i64, h_v: i64) -> (result: i128)
+    fn reweight_edge(weight: i128, h_u: i64, h_v: i64) -> (reweighted: i128)
         ensures true,
     {
         let diff: i128 = (h_u as i128) - (h_v as i128);
@@ -339,12 +339,12 @@ pub mod JohnsonStEphI64 {
     /// Create all-UNREACHABLE result for negative cycle detection.
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2).
-    fn create_negative_cycle_result(n: usize) -> (result: AllPairsResultStEphI64)
+    fn create_negative_cycle_result(n: usize) -> (neg_cycle_apsp: AllPairsResultStEphI64)
         requires n < usize::MAX,
         ensures
-            result.spec_n() == n,
-            result.spec_distances_len() == n as nat,
-            result.spec_predecessors_len() == n as nat,
+            neg_cycle_apsp.spec_n() == n,
+            neg_cycle_apsp.spec_distances_len() == n as nat,
+            neg_cycle_apsp.spec_predecessors_len() == n as nat,
     {
         let mut result = AllPairsResultStEphI64::new(n);
         let mut u: usize = 0;
@@ -378,7 +378,7 @@ pub mod JohnsonStEphI64 {
     /// - APAS: Work O(mn log n), Span O(m log n) where n = |V|, m = |E|.
     /// - Claude-Opus-4.6: Work O(mn log n), Span O(mn log n) — sequential n Dijkstras.
     pub fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>)
-        -> (result: AllPairsResultStEphI64)
+        -> (apsp: AllPairsResultStEphI64)
         requires
             graph@.V.len() > 0,
             graph@.V.len() < usize::MAX as nat,
@@ -387,7 +387,7 @@ pub mod JohnsonStEphI64 {
             forall|v: usize| graph@.V.contains(v) <==> v < graph@.V.len(),
             graph@.A.len() * 2 + 2 <= usize::MAX as int,
         ensures
-            result.spec_n() as nat == graph@.V.len(),
+            apsp.spec_n() as nat == graph@.V.len(),
     {
         let n = graph.vertices().size();
         assert(n as nat == graph@.V.len());
