@@ -21,8 +21,10 @@ pub mod JohnsonStEphF64 {
         AllPairsResultStEphF64, AllPairsResultStEphF64Trait,
     };
     use crate::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::{
-        SSSPResultStEphF64, SSSPResultStEphF64Trait,
+        SSSPResultStEphF64, SSSPResultStEphF64Trait, NO_PREDECESSOR,
     };
+    use crate::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphTrait;
+    use crate::Chap57::DijkstraStEphF64::DijkstraStEphF64::dijkstra;
     use crate::Chap58::BellmanFordStEphF64::BellmanFordStEphF64::{bellman_ford, BellmanFordError};
     use crate::vstdplus::float::float::*;
     use crate::Types::Types::*;
@@ -251,6 +253,8 @@ pub mod JohnsonStEphF64 {
             spec_labgraphview_wf(reweighted@),
             reweighted@.V.len() == n as nat,
             forall|v: usize| v < n ==> reweighted@.V.contains(v),
+            reweighted@.A.len() <= graph@.A.len(),
+            reweighted@.A.len() * 2 + 2 <= usize::MAX as int,
     {
         let vertices = build_vertex_set(n - 1);
         proof {
@@ -281,6 +285,9 @@ pub mod JohnsonStEphF64 {
                 n < usize::MAX,
                 it@.0 <= it@.1.len(),
                 it@.1 == arcs_seq,
+                arcs_seq.map(|i: int, k: LabEdge<usize, WrappedF64>| k@).to_set() =~= graph@.A,
+                arcs_seq.no_duplicates(),
+                edges@.len() <= it@.0,
                 forall|a: usize, b: usize, w: f64|
                     #[trigger] edges@.contains((a, b, w)) ==>
                     vertices@.contains(a) && vertices@.contains(b),
@@ -300,7 +307,22 @@ pub mod JohnsonStEphF64 {
             }
         }
 
-        WeightedDirGraphStEphF64::from_weighed_edges(vertices, edges)
+        let result = WeightedDirGraphStEphF64::from_weighed_edges(vertices, edges);
+        proof {
+            assert(result@.V.len() == n as nat);
+            let view_fn = |k: LabEdge<usize, WrappedF64>| k@;
+            assert forall|x: LabEdge<usize, WrappedF64>, y: LabEdge<usize, WrappedF64>|
+                #[trigger] view_fn(x) == #[trigger] view_fn(y) implies x == y
+            by {};
+            arcs_seq.lemma_no_duplicates_injective(view_fn);
+            let mapped = arcs_seq.map_values(view_fn);
+            mapped.unique_seq_to_set();
+            assert(mapped =~= arcs_seq.map(|i: int, k: LabEdge<usize, WrappedF64>| k@));
+            assert(mapped.to_set() =~= graph@.A);
+            assert(arcs_seq.len() == graph@.A.len());
+            assert(result@.A.len() <= graph@.A.len());
+        }
+        result
     }
 
     /// Create all-unreachable result for negative cycle detection.
@@ -323,11 +345,8 @@ pub mod JohnsonStEphF64 {
     /// Phase 2: Reweight edges w'(u,v) = w(u,v) + h(u) - h(v) (non-negative).
     /// Phase 3: Run Dijkstra from each vertex on reweighted graph, adjust distances back.
     ///
-    /// Blocked: Phase 3 requires DijkstraStEphF64 (agent3 building concurrently).
-    ///
     /// - APAS: Work O(mn log n), Span O(m log n) where n = |V|, m = |E|.
     /// - Claude-Opus-4.6: Work O(mn log n), Span O(mn log n) — sequential n Dijkstras.
-    #[verifier::external_body]
     pub fn johnson_apsp(graph: &WeightedDirGraphStEphF64<usize>)
         -> (result: AllPairsResultStEphF64)
         requires
@@ -340,7 +359,94 @@ pub mod JohnsonStEphF64 {
         ensures
             result.spec_n() as nat == graph@.V.len(),
     {
-        unimplemented!("Blocked: requires DijkstraStEphF64 (agent3 building concurrently)")
+        let n = graph.vertices().size();
+        assert(n as nat == graph@.V.len());
+        assert(n > 0);
+        assert(n < usize::MAX);
+
+        // Phase 1: Bellman-Ford on augmented graph to compute potentials.
+        let augmented = add_dummy_source(graph, n);
+        assert(augmented@.V.len() == (n + 1) as nat);
+        assert(n < augmented@.V.len());
+
+        let bf_result = match bellman_ford(&augmented, n) {
+            Ok(sssp) => sssp,
+            Err(_) => {
+                return create_negative_cycle_result(n);
+            }
+        };
+
+        // Extract potentials from BF result.
+        let mut potentials: Vec<WrappedF64> = Vec::new();
+        let mut i: usize = 0;
+        while i < n
+            invariant
+                i <= n,
+                potentials@.len() == i as int,
+                bf_result.spec_distances().len() == (n + 1) as nat,
+            decreases n - i,
+        {
+            potentials.push(*bf_result.distances.nth(i));
+            i = i + 1;
+        }
+
+        // Phase 2: Reweight graph edges.
+        let reweighted = reweight_graph(graph, &potentials, n);
+        assert(reweighted@.V.len() == n as nat);
+        assert(spec_labgraphview_wf(reweighted@));
+        assert(reweighted@.A.len() * 2 + 2 <= usize::MAX as int);
+
+        // Phase 3: Run Dijkstra from each vertex, adjust distances back.
+        let mut result = AllPairsResultStEphF64::new(n);
+        let mut u: usize = 0;
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+        while u < n
+            invariant
+                u <= n,
+                n > 0,
+                n as nat == graph@.V.len(),
+                result.spec_allpairsresultstephf64_wf(),
+                result.spec_n() == n,
+                potentials@.len() == n as int,
+                spec_labgraphview_wf(reweighted@),
+                valid_key_type_WeightedEdge::<usize, WrappedF64>(),
+                reweighted@.V.len() == n as nat,
+                forall|v: usize| v < n ==> reweighted@.V.contains(v),
+                reweighted@.A.len() * 2 + 2 <= usize::MAX as int,
+            decreases n - u,
+        {
+            let sssp = dijkstra(&reweighted, u);
+
+            let h_u = potentials[u];
+            let mut v: usize = 0;
+            while v < n
+                invariant
+                    v <= n,
+                    u < n,
+                    potentials@.len() == n as int,
+                    result.spec_allpairsresultstephf64_wf(),
+                    result.spec_n() == n,
+                    sssp.spec_distances().len() == n as nat,
+                decreases n - v,
+            {
+                let d_prime = *sssp.distances.nth(v);
+                let h_v = potentials[v];
+                let adjusted = adjust_distance(d_prime, h_u, h_v);
+                result.set_distance(u, v, adjusted);
+
+                // Copy predecessor from Dijkstra result.
+                if v < sssp.predecessors.length() {
+                    let pred = *sssp.predecessors.nth(v);
+                    if pred != NO_PREDECESSOR {
+                        result.set_predecessor(u, v, pred);
+                    }
+                }
+                v = v + 1;
+            }
+            u = u + 1;
+        }
+
+        result
     }
 
     } // verus!

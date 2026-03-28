@@ -44,7 +44,7 @@ verus! {
                 forall |u: V::V, w: V::V, weight: f64|
                     #[trigger] edges@.contains((u, w, weight)) ==>
                         vertices@.contains(u) && vertices@.contains(w),
-            ensures spec_labgraphview_wf(g@), g@.V =~= vertices@;
+            ensures spec_labgraphview_wf(g@), g@.V =~= vertices@, g@.A =~= edges@;
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
@@ -105,6 +105,8 @@ verus! {
                     forall |u: V::V, w: V::V, weight: f64|
                         #[trigger] edge_set@.contains((u, w, weight)) ==>
                             vertices@.contains(u) && vertices@.contains(w),
+                    forall |t: (V::V, V::V, f64)| #[trigger] edge_set@.contains(t) <==>
+                        (exists |j: int| #![trigger edge_seq[j]] 0 <= j < it@.0 && edge_seq[j]@ == t),
                 decreases edge_seq.len() - it@.0,
             {
                 match it.next() {
@@ -116,6 +118,21 @@ verus! {
                         let _ = edge_set.insert(LabEdge(triple.0.clone_plus(), triple.1.clone_plus(), triple.2));
                     },
                 }
+            }
+
+            proof {
+                assert forall |t: (V::V, V::V, f64)| edge_set@.contains(t) == edges@.contains(t)
+                by {
+                    if edge_set@.contains(t) {
+                        let j = choose |j: int| #![trigger edge_seq[j]]
+                            0 <= j < edge_seq.len() && edge_seq[j]@ == t;
+                        lemma_seq_index_in_map_to_set(edge_seq, j);
+                    }
+                    if edges@.contains(t) {
+                        lemma_map_to_set_contains_index(edge_seq, t);
+                    }
+                }
+                assert(edge_set@ =~= edges@);
             }
 
             LabDirGraphStEph::from_vertices_and_labeled_arcs(vertices, edge_set)
