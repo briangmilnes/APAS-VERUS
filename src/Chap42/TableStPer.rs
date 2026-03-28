@@ -632,6 +632,24 @@ pub mod TableStPer {
                 && (#[trigger] self.entries.seq@[i]).0@ == key;
             self.entries.seq@[i].1
         }
+
+        /// The view of spec_stored_value(k) equals the map value self@[k].
+        pub proof fn lemma_spec_stored_value_view(&self, k: K::V)
+            requires self.spec_tablestper_wf(), self@.contains_key(k)
+            ensures self.spec_stored_value(k)@ == self@[k]
+        {
+            lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
+            let view_idx = choose|i: int| 0 <= i < self.entries@.len()
+                && (#[trigger] self.entries@[i]).0 == k;
+            self.entries.lemma_view_index(view_idx);
+            let sv_idx = choose|i: int| 0 <= i < self.entries.seq@.len()
+                && (#[trigger] self.entries.seq@[i]).0@ == k;
+            assert(self.entries@[sv_idx].0 == k) by {
+                self.entries.lemma_view_index(sv_idx);
+            };
+            lemma_entries_to_map_get::<K::V, V::V>(self.entries@, sv_idx);
+            self.entries.lemma_view_index(sv_idx);
+        }
     }
 
     // 9. impls
