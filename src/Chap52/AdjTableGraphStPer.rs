@@ -364,18 +364,15 @@ broadcast use {
             proof { reveal(obeys_view_eq); }
             match self.adj.find(u) {
                 Some(ns) => {
-                    proof {
-                        // Verus ICE on Set<V::V> prevents proving ns@ == self.spec_adj()[u@].
-                        assume(self.spec_adj().dom().contains(u@) ==> ns@ == self.spec_adj()[u@]);
-                    }
+                    // find ensures: self.adj@.contains_key(u@) && self.adj@[u@] == ns@.
+                    // Since spec_adj() = self.adj@, both postconditions follow directly.
                     ns
                 }
                 None => {
                     let empty = AVLTreeSetStPer::empty();
-                    proof {
-                        assume(!self.spec_adj().dom().contains(u@)
-                            ==> empty@ == Set::<<V as View>::V>::empty());
-                    }
+                    // find ensures: !self.adj@.contains_key(u@).
+                    // empty ensures: empty@ == Set::empty().
+                    // Both postconditions are trivially satisfied.
                     empty
                 }
             }
@@ -452,6 +449,8 @@ broadcast use {
 
         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             proof { reveal(obeys_view_eq); }
+            let ghost u_view: <V as View>::V = u@;
+            let ghost v_view: <V as View>::V = v@;
             let neighbors = match self.adj.find_ref(&u) {
                 Some(ns_ref) => {
                     proof {
@@ -463,6 +462,8 @@ broadcast use {
                 None => AVLTreeSetStPer::singleton(v.clone()),
             };
             let new_adj = self.adj.insert(u, neighbors, |_old, new| new.clone());
+            // After first insert: dom contains u@.
+            proof { assert(new_adj@.dom().contains(u_view)); }
             let final_adj = if new_adj.find_ref(&v).is_none() {
                 new_adj.insert(v, AVLTreeSetStPer::empty(), |old, _new| old.clone())
             } else {
@@ -470,30 +471,39 @@ broadcast use {
             };
             let updated = AdjTableGraphStPer { adj: final_adj };
             proof {
-                // Clone gap + graph closure + postconditions: Verus ICE on Set<V::V>.
+                // After conditional second insert: dom contains both u@ and v@.
+                assert(updated.spec_adj().dom().contains(u_view));
+                assert(updated.spec_adj().dom().contains(v_view));
+                // Clone gap + graph closure: Verus ICE on Set<V::V> prevents proving wf.
                 assume(updated.spec_adjtablegraphstper_wf());
-                assume(updated.spec_adj().dom().contains(u@));
-                assume(updated.spec_adj().dom().contains(v@));
-                assume(updated.spec_adj()[u@].contains(v@));
+                assume(updated.spec_adj()[u_view].contains(v_view));
             }
             updated
         }
 
         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
             proof { reveal(obeys_view_eq); }
+            let ghost u_view: <V as View>::V = u@;
+            let ghost v_view: <V as View>::V = v@;
             let updated = match self.adj.find_ref(u) {
                 Some(neighbors) => {
                     let new_neighbors = neighbors.clone_wf().delete(v);
+                    // new_neighbors@ == old_ns@.remove(v@), so !new_neighbors@.contains(v@).
                     let new_adj = self.adj.insert(u.clone(), new_neighbors, |_old, new| new.clone());
                     AdjTableGraphStPer { adj: new_adj }
                 }
-                None => self.clone(),
+                None => {
+                    // u@ not in domain: no changes needed.
+                    self.clone()
+                }
             };
             proof {
-                // Clone gap + graph closure + postcondition: Verus ICE on Set<V::V>.
+                // Clone gap + graph closure: Verus ICE on Set<V::V>.
                 assume(updated.spec_adjtablegraphstper_wf());
-                assume(!updated.spec_adj().dom().contains(u@)
-                    || !updated.spec_adj()[u@].contains(v@));
+                // Proving the postcondition requires clone view preservation through
+                // the combine closure. Leave as assume for now.
+                assume(!updated.spec_adj().dom().contains(u_view)
+                    || !updated.spec_adj()[u_view].contains(v_view));
             }
             updated
         }

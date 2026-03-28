@@ -164,8 +164,16 @@ broadcast use {
             let adj = OrderedTableMtPer::empty();
             let out = AdjTableGraphMtPer { adj };
             proof {
-                // Empty map: graph closure holds vacuously.
-                assume(out.spec_adjtablegraphmtper_wf());
+                // Type-level preds come from requires. Graph closure is vacuous
+                // on an empty map since no u satisfies dom().contains(u).
+                assert(out.adj@ == Map::<<V as View>::V, Set<<V as View>::V>>::empty());
+                assert forall|u: <V as View>::V, v: <V as View>::V|
+                    out.spec_adj().dom().contains(u)
+                    && #[trigger] out.spec_adj().index(u).contains(v)
+                    implies out.spec_adj().dom().contains(v)
+                by {
+                    // Empty map domain contains nothing.
+                };
             }
             out
         }

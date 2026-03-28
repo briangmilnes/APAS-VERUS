@@ -494,6 +494,8 @@ broadcast use {
 
         fn insert_edge(&mut self, u: V, v: V) {
             proof { reveal(obeys_view_eq); }
+            let ghost u_view: <V as View>::V = u@;
+            let ghost v_view: <V as View>::V = v@;
             // Build new neighbor set for u: old neighbors + v, or singleton(v).
             let neighbors = match self.adj.find_ref(&u) {
                 Some(ns_ref) => {
@@ -508,38 +510,55 @@ broadcast use {
                 None => AVLTreeSetStEph::singleton(v.clone()),
             };
             self.adj.insert(u, neighbors, |_old, new| new.clone());
+            // First insert ensures: dom contains u@.
+            proof { assert(self.adj@.dom().contains(u_view)); }
             // Ensure v is in the domain.
             if self.adj.find_ref(&v).is_none() {
+                let ghost pre_second = self.adj@;
                 self.adj.insert(v, AVLTreeSetStEph::empty(), |old, _new| old.clone());
+                proof {
+                    // v@ not in domain (find_ref None) but u@ is (just inserted).
+                    assert(!pre_second.dom().contains(v_view));
+                    assert(pre_second.dom().contains(u_view));
+                    assert(u_view != v_view);
+                }
             }
             proof {
-                // Clone gap + graph closure + postconditions: Verus ICE on Set<V::V>
-                // in proof bodies prevents direct assertion. Exec code verified against
-                // Table/Set contracts. Graph closure holds: u@ and v@ in domain,
-                // adj[u@] contains v@ (inserted), other sets unchanged.
+                // Domain: u@ from first insert, v@ from second or already present.
+                assert(self.spec_adj().dom().contains(u_view));
+                assert(self.spec_adj().dom().contains(v_view));
+                // Blocked: adj[u@].contains(v@) needs v.clone()@ == v@ (generic clone gap).
+                // Blocked: wf needs forall over Set<V::V> (ICE) + stored-value wf (clone gap).
                 assume(self.spec_adjtablegraphsteph_wf());
-                assume(self.spec_adj().dom().contains(u@));
-                assume(self.spec_adj().dom().contains(v@));
-                assume(self.spec_adj()[u@].contains(v@));
+                assume(self.spec_adj()[u_view].contains(v_view));
             }
         }
 
         fn delete_edge(&mut self, u: &V, v: &V) {
             proof { reveal(obeys_view_eq); }
+            let ghost u_view: <V as View>::V = u@;
+            let ghost v_view: <V as View>::V = v@;
+            let ghost old_dom = self.adj@.dom();
             if self.adj.find_ref(u).is_some() {
+                // u@ is in domain (from find_ref ensures).
                 if let Some(ns_ref) = self.adj.find_ref(u) {
                     let mut neighbors = ns_ref.clone_wf();
                     neighbors.delete(v);
+                    // neighbors@ == old_ns@.remove(v@), so !neighbors@.contains(v@).
+                    proof { assert(!neighbors@.contains(v_view)); }
                     self.adj.insert(u.clone(), neighbors, |_old, new| new.clone());
                 }
             }
             proof {
-                // Clone gap + graph closure + postcondition: Verus ICE on Set<V::V>.
-                // Exec verified against Table/Set contracts. If u was in domain,
-                // adj[u@] has v@ removed. If u wasn't, graph unchanged.
+                // Clone gap + graph closure: Verus ICE on Set<V::V>.
                 assume(self.spec_adjtablegraphsteph_wf());
-                assume(!self.spec_adj().dom().contains(u@)
-                    || !self.spec_adj()[u@].contains(v@));
+                // If u@ not in domain: no changes, !dom.contains(u@) holds.
+                // If u@ in domain: adj[u@] had v@ removed, !adj[u@].contains(v@) holds.
+                // But the insert uses combine |_old, new| new.clone(), and proving
+                // that clone preserves the !contains(v@) property requires reasoning
+                // through combine.ensures. Leave as assume for now.
+                assume(!self.spec_adj().dom().contains(u_view)
+                    || !self.spec_adj()[u_view].contains(v_view));
             }
         }
     }
