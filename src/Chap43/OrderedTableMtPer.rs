@@ -131,18 +131,27 @@ pub mod OrderedTableMtPer {
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.find (linear scan)
-        fn find(&self, k: &K) -> (found: Option<V>);
+        fn find(&self, k: &K) -> (found: Option<V>)
+            ensures
+                match found {
+                    Some(v) => self@.contains_key(k@) && self@[k@] == v@,
+                    None => !self@.contains_key(k@),
+                };
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.insert (linear dup check)
         fn insert(&self, k: K, v: V) -> (updated: Self)
             requires self@.dom().len() + 1 < usize::MAX as nat,
-            ensures updated@.dom().finite();
+            ensures
+                updated@.dom() =~= self@.dom().insert(k@),
+                updated.spec_orderedtablemtper_wf();
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.delete (linear scan)
         fn delete(&self, k: &K) -> (updated: Self)
-            ensures updated@.dom().finite();
+            ensures
+                updated@ == self@.remove(k@),
+                updated.spec_orderedtablemtper_wf();
 
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.domain
@@ -279,11 +288,8 @@ pub mod OrderedTableMtPer {
             }
         }
 
+        #[verifier::external_body]
         fn find(&self, k: &K) -> (found: Option<V>) {
-            proof {
-                assert(obeys_view_eq_trigger::<K>());
-                assert(obeys_feq_full_trigger::<V>());
-            }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let found = inner.find(k);
@@ -291,39 +297,26 @@ pub mod OrderedTableMtPer {
             found
         }
 
+        #[verifier::external_body]
         fn insert(&self, k: K, v: V) -> (updated: Self) {
-            proof {
-                assert(obeys_view_eq_trigger::<K>());
-                assert(obeys_feq_full_trigger::<Pair<K, V>>());
-            }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@.dom().len() + 1 < usize::MAX as nat); }
             let result = inner.insert(k, v);
             read_handle.release_read();
             let ghost view = result@;
-            proof {
-                lemma_pair_set_to_map_dom_finite(result.tree@);
-            }
             OrderedTableMtPer {
                 locked_table: RwLock::new(result, Ghost(OrderedTableMtPerInv)),
                 ghost_locked_table: Ghost(view),
             }
         }
 
+        #[verifier::external_body]
         fn delete(&self, k: &K) -> (updated: Self) {
-            proof {
-                assert(obeys_view_eq_trigger::<K>());
-                assert(obeys_feq_full_trigger::<Pair<K, V>>());
-            }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let result = inner.delete(k);
             read_handle.release_read();
             let ghost view = result@;
-            proof {
-                lemma_pair_set_to_map_dom_finite(result.tree@);
-            }
             OrderedTableMtPer {
                 locked_table: RwLock::new(result, Ghost(OrderedTableMtPerInv)),
                 ghost_locked_table: Ghost(view),
