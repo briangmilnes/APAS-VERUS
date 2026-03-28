@@ -39,8 +39,11 @@ pub mod ETSPMtEph {
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
     use crate::vstdplus::float::float::{
-        f64_add, f64_add_spec, f64_sub, f64_sub_spec,
-        f64_mul, f64_mul_spec, f64_sqrt, f64_sqrt_spec,
+        f64_add, f64_sub, f64_mul, f64_sqrt,
+    };
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::float::float::{
+        f64_add_spec, f64_sub_spec, f64_mul_spec, f64_sqrt_spec,
     };
 
 

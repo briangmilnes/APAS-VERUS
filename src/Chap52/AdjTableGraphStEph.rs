@@ -7,6 +7,7 @@ pub mod AdjTableGraphStEph {
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeSeqStEphTrait;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait;
+    #[cfg(verus_keep_ghost)]
     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     use crate::Chap42::TableStEph::TableStEph::*;
     use crate::Types::Types::*;
