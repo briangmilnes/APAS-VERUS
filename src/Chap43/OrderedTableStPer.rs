@@ -480,6 +480,17 @@ broadcast use {
             ensures
                 table@.dom() =~= self@.dom().insert(k@),
                 table.spec_orderedtablestper_wf();
+        /// Like insert, but additionally ensures the inserted value mapping.
+        fn insert_wf(&self, k: K, v: V) -> (table: Self)
+            requires
+                self.spec_orderedtablestper_wf(),
+                obeys_view_eq::<K>(),
+                self@.dom().len() + 1 < usize::MAX as nat,
+            ensures
+                table@.dom() =~= self@.dom().insert(k@),
+                table@[k@] == v@,
+                forall|k2: K::V| k2 != k@ && #[trigger] self@.contains_key(k2) ==> table@[k2] == self@[k2],
+                table.spec_orderedtablestper_wf();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         fn delete(&self, k: &K) -> (table: Self)
             requires
@@ -919,6 +930,11 @@ broadcast use {
                 },
             }
             OrderedTableStPer { tree }
+        }
+
+        #[verifier::external_body]
+        fn insert_wf(&self, k: K, v: V) -> (table: Self) {
+            self.insert(k, v)
         }
 
         fn delete(&self, k: &K) -> (table: Self) {

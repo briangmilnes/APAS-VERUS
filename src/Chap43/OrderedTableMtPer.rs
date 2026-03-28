@@ -146,6 +146,15 @@ pub mod OrderedTableMtPer {
                 updated@.dom() =~= self@.dom().insert(k@),
                 updated.spec_orderedtablemtper_wf();
 
+        /// Like insert, but additionally ensures the inserted value mapping.
+        fn insert_wf(&self, k: K, v: V) -> (updated: Self)
+            requires self@.dom().len() + 1 < usize::MAX as nat,
+            ensures
+                updated@.dom() =~= self@.dom().insert(k@),
+                updated@[k@] == v@,
+                forall|k2: K::V| k2 != k@ && #[trigger] self@.contains_key(k2) ==> updated@[k2] == self@[k2],
+                updated.spec_orderedtablemtper_wf();
+
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.delete (linear scan)
         fn delete(&self, k: &K) -> (updated: Self)
@@ -302,6 +311,19 @@ pub mod OrderedTableMtPer {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             let result = inner.insert(k, v);
+            read_handle.release_read();
+            let ghost view = result@;
+            OrderedTableMtPer {
+                locked_table: RwLock::new(result, Ghost(OrderedTableMtPerInv)),
+                ghost_locked_table: Ghost(view),
+            }
+        }
+
+        #[verifier::external_body]
+        fn insert_wf(&self, k: K, v: V) -> (updated: Self) {
+            let read_handle = self.locked_table.acquire_read();
+            let inner = read_handle.borrow();
+            let result = inner.insert_wf(k, v);
             read_handle.release_read();
             let ghost view = result@;
             OrderedTableMtPer {
