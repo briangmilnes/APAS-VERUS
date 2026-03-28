@@ -117,71 +117,78 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:899: info: structural_false_positive UNSAFE_SEND_SYNC OrderedTableMtEph — unsafe impl<K: MtKey, V: MtVal + Ord> Send for OrderedTableMtEph<K, V> {} [high]
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtEph.rs:900: info: structural_false_positive UNSAFE_SEND_SYNC OrderedTableMtEph — unsafe impl<K: MtKey, V: MtVal + Ord> Sync for OrderedTableMtEph<K, V> {} [high]
 ❌ OrderedTableMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:291: error: external_body - #[verifier::external_body]
-       292 |         fn find(&self, k: &K) -> (found: Option<V>) {
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:300: error: external_body - #[verifier::external_body]
-       301 |         fn insert(&self, k: K, v: V) -> (updated: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:313: error: external_body - #[verifier::external_body]
-       314 |         fn delete(&self, k: &K) -> (updated: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:576: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       571 |         fn clone(&self) -> (cloned: Self)
+       301 |         fn find(&self, k: &K) -> (found: Option<V>) {
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:309: error: external_body - #[verifier::external_body]
+       310 |         fn insert(&self, k: K, v: V) -> (updated: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:322: error: external_body - #[verifier::external_body]
+       323 |         fn insert_wf(&self, k: K, v: V) -> (updated: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:335: error: external_body - #[verifier::external_body]
+       336 |         fn delete(&self, k: &K) -> (updated: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:598: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       593 |         fn clone(&self) -> (cloned: Self)
             ...
-       574 |             let read_handle = self.locked_table.acquire_read();
-       575 |             let inner = read_handle.borrow().clone();
-       577 |             read_handle.release_read();
-       578 |             let ghost view = inner@;
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:580: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       571 |         fn clone(&self) -> (cloned: Self)
+       596 |             let read_handle = self.locked_table.acquire_read();
+       597 |             let inner = read_handle.borrow().clone();
+       599 |             read_handle.release_read();
+       600 |             let ghost view = inner@;
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:602: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       593 |         fn clone(&self) -> (cloned: Self)
             ...
-       578 |             let ghost view = inner@;
-       579 |             proof {
-       581 |                 assume(inner.spec_orderedtablestper_wf());
-       582 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:581: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       571 |         fn clone(&self) -> (cloned: Self)
+       600 |             let ghost view = inner@;
+       601 |             proof {
+       603 |                 assume(inner.spec_orderedtablestper_wf());
+       604 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:603: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       593 |         fn clone(&self) -> (cloned: Self)
             ...
-       579 |             proof {
-       580 |                 assume(view.dom().finite());
-       582 |             }
-       583 |             OrderedTableMtPer {
+       601 |             proof {
+       602 |                 assume(view.dom().finite());
+       604 |             }
+       605 |             OrderedTableMtPer {
 /home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:82: info: structural_false_positive RWLOCK_GHOST from_st_table — assume(inner.spec_orderedtablestper_wf()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:267: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.dom().len()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:449: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:460: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:471: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:482: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:507: info: structural_false_positive RWLOCK_GHOST join_key — assume(self_inner@.dom().len() == self@.dom().len()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:508: info: structural_false_positive RWLOCK_GHOST join_key — assume(other_inner@.dom().len() == other@.dom().len()); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:541: info: structural_false_positive RWLOCK_GHOST rank_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:553: info: structural_false_positive RWLOCK_GHOST select_key — proof { assume(inner@ =~= self@); } [medium]
-   Holes: 3 total
-      3 × external_body
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:276: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.dom().len()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:471: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:482: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:493: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:504: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:529: info: structural_false_positive RWLOCK_GHOST join_key — assume(self_inner@.dom().len() == self@.dom().len()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:530: info: structural_false_positive RWLOCK_GHOST join_key — assume(other_inner@.dom().len() == other@.dom().len()); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:563: info: structural_false_positive RWLOCK_GHOST rank_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableMtPer.rs:575: info: structural_false_positive RWLOCK_GHOST select_key — proof { assume(inner@ =~= self@); } [medium]
+   Holes: 4 total
+      4 × external_body
    Info: 10 × structural_false_positive
       10 × RWLOCK_GHOST
 ✓ OrderedTableStEph.rs
    14 clean proof functions
-⚠ OrderedTableStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3369: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      3365 |         fn eq(&self, other: &Self) -> (equal: bool)
+❌ OrderedTableStPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:935: error: external_body - #[verifier::external_body]
+       936 |         fn insert_wf(&self, k: K, v: V) -> (table: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3385: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      3381 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      3367 |         {
-      3368 |             let equal = self.tree.size() == other.tree.size();
-      3370 |             equal
-      3371 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3381: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      3375 |         fn clone(&self) -> (copy: Self)
+      3383 |         {
+      3384 |             let equal = self.tree.size() == other.tree.size();
+      3386 |             equal
+      3387 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3397: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      3391 |         fn clone(&self) -> (copy: Self)
             ...
-      3379 |                 tree: self.tree.clone(),
-      3380 |             };
-      3382 |             copy
-      3383 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3386: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include result.spec_orderedtablestper_wf() for return type OrderedTableStPer
-      3375 |         fn clone(&self) -> (copy: Self)
+      3395 |                 tree: self.tree.clone(),
+      3396 |             };
+      3398 |             copy
+      3399 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap43/OrderedTableStPer.rs:3402: error: fn_missing_wf_ensures - fn from_sorted_entries — ensures should include result.spec_orderedtablestper_wf() for return type OrderedTableStPer
+      3391 |         fn clone(&self) -> (copy: Self)
             ...
-      3384 |     }
-      3385 | 
-      3387 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
-      3388 |     ) -> (result: OrderedTableStPer<K, V>)
+      3400 |     }
+      3401 | 
+      3403 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
+      3404 |     ) -> (result: OrderedTableStPer<K, V>)
+   Holes: 1 total
+      1 × external_body
+   Proof functions: 12 total (12 clean, 0 holed)
 
 =================================================================
 2. Depends Upon
@@ -232,16 +239,16 @@ Proof Functions:
    35 total
 
 Function Specs:
-   648 exec fns with complete spec (requires+ensures) (82%)
+   652 exec fns with complete spec (requires+ensures) (82%)
    0 exec fns missing spec (0%)
    139 proof/spec fns clean (17%)
    0 proof/spec fns with holes (0%)
-   787 total fns
+   791 total fns
 
 
-Holes Found: 3 (actionable)
-   3 × external_body (100%)
-Real Proof Targets: 3 (all actionable)
+Holes Found: 5 (actionable)
+   5 × external_body (100%)
+Real Proof Targets: 5 (all actionable)
 
 Warnings: 10 total
    1 × fn_missing_wf_ensures
@@ -256,15 +263,15 @@ Structural (info only): 66
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-28 11:51:17 -07:00
-Ended:     2026-03-28 11:51:17 -07:00
-Duration:  429ms
+Started:   2026-03-28 12:15:10 -07:00
+Ended:     2026-03-28 12:15:11 -07:00
+Duration:  273ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
 =======================================================
 
-Started:   2026-03-28 11:51:17 -07:00
-Ended:     2026-03-28 11:51:17 -07:00
-Duration:  429ms
+Started:   2026-03-28 12:15:10 -07:00
+Ended:     2026-03-28 12:15:11 -07:00
+Duration:  273ms
 
 Full output: src/Chap43/analyses/veracity-review-verus-proof-holes.log
