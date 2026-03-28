@@ -6,6 +6,7 @@
 // 1. module
 // 2. imports
 // 4. type definitions
+// 5. view impls
 // 7. proof fns
 // 8. traits
 // 9. impls
@@ -32,6 +33,13 @@ pub mod BSTPlainStEph {
     #[verifier::reject_recursive_types(T)]
     pub struct BSTPlainStEph<T> {
         pub root: BalBinTree<T>,
+    }
+
+    // 5. view impls
+
+    impl<T> View for BSTPlainStEph<T> {
+        type V = BalBinTree<T>;
+        open spec fn view(&self) -> BalBinTree<T> { self.root }
     }
 
     // 7. proof fns
@@ -80,7 +88,7 @@ pub mod BSTPlainStEph {
         spec fn tree_is_bst(self) -> bool;
     }
 
-    pub trait BSTPlainStEphTrait<T: TotalOrder>: Sized {
+    pub trait BSTPlainStEphTrait<T: TotalOrder>: Sized + View<V = BalBinTree<T>> {
         spec fn spec_root(self) -> BalBinTree<T>;
         spec fn spec_bstplainsteph_wf(&self) -> bool;
 

@@ -7,6 +7,7 @@
 // 1. module
 // 2. imports
 // 4. type definitions
+// 5. view impls
 // 6. spec fns
 // 8. traits
 // 9. impls
@@ -39,6 +40,13 @@ pub mod BSTBBAlphaStEph {
         pub root: BalBinTree<T>,
     }
 
+    // 5. view impls
+
+    impl<T> View for BSTBBAlphaStEph<T> {
+        type V = BalBinTree<T>;
+        open spec fn view(&self) -> BalBinTree<T> { self.root }
+    }
+
     // 6. spec fns
 
     /// Weight-balance at every node: neither child exceeds 3/4 of total size.
@@ -65,7 +73,7 @@ pub mod BSTBBAlphaStEph {
 
     // 8. traits
 
-    pub trait BSTBBAlphaStEphTrait<T: TotalOrder>: Sized {
+    pub trait BSTBBAlphaStEphTrait<T: TotalOrder>: Sized + View<V = BalBinTree<T>> {
         spec fn spec_root(self) -> BalBinTree<T>;
         spec fn spec_bstbbalphasteph_wf(&self) -> bool;
 
