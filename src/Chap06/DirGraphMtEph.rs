@@ -831,7 +831,7 @@ pub mod DirGraphMtEph {
     }
 
     pub trait LockedDirGraphMtEphTrait<V: StTInMtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
-        spec fn spec_lockeddirgraphmteph_wf(&self) -> bool;
+        spec fn spec_dirgraphmteph_wf(&self) -> bool;
 
         fn new(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> (s: Self)
             requires
@@ -841,36 +841,36 @@ pub mod DirGraphMtEph {
                 forall |u: V::V, w: V::V|
                     #[trigger] A@.contains((u, w)) ==> V@.contains(u) && V@.contains(w),
             ensures
-                s.spec_lockeddirgraphmteph_wf(),
+                s.spec_dirgraphmteph_wf(),
                 s@.V == V@,
                 s@.A == A@;
 
         fn vertices(&self) -> (v: SetStEph<V>)
-            requires self.spec_lockeddirgraphmteph_wf()
+            requires self.spec_dirgraphmteph_wf()
             ensures v@ == self@.V;
 
         fn arcs(&self) -> (a: SetStEph<Edge<V>>)
-            requires self.spec_lockeddirgraphmteph_wf()
+            requires self.spec_dirgraphmteph_wf()
             ensures a@ == self@.A;
 
         fn sizeV(&self) -> (n: usize)
-            requires self.spec_lockeddirgraphmteph_wf()
+            requires self.spec_dirgraphmteph_wf()
             ensures n == self@.V.len();
 
         fn sizeA(&self) -> (n: usize)
-            requires self.spec_lockeddirgraphmteph_wf()
+            requires self.spec_dirgraphmteph_wf()
             ensures n == self@.A.len();
 
         fn neighbor(&self, u: &V, v: &V) -> (b: bool)
             requires
-                self.spec_lockeddirgraphmteph_wf(),
+                self.spec_dirgraphmteph_wf(),
                 self@.V.contains(u@),
                 self@.V.contains(v@),
             ensures b == self@.A.contains((u@, v@));
 
         fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>)
             requires
-                self.spec_lockeddirgraphmteph_wf(),
+                self.spec_dirgraphmteph_wf(),
                 self@.V.contains(v@),
             ensures
                 out_neighbors.spec_setsteph_wf(),
@@ -879,7 +879,7 @@ pub mod DirGraphMtEph {
 
         fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>)
             requires
-                self.spec_lockeddirgraphmteph_wf(),
+                self.spec_dirgraphmteph_wf(),
                 self@.V.contains(v@),
             ensures
                 in_neighbors.spec_setsteph_wf(),
@@ -888,7 +888,7 @@ pub mod DirGraphMtEph {
 
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
             requires
-                self.spec_lockeddirgraphmteph_wf(),
+                self.spec_dirgraphmteph_wf(),
                 self@.V.contains(v@),
             ensures
                 neighbors.spec_setsteph_wf(),
@@ -896,7 +896,7 @@ pub mod DirGraphMtEph {
 
         fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> (out_neighbors: SetStEph<V>)
             requires
-                self.spec_lockeddirgraphmteph_wf(),
+                self.spec_dirgraphmteph_wf(),
                 u_set@ <= self@.V,
             ensures
                 out_neighbors.spec_setsteph_wf(),
@@ -904,7 +904,7 @@ pub mod DirGraphMtEph {
 
         fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> (in_neighbors: SetStEph<V>)
             requires
-                self.spec_lockeddirgraphmteph_wf(),
+                self.spec_dirgraphmteph_wf(),
                 u_set@ <= self@.V,
             ensures
                 in_neighbors.spec_setsteph_wf(),
@@ -912,7 +912,7 @@ pub mod DirGraphMtEph {
 
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>)
             requires
-                self.spec_lockeddirgraphmteph_wf(),
+                self.spec_dirgraphmteph_wf(),
                 u_set@ <= self@.V,
             ensures
                 neighbors.spec_setsteph_wf(),
@@ -920,7 +920,7 @@ pub mod DirGraphMtEph {
     }
 
     impl<V: StTInMtT + Hash + 'static> LockedDirGraphMtEphTrait<V> for LockedDirGraphMtEph<V> {
-        open spec fn spec_lockeddirgraphmteph_wf(&self) -> bool {
+        open spec fn spec_dirgraphmteph_wf(&self) -> bool {
             spec_graphview_wf(self@)
         }
 

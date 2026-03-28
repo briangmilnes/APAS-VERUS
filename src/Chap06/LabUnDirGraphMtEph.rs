@@ -706,6 +706,8 @@ pub mod LabUnDirGraphMtEph {
     pub trait LockedLabUnDirGraphMtEphTrait<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static>
         : View<V = LabGraphView<<V as View>::V, <L as View>::V>> + Sized
     {
+        spec fn spec_labundirgraphmteph_wf(&self) -> bool;
+
         fn empty() -> (g: Self)
             requires valid_key_type_for_lab_graph::<V, L>()
             ensures
@@ -749,6 +751,10 @@ pub mod LabUnDirGraphMtEph {
     impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> LockedLabUnDirGraphMtEphTrait<V, L>
         for LockedLabUnDirGraphMtEph<V, L>
     {
+        open spec fn spec_labundirgraphmteph_wf(&self) -> bool {
+            spec_labgraphview_wf(self@)
+        }
+
         fn empty() -> (g: Self) {
             let inner = LabUnDirGraphMtEph::empty();
             let ghost view = inner@;
