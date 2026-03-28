@@ -20,9 +20,17 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-✓ JohnsonMtEphF64.rs
+❌ JohnsonMtEphF64.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap59/JohnsonMtEphF64.rs:101: error: external_body - #[verifier::external_body]
+       102 |     pub fn johnson_apsp(graph: &WeightedDirGraphStEphF64<usize>) -> (result: AllPairsResultStEphF64)
+   Holes: 1 total
+      1 × external_body
 ✓ JohnsonMtEphI64.rs
-✓ JohnsonStEphF64.rs
+❌ JohnsonStEphF64.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap59/JohnsonStEphF64.rs:330: error: external_body - #[verifier::external_body]
+       331 |     pub fn johnson_apsp(graph: &WeightedDirGraphStEphF64<usize>)
+   Holes: 1 total
+      1 × external_body
 ✓ JohnsonStEphI64.rs
 
 =================================================================
@@ -52,8 +60,8 @@ JohnsonStEphI64.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   4 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   2 clean (no holes, no errors; 50%)
+   2 holed (holes or errors, 50%)
    4 total
 
 Proof Functions:
@@ -62,24 +70,24 @@ Proof Functions:
    0 total
 
 Function Specs:
-   24 exec fns with complete spec (requires+ensures) (80%)
+   23 exec fns with complete spec (requires+ensures) (79%)
    6 exec fns missing spec (20%)
    0 proof/spec fns clean (0%)
    0 proof/spec fns with holes (0%)
-   30 total fns
+   29 total fns
 
 
-Holes Found: 0 (actionable)
-Real Proof Targets: 0 (all actionable)
-
-No proof holes or warnings found! All proofs are complete.
+Holes Found: 2 (actionable)
+   2 × external_body (100%)
+Real Proof Targets: 2 (all actionable)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 19:51:09 -07:00
-Ended:     2026-03-27 19:51:09 -07:00
-Duration:  25ms
+Started:   2026-03-27 20:02:16 -07:00
+Ended:     2026-03-27 20:02:16 -07:00
+Duration:  13ms
 
+Full output: src/Chap59/analyses/veracity-review-verus-proof-holes.log
 Full output: src/Chap59/analyses/veracity-review-verus-proof-holes.log

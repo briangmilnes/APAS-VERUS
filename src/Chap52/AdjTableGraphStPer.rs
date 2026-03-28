@@ -7,17 +7,25 @@ pub mod AdjTableGraphStPer {
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
+    use crate::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerTrait;
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Chap42::TableStPer::TableStPer::*;
+    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     #[cfg(verus_keep_ghost)]
-    use crate::Chap52::AdjTableGraphStEph::AdjTableGraphStEph::spec_sum_adj_sizes;
+    use crate::Chap52::AdjTableGraphStEph::AdjTableGraphStEph::{
+        spec_sum_adj_sizes, spec_sum_entry_sizes,
+        lemma_sum_adj_remove, lemma_sum_entry_sizes_monotone,
+    };
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap42::TableStEph::TableStEph::spec_entries_to_map as steph_entries_to_map;
     use crate::Types::Types::*;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesWf;
     #[cfg(verus_keep_ghost)]
     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, obeys_feq_fulls};
+    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, obeys_feq_fulls,
+        lemma_cloned_view_eq};
     #[cfg(verus_keep_ghost)]
     use vstd::laws_eq::obeys_view_eq;
     #[cfg(verus_keep_ghost)]
@@ -57,6 +65,39 @@ broadcast use {
         open spec fn view(&self) -> Self::V { *self }
     }
 
+    // 7. proof fns
+
+    /// Bridge: StPer and StEph spec_entries_to_map are identical (same open spec body).
+    proof fn lemma_entries_to_map_eq<KV, VV>(entries: Seq<(KV, VV)>)
+        ensures spec_entries_to_map(entries) == steph_entries_to_map(entries)
+        decreases entries.len()
+    {
+        if entries.len() > 0 {
+            lemma_entries_to_map_eq::<KV, VV>(entries.drop_last());
+        }
+    }
+
+    /// Bridge: StPer and StEph spec_keys_no_dups are identical.
+    proof fn lemma_keys_no_dups_eq<KV, VV>(entries: Seq<(KV, VV)>)
+        ensures
+            spec_keys_no_dups(entries)
+            == crate::Chap42::TableStEph::TableStEph::spec_keys_no_dups(entries)
+    {}
+
+    /// Connect sequential entry sum to recursive map sum (StPer version).
+    proof fn lemma_sum_entry_sizes_eq_stper<VV>(entries: Seq<(VV, Set<VV>)>, n: int)
+        requires
+            0 <= n <= entries.len(),
+            spec_keys_no_dups(entries),
+        ensures
+            spec_sum_entry_sizes(entries, n) == spec_sum_adj_sizes(
+                spec_entries_to_map(entries.subrange(0, n)))
+    {
+        lemma_entries_to_map_eq::<VV, Set<VV>>(entries.subrange(0, n));
+        lemma_keys_no_dups_eq::<VV, Set<VV>>(entries);
+        crate::Chap52::AdjTableGraphStEph::AdjTableGraphStEph::lemma_sum_entry_sizes_eq::<VV>(entries, n);
+    }
+
     // 8. traits
 
     pub trait AdjTableGraphStPerTrait<V: StT + Ord>: Sized {
@@ -87,7 +128,9 @@ broadcast use {
             ensures m as nat == self.spec_num_edges();
         /// Work Theta(|V|), Span Theta(|V|)
         fn vertices(&self) -> (verts: AVLTreeSetStPer<V>)
-            requires self.spec_adjtablegraphstper_wf()
+            requires
+                self.spec_adjtablegraphstper_wf(),
+                self.spec_adj().dom().len() < usize::MAX as nat,
             ensures verts@ == self.spec_adj().dom();
         /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
         fn has_edge(&self, u: &V, v: &V) -> (found: bool)
@@ -187,37 +230,124 @@ broadcast use {
             self.adj.size()
         }
 
-        /// - external_body: iterating domain requires loop invariant.
-        #[verifier::external_body]
         fn num_edges(&self) -> (m: usize) {
-            let domain = self.adj.domain();
-            let seq = domain.to_seq();
-            let len = seq.length();
+            proof {
+                reveal(obeys_view_eq);
+                lemma_entries_to_map_len::<V::V, Set<V::V>>(self.adj.entries@);
+                lemma_sum_entry_sizes_eq_stper::<V::V>(self.adj.entries@, self.adj.entries@.len() as int);
+                assert(self.adj.entries@.subrange(0, self.adj.entries@.len() as int)
+                    =~= self.adj.entries@);
+            }
+            let len = self.adj.entries.length();
+            let ghost total = spec_sum_entry_sizes(self.adj.entries@, len as int);
             let mut count: usize = 0;
             let mut i: usize = 0;
-            while i < len {
-                let v = seq.nth(i).clone();
-                if let Some(neighbors) = self.adj.find(&v) {
-                    count += neighbors.size();
+            while i < len
+                invariant
+                    self.spec_adjtablegraphstper_wf(),
+                    0 <= i <= len,
+                    len == self.adj.entries.spec_len(),
+                    count as nat == spec_sum_entry_sizes(self.adj.entries@, i as int),
+                    total == self.spec_num_edges(),
+                    total == spec_sum_entry_sizes(self.adj.entries@, len as int),
+                    self.spec_num_edges() <= usize::MAX as nat,
+                decreases len - i,
+            {
+                let pair: &Pair<V, AVLTreeSetStPer<V>> = self.adj.entries.nth(i);
+                proof {
+                    lemma_entries_to_map_contains_key::<V::V, Set<V::V>>(
+                        self.adj.entries@, i as int);
                 }
-                i += 1;
+                let ns = self.adj.find_ref(&pair.0).unwrap();
+                proof {
+                    lemma_entries_to_map_get::<V::V, Set<V::V>>(self.adj.entries@, i as int);
+                    lemma_sum_entry_sizes_monotone::<V::V>(
+                        self.adj.entries@, i as int + 1, len as int);
+                }
+                count = count + ns.size();
+                i = i + 1;
             }
             count
         }
 
-        /// - external_body: building set from domain requires loop invariant.
-        #[verifier::external_body]
         fn vertices(&self) -> (verts: AVLTreeSetStPer<V>) {
-            let domain_set = self.adj.domain();
-            let seq = domain_set.to_seq();
-            let len = seq.length();
-            let mut vertices = AVLTreeSetStPer::empty();
-            let mut i: usize = 0;
-            while i < len {
-                vertices = vertices.insert(seq.nth(i).clone());
-                i += 1;
+            proof {
+                lemma_entries_to_map_len::<V::V, Set<V::V>>(self.adj.entries@);
             }
-            vertices
+            let len = self.adj.entries.length();
+            let mut verts = AVLTreeSetStPer::<V>::empty();
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    self.spec_adjtablegraphstper_wf(),
+                    0 <= i <= len,
+                    len == self.adj.entries.spec_len(),
+                    len < usize::MAX,
+                    verts.spec_avltreesetstper_wf(),
+                    verts@.len() <= i as nat,
+                    // verts contains exactly the keys from entries[0..i].
+                    forall|j: int| 0 <= j < i
+                        ==> #[trigger] verts@.contains(self.adj.entries@[j].0),
+                    forall|v: V::V| #[trigger] verts@.contains(v)
+                        ==> exists|j: int| 0 <= j < i
+                            && self.adj.entries@[j].0 == v,
+                decreases len - i,
+            {
+                let pair: &Pair<V, AVLTreeSetStPer<V>> = self.adj.entries.nth(i);
+                let key: V = pair.0.clone_plus();
+                proof {
+                    lemma_cloned_view_eq::<V>(pair.0, key);
+                }
+                let ghost old_verts = verts@;
+                verts = verts.insert(key);
+                proof {
+                    // Maintain forward invariant: entries[0..i+1] keys all in verts.
+                    assert forall|j: int| 0 <= j < i + 1
+                        implies #[trigger] verts@.contains(self.adj.entries@[j].0)
+                    by {
+                        if j < i {
+                            assert(old_verts.contains(self.adj.entries@[j].0));
+                        }
+                    };
+                    // Maintain backward invariant: every element in verts came from entries[0..i+1].
+                    assert forall|v: V::V| #[trigger] verts@.contains(v)
+                        implies exists|j: int| 0 <= j < i + 1
+                            && self.adj.entries@[j].0 == v
+                    by {
+                        if old_verts.contains(v) {
+                            let j = choose|j: int| 0 <= j < i
+                                && self.adj.entries@[j].0 == v;
+                            assert(j < i + 1);
+                        } else {
+                            // v == key@ == pair.0@ == entries[i].0
+                            assert(self.adj.entries@[i as int].0 == v);
+                        }
+                    };
+                }
+                i = i + 1;
+            }
+            proof {
+                // At end: verts contains exactly all entry keys = self@.dom().
+                assert forall|v: V::V| #[trigger] verts@.contains(v)
+                    == self.spec_adj().dom().contains(v)
+                by {
+                    if verts@.contains(v) {
+                        let j = choose|j: int| 0 <= j < len as int
+                            && self.adj.entries@[j].0 == v;
+                        lemma_entries_to_map_contains_key::<V::V, Set<V::V>>(
+                            self.adj.entries@, j);
+                    }
+                    if self.spec_adj().dom().contains(v) {
+                        lemma_entries_to_map_key_in_seq::<V::V, Set<V::V>>(
+                            self.adj.entries@, v);
+                        let j = choose|j: int| 0 <= j < self.adj.entries@.len()
+                            && (#[trigger] self.adj.entries@[j]).0 == v;
+                    }
+                };
+                lemma_entries_to_map_finite::<V::V, Set<V::V>>(self.adj.entries@);
+                assert(verts@ =~= self.spec_adj().dom());
+            }
+            verts
         }
 
         fn has_edge(&self, u: &V, v: &V) -> (found: bool) {
