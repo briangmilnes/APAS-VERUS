@@ -133,15 +133,11 @@ broadcast use {
             spec_sum_adj_sizes(self.spec_adj())
         }
 
-        /// - external_body: TableStPer wf propagation through graph wrapping.
-        #[verifier::external_body]
         fn empty() -> (out: Self) {
             let adj: TableStPer<V, AVLTreeSetStPer<V>> = TableStPer::empty();
             AdjTableGraphStPer { adj }
         }
 
-        /// - external_body: cannot prove table wf propagation through wrapping.
-        #[verifier::external_body]
         fn from_table(table: TableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self) { AdjTableGraphStPer { adj: table } }
 
         /// - external_body: TableStPer::size requires spec_tablestper_wf.
@@ -203,14 +199,16 @@ broadcast use {
         #[verifier::external_body]
         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
 
-        /// - external_body: Table::insert requires table wf + view_eq + feq + closure requires.
+        /// - external_body: Verus ICE on Set<V::V> in proof bodies for generic StPer graphs.
         #[verifier::external_body]
         fn insert_vertex(&self, v: V) -> (updated: Self) {
             let new_adj = self.adj.insert(v, AVLTreeSetStPer::empty(), |old, _new| old.clone());
             AdjTableGraphStPer { adj: new_adj }
         }
 
-        /// - external_body: Table::delete + iterating domain + nested set operations.
+        /// - external_body: requires loop with table iteration + nested set operations.
+        /// Proving the loop invariant (graph closure maintained while removing v from all
+        /// neighbor sets) requires tracking partial progress through the domain sequence.
         #[verifier::external_body]
         fn delete_vertex(&self, v: &V) -> (updated: Self) {
             let v_clone = v.clone();

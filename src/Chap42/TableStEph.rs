@@ -300,7 +300,7 @@ broadcast use {
         /// - APAS Cost Spec 42.5: Work 1, Span 1
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS.
         fn empty() -> (empty: Self)
-            ensures empty@ == Map::<K::V, V::V>::empty();
+            ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_tablesteph_wf();
         /// - APAS Cost Spec 42.5: Work 1, Span 1
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS.
         fn singleton(key: K, value: V) -> (tree: Self)
@@ -422,7 +422,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan + rebuild; disagrees with APAS (not tree-based).
         fn delete(&mut self, key: &K)
             requires old(self).spec_tablesteph_wf(), obeys_view_eq::<K>()
-            ensures self@ =~= old(self)@.remove(key@);
+            ensures self@ =~= old(self)@.remove(key@), self.spec_tablesteph_wf();
         /// - APAS Cost Spec 42.5: Work lg |a|, Span lg |a|
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan + rebuild; disagrees with APAS (not tree-based).
         fn insert<F: Fn(&V, &V) -> V>(&mut self, key: K, value: V, combine: F)
@@ -431,14 +431,18 @@ broadcast use {
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                 obeys_view_eq::<K>(),
             ensures
+                self.spec_tablesteph_wf(),
                 self@.contains_key(key@),
                 self@.dom() =~= old(self)@.dom().insert(key@),
                 forall|k: K::V| k != key@ && #[trigger] old(self)@.contains_key(k)
                     ==> self@[k] == old(self)@[k],
-                !old(self)@.contains_key(key@) ==> self@[key@] == value@,
+                !old(self)@.contains_key(key@) ==> self@[key@] == value@
+                    && self.spec_stored_value(key@) == value,
                 old(self)@.contains_key(key@) ==> (exists|old_v: V, r: V|
                     old_v@ == old(self)@[key@] && combine.ensures((&old_v, &value), r)
-                    && self@[key@] == r@);
+                    && self@[key@] == r@
+                    && old_v == old(self).spec_stored_value(key@)
+                    && self.spec_stored_value(key@) == r);
         /// - APAS Cost Spec 42.5: Work m * lg(1 + n/m), Span lg(n + m)
         /// - Claude-Opus-4.6: Work Θ(|self| * |keys|), Span same -- linear scan; disagrees with APAS.
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
@@ -501,10 +505,14 @@ broadcast use {
         }
 
         fn empty() -> (empty: Self)
-            ensures empty@ == Map::<K::V, V::V>::empty()
         {
             let entries = ArraySeqStEphS::empty();
             assert(entries@ =~= Seq::<(K::V, V::V)>::empty());
+            proof {
+                assert(obeys_feq_full_trigger::<K>());
+                assert(obeys_feq_full_trigger::<V>());
+                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+            }
             TableStEph { entries }
         }
 
@@ -1770,6 +1778,7 @@ broadcast use {
         {
             let ghost key_view: K::V = key@;
             let ghost old_view = self.entries@;
+            let ghost old_exec_seq: Seq<Pair<K, V>> = self.entries.seq@;
             let ghost old_map = self@;
             let n = self.entries.length();
             let mut all: Vec<Pair<K, V>> = Vec::new();
@@ -1830,6 +1839,7 @@ broadcast use {
                 i += 1;
             }
             let ghost value_view: V::V = value@;
+            let ghost old_stored_at_key: Pair<K, V> = old_exec_seq[match_index as int];
             let final_value;
             if match_index < n {
                 let old_entry = self.entries.nth(match_index);
@@ -1837,6 +1847,8 @@ broadcast use {
                     self.entries.lemma_view_index(match_index as int);
                     lemma_entries_to_map_get::<K::V, V::V>(old_view, match_index as int);
                     lemma_entries_to_map_contains_key::<K::V, V::V>(old_view, match_index as int);
+                    // old_entry is the exec Pair at match_index in old entries.
+                    assert(old_entry == old_exec_seq[match_index as int]);
                 }
                 final_value = combine(&old_entry.1, &value);
             } else {
@@ -1916,6 +1928,48 @@ broadcast use {
                 lemma_entries_to_map_get::<K::V, V::V>(self.entries@, last);
                 if match_index == n as usize {
                     lemma_entries_to_map_no_key::<K::V, V::V>(old_view, key_view);
+                }
+                // Prove spec_stored_value for the inserted key.
+                // Key is at position last in new entries.
+                assert(0 <= last < self.entries.seq@.len() as int);
+                assert((#[trigger] self.entries.seq@[last]).0@ == key_view);
+                // By spec_keys_no_dups, last is the unique index with key_view.
+                // Therefore spec_stored_value(key@) == self.entries.seq@[last].1.
+                let ghost chosen_i = choose|i: int| 0 <= i < self.entries.seq@.len()
+                    && (#[trigger] self.entries.seq@[i]).0@ == key_view;
+                assert(self.entries.seq@[chosen_i].0@ == key_view);
+                assert(self.entries.seq@[last].0@ == key_view);
+                // Uniqueness from no_dups: entries@[chosen_i].0 == entries@[last].0
+                // means chosen_i == last (since no two distinct indices share a key).
+                if chosen_i != last {
+                    assert(self.entries@[chosen_i].0 == key_view);
+                    assert(self.entries@[last].0 == key_view);
+                    // This contradicts spec_keys_no_dups
+                }
+                assert(chosen_i == last);
+                assert(self.spec_stored_value(key_view) == self.entries.seq@[last].1);
+                // Prove the existing-key spec_stored_value ensures.
+                if match_index < n as usize {
+                    // match_index is the unique index for key in old entries.
+                    assert(old_exec_seq[match_index as int].0@ == key_view);
+                    // Prove old(self).spec_stored_value(key@) == old_stored_at_key.1.
+                    // old_stored_at_key == old_exec_seq[match_index], and match_index
+                    // is the unique index in old entries with this key.
+                    let ghost old_chosen = choose|i: int| 0 <= i < old_exec_seq.len()
+                        && (#[trigger] old_exec_seq[i]).0@ == key_view;
+                    assert(old_exec_seq[old_chosen].0@ == key_view);
+                    assert(old_exec_seq[match_index as int].0@ == key_view);
+                    if old_chosen != match_index as int {
+                        assert(old_view[old_chosen].0 == key_view);
+                        assert(old_view[match_index as int].0 == key_view);
+                    }
+                    assert(old_chosen == match_index as int);
+                    // Now old(self).spec_stored_value(key_view) == old_stored_at_key.1.
+                    // And final_value is combine(&old_stored_at_key.1, &value).
+                    // And self.spec_stored_value(key_view) == final_value.
+                    // Provide the existential witnesses.
+                    assert(combine.ensures((&old_stored_at_key.1, &value), final_value));
+                    assert(old_stored_at_key.1@ == old_map[key_view]);
                 }
             }
         }

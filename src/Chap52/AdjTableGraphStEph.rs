@@ -11,9 +11,11 @@ pub mod AdjTableGraphStEph {
     use crate::Chap42::TableStEph::TableStEph::*;
     use crate::Types::Types::*;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_fulls};
+    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, obeys_feq_fulls};
     #[cfg(verus_keep_ghost)]
     use vstd::laws_eq::obeys_view_eq;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_view_eq_trigger;
 
     verus! {
 
@@ -92,6 +94,9 @@ broadcast use {
         /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.3]
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; creates empty table.
         fn empty() -> (out: Self)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
             ensures out.spec_adjtablegraphsteph_wf();
         /// - APAS: Work Theta(1), Span Theta(1)
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — wraps existing table.
@@ -187,10 +192,16 @@ broadcast use {
             spec_sum_adj_sizes(self.spec_adj())
         }
 
-        /// - external_body: TableStEph::empty does not ensure spec_tablesteph_wf.
-        #[verifier::external_body]
         fn empty() -> (out: Self) {
             let adj: TableStEph<V, AVLTreeSetStEph<V>> = TableStEph::empty();
+            proof {
+                // Fire feq broadcast triggers for the graph's type parameters.
+                assert(obeys_feq_full_trigger::<V>());
+                assert(obeys_feq_full_trigger::<AVLTreeSetStEph<V>>());
+                assert(obeys_feq_full_trigger::<Pair<V, AVLTreeSetStEph<V>>>());
+                // Fire view_eq and cmp broadcasts.
+                assert(obeys_view_eq_trigger::<V>());
+            }
             AdjTableGraphStEph { adj }
         }
 
@@ -260,7 +271,8 @@ broadcast use {
             }
         }
 
-        /// - external_body: Table::insert requires table wf + view_eq + closure requires.
+        /// - external_body: Table::insert clones non-key entries, losing exec-level wf
+        /// on stored AVLTreeSetStEph values. Clone gap blocks stored_value wf proof.
         #[verifier::external_body]
         fn insert_vertex(&mut self, v: V) {
             self.adj.insert(v, AVLTreeSetStEph::empty(), |old, _new| old.clone());
