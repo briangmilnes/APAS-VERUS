@@ -85,18 +85,18 @@ pub mod MinEditDistStPer {
 
         /// Create new minimum edit distance solver.
         /// - APAS: not specified
-        fn new() -> (result: Self)
+        fn new() -> (empty: Self)
         where
             T: Default
             requires obeys_feq_clone::<T>(),
-            ensures result.spec_source_len() == 0, result.spec_target_len() == 0;
+            ensures empty.spec_source_len() == 0, empty.spec_target_len() == 0;
 
         /// Create from source and target sequences.
         /// - APAS: not specified
-        fn from_sequences(source: ArraySeqStPerS<T>, target: ArraySeqStPerS<T>) -> (result: Self)
+        fn from_sequences(source: ArraySeqStPerS<T>, target: ArraySeqStPerS<T>) -> (edit_dist: Self)
             ensures
-                result.spec_source_len() == source.spec_len(),
-                result.spec_target_len() == target.spec_len();
+                edit_dist.spec_source_len() == source.spec_len(),
+                edit_dist.spec_target_len() == target.spec_len();
 
         /// Compute minimum edit distance.
         /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)

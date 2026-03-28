@@ -172,15 +172,15 @@ pub mod SCCStPer {
     }
 
     /// Computes the finish order for SCC (decreasing finish times).
-    fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (result: AVLTreeSeqStPerS<usize>)
+    fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (finish_order: AVLTreeSeqStPerS<usize>)
         requires
             spec_toposortstper_wf(graph),
             graph@.len() < usize::MAX,
         ensures
-            result.spec_avltreeseqstper_wf(),
-            result@.len() == graph@.len(),
-            forall|i: int| 0 <= i < result@.len()
-                ==> (#[trigger] result@[i] as int) < graph@.len(),
+            finish_order.spec_avltreeseqstper_wf(),
+            finish_order@.len() == graph@.len(),
+            forall|i: int| 0 <= i < finish_order@.len()
+                ==> (#[trigger] finish_order@[i] as int) < graph@.len(),
     {
         let n = graph.length();
         let mut visited: Vec<bool> = Vec::new();

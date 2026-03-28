@@ -86,19 +86,19 @@ pub mod MinEditDistStEph {
         /// Create new minimum edit distance solver.
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- allocate empty structures.
-        fn new() -> (result: Self)
+        fn new() -> (empty: Self)
         where
             T: Default
             requires obeys_feq_clone::<T>(),
-            ensures result.spec_source_len() == 0, result.spec_target_len() == 0;
+            ensures empty.spec_source_len() == 0, empty.spec_target_len() == 0;
 
         /// Create from source and target sequences.
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequences into struct.
-        fn from_sequences(source: ArraySeqStEphS<T>, target: ArraySeqStEphS<T>) -> (result: Self)
+        fn from_sequences(source: ArraySeqStEphS<T>, target: ArraySeqStEphS<T>) -> (edit_dist: Self)
             ensures
-                result.spec_source_len() == source.spec_len(),
-                result.spec_target_len() == target.spec_len();
+                edit_dist.spec_source_len() == source.spec_len(),
+                edit_dist.spec_target_len() == target.spec_len();
 
         /// Compute minimum edit distance.
         /// - APAS: Work O(|S|*|T|), Span O(|S|+|T|)

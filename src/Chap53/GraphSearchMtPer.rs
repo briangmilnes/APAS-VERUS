@@ -217,7 +217,7 @@ pub mod GraphSearchMtPer {
     // 12. derive impls in verus!
 
     impl<V: StTInMtT + Ord + 'static> Clone for SearchResult<V> {
-        fn clone(&self) -> (result: Self) {
+        fn clone(&self) -> (cloned: Self) {
             SearchResult {
                 visited: self.visited.clone(),
                 parent: self.parent.clone(),

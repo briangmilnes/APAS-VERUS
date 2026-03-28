@@ -204,20 +204,20 @@ broadcast use vstd::seq::group_seq_axioms;
         ancestors: Seq<bool>,
         prev_ord: Map<int, nat>,
         prev_next: nat,
-    ) -> (result: (Map<int, nat>, nat))
+    ) -> (dfs_state: (Map<int, nat>, nat))
         requires
             exists|o: Map<int, nat>|
                 #[trigger] spec_is_valid_ord(graph, visited, ancestors, prev_ord, prev_next, o),
         ensures
-            spec_acyclic_ord(graph, result.0, result.1)
+            spec_acyclic_ord(graph, dfs_state.0, dfs_state.1)
             && (forall|v: int| 0 <= v < visited.len()
                 && #[trigger] visited[v] && !ancestors[v]
-                ==> result.0.contains_key(v))
-            && (forall|v: int| #[trigger] result.0.contains_key(v)
+                ==> dfs_state.0.contains_key(v))
+            && (forall|v: int| #[trigger] dfs_state.0.contains_key(v)
                 ==> visited[v] && !ancestors[v])
             && (forall|v: int| #[trigger] prev_ord.contains_key(v)
-                ==> result.0.contains_key(v) && result.0[v] == prev_ord[v])
-            && result.1 >= prev_next,
+                ==> dfs_state.0.contains_key(v) && dfs_state.0[v] == prev_ord[v])
+            && dfs_state.1 >= prev_next,
     {
         let o: Map<int, nat> = choose|o: Map<int, nat>|
             #[trigger] spec_is_valid_ord(graph, visited, ancestors, prev_ord, prev_next, o);

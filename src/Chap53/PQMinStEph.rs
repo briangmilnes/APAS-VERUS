@@ -169,13 +169,13 @@ pub mod PQMinStEph {
 
     fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(
         frontier: &AVLTreeSetStEph<Pair<Pair<P, V>, V>>,
-    ) -> (result: Option<V>)
+    ) -> (min_vertex: Option<V>)
         requires
             frontier.spec_avltreesetsteph_wf(),
             obeys_feq_clone::<V>(),
         ensures
-            frontier@.len() == 0 ==> result.is_none(),
-            frontier@.len() > 0 ==> result.is_some(),
+            frontier@.len() == 0 ==> min_vertex.is_none(),
+            frontier@.len() > 0 ==> min_vertex.is_some(),
     {
         if frontier.size() == 0 {
             None
@@ -200,7 +200,7 @@ pub mod PQMinStEph {
         visited_init: AVLTreeSetStEph<V>,
         frontier_init: AVLTreeSetStEph<Pair<Pair<P, V>, V>>,
         Ghost(vertex_universe): Ghost<Set<<V as View>::V>>,
-    ) -> (result: (AVLTreeSetStEph<V>, AVLTreeSetStEph<Pair<V, P>>))
+    ) -> (explored: (AVLTreeSetStEph<V>, AVLTreeSetStEph<Pair<V, P>>))
         requires
             visited_init.spec_avltreesetsteph_wf(),
             frontier_init.spec_avltreesetsteph_wf(),
@@ -234,9 +234,9 @@ pub mod PQMinStEph {
             vstd::laws_cmp::obeys_cmp_spec::<Pair<V, P>>(),
             view_ord_consistent::<Pair<V, P>>(),
         ensures
-            result.0.spec_avltreesetsteph_wf(),
-            result.1.spec_avltreesetsteph_wf(),
-            visited_init@.subset_of(result.0@),
+            explored.0.spec_avltreesetsteph_wf(),
+            explored.1.spec_avltreesetsteph_wf(),
+            visited_init@.subset_of(explored.0@),
     {
         let mut visited = visited_init;
         let mut frontier = frontier_init;

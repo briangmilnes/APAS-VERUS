@@ -75,16 +75,16 @@ pub mod SubsetSumStPer {
 
         /// Create new subset sum solver.
         /// - APAS: not specified
-        fn new() -> (result: Self)
+        fn new() -> (empty: Self)
         where
             T: Default
             requires obeys_feq_clone::<T>(),
-            ensures result.spec_multiset_len() == 0;
+            ensures empty.spec_multiset_len() == 0;
 
         /// Create from multiset.
         /// - APAS: not specified
-        fn from_multiset(multiset: ArraySeqStPerS<T>) -> (result: Self)
-            ensures result.spec_multiset_len() == multiset.spec_len();
+        fn from_multiset(multiset: ArraySeqStPerS<T>) -> (subset_sum: Self)
+            ensures subset_sum.spec_multiset_len() == multiset.spec_len();
 
         /// Solve subset sum for the given target.
         /// - APAS: Work Θ(k×|S|), Span Θ(|S|)
