@@ -671,13 +671,13 @@ pub mod ETSPMtEph {
     /// Parallel find-best-swap: recursively splits the outer loop over left_tour
     /// and runs both halves in parallel via HFScheduler join().
     /// Work Θ(n·m), Span Θ(m·lg n) where n = left_tour.len(), m = right_tour.len().
-    pub fn find_best_swap_impl(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (result: (usize, usize))
+    pub fn find_best_swap_impl(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (best_swap: (usize, usize))
         requires
             left_tour@.len() >= 1,
             right_tour@.len() >= 1,
         ensures
-            result.0 < left_tour@.len(),
-            result.1 < right_tour@.len(),
+            best_swap.0 < left_tour@.len(),
+            best_swap.1 < right_tour@.len(),
     {
         let lt_cloned = left_tour.clone();
         let rt_cloned = right_tour.clone();
@@ -689,14 +689,14 @@ pub mod ETSPMtEph {
 
     fn find_best_swap_par(
         left_tour: Arc<Vec<Edge>>, right_tour: Arc<Vec<Edge>>, lo: usize, hi: usize,
-    ) -> (result: (usize, usize, f64))
+    ) -> (best_swap: (usize, usize, f64))
         requires
             (*left_tour)@.len() >= 1,
             (*right_tour)@.len() >= 1,
             hi <= (*left_tour)@.len(),
         ensures
-            result.0 < (*left_tour)@.len(),
-            result.1 < (*right_tour)@.len(),
+            best_swap.0 < (*left_tour)@.len(),
+            best_swap.1 < (*right_tour)@.len(),
         decreases hi - lo,
     {
         let lv: &Vec<Edge> = arc_deref(&left_tour);
