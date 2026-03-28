@@ -1,33 +1,20 @@
 
-2) New TOC ify. Adjust style guide.
+1) New TOC ify. Adjust style guide.
 
-3) X{St,Mt}{Per,Eph} consistency.
+2) X{St,Mt}{Per,Eph} consistency.
 
-4) Review marking for human review.
+3) Review marking for human review.
 
-5) Alg analysis tool.
+4) Alg analysis tool.
 
-6) AI alg analysis including marking discrepencies.
+5) AI alg analysis including marking discrepencies.
 
-7) FP.
+6) Are there any algorithmic external bodies?
 
-8) Are there any algorithmic external bodies?
-
-10) Chap64
-
-11) Chap65
-
-12) Chap66
-
-13) Improve the slicing.
-
-14) BSTRB tree parallelism issues.
-
-15) RTT test review for the missing chapters.
+7) RTT test review for the missing chapters.
  Anything not running?
 
-16) PTT test review for the new iterators.
+8) PTT test review for the new iterators.
 
-17) TotalOrder usage from vstdplus vs vstd.
+9) Union Find z3 problems.
 
-18) Union Find compression.
