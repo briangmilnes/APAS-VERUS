@@ -36,13 +36,13 @@ Table of Contents:
       2214 |             cloned
       2215 |         }
 ⚠ TableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:2176: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2172 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:2230: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2226 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      2174 |         {
-      2175 |             let equal = self.entries == other.entries;
-      2177 |             equal
-      2178 |         }
+      2228 |         {
+      2229 |             let equal = self.entries == other.entries;
+      2231 |             equal
+      2232 |         }
 ⚠ TableStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2250: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       2246 |         fn eq(&self, other: &Self) -> (equal: bool)
@@ -113,9 +113,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 13:43:27 -07:00
-Ended:     2026-03-27 13:43:27 -07:00
-Duration:  75ms
+Started:   2026-03-27 17:53:02 -07:00
+Ended:     2026-03-27 17:53:02 -07:00
+Duration:  98ms
 
 Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
-yses/veracity-review-verus-proof-holes.log
+output: src/Chap42/analyses/veracity-review-verus-proof-holes.log

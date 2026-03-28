@@ -263,12 +263,5 @@ broadcast use {
         }
     }
 
-    // 11. derive impls in verus!
-
-    impl<V: StTInMtT + Ord + TotalOrder + 'static> Default for AdjTableGraphMtPer<V> {
-        #[verifier::external_body]
-        fn default() -> Self { Self::empty() }
-    }
-
     } // verus!
 }

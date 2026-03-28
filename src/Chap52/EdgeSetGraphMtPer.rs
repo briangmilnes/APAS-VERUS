@@ -349,12 +349,5 @@ pub mod EdgeSetGraphMtPer {
         }
     }
 
-    // 11. derive impls in verus!
-
-    impl<V: StTInMtT + Ord + ClonePreservesView + 'static> Default for EdgeSetGraphMtPer<V> {
-        #[verifier::external_body]
-        fn default() -> Self { Self::empty() }
-    }
-
     } // verus!
 }
