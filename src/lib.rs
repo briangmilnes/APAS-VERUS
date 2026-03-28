@@ -617,15 +617,15 @@ pub mod Chap57 {
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap58")))]
 pub mod Chap58 {
     pub mod BellmanFordStEphI64;
-//    pub mod BellmanFordStEphF64;  // BROKEN
+    pub mod BellmanFordStEphF64;
 }
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap59")))]
 pub mod Chap59 {
     pub mod JohnsonStEphI64;
     pub mod JohnsonMtEphI64;
-//    pub mod JohnsonStEphF64;  // BROKEN
-//    pub mod JohnsonMtEphF64;  // BROKEN
+    pub mod JohnsonStEphF64;
+    pub mod JohnsonMtEphF64;
 }
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap61")))]

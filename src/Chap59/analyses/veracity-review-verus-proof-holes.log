@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap59/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap59/JohnsonMtEphF64.rs
 Full output: src/Chap59/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,10 +20,11 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-✓ JohnsonMtEphF64.rs
-✓ JohnsonMtEphI64.rs
-✓ JohnsonStEphF64.rs
-✓ JohnsonStEphI64.rs
+❌ JohnsonMtEphF64.rs
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap59/JohnsonMtEphF64.rs:101: error: external_body - #[verifier::external_body]
+       102 |     pub fn johnson_apsp(graph: &WeightedDirGraphStEphF64<usize>) -> (result: AllPairsResultStEphF64)
+   Holes: 1 total
+      1 × external_body
 
 =================================================================
 2. Depends Upon
@@ -34,27 +35,21 @@ Table of Contents:
 =================================================================
 
 JohnsonMtEphF64  depends upon only clean modules
-JohnsonMtEphI64  depends upon only clean modules
-JohnsonStEphF64  depends upon only clean modules
-JohnsonStEphI64  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
 JohnsonMtEphF64.rs  depends upon only clean modules
-JohnsonMtEphI64.rs  depends upon only clean modules
-JohnsonStEphF64.rs  depends upon only clean modules
-JohnsonStEphI64.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   4 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
-   4 total
+   0 clean (no holes, no errors; 0%)
+   1 holed (holes or errors, 100%)
+   1 total
 
 Proof Functions:
    0 clean (0%)
@@ -62,25 +57,23 @@ Proof Functions:
    0 total
 
 Function Specs:
-   12 exec fns with complete spec (requires+ensures) (80%)
-   3 exec fns missing spec (20%)
+   5 exec fns with complete spec (requires+ensures) (83%)
+   1 exec fns missing spec (16%)
    0 proof/spec fns clean (0%)
    0 proof/spec fns with holes (0%)
-   15 total fns
+   6 total fns
 
 
-Holes Found: 0 (actionable)
-Real Proof Targets: 0 (all actionable)
-
-No proof holes or warnings found! All proofs are complete.
+Holes Found: 1 (actionable)
+   1 × external_body (100%)
+Real Proof Targets: 1 (all actionable)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 17:53:02 -07:00
-Ended:     2026-03-27 17:53:02 -07:00
-Duration:  11ms
+Started:   2026-03-27 18:42:59 -07:00
+Ended:     2026-03-27 18:42:59 -07:00
+Duration:  8ms
 
 Full output: src/Chap59/analyses/veracity-review-verus-proof-holes.log
- src/Chap59/analyses/veracity-review-verus-proof-holes.log
