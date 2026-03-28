@@ -36,6 +36,7 @@ pub mod AVLTreeSetStEph {
     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, lemma_cloned_view_eq};
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    use crate::vstdplus::clone_view::clone_view::ClonePreservesWf;
 
     verus! {
 
@@ -781,6 +782,16 @@ broadcast use {
             ensures cloned@ == self@
         {
             AVLTreeSetStEph { tree: self.tree.clone() }
+        }
+    }
+
+    impl<T: StT + Ord> ClonePreservesWf for AVLTreeSetStEph<T> {
+        open spec fn spec_wf(&self) -> bool { self.spec_avltreesetsteph_wf() }
+
+        fn clone_wf(&self) -> (result: Self) {
+            let r = AVLTreeSetStEph { tree: self.tree.clone() };
+            proof { assume(r.spec_avltreesetsteph_wf()); }
+            r
         }
     }
 

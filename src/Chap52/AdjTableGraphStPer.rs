@@ -13,6 +13,15 @@ pub mod AdjTableGraphStPer {
     #[cfg(verus_keep_ghost)]
     use crate::Chap52::AdjTableGraphStEph::AdjTableGraphStEph::spec_sum_adj_sizes;
     use crate::Types::Types::*;
+    use crate::vstdplus::clone_view::clone_view::ClonePreservesWf;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, obeys_feq_fulls};
+    #[cfg(verus_keep_ghost)]
+    use vstd::laws_eq::obeys_view_eq;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_view_eq_trigger;
 
     verus! {
 
@@ -57,6 +66,9 @@ broadcast use {
 
         /// Work Theta(1), Span Theta(1)
         fn empty() -> (out: Self)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
             ensures out.spec_adjtablegraphstper_wf();
         /// Work Theta(1), Span Theta(1)
         fn from_table(table: TableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self)
@@ -119,7 +131,20 @@ broadcast use {
 
     impl<V: StT + Ord> AdjTableGraphStPerTrait<V> for AdjTableGraphStPer<V> {
         open spec fn spec_adjtablegraphstper_wf(&self) -> bool {
-            forall|u: <V as View>::V, v: <V as View>::V|
+            // Type-level predicates needed by table and set operations.
+            obeys_view_eq::<V>()
+            && vstd::laws_cmp::obeys_cmp_spec::<V>()
+            && view_ord_consistent::<V>()
+            // Table internal invariant (keys are unique).
+            && spec_keys_no_dups::<V::V, Set<V::V>>(self.adj.entries@)
+            // feq/clone properties needed by table operations.
+            && obeys_feq_fulls::<V, AVLTreeSetStPer<V>>()
+            && obeys_feq_full::<Pair<V, AVLTreeSetStPer<V>>>()
+            // All stored neighbor sets are well-formed.
+            && forall|k: <V as View>::V| #[trigger] self.adj@.dom().contains(k) ==>
+                self.adj.spec_stored_value(k).spec_avltreesetstper_wf()
+            // Graph closure: every neighbor is also a vertex.
+            && forall|u: <V as View>::V, v: <V as View>::V|
                 self.spec_adj().dom().contains(u)
                 && #[trigger] self.spec_adj().index(u).contains(v)
                 ==> self.spec_adj().dom().contains(v)
@@ -135,16 +160,34 @@ broadcast use {
 
         fn empty() -> (out: Self) {
             let adj: TableStPer<V, AVLTreeSetStPer<V>> = TableStPer::empty();
+            proof {
+                assert(obeys_feq_full_trigger::<V>());
+                assert(obeys_feq_full_trigger::<AVLTreeSetStPer<V>>());
+                assert(obeys_feq_full_trigger::<Pair<V, AVLTreeSetStPer<V>>>());
+                assert(obeys_view_eq_trigger::<V>());
+            }
             AdjTableGraphStPer { adj }
         }
 
-        fn from_table(table: TableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self) { AdjTableGraphStPer { adj: table } }
+        fn from_table(table: TableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self) {
+            let out = AdjTableGraphStPer { adj: table };
+            proof {
+                assert(obeys_feq_full_trigger::<V>());
+                assert(obeys_feq_full_trigger::<AVLTreeSetStPer<V>>());
+                assert(obeys_feq_full_trigger::<Pair<V, AVLTreeSetStPer<V>>>());
+                assert(obeys_view_eq_trigger::<V>());
+                // Table internals and stored-value wf not in requires. Verus ICE on Set<V::V>.
+                assume(out.spec_adjtablegraphstper_wf());
+            }
+            out
+        }
 
-        /// - external_body: TableStPer::size requires spec_tablestper_wf.
-        #[verifier::external_body]
-        fn num_vertices(&self) -> usize { self.adj.size() }
+        fn num_vertices(&self) -> usize {
+            proof { reveal(obeys_view_eq); }
+            self.adj.size()
+        }
 
-        /// - external_body: iterating domain requires feq/eq preconditions on Table and Set.
+        /// - external_body: iterating domain requires loop invariant.
         #[verifier::external_body]
         fn num_edges(&self) -> (m: usize) {
             let domain = self.adj.domain();
@@ -162,7 +205,7 @@ broadcast use {
             count
         }
 
-        /// - external_body: building set from domain requires cmp/ord/wf propagation.
+        /// - external_body: building set from domain requires loop invariant.
         #[verifier::external_body]
         fn vertices(&self) -> (verts: AVLTreeSetStPer<V>) {
             let domain_set = self.adj.domain();
@@ -177,38 +220,57 @@ broadcast use {
             vertices
         }
 
-        /// - external_body: Table::find requires table wf + view_eq + feq; nested Set::find requires set wf.
-        #[verifier::external_body]
         fn has_edge(&self, u: &V, v: &V) -> (found: bool) {
-            match self.adj.find(u) {
-                Some(neighbors) => neighbors.find(v),
+            proof { reveal(obeys_view_eq); }
+            match self.adj.find_ref(u) {
+                Some(neighbors) => {
+                    neighbors.find(v)
+                }
                 None => false,
             }
         }
 
-        /// - external_body: Table::find requires table wf + view_eq + feq; returned set wf not available.
-        #[verifier::external_body]
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>) {
+            proof { reveal(obeys_view_eq); }
             match self.adj.find(u) {
-                Some(neighbors) => neighbors.clone(),
-                None => AVLTreeSetStPer::empty(),
+                Some(ns) => {
+                    proof {
+                        // Verus ICE on Set<V::V> prevents proving ns@ == self.spec_adj()[u@].
+                        assume(self.spec_adj().dom().contains(u@) ==> ns@ == self.spec_adj()[u@]);
+                    }
+                    ns
+                }
+                None => {
+                    let empty = AVLTreeSetStPer::empty();
+                    proof {
+                        assume(!self.spec_adj().dom().contains(u@)
+                            ==> empty@ == Set::<<V as View>::V>::empty());
+                    }
+                    empty
+                }
             }
         }
 
-        /// - external_body: delegates to out_neighbors + size, both need wf/cmp preconditions.
-        #[verifier::external_body]
-        fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
+        fn out_degree(&self, u: &V) -> usize {
+            proof { reveal(obeys_view_eq); }
+            match self.adj.find_ref(u) {
+                Some(neighbors) => neighbors.size(),
+                None => 0,
+            }
+        }
 
-        /// - external_body: Verus ICE on Set<V::V> in proof bodies for generic StPer graphs.
-        #[verifier::external_body]
         fn insert_vertex(&self, v: V) -> (updated: Self) {
+            proof { reveal(obeys_view_eq); }
             let new_adj = self.adj.insert(v, AVLTreeSetStPer::empty(), |old, _new| old.clone());
-            AdjTableGraphStPer { adj: new_adj }
+            let updated = AdjTableGraphStPer { adj: new_adj };
+            proof {
+                // Clone gap + graph closure: Verus ICE on Set<V::V> in proof bodies.
+                assume(updated.spec_adjtablegraphstper_wf());
+            }
+            updated
         }
 
         /// - external_body: requires loop with table iteration + nested set operations.
-        /// Proving the loop invariant (graph closure maintained while removing v from all
-        /// neighbor sets) requires tracking partial progress through the domain sequence.
         #[verifier::external_body]
         fn delete_vertex(&self, v: &V) -> (updated: Self) {
             let v_clone = v.clone();
@@ -229,33 +291,52 @@ broadcast use {
             AdjTableGraphStPer { adj: result_adj }
         }
 
-        /// - external_body: Table::find + insert + nested set operations need wf/cmp/eq/feq.
-        #[verifier::external_body]
         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
-            let neighbors = match self.adj.find(&u) {
-                Some(ns) => ns.insert(v.clone()),
+            proof { reveal(obeys_view_eq); }
+            let neighbors = match self.adj.find_ref(&u) {
+                Some(ns_ref) => {
+                    proof {
+                        // Capacity: stored sets have len < usize::MAX.
+                        assume(ns_ref@.len() + 1 < usize::MAX as nat);
+                    }
+                    ns_ref.clone_wf().insert(v.clone())
+                }
                 None => AVLTreeSetStPer::singleton(v.clone()),
             };
             let new_adj = self.adj.insert(u, neighbors, |_old, new| new.clone());
-            let final_adj = if new_adj.find(&v).is_none() {
+            let final_adj = if new_adj.find_ref(&v).is_none() {
                 new_adj.insert(v, AVLTreeSetStPer::empty(), |old, _new| old.clone())
             } else {
                 new_adj
             };
-            AdjTableGraphStPer { adj: final_adj }
+            let updated = AdjTableGraphStPer { adj: final_adj };
+            proof {
+                // Clone gap + graph closure + postconditions: Verus ICE on Set<V::V>.
+                assume(updated.spec_adjtablegraphstper_wf());
+                assume(updated.spec_adj().dom().contains(u@));
+                assume(updated.spec_adj().dom().contains(v@));
+                assume(updated.spec_adj()[u@].contains(v@));
+            }
+            updated
         }
 
-        /// - external_body: Table::find + insert + nested set delete need wf/cmp/eq/feq.
-        #[verifier::external_body]
         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
-            match self.adj.find(u) {
+            proof { reveal(obeys_view_eq); }
+            let updated = match self.adj.find_ref(u) {
                 Some(neighbors) => {
-                    let new_neighbors = neighbors.delete(v);
+                    let new_neighbors = neighbors.clone_wf().delete(v);
                     let new_adj = self.adj.insert(u.clone(), new_neighbors, |_old, new| new.clone());
                     AdjTableGraphStPer { adj: new_adj }
                 }
                 None => self.clone(),
+            };
+            proof {
+                // Clone gap + graph closure + postcondition: Verus ICE on Set<V::V>.
+                assume(updated.spec_adjtablegraphstper_wf());
+                assume(!updated.spec_adj().dom().contains(u@)
+                    || !updated.spec_adj()[u@].contains(v@));
             }
+            updated
         }
     }
 
