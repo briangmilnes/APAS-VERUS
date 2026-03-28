@@ -1109,9 +1109,9 @@ path = "tests/Chap56/TestSSSPResultStEphI64.rs"
 name = "TestSSSPResultStPerI64"
 path = "tests/Chap56/TestSSSPResultStPerI64.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestDijkstraStEphF64"
-# path = "tests/Chap57/TestDijkstraStEphF64.rs"
+[[test]]
+name = "TestDijkstraStEphF64"
+path = "tests/Chap57/TestDijkstraStEphF64.rs"
 
 [[test]]
 name = "TestDijkstraStEphU64"
