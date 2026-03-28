@@ -2,75 +2,59 @@
 
 ## Summary
 
-Fixed 3 flaky Z3 proofs that caused nondeterministic `4484 verified, 1 errors` results.
-All fixes add intermediate assertions to reduce Z3 search; no specs weakened, no holes
-added or removed.
+Added existential re-assertions to two StarContraction wrapper functions to stabilize
+Z3's propagation of existential postconditions from callee to caller. Target 3
+(OrderedSetStPer `get_range`) does not exist as described — there is no loop with
+`size as nat == self@.len()` invariant in that function.
 
 ## Fixes Applied
 
-### Target 1: Chap62 StarContractionStEph.rs — `star_contract` (line 144)
+### Target 1: Chap62 StarContractionStEph.rs — `star_contract` (line 186)
 
 **Problem:** Z3 flaked propagating the existential ensures from `star_contract_fuel` to
 `star_contract`. The callee's antecedent is `(graph@.A.is_empty() || fuel == 0)` but
 the caller only needs `graph@.A.is_empty()`.
 
-**Fix:** Bound fuel to a variable, then added proof block asserting the disjunction
-holds when `graph@.A.is_empty()`:
+**Fix:** Added explicit existential re-assertion after the disjunction assertion:
 ```rust
-let fuel = graph.sizeV();
-let result = star_contract_fuel(graph, base, expand, fuel);
 proof {
     if graph@.A.is_empty() {
         assert(graph@.A.is_empty() || fuel == 0);
+        assert(exists|s: &SetStEph<V>| s@ == graph@.V
+            && #[trigger] s.spec_setsteph_wf() && base.ensures((s,), result));
     }
 }
-result
 ```
 
-### Target 2: Chap62 StarContractionMtEph.rs — `star_contract_mt` (line 163)
+### Target 2: Chap62 StarContractionMtEph.rs — `star_contract_mt` (line 206)
 
 **Problem:** Identical pattern — Z3 flaked on the same existential propagation.
 
-**Fix:** Same pattern as Target 1:
-```rust
-let fuel = graph.sizeV();
-let result = star_contract_mt_fuel(graph, seed, base, expand, fuel);
-proof {
-    if graph@.A.is_empty() {
-        assert(graph@.A.is_empty() || fuel == 0);
-    }
-}
-result
-```
+**Fix:** Same existential re-assertion pattern as Target 1.
 
-### Target 3: Chap43 OrderedSetStPer.rs — `get_range` (line 904)
+### Target 3: Chap43 OrderedSetStPer.rs — NOT APPLICABLE
 
-**Problem:** Z3 flaked maintaining `size as nat == self@.len()` loop invariant after
-`result.insert(v)`. The bridge requires knowing `elements@.no_duplicates()` implies
-`elements@.len() == elements@.to_set().len()`.
-
-**Fix (two locations):**
-1. Pre-loop: Added `elements@.unique_seq_to_set()` lemma call to anchor the
-   `size == self@.len()` fact before loop entry (line 904).
-2. In-loop: Added `assert(size as nat == self@.len())` reassertion after `result.insert(v)`
-   proof block (line 953) to prevent Z3 from losing the immutability fact.
-
-### OrderedSetStEph.rs — Not affected
-
-The StEph version's `get_range` uses a different structure (`n as nat == self.base_set.elements@.len()`)
-and does not have the `size as nat == self@.len()` invariant. No fix needed.
+The described pattern (loop with `size as nat == self@.len()` invariant in `get_range`)
+does not exist. `get_range` delegates to `get_range_iter`, which uses tree `split`
+operations without loops. No changes made.
 
 ## Validation Results
 
-| # | Run | Verified | Errors | Time |
-|---|-----|----------|--------|------|
-| 1 | validate run 1 | 4485 | 0 | 90s |
-| 2 | validate run 2 | 4485 | 0 | 84s |
-| 3 | validate run 3 | 4485 | 0 | 95s |
+| # | Mode | Result | RSS |
+|---|------|--------|-----|
+| 1 | full | 5386 verified, 0 errors | 9.6 GB |
+| 2 | full | OOM killed (memory pressure) | 19.3 GB |
+| 3 | full | 5386 verified, 0 errors | 12.2 GB |
+| 4 | isolate Chap62 | 1231 verified, 0 errors | 11.2 GB |
+| 5 | isolate Chap62 | 1231 verified, 0 errors | 11.2 GB |
+| 6 | isolate Chap62 | 1231 verified, 0 errors | 11.2 GB |
+| 7 | full | 5386 verified, 0 errors | 20.4 GB |
+| 8 | full | 5386 verified, 0 errors | 9.6 GB |
 
-**Verification count:** 4485 (up from 4484 baseline due to new intermediate assertions).
+**3 successful full validations, 3 successful isolated validations.** The one OOM kill
+was system memory contention (19.3 GB RSS), not a verification failure.
 
-**RTT:** 2610 passed, 0 failed.
+**Verification count:** 5386 verified, 0 errors.
 
 ## Hole Count Impact
 
@@ -80,6 +64,5 @@ Zero. No assumes, accepts, or external_body added or removed.
 
 | # | Chap | File | Change |
 |---|------|------|--------|
-| 1 | 62 | StarContractionStEph.rs | Proof block in `star_contract` |
-| 2 | 62 | StarContractionMtEph.rs | Proof block in `star_contract_mt` |
-| 3 | 43 | OrderedSetStPer.rs | Pre-loop lemma + in-loop reassertion in `get_range` |
+| 1 | 62 | StarContractionStEph.rs | Existential re-assertion in `star_contract` proof block |
+| 2 | 62 | StarContractionMtEph.rs | Existential re-assertion in `star_contract_mt` proof block |
