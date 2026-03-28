@@ -155,7 +155,9 @@ broadcast use {
             ensures updated.spec_adjtablegraphstper_wf(), !updated.spec_adj().dom().contains(v@);
         /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
-            requires self.spec_adjtablegraphstper_wf()
+            requires
+                self.spec_adjtablegraphstper_wf(),
+                self.spec_adj().dom().len() + 1 < usize::MAX as nat,
             ensures
                 updated.spec_adjtablegraphstper_wf(),
                 updated.spec_adj().dom().contains(u@),
@@ -454,8 +456,15 @@ broadcast use {
             let neighbors = match self.adj.find_ref(&u) {
                 Some(ns_ref) => {
                     proof {
-                        // Capacity: stored sets have len < usize::MAX.
-                        assume(ns_ref@.len() + 1 < usize::MAX as nat);
+                        // Capacity: graph closure ⇒ ns@ ⊆ domain ⇒ ns@.len() ≤ dom.len().
+                        let dom = self.spec_adj().dom();
+                        assert(ns_ref@.subset_of(dom)) by {
+                            assert forall|w: <V as View>::V| #[trigger] ns_ref@.contains(w) implies dom.contains(w) by {
+                                assert(self.spec_adj().index(u@).contains(w));
+                            };
+                        };
+                        lemma_entries_to_map_finite::<V::V, Set<V::V>>(self.adj.entries@);
+                        vstd::set_lib::lemma_len_subset(ns_ref@, dom);
                     }
                     ns_ref.clone_wf().insert(v.clone())
                 }

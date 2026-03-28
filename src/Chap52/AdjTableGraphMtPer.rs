@@ -112,7 +112,9 @@ broadcast use {
             requires self.spec_adjtablegraphmtper_wf();
         /// Work Theta(log |V|), Span Theta(log |V|)
         fn insert_vertex(&self, v: V) -> (updated: Self)
-            requires self.spec_adjtablegraphmtper_wf()
+            requires
+                self.spec_adjtablegraphmtper_wf(),
+                self.spec_adj().dom().len() + 1 < usize::MAX as nat,
             ensures updated.spec_adjtablegraphmtper_wf(), updated.spec_adj().dom().contains(v@);
         /// Work Theta((|V| + |E|) log |V|), Span Theta(log^2 |V| + log |E|)
         fn delete_vertex(&self, v: &V) -> (updated: Self)
@@ -120,7 +122,9 @@ broadcast use {
             ensures updated.spec_adjtablegraphmtper_wf(), !updated.spec_adj().dom().contains(v@);
         /// Work Theta(log |V|), Span Theta(log |V|)
         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
-            requires self.spec_adjtablegraphmtper_wf()
+            requires
+                self.spec_adjtablegraphmtper_wf(),
+                self.spec_adj().dom().len() + 2 < usize::MAX as nat,
             ensures
                 updated.spec_adjtablegraphmtper_wf(),
                 updated.spec_adj().dom().contains(u@),
@@ -128,7 +132,9 @@ broadcast use {
                 updated.spec_adj()[u@].contains(v@);
         /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
-            requires self.spec_adjtablegraphmtper_wf()
+            requires
+                self.spec_adjtablegraphmtper_wf(),
+                self.spec_adj().dom().len() + 1 < usize::MAX as nat,
             ensures
                 updated.spec_adjtablegraphmtper_wf(),
                 !updated.spec_adj().dom().contains(u@)
@@ -236,7 +242,6 @@ broadcast use {
             let updated = if self.adj.find(&v).is_some() {
                 self.clone()
             } else {
-                proof { assume(self.adj@.dom().len() + 1 < usize::MAX as nat); }
                 AdjTableGraphMtPer {
                     adj: self.adj.insert(v, AVLTreeSetMtPer::empty()),
                 }
@@ -271,7 +276,6 @@ broadcast use {
         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             let mut new_adj = self.adj.clone();
             if new_adj.find(&u).is_none() {
-                proof { assume(new_adj@.dom().len() + 1 < usize::MAX as nat); }
                 new_adj = new_adj.insert(u.clone(), AVLTreeSetMtPer::empty());
             }
             if new_adj.find(&v).is_none() {
@@ -305,7 +309,6 @@ broadcast use {
                 Some(u_neighbors) => {
                     proof {
                         assume(u_neighbors.spec_avltreesetmtper_wf());
-                        assume(self.adj@.dom().len() + 1 < usize::MAX as nat);
                     }
                     let new_u_neighbors = u_neighbors.delete(v);
                     AdjTableGraphMtPer {
