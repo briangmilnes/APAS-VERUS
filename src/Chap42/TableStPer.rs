@@ -542,10 +542,13 @@ pub mod TableStPer {
                 updated.spec_tablestper_wf(),
                 updated@.dom() =~= self@.dom().insert(key@),
                 forall|k: K::V| k != key@ && #[trigger] self@.contains_key(k) ==> updated@[k] == self@[k],
-                !self@.contains_key(key@) ==> updated@[key@] == value@,
+                !self@.contains_key(key@) ==> updated@[key@] == value@
+                    && updated.spec_stored_value(key@) == value,
                 self@.contains_key(key@) ==> (exists|old_v: V, r: V|
                     old_v@ == self@[key@] && combine.ensures((&old_v, &value), r)
-                    && updated@[key@] == r@);
+                    && updated@[key@] == r@
+                    && old_v == self.spec_stored_value(key@)
+                    && updated.spec_stored_value(key@) == r);
 
         /// - APAS Cost Spec 42.5: Work m * lg(1 + n/m), Span lg(n + m)
         /// - Claude-Opus-4.6: Work Θ(|self| * |keys|), Span same -- linear scan; disagrees with APAS.
@@ -1834,10 +1837,36 @@ pub mod TableStPer {
                     assert(witness_old_v@ == spec_entries_to_map(self_view)[key_view]);
                     assert(spec_entries_to_map(entries@)[key_view] == witness_r@);
                     assert(combine.ensures((&witness_old_v, &value), witness_r));
+                }
+                // Prove spec_stored_value for the inserted key.
+                assert(entries.spec_index(last) == all@[last]);
+                assert((#[trigger] entries.seq@[last]).0@ == key_view);
+                let ghost chosen_i = choose|i: int| 0 <= i < entries.seq@.len()
+                    && (#[trigger] entries.seq@[i]).0@ == key_view;
+                if chosen_i != last {
+                    assert(entries@[chosen_i].0 == key_view);
+                    assert(entries@[last].0 == key_view);
+                }
+                assert(chosen_i == last);
+                // Existing-key stored_value proof.
+                if spec_entries_to_map(self_view).contains_key(key_view) {
+                    assert(found_idx.is_some());
+                    let ghost fi = choose|fi: usize| found_idx == Some(fi);
+                    assert(self_view[fi as int].0 == key_view);
+                    let ghost old_chosen = choose|i: int| 0 <= i < self.entries.seq@.len()
+                        && (#[trigger] self.entries.seq@[i]).0@ == key_view;
+                    if old_chosen != fi as int {
+                        assert(self.entries@[old_chosen].0 == key_view);
+                        assert(self.entries@[fi as int].0 == key_view);
+                    }
+                    assert(old_chosen == fi as int);
+                    assert(combine.ensures((&witness_old_v, &value), witness_r));
                     assert(exists|old_v: V, r: V|
                         old_v@ == spec_entries_to_map(self_view)[key_view]
                         && combine.ensures((&old_v, &value), r)
-                        && spec_entries_to_map(entries@)[key_view] == r@);
+                        && spec_entries_to_map(entries@)[key_view] == r@
+                        && old_v == self.entries.seq@[old_chosen].1
+                        && entries.seq@[chosen_i].1 == r);
                 }
             }
             TableStPer { entries }
