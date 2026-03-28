@@ -21,11 +21,11 @@ Table of Contents:
 =================================================================
 
 ❌ KruskalStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/KruskalStEph.rs:40: error: opaque - #[verifier::opaque]
+/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:40: error: opaque - #[verifier::opaque]
         41 |         pub open spec fn uf_wf_opaque<V: HashOrd>(uf: &UnionFindStEph<V>) -> bool {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/KruskalStEph.rs:49: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:49: error: external_body - #[verifier::external_body]
         50 |         pub fn kruskal_process_edge<V: HashOrd>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/KruskalStEph.rs:404: error: fn_missing_ensures - fn mst_weight — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:404: error: fn_missing_ensures - fn mst_weight — exec fn should have ensures
        311 |     pub fn kruskal_mst<V: HashOrd>(
             ...
        402 |     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
@@ -37,34 +37,34 @@ Table of Contents:
       1 × opaque
    Proof functions: 1 total (1 clean, 0 holed)
 ⚠ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/PrimStEph.rs:421: error: fn_missing_ensures - fn mst_weight — exec fn should have ensures
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:421: error: fn_missing_ensures - fn mst_weight — exec fn should have ensures
        217 |     pub fn prim_mst<V: HashOrd + Display + TotalOrder>(
             ...
        419 |     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
        420 |     /// Overflow-safe: skips edges that would cause u64 overflow (never triggers for MST weights).
        422 |         requires mst_edges.spec_setsteph_wf(),
        423 |     {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/PrimStEph.rs:455: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:455: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        451 |         fn clone(&self) -> (result: Self)
             ...
        453 |         {
        454 |             let result = PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() };
        456 |             result
        457 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/PrimStEph.rs:216: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:216: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
 ❌ UnionFindStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:1087: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1087: error: external_body - #[verifier::external_body]
       1088 |     fn union_merge<V: StT + Hash>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:1317: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1317: error: external_body - #[verifier::external_body]
       1318 |         fn union(&mut self, u: &V, v: &V) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:914: error: fn_missing_wf_requires - fn union_merge_exec — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:914: error: fn_missing_wf_requires - fn union_merge_exec — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
        890 |     proof fn lemma_union_wf_frame<V: StT + Hash>(
             ...
        912 |     /// the quantified wf proof, keeping Z3 under 4 GB.
        913 |     #[verifier::rlimit(30)]
        915 |         uf: &mut UnionFindStEph<V>,
        916 |         root_u: V,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:1088: error: fn_missing_wf_requires - fn union_merge — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1088: error: fn_missing_wf_requires - fn union_merge — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
       1014 |     proof fn lemma_union_merge_wf<V: StT + Hash>(
             ...
       1086 |     /// lemma_union_merge_wf to keep &mut encoding out of the proof context.
@@ -134,12 +134,15 @@ Structural (info only): 1
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 20:02:16 -07:00
-Ended:     2026-03-27 20:02:17 -07:00
-Duration:  19ms
+Started:   2026-03-27 20:33:03 -07:00
+Ended:     2026-03-27 20:33:03 -07:00
+Duration:  30ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-6-03-27 20:02:17 -07:00
-Duration:  19ms
+=======================================
+
+Started:   2026-03-27 20:33:03 -07:00
+Ended:     2026-03-27 20:33:03 -07:00
+Duration:  30ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log

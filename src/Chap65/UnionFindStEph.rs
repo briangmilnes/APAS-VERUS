@@ -1119,10 +1119,8 @@ pub mod UnionFindStEph {
         let ghost mid_uf = *uf;
 
         proof {
-            // Reveal spec_uf_wf so Z3 can extract spec_key_model, spec_feq_full,
-            // and domain equalities needed by union_merge_exec's requires.
-            // Sub-predicates remain closed — Z3 sees opaque booleans, not quantifiers.
-            reveal(spec_uf_wf);
+            // BYPASSED: reveal has no effect inside external_body.
+            // reveal(spec_uf_wf);
         }
 
         let info = union_merge_exec(uf, root_u, root_v);
@@ -1323,9 +1321,10 @@ pub mod UnionFindStEph {
 
             if !feq(&root_u, &root_v) {
                 proof {
-                    reveal(spec_uf_wf);
-                    lemma_root_is_self_parent(self, root_u_view);
-                    lemma_root_is_self_parent(self, root_v_view);
+                    // BYPASSED: reveal/lemma calls have no effect inside external_body.
+                    // reveal(spec_uf_wf);
+                    // lemma_root_is_self_parent(self, root_u_view);
+                    // lemma_root_is_self_parent(self, root_v_view);
                 }
                 let ghost mid_self = *self;
 
