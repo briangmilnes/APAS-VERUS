@@ -213,6 +213,11 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — wraps existing table.
         fn from_table(table: TableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self)
             requires
+                table.spec_tablesteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
+                forall|k: <V as View>::V| #[trigger] table@.dom().contains(k) ==>
+                    table.spec_stored_value(k).spec_avltreesetsteph_wf(),
                 forall|u: <V as View>::V, v: <V as View>::V|
                     table@.dom().contains(u)
                     && #[trigger] table@.index(u).contains(v)
@@ -327,9 +332,10 @@ broadcast use {
                 assert(obeys_feq_full_trigger::<AVLTreeSetStEph<V>>());
                 assert(obeys_feq_full_trigger::<Pair<V, AVLTreeSetStEph<V>>>());
                 assert(obeys_view_eq_trigger::<V>());
-                // Table internals (keys_no_dups) and stored-value wf not available
-                // from trait requires. Verus ICE on Set<V::V> in proof bodies.
-                assume(out.spec_adjtablegraphsteph_wf());
+                // keys_no_dups: from table.spec_tablesteph_wf() in requires.
+                // stored-value wf: from quantifier in requires.
+                // graph closure: from quantifier in requires.
+                // Type predicates: from requires + broadcast triggers above.
             }
             out
         }

@@ -114,6 +114,11 @@ broadcast use {
         /// Work Theta(1), Span Theta(1)
         fn from_table(table: TableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self)
             requires
+                table.spec_tablestper_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
+                forall|k: <V as View>::V| #[trigger] table@.dom().contains(k) ==>
+                    table.spec_stored_value(k).spec_avltreesetstper_wf(),
                 forall|u: <V as View>::V, v: <V as View>::V|
                     table@.dom().contains(u)
                     && #[trigger] table@.index(u).contains(v)
@@ -221,8 +226,10 @@ broadcast use {
                 assert(obeys_feq_full_trigger::<AVLTreeSetStPer<V>>());
                 assert(obeys_feq_full_trigger::<Pair<V, AVLTreeSetStPer<V>>>());
                 assert(obeys_view_eq_trigger::<V>());
-                // Table internals and stored-value wf not in requires. Verus ICE on Set<V::V>.
-                assume(out.spec_adjtablegraphstper_wf());
+                // keys_no_dups: from table.spec_tablestper_wf() in requires.
+                // stored-value wf: from quantifier in requires.
+                // graph closure: from quantifier in requires.
+                // Type predicates: from requires + broadcast triggers above.
             }
             out
         }
