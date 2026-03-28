@@ -27,6 +27,7 @@ pub mod TableStPer {
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
+    use crate::vstdplus::clone_view::clone_view::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
@@ -549,6 +550,35 @@ pub mod TableStPer {
                     && updated@[key@] == r@
                     && old_v == self.spec_stored_value(key@)
                     && updated.spec_stored_value(key@) == r);
+
+        /// Like insert, but additionally ensures all stored values preserve well-formedness.
+        fn insert_wf<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (updated: Self)
+            where K: ClonePreservesView, V: ClonePreservesWf
+            requires
+                self.spec_tablestper_wf(),
+                forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                value.spec_wf(),
+                forall|k: K::V| #[trigger] self@.contains_key(k) ==>
+                    self.spec_stored_value(k).spec_wf(),
+                forall|v1: &V, v2: &V, r: V|
+                    #[trigger] combine.ensures((v1, v2), r) && v1.spec_wf() && v2.spec_wf()
+                    ==> r.spec_wf(),
+            ensures
+                updated@.contains_key(key@),
+                updated.spec_tablestper_wf(),
+                updated@.dom() =~= self@.dom().insert(key@),
+                forall|k: K::V| k != key@ && #[trigger] self@.contains_key(k) ==> updated@[k] == self@[k],
+                !self@.contains_key(key@) ==> updated@[key@] == value@
+                    && updated.spec_stored_value(key@) == value,
+                self@.contains_key(key@) ==> (exists|old_v: V, r: V|
+                    old_v@ == self@[key@] && combine.ensures((&old_v, &value), r)
+                    && updated@[key@] == r@
+                    && old_v == self.spec_stored_value(key@)
+                    && updated.spec_stored_value(key@) == r),
+                forall|k: K::V| #[trigger] updated@.contains_key(k) ==>
+                    updated.spec_stored_value(k).spec_wf();
 
         /// - APAS Cost Spec 42.5: Work m * lg(1 + n/m), Span lg(n + m)
         /// - Claude-Opus-4.6: Work Θ(|self| * |keys|), Span same -- linear scan; disagrees with APAS.
@@ -1868,6 +1898,278 @@ pub mod TableStPer {
                         && old_v == self.entries.seq@[old_chosen].1
                         && entries.seq@[chosen_i].1 == r);
                 }
+            }
+            TableStPer { entries }
+        }
+
+        fn insert_wf<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (updated: Self)
+            where K: ClonePreservesView, V: ClonePreservesWf
+        {
+            let ghost key_view: K::V = key@;
+            let ghost self_view = self.entries@;
+            let ghost self_exec_seq: Seq<Pair<K, V>> = self.entries.seq@;
+            let mut all: Vec<Pair<K, V>> = Vec::new();
+            let mut found_idx: Option<usize> = None;
+            let ghost mut src: Seq<int> = Seq::empty();
+            let mut i: usize = 0;
+            while i < self.entries.length()
+                invariant
+                    i <= self.entries.spec_len(),
+                    self.entries@ == self_view,
+                    self.entries.seq@ =~= self_exec_seq,
+                    self.spec_tablestper_wf(),
+                    forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                    src.len() == all@.len(),
+                    forall|j: int| 0 <= j < src.len() ==> (
+                        0 <= #[trigger] src[j] < i
+                        && all@[j].0@ == self_view[src[j]].0
+                        && all@[j].1@ == self_view[src[j]].1
+                    ),
+                    forall|a: int, b: int| 0 <= a < b < src.len() ==> src[a] < src[b],
+                    forall|j: int| 0 <= j < all@.len() ==> (#[trigger] all@[j]).0@ != key_view,
+                    forall|si: int| 0 <= si < i as int && (#[trigger] self_view[si]).0 != key_view ==>
+                        exists|j: int| 0 <= j < src.len() && src[j] == si,
+                    obeys_view_eq::<K>(),
+                    obeys_feq_full::<Pair<K, V>>(),
+                    key@ == key_view,
+                    match found_idx {
+                        Some(fi) => fi < i
+                            && self_view[fi as int].0 == key_view,
+                        None => forall|si: int|
+                            0 <= si < i as int ==> (#[trigger] self_view[si]).0 != key_view,
+                    },
+                    // Wf invariants.
+                    forall|j: int| 0 <= j < all@.len() ==> (#[trigger] all@[j]).1.spec_wf(),
+                    forall|k: K::V| #[trigger] self@.contains_key(k) ==>
+                        self.spec_stored_value(k).spec_wf(),
+                decreases self.entries.spec_len() - i,
+            {
+                let pair = self.entries.nth(i);
+                proof { reveal(obeys_view_eq); }
+                if pair.0 == key {
+                    found_idx = Some(i);
+                } else {
+                    // Prove pair.1.spec_wf() so we can call clone_wf.
+                    proof {
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(self_view, i as int);
+                        let ghost k_at_i = self_view[i as int].0;
+                        let ghost chosen = choose|idx: int| 0 <= idx < self_exec_seq.len()
+                            && (#[trigger] self_exec_seq[idx]).0@ == k_at_i;
+                        assert(self_exec_seq[i as int].0@ == k_at_i);
+                        if chosen != i as int {
+                            assert(self_view[chosen].0 == k_at_i);
+                            assert(self_view[i as int].0 == k_at_i);
+                        }
+                        assert(chosen == i as int);
+                        // Trigger the stored-value-wf quantifier.
+                        assert(self@.contains_key(k_at_i));
+                        assert(self.spec_stored_value(k_at_i) == self_exec_seq[i as int].1);
+                        // Now pair.1 == self_exec_seq[i].1, and spec_wf follows.
+                        assert(*pair == self.entries.seq@[i as int]);
+                        assert((*pair).1 == self_exec_seq[i as int].1);
+                    }
+                    let kc = pair.0.clone_view();
+                    let vc = pair.1.clone_wf();
+                    let cloned = Pair(kc, vc);
+                    all.push(cloned);
+                    proof {
+                        let ghost old_src = src;
+                        src = src.push(i as int);
+                        assert forall|si: int|
+                            0 <= si < i as int + 1
+                            && (#[trigger] self_view[si]).0 != key_view
+                            implies exists|j: int| 0 <= j < src.len() && src[j] == si
+                        by {
+                            if si < i as int {
+                                let j = choose|j: int|
+                                    0 <= j < old_src.len() && old_src[j] == si;
+                                assert(src[j] == old_src[j]);
+                            } else {
+                                assert(src[src.len() - 1] == i as int);
+                            }
+                        };
+                    }
+                }
+                i += 1;
+            }
+            let ghost mut witness_old_v: V = value;
+            let ghost mut witness_r: V = value;
+            let final_value = match found_idx {
+                Some(idx) => {
+                    let old_entry = self.entries.nth(idx);
+                    proof {
+                        lemma_entries_to_map_get::<K::V, V::V>(self_view, idx as int);
+                        // Prove old_entry.1.spec_wf() for combine-preserves-wf.
+                        let ghost k_at_idx = self_view[idx as int].0;
+                        let ghost chosen = choose|ci: int| 0 <= ci < self_exec_seq.len()
+                            && (#[trigger] self_exec_seq[ci]).0@ == k_at_idx;
+                        assert(self_exec_seq[idx as int].0@ == k_at_idx);
+                        if chosen != idx as int {
+                            assert(self_view[chosen].0 == k_at_idx);
+                            assert(self_view[idx as int].0 == k_at_idx);
+                        }
+                        assert(chosen == idx as int);
+                    }
+                    let combined = combine(&old_entry.1, &value);
+                    proof {
+                        witness_old_v = old_entry.1;
+                        witness_r = combined;
+                    }
+                    combined
+                },
+                None => value,
+            };
+            all.push(Pair(key, final_value));
+            let entries = ArraySeqStPerS::from_vec(all);
+            proof {
+                let last = (entries@.len() - 1) as int;
+                assert(entries.spec_index(last) == all@[last]);
+                lemma_entries_to_map_contains_key::<K::V, V::V>(entries@, last);
+                assert(entries@[last].0 == key_view);
+                assert(spec_keys_no_dups(entries@)) by {
+                    assert forall|a: int, b: int|
+                        0 <= a < b < entries@.len()
+                        implies (#[trigger] entries@[a]).0 != (#[trigger] entries@[b]).0
+                    by {
+                        assert(entries.spec_index(a) == all@[a]);
+                        assert(entries.spec_index(b) == all@[b]);
+                        if b < entries@.len() - 1 {
+                            assert(src[a] < src[b]);
+                            assert(0 <= src[a] < self_view.len());
+                            assert(0 <= src[b] < self_view.len());
+                            assert(self_view[src[a]].0 != self_view[src[b]].0);
+                        } else {
+                            assert(all@[a].0@ != key_view);
+                        }
+                    };
+                };
+                assert forall|k: K::V| #[trigger]
+                    spec_entries_to_map(self_view).contains_key(k)
+                    implies spec_entries_to_map(entries@).contains_key(k)
+                by {
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(self_view, k);
+                    let si = choose|si: int| 0 <= si < self_view.len()
+                        && (#[trigger] self_view[si]).0 == k;
+                    if self_view[si].0 == key_view {
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(entries@, last);
+                    } else {
+                        let j = choose|j: int| 0 <= j < src.len()
+                            && (#[trigger] src[j]) == si;
+                        assert(entries.spec_index(j) == all@[j]);
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(entries@, j);
+                    }
+                };
+                assert forall|k: K::V| #[trigger]
+                    spec_entries_to_map(entries@).contains_key(k)
+                    implies self@.dom().contains(k) || k == key_view
+                by {
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(entries@, k);
+                    let idx = choose|idx: int| 0 <= idx < entries@.len()
+                        && (#[trigger] entries@[idx]).0 == k;
+                    assert(entries.spec_index(idx) == all@[idx]);
+                    if idx < entries@.len() - 1 {
+                        let s = src[idx];
+                        lemma_entries_to_map_contains_key::<K::V, V::V>(self_view, s);
+                    }
+                };
+                assert forall|k: K::V|
+                    k != key_view && #[trigger] self@.contains_key(k)
+                    implies spec_entries_to_map(entries@)[k] == self@[k]
+                by {
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(self_view, k);
+                    let si = choose|si: int| 0 <= si < self_view.len()
+                        && (#[trigger] self_view[si]).0 == k;
+                    let j = choose|j: int| 0 <= j < src.len() && src[j] == si;
+                    assert(entries.spec_index(j) == all@[j]);
+                    lemma_entries_to_map_get::<K::V, V::V>(entries@, j);
+                    lemma_entries_to_map_get::<K::V, V::V>(self_view, si);
+                    assert(all@[j].1@ == self_view[si].1);
+                };
+                if !spec_entries_to_map(self_view).contains_key(key_view) {
+                    assert(found_idx.is_none()) by {
+                        if found_idx.is_some() {
+                            let fi = choose|fi: usize| found_idx == Some(fi);
+                            lemma_entries_to_map_contains_key::<K::V, V::V>(self_view, fi as int);
+                        }
+                    };
+                    lemma_entries_to_map_get::<K::V, V::V>(entries@, last);
+                }
+                assert(spec_entries_to_map(self_view).contains_key(key_view)
+                    ==> found_idx.is_some()) by {
+                    if spec_entries_to_map(self_view).contains_key(key_view)
+                        && found_idx.is_none() {
+                        lemma_entries_to_map_key_in_seq::<K::V, V::V>(self_view, key_view);
+                        let si = choose|si: int| 0 <= si < self_view.len()
+                            && (#[trigger] self_view[si]).0 == key_view;
+                    }
+                };
+                if spec_entries_to_map(self_view).contains_key(key_view) {
+                    lemma_entries_to_map_get::<K::V, V::V>(entries@, last);
+                    assert(found_idx.is_some());
+                    assert(witness_old_v@ == spec_entries_to_map(self_view)[key_view]);
+                    assert(spec_entries_to_map(entries@)[key_view] == witness_r@);
+                    assert(combine.ensures((&witness_old_v, &value), witness_r));
+                }
+                // Prove spec_stored_value for the inserted key.
+                assert(entries.spec_index(last) == all@[last]);
+                assert((#[trigger] entries.seq@[last]).0@ == key_view);
+                let ghost chosen_i = choose|i: int| 0 <= i < entries.seq@.len()
+                    && (#[trigger] entries.seq@[i]).0@ == key_view;
+                if chosen_i != last {
+                    assert(entries@[chosen_i].0 == key_view);
+                    assert(entries@[last].0 == key_view);
+                }
+                assert(chosen_i == last);
+                // Existing-key stored_value proof.
+                if spec_entries_to_map(self_view).contains_key(key_view) {
+                    assert(found_idx.is_some());
+                    let ghost fi = choose|fi: usize| found_idx == Some(fi);
+                    assert(self_view[fi as int].0 == key_view);
+                    let ghost old_chosen = choose|i: int| 0 <= i < self.entries.seq@.len()
+                        && (#[trigger] self.entries.seq@[i]).0@ == key_view;
+                    if old_chosen != fi as int {
+                        assert(self.entries@[old_chosen].0 == key_view);
+                        assert(self.entries@[fi as int].0 == key_view);
+                    }
+                    assert(old_chosen == fi as int);
+                    assert(combine.ensures((&witness_old_v, &value), witness_r));
+                    assert(exists|old_v: V, r: V|
+                        old_v@ == spec_entries_to_map(self_view)[key_view]
+                        && combine.ensures((&old_v, &value), r)
+                        && spec_entries_to_map(entries@)[key_view] == r@
+                        && old_v == self.entries.seq@[old_chosen].1
+                        && entries.seq@[chosen_i].1 == r);
+                }
+                // Prove stored-value wf for all keys.
+                assert forall|k: K::V| #[trigger] spec_entries_to_map(entries@).contains_key(k)
+                    implies entries.seq@[
+                        choose|i: int| 0 <= i < entries.seq@.len()
+                            && (#[trigger] entries.seq@[i]).0@ == k
+                    ].1.spec_wf()
+                by {
+                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(entries@, k);
+                    let idx = choose|idx: int| 0 <= idx < entries@.len()
+                        && (#[trigger] entries@[idx]).0 == k;
+                    assert(entries.spec_index(idx) == all@[idx]);
+                    let ghost sv_idx = choose|i: int| 0 <= i < entries.seq@.len()
+                        && (#[trigger] entries.seq@[i]).0@ == k;
+                    assert(entries@[sv_idx].0 == k);
+                    assert(entries@[idx].0 == k);
+                    if sv_idx != idx {}
+                    assert(sv_idx == idx);
+                    assert(entries.seq@[idx] == all@[idx]);
+                    if idx == last {
+                        if found_idx.is_some() {
+                            assert(combine.ensures((&witness_old_v, &value), witness_r));
+                            assert(witness_old_v.spec_wf());
+                            assert(value.spec_wf());
+                        } else {
+                            assert(all@[last].1 == value);
+                        }
+                    } else {
+                        assert(all@[idx].1.spec_wf());
+                    }
+                };
             }
             TableStPer { entries }
         }
