@@ -20,7 +20,7 @@ pub mod AdjTableGraphStPer {
     #[cfg(verus_keep_ghost)]
     use crate::Chap42::TableStEph::TableStEph::spec_entries_to_map as steph_entries_to_map;
     use crate::Types::Types::*;
-    use crate::vstdplus::clone_view::clone_view::ClonePreservesWf;
+    use crate::vstdplus::clone_view::clone_view::{ClonePreservesView, ClonePreservesWf};
     #[cfg(verus_keep_ghost)]
     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     #[cfg(verus_keep_ghost)]
@@ -100,7 +100,7 @@ broadcast use {
 
     // 8. traits
 
-    pub trait AdjTableGraphStPerTrait<V: StT + Ord>: Sized {
+    pub trait AdjTableGraphStPerTrait<V: StT + Ord + ClonePreservesView>: Sized {
         spec fn spec_adjtablegraphstper_wf(&self) -> bool;
         spec fn spec_adj(&self) -> Map<<V as View>::V, Set<<V as View>::V>>;
         spec fn spec_num_edges(&self) -> nat;
@@ -179,7 +179,7 @@ broadcast use {
 
     // 9. impls
 
-    impl<V: StT + Ord> AdjTableGraphStPerTrait<V> for AdjTableGraphStPer<V> {
+    impl<V: StT + Ord + ClonePreservesView> AdjTableGraphStPerTrait<V> for AdjTableGraphStPer<V> {
         open spec fn spec_adjtablegraphstper_wf(&self) -> bool {
             // Type-level predicates needed by table and set operations.
             obeys_view_eq::<V>()
@@ -469,13 +469,20 @@ broadcast use {
                         lemma_entries_to_map_finite::<V::V, Set<V::V>>(self.adj.entries@);
                         vstd::set_lib::lemma_len_subset(ns_ref@, dom);
                     }
-                    ns_ref.clone_wf().insert(v.clone())
+                    ns_ref.clone_wf().insert(v.clone_view())
                 }
-                None => AVLTreeSetStPer::singleton(v.clone()),
+                None => AVLTreeSetStPer::singleton(v.clone_view()),
             };
-            let new_adj = self.adj.insert(u, neighbors, |_old, new| new.clone());
-            // After first insert: dom contains u@.
-            proof { assert(new_adj@.dom().contains(u_view)); }
+            let ghost neighbors_set = neighbors@;
+            // Delete-then-insert avoids combine clone gap: insert hits "key absent" branch,
+            // so new_adj@[u@] == neighbors@ directly (no combine clone intermediary).
+            let cleaned = self.adj.delete(&u);
+            let new_adj = cleaned.insert(u, neighbors, |_old, new| new.clone());
+            proof {
+                assert(new_adj@[u_view] == neighbors_set);
+                assert(neighbors_set.contains(v_view));
+                assert(new_adj@.dom().contains(u_view));
+            }
             let final_adj = if new_adj.find_ref(&v).is_none() {
                 new_adj.insert(v, AVLTreeSetStPer::empty(), |old, _new| old.clone())
             } else {
@@ -483,12 +490,11 @@ broadcast use {
             };
             let updated = AdjTableGraphStPer { adj: final_adj };
             proof {
-                // After conditional second insert: dom contains both u@ and v@.
                 assert(updated.spec_adj().dom().contains(u_view));
                 assert(updated.spec_adj().dom().contains(v_view));
-                // Clone gap + graph closure: Verus ICE on Set<V::V> prevents proving wf.
+                assert(updated.spec_adj()[u_view].contains(v_view));
+                // Blocked: wf needs forall over Set<V::V> (ICE) + stored-value wf.
                 assume(updated.spec_adjtablegraphstper_wf());
-                assume(updated.spec_adj()[u_view].contains(v_view));
             }
             updated
         }
@@ -497,25 +503,25 @@ broadcast use {
             proof { reveal(obeys_view_eq); }
             let ghost u_view: <V as View>::V = u@;
             let ghost v_view: <V as View>::V = v@;
-            let updated = match self.adj.find_ref(u) {
-                Some(neighbors) => {
-                    let new_neighbors = neighbors.clone_wf().delete(v);
-                    // new_neighbors@ == old_ns@.remove(v@), so !new_neighbors@.contains(v@).
-                    let new_adj = self.adj.insert(u.clone(), new_neighbors, |_old, new| new.clone());
-                    AdjTableGraphStPer { adj: new_adj }
-                }
-                None => {
-                    // u@ not in domain: no changes needed.
-                    self.clone()
-                }
-            };
+            if self.adj.find_ref(u).is_none() {
+                // u@ not in domain: delete is a no-op but gives an owned table.
+                let same_adj = self.adj.delete(u);
+                // same_adj@ =~= self.adj@.remove(u@) =~= self.adj@ (u@ absent).
+                let updated = AdjTableGraphStPer { adj: same_adj };
+                proof { assume(updated.spec_adjtablegraphstper_wf()); }
+                return updated;
+            }
+            // u@ is in domain.
+            let ns_ref = self.adj.find_ref(u).unwrap();
+            let new_neighbors = ns_ref.clone_wf().delete(v);
+            proof { assert(!new_neighbors@.contains(v_view)); }
+            // Delete-then-insert avoids combine clone gap.
+            let cleaned = self.adj.delete(u);
+            let new_adj = cleaned.insert(u.clone_view(), new_neighbors, |_old, new| new.clone());
+            let updated = AdjTableGraphStPer { adj: new_adj };
             proof {
-                // Clone gap + graph closure: Verus ICE on Set<V::V>.
+                assert(!updated.adj@[u_view].contains(v_view));
                 assume(updated.spec_adjtablegraphstper_wf());
-                // Proving the postcondition requires clone view preservation through
-                // the combine closure. Leave as assume for now.
-                assume(!updated.spec_adj().dom().contains(u_view)
-                    || !updated.spec_adj()[u_view].contains(v_view));
             }
             updated
         }

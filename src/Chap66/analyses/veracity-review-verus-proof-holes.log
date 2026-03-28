@@ -21,16 +21,16 @@ Table of Contents:
 =================================================================
 
 ⚠ BoruvkaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaMtEph.rs:62: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:62: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         58 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
         60 |         {
         61 |             let equal = self.0 == other.0 && self.1 == other.1 && self.2.eq(&other.2) && self.3 == other.3;
         63 |             equal
         64 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaMtEph.rs:176: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaMtEph.rs:176: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
 ℹ BoruvkaStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaStEph.rs:69: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap66/BoruvkaStEph.rs:69: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
    Info: 1 × structural_false_positive
 
 =================================================================
@@ -89,9 +89,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 22:22:52 -07:00
-Ended:     2026-03-27 22:22:52 -07:00
-Duration:  18ms
+Started:   2026-03-28 10:47:33 -07:00
+Ended:     2026-03-28 10:47:33 -07:00
+Duration:  19ms
 
 Full output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
-analyses/veracity-review-verus-proof-holes.log
+output: src/Chap66/analyses/veracity-review-verus-proof-holes.log
