@@ -338,6 +338,7 @@ pub mod ETSPStEph {
     /// and verifies the structural combination.
     /// - APAS: Work Θ(n²), Span Θ(lg² n) — Algorithm 26.7, D&C eTSP heuristic.
     /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential implementation, Span = Work.
+    #[verifier::rlimit(20)]
     fn etsp_inner(points: &Vec<Point>) -> (tour: Vec<Edge>)
         requires
             points@.len() >= 2,

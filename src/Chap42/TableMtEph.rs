@@ -2084,10 +2084,13 @@ broadcast use {
                     keys@.finite(),
                     sources.len() == kept@.len(),
                     forall|j: int| 0 <= j < sources.len() ==>
-                        0 <= #[trigger] sources[j] < old_view.len()
-                        && old_view[sources[j]].0 == kept@[j].0@
-                        && old_view[sources[j]].1 == kept@[j].1@
-                        && !keys@.contains(kept@[j].0@),
+                        0 <= #[trigger] sources[j] < old_view.len(),
+                    forall|j: int| 0 <= j < sources.len() ==>
+                        old_view[#[trigger] sources[j]].0 == kept@[j].0@,
+                    forall|j: int| 0 <= j < sources.len() ==>
+                        old_view[#[trigger] sources[j]].1 == kept@[j].1@,
+                    forall|j: int| 0 <= j < sources.len() ==>
+                        !keys@.contains((#[trigger] kept@[j]).0@),
                     forall|si: int| 0 <= si < i as int
                         && !keys@.contains((#[trigger] old_view[si]).0)
                         ==> exists|j: int| 0 <= j < sources.len() && sources[j] == si,
