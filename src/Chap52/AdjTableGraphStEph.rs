@@ -42,7 +42,6 @@ broadcast use {
 
     // 4. type definitions
 
-    #[derive(Clone)]
     #[verifier::reject_recursive_types(V)]
     pub struct AdjTableGraphStEph<V: StT + Ord> {
         pub adj: TableStEph<V, AVLTreeSetStEph<V>>,
