@@ -611,7 +611,7 @@ pub mod Chap56 {
 pub mod Chap57 {
     pub mod StackStEph;
     pub mod DijkstraStEphU64;
-//    pub mod DijkstraStEphF64;  // BROKEN
+    pub mod DijkstraStEphF64;
 }
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap58")))]
