@@ -174,7 +174,7 @@ pub mod ConnectivityMtEph {
 
         let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, r: usize| -> (result: usize) { r };
 
-        star_contract_mt(graph, seed, &base, &expand)
+        star_contract_mt(graph, seed, &base, &expand, Ghost(|_r: usize| true))
     }
 
     /// Exercise 63.2: Connected Components using star_contract_mt higher-order function
@@ -236,7 +236,7 @@ pub mod ConnectivityMtEph {
             (reps, result_map)
         };
 
-        star_contract_mt(graph, seed, &base, &expand)
+        star_contract_mt(graph, seed, &base, &expand, Ghost(|_r: (SetStEph<V>, HashMapWithViewPlus<V, V>)| true))
     }
 
     } // verus!
