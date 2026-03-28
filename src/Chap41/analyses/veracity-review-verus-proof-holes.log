@@ -87,12 +87,7 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:471: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:512: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtPer — unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtPer<T> {} [high]
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:513: info: structural_false_positive UNSAFE_SEND_SYNC AVLTreeSetMtPer — unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {} [high]
-❌ AVLTreeSetStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetStEph.rs:793: error: assume() [algorithmic] - proof { assume(r.spec_avltreesetsteph_wf()); }
-       791 |         fn clone_wf(&self) -> (result: Self) {
-       792 |             let r = AVLTreeSetStEph { tree: self.tree.clone() };
-       794 |             r
-       795 |         }
+⚠ AVLTreeSetStEph.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetStEph.rs:769: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        765 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
@@ -128,15 +123,7 @@ Table of Contents:
        774 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
        776 |             equal
        777 |         }
-   Holes: 1 total
-      1 × assume()
-   Proof functions: 5 total (5 clean, 0 holed)
-❌ AVLTreeSetStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetStPer.rs:685: error: assume() [algorithmic] - proof { assume(r.spec_avltreesetstper_wf()); }
-       683 |         fn clone_wf(&self) -> (result: Self) {
-       684 |             let r = AVLTreeSetStPer { tree: self.tree.clone() };
-       686 |             r
-       687 |         }
+⚠ AVLTreeSetStPer.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetStPer.rs:661: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        657 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
@@ -172,9 +159,6 @@ Table of Contents:
        666 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
        668 |             equal
        669 |         }
-   Holes: 1 total
-      1 × assume()
-   Proof functions: 4 total (4 clean, 0 holed)
 ⚠ ArraySetEnumMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/ArraySetEnumMtEph.rs:934: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        930 |         fn eq(&self, other: &Self) -> (equal: bool)
@@ -251,8 +235,8 @@ ArraySetStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   4 clean (no holes, no errors; 66%)
-   2 holed (holes or errors, 33%)
+   6 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    6 total
 
 Proof Functions:
@@ -268,9 +252,8 @@ Function Specs:
    299 total fns
 
 
-Holes Found: 2 (actionable)
-   2 × assume() [algorithmic] (100%)
-Real Proof Targets: 2 (all actionable)
+Holes Found: 0 (actionable)
+Real Proof Targets: 0 (all actionable)
 
 Warnings: 17 total
    17 × assume_eq_clone_workaround
@@ -283,19 +266,14 @@ Structural (info only): 54
    4 × UNSAFE_SEND_SYNC
    2 × STD_TRAIT_IMPL
 
+No proof holes found! All proofs are complete.
+
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 20:02:16 -07:00
-Ended:     2026-03-27 20:02:16 -07:00
-Duration:  45ms
-
-Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
-=====================
-
-Started:   2026-03-27 20:02:16 -07:00
-Ended:     2026-03-27 20:02:16 -07:00
-Duration:  45ms
+Started:   2026-03-27 20:30:36 -07:00
+Ended:     2026-03-27 20:30:37 -07:00
+Duration:  59ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
