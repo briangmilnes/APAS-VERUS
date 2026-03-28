@@ -127,7 +127,7 @@ broadcast use {
         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
             requires
                 self.spec_adjtablegraphmtper_wf(),
-                self.spec_adj().dom().len() + 2 < usize::MAX as nat,
+                self.spec_adj().dom().len() + 3 < usize::MAX as nat,
             ensures
                 updated.spec_adjtablegraphmtper_wf(),
                 updated.spec_adj().dom().contains(u@),
@@ -408,7 +408,9 @@ broadcast use {
 
             // Ensure v is in domain.
             match new_adj.find(&v) {
-                Some(_) => {}
+                Some(_) => {
+                    assert(new_adj@.dom().len() <= orig_dom_len + 1);
+                }
                 None => {
                     let v_clone = v.clone();
                     proof {
@@ -416,6 +418,7 @@ broadcast use {
                     }
                     new_adj = new_adj.insert_wf(v_clone, AVLTreeSetMtPer::empty());
                     assert(new_adj@.dom().contains(v@));
+                    assert(new_adj@.dom().len() <= orig_dom_len + 2);
                 }
             }
 
@@ -460,7 +463,14 @@ broadcast use {
             }
             let new_u_neighbors = u_neighbors.insert(v);
             // insert ensures: new_u_neighbors@ == u_neighbors@.insert(v@), wf preserved.
-            proof { assume(new_adj@.dom().len() + 1 < usize::MAX as nat); }
+            proof {
+                // After match 1: dom.len() <= orig_dom_len + 1.
+                // After match 2: dom.len() <= orig_dom_len + 2.
+                // requires: orig_dom_len + 3 < usize::MAX.
+                // Therefore: new_adj@.dom().len() + 1 <= orig_dom_len + 3 < usize::MAX.
+                assert(new_adj@.dom().len() <= orig_dom_len + 2);
+                assert(new_adj@.dom().len() + 1 < usize::MAX as nat);
+            }
             let updated = AdjTableGraphMtPer {
                 adj: new_adj.insert_wf(u, new_u_neighbors),
             };
