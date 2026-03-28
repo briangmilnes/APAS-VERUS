@@ -85,7 +85,7 @@ pub mod AVLTreeSeqMtPer {
     #[verifier::reject_recursive_types(T)]
     pub struct AVLTreeSeqMtPerGhostIterator<'a, T: StTInMtT> {
         pub pos: int,
-        pub elements: Seq<T>,
+        pub elements: Seq<T::V>,
         pub phantom: core::marker::PhantomData<&'a T>,
     }
 
@@ -99,15 +99,15 @@ pub mod AVLTreeSeqMtPer {
     }
 
     impl<'a, T: StTInMtT> View for AVLTreeSeqMtPerBorrowIter<'a, T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) {
-            (self.pos as int, spec_inorder_values(self.tree.root))
+        type V = (int, Seq<T::V>);
+        open spec fn view(&self) -> (int, Seq<T::V>) {
+            (self.pos as int, spec_inorder(self.tree.root))
         }
     }
 
     impl<'a, T: StTInMtT> View for AVLTreeSeqMtPerGhostIterator<'a, T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+        type V = Seq<T::V>;
+        open spec fn view(&self) -> Seq<T::V> { self.elements.take(self.pos) }
     }
 
     // 6. spec fns
@@ -119,16 +119,6 @@ pub mod AVLTreeSeqMtPer {
         match link {
             None => Seq::empty(),
             Some(node) => spec_inorder(node.left) + seq![node.value@] + spec_inorder(node.right),
-        }
-    }
-
-    /// In-order traversal as a sequence of values (not view-mapped).
-    pub open spec fn spec_inorder_values<T: StTInMtT>(link: Link<T>) -> Seq<T>
-        decreases link,
-    {
-        match link {
-            None => Seq::empty(),
-            Some(node) => spec_inorder_values(node.left) + seq![node.value] + spec_inorder_values(node.right),
         }
     }
 
@@ -186,21 +176,6 @@ pub mod AVLTreeSeqMtPer {
             Some(node) => {
                 lemma_size_eq_inorder_len::<T>(&node.left);
                 lemma_size_eq_inorder_len::<T>(&node.right);
-            }
-        }
-    }
-
-    proof fn lemma_inorder_values_maps_to_inorder<T: StTInMtT>(link: Link<T>)
-        ensures spec_inorder_values(link).map_values(|t: T| t@) =~= spec_inorder(link),
-        decreases link,
-    {
-        match link {
-            None => {},
-            Some(node) => {
-                let ghost left: Link<T> = node.left;
-                let ghost right: Link<T> = node.right;
-                lemma_inorder_values_maps_to_inorder::<T>(left);
-                lemma_inorder_values_maps_to_inorder::<T>(right);
             }
         }
     }
@@ -273,7 +248,7 @@ pub mod AVLTreeSeqMtPer {
             requires self.spec_avltreeseqmtper_wf(),
             ensures
                 it@.0 == 0int,
-                it@.1.map_values(|t: T| t@) =~= self.spec_seq(),
+                it@.1 =~= self.spec_seq(),
                 iter_invariant(&it);
     }
 
@@ -708,7 +683,6 @@ pub mod AVLTreeSeqMtPer {
         }
 
         fn iter<'a>(&'a self) -> (it: AVLTreeSeqMtPerBorrowIter<'a, T>) {
-            proof { lemma_inorder_values_maps_to_inorder::<T>(self.root); }
             AVLTreeSeqMtPerBorrowIter {
                 tree: self,
                 pos: 0,
@@ -740,7 +714,7 @@ pub mod AVLTreeSeqMtPer {
                         &&& 0 <= old_index < old_seq.len()
                         &&& new_seq == old_seq
                         &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
+                        &&& element@ == old_seq[old_index]
                     },
                 }
             })
@@ -764,7 +738,7 @@ pub mod AVLTreeSeqMtPer {
 
     impl<'a, T: StTInMtT> vstd::pervasive::ForLoopGhostIterator for AVLTreeSeqMtPerGhostIterator<'a, T> {
         type ExecIter = AVLTreeSeqMtPerBorrowIter<'a, T>;
-        type Item = T;
+        type Item = T::V;
         type Decrease = int;
 
         open spec fn exec_invariant(&self, exec_iter: &AVLTreeSeqMtPerBorrowIter<'a, T>) -> bool {
@@ -788,7 +762,7 @@ pub mod AVLTreeSeqMtPer {
             Some(self.elements.len() - self.pos)
         }
 
-        open spec fn ghost_peek_next(&self) -> Option<T> {
+        open spec fn ghost_peek_next(&self) -> Option<T::V> {
             if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
         }
 
@@ -804,7 +778,7 @@ pub mod AVLTreeSeqMtPer {
             requires self.spec_avltreeseqmtper_wf(),
             ensures
                 it@.0 == 0int,
-                it@.1.map_values(|t: T| t@) =~= self.spec_seq(),
+                it@.1 =~= self.spec_seq(),
                 iter_invariant(&it),
         {
             self.iter()
