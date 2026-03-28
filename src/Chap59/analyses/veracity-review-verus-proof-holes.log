@@ -21,13 +21,13 @@ Table of Contents:
 =================================================================
 
 ❌ JohnsonMtEphF64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonMtEphF64.rs:101: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap59/JohnsonMtEphF64.rs:101: error: external_body - #[verifier::external_body]
        102 |     pub fn johnson_apsp(graph: &WeightedDirGraphStEphF64<usize>) -> (result: AllPairsResultStEphF64)
    Holes: 1 total
       1 × external_body
 ✓ JohnsonMtEphI64.rs
 ❌ JohnsonStEphF64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap59/JohnsonStEphF64.rs:330: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap59/JohnsonStEphF64.rs:330: error: external_body - #[verifier::external_body]
        331 |     pub fn johnson_apsp(graph: &WeightedDirGraphStEphF64<usize>)
    Holes: 1 total
       1 × external_body
@@ -85,9 +85,9 @@ Real Proof Targets: 2 (all actionable)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 18:54:00 -07:00
-Ended:     2026-03-27 18:54:00 -07:00
-Duration:  14ms
+Started:   2026-03-27 20:02:16 -07:00
+Ended:     2026-03-27 20:02:16 -07:00
+Duration:  13ms
 
 Full output: src/Chap59/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap59/analyses/veracity-review-verus-proof-holes.log
+Full output: src/Chap59/analyses/veracity-review-verus-proof-holes.log

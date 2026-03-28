@@ -11,9 +11,11 @@ pub mod AdjTableGraphStEph {
     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     use crate::Chap42::TableStEph::TableStEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesWf;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, obeys_feq_fulls};
+    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, obeys_feq_fulls,
+        lemma_cloned_view_eq};
     #[cfg(verus_keep_ghost)]
     use vstd::laws_eq::obeys_view_eq;
     #[cfg(verus_keep_ghost)]
@@ -78,12 +80,120 @@ broadcast use {
         }
     }
 
+    /// Sequential sum of entry value-set sizes: entries[0].1.len() + ... + entries[n-1].1.len().
+    pub open spec fn spec_sum_entry_sizes<VV>(entries: Seq<(VV, Set<VV>)>, n: int) -> nat
+        decreases n
+    {
+        if n <= 0 { 0 }
+        else { entries[n - 1].1.len() + spec_sum_entry_sizes(entries, n - 1) }
+    }
+
     // 7. proof fns
 
-    proof fn lemma_sum_adj_sizes_monotone<VV>(m: Map<VV, Set<VV>>, sub: Set<VV>)
-        requires m.dom().finite(), sub.finite(), sub.subset_of(m.dom())
-        ensures spec_sum_adj_sizes(m) >= 0
+    /// Extract any key from the recursive sum: decompose at k regardless of choose() order.
+    pub proof fn lemma_sum_adj_remove<VV>(m: Map<VV, Set<VV>>, k: VV)
+        requires m.dom().finite(), m.dom().contains(k)
+        ensures spec_sum_adj_sizes(m) == m[k].len() + spec_sum_adj_sizes(m.remove(k))
+        decreases m.dom().len()
     {
+        let chosen = m.dom().choose();
+        if chosen == k {
+            // Definition picks k directly.
+        } else {
+            // Definition picks chosen != k.
+            // IH on m.remove(chosen) extracting k:
+            lemma_sum_adj_remove(m.remove(chosen), k);
+            // IH on m.remove(k) extracting chosen:
+            lemma_sum_adj_remove(m.remove(k), chosen);
+            // Commutativity of remove.
+            assert(m.remove(chosen).remove(k) =~= m.remove(k).remove(chosen));
+        }
+    }
+
+    /// Connect sequential entry sum to recursive map sum.
+    pub proof fn lemma_sum_entry_sizes_eq<VV>(entries: Seq<(VV, Set<VV>)>, n: int)
+        requires
+            0 <= n <= entries.len(),
+            spec_keys_no_dups(entries),
+        ensures
+            spec_sum_entry_sizes(entries, n) == spec_sum_adj_sizes(
+                spec_entries_to_map(entries.subrange(0, n)))
+        decreases n
+    {
+        lemma_entries_to_map_finite::<VV, Set<VV>>(entries.subrange(0, n));
+        if n == 0 {
+            assert(entries.subrange(0, 0) =~= Seq::<(VV, Set<VV>)>::empty());
+        } else {
+            // Establish no-dup for the subrange.
+            let sub_n = entries.subrange(0, n);
+            let sub_prev = entries.subrange(0, n - 1);
+            assert(spec_keys_no_dups::<VV, Set<VV>>(sub_n)) by {
+                assert forall|i: int, j: int|
+                    0 <= i < j < sub_n.len()
+                    implies (#[trigger] sub_n[i]).0 != (#[trigger] sub_n[j]).0
+                by {
+                    assert(entries[i].0 != entries[j].0);
+                };
+            };
+            assert(spec_keys_no_dups::<VV, Set<VV>>(sub_prev)) by {
+                assert forall|i: int, j: int|
+                    0 <= i < j < sub_prev.len()
+                    implies (#[trigger] sub_prev[i]).0 != (#[trigger] sub_prev[j]).0
+                by {
+                    assert(entries[i].0 != entries[j].0);
+                };
+            };
+
+            // IH for n-1.
+            lemma_sum_entry_sizes_eq(entries, n - 1);
+            // Now: spec_sum_entry_sizes(entries, n-1) == spec_sum_adj_sizes(spec_entries_to_map(sub_prev))
+
+            let prefix_map = spec_entries_to_map(sub_prev);
+            let full_map = spec_entries_to_map(sub_n);
+            let key = entries[n - 1].0;
+            let val = entries[n - 1].1;
+
+            // sub_n == sub_prev.push((key, val))
+            assert(sub_n =~= sub_prev.push((key, val)));
+            // So full_map == prefix_map.insert(key, val)
+
+            // key not in prefix_map (no dup keys).
+            assert forall|idx: int| 0 <= idx < sub_prev.len()
+                implies (#[trigger] sub_prev[idx]).0 != key
+            by {
+                // entries[idx].0 != entries[n-1].0 because idx < n-1 < n and no dups.
+            };
+            lemma_entries_to_map_no_key::<VV, Set<VV>>(sub_prev, key);
+
+            // full_map == prefix_map.insert(key, val) by spec_entries_to_map definition.
+            assert(sub_n.drop_last() =~= sub_prev);
+            assert(sub_n.last() == (key, val));
+
+            // Extract key from full_map sum.
+            lemma_entries_to_map_finite::<VV, Set<VV>>(sub_n);
+            lemma_entries_to_map_contains_key::<VV, Set<VV>>(sub_n, n - 1);
+            lemma_sum_adj_remove(full_map, key);
+
+            // full_map[key] == val.
+            lemma_entries_to_map_get::<VV, Set<VV>>(sub_n, n - 1);
+
+            // full_map.remove(key) =~= prefix_map: insert then remove with fresh key.
+            lemma_entries_to_map_finite::<VV, Set<VV>>(sub_prev);
+            assert(full_map =~= prefix_map.insert(key, val));
+            assert(!prefix_map.dom().contains(key));
+            assert(prefix_map.insert(key, val).remove(key) =~= prefix_map);
+        }
+    }
+
+    /// Partial sums are monotonically non-decreasing.
+    pub proof fn lemma_sum_entry_sizes_monotone<VV>(entries: Seq<(VV, Set<VV>)>, i: int, j: int)
+        requires 0 <= i <= j <= entries.len()
+        ensures spec_sum_entry_sizes(entries, i) <= spec_sum_entry_sizes(entries, j)
+        decreases j - i
+    {
+        if i < j {
+            lemma_sum_entry_sizes_monotone(entries, i, j - 1);
+        }
     }
 
     // 8. traits
@@ -121,7 +231,9 @@ broadcast use {
         /// - APAS: Work Theta(|V|), Span Theta(|V|) [Cost Spec 52.3]
         /// - Claude-Opus-4.6: Work Theta(|V|), Span Theta(|V|) — agrees; builds set from domain.
         fn vertices(&self) -> AVLTreeSetStEph<V>
-            requires self.spec_adjtablegraphsteph_wf();
+            requires
+                self.spec_adjtablegraphsteph_wf(),
+                self.spec_adj().dom().len() < usize::MAX as nat;
         /// - APAS: Work Theta(lg n + lg m), Span Theta(lg n + lg m) [Cost Spec 52.3]
         /// - Claude-Opus-4.6: Work Theta(lg n + lg m), Span Theta(lg n + lg m) — agrees; table find + set find.
         fn has_edge(&self, u: &V, v: &V) -> bool
@@ -223,35 +335,72 @@ broadcast use {
 
         fn num_vertices(&self) -> usize { self.adj.size() }
 
-        /// - external_body: iterating domain requires feq/eq preconditions on Table and Set.
-        #[verifier::external_body]
         fn num_edges(&self) -> (m: usize) {
-            let domain = self.adj.domain();
-            let seq = domain.to_seq();
-            let len = seq.length();
-            let mut count = 0;
+            proof {
+                reveal(obeys_view_eq);
+                lemma_entries_to_map_len::<V::V, Set<V::V>>(self.adj.entries@);
+                // Establish total equality: seq sum == map sum == spec_num_edges.
+                lemma_sum_entry_sizes_eq::<V::V>(self.adj.entries@, self.adj.entries@.len() as int);
+                assert(self.adj.entries@.subrange(0, self.adj.entries@.len() as int)
+                    =~= self.adj.entries@);
+            }
+            let len = self.adj.entries.length();
+            let ghost total = spec_sum_entry_sizes(self.adj.entries@, len as int);
+            let mut count: usize = 0;
             let mut i: usize = 0;
-            while i < len {
-                let v = seq.nth(i).clone();
-                if let Some(neighbors) = self.adj.find(&v) {
-                    count += neighbors.size();
+            while i < len
+                invariant
+                    self.spec_adjtablegraphsteph_wf(),
+                    0 <= i <= len,
+                    len == self.adj.entries.spec_len(),
+                    count as nat == spec_sum_entry_sizes(self.adj.entries@, i as int),
+                    total == self.spec_num_edges(),
+                    total == spec_sum_entry_sizes(self.adj.entries@, len as int),
+                    self.spec_num_edges() <= usize::MAX as nat,
+                decreases len - i,
+            {
+                let pair: &Pair<V, AVLTreeSetStEph<V>> = self.adj.entries.nth(i);
+                proof {
+                    lemma_entries_to_map_contains_key::<V::V, Set<V::V>>(
+                        self.adj.entries@, i as int);
                 }
-                i += 1;
+                let ns = self.adj.find_ref(&pair.0).unwrap();
+                proof {
+                    lemma_entries_to_map_get::<V::V, Set<V::V>>(self.adj.entries@, i as int);
+                    // Capacity: partial sum + current <= total <= usize::MAX.
+                    lemma_sum_entry_sizes_monotone::<V::V>(
+                        self.adj.entries@, i as int + 1, len as int);
+                }
+                count = count + ns.size();
+                i = i + 1;
             }
             count
         }
 
-        /// - external_body: building set from domain requires cmp/ord/wf propagation.
-        #[verifier::external_body]
         fn vertices(&self) -> (verts: AVLTreeSetStEph<V>) {
-            let domain = self.adj.domain();
-            let seq = domain.to_seq();
-            let len = seq.length();
-            let mut verts = AVLTreeSetStEph::empty();
+            proof {
+                lemma_entries_to_map_len::<V::V, Set<V::V>>(self.adj.entries@);
+            }
+            let len = self.adj.entries.length();
+            let mut verts = AVLTreeSetStEph::<V>::empty();
             let mut i: usize = 0;
-            while i < len {
-                verts.insert(seq.nth(i).clone());
-                i += 1;
+            while i < len
+                invariant
+                    self.spec_adjtablegraphsteph_wf(),
+                    0 <= i <= len,
+                    len == self.adj.entries.spec_len(),
+                    len < usize::MAX,
+                    verts.spec_avltreesetsteph_wf(),
+                    verts@.len() <= i as nat,
+                decreases len - i,
+            {
+                let pair: &Pair<V, AVLTreeSetStEph<V>> = self.adj.entries.nth(i);
+                let key: V = pair.0.clone_plus();
+                proof {
+                    lemma_cloned_view_eq::<V>(pair.0, key);
+                }
+                verts.insert(key);
+                i = i + 1;
             }
             verts
         }
