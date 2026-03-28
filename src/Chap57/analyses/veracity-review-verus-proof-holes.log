@@ -20,10 +20,20 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-✓ DijkstraStEphF64.rs
+ℹ DijkstraStEphF64.rs
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:146: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:148: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:150: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:152: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:155: info: external_body_accept_hole
+   Info: 5 total
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:116: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:135: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+   Info: 2 × structural_false_positive
+   4 clean proof functions
 ℹ DijkstraStEphU64.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphU64.rs:112: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap57/DijkstraStEphU64.rs:129: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:112: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:129: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
    Info: 2 × structural_false_positive
    4 clean proof functions
 ✓ StackStEph.rs
@@ -58,23 +68,26 @@ Modules:
    3 total
 
 Proof Functions:
-   4 clean (100%)
+   8 clean (100%)
    0 holed (0%)
-   4 total
+   8 total
 
 Function Specs:
-   21 exec fns with complete spec (requires+ensures) (63%)
-   1 exec fns missing spec (3%)
-   11 proof/spec fns clean (33%)
+   26 exec fns with complete spec (requires+ensures) (55%)
+   2 exec fns missing spec (4%)
+   19 proof/spec fns clean (40%)
    0 proof/spec fns with holes (0%)
-   33 total fns
+   47 total fns
 
 
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
-Structural (info only): 2
-   2 × STD_TRAIT_IMPL
+Accepted (reviewed): 5 total
+   5 × external_body_accept_hole
+
+Structural (info only): 4
+   4 × STD_TRAIT_IMPL
 
 No proof holes or warnings found! All proofs are complete.
 
@@ -82,9 +95,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 18:50:03 -07:00
-Ended:     2026-03-27 18:50:03 -07:00
-Duration:  5ms
+Started:   2026-03-27 18:54:00 -07:00
+Ended:     2026-03-27 18:54:00 -07:00
+Duration:  8ms
 
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
