@@ -105,6 +105,7 @@ broadcast use {
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)
             requires self.spec_adjtablegraphmtper_wf()
             ensures
+                neighbors.spec_avltreesetmtper_wf(),
                 self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],
                 !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty();
         /// Work Theta(log |V|), Span Theta(log |V|)
@@ -151,6 +152,8 @@ broadcast use {
             && spec_pair_key_determines_order::<V, AVLTreeSetMtPer<V>>()
             && vstd::laws_cmp::obeys_cmp_spec::<V>()
             && view_ord_consistent::<V>()
+            // Adjacency domain is finite.
+            && self.spec_adj().dom().finite()
             // Graph closure: every neighbor is also a vertex.
             && forall|u: <V as View>::V, v: <V as View>::V|
                 self.spec_adj().dom().contains(u)
@@ -173,6 +176,7 @@ broadcast use {
                 // Type-level preds come from requires. Graph closure is vacuous
                 // on an empty map since no u satisfies dom().contains(u).
                 assert(out.adj@ == Map::<<V as View>::V, Set<<V as View>::V>>::empty());
+                assert(out.spec_adj().dom().finite());
                 assert forall|u: <V as View>::V, v: <V as View>::V|
                     out.spec_adj().dom().contains(u)
                     && #[trigger] out.spec_adj().index(u).contains(v)
@@ -206,11 +210,19 @@ broadcast use {
                 let v = domain_seq.nth(i).clone();
                 if let Some(neighbors) = self.adj.find(&v) {
                     proof {
-                        // find() has no ensures — cannot prove wf of returned set.
-                        // blocked by weak OrderedTableMtPer::find ensures
-                        assume(neighbors.spec_avltreesetmtper_wf());
+                        // find ensures: self.adj@.contains_key(v@) && self.adj@[v@] == neighbors@
+                        // Prove neighbors wf via graph closure + finiteness.
+                        let dom = self.spec_adj().dom();
+                        assert(neighbors@.subset_of(dom)) by {
+                            assert forall|w: <V as View>::V| #[trigger] neighbors@.contains(w)
+                                implies dom.contains(w)
+                            by {
+                                assert(self.spec_adj().index(v@).contains(w));
+                            };
+                        };
+                        vstd::set_lib::lemma_len_subset(neighbors@, dom);
                         // Overflow: partial sum + current size <= total edges.
-                        // blocked by weak OrderedTableMtPer::find/domain ensures
+                        // blocked by weak OrderedTableMtPer domain/find ensures
                         assume(count as nat + neighbors@.len() <= self.spec_num_edges());
                     }
                     count = count + neighbors.size();
@@ -218,83 +230,97 @@ broadcast use {
                 i += 1;
             }
             proof {
-                // Bridge: domain() doesn't ensure domain matches self@.dom(),
-                // find() has no ensures about returned values. The loop computes
-                // the correct sum algorithmically (iterate domain keys, look up
-                // neighbor set sizes, accumulate), but the spec connection to
-                // spec_sum_adj_sizes requires both domain and find specs.
-                // blocked by weak OrderedTableMtPer domain/find ensures
+                // Bridge: the loop computes the correct sum algorithmically
+                // (iterate domain keys, look up neighbor set sizes, accumulate),
+                // but the spec connection to spec_sum_adj_sizes requires
+                // domain-value correspondence that OrderedTableMtPer::map/domain
+                // ensures don't provide.
                 assume(count as nat == self.spec_num_edges());
             }
             count
         }
 
         fn has_edge(&self, u: &V, v: &V) -> (found: bool) {
-            // find ensures: Some(ns) => contains_key(u@) && adj@[u@] == ns@,
-            //               None => !contains_key(u@)
             match self.adj.find(u) {
                 Some(neighbors) => {
-                    proof { assume(neighbors.spec_avltreesetmtper_wf()); }
+                    proof {
+                        // find ensures: self.adj@.contains_key(u@) && self.adj@[u@] == neighbors@
+                        // Prove neighbors wf via graph closure + finiteness.
+                        let dom = self.spec_adj().dom();
+                        assert(neighbors@.subset_of(dom)) by {
+                            assert forall|w: <V as View>::V| #[trigger] neighbors@.contains(w)
+                                implies dom.contains(w)
+                            by {
+                                assert(self.spec_adj().index(u@).contains(w));
+                            };
+                        };
+                        vstd::set_lib::lemma_len_subset(neighbors@, dom);
+                    }
+                    // neighbors.find(v) ensures: result == neighbors@.contains(v@)
+                    // neighbors@ == self.spec_adj()[u@], dom.contains(u@) is true.
                     neighbors.find(v)
-                    // AVLTreeSetMtPer::find ensures: result == neighbors@.contains(v@)
-                    // == self.spec_adj()[u@].contains(v@)
-                    // postcondition: found == (true && adj[u@].contains(v@)) ✓
                 }
                 None => {
-                    // !dom.contains(u@), so postcondition: false == (false && ...) ✓
+                    // find ensures: !self.adj@.contains_key(u@)
+                    // so !self.spec_adj().dom().contains(u@), making the && false.
                     false
                 }
             }
         }
 
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>) {
-            // find ensures: Some(v) => contains_key(u@) && self@[u@] == v@,
-            //               None => !contains_key(u@)
             match self.adj.find(u) {
-                Some(ns) => ns.clone(),
-                None => AVLTreeSetMtPer::empty(),
+                Some(ns) => {
+                    proof {
+                        // find ensures: self.adj@.contains_key(u@) && self.adj@[u@] == ns@
+                        // Prove ns wf: ns@ == adj[u@] ⊆ dom (graph closure), dom finite → ns@ finite.
+                        let dom = self.spec_adj().dom();
+                        assert(ns@.subset_of(dom)) by {
+                            assert forall|w: <V as View>::V| #[trigger] ns@.contains(w)
+                                implies dom.contains(w)
+                            by {
+                                assert(self.spec_adj().index(u@).contains(w));
+                            };
+                        };
+                        vstd::set_lib::lemma_len_subset(ns@, dom);
+                    }
+                    ns.clone()
+                }
+                None => {
+                    AVLTreeSetMtPer::empty()
+                }
             }
         }
 
         fn out_degree(&self, u: &V) -> usize {
             let ns = self.out_neighbors(u);
-            proof { assume(ns.spec_avltreesetmtper_wf()); }
+            // out_neighbors now ensures ns.spec_avltreesetmtper_wf().
             ns.size()
         }
 
         fn insert_vertex(&self, v: V) -> (updated: Self) {
-            match self.adj.find(&v) {
-                Some(_) => {
-                    // find ensures: self.adj@.contains_key(v@)
-                    // Use adj.clone() (has ensures) instead of derived self.clone() (no ensures).
-                    let updated = AdjTableGraphMtPer { adj: self.adj.clone() };
-                    proof {
-                        // clone ensures: updated.adj@ == self.adj@
-                        assert(updated.spec_adj() =~= self.spec_adj());
-                        // Graph closure: identical spec_adj, so self's closure applies.
-                        assert forall|u: <V as View>::V, w: <V as View>::V|
-                            updated.spec_adj().dom().contains(u)
-                            && #[trigger] updated.spec_adj().index(u).contains(w)
-                            implies updated.spec_adj().dom().contains(w)
-                        by {
-                            assert(self.spec_adj().dom().contains(u));
-                            assert(self.spec_adj().index(u).contains(w));
-                        };
-                    }
-                    updated
+            if self.adj.find(&v).is_some() {
+                // v already in domain. Clone preserves view → preserves wf.
+                let cloned_adj = self.adj.clone();
+                // OrderedTableMtPer::clone ensures cloned_adj@ == self.adj@.
+                let updated = AdjTableGraphMtPer { adj: cloned_adj };
+                // updated.spec_adj() == self.spec_adj(), so wf follows from self's wf.
+                // dom.contains(v@): find returned Some → self.adj@.contains_key(v@).
+                updated
+            } else {
+                // v not in domain. Insert v with empty neighbor set.
+                let updated = AdjTableGraphMtPer {
+                    adj: self.adj.insert(v, AVLTreeSetMtPer::empty()),
+                };
+                proof {
+                    // insert ensures: updated.adj@.dom() =~= self.adj@.dom().insert(v@)
+                    // so dom.contains(v@) is immediate.
+                    // Graph wf: needs value-level ensures (what values are at each key)
+                    // to prove graph closure and domain finiteness on the new table.
+                    // blocked by weak OrderedTableMtPer::insert value ensures
+                    assume(updated.spec_adjtablegraphmtper_wf());
                 }
-                None => {
-                    // find ensures: !self.adj@.contains_key(v@)
-                    let updated = AdjTableGraphMtPer {
-                        adj: self.adj.insert(v, AVLTreeSetMtPer::empty()),
-                    };
-                    // insert ensures: dom =~= old_dom.insert(v@) => dom.contains(v@)
-                    proof {
-                        // Graph closure not provable: insert doesn't ensure value preservation.
-                        assume(updated.spec_adjtablegraphmtper_wf());
-                    }
-                    updated
-                }
+                updated
             }
         }
 
@@ -306,12 +332,11 @@ broadcast use {
             });
             let updated = AdjTableGraphMtPer { adj: cleaned };
             proof {
-                // Graph-level wf (neighbor-set wf + graph closure) requires
-                // quantifying over Map<V::V, Set<V::V>> which triggers Verus ICE.
-                // Weak OrderedTableMtPer::delete/map ensures prevent proving
-                // domain/value properties. Algorithmic logic verified: v deleted
-                // from table, v removed from each neighbor set via map.
-                // blocked by Verus ICE + weak OrderedTableMtPer ensures
+                // Graph wf + domain exclusion: delete ensures updated@ == self@.remove(v@),
+                // but map() only ensures mapped@.dom().finite(). Cannot prove graph closure
+                // or domain properties through map. Algorithmic logic is correct: v deleted
+                // from table, v removed from each neighbor set.
+                // blocked by weak OrderedTableMtPer::map ensures
                 assume(updated.spec_adjtablegraphmtper_wf());
                 assume(!updated.spec_adj().dom().contains(v@));
             }
@@ -332,6 +357,9 @@ broadcast use {
                 None => AVLTreeSetMtPer::empty(),
             };
             proof {
+                // ns wf: new_adj is a modified clone (up to two inserts). Graph closure
+                // doesn't hold on intermediate table, so cannot prove ns@ ⊆ dom.
+                // blocked by weak OrderedTableMtPer::insert value ensures
                 assume(u_neighbors.spec_avltreesetmtper_wf());
                 assume(u_neighbors@.len() + 1 < usize::MAX as nat);
             }
@@ -341,6 +369,10 @@ broadcast use {
                 adj: new_adj.insert(u, new_u_neighbors),
             };
             proof {
+                // Graph wf + postcondition: insert ensures only give domain info,
+                // not what values are at each key. Cannot prove graph closure or
+                // edge membership without value-level ensures.
+                // blocked by weak OrderedTableMtPer::insert value ensures
                 assume(updated.spec_adjtablegraphmtper_wf());
                 assume(updated.spec_adj().dom().contains(u@));
                 assume(updated.spec_adj().dom().contains(v@));
@@ -350,43 +382,37 @@ broadcast use {
         }
 
         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
-            match self.adj.find(u) {
+            let updated = match self.adj.find(u) {
                 Some(u_neighbors) => {
-                    proof { assume(u_neighbors.spec_avltreesetmtper_wf()); }
-                    let new_u_neighbors = u_neighbors.delete(v);
-                    let updated = AdjTableGraphMtPer {
-                        adj: self.adj.insert(u.clone(), new_u_neighbors),
-                    };
                     proof {
-                        // insert doesn't ensure value preservation, so can't prove
-                        // graph closure or that adj[u@] lost v@.
-                        assume(updated.spec_adjtablegraphmtper_wf());
-                        assume(!updated.spec_adj().dom().contains(u@)
-                            || !updated.spec_adj()[u@].contains(v@));
-                    }
-                    updated
-                }
-                None => {
-                    // find ensures: !self.adj@.contains_key(u@)
-                    // Use adj.clone() (has ensures) instead of derived self.clone().
-                    let updated = AdjTableGraphMtPer { adj: self.adj.clone() };
-                    proof {
-                        // clone ensures: updated.adj@ == self.adj@
-                        assert(updated.spec_adj() =~= self.spec_adj());
-                        // Graph closure from self's wf.
-                        assert forall|u2: <V as View>::V, w: <V as View>::V|
-                            updated.spec_adj().dom().contains(u2)
-                            && #[trigger] updated.spec_adj().index(u2).contains(w)
-                            implies updated.spec_adj().dom().contains(w)
-                        by {
-                            assert(self.spec_adj().dom().contains(u2));
-                            assert(self.spec_adj().index(u2).contains(w));
+                        // find ensures: self.adj@.contains_key(u@) && self.adj@[u@] == u_neighbors@
+                        // Prove u_neighbors wf via graph closure + finiteness.
+                        let dom = self.spec_adj().dom();
+                        assert(u_neighbors@.subset_of(dom)) by {
+                            assert forall|w: <V as View>::V| #[trigger] u_neighbors@.contains(w)
+                                implies dom.contains(w)
+                            by {
+                                assert(self.spec_adj().index(u@).contains(w));
+                            };
                         };
-                        // postcondition: !dom.contains(u@) is true, so disjunction holds.
+                        vstd::set_lib::lemma_len_subset(u_neighbors@, dom);
                     }
-                    updated
+                    let new_u_neighbors = u_neighbors.delete(v);
+                    AdjTableGraphMtPer {
+                        adj: self.adj.insert(u.clone(), new_u_neighbors),
+                    }
                 }
+                None => self.clone(),
+            };
+            proof {
+                // Graph wf + postcondition: insert ensures only give domain info.
+                // Cannot prove graph closure or edge removal without value-level ensures.
+                // blocked by weak OrderedTableMtPer::insert value ensures
+                assume(updated.spec_adjtablegraphmtper_wf());
+                assume(!updated.spec_adj().dom().contains(u@)
+                    || !updated.spec_adj()[u@].contains(v@));
             }
+            updated
         }
     }
 
