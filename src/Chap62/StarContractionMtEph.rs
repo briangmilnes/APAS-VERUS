@@ -205,6 +205,9 @@ pub mod StarContractionMtEph {
         proof {
             if graph@.A.is_empty() {
                 assert(graph@.A.is_empty() || fuel == 0);
+                // Callee's existential now holds; re-assert for Z3 stability.
+                assert(exists|s: &SetStEph<V>| #[trigger] s@ == graph@.V
+                    && s.spec_setsteph_wf() && base.ensures((s,), result));
             }
         }
         result
