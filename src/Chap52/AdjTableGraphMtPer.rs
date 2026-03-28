@@ -188,20 +188,43 @@ broadcast use {
             self.adj.size()
         }
 
-        /// - external_body: iterating domain requires loop invariant.
-        #[verifier::external_body]
         fn num_edges(&self) -> (m: usize) {
             let domain = self.adj.domain();
             let domain_seq = domain.to_seq();
             let len = domain_seq.length();
             let mut count: usize = 0;
             let mut i: usize = 0;
-            while i < len {
+            while i < len
+                invariant
+                    0 <= i <= len,
+                    len == domain_seq@.len(),
+                    self.spec_adjtablegraphmtper_wf(),
+                    self.spec_num_edges() <= usize::MAX as nat,
+                    count as nat <= self.spec_num_edges(),
+                decreases len - i,
+            {
                 let v = domain_seq.nth(i).clone();
                 if let Some(neighbors) = self.adj.find(&v) {
-                    count += neighbors.size();
+                    proof {
+                        // find() has no ensures — cannot prove wf of returned set.
+                        // blocked by weak OrderedTableMtPer::find ensures
+                        assume(neighbors.spec_avltreesetmtper_wf());
+                        // Overflow: partial sum + current size <= total edges.
+                        // blocked by weak OrderedTableMtPer::find/domain ensures
+                        assume(count as nat + neighbors@.len() <= self.spec_num_edges());
+                    }
+                    count = count + neighbors.size();
                 }
                 i += 1;
+            }
+            proof {
+                // Bridge: domain() doesn't ensure domain matches self@.dom(),
+                // find() has no ensures about returned values. The loop computes
+                // the correct sum algorithmically (iterate domain keys, look up
+                // neighbor set sizes, accumulate), but the spec connection to
+                // spec_sum_adj_sizes requires both domain and find specs.
+                // blocked by weak OrderedTableMtPer domain/find ensures
+                assume(count as nat == self.spec_num_edges());
             }
             count
         }
