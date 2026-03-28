@@ -682,7 +682,13 @@ broadcast use {
 
         fn clone_wf(&self) -> (result: Self) {
             let r = AVLTreeSetStPer { tree: self.tree.clone() };
-            proof { assume(r.spec_avltreesetstper_wf()); }
+            proof {
+                assert(r.tree@ == self.tree@);
+                assert(obeys_feq_full_trigger::<T>());
+                assert(r.tree@.finite());
+                assert(r.tree.spec_bstparasteph_wf());
+                assert(r@.len() < usize::MAX as nat);
+            }
             r
         }
     }
