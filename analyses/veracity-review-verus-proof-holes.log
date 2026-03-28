@@ -1292,39 +1292,48 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:836: info: structural_false_positive RWLOCK_GHOST from_st — proof { assume(inner.spec_orderedtablesteph_wf()); } [medium]
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:899: info: structural_false_positive UNSAFE_SEND_SYNC OrderedTableMtEph — unsafe impl<K: MtKey, V: MtVal + Ord> Send for OrderedTableMtEph<K, V> {} [high]
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtEph.rs:900: info: structural_false_positive UNSAFE_SEND_SYNC OrderedTableMtEph — unsafe impl<K: MtKey, V: MtVal + Ord> Sync for OrderedTableMtEph<K, V> {} [high]
-⚠ src/Chap43/OrderedTableMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:583: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       578 |         fn clone(&self) -> (cloned: Self)
+❌ src/Chap43/OrderedTableMtPer.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:291: error: external_body - #[verifier::external_body]
+       292 |         fn find(&self, k: &K) -> (found: Option<V>) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:300: error: external_body - #[verifier::external_body]
+       301 |         fn insert(&self, k: K, v: V) -> (updated: Self) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:313: error: external_body - #[verifier::external_body]
+       314 |         fn delete(&self, k: &K) -> (updated: Self) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:576: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       571 |         fn clone(&self) -> (cloned: Self)
             ...
-       581 |             let read_handle = self.locked_table.acquire_read();
-       582 |             let inner = read_handle.borrow().clone();
-       584 |             read_handle.release_read();
-       585 |             let ghost view = inner@;
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:587: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       578 |         fn clone(&self) -> (cloned: Self)
+       574 |             let read_handle = self.locked_table.acquire_read();
+       575 |             let inner = read_handle.borrow().clone();
+       577 |             read_handle.release_read();
+       578 |             let ghost view = inner@;
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:580: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       571 |         fn clone(&self) -> (cloned: Self)
             ...
-       585 |             let ghost view = inner@;
-       586 |             proof {
-       588 |                 assume(inner.spec_orderedtablestper_wf());
-       589 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:588: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       578 |         fn clone(&self) -> (cloned: Self)
+       578 |             let ghost view = inner@;
+       579 |             proof {
+       581 |                 assume(inner.spec_orderedtablestper_wf());
+       582 |             }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:581: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       571 |         fn clone(&self) -> (cloned: Self)
             ...
-       586 |             proof {
-       587 |                 assume(view.dom().finite());
-       589 |             }
-       590 |             OrderedTableMtPer {
+       579 |             proof {
+       580 |                 assume(view.dom().finite());
+       582 |             }
+       583 |             OrderedTableMtPer {
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:82: info: structural_false_positive RWLOCK_GHOST from_st_table — assume(inner.spec_orderedtablestper_wf()); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:258: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.dom().len()); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:301: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(inner@.dom().len() + 1 < usize::MAX as nat);  [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:456: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:467: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:478: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:489: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:514: info: structural_false_positive RWLOCK_GHOST join_key — assume(self_inner@.dom().len() == self@.dom().len()); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:515: info: structural_false_positive RWLOCK_GHOST join_key — assume(other_inner@.dom().len() == other@.dom().len()); [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:548: info: structural_false_positive RWLOCK_GHOST rank_key — proof { assume(inner@ =~= self@); } [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:560: info: structural_false_positive RWLOCK_GHOST select_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:267: info: structural_false_positive RWLOCK_GHOST size — proof { assume(count == self@.dom().len()); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:449: info: structural_false_positive RWLOCK_GHOST first_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:460: info: structural_false_positive RWLOCK_GHOST last_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:471: info: structural_false_positive RWLOCK_GHOST previous_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:482: info: structural_false_positive RWLOCK_GHOST next_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:507: info: structural_false_positive RWLOCK_GHOST join_key — assume(self_inner@.dom().len() == self@.dom().len()); [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:508: info: structural_false_positive RWLOCK_GHOST join_key — assume(other_inner@.dom().len() == other@.dom().len()); [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:541: info: structural_false_positive RWLOCK_GHOST rank_key — proof { assume(inner@ =~= self@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap43/OrderedTableMtPer.rs:553: info: structural_false_positive RWLOCK_GHOST select_key — proof { assume(inner@ =~= self@); } [medium]
+   Holes: 3 total
+      3 × external_body
+   Info: 10 × structural_false_positive
+      10 × RWLOCK_GHOST
 ✓ src/Chap43/OrderedTableStEph.rs
    14 clean proof functions
 ⚠ src/Chap43/OrderedTableStPer.rs
@@ -1942,57 +1951,50 @@ Table of Contents:
        447 |                 // domain grew by {v@}, edge sets unchanged (clone) or empty (new vertex).
        449 |             }
        450 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:458: error: assume() [algorithmic] - assume(domain.spec_arraysetsteph_wf());
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:481: error: assume() [algorithmic] - assume(ns_ref.spec_avltreesetsteph_wf());
        452 |         fn delete_vertex(&mut self, v: &V) {
             ...
-       456 |             proof {
-       457 |                 // domain() maintains wf internally but ensures doesn't expose it.
-       459 |             }
-       460 |             let seq = domain.to_seq();
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:485: error: assume() [algorithmic] - assume(ns_ref.spec_avltreesetsteph_wf());
+       479 |                         // that triggers Verus ICE on Set<V::V>.
+       480 |                         // blocked by Verus ICE
+       482 |                     }
+       483 |                     let mut neighbors = ns_ref.clone_wf();
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:495: error: assume() [algorithmic] - assume(self.spec_adjtablegraphsteph_wf());
        452 |         fn delete_vertex(&mut self, v: &V) {
             ...
-       483 |                         // that triggers Verus ICE on Set<V::V>.
-       484 |                         // blocked by Verus ICE
-       486 |                     }
-       487 |                     let mut neighbors = ns_ref.clone_wf();
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:499: error: assume() [algorithmic] - assume(self.spec_adjtablegraphsteph_wf());
-       452 |         fn delete_vertex(&mut self, v: &V) {
+       493 |                 // from each remaining neighbor set via loop.
+       494 |                 // blocked by Verus ICE
+       496 |             }
+       497 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:543: error: assume() [algorithmic] - assume(self.spec_adjtablegraphsteph_wf());
+       499 |         fn insert_edge(&mut self, u: V, v: V) {
             ...
-       497 |                 // from each remaining neighbor set via loop.
-       498 |                 // blocked by Verus ICE
-       500 |             }
-       501 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:547: error: assume() [algorithmic] - assume(self.spec_adjtablegraphsteph_wf());
-       503 |         fn insert_edge(&mut self, u: V, v: V) {
+       541 |                 // Blocked: adj[u@].contains(v@) needs v.clone()@ == v@ (generic clone gap).
+       542 |                 // Blocked: wf needs forall over Set<V::V> (ICE) + stored-value wf (clone gap).
+       544 |                 assume(self.spec_adj()[u_view].contains(v_view));
+       545 |             }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:544: error: assume() [algorithmic] - assume(self.spec_adj()[u_view].contains(v_view));
+       499 |         fn insert_edge(&mut self, u: V, v: V) {
             ...
-       545 |                 // Blocked: adj[u@].contains(v@) needs v.clone()@ == v@ (generic clone gap).
-       546 |                 // Blocked: wf needs forall over Set<V::V> (ICE) + stored-value wf (clone gap).
-       548 |                 assume(self.spec_adj()[u_view].contains(v_view));
-       549 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:548: error: assume() [algorithmic] - assume(self.spec_adj()[u_view].contains(v_view));
-       503 |         fn insert_edge(&mut self, u: V, v: V) {
+       542 |                 // Blocked: wf needs forall over Set<V::V> (ICE) + stored-value wf (clone gap).
+       543 |                 assume(self.spec_adjtablegraphsteph_wf());
+       545 |             }
+       546 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:565: error: assume() [algorithmic] - assume(self.spec_adjtablegraphsteph_wf());
+       548 |         fn delete_edge(&mut self, u: &V, v: &V) {
             ...
-       546 |                 // Blocked: wf needs forall over Set<V::V> (ICE) + stored-value wf (clone gap).
-       547 |                 assume(self.spec_adjtablegraphsteph_wf());
-       549 |             }
-       550 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:569: error: assume() [algorithmic] - assume(self.spec_adjtablegraphsteph_wf());
-       552 |         fn delete_edge(&mut self, u: &V, v: &V) {
+       563 |             proof {
+       564 |                 // Clone gap + graph closure: Verus ICE on Set<V::V>.
+       566 |                 // If u@ not in domain: no changes, !dom.contains(u@) holds.
+       567 |                 // If u@ in domain: adj[u@] had v@ removed, !adj[u@].contains(v@) holds.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:571: error: assume() [algorithmic] - assume(!self.spec_adj().dom().contains(u_view)
+       548 |         fn delete_edge(&mut self, u: &V, v: &V) {
             ...
-       567 |             proof {
-       568 |                 // Clone gap + graph closure: Verus ICE on Set<V::V>.
-       570 |                 // If u@ not in domain: no changes, !dom.contains(u@) holds.
-       571 |                 // If u@ in domain: adj[u@] had v@ removed, !adj[u@].contains(v@) holds.
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStEph.rs:575: error: assume() [algorithmic] - assume(!self.spec_adj().dom().contains(u_view)
-       552 |         fn delete_edge(&mut self, u: &V, v: &V) {
-            ...
-       573 |                 // that clone preserves the !contains(v@) property requires reasoning
-       574 |                 // through combine.ensures. Leave as assume for now.
-       576 |                     || !self.spec_adj()[u_view].contains(v_view));
-       577 |             }
-   Holes: 8 total
-      8 × assume()
+       569 |                 // that clone preserves the !contains(v@) property requires reasoning
+       570 |                 // through combine.ensures. Leave as assume for now.
+       572 |                     || !self.spec_adj()[u_view].contains(v_view));
+       573 |             }
+   Holes: 7 total
+      7 × assume()
    Proof functions: 3 total (3 clean, 0 holed)
 ❌ src/Chap52/AdjTableGraphStPer.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:404: error: assume() [algorithmic] - assume(updated.spec_adjtablegraphstper_wf());
@@ -2002,57 +2004,50 @@ Table of Contents:
        403 |                 // Clone gap + graph closure: Verus ICE on Set<V::V> in proof bodies.
        405 |             }
        406 |             updated
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:417: error: assume() [algorithmic] - assume(domain.spec_arraysetsteph_wf());
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:438: error: assume() [algorithmic] - assume(neighbors.spec_avltreesetstper_wf());
        409 |         fn delete_vertex(&self, v: &V) -> (updated: Self) {
             ...
-       415 |             proof {
-       416 |                 // domain() maintains wf internally but ensures doesn't expose it.
-       418 |             }
-       419 |             let seq = domain.to_seq();
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:442: error: assume() [algorithmic] - assume(neighbors.spec_avltreesetstper_wf());
+       436 |                         // Neighbor-set wf from find requires quantifier over domain.
+       437 |                         // blocked by Verus ICE
+       439 |                     }
+       440 |                     let new_neighbors = neighbors.delete(v);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:450: error: assume() [algorithmic] - assume(updated.spec_adjtablegraphstper_wf());
        409 |         fn delete_vertex(&self, v: &V) -> (updated: Self) {
             ...
-       440 |                         // Neighbor-set wf from find requires quantifier over domain.
-       441 |                         // blocked by Verus ICE
-       443 |                     }
-       444 |                     let new_neighbors = neighbors.delete(v);
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:454: error: assume() [algorithmic] - assume(updated.spec_adjtablegraphstper_wf());
-       409 |         fn delete_vertex(&self, v: &V) -> (updated: Self) {
+       448 |                 // quantifying over Map<V::V, Set<V::V>> which triggers Verus ICE.
+       449 |                 // blocked by Verus ICE
+       451 |             }
+       452 |             updated
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:490: error: assume() [algorithmic] - assume(updated.spec_adjtablegraphstper_wf());
+       455 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             ...
-       452 |                 // quantifying over Map<V::V, Set<V::V>> which triggers Verus ICE.
-       453 |                 // blocked by Verus ICE
-       455 |             }
-       456 |             updated
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:494: error: assume() [algorithmic] - assume(updated.spec_adjtablegraphstper_wf());
-       459 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
+       488 |                 assert(updated.spec_adj().dom().contains(v_view));
+       489 |                 // Clone gap + graph closure: Verus ICE on Set<V::V> prevents proving wf.
+       491 |                 assume(updated.spec_adj()[u_view].contains(v_view));
+       492 |             }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:491: error: assume() [algorithmic] - assume(updated.spec_adj()[u_view].contains(v_view));
+       455 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             ...
-       492 |                 assert(updated.spec_adj().dom().contains(v_view));
-       493 |                 // Clone gap + graph closure: Verus ICE on Set<V::V> prevents proving wf.
-       495 |                 assume(updated.spec_adj()[u_view].contains(v_view));
-       496 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:495: error: assume() [algorithmic] - assume(updated.spec_adj()[u_view].contains(v_view));
-       459 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
+       489 |                 // Clone gap + graph closure: Verus ICE on Set<V::V> prevents proving wf.
+       490 |                 assume(updated.spec_adjtablegraphstper_wf());
+       492 |             }
+       493 |             updated
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:514: error: assume() [algorithmic] - assume(updated.spec_adjtablegraphstper_wf());
+       496 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
             ...
-       493 |                 // Clone gap + graph closure: Verus ICE on Set<V::V> prevents proving wf.
-       494 |                 assume(updated.spec_adjtablegraphstper_wf());
-       496 |             }
-       497 |             updated
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:518: error: assume() [algorithmic] - assume(updated.spec_adjtablegraphstper_wf());
-       500 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
+       512 |             proof {
+       513 |                 // Clone gap + graph closure: Verus ICE on Set<V::V>.
+       515 |                 // Proving the postcondition requires clone view preservation through
+       516 |                 // the combine closure. Leave as assume for now.
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:517: error: assume() [algorithmic] - assume(!updated.spec_adj().dom().contains(u_view)
+       496 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
             ...
-       516 |             proof {
-       517 |                 // Clone gap + graph closure: Verus ICE on Set<V::V>.
-       519 |                 // Proving the postcondition requires clone view preservation through
-       520 |                 // the combine closure. Leave as assume for now.
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphStPer.rs:521: error: assume() [algorithmic] - assume(!updated.spec_adj().dom().contains(u_view)
-       500 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
-            ...
-       519 |                 // Proving the postcondition requires clone view preservation through
-       520 |                 // the combine closure. Leave as assume for now.
-       522 |                     || !updated.spec_adj()[u_view].contains(v_view));
-       523 |             }
-   Holes: 8 total
-      8 × assume()
+       515 |                 // Proving the postcondition requires clone view preservation through
+       516 |                 // the combine closure. Leave as assume for now.
+       518 |                     || !updated.spec_adj()[u_view].contains(v_view));
+       519 |             }
+   Holes: 7 total
+      7 × assume()
    Proof functions: 3 total (3 clean, 0 holed)
 ✓ src/Chap52/EdgeSetGraphMtPer.rs
    1 clean proof function
@@ -2410,7 +2405,7 @@ Chap52::AdjSeqGraphMtEph  depends upon only clean modules
 Chap52::AdjSeqGraphMtPer  depends upon only clean modules
 Chap52::AdjSeqGraphStEph  depends upon only clean modules
 Chap52::AdjSeqGraphStPer  depends upon only clean modules
-Chap52::AdjTableGraphMtPer  depends upon only clean modules
+Chap52::AdjTableGraphMtPer  depends upon holed modules: Chap43::OrderedTableMtPer
 Chap52::AdjTableGraphStEph  depends upon only clean modules
 Chap52::AdjTableGraphStPer  depends upon holed modules: Chap52::AdjTableGraphStEph
 Chap52::EdgeSetGraphMtPer  depends upon only clean modules
@@ -2660,7 +2655,7 @@ src/Chap52/AdjSeqGraphMtEph.rs  depends upon only clean modules
 src/Chap52/AdjSeqGraphMtPer.rs  depends upon only clean modules
 src/Chap52/AdjSeqGraphStEph.rs  depends upon only clean modules
 src/Chap52/AdjSeqGraphStPer.rs  depends upon only clean modules
-src/Chap52/AdjTableGraphMtPer.rs  depends upon only clean modules
+src/Chap52/AdjTableGraphMtPer.rs  depends upon holed modules: Chap43::OrderedTableMtPer
 src/Chap52/AdjTableGraphStEph.rs  depends upon only clean modules
 src/Chap52/AdjTableGraphStPer.rs  depends upon holed modules: Chap52::AdjTableGraphStEph
 src/Chap52/EdgeSetGraphMtPer.rs  depends upon only clean modules
@@ -2729,8 +2724,8 @@ bugs/f64-bitvector-crash/reproducer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   231 clean (no holes, no errors; 94%)
-   14 holed (holes or errors, 5%)
+   230 clean (no holes, no errors; 93%)
+   15 holed (holes or errors, 6%)
    245 total
 
 Proof Functions:
@@ -2746,15 +2741,16 @@ Function Specs:
    7950 total fns
 
 
-Holes Found: 42 (actionable)
-   28 × assume() [algorithmic] (66%)
-   8 × assume() [rwlock:predicate] (19%)
-   5 × external_body (11%)
+Holes Found: 43 (actionable)
+   26 × assume() [algorithmic] (60%)
+   8 × assume() [rwlock:predicate] (18%)
+   8 × external_body (18%)
    1 × opaque (2%)
-Real Proof Targets: 34 (42 total - 8 rwlock)
+Real Proof Targets: 35 (43 total - 8 rwlock)
 
 Per-Chapter Holes:
-  Chap52: 37  Chap62:  1  Chap65:  4
+  Chap43:  3  Chap52: 35  Chap62:  1
+  Chap65:  4
 
 Warnings: 183 total
    2 × fn_missing_requires
@@ -2768,9 +2764,9 @@ Accepted (reviewed): 67 total
    10 × trivial_spec_wf
    4 × unsafe_block_accept_hole
    3 × external_accept_hole
+   1 × struct_outside_verus_accept_hole
    1 × enum_outside_verus_accept_hole
    1 × external_type_specification_accept_hole
-   1 × struct_outside_verus_accept_hole
 
 Accepted by Chapter:
   Chap02:  6  Chap11:  6  Chap12: 19
@@ -2778,8 +2774,8 @@ Accepted by Chapter:
   Chap37:  5  Chap39:  2  Chap40:  3
   Chap41:  2  Chap57:  5
 
-Structural (info only): 223
-   181 × RWLOCK_GHOST
+Structural (info only): 222
+   180 × RWLOCK_GHOST
    17 × STD_TRAIT_IMPL
    11 × OPAQUE_EXTERNAL
    10 × UNSAFE_SEND_SYNC
@@ -2795,59 +2791,59 @@ Structural (info only): 223
 4.1. Worst src/* Directories (all dirs, by holes)
 =================================================================
 
-   1  Chap52  (37 holes, 14 files)
+   1  Chap52  (35 holes, 14 files)
    2  Chap65  (4 holes, 3 files)
-   3  Chap62  (1 holes, 4 files)
-   4  Chap30  (0 holes, 1 files)
-   5  Chap63  (0 holes, 2 files)
-   6  Chap42  (0 holes, 3 files)
-   7  Chap21  (0 holes, 5 files)
-   8  Chap18  (0 holes, 7 files)
-   9  Chap55  (0 holes, 8 files)
-   10  Chap35  (0 holes, 4 files)
-   11  Chap26  (0 holes, 8 files)
-   12  Chap19  (0 holes, 4 files)
-   13  Chap05  (0 holes, 5 files)
-   14  Chap44  (0 holes, 1 files)
-   15  Chap43  (0 holes, 10 files)
-   16  Chap12  (0 holes, 3 files)
-   17  Chap06  (0 holes, 21 files)
-   18  Chap02  (0 holes, 2 files)
-   19  Chap50  (0 holes, 8 files)
-   20  Chap38  (0 holes, 2 files)
-   21  Chap58  (0 holes, 2 files)
-   22  Chap45  (0 holes, 6 files)
-   23  Chap54  (0 holes, 4 files)
-   24  Chap49  (0 holes, 8 files)
-   25  Chap27  (0 holes, 4 files)
-   26  Chap47  (0 holes, 9 files)
-   27  Chap36  (0 holes, 3 files)
-   28  Chap37  (0 holes, 19 files)
-   29  Chap39  (0 holes, 4 files)
-   30  Chap59  (0 holes, 4 files)
-   31  Chap17  (0 holes, 1 files)
-   32  Chap56  (0 holes, 10 files)
-   33  ParaPairs  (0 holes, 1 files)
-   34  Chap28  (0 holes, 11 files)
-   35  Chap11  (0 holes, 5 files)
-   36  Chap53  (0 holes, 5 files)
-   37  Chap41  (0 holes, 6 files)
+   3  Chap43  (3 holes, 10 files)
+   4  Chap62  (1 holes, 4 files)
+   5  Chap26  (0 holes, 8 files)
+   6  Chap11  (0 holes, 5 files)
+   7  Chap61  (0 holes, 4 files)
+   8  Chap47  (0 holes, 9 files)
+   9  Chap53  (0 holes, 5 files)
+   10  Chap03  (0 holes, 1 files)
+   11  Chap58  (0 holes, 2 files)
+   12  Chap50  (0 holes, 8 files)
+   13  Chap21  (0 holes, 5 files)
+   14  Chap54  (0 holes, 4 files)
+   15  Chap05  (0 holes, 5 files)
+   16  Chap44  (0 holes, 1 files)
+   17  Chap19  (0 holes, 4 files)
+   18  Chap37  (0 holes, 19 files)
+   19  Chap23  (0 holes, 2 files)
+   20  Chap17  (0 holes, 1 files)
+   21  Chap06  (0 holes, 21 files)
+   22  Chap39  (0 holes, 4 files)
+   23  Chap38  (0 holes, 2 files)
+   24  Chap27  (0 holes, 4 files)
+   25  Chap40  (0 holes, 3 files)
+   26  Chap57  (0 holes, 3 files)
+   27  Chap49  (0 holes, 8 files)
+   28  Chap64  (0 holes, 3 files)
+   29  Chap66  (0 holes, 2 files)
+   30  Chap12  (0 holes, 3 files)
+   31  Chap55  (0 holes, 8 files)
+   32  Chap28  (0 holes, 11 files)
+   33  Chap42  (0 holes, 3 files)
+   34  Chap41  (0 holes, 6 files)
+   35  ParaPairs  (0 holes, 1 files)
+   36  Chap18  (0 holes, 7 files)
+   37  Chap56  (0 holes, 10 files)
    38  Chap51  (0 holes, 8 files)
-   39  Chap64  (0 holes, 3 files)
-   40  Chap03  (0 holes, 1 files)
-   41  Chap23  (0 holes, 2 files)
+   39  Chap45  (0 holes, 6 files)
+   40  Chap35  (0 holes, 4 files)
+   41  Chap30  (0 holes, 1 files)
    42  Concurrency  (0 holes, 1 files)
-   43  Chap57  (0 holes, 3 files)
-   44  Chap40  (0 holes, 3 files)
-   45  Chap66  (0 holes, 2 files)
-   46  Chap61  (0 holes, 4 files)
+   43  Chap36  (0 holes, 3 files)
+   44  Chap02  (0 holes, 2 files)
+   45  Chap63  (0 holes, 2 files)
+   46  Chap59  (0 holes, 4 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
 =================================================================
 
-   1  src/Chap52/AdjTableGraphMtPer.rs  (21 holes)
-   2  src/Chap52/AdjTableGraphStEph.rs  (8 holes)
+   1  src/Chap52/AdjTableGraphStEph.rs  (7 holes)
+   2  src/Chap43/OrderedTableMtPer.rs  (3 holes)
    3  src/Chap65/UnionFindStEph.rs  (2 holes)
    4  src/Chap62/StarPartitionMtEph.rs  (1 holes)
 
@@ -2855,7 +2851,8 @@ Structural (info only): 223
 4.3. Next Target Directories
 =================================================================
 
-   1  src/Chap62  (1 holes, 4 files)
+   1  src/Chap43  (3 holes, 10 files)
+   2  src/Chap62  (1 holes, 4 files)
 
 =================================================================
 4.4. Not Verusified
@@ -2873,9 +2870,9 @@ Structural (info only): 223
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 43 clean, 3 holed, 42 holes (global), 244 modules
+Chapter Status — 46 chapters, 42 clean, 4 holed, 43 holes (global), 244 modules
 
-CLEAN CHAPTERS (43)
+CLEAN CHAPTERS (42)
   Chapter        Files
   -------------- -----
   Chap02             2
@@ -2901,7 +2898,6 @@ CLEAN CHAPTERS (43)
   Chap40             3
   Chap41             6
   Chap42             3
-  Chap43            10
   Chap44             1
   Chap45             6
   Chap47             9
@@ -2922,23 +2918,25 @@ CLEAN CHAPTERS (43)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (3) — 42 holes
+HOLED CHAPTERS (4) — 43 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
-  Chap52            37    14  internal  Chap52::AdjTableGraphStEph
+  Chap43             3    10  YES       
+  Chap52            35    14  NO        Chap43::OrderedTableMtPer
   Chap62             1     4  YES       
   Chap65             4     3  internal  Chap65::UnionFindStEph
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
   --------------  -------------------
+  Chap52          Chap43
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-27 22:22:52 -07:00
-Ended:     2026-03-27 22:22:54 -07:00
-Duration:  1677ms
+Started:   2026-03-28 10:32:16 -07:00
+Ended:     2026-03-28 10:32:18 -07:00
+Duration:  1936ms
 
 Full output: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-review-verus-proof-holes.log
