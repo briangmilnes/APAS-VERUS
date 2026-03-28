@@ -117,12 +117,12 @@ pub mod BoruvkaMtEph {
             bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
             seed: u64,
             round: usize,
-        ) -> (result: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>))
+        ) -> (partition: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>))
             requires
                 obeys_key_model::<V>(),
                 forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
                 SetStEph::<V>::spec_valid_key_type(),
-            ensures result.0.spec_setsteph_wf();
+            ensures partition.0.spec_setsteph_wf();
 
         /// Parallel Borůvka's MST algorithm.
         /// APAS: Work O(m log n), Span O(log² n)
@@ -193,13 +193,13 @@ pub mod BoruvkaMtEph {
         round: usize,
         start: usize,
         end: usize,
-    ) -> (result: HashMapWithViewPlus<V, bool>)
+    ) -> (flips: HashMapWithViewPlus<V, bool>)
         requires
             start <= end, end <= vertices@.len(),
             obeys_key_model::<V>(),
             forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
         ensures
-            start == end ==> result@.len() == 0,
+            start == end ==> flips@.len() == 0,
         decreases end - start,
     {
         let size = end - start;
@@ -263,9 +263,9 @@ pub mod BoruvkaMtEph {
         partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
         start: usize,
         end: usize,
-    ) -> (result: Vec<V>)
+    ) -> (remaining: Vec<V>)
         requires start <= end, end <= vertices@.len(),
-        ensures result@.len() <= (end - start) as int,
+        ensures remaining@.len() <= (end - start) as int,
         decreases end - start,
     {
         let size = end - start;
@@ -330,9 +330,9 @@ pub mod BoruvkaMtEph {
         partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
         start: usize,
         end: usize,
-    ) -> (result: Vec<usize>)
+    ) -> (labels: Vec<usize>)
         requires start <= end, end <= keys@.len(),
-        ensures result@.len() <= (end - start) as int,
+        ensures labels@.len() <= (end - start) as int,
         decreases end - start,
     {
         let size = end - start;
@@ -397,13 +397,13 @@ pub mod BoruvkaMtEph {
         partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
         start: usize,
         end: usize,
-    ) -> (result: HashMapWithViewPlus<V, V>)
+    ) -> (part_map: HashMapWithViewPlus<V, V>)
         requires
             start <= end, end <= vertices@.len(),
             obeys_key_model::<V>(),
             forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
         ensures
-            start == end ==> result@.len() == 0,
+            start == end ==> part_map@.len() == 0,
         decreases end - start,
     {
         let size = end - start;
@@ -586,12 +586,12 @@ pub mod BoruvkaMtEph {
         bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
         seed: u64,
         round: usize,
-    ) -> (result: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>))
+    ) -> (partition: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>))
         requires
             obeys_key_model::<V>(),
             forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
             SetStEph::<V>::spec_valid_key_type(),
-        ensures result.0.spec_setsteph_wf(),
+        ensures partition.0.spec_setsteph_wf(),
     {
         // Parallel hash-based coin flips: O(n) work, O(log n) span.
         let vertices_len = vertices_vec.len();
@@ -653,13 +653,13 @@ pub mod BoruvkaMtEph {
         coin_flips: Arc<HashMapWithViewPlus<V, bool>>,
         start: usize,
         end: usize,
-    ) -> (result: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)
+    ) -> (filtered: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)
         requires
             start <= end, end <= vertices@.len(),
             obeys_key_model::<V>(),
             forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
         ensures
-            start == end ==> result@.len() == 0,
+            start == end ==> filtered@.len() == 0,
         decreases end - start,
     {
         let size = end - start;
@@ -888,14 +888,14 @@ pub mod BoruvkaMtEph {
         partition: Arc<HashMapWithViewPlus<V, V>>,
         start: usize,
         end: usize,
-    ) -> (result: Vec<LabeledEdge<V>>)
+    ) -> (rerouted: Vec<LabeledEdge<V>>)
         requires
             start <= end, end <= edges@.len(),
             spec_all_weights_finite_seq(edges@),
             obeys_key_model::<V>(),
             forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
         ensures
-            spec_all_weights_finite_seq(result@),
+            spec_all_weights_finite_seq(rerouted@),
         decreases end - start,
     {
         let size = end - start;

@@ -108,11 +108,11 @@ pub mod ConnectivityMtEph {
     pub fn connected_components_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
-    ) -> (result: (SetStEph<V>, HashMapWithViewPlus<V, V>))
+    ) -> (components: (SetStEph<V>, HashMapWithViewPlus<V, V>))
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
-        ensures graph@.A.is_empty() ==> result.0@ == graph@.V,
+        ensures graph@.A.is_empty() ==> components.0@ == graph@.V,
     {
         connected_components_hof(graph, seed)
     }
@@ -124,12 +124,12 @@ pub mod ConnectivityMtEph {
     fn compose_maps_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         partition_map: &HashMapWithViewPlus<V, V>,
         component_map: &HashMapWithViewPlus<V, V>,
-    ) -> (result: HashMapWithViewPlus<V, V>)
+    ) -> (composed: HashMapWithViewPlus<V, V>)
         requires
             obeys_key_model::<V>(),
             forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
         ensures
-            forall|k: V::V| #[trigger] result@.contains_key(k) ==> partition_map@.contains_key(k),
+            forall|k: V::V| #[trigger] composed@.contains_key(k) ==> partition_map@.contains_key(k),
     {
         let mut result: HashMapWithViewPlus<V, V> = HashMapWithViewPlus::new();
 
@@ -172,7 +172,7 @@ pub mod ConnectivityMtEph {
             ensures n as nat == vertices@.len()
         { vertices.size() };
 
-        let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, r: usize| -> (result: usize) { r };
+        let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, r: usize| -> (count: usize) { r };
 
         star_contract_mt(graph, seed, &base, &expand, Ghost(|_r: usize| true))
     }
@@ -184,11 +184,11 @@ pub mod ConnectivityMtEph {
     pub fn connected_components_hof<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
-    ) -> (result: (SetStEph<V>, HashMapWithViewPlus<V, V>))
+    ) -> (components: (SetStEph<V>, HashMapWithViewPlus<V, V>))
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
-        ensures graph@.A.is_empty() ==> result.0@ == graph@.V,
+        ensures graph@.A.is_empty() ==> components.0@ == graph@.V,
     {
         let base = |vertices: &SetStEph<V>| -> (r: (SetStEph<V>, HashMapWithViewPlus<V, V>))
             requires
@@ -216,7 +216,7 @@ pub mod ConnectivityMtEph {
                       _centers: &SetStEph<V>,
                       partition_map: &HashMapWithViewPlus<V, V>,
                       reps_and_map: (SetStEph<V>, HashMapWithViewPlus<V, V>)|
-            -> (result: (SetStEph<V>, HashMapWithViewPlus<V, V>))
+            -> (expanded: (SetStEph<V>, HashMapWithViewPlus<V, V>))
             requires
                 obeys_key_model::<V>(),
                 forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,

@@ -70,8 +70,8 @@ pub mod DijkstraStEphF64 {
     }
 
     impl Clone for PQEntry {
-        fn clone(&self) -> (result: PQEntry)
-            ensures result@ == self@
+        fn clone(&self) -> (cloned: PQEntry)
+            ensures cloned@ == self@
         {
             PQEntry { dist: self.dist, vertex: self.vertex }
         }

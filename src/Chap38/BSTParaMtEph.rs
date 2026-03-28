@@ -947,12 +947,12 @@ pub mod BSTParaMtEph {
         }
     }
 
-    fn min_key<T: MtKey>(tree: &ParamBST<T>) -> (result: Option<T>)
+    fn min_key<T: MtKey>(tree: &ParamBST<T>) -> (min: Option<T>)
         requires
             tree@.finite(),
         ensures
-            result.is_none() <==> tree@.len() == 0,
-            result.is_some() ==> tree@.contains(result.unwrap()@),
+            min.is_none() <==> tree@.len() == 0,
+            min.is_some() ==> tree@.contains(min.unwrap()@),
         decreases tree@.len(),
     {
         match expose_internal(tree) {
@@ -1003,13 +1003,13 @@ pub mod BSTParaMtEph {
                         assert(alv.len() + blv.len() <= usize::MAX as nat);
                         assert(arv.len() + brv.len() <= usize::MAX as nat);
                     }
-                    let f1 = move || -> (result: ParamBST<T>)
-                        ensures result@ == al@.union(bl@), result@.finite()
+                    let f1 = move || -> (merged: ParamBST<T>)
+                        ensures merged@ == al@.union(bl@), merged@.finite()
                     {
                         union_inner(&al, &bl)
                     };
-                    let f2 = move || -> (result: ParamBST<T>)
-                        ensures result@ == ar@.union(br@), result@.finite()
+                    let f2 = move || -> (merged: ParamBST<T>)
+                        ensures merged@ == ar@.union(br@), merged@.finite()
                     {
                         union_inner(&ar, &br)
                     };
@@ -1119,13 +1119,13 @@ pub mod BSTParaMtEph {
                         use_type_invariant(&bl);
                         use_type_invariant(&br);
                     }
-                    let f1 = move || -> (result: ParamBST<T>)
-                        ensures result@ == al@.intersect(bl@), result@.finite()
+                    let f1 = move || -> (common: ParamBST<T>)
+                        ensures common@ == al@.intersect(bl@), common@.finite()
                     {
                         intersect_inner(&al, &bl)
                     };
-                    let f2 = move || -> (result: ParamBST<T>)
-                        ensures result@ == ar@.intersect(br@), result@.finite()
+                    let f2 = move || -> (common: ParamBST<T>)
+                        ensures common@ == ar@.intersect(br@), common@.finite()
                     {
                         intersect_inner(&ar, &br)
                     };
@@ -1291,13 +1291,13 @@ pub mod BSTParaMtEph {
                         use_type_invariant(&bl);
                         use_type_invariant(&br);
                     }
-                    let f1 = move || -> (result: ParamBST<T>)
-                        ensures result@ == al@.difference(bl@), result@.finite()
+                    let f1 = move || -> (diff: ParamBST<T>)
+                        ensures diff@ == al@.difference(bl@), diff@.finite()
                     {
                         difference_inner(&al, &bl)
                     };
-                    let f2 = move || -> (result: ParamBST<T>)
-                        ensures result@ == ar@.difference(br@), result@.finite()
+                    let f2 = move || -> (diff: ParamBST<T>)
+                        ensures diff@ == ar@.difference(br@), diff@.finite()
                     {
                         difference_inner(&ar, &br)
                     };
@@ -1571,11 +1571,11 @@ pub mod BSTParaMtEph {
         tree: &ParamBST<T>,
         op: &Arc<F>,
         identity: T,
-    ) -> (result: T)
+    ) -> (reduced: T)
         requires
             tree@.finite(),
             forall|a: T, b: T| #[trigger] op.requires((a, b)),
-        ensures tree@.len() == 0 ==> result@ == identity@,
+        ensures tree@.len() == 0 ==> reduced@ == identity@,
         decreases tree@.len(),
     {
         match expose_internal(tree) {
@@ -1609,10 +1609,10 @@ pub mod BSTParaMtEph {
         tree: &ParamBST<T>,
         op: F,
         base: T,
-    ) -> (result: T)
+    ) -> (reduced: T)
         requires
             forall|a: T, b: T| #[trigger] op.requires((a, b)),
-        ensures tree@.len() == 0 ==> result@ == base@,
+        ensures tree@.len() == 0 ==> reduced@ == base@,
     {
         let _ = tree.size();
         let op = Arc::new(op);

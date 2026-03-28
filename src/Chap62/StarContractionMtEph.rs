@@ -45,7 +45,7 @@ pub mod StarContractionMtEph {
         fn star_contract_mt<V, R, F, G>(
             graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G,
             Ghost(r_inv): Ghost<spec_fn(R) -> bool>,
-        ) -> (result: R)
+        ) -> (contracted: R)
         where
             V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,
             F: Fn(&SetStEph<V>) -> R,
@@ -60,7 +60,7 @@ pub mod StarContractionMtEph {
                 ==> #[trigger] expand.requires((v, e, c, p, r)),
             forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R, out: R|
                 #[trigger] expand.ensures((v, e, c, p, r), out) ==> r_inv(out),
-        ensures r_inv(result);
+        ensures r_inv(contracted);
 
         /// Contract graph to just vertices (no edges).
         /// APAS: Work O((n + m) lg n), Span O(lg^2 n)
@@ -94,7 +94,7 @@ pub mod StarContractionMtEph {
     fn star_contract_mt_fuel<V, R, F, G>(
         graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G, fuel: usize,
         Ghost(r_inv): Ghost<spec_fn(R) -> bool>,
-    ) -> (result: R)
+    ) -> (contracted: R)
     where
         V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,
         F: Fn(&SetStEph<V>) -> R,
@@ -110,9 +110,9 @@ pub mod StarContractionMtEph {
         forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R, out: R|
             #[trigger] expand.ensures((v, e, c, p, r), out) ==> r_inv(out),
     ensures
-        r_inv(result),
+        r_inv(contracted),
         (graph@.A.is_empty() || fuel == 0) ==>
-            exists|s: &SetStEph<V>| #[trigger] s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+            exists|s: &SetStEph<V>| #[trigger] s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), contracted),
     decreases fuel,
     {
         if graph.sizeE() == 0 || fuel == 0 {
@@ -180,7 +180,7 @@ pub mod StarContractionMtEph {
     pub fn star_contract_mt<V, R, F, G>(
         graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G,
         Ghost(r_inv): Ghost<spec_fn(R) -> bool>,
-    ) -> (result: R)
+    ) -> (contracted: R)
     where
         V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,
         F: Fn(&SetStEph<V>) -> R,
@@ -196,9 +196,9 @@ pub mod StarContractionMtEph {
         forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R, out: R|
             #[trigger] expand.ensures((v, e, c, p, r), out) ==> r_inv(out),
     ensures
-        r_inv(result),
+        r_inv(contracted),
         graph@.A.is_empty() ==>
-            exists|s: &SetStEph<V>| #[trigger] s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+            exists|s: &SetStEph<V>| #[trigger] s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), contracted),
     {
         let fuel = graph.sizeV();
         let result = star_contract_mt_fuel(graph, seed, base, expand, fuel, Ghost(r_inv));
@@ -295,7 +295,7 @@ pub mod StarContractionMtEph {
         Ghost(centers_view): Ghost<Set<V::V>>,
         start: usize,
         end: usize,
-    ) -> (result: SetStEph<Edge<V>>)
+    ) -> (quotient_edges: SetStEph<Edge<V>>)
         requires
             start <= end,
             end as nat <= (*edges)@.len(),
@@ -305,9 +305,9 @@ pub mod StarContractionMtEph {
                 graph_v_view.contains((*edges).spec_index(j)@.1),
             spec_valid_partition_map::<V>(graph_v_view, centers_view, (*partition_map)@),
         ensures
-            result.spec_setsteph_wf(),
+            quotient_edges.spec_setsteph_wf(),
             forall |u_v: V::V, w_v: V::V|
-                #[trigger] result@.contains((u_v, w_v)) ==>
+                #[trigger] quotient_edges@.contains((u_v, w_v)) ==>
                     centers_view.contains(u_v) && centers_view.contains(w_v),
         decreases end - start,
     {
@@ -418,7 +418,7 @@ pub mod StarContractionMtEph {
     pub fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
-    ) -> (result: SetStEph<V>)
+    ) -> (vertices: SetStEph<V>)
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),

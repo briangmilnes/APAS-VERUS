@@ -61,11 +61,11 @@ pub mod BellmanFordStEphI64 {
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1).
     // veracity: no_requires
-    fn clamp_weight(w: i128) -> (result: i64)
+    fn clamp_weight(w: i128) -> (clamped: i64)
         ensures
-            w >= i64::MIN as i128 && w <= i64::MAX as i128 ==> result == w as i64,
-            w < i64::MIN as i128 ==> result == i64::MIN,
-            w > i64::MAX as i128 ==> result == i64::MAX,
+            w >= i64::MIN as i128 && w <= i64::MAX as i128 ==> clamped == w as i64,
+            w < i64::MIN as i128 ==> clamped == i64::MIN,
+            w > i64::MAX as i128 ==> clamped == i64::MAX,
     {
         if w > i64::MAX as i128 { i64::MAX }
         else if w < i64::MIN as i128 { i64::MIN }
@@ -76,13 +76,13 @@ pub mod BellmanFordStEphI64 {
     /// Returns UNREACHABLE on positive overflow, i64::MIN on negative overflow.
     /// - APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1).
-    fn add_distance(d: i64, w: i64) -> (result: i64)
+    fn add_distance(d: i64, w: i64) -> (sum: i64)
         requires d != UNREACHABLE,
         ensures
-            (d as i128) + (w as i128) >= UNREACHABLE as i128 ==> result == UNREACHABLE,
-            (d as i128) + (w as i128) < i64::MIN as i128 ==> result == i64::MIN,
+            (d as i128) + (w as i128) >= UNREACHABLE as i128 ==> sum == UNREACHABLE,
+            (d as i128) + (w as i128) < i64::MIN as i128 ==> sum == i64::MIN,
             (d as i128) + (w as i128) >= i64::MIN as i128 && (d as i128) + (w as i128) < UNREACHABLE as i128
-                ==> result == ((d as i128) + (w as i128)) as i64,
+                ==> sum == ((d as i128) + (w as i128)) as i64,
     {
         let sum: i128 = (d as i128) + (w as i128);
         if sum >= UNREACHABLE as i128 { UNREACHABLE }

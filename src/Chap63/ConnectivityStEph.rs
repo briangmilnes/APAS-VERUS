@@ -98,11 +98,11 @@ pub mod ConnectivityStEph {
     /// Returns:
     /// - (representatives, component_map): Set of component representatives and
     ///   mapping from each vertex to its component representative
-    pub fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (result: (SetStEph<V>, HashMapWithViewPlus<V, V>))
+    pub fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (components: (SetStEph<V>, HashMapWithViewPlus<V, V>))
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
-        ensures graph@.A.is_empty() ==> result.0@ == graph@.V,
+        ensures graph@.A.is_empty() ==> components.0@ == graph@.V,
     {
         connected_components_hof(graph)
     }
@@ -175,7 +175,7 @@ pub mod ConnectivityStEph {
             ensures n as nat == vertices@.len()
         { vertices.size() };
 
-        let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, r: usize| -> (result: usize) { r };
+        let expand = |_v: &SetStEph<V>, _e: &SetStEph<Edge<V>>, _centers: &SetStEph<V>, _part: &HashMapWithViewPlus<V, V>, r: usize| -> (count: usize) { r };
 
         star_contract(graph, &base, &expand, Ghost(|r: usize| true))
     }
@@ -186,11 +186,11 @@ pub mod ConnectivityStEph {
     ///
     /// - APAS: Work O((n+m) lg n), Span O((n+m) lg n) — same as Algorithm 63.3
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
-    pub fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (result: (SetStEph<V>, HashMapWithViewPlus<V, V>))
+    pub fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (components: (SetStEph<V>, HashMapWithViewPlus<V, V>))
         requires
             spec_graphview_wf(graph@),
             valid_key_type_Edge::<V>(),
-        ensures graph@.A.is_empty() ==> result.0@ == graph@.V,
+        ensures graph@.A.is_empty() ==> components.0@ == graph@.V,
     {
         let base = |vertices: &SetStEph<V>| -> (r: (SetStEph<V>, HashMapWithViewPlus<V, V>))
             requires
@@ -218,7 +218,7 @@ pub mod ConnectivityStEph {
                       _centers: &SetStEph<V>,
                       partition_map: &HashMapWithViewPlus<V, V>,
                       reps_and_map: (SetStEph<V>, HashMapWithViewPlus<V, V>)|
-            -> (result: (SetStEph<V>, HashMapWithViewPlus<V, V>))
+            -> (expanded: (SetStEph<V>, HashMapWithViewPlus<V, V>))
             requires
                 obeys_key_model::<V>(),
                 forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,

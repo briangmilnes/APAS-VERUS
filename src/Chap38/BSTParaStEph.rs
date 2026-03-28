@@ -421,11 +421,11 @@ pub mod BSTParaStEph {
         /// - APAS: Work O(|t|), Span O(|t|) — sequential
         /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|) -- agrees with APAS; sequential.
         /// Requires `op` to be associative with identity `base`.
-        fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (result: T)
+        fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (reduced: T)
             requires
                 self@.finite(),
                 forall|a: T, b: T| op.requires((a, b)),
-            ensures self@.len() == 0 ==> result@ == base@;
+            ensures self@.len() == 0 ==> reduced@ == base@;
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|) -- helper for in_order.
         fn collect_in_order(&self, out: &mut Vec<T>)
@@ -1380,7 +1380,7 @@ pub mod BSTParaStEph {
         }
 
         /// Algorithm 38.10 — sequential reduce. Folds `op(L', op(k, R'))`.
-        fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (result: T) {
+        fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (reduced: T) {
             reduce_inner(self, &op, base)
         }
 
@@ -1570,11 +1570,11 @@ pub mod BSTParaStEph {
         tree: &ParamBST<T>,
         op: &F,
         identity: T,
-    ) -> (result: T)
+    ) -> (reduced: T)
         requires
             tree@.finite(),
             forall|a: T, b: T| op.requires((a, b)),
-        ensures tree@.len() == 0 ==> result@ == identity@,
+        ensures tree@.len() == 0 ==> reduced@ == identity@,
         decreases tree@.len(),
     {
         match tree.expose() {

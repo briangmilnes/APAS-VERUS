@@ -317,11 +317,11 @@ pub mod BSTSplayStEph {
     // zig, zig-zig, and zig-zag rotations (Sleator & Tarjan).
     /// - APAS: Work O(lg n) amortized, Span O(lg n) amortized
     /// - Claude-Opus-4.6: Work O(lg n) amortized, Span O(lg n) amortized -- agrees with APAS.
-    fn splay<T: TotalOrder + Clone>(root: Box<Node<T>>, target: &T) -> (result: Box<Node<T>>)
+    fn splay<T: TotalOrder + Clone>(root: Box<Node<T>>, target: &T) -> (splayed: Box<Node<T>>)
         requires spec_is_bst_link(&Some(root)),
         ensures
-            spec_is_bst_link(&Some(result)),
-            forall|x: T| spec_contains_link(&Some(result), x) <==> spec_contains_link(&Some(root), x),
+            spec_is_bst_link(&Some(splayed)),
+            forall|x: T| spec_contains_link(&Some(splayed), x) <==> spec_contains_link(&Some(root), x),
         decreases root,
     {
         let ghost orig = root;

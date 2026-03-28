@@ -181,11 +181,11 @@ pub mod BSTSplayMtEph {
 
     // Bottom-up splay: bring target (or nearest key) toward the root using
     // zig, zig-zig, and zig-zag rotations (Sleator & Tarjan).
-    fn splay<T: StTInMtT + Ord + TotalOrder>(root: Box<Node<T>>, target: &T) -> (result: Box<Node<T>>)
+    fn splay<T: StTInMtT + Ord + TotalOrder>(root: Box<Node<T>>, target: &T) -> (splayed: Box<Node<T>>)
         requires spec_is_bst_link(Some(root)),
         ensures
-            spec_is_bst_link(Some(result)),
-            forall|x: T| link_contains(Some(result), x) <==> link_contains(Some(root), x),
+            spec_is_bst_link(Some(splayed)),
+            forall|x: T| link_contains(Some(splayed), x) <==> link_contains(Some(root), x),
         decreases root,
     {
         let ghost orig = root;
@@ -1466,7 +1466,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    fn in_order_parallel<T: StTInMtT + Ord + TotalOrder + 'static>(link: &Link<T>) -> (result: Vec<T>)
+    fn in_order_parallel<T: StTInMtT + Ord + TotalOrder + 'static>(link: &Link<T>) -> (elements: Vec<T>)
         requires link_spec_size(*link) <= usize::MAX as nat,
         ensures true,
     {
@@ -1475,7 +1475,7 @@ pub mod BSTSplayMtEph {
         out
     }
 
-    fn pre_order_parallel<T: StTInMtT + Ord + TotalOrder + 'static>(link: &Link<T>) -> (result: Vec<T>)
+    fn pre_order_parallel<T: StTInMtT + Ord + TotalOrder + 'static>(link: &Link<T>) -> (elements: Vec<T>)
         requires link_spec_size(*link) <= usize::MAX as nat,
         ensures true,
     {
@@ -1650,7 +1650,7 @@ pub mod BSTSplayMtEph {
         Some(node)
     }
 
-    fn filter_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, predicate: &Arc<F>) -> (result: Vec<T>)
+    fn filter_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, predicate: &Arc<F>) -> (filtered: Vec<T>)
         where
             F: Fn(&T) -> bool + Send + Sync,
         requires
@@ -1679,7 +1679,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    fn reduce_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (result: T)
+    fn reduce_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (reduced: T)
         where
             F: Fn(T, T) -> T + Send + Sync,
         requires
