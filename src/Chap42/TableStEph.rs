@@ -310,7 +310,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- sequential scan; disagrees with APAS span (no parallelism).
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             requires obeys_feq_clone::<K>()
-            ensures domain@ =~= self@.dom();
+            ensures domain@ =~= self@.dom(), domain.spec_arraysetsteph_wf();
         /// - APAS Cost Spec 42.5: Work |s| * W(f), Span lg |s| + S(f)
         /// - Claude-Opus-4.6: Work Θ(|s| * W(f)), Span Θ(|s| * W(f)) -- sequential; disagrees with APAS span.
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)

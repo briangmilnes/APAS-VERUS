@@ -453,10 +453,6 @@ broadcast use {
             proof { reveal(obeys_view_eq); }
             // Obtain domain sequence before mutation.
             let domain = self.adj.domain();
-            proof {
-                // domain() maintains wf internally but ensures doesn't expose it.
-                assume(domain.spec_arraysetsteph_wf());
-            }
             let seq = domain.to_seq();
             let len = seq.length();
             // Step 1: Remove v as a key from the adjacency table.

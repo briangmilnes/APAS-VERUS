@@ -412,10 +412,6 @@ broadcast use {
             let new_adj = self.adj.delete(v);
             // Obtain domain sequence from table with v removed.
             let domain = new_adj.domain();
-            proof {
-                // domain() maintains wf internally but ensures doesn't expose it.
-                assume(domain.spec_arraysetsteph_wf());
-            }
             let seq = domain.to_seq();
             let len = seq.length();
             // Step 2: For each remaining key, remove v from its neighbor set.
