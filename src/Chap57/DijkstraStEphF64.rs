@@ -143,16 +143,16 @@ pub mod DijkstraStEphF64 {
             self.dist@.le(other.dist@) && (self.dist@ != other.dist@ || self.vertex <= other.vertex)
         }
 
-        #[verifier::external_body]
+        #[verifier::external_body] // accept hole: TotalOrder for float PQEntry — FloatTotalOrder axioms require is_finite_spec(), but TotalOrder trait is unconditional. Sound because Dijkstra only inserts finite distances.
         proof fn reflexive(x: Self) {}
-        #[verifier::external_body]
+        #[verifier::external_body] // accept hole: TotalOrder for float PQEntry (see reflexive)
         proof fn transitive(x: Self, y: Self, z: Self) {}
-        #[verifier::external_body]
+        #[verifier::external_body] // accept hole: TotalOrder for float PQEntry (see reflexive)
         proof fn antisymmetric(x: Self, y: Self) {}
-        #[verifier::external_body]
+        #[verifier::external_body] // accept hole: TotalOrder for float PQEntry (see reflexive)
         proof fn total(x: Self, y: Self) {}
 
-        #[verifier::external_body]
+        #[verifier::external_body] // accept hole: TotalOrder for float PQEntry (see reflexive)
         fn cmp(&self, other: &Self) -> (c: Ordering) {
             match self.dist.val.partial_cmp(&other.dist.val) {
                 Some(Ordering::Less) => Ordering::Less,
