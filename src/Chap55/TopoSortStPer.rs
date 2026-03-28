@@ -10,8 +10,9 @@ pub mod TopoSortStPer {
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::{AVLTreeSeqStPerS, AVLTreeSeqStPerTrait};
     #[cfg(verus_keep_ghost)]
     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq, lemma_all_false_num_false_eq_len, lemma_all_true_num_false_zero};
+    use crate::Chap55::CycleDetectStPer::CycleDetectStPer::{CycleDetectStPer, CycleDetectStPerTrait};
     #[cfg(verus_keep_ghost)]
-    use crate::Chap55::CycleDetectStPer::CycleDetectStPer::{CycleDetectStPer, CycleDetectStPerTrait, spec_cycledetectstper_wf};
+    use crate::Chap55::CycleDetectStPer::CycleDetectStPer::spec_cycledetectstper_wf;
     use crate::Types::Types::*;
 
     verus! {

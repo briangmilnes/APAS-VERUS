@@ -8,7 +8,6 @@ pub mod TopoSortStEph {
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::*;
-    #[cfg(verus_keep_ghost)]
     use crate::Chap55::CycleDetectStEph::CycleDetectStEph::{CycleDetectStEph, CycleDetectStEphTrait};
     use crate::Types::Types::*;
 
