@@ -35,7 +35,8 @@ pub mod UnionFindStEph {
 
     verus! {
 
-    broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+    // feq broadcast moved from module-level to per-function to avoid
+    // matching loop with spec_elements_distinct in union/equals.
 
     // 4. type definitions
 
@@ -197,6 +198,7 @@ pub mod UnionFindStEph {
             v2 == v,
             v3 == v,
     {
+        broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
     }
 
     /// Prove wf preservation after insert: frame lemma + new element properties.
@@ -718,8 +720,10 @@ pub mod UnionFindStEph {
         ensures
             root@ == uf@.roots[v@],
             uf@.parent.contains_key(root@),
+            uf@.roots.contains_key(root@),
             uf@.roots[root@] == root@,
     {
+        broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
         proof {
             reveal(spec_uf_wf);
             reveal(spec_parent_closed);
@@ -955,6 +959,7 @@ pub mod UnionFindStEph {
                 )
             ),
     {
+        broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
         let ghost root_u_view = root_u@;
         let ghost root_v_view = root_v@;
         let ghost mid_roots = uf.roots@;
@@ -1080,6 +1085,81 @@ pub mod UnionFindStEph {
         lemma_assemble_wf(uf);
     }
 
+    /// Extract parent.dom() =~= roots.dom() from wf without polluting the caller's
+    /// Z3 context with all 14 sub-predicates.
+    proof fn lemma_wf_parent_dom_eq_roots_dom<V: StT + Hash>(
+        uf: &UnionFindStEph<V>,
+    )
+        requires uf.spec_unionfindsteph_wf(),
+        ensures
+            uf.parent@.dom() =~= uf.roots@.dom(),
+            uf.parent@.dom() =~= uf.rank@.dom(),
+    {
+        reveal(spec_uf_wf);
+        reveal(spec_parent_rank_same_dom);
+        reveal(spec_roots_parent_same_dom);
+    }
+
+    /// Bridge: translate union_merge's quantified ensures (trigger on roots@[x])
+    /// to union's quantified ensures (trigger on roots.contains_key(x)).
+    /// Proof-only, no &mut — keeps Z3 under budget.
+    proof fn lemma_union_ensures_bridge<V: StT + Hash>(
+        uf_new: &UnionFindStEph<V>,
+        uf_old: &UnionFindStEph<V>,
+        root_u_view: <V as View>::V,
+        root_v_view: <V as View>::V,
+        u_view: <V as View>::V,
+        v_view: <V as View>::V,
+        winner_view: <V as View>::V,
+    )
+        requires
+            root_u_view == uf_old.roots@[u_view],
+            root_v_view == uf_old.roots@[v_view],
+            uf_new.roots@.dom() =~= uf_old.roots@.dom(),
+            uf_old.roots@.contains_key(u_view),
+            uf_new.roots@[u_view] == winner_view,
+            forall|x: <V as View>::V| uf_old.roots@.contains_key(x) ==> (
+                #[trigger] uf_new.roots@[x] == (
+                    if uf_old.roots@[x] == root_u_view
+                        || uf_old.roots@[x] == root_v_view
+                    {
+                        winner_view
+                    } else {
+                        uf_old.roots@[x]
+                    }
+                )
+            ),
+        ensures
+            forall|x: <V as View>::V|
+                #[trigger] uf_new.roots@.contains_key(x) ==> {
+                    let old_root_u = uf_old.roots@[u_view];
+                    let old_root_v = uf_old.roots@[v_view];
+                    if uf_old.roots@[x] == old_root_u
+                        || uf_old.roots@[x] == old_root_v
+                    {
+                        uf_new.roots@[x] == uf_new.roots@[u_view]
+                    } else {
+                        uf_new.roots@[x] == uf_old.roots@[x]
+                    }
+                },
+    {
+        assert forall|x: <V as View>::V|
+            #[trigger] uf_new.roots@.contains_key(x) implies {
+                let old_root_u = uf_old.roots@[u_view];
+                let old_root_v = uf_old.roots@[v_view];
+                if uf_old.roots@[x] == old_root_u
+                    || uf_old.roots@[x] == old_root_v
+                {
+                    uf_new.roots@[x] == uf_new.roots@[u_view]
+                } else {
+                    uf_new.roots@[x] == uf_old.roots@[x]
+                }
+            }
+        by {
+            assert(uf_old.roots@.contains_key(x));
+        }
+    }
+
     /// Merge two components: mutate parent/rank/roots, prove wf.
     /// Returns Ghost info for caller to derive structural ensures.
     /// Exec does mutations via union_merge_exec; proof delegates to
@@ -1097,15 +1177,16 @@ pub mod UnionFindStEph {
             old(uf).roots@.contains_key(root_v@),
             old(uf).roots@[root_u@] == root_u@,
             old(uf).roots@[root_v@] == root_v@,
-            old(uf).parent@[root_u@]@ == root_u@,
-            old(uf).parent@[root_v@]@ == root_v@,
+            // parent self-loops derivable from wf + root conditions via
+            // lemma_root_is_self_parent; omitted to avoid matching loop in callers.
         ensures
             uf.spec_unionfindsteph_wf(),
             ((info@.winner_view == root_u@ && info@.loser_view == root_v@) ||
              (info@.winner_view == root_v@ && info@.loser_view == root_u@)),
             info@.winner_val@ == info@.winner_view,
-            uf.elements@ =~= old(uf).elements@,
+            uf.elements@ == old(uf).elements@,
             uf.roots@.dom() =~= old(uf).roots@.dom(),
+            uf.parent@.dom() =~= old(uf).parent@.dom(),
             forall|x: <V as View>::V| old(uf).roots@.contains_key(x) ==> (
                 #[trigger] uf.roots@[x] == (
                     if old(uf).roots@[x] == root_u@ || old(uf).roots@[x] == root_v@ {
@@ -1250,7 +1331,7 @@ pub mod UnionFindStEph {
 
     impl<V: StT + Hash> UnionFindStEphTrait<V> for UnionFindStEph<V> {
         /// Well-formedness invariant for the Union-Find structure.
-        /// Delegates to closed spec_uf_wf so Z3 sees one opaque boolean
+        /// Delegates to closed spec_uf_wf so wf unfolds to one opaque boolean
         /// in exec contexts. Proof functions use `reveal(spec_uf_wf)` to
         /// access the sub-predicate conjunction.
         open spec fn spec_unionfindsteph_wf(&self) -> bool {
@@ -1312,6 +1393,14 @@ pub mod UnionFindStEph {
         }
 
         /// - APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
+        // BLOCKED: Z3 matching loop between obeys_feq_view_injective and
+        // spec_elements_distinct. Both leak from spec_uf_wf's closed body
+        // into Z3 via spec_unionfindsteph_wf → spec_uf_wf. The loop
+        // diverges unboundedly (17GB OOM at rlimit 200). See
+        // plans/agent1-r103-profiling-notes.md for full analysis.
+        // Infrastructure ready: lemma_union_ensures_bridge (quantifier),
+        // lemma_wf_parent_dom_eq_roots_dom (dom preservation),
+        // find_root_loop extended ensures (roots.contains_key).
         #[verifier::external_body]
         fn union(&mut self, u: &V, v: &V) {
             let root_u = find_root_loop(self, u);
@@ -1320,27 +1409,16 @@ pub mod UnionFindStEph {
             let ghost root_v_view = root_v@;
 
             if !feq(&root_u, &root_v) {
-                proof {
-                    // BYPASSED: reveal/lemma calls have no effect inside external_body.
-                    // reveal(spec_uf_wf);
-                    // lemma_root_is_self_parent(self, root_u_view);
-                    // lemma_root_is_self_parent(self, root_v_view);
-                }
-                let ghost mid_self = *self;
-
-                // Inline union_merge: call exec directly, prove wf with lemma.
-                let info = union_merge_exec(self, root_u, root_v);
+                let info = union_merge(self, root_u, root_v);
 
                 proof {
-                    lemma_union_merge_wf(
-                        &(*self), &mid_self, info@.winner_val,
-                        root_u_view, root_v_view,
-                        info@.winner_view, info@.loser_view,
-                    );
-
-                    // Translate winner_view to self@.roots[u@].
-                    assert(self.roots@.contains_key(u@));
-                    assert(self.roots@[u@] == info@.winner_view);
+                    // BYPASSED: lemma calls have no effect inside external_body.
+                    // lemma_union_ensures_bridge::<V>(
+                    //     self, old(self),
+                    //     root_u_view, root_v_view,
+                    //     u@, v@,
+                    //     info@.winner_view,
+                    // );
                 }
             }
         }
@@ -1355,6 +1433,7 @@ pub mod UnionFindStEph {
 
         /// - APAS: Work O(n alpha(n)), Span O(n alpha(n))
         fn num_sets(&mut self) -> (count: usize) {
+            broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
             proof { reveal(spec_uf_wf); reveal(spec_elements_forward); }
             let mut roots_set = HashSetWithViewPlus::<V>::new();
             let mut i: usize = 0;
