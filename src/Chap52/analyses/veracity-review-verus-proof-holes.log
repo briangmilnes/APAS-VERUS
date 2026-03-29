@@ -27,7 +27,7 @@ Table of Contents:
 ✓ AdjMatrixGraphStEph.rs
    3 clean proof functions
 ⚠ AdjMatrixGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:477: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjMatrixGraphStPer.rs:477: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        473 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        475 |         {
@@ -41,7 +41,7 @@ Table of Contents:
 ✓ AdjSeqGraphStEph.rs
    2 clean proof functions
 ⚠ AdjSeqGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:513: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjSeqGraphStPer.rs:513: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        509 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        511 |         {
@@ -49,21 +49,21 @@ Table of Contents:
        514 |             equal
        515 |         }
 ❌ AdjTableGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:228: error: assume() [algorithmic] - assume(count as nat + neighbors@.len() <= self.spec_num_edge
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphMtPer.rs:228: error: assume() [algorithmic] - assume(count as nat + neighbors@.len() <= self.spec_num_edge
        197 |         fn num_edges(&self) -> (m: usize) {
             ...
        226 |                         // Overflow: partial sum + current size <= total edges.
        227 |                         // blocked by weak OrderedTableMtPer domain/find ensures
        229 |                     }
        230 |                     count = count + neighbors.size();
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:240: error: assume() [algorithmic] - assume(count as nat == self.spec_num_edges());
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphMtPer.rs:240: error: assume() [algorithmic] - assume(count as nat == self.spec_num_edges());
        197 |         fn num_edges(&self) -> (m: usize) {
             ...
        238 |                 // domain-value correspondence that OrderedTableMtPer::map/domain
        239 |                 // ensures don't provide.
        241 |             }
        242 |             count
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:365: error: assume() [rwlock:predicate] - assume(updated.spec_adjtablegraphmtper_wf()); // algorithmic
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphMtPer.rs:365: error: assume() [rwlock:predicate] - assume(updated.spec_adjtablegraphmtper_wf()); // algorithmic
        349 |         fn delete_vertex(&self, v: &V) -> (updated: Self) {
             ...
        363 |                 // Graph closure still needs map value ensures to prove neighbor sets
@@ -79,7 +79,7 @@ Table of Contents:
 ✓ EdgeSetGraphMtPer.rs
    1 clean proof function
 ⚠ EdgeSetGraphStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:406: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStEph.rs:406: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        399 |         fn clone(&self) -> (result: Self)
             ...
        404 |                 edges: self.edges.clone(),
@@ -87,14 +87,14 @@ Table of Contents:
        407 |             result
        408 |         }
 ⚠ EdgeSetGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:375: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStPer.rs:375: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        368 |         fn clone(&self) -> (result: Self)
             ...
        373 |                 edges: self.edges.clone(),
        374 |             };
        376 |             result
        377 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:391: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStPer.rs:391: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        387 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        389 |         {
@@ -178,9 +178,12 @@ Warnings: 5 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-28 17:04:14 -07:00
-Ended:     2026-03-28 17:04:14 -07:00
-Duration:  55ms
+Started:   2026-03-28 17:36:22 -07:00
+Ended:     2026-03-28 17:36:22 -07:00
+Duration:  71ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
+:22 -07:00
+Duration:  71ms
+
+Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
