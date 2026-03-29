@@ -1,56 +1,51 @@
-# R103 Agent 3 — Prove DocumentIndex make_index (replace sort_unstable_by), STEP 20
+# R103 Agent 3 — Prove DocumentIndex make_index (table-based, no sort), STEP 20
 
 ## Objective
 
 The last Chap44 hole: `make_index` is external_body because it calls
-`sort_unstable_by` which has no Verus spec. Replace it with a verified
-sort or an assume_specification bridge.
+`sort_unstable_by` which has no Verus spec. Rewrite to avoid sorting entirely.
 
-## Option A: assume_specification for sort_unstable_by (quick)
+## Approach: Table-based insert (textbook Algorithm 44.2)
 
-Write in `vstdplus/strings.rs` or a new `vstdplus/vec_sort.rs`:
+The current code sorts `(word, doc_id)` pairs then groups by word. The textbook
+approach is simpler: iterate docs, iterate words per doc, insert each word into
+the table. If the word exists, union the document sets. No sort needed.
 
 ```rust
-#[verifier::external_body]
-pub fn vec_sort_by<T, F: FnMut(&T, &T) -> core::cmp::Ordering>(v: &mut Vec<T>, compare: F)
-    ensures v@.to_multiset() =~= old(v)@.to_multiset()
-{
-    v.sort_unstable_by(compare);
+fn make_index(docs: &DocumentCollection) -> Self {
+    let mut table = TableStPer::empty();
+    for i in 0..docs.length() {
+        let doc = docs.nth(i);
+        let doc_id = doc.0.clone();
+        let words = tokens(&doc.1);
+        for j in 0..words.length() {
+            let word = words.nth(j);
+            let singleton = AVLTreeSetStPer::singleton(doc_id.clone());
+            table = table.insert(word, singleton, |old_set, new_set| old_set.union(&new_set));
+        }
+    }
+    DocumentIndex { word_to_docs: table }
 }
 ```
 
-The ensures says: output is a permutation of input. We could add sorted
-ensures too if we have a spec for the comparator, but permutation alone
-may be enough for make_index (it groups by word, and grouping only needs
-equal elements adjacent, which sorted gives).
+Use our ArraySeqStPerS types throughout — no Vec, no conversion.
 
-## Option B: Use Chap36 QuickSort (verified, more work)
+`tokens` is already verified (agent2 R103). `TableStPer::insert` with combine
+is verified. `AVLTreeSetStPer::union` and `singleton` are verified.
 
-Convert `Vec<(Word, DocumentId)>` to `ArraySeqStEphS`, sort with
-`QuickSortStEph::quick_sort_first`, convert back. Needs `TotalOrder`
-impl for `(Word, DocumentId)` — lexicographic on (String, String).
+## What needs to verify
 
-This is more work but eliminates the external_body entirely.
-
-## Option C: Restructure make_index to avoid sort
-
-The sort groups words. Alternative: use a Table directly — insert each
-(word, doc_id) pair into the table. Table::insert with combine handles
-duplicates. No sort needed. This is actually closer to the textbook's
-Algorithm 44.2 which uses a table-based approach.
-
-## Recommendation
-
-Try Option C first — it's the cleanest and textbook-aligned. make_index
-becomes: iterate docs, iterate words per doc, for each word insert into
-table with combine that unions the document set. No sort. No external_body.
-
-If Option C is too complex, fall back to Option A (assume_specification).
+- Outer loop: iterate docs (ArraySeqStPerS), maintain table wf
+- Inner loop: iterate words (ArraySeqStPerS from tokens), maintain table wf
+- Combine closure: `|old, new| old.union(&new)` — needs requires/ensures
+  that both args are wf and result is wf
+- Final: `DocumentIndex { word_to_docs: table }` with `spec_documentindex_wf`
 
 ## Read first
 
-- `src/Chap44/DocumentIndex.rs` — make_index (line 98)
+- `src/Chap44/DocumentIndex.rs` — current make_index (line 98)
 - `src/Chap42/TableStPer.rs` — insert with combine
+- `src/Chap41/AVLTreeSetStPer.rs` — singleton, union
 
 ## Isolation
 
@@ -64,10 +59,12 @@ Do NOT use the Agent tool to spawn subagents.
 
 ## Important
 
-- Do NOT add assume or accept in algorithmic code.
-- An assume_specification on sort_unstable_by (Option A) is acceptable —
-  same category as external_body bridges on std library functions.
-- Option C (no sort) is preferred if it works.
+- Do NOT use Vec. Use ArraySeqStPerS throughout.
+- Do NOT use sort_unstable_by or any Rust stdlib sort.
+- Do NOT add assume or accept.
+- `tokens` returns `ArraySeqStPerS<Word>` — use it directly.
+- The combine closure needs explicit requires/ensures for Verus.
+  Read `src/standards/using_closures_standard.rs`.
 
 ## STEP 20
 
