@@ -75,7 +75,7 @@ broadcast use {
     #[verifier::reject_recursive_types(T)]
     pub struct AVLTreeSetMtEphGhostIter<T: StTInMtT + Ord + 'static> {
         pub pos: int,
-        pub elements: Seq<T>,
+        pub elements: Seq<T::V>,
     }
 
     // 5. view impls
@@ -86,15 +86,15 @@ broadcast use {
     }
 
     impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtEphIter<T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) {
-            (self.pos as int, self.snapshot@)
+        type V = (int, Seq<T::V>);
+        open spec fn view(&self) -> (int, Seq<T::V>) {
+            (self.pos as int, self.snapshot@.map_values(|t: T| t@))
         }
     }
 
     impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtEphGhostIter<T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+        type V = Seq<T::V>;
+        open spec fn view(&self) -> Seq<T::V> { self.elements.take(self.pos) }
     }
 
     // 6. spec fns
@@ -492,7 +492,7 @@ broadcast use {
                         &&& 0 <= old_index < old_seq.len()
                         &&& new_seq == old_seq
                         &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
+                        &&& element@ == old_seq[old_index]
                     },
                 }
             })
@@ -502,7 +502,7 @@ broadcast use {
             } else {
                 let item = self.snapshot[self.pos].clone();
                 self.pos = self.pos + 1;
-                proof { assume(item == old(self)@.1[old(self)@.0]); }  // accept hole: Clone preserves value
+                proof { assume(item@ == old(self)@.1[old(self)@.0]); }  // accept hole: Clone preserves value
                 Some(item)
             }
         }
@@ -517,7 +517,7 @@ broadcast use {
 
     impl<T: StTInMtT + Ord + 'static> vstd::pervasive::ForLoopGhostIterator for AVLTreeSetMtEphGhostIter<T> {
         type ExecIter = AVLTreeSetMtEphIter<T>;
-        type Item = T;
+        type Item = T::V;
         type Decrease = int;
 
         open spec fn exec_invariant(&self, exec_iter: &AVLTreeSetMtEphIter<T>) -> bool {
@@ -541,7 +541,7 @@ broadcast use {
             Some(self.elements.len() - self.pos)
         }
 
-        open spec fn ghost_peek_next(&self) -> Option<T> {
+        open spec fn ghost_peek_next(&self) -> Option<T::V> {
             if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
         }
 

@@ -39,3 +39,33 @@ files import AVLTreeSetMtEph. No cascade needed.
 ## Steps Used: 1 of 20
 
 No code changes needed — task was already complete.
+
+---
+
+# R101 Agent 2 (continued) — Iterator Views Seq<T> → Seq<T::V>
+
+## Objective
+
+Fix AVLTreeSetMtEph iterator ghost views from `Seq<T>` to `Seq<T::V>`.
+
+## Changes
+
+| # | Chap | File | Line | Before | After |
+|---|------|------|------|--------|-------|
+| 1 | 41 | AVLTreeSetMtEph.rs | 78 | `elements: Seq<T>` | `elements: Seq<T::V>` |
+| 2 | 41 | AVLTreeSetMtEph.rs | 89 | `type V = (int, Seq<T>)` | `type V = (int, Seq<T::V>)` |
+| 3 | 41 | AVLTreeSetMtEph.rs | 90 | `self.snapshot@` | `self.snapshot@.map_values(\|t: T\| t@)` |
+| 4 | 41 | AVLTreeSetMtEph.rs | 96 | `type V = Seq<T>` | `type V = Seq<T::V>` |
+| 5 | 41 | AVLTreeSetMtEph.rs | 520 | `type Item = T` | `type Item = T::V` |
+| 6 | 41 | AVLTreeSetMtEph.rs | 544 | `Option<T>` | `Option<T::V>` |
+| 7 | 41 | AVLTreeSetMtEph.rs | 495 | `element == old_seq[i]` | `element@ == old_seq[i]` |
+| 8 | 41 | AVLTreeSetMtEph.rs | 505 | `item == old(self)@.1[...]` | `item@ == old(self)@.1[...]` |
+
+## Verification
+
+| Step | Result |
+|------|--------|
+| Isolate Chap41 | 2031 verified, 0 errors |
+| RTT | 3083 passed |
+
+## Steps Used: 2 of 15
