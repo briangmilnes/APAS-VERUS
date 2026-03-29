@@ -21,29 +21,29 @@ Table of Contents:
 =================================================================
 
 ❌ DocumentIndex.rs
-/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:160: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap44/DocumentIndex.rs:160: error: external_body - #[verifier::external_body]
        161 |         fn make_index(docs: &DocumentCollection) -> (di: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:229: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap44/DocumentIndex.rs:229: error: external_body - #[verifier::external_body]
        230 |         fn to_seq(docs: &DocumentSet) -> (seq: ArraySeqStPerS<DocumentId>) {
-/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:249: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap44/DocumentIndex.rs:249: error: external_body - #[verifier::external_body]
        250 |         fn get_all_words(&self) -> (words: ArraySeqStPerS<Word>) {
-/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:376: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap44/DocumentIndex.rs:376: error: external_body - #[verifier::external_body]
        377 |         fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> (result: DocumentSet) {
-/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:283: error: fn_missing_wf_requires - fn new — requires should include index.spec_documentindex_wf() for input type DocumentIndex
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap44/DocumentIndex.rs:283: error: fn_missing_wf_requires - fn new — requires should include index.spec_documentindex_wf() for input type DocumentIndex
        279 |         spec fn spec_index_wf(&self) -> bool;
             ...
        281 |         /// - APAS: N/A — Verus-specific scaffolding.
        282 |         /// - Claude-Opus-4.6: Work O(1), Span O(1)
        284 |             requires spec_documentindex_wf(index)
        285 |             ensures qb.spec_index_wf();
-/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:397: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap44/DocumentIndex.rs:397: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        393 |         fn clone(&self) -> (cloned: Self)
             ...
        395 |         {
        396 |             let cloned = DocumentIndex { word_to_docs: self.word_to_docs.clone() };
        398 |             cloned
        399 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:403: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap44/DocumentIndex.rs:403: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
    Holes: 4 total
       4 × external_body
    Info: 1 × structural_false_positive
@@ -102,9 +102,11 @@ Structural (info only): 1
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-28 17:59:41 -07:00
-Ended:     2026-03-28 17:59:41 -07:00
-Duration:  4ms
+Started:   2026-03-29 14:05:04 -07:00
+Ended:     2026-03-29 14:05:04 -07:00
+Duration:  11ms
 
 Full output: src/Chap44/analyses/veracity-review-verus-proof-holes.log
- src/Chap44/analyses/veracity-review-verus-proof-holes.log
+Duration:  11ms
+
+Full output: src/Chap44/analyses/veracity-review-verus-proof-holes.log

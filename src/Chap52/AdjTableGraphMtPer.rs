@@ -424,21 +424,61 @@ broadcast use {
 
         fn delete_vertex(&self, v: &V) -> (updated: Self) {
             let without_v = self.adj.delete(v);
+            let ghost v_view = v@;
             let v_clone = v.clone();
-            let cleaned = without_v.map(move |_k: &V, neighbors: &AVLTreeSetMtPer<V>| {
-                neighbors.delete(&v_clone)
-            });
+            proof {
+                assert(obeys_feq_full_trigger::<V>());
+                crate::vstdplus::feq::feq::lemma_cloned_view_eq::<V>(*v, v_clone);
+                assert(v_clone@ == v_view);
+            }
+            let cleaned = without_v.map(
+                move |neighbors: &AVLTreeSetMtPer<V>| -> (r: AVLTreeSetMtPer<V>)
+                    ensures r@ == neighbors@.remove(v_clone@)
+                {
+                    neighbors.delete(&v_clone)
+                },
+                Ghost(|ns: Set<<V as View>::V>| -> Set<<V as View>::V> { ns.remove(v_view) }),
+            );
             let updated = AdjTableGraphMtPer { adj: cleaned };
             proof {
                 // delete ensures: without_v@ == self.adj@.remove(v@)
-                // map ensures: cleaned@.dom() =~= without_v@.dom()
-                // Map::remove(k).dom() == dom().remove(k), so v@ not in cleaned@.dom().
+                // map ensures: cleaned@.dom() =~= without_v@.dom(),
+                //   forall|k| without_v@.contains_key(k) ==> cleaned@[k] == without_v@[k].remove(v@)
                 assert(without_v@ == self.adj@.remove(v@));
                 assert(cleaned@.dom() =~= without_v@.dom());
                 assert(!updated.spec_adj().dom().contains(v@));
-                // Graph closure still needs map value ensures to prove neighbor sets
-                // had v removed, so every neighbor is still in domain.
-                assume(updated.spec_adjtablegraphmtper_wf()); // algorithmic: needs map value ensures
+
+                // Graph closure: every neighbor of every vertex is still a vertex.
+                assert forall|u: <V as View>::V, w: <V as View>::V|
+                    updated.spec_adj().dom().contains(u)
+                    && #[trigger] updated.spec_adj().index(u).contains(w)
+                    implies updated.spec_adj().dom().contains(w)
+                by {
+                    // updated.spec_adj() == cleaned@
+                    assert(updated.adj@ == cleaned@);
+                    assert(cleaned@.dom().contains(u));
+                    assert(cleaned@.index(u).contains(w));
+                    // u in cleaned@.dom() =~= without_v@.dom()
+                    assert(without_v@.contains_key(u));
+                    // Map value ensures: cleaned@[u] == f_spec(without_v@[u]) == without_v@[u].remove(v_view)
+                    assert(without_v@.contains_key(u));
+                    assert(cleaned@[u] =~= without_v@[u].remove(v_view));
+                    // without_v@ == self.adj@.remove(v@), and u != v@ (since u in without_v dom)
+                    assert(u != v@);
+                    assert(self.adj@.contains_key(u));
+                    assert(without_v@[u] =~= self.adj@[u]);
+                    // So cleaned@[u] =~= self.adj@[u].remove(v_view)
+                    // w in cleaned@[u] → w in self.adj@[u] and w != v_view
+                    assert(self.adj@.index(u).contains(w));
+                    assert(w != v_view);
+                    // v_view == v@ (from clone)
+                    assert(v_view == v@);
+                    // By self's graph closure: w in self.adj@.dom()
+                    assert(self.adj@.dom().contains(w));
+                    // w != v@ → w in self.adj@.dom().remove(v@) = without_v@.dom() =~= cleaned@.dom()
+                    assert(without_v@.dom().contains(w));
+                    assert(cleaned@.dom().contains(w));
+                };
             }
             updated
         }
