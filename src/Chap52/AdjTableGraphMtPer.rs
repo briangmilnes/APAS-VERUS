@@ -76,6 +76,26 @@ broadcast use {
         }
     }
 
+    // 7. proof fns
+
+    /// Extract any key from the recursive sum: decompose at k regardless of choose() order.
+    /// Local copy — standalone rule forbids importing from StEph.
+    pub proof fn lemma_sum_adj_remove<VV>(m: Map<VV, Set<VV>>, k: VV)
+        requires m.dom().finite(), m.dom().contains(k)
+        ensures spec_sum_adj_sizes(m) == m[k].len() + spec_sum_adj_sizes(m.remove(k))
+        decreases m.dom().len()
+    {
+        let chosen = m.dom().choose();
+        if chosen == k {
+            // Definition picks k directly.
+        } else {
+            // Definition picks chosen != k.
+            lemma_sum_adj_remove(m.remove(chosen), k);
+            lemma_sum_adj_remove(m.remove(k), chosen);
+            assert(m.remove(chosen).remove(k) =~= m.remove(k).remove(chosen));
+        }
+    }
+
     // 8. traits
 
     pub trait AdjTableGraphMtPerTrait<V: StTInMtT + Ord + TotalOrder + 'static>: Sized {
@@ -195,49 +215,105 @@ broadcast use {
         }
 
         fn num_edges(&self) -> (m: usize) {
-            let domain = self.adj.domain();
-            let domain_seq = domain.to_seq();
-            let len = domain_seq.length();
+            // Strategy: clone the table, repeatedly extract first_key, look up
+            // neighbor size via find, delete the key, and accumulate.  The
+            // invariant tracks count + spec_sum_adj_sizes(remaining@) == total.
+            let mut remaining = self.adj.clone();
             let mut count: usize = 0;
-            let mut i: usize = 0;
-            while i < len
+            let mut n = remaining.size();
+            while n > 0
                 invariant
-                    0 <= i <= len,
-                    len == domain_seq@.len(),
+                    remaining.spec_orderedtablemtper_wf(),
+                    n as nat == remaining@.dom().len(),
+                    count as nat + spec_sum_adj_sizes(remaining@) == self.spec_num_edges(),
+                    remaining@.dom().subset_of(self.spec_adj().dom()),
+                    forall|k: <V as View>::V| #[trigger] remaining@.dom().contains(k)
+                        ==> remaining@[k] == self.spec_adj()[k],
                     self.spec_adjtablegraphmtper_wf(),
                     self.spec_num_edges() <= usize::MAX as nat,
                     count as nat <= self.spec_num_edges(),
-                decreases len - i,
+                decreases n,
             {
-                let v = domain_seq.nth(i).clone();
-                if let Some(neighbors) = self.adj.find(&v) {
-                    proof {
-                        // find ensures: self.adj@.contains_key(v@) && self.adj@[v@] == neighbors@
-                        // Prove neighbors wf via graph closure + finiteness.
-                        let dom = self.spec_adj().dom();
-                        assert(neighbors@.subset_of(dom)) by {
-                            assert forall|w: <V as View>::V| #[trigger] neighbors@.contains(w)
-                                implies dom.contains(w)
-                            by {
-                                assert(self.spec_adj().index(v@).contains(w));
-                            };
-                        };
-                        vstd::set_lib::lemma_len_subset(neighbors@, dom);
-                        // Overflow: partial sum + current size <= total edges.
-                        // blocked by weak OrderedTableMtPer domain/find ensures
-                        assume(count as nat + neighbors@.len() <= self.spec_num_edges());
+                let first = remaining.first_key();
+                // first_key ensures: dom.len() > 0 ==> Some(k), dom.contains(k@).
+                match first {
+                    None => {
+                        // Contradicts n > 0.
+                        proof { assert(false); }
                     }
-                    count = count + neighbors.size();
+                    Some(v_key) => {
+                        let ghost old_remaining_view = remaining@;
+                        match remaining.find(&v_key) {
+                            None => {
+                                // Contradicts first_key: v_key@ in dom.
+                                proof { assert(false); }
+                            }
+                            Some(neighbors) => {
+                                // find ensures: remaining@[v_key@] == neighbors@.
+                                proof {
+                                    // neighbors@ == remaining@[v_key@] == self.spec_adj()[v_key@].
+                                    assert(remaining@.dom().contains(v_key@));
+                                    assert(neighbors@ == self.spec_adj()[v_key@]);
+                                    // Prove neighbors@.finite() via graph closure on self.
+                                    let dom = self.spec_adj().dom();
+                                    assert(neighbors@.subset_of(dom)) by {
+                                        assert forall|w: <V as View>::V|
+                                            #[trigger] neighbors@.contains(w)
+                                            implies dom.contains(w)
+                                        by {
+                                            assert(self.spec_adj().index(v_key@).contains(w));
+                                        };
+                                    };
+                                    vstd::set_lib::lemma_len_subset(neighbors@, dom);
+                                    // Overflow: lemma_sum_adj_remove decomposes the sum.
+                                    lemma_sum_adj_remove(remaining@, v_key@);
+                                    // spec_sum_adj_sizes(remaining@)
+                                    //   == remaining@[v_key@].len()
+                                    //      + spec_sum_adj_sizes(remaining@.remove(v_key@))
+                                    // So count + remaining@[v_key@].len()
+                                    //   <= count + spec_sum_adj_sizes(remaining@)
+                                    //   == self.spec_num_edges() <= usize::MAX.
+                                }
+                                let neighbor_count = neighbors.size();
+                                count = count + neighbor_count;
+                                remaining = remaining.delete(&v_key);
+                                n = remaining.size();
+                                proof {
+                                    // delete ensures: remaining@ == old_remaining_view.remove(v_key@).
+                                    // new count + spec_sum_adj_sizes(new remaining@)
+                                    //   == (old count + neighbor_count)
+                                    //      + spec_sum_adj_sizes(old_remaining_view.remove(v_key@))
+                                    //   == old count + spec_sum_adj_sizes(old_remaining_view)
+                                    //   == self.spec_num_edges().
+                                    assert(remaining@ == old_remaining_view.remove(v_key@));
+                                    // Subset preservation: remaining dom ⊆ self dom.
+                                    assert(remaining@.dom().subset_of(self.spec_adj().dom())) by {
+                                        assert forall|k: <V as View>::V|
+                                            #[trigger] remaining@.dom().contains(k)
+                                            implies self.spec_adj().dom().contains(k)
+                                        by {
+                                            assert(old_remaining_view.dom().contains(k));
+                                        };
+                                    };
+                                    // Value preservation: remaining@[k] == self.spec_adj()[k].
+                                    assert forall|k: <V as View>::V|
+                                        #[trigger] remaining@.dom().contains(k)
+                                        implies remaining@[k] == self.spec_adj()[k]
+                                    by {
+                                        assert(old_remaining_view.dom().contains(k));
+                                        assert(k != v_key@);
+                                    };
+                                }
+                            }
+                        }
+                    }
                 }
-                i += 1;
             }
             proof {
-                // Bridge: the loop computes the correct sum algorithmically
-                // (iterate domain keys, look up neighbor set sizes, accumulate),
-                // but the spec connection to spec_sum_adj_sizes requires
-                // domain-value correspondence that OrderedTableMtPer::map/domain
-                // ensures don't provide.
-                assume(count as nat == self.spec_num_edges());
+                // n == 0 → remaining@.dom().len() == 0 → dom is empty.
+                // spec_sum_adj_sizes on empty map == 0.
+                // count + 0 == self.spec_num_edges().
+                assert(remaining@.dom().is_empty());
             }
             count
         }
