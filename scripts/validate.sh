@@ -1,5 +1,5 @@
 #!/bin/bash
-# Verus verification. Usage: validate.sh [full|dev_only|exp|union_find] [--time] [--profile]
+# Verus verification. Usage: validate.sh [full|dev_only|exp|union_find] [--time] [--profile] [--profile-all]
 
 set -uo pipefail
 
@@ -33,9 +33,11 @@ shift 2>/dev/null || true
 
 USE_TIME=false
 USE_PROFILE=false
+USE_PROFILE_ALL=false
 EXTRA_FEATURES=()
 for arg in "$@"; do
     if [ "$arg" = "--time" ]; then USE_TIME=true;
+    elif [ "$arg" = "--profile-all" ]; then USE_PROFILE_ALL=true;
     elif [ "$arg" = "--profile" ]; then USE_PROFILE=true;
     elif [[ "$arg" == Chap* ]]; then EXTRA_FEATURES+=("$arg");
     fi
@@ -90,7 +92,9 @@ if $USE_TIME; then
 fi
 
 PROFILE_FLAG=()
-if $USE_PROFILE; then
+if $USE_PROFILE_ALL; then
+    PROFILE_FLAG=(--profile-all)
+elif $USE_PROFILE; then
     PROFILE_FLAG=(--profile)
 fi
 

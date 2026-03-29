@@ -10,9 +10,11 @@ develop two software engineering tools to clean things up:
 - [veracity](https://github.com/briangmilnes/veracity) - Verus code analysis tools (proof hole detection, spec strength review, function search).
 - [rusticate](https://github.com/briangmilnes/rusticate) - Rust code style and structure review tools.
 
-**All 44 algorithm chapters verified, 44 with zero proof holes**
+**All 46 algorithm chapters verified, 45 with zero proof holes**
 
-**4489 verified, 0 errors | 2610 runtime tests | 147 proof time tests | 1 proof hole (false positive) | 101 PartialEq/Clone workarounds**
+**5424 verified, 0 errors | 3083 runtime tests | 157 proof time tests | 4 proof holes (all in Chap65 UnionFind) | 101 PartialEq/Clone workarounds**
+
+The 4 remaining holes are in UnionFind (Chap65), blocked by a Z3 matching loop between `obeys_feq_view_injective` and `spec_elements_distinct` (7.4M quantifier instantiations). All other chapters are fully clean.
 
 The 101 PartialEq/Clone workarounds are accepted `assume` calls inside `eq()` and `clone()` bodies — Verus cannot yet verify that Rust's generic PartialEq and Clone match spec-level View equality. These are standard across all Verus projects and will be eliminated when Verus adds derived spec support for these traits.
 
@@ -20,25 +22,25 @@ The 101 PartialEq/Clone workarounds are accepted `assume` calls inside `eq()` an
 
 - `src/` - Verified algorithm implementations organized by chapter
 - `src/vstdplus/` - Extensions to the Verus standard library (24 modules)
-- `src/standards/` - Verus coding standards and patterns (14 files)
+- `src/standards/` - Verus coding standards and patterns (24 files)
 - `tests/` - Rust unit tests for algorithm correctness
 - `benches/` - Performance benchmarks using Criterion
 
 ## Proof State
 
-Full verification: **4489 verified, 0 errors**
+Full verification: **5424 verified, 0 errors**
 
 | # | Metric | Count |
 |---|--------|-------|
 | 1 | Chapters verified | 46 |
 | 2 | Chapters with zero proof holes | 45 |
-| 3 | Verified functions | 4489 |
-| 4 | Runtime tests (RTT) | 2610 |
-| 5 | Proof time tests (PTT) | 147 |
-| 6 | Proof holes remaining | 1 (false positive) |
+| 3 | Verified functions | 5424 |
+| 4 | Runtime tests (RTT) | 3083 |
+| 5 | Proof time tests (PTT) | 157 |
+| 6 | Proof holes remaining | 4 (UnionFind, Z3 matching loop) |
 | 7 | Modules | 258 |
 
-Holes tracked by [veracity](https://github.com/briangmilnes/veracity). 1 chapter has a single false-positive hole; 45 are fully clean.
+Holes tracked by [veracity](https://github.com/briangmilnes/veracity). 1 chapter (Chap65 UnionFind) has 4 holes blocked by a Z3 matching loop; 45 are fully clean.
 
 ## Algorithm Status
 
@@ -484,13 +486,13 @@ Behind `all_chapters` feature gate.
 | 2 | SpanTreeMtEph | Mt | Parallel spanning tree |
 | 3 | TSPApproxStEph | St | TSP approximation |
 
-### Chapter 65: MST (Kruskal, Prim) - ✅ VERIFIED (ZERO HOLES) (`all_chapters`)
+### Chapter 65: MST (Kruskal, Prim) - ✅ VERIFIED (4 HOLES) (`all_chapters`)
 
 Behind `all_chapters` feature gate.
 
 | # | Algorithm | St/Mt | Notes |
 |---|-----------|-------|-------|
-| 1 | UnionFindStEph | St | Union-find data structure |
+| 1 | UnionFindStEph | St | Union-find (4 holes: Z3 matching loop on feq/spec_elements_distinct) |
 | 2 | KruskalStEph | St | Kruskal's MST algorithm |
 | 3 | PrimStEph | St | Prim's MST algorithm |
 
@@ -519,6 +521,7 @@ Behind `all_chapters` feature gate.
 | 4 | `checked_int` | Overflow-checked signed integers (`CheckedI8`..`CheckedI128`) |
 | 5 | `checked_nat` | Overflow-checked unsigned integers (`CheckedU8`..`CheckedU128`) |
 | 6 | `clone_plus` | `ClonePlus` trait for Verus-compatible cloning |
+| 6b | `clone_view` | `ClonePreservesView`/`ClonePreservesWf` traits |
 | 7 | `feq` | Functional equality |
 | 8 | `float` | `FloatTotalOrder` trait and IEEE 754 axioms |
 | 9 | `hash_map_with_view_plus` | Enhanced `HashMap` with view specs |
@@ -536,11 +539,12 @@ Behind `all_chapters` feature gate.
 | 21 | `sqrt` | Integer square root |
 | 22 | `threads_plus` | Verified thread primitives (`spawn_plus`, `JoinHandlePlus`) |
 | 23 | `total_order` | `TotalOrdered` trait for all 12 integer types |
-| 24 | `VecQueue` | Verified queue using `Vec` |
+| 24 | `strings` | Verified wraps for `char`/`String` methods (ASCII alphabetic, lowercase, push, clear, is_empty) |
+| 25 | `VecQueue` | Verified queue using `Vec` |
 
 ### Standards Library
 
-19 Verus coding standards demonstrating project patterns. Each is a compilable, verified example.
+24 Verus coding standards demonstrating project patterns. Each is a compilable, verified example.
 
 | # | Standard | Covers |
 |---|----------|--------|
@@ -587,6 +591,8 @@ All scripts live in `scripts/`, auto-detect the worktree root, and strip ANSI es
 | 5 | `scripts/holes.sh` | `holes.sh [dir-or-file]` | Proof hole detection |
 | 6 | `scripts/merge-agent.sh` | `merge-agent.sh <branch>` | Merge an agent branch (validate separately after) |
 | 7 | `scripts/reset-agent-to-main.sh` | `reset-agent-to-main.sh` | Reset agent branch to `origin/main` + force push |
+| 8 | `scripts/profile.sh` | `profile.sh [isolate ChapNN]` | Z3 profiling (capture-profiles) |
+| 9 | `scripts/profile-summary.sh` | `profile-summary.sh <dir-or-file>` | Parse Z3 traces, show instantiation counts |
 
 ### Verification
 
