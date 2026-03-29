@@ -1,16 +1,38 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 44: Document Indexing and Searching implementation.
 
+// Table of Contents
+// 1. module
+// 2. imports
+// 4a. type definitions — struct DocumentIndex
+// 6a. spec fns — struct DocumentIndex
+// 8a. traits — struct DocumentIndex
+// 9a. impls — struct DocumentIndex
+// 4b. type definitions — struct QueryBuilder
+// 8b. traits — struct QueryBuilder
+// 9b. impls — struct QueryBuilder
+// 12a. derive impls in verus! — struct DocumentIndex
+// 13. macros
+// 14a. derive impls outside verus! — struct DocumentIndex
+
 pub mod DocumentIndex {
+
+    // 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
 
     use vstd::prelude::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::laws_eq::obeys_view_eq;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
     use crate::Chap42::TableStPer::TableStPer::*;
     use crate::Types::Types::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_clone};
 
     pub type Word = String;
     pub type DocumentId = String;
@@ -21,81 +43,122 @@ pub mod DocumentIndex {
     pub type DocumentCollection = ArraySeqStPerS<Pair<DocumentId, Contents>>;
 
     verus! {
-        /// Placeholder; DocumentIndex uses Vec, Box<dyn Fn>, chars().
-        proof fn _document_index_verified() {}
 
-        /// Document Index structure implementing Data Type 44.1.
-        pub struct DocumentIndex {
-            pub word_to_docs: TableStPer<Word, DocumentSet>,
-        }
+    // 4a. type definitions — struct DocumentIndex
 
-        impl Clone for DocumentIndex {
-            fn clone(&self) -> (cloned: Self)
-                ensures cloned == *self
-            {
-                let cloned = DocumentIndex { word_to_docs: self.word_to_docs.clone() };
-                proof { assume(cloned == *self); }
-                cloned
-            }
-        }
-
-        impl core::cmp::PartialEq for DocumentIndex {
-            #[verifier::external_body]
-            fn eq(&self, other: &Self) -> bool {
-                self.word_to_docs == other.word_to_docs
-            }
-        }
-
-        impl core::cmp::Eq for DocumentIndex {}
+    /// Document Index structure implementing Data Type 44.1.
+    pub struct DocumentIndex {
+        pub word_to_docs: TableStPer<Word, DocumentSet>,
     }
 
+    // 6a. spec fns — struct DocumentIndex
+
+    /// Well-formedness predicate for DocumentIndex.
+    pub open spec fn spec_documentindex_wf(di: &DocumentIndex) -> bool {
+        di.word_to_docs.spec_tablestper_wf()
+    }
+
+    // 8a. traits — struct DocumentIndex
+
     /// Trait defining the Document Index ADT (Data Type 44.1).
-    pub trait DocumentIndexTrait {
+    pub trait DocumentIndexTrait: Sized {
+        /// Well-formedness spec.
+        spec fn spec_documentindex_wf(&self) -> bool;
+
         /// - APAS: Work O(n log n), Span O(log^2 n)
         /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — sequential nested loops over all_pairs; no Table.collect sort used
-        fn make_index(docs: &DocumentCollection)                     -> Self;
+        fn make_index(docs: &DocumentCollection) -> (di: Self)
+            ensures di.spec_documentindex_wf();
 
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(log n), Span O(log n) — agrees with APAS; delegates to Table.find
-        fn find(&self, word: &Word)                                  -> DocumentSet;
+        fn find(&self, word: &Word) -> (found: DocumentSet)
+            requires
+                self.spec_documentindex_wf(),
+                obeys_view_eq::<Word>(),
+                obeys_feq_full::<DocumentSet>(),
+        ;
 
         /// - APAS: Work O(m log(1 + n/m)), Span O(log n + log m)
         /// - Claude-Opus-4.6: Work O(m log(1 + n/m)), Span O(m log(1 + n/m)) — delegates to AVLTreeSetStPer.intersection (sequential)
-        fn query_and(docs_a: &DocumentSet, docs_b: &DocumentSet)     -> DocumentSet;
+        fn query_and(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (combined: DocumentSet)
+            requires
+                docs_a.spec_avltreesetstper_wf(),
+                docs_b.spec_avltreesetstper_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+                view_ord_consistent::<DocumentId>(),
+            ensures
+                combined@ == docs_a@.intersect(docs_b@),
+                combined.spec_avltreesetstper_wf(),
+        ;
 
         /// - APAS: Work O(m log(1 + n/m)), Span O(log n + log m)
         /// - Claude-Opus-4.6: Work O(m log(1 + n/m)), Span O(m log(1 + n/m)) — delegates to AVLTreeSetStPer.union (sequential)
-        fn query_or(docs_a: &DocumentSet, docs_b: &DocumentSet)      -> DocumentSet;
+        fn query_or(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (combined: DocumentSet)
+            requires
+                docs_a.spec_avltreesetstper_wf(),
+                docs_b.spec_avltreesetstper_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+                view_ord_consistent::<DocumentId>(),
+                docs_a@.len() + docs_b@.len() < usize::MAX as nat,
+            ensures
+                combined@ == docs_a@.union(docs_b@),
+                combined.spec_avltreesetstper_wf(),
+        ;
 
         /// - APAS: Work O(m log(1 + n/m)), Span O(log n + log m)
         /// - Claude-Opus-4.6: Work O(m log(1 + n/m)), Span O(m log(1 + n/m)) — delegates to AVLTreeSetStPer.difference (sequential)
-        fn query_and_not(docs_a: &DocumentSet, docs_b: &DocumentSet) -> DocumentSet;
+        fn query_and_not(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (remaining: DocumentSet)
+            requires
+                docs_a.spec_avltreesetstper_wf(),
+                docs_b.spec_avltreesetstper_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+                view_ord_consistent::<DocumentId>(),
+            ensures
+                remaining@ == docs_a@.difference(docs_b@),
+                remaining.spec_avltreesetstper_wf(),
+        ;
 
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS
-        fn size(docs: &DocumentSet)                                  -> usize;
+        fn size(docs: &DocumentSet) -> (count: usize)
+            requires docs.spec_avltreesetstper_wf()
+            ensures count == docs@.len();
 
         /// - APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) — sequential iteration over AVL tree sequence
-        fn to_seq(docs: &DocumentSet)                                -> ArraySeqStPerS<DocumentId>;
+        fn to_seq(docs: &DocumentSet) -> (seq: ArraySeqStPerS<DocumentId>)
+            requires docs.spec_avltreesetstper_wf()
+            ensures seq.spec_arrayseqstper_wf();
 
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1)
-        fn empty()                                                   -> Self;
+        fn empty() -> (di: Self)
+            ensures di.spec_documentindex_wf();
 
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(n), Span O(n) — collects table keys into sequence
-        fn get_all_words(&self)                                      -> ArraySeqStPerS<Word>;
+        fn get_all_words(&self) -> (words: ArraySeqStPerS<Word>)
+            requires self.spec_documentindex_wf()
+            ensures words.spec_arrayseqstper_wf();
 
         /// - APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — delegates to Table.size
-        fn word_count(&self)                                         -> usize;
+        fn word_count(&self) -> (count: usize)
+            requires self.spec_documentindex_wf();
     }
 
+    // 9a. impls — struct DocumentIndex
+
     impl DocumentIndexTrait for DocumentIndex {
+        open spec fn spec_documentindex_wf(&self) -> bool {
+            spec_documentindex_wf(self)
+        }
+
         /// Algorithm 44.2: Make Index.
         /// Sort-based grouping: O(n log n) instead of O(n^2) quadratic rescan.
-        fn make_index(docs: &DocumentCollection) -> Self {
+        #[verifier::external_body]
+        fn make_index(docs: &DocumentCollection) -> (di: Self) {
             let mut pairs_vec: Vec<(Word, DocumentId)> = Vec::new();
 
             for i in 0..docs.length() {
@@ -135,7 +198,7 @@ pub mod DocumentIndex {
         }
 
         /// Algorithm 44.3: find function - simple table lookup.
-        fn find(&self, word: &Word) -> DocumentSet {
+        fn find(&self, word: &Word) -> (found: DocumentSet) {
             match self.word_to_docs.find(word) {
                 Some(doc_set) => doc_set,
                 None => AVLTreeSetStPer::empty(),
@@ -143,19 +206,28 @@ pub mod DocumentIndex {
         }
 
         /// Algorithm 44.3: queryAnd - set intersection.
-        fn query_and(docs_a: &DocumentSet, docs_b: &DocumentSet) -> DocumentSet { docs_a.intersection(docs_b) }
+        fn query_and(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (combined: DocumentSet) {
+            docs_a.intersection(docs_b)
+        }
 
         /// Algorithm 44.3: queryOr - set union.
-        fn query_or(docs_a: &DocumentSet, docs_b: &DocumentSet) -> DocumentSet { docs_a.union(docs_b) }
+        fn query_or(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (combined: DocumentSet) {
+            docs_a.union(docs_b)
+        }
 
         /// Algorithm 44.3: queryAndNot - set difference.
-        fn query_and_not(docs_a: &DocumentSet, docs_b: &DocumentSet) -> DocumentSet { docs_a.difference(docs_b) }
+        fn query_and_not(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (remaining: DocumentSet) {
+            docs_a.difference(docs_b)
+        }
 
         /// Algorithm 44.3: size function.
-        fn size(docs: &DocumentSet) -> usize { docs.size() }
+        fn size(docs: &DocumentSet) -> (count: usize) {
+            docs.size()
+        }
 
         /// Algorithm 44.3: toSeq function.
-        fn to_seq(docs: &DocumentSet) -> ArraySeqStPerS<DocumentId> {
+        #[verifier::external_body]
+        fn to_seq(docs: &DocumentSet) -> (seq: ArraySeqStPerS<DocumentId>) {
             let avl_seq = docs.to_seq();
             let mut array_seq = ArraySeqStPerS::empty();
 
@@ -168,13 +240,14 @@ pub mod DocumentIndex {
             array_seq
         }
 
-        fn empty() -> Self {
+        fn empty() -> (di: Self) {
             DocumentIndex {
                 word_to_docs: TableStPer::empty(),
             }
         }
 
-        fn get_all_words(&self) -> ArraySeqStPerS<Word> {
+        #[verifier::external_body]
+        fn get_all_words(&self) -> (words: ArraySeqStPerS<Word>) {
             let entries = self.word_to_docs.collect();
             let mut words = ArraySeqStPerS::empty();
 
@@ -187,8 +260,155 @@ pub mod DocumentIndex {
             words
         }
 
-        fn word_count(&self) -> usize { self.word_to_docs.size() }
+        fn word_count(&self) -> (count: usize) {
+            self.word_to_docs.size()
+        }
     }
+
+    // 4b. type definitions — struct QueryBuilder
+
+    /// Complex query builder for chaining operations.
+    pub struct QueryBuilder<'a> {
+        pub index: &'a DocumentIndex,
+    }
+
+    // 8b. traits — struct QueryBuilder
+
+    pub trait QueryBuilderTrait<'a>: Sized {
+        /// Spec: whether the underlying index is well-formed.
+        spec fn spec_index_wf(&self) -> bool;
+
+        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(1), Span O(1)
+        fn new(index: &'a DocumentIndex) -> (qb: Self)
+            requires spec_documentindex_wf(index)
+            ensures qb.spec_index_wf();
+
+        /// - APAS: N/A — delegates to DocumentIndex::find.
+        /// - Claude-Opus-4.6: Work O(log n), Span O(log n)
+        fn find(&self, word: &Word) -> (found: DocumentSet)
+            requires
+                self.spec_index_wf(),
+                obeys_view_eq::<Word>(),
+                obeys_feq_full::<DocumentSet>(),
+        ;
+
+        /// - APAS: N/A — delegates to DocumentIndex::query_and.
+        /// - Claude-Opus-4.6: Work O(m log(1 + n/m)), Span O(m log(1 + n/m))
+        fn and(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> (combined: DocumentSet)
+            requires
+                docs_a.spec_avltreesetstper_wf(),
+                docs_b.spec_avltreesetstper_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+                view_ord_consistent::<DocumentId>(),
+            ensures
+                combined@ == docs_a@.intersect(docs_b@),
+                combined.spec_avltreesetstper_wf(),
+        ;
+
+        /// - APAS: N/A — delegates to DocumentIndex::query_or.
+        /// - Claude-Opus-4.6: Work O(m log(1 + n/m)), Span O(m log(1 + n/m))
+        fn or(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> (combined: DocumentSet)
+            requires
+                docs_a.spec_avltreesetstper_wf(),
+                docs_b.spec_avltreesetstper_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+                view_ord_consistent::<DocumentId>(),
+                docs_a@.len() + docs_b@.len() < usize::MAX as nat,
+            ensures
+                combined@ == docs_a@.union(docs_b@),
+                combined.spec_avltreesetstper_wf(),
+        ;
+
+        /// - APAS: N/A — delegates to DocumentIndex::query_and_not.
+        /// - Claude-Opus-4.6: Work O(m log(1 + n/m)), Span O(m log(1 + n/m))
+        fn and_not(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> (remaining: DocumentSet)
+            requires
+                docs_a.spec_avltreesetstper_wf(),
+                docs_b.spec_avltreesetstper_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+                view_ord_consistent::<DocumentId>(),
+            ensures
+                remaining@ == docs_a@.difference(docs_b@),
+                remaining.spec_avltreesetstper_wf(),
+        ;
+
+        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work dominated by 4 finds + 3 set operations
+        fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> (result: DocumentSet)
+            requires
+                self.spec_index_wf(),
+                obeys_view_eq::<Word>(),
+                obeys_feq_full::<DocumentSet>(),
+                vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+                view_ord_consistent::<DocumentId>(),
+        ;
+    }
+
+    // 9b. impls — struct QueryBuilder
+
+    impl<'a> QueryBuilderTrait<'a> for QueryBuilder<'a> {
+        open spec fn spec_index_wf(&self) -> bool {
+            spec_documentindex_wf(self.index)
+        }
+
+        fn new(index: &'a DocumentIndex) -> (qb: Self) {
+            QueryBuilder { index }
+        }
+
+        fn find(&self, word: &Word) -> (found: DocumentSet) {
+            self.index.find(word)
+        }
+
+        fn and(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> (combined: DocumentSet) {
+            DocumentIndex::query_and(&docs_a, &docs_b)
+        }
+
+        fn or(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> (combined: DocumentSet) {
+            DocumentIndex::query_or(&docs_a, &docs_b)
+        }
+
+        fn and_not(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> (remaining: DocumentSet) {
+            DocumentIndex::query_and_not(&docs_a, &docs_b)
+        }
+
+        /// Complex query: (word1 AND word2) OR (word3 AND NOT word4).
+        #[verifier::external_body]
+        fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> (result: DocumentSet) {
+            let set1 = self.find(word1);
+            let set2 = self.find(word2);
+            let set3 = self.find(word3);
+            let set4 = self.find(word4);
+
+            let left_side = self.and(set1, set2);
+            let right_side = self.and_not(set3, set4);
+
+            self.or(left_side, right_side)
+        }
+    }
+
+    // 12a. derive impls in verus! — struct DocumentIndex
+
+    impl Clone for DocumentIndex {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned == *self
+        {
+            let cloned = DocumentIndex { word_to_docs: self.word_to_docs.clone() };
+            proof { assume(cloned == *self); }
+            cloned
+        }
+    }
+
+    impl core::cmp::PartialEq for DocumentIndex {
+        #[verifier::external_body]
+        fn eq(&self, other: &Self) -> bool {
+            self.word_to_docs == other.word_to_docs
+        }
+    }
+
+    impl core::cmp::Eq for DocumentIndex {}
+
+    } // verus!
 
     /// Tokenization function: splits content into words.
     /// - APAS: (no cost stated — tokens is a helper assumed O(m) where m = string length)
@@ -224,25 +444,7 @@ pub mod DocumentIndex {
         move |word: &Word| index.find(word)
     }
 
-    impl Display for DocumentIndex {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-            write!(
-                f,
-                "DocumentIndex(words: {}, total_mappings: {})",
-                self.word_count(),
-                self.word_to_docs.size()
-            )
-        }
-    }
-
-    impl Debug for DocumentIndex {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-            f.debug_struct("DocumentIndex")
-                .field("word_count", &self.word_count())
-                .field("word_to_docs", &self.word_to_docs)
-                .finish()
-        }
-    }
+    // 13. macros
 
     /// Macro for creating document collections.
     #[macro_export]
@@ -266,67 +468,25 @@ pub mod DocumentIndex {
         }};
     }
 
-    verus! {
-        /// Complex query builder for chaining operations.
-        pub struct QueryBuilder<'a> {
-            pub index: &'a DocumentIndex,
+    // 14a. derive impls outside verus! — struct DocumentIndex
+
+    impl Display for DocumentIndex {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            write!(
+                f,
+                "DocumentIndex(words: {}, total_mappings: {})",
+                self.word_count(),
+                self.word_to_docs.size()
+            )
         }
     }
 
-    pub trait QueryBuilderTrait<'a> {
-        /// - APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1)
-        fn new(index: &'a DocumentIndex)                                                -> Self;
-
-        /// - APAS: N/A — delegates to DocumentIndex::find.
-        /// - Claude-Opus-4.6: Work O(log n), Span O(log n)
-        fn find(&self, word: &Word)                                                     -> DocumentSet;
-
-        /// - APAS: N/A — delegates to DocumentIndex::query_and.
-        /// - Claude-Opus-4.6: Work O(m log(1 + n/m)), Span O(m log(1 + n/m))
-        fn and(&self, docs_a: DocumentSet, docs_b: DocumentSet)                         -> DocumentSet;
-
-        /// - APAS: N/A — delegates to DocumentIndex::query_or.
-        /// - Claude-Opus-4.6: Work O(m log(1 + n/m)), Span O(m log(1 + n/m))
-        fn or(&self, docs_a: DocumentSet, docs_b: DocumentSet)                          -> DocumentSet;
-
-        /// - APAS: N/A — delegates to DocumentIndex::query_and_not.
-        /// - Claude-Opus-4.6: Work O(m log(1 + n/m)), Span O(m log(1 + n/m))
-        fn and_not(&self, docs_a: DocumentSet, docs_b: DocumentSet)                     -> DocumentSet;
-
-        /// - APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work dominated by 4 finds + 3 set operations
-        fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> DocumentSet;
-    }
-
-    impl<'a> QueryBuilderTrait<'a> for QueryBuilder<'a> {
-        fn new(index: &'a DocumentIndex) -> Self { QueryBuilder { index } }
-
-        fn find(&self, word: &Word) -> DocumentSet { self.index.find(word) }
-
-        fn and(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> DocumentSet {
-            DocumentIndex::query_and(&docs_a, &docs_b)
-        }
-
-        fn or(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> DocumentSet {
-            DocumentIndex::query_or(&docs_a, &docs_b)
-        }
-
-        fn and_not(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> DocumentSet {
-            DocumentIndex::query_and_not(&docs_a, &docs_b)
-        }
-
-        /// Complex query: (word1 AND word2) OR (word3 AND NOT word4).
-        fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> DocumentSet {
-            let set1 = self.find(word1);
-            let set2 = self.find(word2);
-            let set3 = self.find(word3);
-            let set4 = self.find(word4);
-
-            let left_side = self.and(set1, set2);
-            let right_side = self.and_not(set3, set4);
-
-            self.or(left_side, right_side)
+    impl Debug for DocumentIndex {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            f.debug_struct("DocumentIndex")
+                .field("word_count", &self.word_count())
+                .field("word_to_docs", &self.word_to_docs)
+                .finish()
         }
     }
 }
