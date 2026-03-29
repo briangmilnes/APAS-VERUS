@@ -11,6 +11,7 @@
 // 4b. type definitions — struct QueryBuilder
 // 8b. traits — struct QueryBuilder
 // 9b. impls — struct QueryBuilder
+// 10. free functions
 // 12a. derive impls in verus! — struct DocumentIndex
 // 13. macros
 // 14a. derive impls outside verus! — struct DocumentIndex
@@ -32,6 +33,7 @@ pub mod DocumentIndex {
     use crate::Chap42::TableStPer::TableStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesWf;
+    use crate::vstdplus::strings::strings::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_clone};
 
@@ -419,6 +421,45 @@ pub mod DocumentIndex {
         }
     }
 
+    // 10. free functions
+
+    /// Tokenization: splits content into lowercase ASCII words.
+    /// - APAS: (no cost stated — tokens is a helper assumed O(m) where m = string length)
+    /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential character iteration
+    pub fn tokens(content: &Contents) -> (words: ArraySeqStPerS<Word>)
+        ensures words.spec_arrayseqstper_wf()
+    {
+        let mut result: Vec<Word> = Vec::new();
+        let mut current_word = String::new();
+        let content_str: &str = content.as_str();
+
+        let mut chars = content_str.chars();
+        loop
+            invariant true,
+            decreases chars@.1.len() - chars@.0,
+        {
+            let ch_opt = chars.next();
+            match ch_opt {
+                None => break,
+                Some(ch) => {
+                    if char_is_ascii_alphabetic(ch) {
+                        let lc = char_to_ascii_lowercase(ch);
+                        string_push(&mut current_word, lc);
+                    } else if !string_is_empty(&current_word) {
+                        result.push(current_word);
+                        current_word = String::new();
+                    }
+                },
+            }
+        }
+
+        if !string_is_empty(&current_word) {
+            result.push(current_word);
+        }
+
+        ArraySeqStPerS::from_vec(result)
+    }
+
     // 12a. derive impls in verus! — struct DocumentIndex
 
     impl Clone for DocumentIndex {
@@ -441,33 +482,6 @@ pub mod DocumentIndex {
     impl core::cmp::Eq for DocumentIndex {}
 
     } // verus!
-
-    /// Tokenization function: splits content into words.
-    /// - APAS: (no cost stated — tokens is a helper assumed O(m) where m = string length)
-    /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential character iteration
-    pub fn tokens(content: &Contents) -> ArraySeqStPerS<Word> {
-        let mut words = ArraySeqStPerS::empty();
-        let content_lower = content.to_lowercase();
-
-        let mut current_word = String::new();
-
-        for ch in content_lower.chars() {
-            if ch.is_alphabetic() {
-                current_word.push(ch);
-            } else if !current_word.is_empty() {
-                let single_seq = ArraySeqStPerS::singleton(current_word.clone());
-                words = ArraySeqStPerS::append(&words, &single_seq);
-                current_word = String::new();
-            }
-        }
-
-        if !current_word.is_empty() {
-            let single_seq = ArraySeqStPerS::singleton(current_word);
-            words = ArraySeqStPerS::append(&words, &single_seq);
-        }
-
-        words
-    }
 
     /// Convenience function for staged computation pattern (Example 44.2).
     /// - APAS: N/A — Verus-specific scaffolding.

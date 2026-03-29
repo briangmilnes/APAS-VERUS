@@ -21,23 +21,30 @@ Table of Contents:
 =================================================================
 
 ❌ DocumentIndex.rs
-/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:172: error: external_body - #[verifier::external_body]
-       173 |         fn make_index(docs: &DocumentCollection) -> (di: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:308: error: fn_missing_wf_requires - fn new — requires should include index.spec_documentindex_wf() for input type DocumentIndex
-       304 |         spec fn spec_index_wf(&self) -> bool;
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap44/DocumentIndex.rs:174: error: external_body - #[verifier::external_body]
+       175 |         fn make_index(docs: &DocumentCollection) -> (di: Self) {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap44/DocumentIndex.rs:310: error: fn_missing_wf_requires - fn new — requires should include index.spec_documentindex_wf() for input type DocumentIndex
+       306 |         spec fn spec_index_wf(&self) -> bool;
             ...
-       306 |         /// - APAS: N/A — Verus-specific scaffolding.
-       307 |         /// - Claude-Opus-4.6: Work O(1), Span O(1)
-       309 |             requires spec_documentindex_wf(index)
-       310 |             ensures qb.spec_index_wf();
-/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:429: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       425 |         fn clone(&self) -> (cloned: Self)
+       308 |         /// - APAS: N/A — Verus-specific scaffolding.
+       309 |         /// - Claude-Opus-4.6: Work O(1), Span O(1)
+       311 |             requires spec_documentindex_wf(index)
+       312 |             ensures qb.spec_index_wf();
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap44/DocumentIndex.rs:429: error: fn_missing_requires - fn tokens — exec fn should have requires
+       406 |         fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> (result: DocumentSet) {
             ...
-       427 |         {
-       428 |             let cloned = DocumentIndex { word_to_docs: self.word_to_docs.clone() };
-       430 |             cloned
-       431 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:435: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
+       427 |     /// - APAS: (no cost stated — tokens is a helper assumed O(m) where m = string length)
+       428 |     /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential character iteration
+       430 |         ensures words.spec_arrayseqstper_wf()
+       431 |     {
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap44/DocumentIndex.rs:470: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       466 |         fn clone(&self) -> (cloned: Self)
+            ...
+       468 |         {
+       469 |             let cloned = DocumentIndex { word_to_docs: self.word_to_docs.clone() };
+       471 |             cloned
+       472 |         }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap44/DocumentIndex.rs:476: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
    Holes: 1 total
       1 × external_body
    Info: 1 × structural_false_positive
@@ -74,18 +81,19 @@ Proof Functions:
    0 total
 
 Function Specs:
-   34 exec fns with complete spec (requires+ensures) (87%)
-   0 exec fns missing spec (0%)
+   34 exec fns with complete spec (requires+ensures) (85%)
+   1 exec fns missing spec (2%)
    5 proof/spec fns clean (12%)
    0 proof/spec fns with holes (0%)
-   39 total fns
+   40 total fns
 
 
 Holes Found: 1 (actionable)
    1 × external_body (100%)
 Real Proof Targets: 1 (all actionable)
 
-Warnings: 2 total
+Warnings: 3 total
+   1 × fn_missing_requires
    1 × fn_missing_wf_requires
    1 × assume_eq_clone_workaround
 
@@ -96,9 +104,8 @@ Structural (info only): 1
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-29 14:11:36 -07:00
-Ended:     2026-03-29 14:11:36 -07:00
-Duration:  6ms
+Started:   2026-03-29 14:45:26 -07:00
+Ended:     2026-03-29 14:45:26 -07:00
+Duration:  9ms
 
 Full output: src/Chap44/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap44/analyses/veracity-review-verus-proof-holes.log
