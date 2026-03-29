@@ -534,6 +534,7 @@ broadcast use {
                 invariant
                     i <= len,
                     len == seq@.len(),
+                    seq@.no_duplicates(),
                     self.adj.spec_tablesteph_wf(),
                     obeys_view_eq::<V>(),
                     vstd::laws_cmp::obeys_cmp_spec::<V>(),
@@ -549,9 +550,18 @@ broadcast use {
                     // For all keys: neighbor sets are subsets of adj_after_delete values.
                     forall|k: <V as View>::V| #[trigger] self.adj@.dom().contains(k) ==>
                         self.adj@[k].subset_of(adj_after_delete[k]),
+                    // v@ removed from all processed neighbor sets.
+                    forall|j: int| #![trigger seq@[j]] 0 <= j < i ==>
+                        (self.adj@.dom().contains(seq@[j]) ==> !self.adj@[seq@[j]].contains(v@)),
                 decreases len - i,
             {
-                let u = seq.nth(i).clone();
+                let nth_ref = seq.nth(i);
+                let u = nth_ref.clone_plus();
+                proof {
+                    lemma_cloned_view_eq::<V>(*nth_ref, u);
+                    seq.lemma_view_index(i as int);
+                    assert(u@ == seq@[i as int]);
+                }
                 if let Some(ns_ref) = self.adj.find_ref(&u) {
                     let ghost pre_insert = self.adj@;
                     let ghost pre_insert_adj = self.adj;
@@ -593,32 +603,60 @@ broadcast use {
                                 assert(self.adj@[k] == pre_insert[k]);
                             }
                         };
+                        // v-removal invariant.
+                        assert(!neighbors_view.contains(v@));
+                        // Helper: for k != u@ in post-insert domain, value unchanged from pre_insert.
+                        assert(pre_insert.dom() =~= adj_after_delete.dom());
+                        assert forall|k: <V as View>::V| k != u@ && #[trigger] self.adj@.dom().contains(k) implies
+                            pre_insert.dom().contains(k) && self.adj@[k] == pre_insert[k]
+                        by {
+                            assert(adj_after_delete.dom().contains(k));
+                            assert(pre_insert.dom().contains(k));
+                        };
+                        assert forall|j: int| #![trigger seq@[j]] 0 <= j < (i + 1) as int implies
+                            (self.adj@.dom().contains(seq@[j]) ==> !self.adj@[seq@[j]].contains(v@))
+                        by {
+                            if j == i as int {
+                                assert(self.adj@[u@] == neighbors_view);
+                            } else if self.adj@.dom().contains(seq@[j]) {
+                                // j < i. no_duplicates ⟹ seq@[j] != seq@[i] == u@.
+                                assert(seq@[j] != u@);
+                                // Helper: value preserved for non-u@ keys.
+                                assert(self.adj@[seq@[j]] == pre_insert[seq@[j]]);
+                                // Old invariant at pre-insert: !pre_insert[seq@[j]].contains(v@).
+                                assert(pre_insert.dom().contains(seq@[j]));
+                                assert(!pre_insert[seq@[j]].contains(v@));
+                            }
+                        };
                     }
                 }
                 i += 1;
             }
             proof {
+                // v@ removed from ALL neighbor sets (loop processed entire domain).
+                assert forall|k: <V as View>::V| #[trigger] self.adj@.dom().contains(k) implies
+                    !self.adj@[k].contains(v@)
+                by {
+                    // k ∈ dom ⊆ old_dom = seq@.to_set(). So seq@ contains k.
+                    assert(old_dom.contains(k));
+                    assert(seq@.to_set().contains(k));
+                    // Seq::to_set().contains ⟹ Seq::contains ⟹ ∃j: seq@[j]==k.
+                    // Loop invariant (i==len) gives !adj[k].contains(v@).
+                };
                 // Graph closure: for any u,w with adj[u].contains(w), w is in the domain.
-                // adj[u] ⊆ adj_after_delete[u] == old_adj[u], so old_adj[u].contains(w).
-                // From old graph closure: old_dom.contains(w). And w != v@ because
-                // v@ is not in dom (invariant), so adj[u].contains(v@) would require
-                // v@ in adj[u] ⊆ adj_after_delete[u] = old_adj[u], but old closure gives
-                // old_dom.contains(v@) which is fine. The key: w is in adj_after_delete.dom()
-                // which excludes v@.
                 assert forall|u: <V as View>::V, w: <V as View>::V|
                     self.spec_adj().dom().contains(u)
                     && #[trigger] self.spec_adj().index(u).contains(w)
                     implies self.spec_adj().dom().contains(w)
                 by {
+                    // !adj[u].contains(v@) (from above), but adj[u].contains(w), so w≠v@.
+                    assert(!self.adj@[u].contains(v@));
+                    assert(w != v@);
+                    // adj[u] ⊆ adj_after_delete[u] == old_adj[u], so old_adj[u].contains(w).
                     assert(adj_after_delete[u].contains(w));
                     assert(old_adj[u].contains(w));
-                    // Graph closure: requires v@ removed from all neighbor sets.
-                    // Subset invariant gives adj[u] ⊆ old_adj[u], so old_adj[u].contains(w).
-                    // Old closure gives old_dom.contains(w). But need w != v@ to conclude
-                    // dom.contains(w) (since dom = old_dom \ {v@}).
-                    // The loop removed v@ from each set, but tracking this through Map
-                    // indexing in assert-forall hits Z3 limitations. Targeted assume.
-                    assume(self.spec_adj().dom().contains(w));
+                    // Old graph closure gives old_dom.contains(w). w≠v@ ⟹ dom.contains(w).
+                    assert(old_dom.contains(w));
                 };
             }
         }
