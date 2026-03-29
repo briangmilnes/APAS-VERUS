@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap52/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap52/AdjTableGraphMtPer.rs
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,87 +20,17 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-✓ AdjMatrixGraphMtEph.rs
-   3 clean proof functions
-✓ AdjMatrixGraphMtPer.rs
-   3 clean proof functions
-✓ AdjMatrixGraphStEph.rs
-   3 clean proof functions
-⚠ AdjMatrixGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:477: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       473 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       475 |         {
-       476 |             let equal = self.matrix == other.matrix && self.n == other.n;
-       478 |             equal
-       479 |         }
-✓ AdjSeqGraphMtEph.rs
-   2 clean proof functions
-✓ AdjSeqGraphMtPer.rs
-   2 clean proof functions
-✓ AdjSeqGraphStEph.rs
-   2 clean proof functions
-⚠ AdjSeqGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:513: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       509 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       511 |         {
-       512 |             let equal = self.adj == other.adj;
-       514 |             equal
-       515 |         }
 ❌ AdjTableGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:228: error: assume() [algorithmic] - assume(count as nat + neighbors@.len() <= self.spec_num_edge
-       197 |         fn num_edges(&self) -> (m: usize) {
+/home/milnes/projects/APAS-VERUS-agent4/src/Chap52/AdjTableGraphMtPer.rs:441: error: assume() [rwlock:predicate] - assume(updated.spec_adjtablegraphmtper_wf()); // algorithmic
+       425 |         fn delete_vertex(&self, v: &V) -> (updated: Self) {
             ...
-       226 |                         // Overflow: partial sum + current size <= total edges.
-       227 |                         // blocked by weak OrderedTableMtPer domain/find ensures
-       229 |                     }
-       230 |                     count = count + neighbors.size();
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:240: error: assume() [algorithmic] - assume(count as nat == self.spec_num_edges());
-       197 |         fn num_edges(&self) -> (m: usize) {
-            ...
-       238 |                 // domain-value correspondence that OrderedTableMtPer::map/domain
-       239 |                 // ensures don't provide.
-       241 |             }
-       242 |             count
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:365: error: assume() [rwlock:predicate] - assume(updated.spec_adjtablegraphmtper_wf()); // algorithmic
-       349 |         fn delete_vertex(&self, v: &V) -> (updated: Self) {
-            ...
-       363 |                 // Graph closure still needs map value ensures to prove neighbor sets
-       364 |                 // had v removed, so every neighbor is still in domain.
-       366 |             }
-       367 |             updated
-   Holes: 3 total
-      3 × assume()
-✓ AdjTableGraphStEph.rs
-   3 clean proof functions
-✓ AdjTableGraphStPer.rs
-   3 clean proof functions
-✓ EdgeSetGraphMtPer.rs
-   1 clean proof function
-⚠ EdgeSetGraphStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:406: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       399 |         fn clone(&self) -> (result: Self)
-            ...
-       404 |                 edges: self.edges.clone(),
-       405 |             };
-       407 |             result
-       408 |         }
-⚠ EdgeSetGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:375: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       368 |         fn clone(&self) -> (result: Self)
-            ...
-       373 |                 edges: self.edges.clone(),
-       374 |             };
-       376 |             result
-       377 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:391: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       387 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       389 |         {
-       390 |             let equal = self.vertices == other.vertices && self.edges == other.edges;
-       392 |             equal
-       393 |         }
+       439 |                 // Graph closure still needs map value ensures to prove neighbor sets
+       440 |                 // had v removed, so every neighbor is still in domain.
+       442 |             }
+       443 |             updated
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
 
 =================================================================
 2. Depends Upon
@@ -110,80 +40,46 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
-AdjMatrixGraphMtEph  depends upon only clean modules
-AdjMatrixGraphMtPer  depends upon only clean modules
-AdjMatrixGraphStEph  depends upon only clean modules
-AdjMatrixGraphStPer  depends upon only clean modules
-AdjSeqGraphMtEph  depends upon only clean modules
-AdjSeqGraphMtPer  depends upon only clean modules
-AdjSeqGraphStEph  depends upon only clean modules
-AdjSeqGraphStPer  depends upon only clean modules
 AdjTableGraphMtPer  depends upon only clean modules
-AdjTableGraphStEph  depends upon only clean modules
-AdjTableGraphStPer  depends upon only clean modules
-EdgeSetGraphMtPer  depends upon only clean modules
-EdgeSetGraphStEph  depends upon only clean modules
-EdgeSetGraphStPer  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
-AdjMatrixGraphMtEph.rs  depends upon only clean modules
-AdjMatrixGraphMtPer.rs  depends upon only clean modules
-AdjMatrixGraphStEph.rs  depends upon only clean modules
-AdjMatrixGraphStPer.rs  depends upon only clean modules
-AdjSeqGraphMtEph.rs  depends upon only clean modules
-AdjSeqGraphMtPer.rs  depends upon only clean modules
-AdjSeqGraphStEph.rs  depends upon only clean modules
-AdjSeqGraphStPer.rs  depends upon only clean modules
 AdjTableGraphMtPer.rs  depends upon only clean modules
-AdjTableGraphStEph.rs  depends upon only clean modules
-AdjTableGraphStPer.rs  depends upon only clean modules
-EdgeSetGraphMtPer.rs  depends upon only clean modules
-EdgeSetGraphStEph.rs  depends upon only clean modules
-EdgeSetGraphStPer.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   13 clean (no holes, no errors; 92%)
-   1 holed (holes or errors, 7%)
-   14 total
+   0 clean (no holes, no errors; 0%)
+   1 holed (holes or errors, 100%)
+   1 total
 
 Proof Functions:
-   29 clean (100%)
+   1 clean (100%)
    0 holed (0%)
-   29 total
+   1 total
 
 Function Specs:
-   289 exec fns with complete spec (requires+ensures) (63%)
+   20 exec fns with complete spec (requires+ensures) (68%)
    0 exec fns missing spec (0%)
-   165 proof/spec fns clean (36%)
+   9 proof/spec fns clean (31%)
    0 proof/spec fns with holes (0%)
-   454 total fns
+   29 total fns
 
 
-Holes Found: 3 (actionable)
-   2 × assume() [algorithmic] (66%)
-   1 × assume() [rwlock:predicate] (33%)
-Real Proof Targets: 2 (3 total - 1 rwlock)
-
-Warnings: 5 total
-   5 × assume_eq_clone_workaround
+Holes Found: 1 (actionable)
+   1 × assume() [rwlock:predicate] (100%)
+Real Proof Targets: 0 (1 total - 1 rwlock)
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-28 17:39:28 -07:00
-Ended:     2026-03-28 17:39:28 -07:00
-Duration:  76ms
-
-Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
-:28 -07:00
-Duration:  76ms
+Started:   2026-03-28 17:48:58 -07:00
+Ended:     2026-03-28 17:48:58 -07:00
+Duration:  10ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
