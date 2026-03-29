@@ -77,8 +77,14 @@ pub mod DocumentIndex {
         spec fn spec_documentindex_wf(&self) -> bool;
 
         /// - APAS: Work O(n log n), Span O(log^2 n)
-        /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — sequential nested loops over all_pairs; no Table.collect sort used
+        /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — sequential table-based insert; no sort
         fn make_index(docs: &DocumentCollection) -> (di: Self)
+            requires
+                docs.spec_len() <= usize::MAX as nat / 2,
+                obeys_view_eq::<Word>(),
+                obeys_feq_full::<Pair<Word, DocumentSet>>(),
+                vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+                view_ord_consistent::<DocumentId>(),
             ensures di.spec_documentindex_wf();
 
         /// - APAS: Work O(log n), Span O(log n)
@@ -169,46 +175,168 @@ pub mod DocumentIndex {
             spec_documentindex_wf(self)
         }
 
-        /// Algorithm 44.2: Make Index.
-        /// Sort-based grouping: O(n log n) instead of O(n^2) quadratic rescan.
-        #[verifier::external_body]
+        /// Algorithm 44.2: Make Index — table-based insert.
+        /// Iterate docs, iterate words per doc, insert each word into the table.
         fn make_index(docs: &DocumentCollection) -> (di: Self) {
-            let mut pairs_vec: Vec<(Word, DocumentId)> = Vec::new();
-
-            for i in 0..docs.length() {
+            proof {
+                assert(Pair_feq_trigger::<Word, DocumentSet>());
+            }
+            let mut table = TableStPer::<Word, DocumentSet>::empty();
+            let ghost mut gds: Set<Seq<char>> = Set::empty();
+            let mut i: usize = 0;
+            while i < docs.length()
+                invariant
+                    i <= docs.spec_len(),
+                    docs.spec_len() <= usize::MAX as nat / 2,
+                    table.spec_tablestper_wf(),
+                    obeys_view_eq::<Word>(),
+                    obeys_feq_full::<Pair<Word, DocumentSet>>(),
+                    vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+                    view_ord_consistent::<DocumentId>(),
+                    gds.finite(),
+                    gds.len() <= i as nat,
+                    forall|k: Seq<char>| #[trigger] table@.contains_key(k) ==> {
+                        let ds = table.spec_stored_value(k);
+                        &&& ds.spec_avltreesetstper_wf()
+                        &&& ds@.subset_of(gds)
+                    },
+                decreases docs.spec_len() - i,
+            {
                 let doc = docs.nth(i);
-                let doc_id = doc.0.clone();
-                let content = &doc.1;
-                let word_tokens = tokens(content);
-
-                for j in 0..word_tokens.length() {
-                    let word = word_tokens.nth(j).clone();
-                    pairs_vec.push((word, doc_id.clone()));
+                let doc_id: DocumentId = doc.0.clone();
+                let words = tokens(&doc.1);
+                proof {
+                    let ghost old_gds = gds;
+                    gds = gds.insert(doc_id@);
+                    vstd::set::axiom_set_insert_finite(old_gds, doc_id@);
+                    vstd::set::axiom_set_insert_len(old_gds, doc_id@);
+                    assert forall|k: Seq<char>| #[trigger] table@.contains_key(k) implies {
+                        let ds = table.spec_stored_value(k);
+                        ds.spec_avltreesetstper_wf() && ds@.subset_of(gds)
+                    } by {
+                        let ds = table.spec_stored_value(k);
+                        assert(ds@.subset_of(old_gds));
+                        assert forall|v: Seq<char>| #[trigger] ds@.contains(v) implies gds.contains(v) by {
+                            assert(old_gds.contains(v));
+                        };
+                    };
                 }
-            }
-
-            pairs_vec.sort_unstable_by(|a, b| a.0.cmp(&b.0).then_with(|| a.1.cmp(&b.1)));
-
-            let mut final_table = TableStPer::empty();
-            let mut i = 0;
-
-            while i < pairs_vec.len() {
-                let word = pairs_vec[i].0.clone();
-                let mut doc_ids = Vec::new();
-
-                while i < pairs_vec.len() && pairs_vec[i].0 == word {
-                    doc_ids.push(pairs_vec[i].1.clone());
-                    i += 1;
+                let ghost gds_snap = gds;
+                let ghost doc_id_view: Seq<char> = doc_id@;
+                proof { assert(Pair_feq_trigger::<Word, DocumentSet>()); }
+                let mut j: usize = 0;
+                while j < words.length()
+                    invariant
+                        j <= words.spec_len(),
+                        words.spec_arrayseqstper_wf(),
+                        i < docs.spec_len(),
+                        docs.spec_len() <= usize::MAX as nat / 2,
+                        table.spec_tablestper_wf(),
+                        obeys_view_eq::<Word>(),
+                        obeys_feq_full::<Pair<Word, DocumentSet>>(),
+                        vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+                        view_ord_consistent::<DocumentId>(),
+                        gds == gds_snap,
+                        gds.finite(),
+                        gds.len() <= (i + 1) as nat,
+                        gds.contains(doc_id_view),
+                        doc_id@ == doc_id_view,
+                        forall|k: Seq<char>| #[trigger] table@.contains_key(k) ==> {
+                            let ds = table.spec_stored_value(k);
+                            &&& ds.spec_avltreesetstper_wf()
+                            &&& ds@.subset_of(gds)
+                        },
+                    decreases words.spec_len() - j,
+                {
+                    let word: &Word = words.nth(j);
+                    let singleton = AVLTreeSetStPer::singleton(doc_id.clone());
+                    let new_set: DocumentSet = match table.find_ref(word) {
+                        Some(existing) => {
+                            proof {
+                                vstd::set_lib::lemma_len_subset(existing@, gds);
+                                // existing@.len() <= gds.len() <= i + 1 <= usize::MAX/2
+                                assert(existing@.len() <= gds.len());
+                                assert(gds.len() <= (i + 1) as nat);
+                                assert((i + 1) as nat <= docs.spec_len());
+                                assert(existing@.len() <= usize::MAX as nat / 2);
+                                // singleton: {doc_id@}, len 1
+                                assert(singleton@ == Set::<<DocumentId as View>::V>::empty().insert(doc_id@));
+                                vstd::set::axiom_set_insert_len(
+                                    Set::<<DocumentId as View>::V>::empty(), doc_id@);
+                                assert(singleton@.len() == 1);
+                                assert(existing@.len() + singleton@.len() <= usize::MAX as nat / 2 + 1);
+                                assert(usize::MAX as nat / 2 + 1 < usize::MAX as nat);
+                            }
+                            existing.union(&singleton)
+                        },
+                        None => singleton,
+                    };
+                    let word_owned: Word = word.clone();
+                    let ghost word_v: Seq<char> = word_owned@;
+                    let ghost old_table = table;
+                    let ghost new_set_view = new_set@;
+                    table = table.insert(word_owned, new_set,
+                        |_old: &DocumentSet, nd: &DocumentSet| -> (r: DocumentSet)
+                            ensures r@ == nd@
+                        { nd.clone() }
+                    );
+                    proof {
+                        assert forall|k: Seq<char>| #[trigger] table@.contains_key(k)
+                            implies {
+                                let ds = table.spec_stored_value(k);
+                                ds.spec_avltreesetstper_wf() && ds@.subset_of(gds)
+                            }
+                        by {
+                            if k == word_v {
+                                let ds = table.spec_stored_value(k);
+                                // In both found/not-found cases, ds@ == new_set_view.
+                                if !old_table@.contains_key(word_v) {
+                                    assert(ds@ == new_set_view);
+                                } else {
+                                    // Existential witness gives ds@ == new_set_view.
+                                    assert(table@[word_v] == new_set_view);
+                                    table.lemma_spec_stored_value_view(k);
+                                    assert(ds@ == new_set_view);
+                                }
+                                // Subset: new_set@ ⊆ gds.
+                                assert forall|v: Seq<char>| new_set_view.contains(v)
+                                    implies gds.contains(v)
+                                by {
+                                    // new_set@ ⊆ existing@ ∪ {doc_id@} ⊆ gds.
+                                };
+                                assert(ds@.subset_of(gds));
+                                // Wf: ds@.finite() and ds@.len() < usize::MAX.
+                                assert(ds@.finite());
+                                assert(ds@.len() < usize::MAX as nat);
+                            } else {
+                                assert(old_table@.contains_key(k));
+                                let ds = table.spec_stored_value(k);
+                                let old_ds = old_table.spec_stored_value(k);
+                                old_table.lemma_spec_stored_value_view(k);
+                                table.lemma_spec_stored_value_view(k);
+                                // ds@ == table@[k] == old_table@[k] == old_ds@.
+                                assert(old_ds.spec_avltreesetstper_wf());
+                                assert(old_ds@.subset_of(gds));
+                                assert(ds@.subset_of(gds));
+                                assert(ds@.finite());
+                                assert(ds@.len() < usize::MAX as nat);
+                            }
+                        };
+                    }
+                    j += 1;
                 }
-
-                let avl_seq = AVLTreeSeqStPerS::from_vec(doc_ids);
-                let doc_set = AVLTreeSetStPer::from_seq(avl_seq);
-                final_table = final_table.insert(word, doc_set, |_old, new| new.clone());
+                i += 1;
             }
-
-            DocumentIndex {
-                word_to_docs: final_table,
+            proof {
+                assert forall|k: Seq<char>| #[trigger] table@.contains_key(k) implies {
+                    let ds = table.spec_stored_value(k);
+                    ds.spec_avltreesetstper_wf() && ds@.len() <= usize::MAX as nat / 2
+                } by {
+                    let ds = table.spec_stored_value(k);
+                    vstd::set_lib::lemma_len_subset(ds@, gds);
+                };
             }
+            DocumentIndex { word_to_docs: table }
         }
 
         /// Algorithm 44.3: find function - simple table lookup.
