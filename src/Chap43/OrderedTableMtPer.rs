@@ -182,10 +182,15 @@ pub mod OrderedTableMtPer {
 
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.map
-        fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (mapped: Self)
-            requires forall|k: &K, v: &V| f.requires((k, v))
+        fn map<G: Fn(&V) -> V + Send + Sync + 'static>(
+            &self, f: G, Ghost(f_spec): Ghost<spec_fn(V::V) -> V::V>,
+        ) -> (mapped: Self)
+            requires
+                forall|v: &V| f.requires((v,)),
+                forall|v: V, r: V| f.ensures((&v,), r) ==> r@ == f_spec(v@),
             ensures
                 mapped@.dom() =~= self@.dom(),
+                forall|k: K::V| #[trigger] self@.contains_key(k) ==> mapped@[k] == f_spec(self@[k]),
                 mapped.spec_orderedtablemtper_wf();
 
         /// - APAS: Work Θ(n), Span Θ(n)
@@ -410,48 +415,39 @@ pub mod OrderedTableMtPer {
             result
         }
 
-        fn map<G: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: G) -> (mapped: Self) {
+        fn map<G: Fn(&V) -> V + Send + Sync + 'static>(
+            &self, f: G, Ghost(f_spec): Ghost<spec_fn(V::V) -> V::V>,
+        ) -> (mapped: Self) {
             proof {
                 use_type_invariant(self);
                 assert(obeys_view_eq_trigger::<K>());
             }
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
+            let ghost inner_view = inner@;
             proof { assert(inner@ == self@); }
-            let entries = inner.collect();
+            let st_result = inner.map(f);
             read_handle.release_read();
-            let mut result = OrderedTableStPer::empty();
-            let len = entries.length();
             proof {
-                lemma_size_lt_usize_max::<Pair<K, V>>(&entries.root);
-                lemma_size_eq_inorder_len::<Pair<K, V>>(&entries.root);
-                assert(len < usize::MAX);
+                // StPer map ensures: st_result@.dom() == inner@.dom()
+                // and forall|k| st_result@.contains_key(k) ==>
+                //   exists|old_val, result| old_val@ == inner@[k] && f.ensures((&old_val,), result) && st_result@[k] == result@
+                // Our requires: forall|v, r| f.ensures((&v,), r) ==> r@ == f_spec(v@)
+                // Combined: st_result@[k] == f_spec(inner@[k]) == f_spec(self@[k])
+                assert forall|k: K::V| #[trigger] self@.contains_key(k)
+                    implies st_result@[k] == f_spec(self@[k])
+                by {
+                    assert(inner_view.contains_key(k));
+                    assert(st_result@.contains_key(k));
+                    let (old_val, result): (V, V) = choose|old_val: V, result: V|
+                        old_val@ == inner_view[k]
+                        && f.ensures((&old_val,), result)
+                        && st_result@[k] == result@;
+                    assert(f.ensures((&old_val,), result));
+                    assert(result@ == f_spec(old_val@));
+                };
             }
-            let mut i: usize = 0;
-            while i < len
-                invariant
-                    entries.spec_avltreeseqstper_wf(),
-                    result.spec_orderedtablestper_wf(),
-                    result@.dom().finite(),
-                    result@.dom().len() <= i as nat,
-                    i <= len,
-                    len as nat == entries.spec_seq().len(),
-                    len < usize::MAX,
-                    forall|k: &K, v: &V| f.requires((k, v)),
-                    obeys_view_eq::<K>(),
-                decreases len - i,
-            {
-                let pair = entries.nth(i);
-                let new_v = f(&pair.0, &pair.1);
-                result = result.insert(pair.0.clone(), new_v);
-                i += 1;
-            }
-            proof {
-                // The loop iterates all entries from inner.collect(), which covers
-                // all keys of inner@ == self@. result@.dom() =~= self@.dom().
-                assume(result@.dom() =~= self@.dom());
-            }
-            from_st_table(result)
+            from_st_table(st_result)
         }
 
         fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> (filtered: Self) {

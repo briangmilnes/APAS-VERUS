@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 Chapter Status — 46 chapters, 43 clean, 3 holed, 9 holes (global), 244 modules
+=======
+Chapter Status — 46 chapters, 44 clean, 2 holed, 8 holes (global), 244 modules
+>>>>>>> agent3/ready
 
-CLEAN CHAPTERS (43)
+CLEAN CHAPTERS (44)
   Chapter        Files
   -------------- -----
   Chap02             2
@@ -32,6 +36,7 @@ CLEAN CHAPTERS (43)
   Chap49             8
   Chap50             8
   Chap51             8
+  Chap52            14
   Chap53             5
   Chap54             4
   Chap55             8
@@ -47,11 +52,18 @@ CLEAN CHAPTERS (43)
   Concurrency        1
   ParaPairs          1
 
+<<<<<<< HEAD
 HOLED CHAPTERS (3) — 9 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
   Chap44             4     1  YES       
   Chap52             1    14  YES       
+=======
+HOLED CHAPTERS (2) — 8 holes
+  Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
+  -------------- ----- -----  --------  -----------------------------------
+  Chap44             4     1  YES       
+>>>>>>> agent3/ready
   Chap65             4     3  internal  Chap65::UnionFindStEph
 
 DEPENDENCY CHAIN (chapter-level, external only)

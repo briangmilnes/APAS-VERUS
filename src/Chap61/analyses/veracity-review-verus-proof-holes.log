@@ -21,12 +21,21 @@ Table of Contents:
 =================================================================
 
 ℹ EdgeContractionMtEph.rs
+<<<<<<< HEAD
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap61/EdgeContractionMtEph.rs:75: info: structural_false_positive OPAQUE_EXTERNAL edge_contract_mt — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
 ✓ EdgeContractionStEph.rs
 ℹ VertexMatchingMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:122: info: structural_false_positive OPAQUE_EXTERNAL select_edges_parallel — #[verifier::external_body] [medium]
 /home/milnes/projects/APAS-VERUS-agent4/src/Chap61/VertexMatchingMtEph.rs:156: info: structural_false_positive OPAQUE_EXTERNAL select_edges_recursive — #[verifier::external_body] [medium]
+=======
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap61/EdgeContractionMtEph.rs:75: info: structural_false_positive OPAQUE_EXTERNAL edge_contract_mt — #[verifier::external_body] [medium]
+   Info: 1 × structural_false_positive
+✓ EdgeContractionStEph.rs
+ℹ VertexMatchingMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap61/VertexMatchingMtEph.rs:122: info: structural_false_positive OPAQUE_EXTERNAL select_edges_parallel — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap61/VertexMatchingMtEph.rs:156: info: structural_false_positive OPAQUE_EXTERNAL select_edges_recursive — #[verifier::external_body] [medium]
+>>>>>>> agent3/ready
    Info: 2 × structural_false_positive
 ✓ VertexMatchingStEph.rs
 
@@ -86,12 +95,17 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
+<<<<<<< HEAD
 Started:   2026-03-29 13:38:50 -07:00
 Ended:     2026-03-29 13:38:50 -07:00
 Duration:  7ms
+=======
+Started:   2026-03-29 14:05:05 -07:00
+Ended:     2026-03-29 14:05:05 -07:00
+Duration:  12ms
+>>>>>>> agent3/ready
 
 Full output: src/Chap61/analyses/veracity-review-verus-proof-holes.log
-
-Duration:  7ms
+Duration:  12ms
 
 Full output: src/Chap61/analyses/veracity-review-verus-proof-holes.log
