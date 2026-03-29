@@ -1334,15 +1334,34 @@ Table of Contents:
       3434 | 
       3436 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
       3437 |     ) -> (result: OrderedTableStPer<K, V>)
-⚠ src/Chap44/DocumentIndex.rs
-/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:37: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        33 |             fn clone(&self) -> (cloned: Self)
+❌ src/Chap44/DocumentIndex.rs
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:160: error: external_body - #[verifier::external_body]
+       161 |         fn make_index(docs: &DocumentCollection) -> (di: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:229: error: external_body - #[verifier::external_body]
+       230 |         fn to_seq(docs: &DocumentSet) -> (seq: ArraySeqStPerS<DocumentId>) {
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:249: error: external_body - #[verifier::external_body]
+       250 |         fn get_all_words(&self) -> (words: ArraySeqStPerS<Word>) {
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:376: error: external_body - #[verifier::external_body]
+       377 |         fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> (result: DocumentSet) {
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:283: error: fn_missing_wf_requires - fn new — requires should include index.spec_documentindex_wf() for input type DocumentIndex
+       279 |         spec fn spec_index_wf(&self) -> bool;
             ...
-        35 |             {
-        36 |                 let cloned = DocumentIndex { word_to_docs: self.word_to_docs.clone() };
-        38 |                 cloned
-        39 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:43: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
+       281 |         /// - APAS: N/A — Verus-specific scaffolding.
+       282 |         /// - Claude-Opus-4.6: Work O(1), Span O(1)
+       284 |             requires spec_documentindex_wf(index)
+       285 |             ensures qb.spec_index_wf();
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:397: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       393 |         fn clone(&self) -> (cloned: Self)
+            ...
+       395 |         {
+       396 |             let cloned = DocumentIndex { word_to_docs: self.word_to_docs.clone() };
+       398 |             cloned
+       399 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:403: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
+   Holes: 4 total
+      4 × external_body
+   Info: 1 × structural_false_positive
+      1 × STD_TRAIT_IMPL
 ⚠ src/Chap45/BalancedTreePQ.rs
 /home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:774: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        770 |             fn eq(&self, other: &Self) -> (equal: bool)
@@ -1776,29 +1795,16 @@ Table of Contents:
        514 |             equal
        515 |         }
 ❌ src/Chap52/AdjTableGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:228: error: assume() [algorithmic] - assume(count as nat + neighbors@.len() <= self.spec_num_edge
-       197 |         fn num_edges(&self) -> (m: usize) {
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:441: error: assume() [rwlock:predicate] - assume(updated.spec_adjtablegraphmtper_wf()); // algorithmic
+       425 |         fn delete_vertex(&self, v: &V) -> (updated: Self) {
             ...
-       226 |                         // Overflow: partial sum + current size <= total edges.
-       227 |                         // blocked by weak OrderedTableMtPer domain/find ensures
-       229 |                     }
-       230 |                     count = count + neighbors.size();
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:240: error: assume() [algorithmic] - assume(count as nat == self.spec_num_edges());
-       197 |         fn num_edges(&self) -> (m: usize) {
-            ...
-       238 |                 // domain-value correspondence that OrderedTableMtPer::map/domain
-       239 |                 // ensures don't provide.
-       241 |             }
-       242 |             count
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:365: error: assume() [rwlock:predicate] - assume(updated.spec_adjtablegraphmtper_wf()); // algorithmic
-       349 |         fn delete_vertex(&self, v: &V) -> (updated: Self) {
-            ...
-       363 |                 // Graph closure still needs map value ensures to prove neighbor sets
-       364 |                 // had v removed, so every neighbor is still in domain.
-       366 |             }
-       367 |             updated
-   Holes: 3 total
-      3 × assume()
+       439 |                 // Graph closure still needs map value ensures to prove neighbor sets
+       440 |                 // had v removed, so every neighbor is still in domain.
+       442 |             }
+       443 |             updated
+   Holes: 1 total
+      1 × assume()
+   Proof functions: 1 total (1 clean, 0 holed)
 ✓ src/Chap52/AdjTableGraphStEph.rs
    3 clean proof functions
 ✓ src/Chap52/AdjTableGraphStPer.rs
@@ -2480,8 +2486,8 @@ bugs/ice-set-type-projection/reproducer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   234 clean (no holes, no errors; 95%)
-   12 holed (holes or errors, 4%)
+   233 clean (no holes, no errors; 94%)
+   13 holed (holes or errors, 5%)
    246 total
 
 Proof Functions:
@@ -2490,26 +2496,26 @@ Proof Functions:
    533 total
 
 Function Specs:
-   5350 exec fns with complete spec (requires+ensures) (67%)
+   5382 exec fns with complete spec (requires+ensures) (67%)
    59 exec fns missing spec (0%)
-   2564 proof/spec fns clean (32%)
+   2569 proof/spec fns clean (32%)
    0 proof/spec fns with holes (0%)
-   7973 total fns
+   8010 total fns
 
 
-Holes Found: 8 (actionable)
-   2 × assume() [algorithmic] (25%)
-   1 × assume() [rwlock:predicate] (12%)
-   4 × external_body (50%)
-   1 × opaque (12%)
-Real Proof Targets: 7 (8 total - 1 rwlock)
+Holes Found: 10 (actionable)
+   1 × assume() [rwlock:predicate] (10%)
+   8 × external_body (80%)
+   1 × opaque (10%)
+Real Proof Targets: 9 (10 total - 1 rwlock)
 
 Per-Chapter Holes:
-  Chap52:  3  Chap62:  1  Chap65:  4
+  Chap44:  4  Chap52:  1  Chap62:  1
+  Chap65:  4
 
-Warnings: 182 total
+Warnings: 183 total
    2 × fn_missing_requires
-   8 × fn_missing_wf_requires
+   9 × fn_missing_wf_requires
    11 × fn_missing_wf_ensures
    161 × assume_eq_clone_workaround
 
@@ -2519,9 +2525,9 @@ Accepted (reviewed): 67 total
    10 × trivial_spec_wf
    4 × unsafe_block_accept_hole
    3 × external_accept_hole
+   1 × external_type_specification_accept_hole
    1 × enum_outside_verus_accept_hole
    1 × struct_outside_verus_accept_hole
-   1 × external_type_specification_accept_hole
 
 Accepted by Chapter:
   Chap02:  6  Chap11:  6  Chap12: 19
@@ -2546,67 +2552,69 @@ Structural (info only): 213
 4.1. Worst src/* Directories (all dirs, by holes)
 =================================================================
 
-   1  Chap65  (4 holes, 3 files)
-   2  Chap52  (3 holes, 14 files)
+   1  Chap44  (4 holes, 1 files)
+   2  Chap65  (4 holes, 3 files)
    3  Chap62  (1 holes, 4 files)
-   4  Chap02  (0 holes, 2 files)
-   5  Chap44  (0 holes, 1 files)
-   6  Chap56  (0 holes, 10 files)
-   7  Chap59  (0 holes, 4 files)
-   8  Chap35  (0 holes, 4 files)
-   9  Chap05  (0 holes, 5 files)
-   10  Chap55  (0 holes, 8 files)
-   11  Chap18  (0 holes, 7 files)
-   12  Chap26  (0 holes, 8 files)
-   13  Chap12  (0 holes, 3 files)
-   14  Chap17  (0 holes, 1 files)
-   15  ParaPairs  (0 holes, 1 files)
-   16  Chap53  (0 holes, 5 files)
-   17  Chap49  (0 holes, 8 files)
+   4  Chap52  (1 holes, 14 files)
+   5  Chap28  (0 holes, 11 files)
+   6  Chap18  (0 holes, 7 files)
+   7  Chap42  (0 holes, 3 files)
+   8  Chap02  (0 holes, 2 files)
+   9  Chap38  (0 holes, 2 files)
+   10  Chap21  (0 holes, 5 files)
+   11  Chap63  (0 holes, 2 files)
+   12  Chap55  (0 holes, 8 files)
+   13  Chap53  (0 holes, 5 files)
+   14  Chap06  (0 holes, 21 files)
+   15  Chap51  (0 holes, 8 files)
+   16  Chap58  (0 holes, 2 files)
+   17  Chap05  (0 holes, 5 files)
    18  Chap45  (0 holes, 6 files)
-   19  Chap57  (0 holes, 3 files)
-   20  Chap19  (0 holes, 4 files)
-   21  Chap06  (0 holes, 21 files)
-   22  Chap39  (0 holes, 4 files)
-   23  Chap27  (0 holes, 4 files)
-   24  Chap66  (0 holes, 2 files)
-   25  Chap03  (0 holes, 1 files)
-   26  Chap21  (0 holes, 5 files)
-   27  Chap40  (0 holes, 3 files)
-   28  Chap41  (0 holes, 6 files)
-   29  Chap37  (0 holes, 19 files)
-   30  Chap64  (0 holes, 3 files)
-   31  Chap50  (0 holes, 8 files)
-   32  Chap63  (0 holes, 2 files)
-   33  Concurrency  (0 holes, 1 files)
-   34  Chap38  (0 holes, 2 files)
-   35  Chap23  (0 holes, 2 files)
-   36  Chap47  (0 holes, 9 files)
-   37  Chap30  (0 holes, 1 files)
-   38  Chap28  (0 holes, 11 files)
-   39  Chap51  (0 holes, 8 files)
-   40  Chap58  (0 holes, 2 files)
-   41  Chap61  (0 holes, 4 files)
-   42  Chap54  (0 holes, 4 files)
+   19  Chap61  (0 holes, 4 files)
+   20  Chap41  (0 holes, 6 files)
+   21  Chap47  (0 holes, 9 files)
+   22  Concurrency  (0 holes, 1 files)
+   23  Chap40  (0 holes, 3 files)
+   24  Chap27  (0 holes, 4 files)
+   25  Chap50  (0 holes, 8 files)
+   26  Chap37  (0 holes, 19 files)
+   27  Chap43  (0 holes, 10 files)
+   28  Chap59  (0 holes, 4 files)
+   29  Chap12  (0 holes, 3 files)
+   30  Chap66  (0 holes, 2 files)
+   31  Chap26  (0 holes, 8 files)
+   32  Chap54  (0 holes, 4 files)
+   33  ParaPairs  (0 holes, 1 files)
+   34  Chap19  (0 holes, 4 files)
+   35  Chap03  (0 holes, 1 files)
+   36  Chap64  (0 holes, 3 files)
+   37  Chap36  (0 holes, 3 files)
+   38  Chap49  (0 holes, 8 files)
+   39  Chap56  (0 holes, 10 files)
+   40  Chap17  (0 holes, 1 files)
+   41  Chap23  (0 holes, 2 files)
+   42  Chap57  (0 holes, 3 files)
    43  Chap11  (0 holes, 5 files)
-   44  Chap42  (0 holes, 3 files)
-   45  Chap43  (0 holes, 10 files)
-   46  Chap36  (0 holes, 3 files)
+   44  Chap39  (0 holes, 4 files)
+   45  Chap30  (0 holes, 1 files)
+   46  Chap35  (0 holes, 4 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
 =================================================================
 
-   1  src/Chap52/AdjTableGraphMtPer.rs  (3 holes)
+   1  src/Chap44/DocumentIndex.rs  (4 holes)
    2  src/Chap65/UnionFindStEph.rs  (2 holes)
-   3  src/Chap62/StarPartitionMtEph.rs  (1 holes)
+   3  src/Chap52/AdjTableGraphMtPer.rs  (1 holes)
+   4  src/Chap62/StarPartitionMtEph.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
 =================================================================
 
-   1  src/Chap52  (3 holes, 14 files)
+   1  src/Chap44  (4 holes, 1 files)
    2  src/Chap62  (1 holes, 4 files)
+   3  src/Chap52  (1 holes, 14 files)
 
 =================================================================
 4.4. Not Verusified
@@ -2624,9 +2632,9 @@ Structural (info only): 213
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 43 clean, 3 holed, 8 holes (global), 244 modules
+Chapter Status — 46 chapters, 42 clean, 4 holed, 10 holes (global), 244 modules
 
-CLEAN CHAPTERS (43)
+CLEAN CHAPTERS (42)
   Chapter        Files
   -------------- -----
   Chap02             2
@@ -2653,7 +2661,6 @@ CLEAN CHAPTERS (43)
   Chap41             6
   Chap42             3
   Chap43            10
-  Chap44             1
   Chap45             6
   Chap47             9
   Chap49             8
@@ -2673,10 +2680,11 @@ CLEAN CHAPTERS (43)
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (3) — 8 holes
+HOLED CHAPTERS (4) — 10 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
-  Chap52             3    14  YES       
+  Chap44             4     1  YES       
+  Chap52             1    14  YES       
   Chap62             1     4  YES       
   Chap65             4     3  internal  Chap65::UnionFindStEph
 
@@ -2688,8 +2696,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-28 17:39:28 -07:00
-Ended:     2026-03-28 17:39:30 -07:00
-Duration:  1869ms
+Started:   2026-03-28 17:58:21 -07:00
+Ended:     2026-03-28 17:58:23 -07:00
+Duration:  1708ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log
