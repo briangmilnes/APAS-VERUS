@@ -38,6 +38,7 @@ broadcast use {
     // 8. traits
     // 9. impls
     // 11. derive impls in verus!
+    // 14. derive impls outside verus!
 
     // 4. type definitions
 
@@ -47,7 +48,6 @@ broadcast use {
     // - This allows the table to use parallel tree operations (split, join, union)
     // - Sets (AVLTreeSetMtPer<V>) implement Ord via lexicographic ordering of elements
     // - This constraint enables efficient parallel operations on the adjacency structure
-    #[derive(Clone)]
     #[verifier::reject_recursive_types(V)]
     pub struct AdjTableGraphMtPer<V: StTInMtT + Ord + TotalOrder + 'static> {
         pub adj: OrderedTableMtPer<V, AVLTreeSetMtPer<V>>,
@@ -624,4 +624,12 @@ broadcast use {
     }
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl<V: StTInMtT + Ord + TotalOrder + Clone + 'static> Clone for AdjTableGraphMtPer<V> {
+        fn clone(&self) -> Self {
+            AdjTableGraphMtPer { adj: self.adj.clone() }
+        }
+    }
 }
