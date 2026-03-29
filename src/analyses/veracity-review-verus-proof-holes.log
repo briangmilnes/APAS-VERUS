@@ -1907,11 +1907,7 @@ Table of Contents:
 ✓ src/Chap61/VertexMatchingStEph.rs
 ✓ src/Chap62/StarContractionMtEph.rs
 ✓ src/Chap62/StarContractionStEph.rs
-❌ src/Chap62/StarPartitionMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap62/StarPartitionMtEph.rs:72: error: external_body - #[verifier::external_body]
-        73 |     pub fn parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
-   Holes: 1 total
-      1 × external_body
+✓ src/Chap62/StarPartitionMtEph.rs
 ✓ src/Chap62/StarPartitionStEph.rs
 ✓ src/Chap63/ConnectivityMtEph.rs
 ✓ src/Chap63/ConnectivityStEph.rs
@@ -2486,8 +2482,8 @@ bugs/ice-set-type-projection/reproducer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   233 clean (no holes, no errors; 94%)
-   13 holed (holes or errors, 5%)
+   234 clean (no holes, no errors; 95%)
+   12 holed (holes or errors, 4%)
    246 total
 
 Proof Functions:
@@ -2503,15 +2499,14 @@ Function Specs:
    8010 total fns
 
 
-Holes Found: 10 (actionable)
-   1 × assume() [rwlock:predicate] (10%)
-   8 × external_body (80%)
-   1 × opaque (10%)
-Real Proof Targets: 9 (10 total - 1 rwlock)
+Holes Found: 9 (actionable)
+   1 × assume() [rwlock:predicate] (11%)
+   7 × external_body (77%)
+   1 × opaque (11%)
+Real Proof Targets: 8 (9 total - 1 rwlock)
 
 Per-Chapter Holes:
-  Chap44:  4  Chap52:  1  Chap62:  1
-  Chap65:  4
+  Chap44:  4  Chap52:  1  Chap65:  4
 
 Warnings: 183 total
    2 × fn_missing_requires
@@ -2525,8 +2520,8 @@ Accepted (reviewed): 67 total
    10 × trivial_spec_wf
    4 × unsafe_block_accept_hole
    3 × external_accept_hole
-   1 × external_type_specification_accept_hole
    1 × enum_outside_verus_accept_hole
+   1 × external_type_specification_accept_hole
    1 × struct_outside_verus_accept_hole
 
 Accepted by Chapter:
@@ -2554,50 +2549,50 @@ Structural (info only): 213
 
    1  Chap44  (4 holes, 1 files)
    2  Chap65  (4 holes, 3 files)
-   3  Chap62  (1 holes, 4 files)
-   4  Chap52  (1 holes, 14 files)
-   5  Chap28  (0 holes, 11 files)
-   6  Chap18  (0 holes, 7 files)
-   7  Chap42  (0 holes, 3 files)
-   8  Chap02  (0 holes, 2 files)
-   9  Chap38  (0 holes, 2 files)
-   10  Chap21  (0 holes, 5 files)
-   11  Chap63  (0 holes, 2 files)
-   12  Chap55  (0 holes, 8 files)
-   13  Chap53  (0 holes, 5 files)
-   14  Chap06  (0 holes, 21 files)
-   15  Chap51  (0 holes, 8 files)
-   16  Chap58  (0 holes, 2 files)
-   17  Chap05  (0 holes, 5 files)
-   18  Chap45  (0 holes, 6 files)
-   19  Chap61  (0 holes, 4 files)
-   20  Chap41  (0 holes, 6 files)
-   21  Chap47  (0 holes, 9 files)
-   22  Concurrency  (0 holes, 1 files)
-   23  Chap40  (0 holes, 3 files)
-   24  Chap27  (0 holes, 4 files)
-   25  Chap50  (0 holes, 8 files)
-   26  Chap37  (0 holes, 19 files)
-   27  Chap43  (0 holes, 10 files)
-   28  Chap59  (0 holes, 4 files)
-   29  Chap12  (0 holes, 3 files)
-   30  Chap66  (0 holes, 2 files)
-   31  Chap26  (0 holes, 8 files)
-   32  Chap54  (0 holes, 4 files)
-   33  ParaPairs  (0 holes, 1 files)
-   34  Chap19  (0 holes, 4 files)
-   35  Chap03  (0 holes, 1 files)
-   36  Chap64  (0 holes, 3 files)
-   37  Chap36  (0 holes, 3 files)
-   38  Chap49  (0 holes, 8 files)
-   39  Chap56  (0 holes, 10 files)
-   40  Chap17  (0 holes, 1 files)
-   41  Chap23  (0 holes, 2 files)
-   42  Chap57  (0 holes, 3 files)
-   43  Chap11  (0 holes, 5 files)
-   44  Chap39  (0 holes, 4 files)
-   45  Chap30  (0 holes, 1 files)
-   46  Chap35  (0 holes, 4 files)
+   3  Chap52  (1 holes, 14 files)
+   4  Chap61  (0 holes, 4 files)
+   5  Chap37  (0 holes, 19 files)
+   6  Chap11  (0 holes, 5 files)
+   7  Chap05  (0 holes, 5 files)
+   8  Chap17  (0 holes, 1 files)
+   9  Chap30  (0 holes, 1 files)
+   10  Chap54  (0 holes, 4 files)
+   11  Chap35  (0 holes, 4 files)
+   12  Chap40  (0 holes, 3 files)
+   13  Chap02  (0 holes, 2 files)
+   14  Chap26  (0 holes, 8 files)
+   15  Chap63  (0 holes, 2 files)
+   16  Chap66  (0 holes, 2 files)
+   17  Chap38  (0 holes, 2 files)
+   18  Chap58  (0 holes, 2 files)
+   19  Chap50  (0 holes, 8 files)
+   20  Concurrency  (0 holes, 1 files)
+   21  Chap27  (0 holes, 4 files)
+   22  Chap47  (0 holes, 9 files)
+   23  Chap64  (0 holes, 3 files)
+   24  Chap59  (0 holes, 4 files)
+   25  Chap23  (0 holes, 2 files)
+   26  Chap36  (0 holes, 3 files)
+   27  Chap39  (0 holes, 4 files)
+   28  Chap21  (0 holes, 5 files)
+   29  Chap18  (0 holes, 7 files)
+   30  Chap62  (0 holes, 4 files)
+   31  Chap55  (0 holes, 8 files)
+   32  Chap12  (0 holes, 3 files)
+   33  Chap57  (0 holes, 3 files)
+   34  Chap53  (0 holes, 5 files)
+   35  Chap42  (0 holes, 3 files)
+   36  Chap19  (0 holes, 4 files)
+   37  Chap28  (0 holes, 11 files)
+   38  Chap43  (0 holes, 10 files)
+   39  Chap51  (0 holes, 8 files)
+   40  Chap41  (0 holes, 6 files)
+   41  Chap49  (0 holes, 8 files)
+   42  Chap03  (0 holes, 1 files)
+   43  Chap56  (0 holes, 10 files)
+   44  ParaPairs  (0 holes, 1 files)
+   45  Chap06  (0 holes, 21 files)
+   46  Chap45  (0 holes, 6 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
@@ -2606,15 +2601,13 @@ Structural (info only): 213
    1  src/Chap44/DocumentIndex.rs  (4 holes)
    2  src/Chap65/UnionFindStEph.rs  (2 holes)
    3  src/Chap52/AdjTableGraphMtPer.rs  (1 holes)
-   4  src/Chap62/StarPartitionMtEph.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
 =================================================================
 
    1  src/Chap44  (4 holes, 1 files)
-   2  src/Chap62  (1 holes, 4 files)
-   3  src/Chap52  (1 holes, 14 files)
+   2  src/Chap52  (1 holes, 14 files)
 
 =================================================================
 4.4. Not Verusified
@@ -2632,9 +2625,9 @@ Structural (info only): 213
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 42 clean, 4 holed, 10 holes (global), 244 modules
+Chapter Status — 46 chapters, 43 clean, 3 holed, 9 holes (global), 244 modules
 
-CLEAN CHAPTERS (42)
+CLEAN CHAPTERS (43)
   Chapter        Files
   -------------- -----
   Chap02             2
@@ -2674,18 +2667,18 @@ CLEAN CHAPTERS (42)
   Chap58             2
   Chap59             4
   Chap61             4
+  Chap62             4
   Chap63             2
   Chap64             3
   Chap66             2
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (4) — 10 holes
+HOLED CHAPTERS (3) — 9 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
   Chap44             4     1  YES       
   Chap52             1    14  YES       
-  Chap62             1     4  YES       
   Chap65             4     3  internal  Chap65::UnionFindStEph
 
 DEPENDENCY CHAIN (chapter-level, external only)
@@ -2696,8 +2689,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-28 17:58:21 -07:00
-Ended:     2026-03-28 17:58:23 -07:00
-Duration:  1708ms
+Started:   2026-03-28 17:59:41 -07:00
+Ended:     2026-03-28 17:59:43 -07:00
+Duration:  1727ms
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-review-verus-proof-holes.log
