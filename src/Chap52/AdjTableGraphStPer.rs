@@ -49,10 +49,10 @@ broadcast use {
     // 8. traits
     // 9. impls
     // 11. derive impls in verus!
+    // 14. derive impls outside verus!
 
     // 4. type definitions
 
-    #[derive(Clone)]
     #[verifier::reject_recursive_types(V)]
     pub struct AdjTableGraphStPer<V: StT + Ord> {
         pub adj: TableStPer<V, AVLTreeSetStPer<V>>,
@@ -299,7 +299,7 @@ broadcast use {
                         ==> #[trigger] verts@.contains(self.adj.entries@[j].0),
                     forall|v: V::V| #[trigger] verts@.contains(v)
                         ==> exists|j: int| 0 <= j < i
-                            && self.adj.entries@[j].0 == v,
+                            && (#[trigger] self.adj.entries@[j]).0 == v,
                 decreases len - i,
             {
                 let pair: &Pair<V, AVLTreeSetStPer<V>> = self.adj.entries.nth(i);
@@ -321,11 +321,11 @@ broadcast use {
                     // Maintain backward invariant: every element in verts came from entries[0..i+1].
                     assert forall|v: V::V| #[trigger] verts@.contains(v)
                         implies exists|j: int| 0 <= j < i + 1
-                            && self.adj.entries@[j].0 == v
+                            && (#[trigger] self.adj.entries@[j]).0 == v
                     by {
                         if old_verts.contains(v) {
                             let j = choose|j: int| 0 <= j < i
-                                && self.adj.entries@[j].0 == v;
+                                && (#[trigger] self.adj.entries@[j]).0 == v;
                             assert(j < i + 1);
                         } else {
                             // v == key@ == pair.0@ == entries[i].0
@@ -342,7 +342,7 @@ broadcast use {
                 by {
                     if verts@.contains(v) {
                         let j = choose|j: int| 0 <= j < len as int
-                            && self.adj.entries@[j].0 == v;
+                            && (#[trigger] self.adj.entries@[j]).0 == v;
                         lemma_entries_to_map_contains_key::<V::V, Set<V::V>>(
                             self.adj.entries@, j);
                     }
@@ -803,4 +803,12 @@ broadcast use {
     }
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl<V: StT + Ord + Clone> Clone for AdjTableGraphStPer<V> {
+        fn clone(&self) -> Self {
+            AdjTableGraphStPer { adj: self.adj.clone() }
+        }
+    }
 }
