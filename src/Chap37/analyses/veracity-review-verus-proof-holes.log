@@ -51,36 +51,36 @@ Table of Contents:
       1272 |         }
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeq.rs:1122: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
 ⚠ AVLTreeSeqMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:859: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       855 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:833: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       829 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       857 |         {
-       858 |             proof {
-       860 |                 assume(spec_avltreeseqmtper_wf(other.root));
-       861 |                 assume(obeys_feq_full::<T>());
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:860: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       855 |         fn eq(&self, other: &Self) -> (equal: bool)
+       831 |         {
+       832 |             proof {
+       834 |                 assume(spec_avltreeseqmtper_wf(other.root));
+       835 |                 assume(obeys_feq_full::<T>());
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:834: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       829 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       858 |             proof {
-       859 |                 assume(spec_avltreeseqmtper_wf(self.root));
-       861 |                 assume(obeys_feq_full::<T>());
-       862 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:861: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       855 |         fn eq(&self, other: &Self) -> (equal: bool)
+       832 |             proof {
+       833 |                 assume(spec_avltreeseqmtper_wf(self.root));
+       835 |                 assume(obeys_feq_full::<T>());
+       836 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:835: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       829 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       859 |                 assume(spec_avltreeseqmtper_wf(self.root));
-       860 |                 assume(spec_avltreeseqmtper_wf(other.root));
-       862 |             }
-       863 |             compare_trees(&self.root, &other.root)
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:874: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       868 |         fn clone(&self) -> (copy: Self)
+       833 |                 assume(spec_avltreeseqmtper_wf(self.root));
+       834 |                 assume(spec_avltreeseqmtper_wf(other.root));
+       836 |             }
+       837 |             compare_trees(&self.root, &other.root)
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:848: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       842 |         fn clone(&self) -> (copy: Self)
             ...
-       872 |                 root: self.root.clone(),
-       873 |             };
-       875 |             copy
-       876 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:667: info: structural_false_positive OPAQUE_EXTERNAL subseq_copy — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:729: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
+       846 |                 root: self.root.clone(),
+       847 |             };
+       849 |             copy
+       850 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:642: info: structural_false_positive OPAQUE_EXTERNAL subseq_copy — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqMtPer.rs:703: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
 ⚠ AVLTreeSeqStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap37/AVLTreeSeqStEph.rs:743: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        728 |     fn clone_link<T: StT>(link: &Link<T>) -> (copy: Link<T>)
@@ -297,16 +297,16 @@ Modules:
    19 total
 
 Proof Functions:
-   24 clean (100%)
+   23 clean (100%)
    0 holed (0%)
-   24 total
+   23 total
 
 Function Specs:
    739 exec fns with complete spec (requires+ensures) (72%)
    18 exec fns missing spec (1%)
-   264 proof/spec fns clean (25%)
+   262 proof/spec fns clean (25%)
    0 proof/spec fns with holes (0%)
-   1021 total fns
+   1019 total fns
 
 
 Holes Found: 0 (actionable)
@@ -330,15 +330,15 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-28 13:57:17 -07:00
-Ended:     2026-03-28 13:57:18 -07:00
-Duration:  188ms
+Started:   2026-03-28 17:04:13 -07:00
+Ended:     2026-03-28 17:04:13 -07:00
+Duration:  144ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
-================
+=========
 
-Started:   2026-03-28 13:57:17 -07:00
-Ended:     2026-03-28 13:57:18 -07:00
-Duration:  188ms
+Started:   2026-03-28 17:04:13 -07:00
+Ended:     2026-03-28 17:04:13 -07:00
+Duration:  144ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log

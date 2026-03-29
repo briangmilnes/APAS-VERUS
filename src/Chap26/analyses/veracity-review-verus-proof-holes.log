@@ -111,9 +111,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-28 13:57:17 -07:00
-Ended:     2026-03-28 13:57:17 -07:00
-Duration:  38ms
+Started:   2026-03-28 17:04:13 -07:00
+Ended:     2026-03-28 17:04:13 -07:00
+Duration:  31ms
 
 Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
 output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
