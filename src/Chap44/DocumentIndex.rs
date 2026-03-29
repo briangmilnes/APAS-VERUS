@@ -31,6 +31,7 @@ pub mod DocumentIndex {
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
     use crate::Chap42::TableStPer::TableStPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::clone_view::clone_view::ClonePreservesWf;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_clone};
 
@@ -54,8 +55,16 @@ pub mod DocumentIndex {
     // 6a. spec fns — struct DocumentIndex
 
     /// Well-formedness predicate for DocumentIndex.
+    /// Requires the table to be well-formed and all stored DocumentSets
+    /// to be well-formed with bounded size (each set < usize::MAX/2 entries).
     pub open spec fn spec_documentindex_wf(di: &DocumentIndex) -> bool {
-        di.word_to_docs.spec_tablestper_wf()
+        &&& di.word_to_docs.spec_tablestper_wf()
+        &&& forall|k: Seq<char>|
+                #[trigger] di.word_to_docs@.contains_key(k) ==> {
+                    let ds = di.word_to_docs.spec_stored_value(k);
+                    &&& ds.spec_avltreesetstper_wf()
+                    &&& ds@.len() <= usize::MAX as nat / 2
+                }
     }
 
     // 8a. traits — struct DocumentIndex
@@ -77,6 +86,9 @@ pub mod DocumentIndex {
                 self.spec_documentindex_wf(),
                 obeys_view_eq::<Word>(),
                 obeys_feq_full::<DocumentSet>(),
+            ensures
+                found.spec_avltreesetstper_wf(),
+                found@.len() <= usize::MAX as nat / 2,
         ;
 
         /// - APAS: Work O(m log(1 + n/m)), Span O(log n + log m)
@@ -199,8 +211,10 @@ pub mod DocumentIndex {
 
         /// Algorithm 44.3: find function - simple table lookup.
         fn find(&self, word: &Word) -> (found: DocumentSet) {
-            match self.word_to_docs.find(word) {
-                Some(doc_set) => doc_set,
+            match self.word_to_docs.find_ref(word) {
+                Some(doc_set_ref) => {
+                    doc_set_ref.clone_wf()
+                },
                 None => AVLTreeSetStPer::empty(),
             }
         }
@@ -226,18 +240,24 @@ pub mod DocumentIndex {
         }
 
         /// Algorithm 44.3: toSeq function.
-        #[verifier::external_body]
         fn to_seq(docs: &DocumentSet) -> (seq: ArraySeqStPerS<DocumentId>) {
             let avl_seq = docs.to_seq();
-            let mut array_seq = ArraySeqStPerS::empty();
-
-            for i in 0..avl_seq.length() {
+            let len = avl_seq.length();
+            let mut result: Vec<DocumentId> = Vec::new();
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    avl_seq.spec_avltreeseqstper_wf(),
+                    len == avl_seq.spec_seq().len(),
+                    i <= len,
+                    result@.len() == i as int,
+                decreases len - i,
+            {
                 let doc_id = avl_seq.nth(i);
-                let single_seq = ArraySeqStPerS::singleton(doc_id.clone());
-                array_seq = ArraySeqStPerS::append(&array_seq, &single_seq);
+                result.push(doc_id.clone());
+                i += 1;
             }
-
-            array_seq
+            ArraySeqStPerS::from_vec(result)
         }
 
         fn empty() -> (di: Self) {
@@ -246,18 +266,23 @@ pub mod DocumentIndex {
             }
         }
 
-        #[verifier::external_body]
         fn get_all_words(&self) -> (words: ArraySeqStPerS<Word>) {
             let entries = self.word_to_docs.collect();
-            let mut words = ArraySeqStPerS::empty();
-
-            for i in 0..entries.length() {
+            let len = entries.length();
+            let mut result: Vec<Word> = Vec::new();
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    len == entries.spec_len(),
+                    i <= len,
+                    result@.len() == i as int,
+                decreases len - i,
+            {
                 let entry = entries.nth(i);
-                let single_seq = ArraySeqStPerS::singleton(entry.0.clone());
-                words = ArraySeqStPerS::append(&words, &single_seq);
+                result.push(entry.0.clone());
+                i += 1;
             }
-
-            words
+            ArraySeqStPerS::from_vec(result)
         }
 
         fn word_count(&self) -> (count: usize) {
@@ -291,6 +316,9 @@ pub mod DocumentIndex {
                 self.spec_index_wf(),
                 obeys_view_eq::<Word>(),
                 obeys_feq_full::<DocumentSet>(),
+            ensures
+                found.spec_avltreesetstper_wf(),
+                found@.len() <= usize::MAX as nat / 2,
         ;
 
         /// - APAS: N/A — delegates to DocumentIndex::query_and.
@@ -373,7 +401,6 @@ pub mod DocumentIndex {
         }
 
         /// Complex query: (word1 AND word2) OR (word3 AND NOT word4).
-        #[verifier::external_body]
         fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> (result: DocumentSet) {
             let set1 = self.find(word1);
             let set2 = self.find(word2);
@@ -382,6 +409,11 @@ pub mod DocumentIndex {
 
             let left_side = self.and(set1, set2);
             let right_side = self.and_not(set3, set4);
+
+            proof {
+                vstd::set_lib::lemma_len_intersect::<Seq<char>>(set1@, set2@);
+                vstd::set_lib::lemma_len_difference::<Seq<char>>(set3@, set4@);
+            }
 
             self.or(left_side, right_side)
         }
