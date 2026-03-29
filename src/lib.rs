@@ -227,6 +227,7 @@ pub mod vstdplus {
     pub mod monoid;
     pub mod multiset;
     pub mod rand;
+    pub mod strings;
     pub mod arithmetic {
     pub mod power2_plus;
     }
