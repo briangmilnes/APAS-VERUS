@@ -311,7 +311,7 @@ broadcast use {
                 assert forall|v: T::V| st@.contains(v) <==> seq_view.to_set().contains(v)
                 by {
                     if st@.contains(v) {
-                        let j = choose|j: int| 0 <= j < n as int && vals@[j]@ == v;
+                        let j = choose|j: int| 0 <= j < n as int && #[trigger] vals@[j]@ == v;
                         assert(seq_view[j] == vals@[j]@);
                         assert(seq_view.to_set().contains(v));
                     }
