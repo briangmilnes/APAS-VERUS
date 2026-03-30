@@ -121,7 +121,7 @@ pub mod StarPartitionMtEph {
                     vertex_to_index@[vertices_vec@[j]@] as usize == j,
                 // Domain is exactly {vertices_vec@[j]@ | 0 <= j < i}.
                 forall|v_view: V::V| #[trigger] vertex_to_index@.contains_key(v_view) ==>
-                    exists|j: int| 0 <= j < i as int && vertices_vec@[j]@ == v_view,
+                    exists|j: int| 0 <= j < i as int && #[trigger] vertices_vec@[j]@ == v_view,
             decreases nv - i,
         {
             let ghost iv = vertices_vec@[i as int]@;
@@ -129,7 +129,7 @@ pub mod StarPartitionMtEph {
             proof {
                 // After inserting vertices_vec[i] -> i, prove invariants for range [0..i+1].
                 assert forall|j: int| 0 <= j < i as int + 1 implies
-                    vertex_to_index@.contains_key(vertices_vec@[j]@) &&
+                    #[trigger] vertex_to_index@.contains_key(vertices_vec@[j]@) &&
                     vertex_to_index@[vertices_vec@[j]@] as usize == j by {
                     if j < i as int {
                         let ghost jv = vertices_vec@[j]@;
@@ -147,7 +147,7 @@ pub mod StarPartitionMtEph {
                 };
                 // Domain update: any new key must be vertices_vec@[i]@ or an old key.
                 assert forall|v_view: V::V| vertex_to_index@.contains_key(v_view) implies
-                    exists|j: int| 0 <= j < i as int + 1 && vertices_vec@[j]@ == v_view by {
+                    exists|j: int| 0 <= j < i as int + 1 && #[trigger] vertices_vec@[j]@ == v_view by {
                     if v_view != iv {
                         // Old key; old invariant provides witness.
                         let j2 = choose|j: int| 0 <= j < i as int && #[trigger] vertices_vec@[j]@ == v_view;
@@ -190,7 +190,7 @@ pub mod StarPartitionMtEph {
             coin_flips.insert(vertices_vec[j].clone_view(), random_bool_seeded(&mut rng));
             proof {
                 assert forall|jj: int| 0 <= jj < j as int + 1 implies
-                    coin_flips@.contains_key(vertices_vec@[jj]@) by {
+                    #[trigger] coin_flips@.contains_key(vertices_vec@[jj]@) by {
                     if jj < j as int {
                         let ghost jjv = vertices_vec@[jj]@;
                         let ghost jv2 = vertices_vec@[j as int]@;
@@ -228,7 +228,7 @@ pub mod StarPartitionMtEph {
                     #[trigger] vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
                     vertex_to_index@[vertices_vec@[j2]@] as usize == j2,
                 forall|v_view: V::V| #[trigger] vertex_to_index@.contains_key(v_view) ==>
-                    exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+                    exists|j2: int| 0 <= j2 < nv as int && #[trigger] vertices_vec@[j2]@ == v_view,
                 forall|v_view: V::V| #[trigger] graph@.V.contains(v_view) ==>
                     vertex_to_index@.contains_key(v_view),
                 // coin_flips covers all vertices.
@@ -284,7 +284,7 @@ pub mod StarPartitionMtEph {
                             assert(coin_flips@[v@]);
                             assert((vertex_to_index@[v@] as usize) < nv);
                             assert(th_edges@.len() == pre_th_len + 1);
-                            assert forall|s: int| 0 <= s < th_edges@.len() implies
+                            assert forall|s: int| #![trigger th_edges@[s]] 0 <= s < th_edges@.len() implies
                                 (th_edges@[s].0 as usize) < nv &&
                                 coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@) &&
                                 !coin_flips@[vertices_vec@[(th_edges@[s].0 as usize) as int]@] &&
@@ -326,7 +326,7 @@ pub mod StarPartitionMtEph {
                             assert(coin_flips@[u@]);
                             assert((vertex_to_index@[u@] as usize) < nv);
                             assert(th_edges@.len() == pre_th_len + 1);
-                            assert forall|s: int| 0 <= s < th_edges@.len() implies
+                            assert forall|s: int| #![trigger th_edges@[s]] 0 <= s < th_edges@.len() implies
                                 (th_edges@[s].0 as usize) < nv &&
                                 coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@) &&
                                 !coin_flips@[vertices_vec@[(th_edges@[s].0 as usize) as int]@] &&
@@ -355,7 +355,7 @@ pub mod StarPartitionMtEph {
             }
             // Re-establish th_edges invariant at merge point (after if/else if).
             proof {
-                assert forall|s: int| 0 <= s < th_edges@.len() implies
+                assert forall|s: int| #![trigger th_edges@[s]] 0 <= s < th_edges@.len() implies
                     (th_edges@[s].0 as usize) < nv &&
                     coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@) &&
                     !coin_flips@[vertices_vec@[(th_edges@[s].0 as usize) as int]@] &&
@@ -375,7 +375,7 @@ pub mod StarPartitionMtEph {
 
         // Bridge: th_edges invariant from Loop 3 for Loop 4 carry-through.
         proof {
-            assert forall|s: int| 0 <= s < th_edges@.len() implies
+            assert forall|s: int| #![trigger th_edges@[s]] 0 <= s < th_edges@.len() implies
                 (th_edges@[s].0 as usize) < nv &&
                 coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@) &&
                 !coin_flips@[vertices_vec@[(th_edges@[s].0 as usize) as int]@] &&
@@ -397,13 +397,13 @@ pub mod StarPartitionMtEph {
                 nv == vertices_vec@.len(),
                 vertices_vec@.no_duplicates(),
                 p_vec@.len() == m as int,
-                forall|j2: int| 0 <= j2 < m as int ==> p_vec@[j2]@ == vertices_vec@[j2]@,
+                forall|j2: int| 0 <= j2 < m as int ==> #[trigger] p_vec@[j2]@ == vertices_vec@[j2]@,
                 // Carry-through: vertex_to_index invariants.
                 forall|j2: int| 0 <= j2 < nv as int ==>
                     #[trigger] vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
                     vertex_to_index@[vertices_vec@[j2]@] as usize == j2,
                 forall|v_view: V::V| #[trigger] vertex_to_index@.contains_key(v_view) ==>
-                    exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+                    exists|j2: int| 0 <= j2 < nv as int && #[trigger] vertices_vec@[j2]@ == v_view,
                 // Carry-through: coin_flips covers all vertices.
                 forall|j2: int| 0 <= j2 < nv as int ==>
                     #[trigger] coin_flips@.contains_key(vertices_vec@[j2]@),
@@ -462,10 +462,10 @@ pub mod StarPartitionMtEph {
                     (vertex_to_index@[p_vec@[j2]@] as usize) < nv,
                 // vertex_to_index domain invariants.
                 forall|j2: int| 0 <= j2 < nv as int ==>
-                    vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+                    #[trigger] vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
                     vertex_to_index@[vertices_vec@[j2]@] as usize == j2,
                 forall|v_view: V::V| #[trigger] vertex_to_index@.contains_key(v_view) ==>
-                    exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+                    exists|j2: int| 0 <= j2 < nv as int && #[trigger] vertices_vec@[j2]@ == v_view,
                 // th_edges invariant (immutable).
                 forall|s: int| 0 <= s < th_edges@.len() ==>
                     (th_edges@[s].0 as usize) < nv &&
@@ -501,9 +501,9 @@ pub mod StarPartitionMtEph {
                     };
                     // Heads preserve: for j == idx, coin_flips[vertices_vec[idx]] = false => vacuous.
                     assert forall|j2: int| 0 <= j2 < nv as int implies
-                        coin_flips@.contains_key(vertices_vec@[j2]@) &&
+                        coin_flips@.contains_key(#[trigger] vertices_vec@[j2]@) &&
                         (coin_flips@[vertices_vec@[j2]@] ==>
-                         p_vec@[j2]@ == vertices_vec@[j2]@) by {
+                         #[trigger] p_vec@[j2]@ == vertices_vec@[j2]@) by {
                         if j2 != idx as usize as int {
                             assert(p_vec@[j2] == pre_p[j2]);
                         }
@@ -511,7 +511,7 @@ pub mod StarPartitionMtEph {
                     };
                     // Modified entries point to heads.
                     assert forall|j2: int|
-                        (0 <= j2 < nv as int && p_vec@[j2]@ != vertices_vec@[j2]@) implies
+                        (0 <= j2 < nv as int && #[trigger] p_vec@[j2]@ != #[trigger] vertices_vec@[j2]@) implies
                         (coin_flips@.contains_key(p_vec@[j2]@) &&
                          coin_flips@[p_vec@[j2]@]) by {
                         if j2 == idx as usize as int {
@@ -537,7 +537,7 @@ pub mod StarPartitionMtEph {
             }
             // Re-assert th_edges invariant (th_edges is immutable, unchanged by p_vec.set).
             proof {
-                assert forall|s: int| 0 <= s < th_edges@.len() implies
+                assert forall|s: int| #![trigger th_edges@[s]] 0 <= s < th_edges@.len() implies
                     (th_edges@[s].0 as usize) < nv &&
                     coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@) &&
                     !coin_flips@[vertices_vec@[(th_edges@[s].0 as usize) as int]@] &&
@@ -581,10 +581,10 @@ pub mod StarPartitionMtEph {
                     (vertex_to_index@[p_vec@[j2]@] as usize) < nv,
                 // vertex_to_index domain.
                 forall|j2: int| 0 <= j2 < nv as int ==>
-                    vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+                    #[trigger] vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
                     vertex_to_index@[vertices_vec@[j2]@] as usize == j2,
                 forall|v_view: V::V| #[trigger] vertex_to_index@.contains_key(v_view) ==>
-                    exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+                    exists|j2: int| 0 <= j2 < nv as int && #[trigger] vertices_vec@[j2]@ == v_view,
                 // Prefix: partition_map covers vertices_vec[0..q] with correct values.
                 forall|j2: int| 0 <= j2 < q as int ==>
                     #[trigger] partition_map@.contains_key(vertices_vec@[j2]@) &&
@@ -595,7 +595,7 @@ pub mod StarPartitionMtEph {
                     #[trigger] centers@.contains(p_vec@[j2]@),
                 // All partition_map keys come from vertices_vec[0..q].
                 forall|v_view: V::V| #[trigger] partition_map@.contains_key(v_view) ==>
-                    exists|j2: int| 0 <= j2 < q as int && vertices_vec@[j2]@ == v_view,
+                    exists|j2: int| 0 <= j2 < q as int && #[trigger] vertices_vec@[j2]@ == v_view,
             decreases nv - q,
         {
             let vertex = &vertices_vec[q];
@@ -614,7 +614,7 @@ pub mod StarPartitionMtEph {
                 assert(partition_map@[qv]@ == cv);
                 // Prior entries are unchanged (qv can't equal earlier vertices by no_duplicates).
                 assert forall|j2: int| 0 <= j2 < q as int implies
-                    partition_map@.contains_key(vertices_vec@[j2]@) &&
+                    #[trigger] partition_map@.contains_key(vertices_vec@[j2]@) &&
                     partition_map@[vertices_vec@[j2]@]@ == p_vec@[j2]@ by {
                     let ghost jv = vertices_vec@[j2]@;
                     if jv != qv {
@@ -629,7 +629,7 @@ pub mod StarPartitionMtEph {
                 };
                 // All keys come from vertices_vec[0..q+1].
                 assert forall|v_view: V::V| partition_map@.contains_key(v_view) implies
-                    exists|j2: int| 0 <= j2 < q as int + 1 && vertices_vec@[j2]@ == v_view by {
+                    exists|j2: int| 0 <= j2 < q as int + 1 && #[trigger] vertices_vec@[j2]@ == v_view by {
                     if v_view != qv {
                         assert(pre_pm.contains_key(v_view));
                         let j2 = choose|j2: int| 0 <= j2 < q as int && #[trigger] vertices_vec@[j2]@ == v_view;
@@ -651,7 +651,7 @@ pub mod StarPartitionMtEph {
                     assert(centers@.contains(qv));
                     // Prior heads-in-centers: pre_ctr had them; centers@ = pre_ctr.insert(qv) still does.
                     assert forall|j2: int|
-                        (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+                        (0 <= j2 < q as int && #[trigger] p_vec@[j2]@ == #[trigger] vertices_vec@[j2]@) implies
                         centers@.contains(p_vec@[j2]@) by {
                         // Both antecedents assumed via implies. Old invariant gives pre_ctr membership.
                         assert(pre_ctr.contains(p_vec@[j2]@));
@@ -665,7 +665,7 @@ pub mod StarPartitionMtEph {
                     assert(p_vec@[q as int]@ != vertices_vec@[q as int]@);
                     // Prior entries unchanged.
                     assert forall|j2: int|
-                        (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+                        (0 <= j2 < q as int && #[trigger] p_vec@[j2]@ == #[trigger] vertices_vec@[j2]@) implies
                         centers@.contains(p_vec@[j2]@) by {
                         assert(pre_ctr.contains(p_vec@[j2]@));
                     };
