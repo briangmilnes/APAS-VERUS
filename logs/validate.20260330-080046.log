@@ -1,0 +1,112 @@
+error: invariant not satisfied at end of loop body
+   --> src/Chap62/StarPartitionMtEph.rs:238:17
+    |
+238 | /                 forall|s: int| 0 <= s < th_edges@.len() ==>
+239 | |                     (th_edges@[s].0 as usize) < nv &&
+240 | |                     #[trigger] coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@) &&
+241 | |                     !coin_flips@[vertices_vec@[(th_edges@[s].0 as usize) as int]@] &&
+...   |
+244 | |                     vertex_to_index@.contains_key(th_edges@[s].1@) &&
+245 | |                     (vertex_to_index@[th_edges@[s].1@] as usize) < nv,
+    | |_____________________________________________________________________^
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:297:69
+    |
+297 | ...                   assert(coin_flips@.contains_key(vertices_vec@[(pre_th[s].0 as usize) as int]@));
+    |                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:339:69
+    |
+339 | ...                   assert(coin_flips@.contains_key(vertices_vec@[(pre_th[s].0 as usize) as int]@));
+    |                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:367:53
+    |
+367 |                     assert(coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@));
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:386:49
+    |
+386 |                 assert(coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@));
+    |                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: invariant not satisfied before loop
+   --> src/Chap62/StarPartitionMtEph.rs:411:17
+    |
+411 | /                 forall|s: int| 0 <= s < th_edges@.len() ==>
+412 | |                     (th_edges@[s].0 as usize) < nv &&
+413 | |                     #[trigger] coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@) &&
+414 | |                     !coin_flips@[vertices_vec@[(th_edges@[s].0 as usize) as int]@] &&
+...   |
+417 | |                     vertex_to_index@.contains_key(th_edges@[s].1@) &&
+418 | |                     (vertex_to_index@[th_edges@[s].1@] as usize) < nv,
+    | |_____________________________________________________________________^
+
+error: invariant not satisfied before loop
+   --> src/Chap62/StarPartitionMtEph.rs:460:17
+    |
+460 | /                 forall|j2: int| 0 <= j2 < nv as int ==>
+461 | |                     vertex_to_index@.contains_key(#[trigger] p_vec@[j2]@) &&
+462 | |                     (vertex_to_index@[p_vec@[j2]@] as usize) < nv,
+    | |_________________________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap62/StarPartitionMtEph.rs:470:17
+    |
+470 | /                 forall|s: int| 0 <= s < th_edges@.len() ==>
+471 | |                     (th_edges@[s].0 as usize) < nv &&
+472 | |                     #[trigger] coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@) &&
+473 | |                     !coin_flips@[vertices_vec@[(th_edges@[s].0 as usize) as int]@] &&
+...   |
+476 | |                     vertex_to_index@.contains_key(th_edges@[s].1@) &&
+477 | |                     (vertex_to_index@[th_edges@[s].1@] as usize) < nv,
+    | |_____________________________________________________________________^
+
+error: invariant not satisfied before loop
+   --> src/Chap62/StarPartitionMtEph.rs:470:17
+    |
+470 | /                 forall|s: int| 0 <= s < th_edges@.len() ==>
+471 | |                     (th_edges@[s].0 as usize) < nv &&
+472 | |                     #[trigger] coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@) &&
+473 | |                     !coin_flips@[vertices_vec@[(th_edges@[s].0 as usize) as int]@] &&
+...   |
+476 | |                     vertex_to_index@.contains_key(th_edges@[s].1@) &&
+477 | |                     (vertex_to_index@[th_edges@[s].1@] as usize) < nv,
+    | |_____________________________________________________________________^
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:548:53
+    |
+548 |                     assert(coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@));
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 1236 verified, 3 errors
+error: aborting due to 5 previous errors
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 1747MB, peak z3 RSS: 240MB, min free: 21407MB
+Sampled CPU Usage: rust_verify: 20s, z3 children: 14s

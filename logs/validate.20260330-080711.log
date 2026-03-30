@@ -1,0 +1,64 @@
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:297:69
+    |
+297 | ...                   assert(coin_flips@.contains_key(vertices_vec@[(pre_th[s].0 as usize) as int]@));
+    |                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:339:69
+    |
+339 | ...                   assert(coin_flips@.contains_key(vertices_vec@[(pre_th[s].0 as usize) as int]@));
+    |                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:367:53
+    |
+367 |                     assert(coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@));
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:386:49
+    |
+386 |                 assert(coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@));
+    |                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: invariant not satisfied before loop
+   --> src/Chap62/StarPartitionMtEph.rs:460:17
+    |
+460 | /                 forall|j2: int| 0 <= j2 < nv as int ==>
+461 | |                     vertex_to_index@.contains_key(#[trigger] p_vec@[j2]@) &&
+462 | |                     (vertex_to_index@[p_vec@[j2]@] as usize) < nv,
+    | |_________________________________________________________________^
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:548:53
+    |
+548 |                     assert(coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@));
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 1238 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 1756MB, peak z3 RSS: 267MB, min free: 21566MB
+Sampled CPU Usage: rust_verify: 21s, z3 children: 15s
