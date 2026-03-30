@@ -496,12 +496,27 @@ pub mod AVLTreeSeqMtPer {
 
     fn inorder_collect<T: StTInMtT>(cur: &Link<T>, out: &mut Vec<T>)
         requires spec_cached_size(cur) <= usize::MAX as nat,
-        ensures true,
+        ensures
+            out@.map_values(|t: T| t@) =~=
+                old(out)@.map_values(|t: T| t@) + spec_inorder(*cur),
         decreases *cur,
     {
         if let Some(n) = cur {
+            let ghost old_out_views = out@.map_values(|t: T| t@);
             inorder_collect(&n.left, out);
-            out.push(n.value.clone());
+            let ghost after_left_views = out@.map_values(|t: T| t@);
+            assert(after_left_views =~= old_out_views + spec_inorder(n.left));
+            let val = n.value.clone();
+            proof {
+                assert(obeys_feq_full_trigger::<T>());
+                assert(cloned(*&n.value, val));
+                // broadcast axiom_cloned_implies_eq fires: *&n.value == val, so val@ == n.value@.
+            }
+            out.push(val);
+            let ghost after_push_views = out@.map_values(|t: T| t@);
+            assert(after_push_views =~= after_left_views.push(n.value@));
+            assert(after_push_views =~=
+                old_out_views + spec_inorder(n.left) + seq![n.value@]);
             inorder_collect(&n.right, out);
         }
     }
@@ -680,12 +695,6 @@ pub mod AVLTreeSeqMtPer {
         fn values_in_order(&self) -> (values: Vec<T>) {
             let mut out: Vec<T> = Vec::new();
             inorder_collect(&self.root, &mut out);
-            proof {
-                // In-order traversal produces elements whose views match spec_inorder.
-                // Correct by construction: inorder_collect pushes elements in in-order,
-                // and clone preserves view. Full proof requires map_values + push lemma.
-                assume(out@.map_values(|t: T| t@) =~= self.spec_seq());
-            }
             out
         }
 

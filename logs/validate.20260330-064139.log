@@ -1,0 +1,17 @@
+error[E0507]: cannot move out of an `Arc`
+   --> src/Chap37/AVLTreeSeqMtPer.rs:513:43
+    |
+513 |                 lemma_cloned_view_eq::<T>(n.value, val);
+    |                                           ^^^^^^^ move occurs because value has type `T`, which does not implement the `Copy` trait
+    |
+help: consider cloning the value if the performance cost is acceptable
+    |
+513 |                 lemma_cloned_view_eq::<T>(n.value.clone(), val);
+    |                                                  ++++++++
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0507`.
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 3592MB, peak z3 RSS: 492MB, min free: 17785MB
+Sampled CPU Usage: rust_verify: 64s, z3 children: 55s

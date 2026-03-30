@@ -50,50 +50,37 @@ Table of Contents:
       1271 |             copy
       1272 |         }
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeq.rs:1122: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
-❌ AVLTreeSeqMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:687: error: assume() [algorithmic] - assume(out@.map_values(|t: T| t@) =~= self.spec_seq());
-       680 |         fn values_in_order(&self) -> (values: Vec<T>) {
+⚠ AVLTreeSeqMtPer.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:849: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       845 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       685 |                 // Correct by construction: inorder_collect pushes elements in in-order,
-       686 |                 // and clone preserves view. Full proof requires map_values + push lemma.
-       688 |             }
-       689 |             out
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:840: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       836 |         fn eq(&self, other: &Self) -> (equal: bool)
+       847 |         {
+       848 |             proof {
+       850 |                 assume(spec_avltreeseqmtper_wf(other.root));
+       851 |                 assume(obeys_feq_full::<T>());
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:850: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       845 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       838 |         {
-       839 |             proof {
-       841 |                 assume(spec_avltreeseqmtper_wf(other.root));
-       842 |                 assume(obeys_feq_full::<T>());
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:841: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       836 |         fn eq(&self, other: &Self) -> (equal: bool)
+       848 |             proof {
+       849 |                 assume(spec_avltreeseqmtper_wf(self.root));
+       851 |                 assume(obeys_feq_full::<T>());
+       852 |             }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:851: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       845 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       839 |             proof {
-       840 |                 assume(spec_avltreeseqmtper_wf(self.root));
-       842 |                 assume(obeys_feq_full::<T>());
-       843 |             }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:842: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       836 |         fn eq(&self, other: &Self) -> (equal: bool)
+       849 |                 assume(spec_avltreeseqmtper_wf(self.root));
+       850 |                 assume(spec_avltreeseqmtper_wf(other.root));
+       852 |             }
+       853 |             compare_trees(&self.root, &other.root)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:864: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       858 |         fn clone(&self) -> (copy: Self)
             ...
-       840 |                 assume(spec_avltreeseqmtper_wf(self.root));
-       841 |                 assume(spec_avltreeseqmtper_wf(other.root));
-       843 |             }
-       844 |             compare_trees(&self.root, &other.root)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:855: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       849 |         fn clone(&self) -> (copy: Self)
-            ...
-       853 |                 root: self.root.clone(),
-       854 |             };
-       856 |             copy
-       857 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:643: info: structural_false_positive OPAQUE_EXTERNAL subseq_copy — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:710: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
-   Holes: 1 total
-      1 × assume()
-   Info: 2 × structural_false_positive
-      1 × OPAQUE_EXTERNAL
-      1 × STD_TRAIT_IMPL
-   Proof functions: 2 total (2 clean, 0 holed)
+       862 |                 root: self.root.clone(),
+       863 |             };
+       865 |             copy
+       866 |         }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:658: info: structural_false_positive OPAQUE_EXTERNAL subseq_copy — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqMtPer.rs:719: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
 ⚠ AVLTreeSeqStEph.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap37/AVLTreeSeqStEph.rs:743: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        728 |     fn clone_link<T: StT>(link: &Link<T>) -> (copy: Link<T>)
@@ -298,8 +285,8 @@ BSTSplayStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   18 clean (no holes, no errors; 94%)
-   1 holed (holes or errors, 5%)
+   19 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    19 total
 
 Proof Functions:
@@ -315,9 +302,8 @@ Function Specs:
    1023 total fns
 
 
-Holes Found: 1 (actionable)
-   1 × assume() [algorithmic] (100%)
-Real Proof Targets: 1 (all actionable)
+Holes Found: 0 (actionable)
+Real Proof Targets: 0 (all actionable)
 
 Warnings: 19 total
    19 × assume_eq_clone_workaround
@@ -330,19 +316,14 @@ Structural (info only): 35
    4 × STD_TRAIT_IMPL
    1 × OPAQUE_EXTERNAL
 
+No proof holes found! All proofs are complete.
+
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-30 06:22:55 -07:00
-Ended:     2026-03-30 06:22:56 -07:00
-Duration:  243ms
-
-Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
-====================
-
-Started:   2026-03-30 06:22:55 -07:00
-Ended:     2026-03-30 06:22:56 -07:00
-Duration:  243ms
+Started:   2026-03-30 07:07:21 -07:00
+Ended:     2026-03-30 07:07:22 -07:00
+Duration:  160ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
