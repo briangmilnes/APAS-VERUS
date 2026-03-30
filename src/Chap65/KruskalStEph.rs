@@ -3,6 +3,10 @@
 //!
 //! Implements Algorithm 65.2: Kruskal's algorithm for computing Minimum Spanning Trees.
 //! Uses Union-Find data structure for efficient cycle detection.
+//!
+//! Final four proof holes (2 of 4):
+//! - uf_wf_opaque (line 40): opaque wf wrapper — Z3 diverges on 13-quantifier wf through equals+union+if.
+//! - kruskal (line 49): external_body — blocked by UnionFindStEph union proof.
 
 pub mod KruskalStEph {
 

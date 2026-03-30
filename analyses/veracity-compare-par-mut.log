@@ -1,6 +1,6 @@
 veracity-compare-par-mut
 ========================
-Started at: 2026-03-30 06:19:22 -07:00
+Started at: 2026-03-30 07:16:05 -07:00
 Codebase: /home/milnes/projects/APAS-VERUS
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-compare-par-mut.log
 
@@ -660,13 +660,13 @@ src/Chap43/OrderedTableMtPer.rs:99: info: View = Map < K :: V , V :: V >
 src/Chap43/OrderedTableMtPer.rs:108: info: wf = spec_orderedtablemtper_wf
 src/Chap43/OrderedTableStEph.rs:53: info: struct OrderedTableStEph { tree: ParamBST < Pair < K , V > > }
 src/Chap43/OrderedTableStEph.rs:62: info: View = Map < K :: V , V :: V >
-src/Chap43/OrderedTableStEph.rs:553: info: wf = spec_orderedtablesteph_wf
+src/Chap43/OrderedTableStEph.rs:550: info: wf = spec_orderedtablesteph_wf
 src/Chap43/OrderedTableMtEph.rs:62: info: struct OrderedTableMtEph { locked_table: RwLock < OrderedTableStEph < K , V > , OrderedTableMtEphInv >, ghost ghost_locked_table: Ghost < Map < K :: V , V :: V > > }
 src/Chap43/OrderedTableMtEph.rs:78: info: View = Map < K :: V , V :: V >
 src/Chap43/OrderedTableMtEph.rs:88: info: wf = spec_orderedtablemteph_wf
 src/Chap43/OrderedTableStPer.rs:455: info: trait OrderedTableStPerTrait <K : StT + Ord, V : StT + Ord> : Sized + View < V = Map < K :: V , V :: V > > — 41 fns (39 exec, 2 spec)
 src/Chap43/OrderedTableMtPer.rs:107: info: trait OrderedTableMtPerTrait <K : MtKey + TotalOrder + 'static, V : StTInMtT + Ord + 'static> : Sized + View < V = Map < K :: V , V :: V > > — 22 fns (21 exec, 1 spec)
-src/Chap43/OrderedTableStEph.rs:552: info: trait OrderedTableStEphTrait <K : StT + Ord, V : StT + Ord> : Sized + View < V = Map < K :: V , V :: V > > — 41 fns (40 exec, 1 spec)
+src/Chap43/OrderedTableStEph.rs:549: info: trait OrderedTableStEphTrait <K : StT + Ord, V : StT + Ord> : Sized + View < V = Map < K :: V , V :: V > > — 41 fns (40 exec, 1 spec)
 src/Chap43/OrderedTableMtEph.rs:87: info: trait OrderedTableMtEphTrait <K : MtKey, V : MtVal + Ord> : Sized + View < V = Map < K :: V , V :: V > > — 31 fns (30 exec, 1 spec)
 src/Chap43/OrderedTableMtPer.rs:107: info: generic bounds `<K : MtKey + TotalOrder + 'static, V : StTInMtT + Ord + 'static>` — supertrait-compatible with StPer `<K : StT + Ord, V : StT + Ord>` (extra: K: TotalOrder, V: StTInMtT)
 src/Chap43/OrderedTableMtEph.rs:87: info: generic bounds `<K : MtKey, V : MtVal + Ord>` — supertrait-compatible with StPer `<K : StT + Ord, V : StT + Ord>` (extra: V: MtVal)
@@ -691,23 +691,23 @@ src/Chap43/OrderedTableMtPer.rs:256: warning: `get_key_range`: StPer has require
 src/Chap43/OrderedTableMtPer.rs:261: warning: `rank_key`: StPer has requires but MtPer does not
 src/Chap43/OrderedTableMtPer.rs:270: warning: `select_key`: StPer has requires but MtPer does not
 src/Chap43/OrderedTableMtPer.rs:280: warning: `split_rank_key`: StPer has requires but MtPer does not
-src/Chap43/OrderedTableStEph.rs:552: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_orderedtablestper_wf`
-src/Chap43/OrderedTableStEph.rs:552: warning: missing 3 fns present in StPer (OrderedTableStPerTrait): `spec_orderedtablestper_find_pre`, `insert_wf`, `delete_wf`
-src/Chap43/OrderedTableStEph.rs:552: info: 4 extra fns not in StPer (OrderedTableStPerTrait): `spec_orderedtablesteph_wf`, `lookup`, `is_empty`, `reduce`
-src/Chap43/OrderedTableStEph.rs:562: warning: `empty`: StPer has requires but StEph does not
-src/Chap43/OrderedTableStEph.rs:600: info: `insert` has 3 params but StPer has 2 (Eph/Per interface difference)
-src/Chap43/OrderedTableStEph.rs:600: info: `insert` returns `()` but StPer returns `Self` (Eph→Per return shift)
-src/Chap43/OrderedTableStEph.rs:617: info: `delete` returns `Option < V >` but StPer returns `Self`
-src/Chap43/OrderedTableStEph.rs:684: info: `intersection` returns `()` but StPer returns `Self` (Eph→Per return shift)
-src/Chap43/OrderedTableStEph.rs:702: info: `union` returns `()` but StPer returns `Self` (Eph→Per return shift)
-src/Chap43/OrderedTableStEph.rs:725: info: `difference` returns `()` but StPer returns `Self` (Eph→Per return shift)
-src/Chap43/OrderedTableStEph.rs:734: info: `restrict` returns `()` but StPer returns `Self` (Eph→Per return shift)
-src/Chap43/OrderedTableStEph.rs:743: info: `subtract` returns `()` but StPer returns `Self` (Eph→Per return shift)
-src/Chap43/OrderedTableStEph.rs:819: info: `join_key` has 1 params but StPer has 2 (Eph/Per interface difference)
-src/Chap43/OrderedTableStEph.rs:819: info: `join_key` returns `()` but StPer returns `Self` (Eph→Per return shift)
-src/Chap43/OrderedTableStEph.rs:889: info: `insert_iter` has 3 params but StPer has 2 (Eph/Per interface difference)
-src/Chap43/OrderedTableStEph.rs:889: info: `insert_iter` returns `()` but StPer returns `Self` (Eph→Per return shift)
-src/Chap43/OrderedTableStEph.rs:905: info: `delete_iter` returns `Option < V >` but StPer returns `Self`
+src/Chap43/OrderedTableStEph.rs:549: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_orderedtablestper_wf`
+src/Chap43/OrderedTableStEph.rs:549: warning: missing 3 fns present in StPer (OrderedTableStPerTrait): `spec_orderedtablestper_find_pre`, `insert_wf`, `delete_wf`
+src/Chap43/OrderedTableStEph.rs:549: info: 4 extra fns not in StPer (OrderedTableStPerTrait): `spec_orderedtablesteph_wf`, `lookup`, `is_empty`, `reduce`
+src/Chap43/OrderedTableStEph.rs:559: warning: `empty`: StPer has requires but StEph does not
+src/Chap43/OrderedTableStEph.rs:597: info: `insert` has 3 params but StPer has 2 (Eph/Per interface difference)
+src/Chap43/OrderedTableStEph.rs:597: info: `insert` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableStEph.rs:614: info: `delete` returns `Option < V >` but StPer returns `Self`
+src/Chap43/OrderedTableStEph.rs:681: info: `intersection` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableStEph.rs:699: info: `union` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableStEph.rs:722: info: `difference` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableStEph.rs:731: info: `restrict` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableStEph.rs:740: info: `subtract` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableStEph.rs:816: info: `join_key` has 1 params but StPer has 2 (Eph/Per interface difference)
+src/Chap43/OrderedTableStEph.rs:816: info: `join_key` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableStEph.rs:886: info: `insert_iter` has 3 params but StPer has 2 (Eph/Per interface difference)
+src/Chap43/OrderedTableStEph.rs:886: info: `insert_iter` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap43/OrderedTableStEph.rs:902: info: `delete_iter` returns `Option < V >` but StPer returns `Self`
 src/Chap43/OrderedTableMtEph.rs:87: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_orderedtablestper_wf`
 src/Chap43/OrderedTableMtEph.rs:87: warning: missing 14 fns present in StPer (OrderedTableStPerTrait): `spec_orderedtablestper_find_pre`, `insert_wf`, `delete_wf`, `find_iter`, `insert_iter`, `delete_iter`, `first_key_iter`, `last_key_iter`, `previous_key_iter`, `next_key_iter`, `split_key_iter`, `get_key_range_iter`, `rank_key_iter`, `split_rank_key_iter`
 src/Chap43/OrderedTableMtEph.rs:87: info: 5 extra fns not in StPer (OrderedTableStPerTrait): `spec_orderedtablemteph_wf`, `lookup`, `is_empty`, `reduce`, `iter`
@@ -2233,28 +2233,28 @@ src/Chap43/OrderedSetStEph.rs:484: info: `split_rank_iter`: StEph has extra ensu
 src/Chap43/OrderedSetStEph.rs:484: info: `split_rank_iter`: StEph has extra ensures clause `split . 1 @ . subset_of (old (self) @)` not in StPer
 src/Chap43/OrderedTableMtPer.rs:117: info: `empty`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `empty . spec_orderedtable_wf ()`
 src/Chap43/OrderedTableMtPer.rs:117: info: `empty`: ensures clause fuzzy match — ref: `table @ == Map :: < K :: V , V :: V > :: empty ()` ~ cur: `empty @ == Map :: < K :: V , V :: V > :: empty ()`
-src/Chap43/OrderedTableStEph.rs:562: warning: `empty`: ensures clause count 1 vs 2 (StPer has 2)
-src/Chap43/OrderedTableStEph.rs:562: info: `empty`: ensures clause fuzzy match — ref: `table @ == Map :: < K :: V , V :: V > :: empty ()` ~ cur: `empty @ == Map :: < K :: V , V :: V > :: empty ()`
-src/Chap43/OrderedTableStEph.rs:562: info: `empty`: StPer has ensures clause `table . spec_orderedtable_wf ()` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:559: warning: `empty`: ensures clause count 1 vs 2 (StPer has 2)
+src/Chap43/OrderedTableStEph.rs:559: info: `empty`: ensures clause fuzzy match — ref: `table @ == Map :: < K :: V , V :: V > :: empty ()` ~ cur: `empty @ == Map :: < K :: V , V :: V > :: empty ()`
+src/Chap43/OrderedTableStEph.rs:559: info: `empty`: StPer has ensures clause `table . spec_orderedtable_wf ()` with no match in StEph
 src/Chap43/OrderedTableMtEph.rs:98: info: `empty`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `empty . spec_orderedtable_wf ()`
 src/Chap43/OrderedTableMtEph.rs:98: info: `empty`: ensures clause fuzzy match — ref: `table @ == Map :: < K :: V , V :: V > :: empty ()` ~ cur: `empty @ == Map :: < K :: V , V :: V > :: empty ()`
 src/Chap43/OrderedTableMtPer.rs:128: info: `singleton`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `tree . spec_orderedtable_wf ()`
 src/Chap43/OrderedTableMtPer.rs:128: info: `singleton`: ensures clause fuzzy match — ref: `table @ == Map :: < K :: V , V :: V > :: empty () . insert (...` ~ cur: `tree @ == Map :: < K :: V , V :: V > :: empty () . insert (k...`
-src/Chap43/OrderedTableStEph.rs:566: warning: `singleton`: ensures clause count 3 vs 2 (StPer has 2)
-src/Chap43/OrderedTableStEph.rs:566: info: `singleton`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `tree . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:566: info: `singleton`: ensures clause fuzzy match — ref: `table @ == Map :: < K :: V , V :: V > :: empty () . insert (...` ~ cur: `tree @ == Map :: < K :: V , V :: V > :: empty () . insert (k...`
-src/Chap43/OrderedTableStEph.rs:566: info: `singleton`: StEph has extra ensures clause `tree @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:563: warning: `singleton`: ensures clause count 3 vs 2 (StPer has 2)
+src/Chap43/OrderedTableStEph.rs:563: info: `singleton`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `tree . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:563: info: `singleton`: ensures clause fuzzy match — ref: `table @ == Map :: < K :: V , V :: V > :: empty () . insert (...` ~ cur: `tree @ == Map :: < K :: V , V :: V > :: empty () . insert (k...`
+src/Chap43/OrderedTableStEph.rs:563: info: `singleton`: StEph has extra ensures clause `tree @ . dom () . finite ()` not in StPer
 src/Chap43/OrderedTableMtEph.rs:103: warning: `singleton`: requires clause count 5 vs 6 (StPer has 6)
 src/Chap43/OrderedTableMtEph.rs:103: warning: `singleton`: StPer has requires clause `obeys_feq_clone :: < Pair < K , V > > ()` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:103: warning: `singleton`: ensures clause count 3 vs 2 (StPer has 2)
 src/Chap43/OrderedTableMtEph.rs:103: info: `singleton`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `tree . spec_orderedtable_wf ()`
 src/Chap43/OrderedTableMtEph.rs:103: info: `singleton`: ensures clause fuzzy match — ref: `table @ == Map :: < K :: V , V :: V > :: empty () . insert (...` ~ cur: `tree @ == Map :: < K :: V , V :: V > :: empty () . insert (k...`
 src/Chap43/OrderedTableMtEph.rs:103: info: `singleton`: MtEph has extra ensures clause `tree @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:577: warning: `find`: requires clause count 2 vs 3 (StPer has 3)
-src/Chap43/OrderedTableStEph.rs:577: warning: `find`: StPer has requires clause `obeys_feq_full :: < V > ()` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:577: warning: `find`: StPer has requires clause `self . spec_orderedtable_find_pre ()` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:577: info: `find`: StEph has extra requires clause `self . spec_orderedtable_wf ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:577: info: `find`: ensures clause fuzzy match — ref: `match found { Some (v) => self @ . contains_key (k @) && sel...` ~ cur: `match found { Some (v) => self @ . contains_key (k @) && v @...`
+src/Chap43/OrderedTableStEph.rs:574: warning: `find`: requires clause count 2 vs 3 (StPer has 3)
+src/Chap43/OrderedTableStEph.rs:574: warning: `find`: StPer has requires clause `obeys_feq_full :: < V > ()` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:574: warning: `find`: StPer has requires clause `self . spec_orderedtable_find_pre ()` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:574: info: `find`: StEph has extra requires clause `self . spec_orderedtable_wf ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:574: info: `find`: ensures clause fuzzy match — ref: `match found { Some (v) => self @ . contains_key (k @) && sel...` ~ cur: `match found { Some (v) => self @ . contains_key (k @) && v @...`
 src/Chap43/OrderedTableMtEph.rs:114: warning: `find`: requires clause count 2 vs 3 (StPer has 3)
 src/Chap43/OrderedTableMtEph.rs:114: warning: `find`: StPer has requires clause `obeys_feq_full :: < V > ()` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:114: warning: `find`: StPer has requires clause `self . spec_orderedtable_find_pre ()` with no match in MtEph
@@ -2268,18 +2268,18 @@ src/Chap43/OrderedTableMtPer.rs:149: info: `insert`: ensures clause fuzzy match 
 src/Chap43/OrderedTableMtPer.rs:149: info: `insert`: ensures clause fuzzy match — ref: `table @ . dom () =~= self @ . dom () . insert (k @)` ~ cur: `updated @ . dom () =~= self @ . dom () . insert (k @)`
 src/Chap43/OrderedTableMtPer.rs:149: warning: `insert`: StPer has ensures clause `forall | k2 : K :: V | k2 != k @ && # [trigger] self @ . contains_key (k2) ==> t...` with no match in MtPer
 src/Chap43/OrderedTableMtPer.rs:149: warning: `insert`: StPer has ensures clause `table @ [k @] == v @` with no match in MtPer
-src/Chap43/OrderedTableStEph.rs:600: warning: `insert`: requires clause count 4 vs 3 (StPer has 3)
-src/Chap43/OrderedTableStEph.rs:600: info: `insert`: requires clause fuzzy match — ref: `self @ . dom () . len () + 1 < usize :: MAX as nat` ~ cur: `! old (self) @ . contains_key (k @) ==> old (self) @ . dom (...`
-src/Chap43/OrderedTableStEph.rs:600: info: `insert`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:600: info: `insert`: StEph has extra requires clause `forall | v1 : & V , v2 : & V | combine . requires ((v1 , v2))` not in StPer
-src/Chap43/OrderedTableStEph.rs:600: warning: `insert`: ensures clause count 7 vs 4 (StPer has 4)
-src/Chap43/OrderedTableStEph.rs:600: info: `insert`: ensures clause fuzzy match — ref: `forall | k2 : K :: V | k2 != k @ && # [trigger] self @ . con...` ~ cur: `! old (self) @ . contains_key (k @) ==> self @ [k @] == v @`
-src/Chap43/OrderedTableStEph.rs:600: info: `insert`: ensures clause fuzzy match — ref: `table @ [k @] == v @` ~ cur: `forall | key : K :: V | key != k @ && # [trigger] old (self)...`
-src/Chap43/OrderedTableStEph.rs:600: info: `insert`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `self . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:600: info: `insert`: ensures clause fuzzy match — ref: `table @ . dom () =~= self @ . dom () . insert (k @)` ~ cur: `self @ . dom () =~= old (self) @ . dom () . insert (k @)`
-src/Chap43/OrderedTableStEph.rs:600: info: `insert`: StEph has extra ensures clause `old (self) @ . contains_key (k @) ==> (exists | old_v : V , r : V | old_v @ == o...` not in StPer
-src/Chap43/OrderedTableStEph.rs:600: info: `insert`: StEph has extra ensures clause `self @ . contains_key (k @)` not in StPer
-src/Chap43/OrderedTableStEph.rs:600: info: `insert`: StEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:597: warning: `insert`: requires clause count 4 vs 3 (StPer has 3)
+src/Chap43/OrderedTableStEph.rs:597: info: `insert`: requires clause fuzzy match — ref: `self @ . dom () . len () + 1 < usize :: MAX as nat` ~ cur: `! old (self) @ . contains_key (k @) ==> old (self) @ . dom (...`
+src/Chap43/OrderedTableStEph.rs:597: info: `insert`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:597: info: `insert`: StEph has extra requires clause `forall | v1 : & V , v2 : & V | combine . requires ((v1 , v2))` not in StPer
+src/Chap43/OrderedTableStEph.rs:597: warning: `insert`: ensures clause count 7 vs 4 (StPer has 4)
+src/Chap43/OrderedTableStEph.rs:597: info: `insert`: ensures clause fuzzy match — ref: `forall | k2 : K :: V | k2 != k @ && # [trigger] self @ . con...` ~ cur: `! old (self) @ . contains_key (k @) ==> self @ [k @] == v @`
+src/Chap43/OrderedTableStEph.rs:597: info: `insert`: ensures clause fuzzy match — ref: `table @ [k @] == v @` ~ cur: `forall | key : K :: V | key != k @ && # [trigger] old (self)...`
+src/Chap43/OrderedTableStEph.rs:597: info: `insert`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `self . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:597: info: `insert`: ensures clause fuzzy match — ref: `table @ . dom () =~= self @ . dom () . insert (k @)` ~ cur: `self @ . dom () =~= old (self) @ . dom () . insert (k @)`
+src/Chap43/OrderedTableStEph.rs:597: info: `insert`: StEph has extra ensures clause `old (self) @ . contains_key (k @) ==> (exists | old_v : V , r : V | old_v @ == o...` not in StPer
+src/Chap43/OrderedTableStEph.rs:597: info: `insert`: StEph has extra ensures clause `self @ . contains_key (k @)` not in StPer
+src/Chap43/OrderedTableStEph.rs:597: info: `insert`: StEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
 src/Chap43/OrderedTableMtEph.rs:140: warning: `insert`: requires clause count 4 vs 3 (StPer has 3)
 src/Chap43/OrderedTableMtEph.rs:140: info: `insert`: requires clause fuzzy match — ref: `self @ . dom () . len () + 1 < usize :: MAX as nat` ~ cur: `obeys_feq_clone :: < K > ()`
 src/Chap43/OrderedTableMtEph.rs:140: info: `insert`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
@@ -2299,13 +2299,13 @@ src/Chap43/OrderedTableMtPer.rs:156: info: `insert_wf`: ensures clause fuzzy mat
 src/Chap43/OrderedTableMtPer.rs:156: info: `insert_wf`: ensures clause fuzzy match — ref: `table @ [k @] == v @` ~ cur: `updated @ [k @] == v @`
 src/Chap43/OrderedTableMtPer.rs:166: info: `delete`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `updated . spec_orderedtable_wf ()`
 src/Chap43/OrderedTableMtPer.rs:166: info: `delete`: ensures clause fuzzy match — ref: `table @ == self @ . remove (k @)` ~ cur: `updated @ == self @ . remove (k @)`
-src/Chap43/OrderedTableStEph.rs:617: warning: `delete`: requires clause count 2 vs 3 (StPer has 3)
-src/Chap43/OrderedTableStEph.rs:617: info: `delete`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:617: warning: `delete`: StPer has requires clause `obeys_feq_clone :: < Pair < K , V > > ()` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:617: warning: `delete`: ensures clause count 3 vs 2 (StPer has 2)
-src/Chap43/OrderedTableStEph.rs:617: info: `delete`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `self . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:617: info: `delete`: ensures clause fuzzy match — ref: `table @ == self @ . remove (k @)` ~ cur: `self @ == old (self) @ . remove (k @)`
-src/Chap43/OrderedTableStEph.rs:617: info: `delete`: StEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:614: warning: `delete`: requires clause count 2 vs 3 (StPer has 3)
+src/Chap43/OrderedTableStEph.rs:614: info: `delete`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:614: warning: `delete`: StPer has requires clause `obeys_feq_clone :: < Pair < K , V > > ()` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:614: warning: `delete`: ensures clause count 3 vs 2 (StPer has 2)
+src/Chap43/OrderedTableStEph.rs:614: info: `delete`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `self . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:614: info: `delete`: ensures clause fuzzy match — ref: `table @ == self @ . remove (k @)` ~ cur: `self @ == old (self) @ . remove (k @)`
+src/Chap43/OrderedTableStEph.rs:614: info: `delete`: StEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
 src/Chap43/OrderedTableMtEph.rs:150: warning: `delete`: requires clause count 2 vs 3 (StPer has 3)
 src/Chap43/OrderedTableMtEph.rs:150: info: `delete`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
 src/Chap43/OrderedTableMtEph.rs:150: warning: `delete`: StPer has requires clause `obeys_feq_clone :: < Pair < K , V > > ()` with no match in MtEph
@@ -2317,20 +2317,20 @@ src/Chap43/OrderedTableMtPer.rs:172: info: `delete_wf`: ensures clause fuzzy mat
 src/Chap43/OrderedTableMtPer.rs:172: info: `delete_wf`: ensures clause fuzzy match — ref: `table @ == self @ . remove (k @)` ~ cur: `updated @ == self @ . remove (k @)`
 src/Chap43/OrderedTableMtPer.rs:180: warning: `domain`: ensures clause count 1 vs 2 (StPer has 2)
 src/Chap43/OrderedTableMtPer.rs:180: warning: `domain`: StPer has ensures clause `keys @ =~= self @ . dom ()` with no match in MtPer
-src/Chap43/OrderedTableStEph.rs:624: warning: `domain`: StPer has ensures clause `keys @ =~= self @ . dom ()` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:624: info: `domain`: StEph has extra ensures clause `domain @ =~= self @ . dom ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:621: warning: `domain`: StPer has ensures clause `keys @ =~= self @ . dom ()` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:621: info: `domain`: StEph has extra ensures clause `domain @ =~= self @ . dom ()` not in StPer
 src/Chap43/OrderedTableMtEph.rs:158: warning: `domain`: ensures clause count 1 vs 2 (StPer has 2)
 src/Chap43/OrderedTableMtEph.rs:158: warning: `domain`: StPer has ensures clause `keys @ =~= self @ . dom ()` with no match in MtEph
-src/Chap43/OrderedTableStEph.rs:629: warning: `tabulate`: requires clause count 11 vs 9 (StPer has 9)
-src/Chap43/OrderedTableStEph.rs:629: info: `tabulate`: requires clause fuzzy match — ref: `keys @ . len () < usize :: MAX` ~ cur: `keys @ . len () < usize :: MAX as nat`
-src/Chap43/OrderedTableStEph.rs:629: info: `tabulate`: StEph has extra requires clause `obeys_feq_full :: < Pair < K , V > > ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:629: info: `tabulate`: StEph has extra requires clause `obeys_feq_fulls :: < K , V > ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:629: warning: `tabulate`: ensures clause count 4 vs 3 (StPer has 3)
-src/Chap43/OrderedTableStEph.rs:629: info: `tabulate`: ensures clause fuzzy match — ref: `forall | k : K :: V | # [trigger] table @ . contains_key (k)...` ~ cur: `forall | k : K :: V | # [trigger] tabulated @ . contains_key...`
-src/Chap43/OrderedTableStEph.rs:629: info: `tabulate`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `tabulated . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:629: warning: `tabulate`: StPer has ensures clause `table @ . dom () =~= keys @` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:629: info: `tabulate`: StEph has extra ensures clause `tabulated @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:629: info: `tabulate`: StEph has extra ensures clause `tabulated @ . dom () =~= keys @` not in StPer
+src/Chap43/OrderedTableStEph.rs:626: warning: `tabulate`: requires clause count 11 vs 9 (StPer has 9)
+src/Chap43/OrderedTableStEph.rs:626: info: `tabulate`: requires clause fuzzy match — ref: `keys @ . len () < usize :: MAX` ~ cur: `keys @ . len () < usize :: MAX as nat`
+src/Chap43/OrderedTableStEph.rs:626: info: `tabulate`: StEph has extra requires clause `obeys_feq_full :: < Pair < K , V > > ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:626: info: `tabulate`: StEph has extra requires clause `obeys_feq_fulls :: < K , V > ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:626: warning: `tabulate`: ensures clause count 4 vs 3 (StPer has 3)
+src/Chap43/OrderedTableStEph.rs:626: info: `tabulate`: ensures clause fuzzy match — ref: `forall | k : K :: V | # [trigger] table @ . contains_key (k)...` ~ cur: `forall | k : K :: V | # [trigger] tabulated @ . contains_key...`
+src/Chap43/OrderedTableStEph.rs:626: info: `tabulate`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `tabulated . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:626: warning: `tabulate`: StPer has ensures clause `table @ . dom () =~= keys @` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:626: info: `tabulate`: StEph has extra ensures clause `tabulated @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:626: info: `tabulate`: StEph has extra ensures clause `tabulated @ . dom () =~= keys @` not in StPer
 src/Chap43/OrderedTableMtEph.rs:163: warning: `tabulate`: requires clause count 11 vs 9 (StPer has 9)
 src/Chap43/OrderedTableMtEph.rs:163: info: `tabulate`: requires clause fuzzy match — ref: `keys @ . len () < usize :: MAX` ~ cur: `keys @ . len () < usize :: MAX as nat`
 src/Chap43/OrderedTableMtEph.rs:163: info: `tabulate`: MtEph has extra requires clause `obeys_feq_full :: < Pair < K , V > > ()` not in StPer
@@ -2346,14 +2346,14 @@ src/Chap43/OrderedTableMtPer.rs:185: info: `map`: ensures clause fuzzy match —
 src/Chap43/OrderedTableMtPer.rs:185: info: `map`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `mapped . spec_orderedtable_wf ()`
 src/Chap43/OrderedTableMtPer.rs:185: warning: `map`: StPer has ensures clause `table @ . dom () == self @ . dom ()` with no match in MtPer
 src/Chap43/OrderedTableMtPer.rs:185: info: `map`: MtPer has extra ensures clause `mapped @ . dom () =~= self @ . dom ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:652: warning: `map`: requires clause count 3 vs 2 (StPer has 2)
-src/Chap43/OrderedTableStEph.rs:652: info: `map`: requires clause fuzzy match — ref: `forall | v : & V | f . requires ((v ,))` ~ cur: `forall | k : & K , v : & V | f . requires ((k , v))`
-src/Chap43/OrderedTableStEph.rs:652: info: `map`: StEph has extra requires clause `obeys_feq_clone :: < Pair < K , V > > ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:652: info: `map`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `mapped . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:652: warning: `map`: StPer has ensures clause `forall | k : K :: V | # [trigger] table @ . contains_key (k) ==> (exists | old_v...` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:652: warning: `map`: StPer has ensures clause `table @ . dom () == self @ . dom ()` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:652: info: `map`: StEph has extra ensures clause `mapped @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:652: info: `map`: StEph has extra ensures clause `mapped @ . dom () =~= self @ . dom ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:649: warning: `map`: requires clause count 3 vs 2 (StPer has 2)
+src/Chap43/OrderedTableStEph.rs:649: info: `map`: requires clause fuzzy match — ref: `forall | v : & V | f . requires ((v ,))` ~ cur: `forall | k : & K , v : & V | f . requires ((k , v))`
+src/Chap43/OrderedTableStEph.rs:649: info: `map`: StEph has extra requires clause `obeys_feq_clone :: < Pair < K , V > > ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:649: info: `map`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `mapped . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:649: warning: `map`: StPer has ensures clause `forall | k : K :: V | # [trigger] table @ . contains_key (k) ==> (exists | old_v...` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:649: warning: `map`: StPer has ensures clause `table @ . dom () == self @ . dom ()` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:649: info: `map`: StEph has extra ensures clause `mapped @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:649: info: `map`: StEph has extra ensures clause `mapped @ . dom () =~= self @ . dom ()` not in StPer
 src/Chap43/OrderedTableMtEph.rs:180: warning: `map`: requires clause count 1 vs 2 (StPer has 2)
 src/Chap43/OrderedTableMtEph.rs:180: info: `map`: requires clause fuzzy match — ref: `forall | v : & V | f . requires ((v ,))` ~ cur: `forall | k : & K , v : & V | f . requires ((k , v))`
 src/Chap43/OrderedTableMtEph.rs:180: info: `map`: StPer has requires clause `self . spec_orderedtable_wf ()` with no match in MtEph
@@ -2372,13 +2372,13 @@ src/Chap43/OrderedTableMtPer.rs:198: warning: `filter`: StPer has ensures clause
 src/Chap43/OrderedTableMtPer.rs:198: info: `filter`: StPer has ensures clause `table . spec_orderedtable_wf ()` with no match in MtPer
 src/Chap43/OrderedTableMtPer.rs:198: warning: `filter`: StPer has ensures clause `table @ . dom () . subset_of (self @ . dom ())` with no match in MtPer
 src/Chap43/OrderedTableMtPer.rs:198: info: `filter`: MtPer has extra ensures clause `filtered @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:660: warning: `filter`: ensures clause count 5 vs 4 (StPer has 4)
-src/Chap43/OrderedTableStEph.rs:660: info: `filter`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `filtered . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:660: info: `filter`: ensures clause fuzzy match — ref: `forall | k : K :: V | # [trigger] table @ . contains_key (k)...` ~ cur: `forall | k : K :: V | # [trigger] filtered @ . contains_key ...`
-src/Chap43/OrderedTableStEph.rs:660: info: `filter`: ensures clause fuzzy match — ref: `forall | k : K :: V | self @ . dom () . contains (k) && spec...` ~ cur: `forall | k : K :: V | self @ . dom () . contains (k) && spec...`
-src/Chap43/OrderedTableStEph.rs:660: warning: `filter`: StPer has ensures clause `table @ . dom () . subset_of (self @ . dom ())` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:660: info: `filter`: StEph has extra ensures clause `filtered @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:660: info: `filter`: StEph has extra ensures clause `filtered @ . dom () . subset_of (self @ . dom ())` not in StPer
+src/Chap43/OrderedTableStEph.rs:657: warning: `filter`: ensures clause count 5 vs 4 (StPer has 4)
+src/Chap43/OrderedTableStEph.rs:657: info: `filter`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `filtered . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:657: info: `filter`: ensures clause fuzzy match — ref: `forall | k : K :: V | # [trigger] table @ . contains_key (k)...` ~ cur: `forall | k : K :: V | # [trigger] filtered @ . contains_key ...`
+src/Chap43/OrderedTableStEph.rs:657: info: `filter`: ensures clause fuzzy match — ref: `forall | k : K :: V | self @ . dom () . contains (k) && spec...` ~ cur: `forall | k : K :: V | self @ . dom () . contains (k) && spec...`
+src/Chap43/OrderedTableStEph.rs:657: warning: `filter`: StPer has ensures clause `table @ . dom () . subset_of (self @ . dom ())` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:657: info: `filter`: StEph has extra ensures clause `filtered @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:657: info: `filter`: StEph has extra ensures clause `filtered @ . dom () . subset_of (self @ . dom ())` not in StPer
 src/Chap43/OrderedTableMtEph.rs:186: warning: `filter`: requires clause count 2 vs 3 (StPer has 3)
 src/Chap43/OrderedTableMtEph.rs:186: info: `filter`: StPer has requires clause `self . spec_orderedtable_wf ()` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:186: warning: `filter`: ensures clause count 1 vs 4 (StPer has 4)
@@ -2387,15 +2387,15 @@ src/Chap43/OrderedTableMtEph.rs:186: warning: `filter`: StPer has ensures clause
 src/Chap43/OrderedTableMtEph.rs:186: info: `filter`: StPer has ensures clause `table . spec_orderedtable_wf ()` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:186: warning: `filter`: StPer has ensures clause `table @ . dom () . subset_of (self @ . dom ())` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:186: info: `filter`: MtEph has extra ensures clause `filtered @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:684: warning: `intersection`: requires clause count 5 vs 4 (StPer has 4)
-src/Chap43/OrderedTableStEph.rs:684: info: `intersection`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:684: info: `intersection`: StEph has extra requires clause `obeys_feq_clone :: < K > ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:684: warning: `intersection`: ensures clause count 4 vs 3 (StPer has 3)
-src/Chap43/OrderedTableStEph.rs:684: info: `intersection`: ensures clause fuzzy match — ref: `forall | k : K :: V | # [trigger] table @ . contains_key (k)...` ~ cur: `forall | k : K :: V | # [trigger] self @ . contains_key (k) ...`
-src/Chap43/OrderedTableStEph.rs:684: info: `intersection`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `self . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:684: warning: `intersection`: StPer has ensures clause `table @ . dom () =~= self @ . dom () . intersect (other @ . dom ())` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:684: info: `intersection`: StEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:684: info: `intersection`: StEph has extra ensures clause `self @ . dom () =~= old (self) @ . dom () . intersect (other @ . dom ())` not in StPer
+src/Chap43/OrderedTableStEph.rs:681: warning: `intersection`: requires clause count 5 vs 4 (StPer has 4)
+src/Chap43/OrderedTableStEph.rs:681: info: `intersection`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:681: info: `intersection`: StEph has extra requires clause `obeys_feq_clone :: < K > ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:681: warning: `intersection`: ensures clause count 4 vs 3 (StPer has 3)
+src/Chap43/OrderedTableStEph.rs:681: info: `intersection`: ensures clause fuzzy match — ref: `forall | k : K :: V | # [trigger] table @ . contains_key (k)...` ~ cur: `forall | k : K :: V | # [trigger] self @ . contains_key (k) ...`
+src/Chap43/OrderedTableStEph.rs:681: info: `intersection`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `self . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:681: warning: `intersection`: StPer has ensures clause `table @ . dom () =~= self @ . dom () . intersect (other @ . dom ())` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:681: info: `intersection`: StEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:681: info: `intersection`: StEph has extra ensures clause `self @ . dom () =~= old (self) @ . dom () . intersect (other @ . dom ())` not in StPer
 src/Chap43/OrderedTableMtEph.rs:199: warning: `intersection`: requires clause count 1 vs 4 (StPer has 4)
 src/Chap43/OrderedTableMtEph.rs:199: warning: `intersection`: StPer has requires clause `obeys_view_eq :: < K > ()` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:199: info: `intersection`: StPer has requires clause `other . spec_orderedtable_wf ()` with no match in MtEph
@@ -2405,18 +2405,18 @@ src/Chap43/OrderedTableMtEph.rs:199: warning: `intersection`: StPer has ensures 
 src/Chap43/OrderedTableMtEph.rs:199: info: `intersection`: StPer has ensures clause `table . spec_orderedtable_wf ()` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:199: warning: `intersection`: StPer has ensures clause `table @ . dom () =~= self @ . dom () . intersect (other @ . dom ())` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:199: info: `intersection`: MtEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:702: warning: `union`: requires clause count 6 vs 5 (StPer has 5)
-src/Chap43/OrderedTableStEph.rs:702: info: `union`: requires clause fuzzy match — ref: `self @ . dom () . len () + other @ . dom () . len () < usize...` ~ cur: `obeys_feq_clone :: < K > ()`
-src/Chap43/OrderedTableStEph.rs:702: info: `union`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:702: info: `union`: StEph has extra requires clause `old (self) @ . dom () . len () + other @ . dom () . len () < usize :: MAX` not in StPer
-src/Chap43/OrderedTableStEph.rs:702: warning: `union`: ensures clause count 6 vs 5 (StPer has 5)
-src/Chap43/OrderedTableStEph.rs:702: info: `union`: ensures clause fuzzy match — ref: `forall | k : K :: V | # [trigger] other @ . contains_key (k)...` ~ cur: `forall | k : K :: V | # [trigger] old (self) @ . contains_ke...`
-src/Chap43/OrderedTableStEph.rs:702: info: `union`: ensures clause fuzzy match — ref: `forall | k : K :: V | # [trigger] self @ . contains_key (k) ...` ~ cur: `forall | k : K :: V | # [trigger] old (self) @ . contains_ke...`
-src/Chap43/OrderedTableStEph.rs:702: info: `union`: ensures clause fuzzy match — ref: `forall | k : K :: V | # [trigger] self @ . contains_key (k) ...` ~ cur: `forall | k : K :: V | # [trigger] other @ . contains_key (k)...`
-src/Chap43/OrderedTableStEph.rs:702: info: `union`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `self . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:702: warning: `union`: StPer has ensures clause `table @ . dom () =~= self @ . dom () . union (other @ . dom ())` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:702: info: `union`: StEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:702: info: `union`: StEph has extra ensures clause `self @ . dom () =~= old (self) @ . dom () . union (other @ . dom ())` not in StPer
+src/Chap43/OrderedTableStEph.rs:699: warning: `union`: requires clause count 6 vs 5 (StPer has 5)
+src/Chap43/OrderedTableStEph.rs:699: info: `union`: requires clause fuzzy match — ref: `self @ . dom () . len () + other @ . dom () . len () < usize...` ~ cur: `obeys_feq_clone :: < K > ()`
+src/Chap43/OrderedTableStEph.rs:699: info: `union`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:699: info: `union`: StEph has extra requires clause `old (self) @ . dom () . len () + other @ . dom () . len () < usize :: MAX` not in StPer
+src/Chap43/OrderedTableStEph.rs:699: warning: `union`: ensures clause count 6 vs 5 (StPer has 5)
+src/Chap43/OrderedTableStEph.rs:699: info: `union`: ensures clause fuzzy match — ref: `forall | k : K :: V | # [trigger] other @ . contains_key (k)...` ~ cur: `forall | k : K :: V | # [trigger] old (self) @ . contains_ke...`
+src/Chap43/OrderedTableStEph.rs:699: info: `union`: ensures clause fuzzy match — ref: `forall | k : K :: V | # [trigger] self @ . contains_key (k) ...` ~ cur: `forall | k : K :: V | # [trigger] old (self) @ . contains_ke...`
+src/Chap43/OrderedTableStEph.rs:699: info: `union`: ensures clause fuzzy match — ref: `forall | k : K :: V | # [trigger] self @ . contains_key (k) ...` ~ cur: `forall | k : K :: V | # [trigger] other @ . contains_key (k)...`
+src/Chap43/OrderedTableStEph.rs:699: info: `union`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `self . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:699: warning: `union`: StPer has ensures clause `table @ . dom () =~= self @ . dom () . union (other @ . dom ())` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:699: info: `union`: StEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:699: info: `union`: StEph has extra ensures clause `self @ . dom () =~= old (self) @ . dom () . union (other @ . dom ())` not in StPer
 src/Chap43/OrderedTableMtEph.rs:205: warning: `union`: requires clause count 1 vs 5 (StPer has 5)
 src/Chap43/OrderedTableMtEph.rs:205: warning: `union`: StPer has requires clause `obeys_view_eq :: < K > ()` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:205: info: `union`: StPer has requires clause `other . spec_orderedtable_wf ()` with no match in MtEph
@@ -2429,80 +2429,80 @@ src/Chap43/OrderedTableMtEph.rs:205: warning: `union`: StPer has ensures clause 
 src/Chap43/OrderedTableMtEph.rs:205: info: `union`: StPer has ensures clause `table . spec_orderedtable_wf ()` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:205: warning: `union`: StPer has ensures clause `table @ . dom () =~= self @ . dom () . union (other @ . dom ())` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:205: info: `union`: MtEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:725: info: `difference`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:725: warning: `difference`: ensures clause count 4 vs 3 (StPer has 3)
-src/Chap43/OrderedTableStEph.rs:725: info: `difference`: ensures clause fuzzy match — ref: `forall | k : K :: V | # [trigger] table @ . contains_key (k)...` ~ cur: `forall | k : K :: V | # [trigger] self @ . contains_key (k) ...`
-src/Chap43/OrderedTableStEph.rs:725: info: `difference`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `self . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:725: warning: `difference`: StPer has ensures clause `table @ . dom () =~= self @ . dom () . difference (other @ . dom ())` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:725: info: `difference`: StEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:725: info: `difference`: StEph has extra ensures clause `self @ . dom () =~= old (self) @ . dom () . difference (other @ . dom ())` not in StPer
+src/Chap43/OrderedTableStEph.rs:722: info: `difference`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:722: warning: `difference`: ensures clause count 4 vs 3 (StPer has 3)
+src/Chap43/OrderedTableStEph.rs:722: info: `difference`: ensures clause fuzzy match — ref: `forall | k : K :: V | # [trigger] table @ . contains_key (k)...` ~ cur: `forall | k : K :: V | # [trigger] self @ . contains_key (k) ...`
+src/Chap43/OrderedTableStEph.rs:722: info: `difference`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `self . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:722: warning: `difference`: StPer has ensures clause `table @ . dom () =~= self @ . dom () . difference (other @ . dom ())` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:722: info: `difference`: StEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:722: info: `difference`: StEph has extra ensures clause `self @ . dom () =~= old (self) @ . dom () . difference (other @ . dom ())` not in StPer
 src/Chap43/OrderedTableMtEph.rs:211: warning: `difference`: ensures clause count 1 vs 3 (StPer has 3)
 src/Chap43/OrderedTableMtEph.rs:211: warning: `difference`: StPer has ensures clause `forall | k : K :: V | # [trigger] table @ . contains_key (k) ==> table @ [k] == ...` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:211: info: `difference`: StPer has ensures clause `table . spec_orderedtable_wf ()` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:211: warning: `difference`: StPer has ensures clause `table @ . dom () =~= self @ . dom () . difference (other @ . dom ())` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:211: info: `difference`: MtEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:734: info: `restrict`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:734: warning: `restrict`: ensures clause count 4 vs 3 (StPer has 3)
-src/Chap43/OrderedTableStEph.rs:734: info: `restrict`: ensures clause fuzzy match — ref: `forall | k : K :: V | # [trigger] table @ . contains_key (k)...` ~ cur: `forall | k : K :: V | # [trigger] self @ . contains_key (k) ...`
-src/Chap43/OrderedTableStEph.rs:734: info: `restrict`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `self . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:734: warning: `restrict`: StPer has ensures clause `table @ . dom () =~= self @ . dom () . intersect (keys @)` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:734: info: `restrict`: StEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:734: info: `restrict`: StEph has extra ensures clause `self @ . dom () =~= old (self) @ . dom () . intersect (keys @)` not in StPer
+src/Chap43/OrderedTableStEph.rs:731: info: `restrict`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:731: warning: `restrict`: ensures clause count 4 vs 3 (StPer has 3)
+src/Chap43/OrderedTableStEph.rs:731: info: `restrict`: ensures clause fuzzy match — ref: `forall | k : K :: V | # [trigger] table @ . contains_key (k)...` ~ cur: `forall | k : K :: V | # [trigger] self @ . contains_key (k) ...`
+src/Chap43/OrderedTableStEph.rs:731: info: `restrict`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `self . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:731: warning: `restrict`: StPer has ensures clause `table @ . dom () =~= self @ . dom () . intersect (keys @)` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:731: info: `restrict`: StEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:731: info: `restrict`: StEph has extra ensures clause `self @ . dom () =~= old (self) @ . dom () . intersect (keys @)` not in StPer
 src/Chap43/OrderedTableMtEph.rs:216: warning: `restrict`: ensures clause count 1 vs 3 (StPer has 3)
 src/Chap43/OrderedTableMtEph.rs:216: warning: `restrict`: StPer has ensures clause `forall | k : K :: V | # [trigger] table @ . contains_key (k) ==> table @ [k] == ...` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:216: info: `restrict`: StPer has ensures clause `table . spec_orderedtable_wf ()` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:216: warning: `restrict`: StPer has ensures clause `table @ . dom () =~= self @ . dom () . intersect (keys @)` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:216: info: `restrict`: MtEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:743: info: `subtract`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:743: warning: `subtract`: ensures clause count 4 vs 3 (StPer has 3)
-src/Chap43/OrderedTableStEph.rs:743: info: `subtract`: ensures clause fuzzy match — ref: `forall | k : K :: V | # [trigger] table @ . contains_key (k)...` ~ cur: `forall | k : K :: V | # [trigger] self @ . contains_key (k) ...`
-src/Chap43/OrderedTableStEph.rs:743: info: `subtract`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `self . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:743: warning: `subtract`: StPer has ensures clause `table @ . dom () =~= self @ . dom () . difference (keys @)` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:743: info: `subtract`: StEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:743: info: `subtract`: StEph has extra ensures clause `self @ . dom () =~= old (self) @ . dom () . difference (keys @)` not in StPer
+src/Chap43/OrderedTableStEph.rs:740: info: `subtract`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:740: warning: `subtract`: ensures clause count 4 vs 3 (StPer has 3)
+src/Chap43/OrderedTableStEph.rs:740: info: `subtract`: ensures clause fuzzy match — ref: `forall | k : K :: V | # [trigger] table @ . contains_key (k)...` ~ cur: `forall | k : K :: V | # [trigger] self @ . contains_key (k) ...`
+src/Chap43/OrderedTableStEph.rs:740: info: `subtract`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `self . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:740: warning: `subtract`: StPer has ensures clause `table @ . dom () =~= self @ . dom () . difference (keys @)` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:740: info: `subtract`: StEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:740: info: `subtract`: StEph has extra ensures clause `self @ . dom () =~= old (self) @ . dom () . difference (keys @)` not in StPer
 src/Chap43/OrderedTableMtEph.rs:221: warning: `subtract`: ensures clause count 1 vs 3 (StPer has 3)
 src/Chap43/OrderedTableMtEph.rs:221: warning: `subtract`: StPer has ensures clause `forall | k : K :: V | # [trigger] table @ . contains_key (k) ==> table @ [k] == ...` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:221: info: `subtract`: StPer has ensures clause `table . spec_orderedtable_wf ()` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:221: warning: `subtract`: StPer has ensures clause `table @ . dom () =~= self @ . dom () . difference (keys @)` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:221: info: `subtract`: MtEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:752: info: `collect`: ensures clause fuzzy match — ref: `sorted_entries . spec_avltreeseq_wf ()` ~ cur: `collected . spec_avltreeseq_wf ()`
-src/Chap43/OrderedTableStEph.rs:752: info: `collect`: ensures clause fuzzy match — ref: `sorted_entries @ . len () == self @ . dom () . len ()` ~ cur: `collected @ . len () == self @ . dom () . len ()`
+src/Chap43/OrderedTableStEph.rs:749: info: `collect`: ensures clause fuzzy match — ref: `sorted_entries . spec_avltreeseq_wf ()` ~ cur: `collected . spec_avltreeseq_wf ()`
+src/Chap43/OrderedTableStEph.rs:749: info: `collect`: ensures clause fuzzy match — ref: `sorted_entries @ . len () == self @ . dom () . len ()` ~ cur: `collected @ . len () == self @ . dom () . len ()`
 src/Chap43/OrderedTableMtEph.rs:232: warning: `collect`: ensures clause count 2 vs 3 (StPer has 3)
 src/Chap43/OrderedTableMtEph.rs:232: info: `collect`: ensures clause fuzzy match — ref: `sorted_entries . spec_avltreeseq_wf ()` ~ cur: `collected . spec_avltreeseq_wf ()`
 src/Chap43/OrderedTableMtEph.rs:232: warning: `collect`: StPer has ensures clause `sorted_entries @ . len () == self @ . dom () . len ()` with no match in MtEph
 src/Chap43/OrderedTableMtPer.rs:204: info: `first_key`: ensures clause fuzzy match — ref: `key matches Some (k) ==> self @ . dom () . contains (k @)` ~ cur: `first matches Some (k) ==> self @ . dom () . contains (k @)`
 src/Chap43/OrderedTableMtPer.rs:204: info: `first_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | self @ . dom () . ...` ~ cur: `first matches Some (v) ==> forall | t : K | self @ . dom () ...`
 src/Chap43/OrderedTableMtPer.rs:204: info: `first_key`: ensures clause fuzzy match — ref: `self @ . dom () . len () == 0 <==> key matches None` ~ cur: `self @ . dom () . len () == 0 <==> first matches None`
-src/Chap43/OrderedTableStEph.rs:757: info: `first_key`: ensures clause fuzzy match — ref: `key matches Some (k) ==> self @ . dom () . contains (k @)` ~ cur: `first matches Some (k) ==> self @ . dom () . contains (k @)`
-src/Chap43/OrderedTableStEph.rs:757: info: `first_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | self @ . dom () . ...` ~ cur: `first matches Some (v) ==> forall | t : K | self @ . dom () ...`
-src/Chap43/OrderedTableStEph.rs:757: info: `first_key`: ensures clause fuzzy match — ref: `self @ . dom () . len () == 0 <==> key matches None` ~ cur: `self @ . dom () . len () == 0 <==> first matches None`
+src/Chap43/OrderedTableStEph.rs:754: info: `first_key`: ensures clause fuzzy match — ref: `key matches Some (k) ==> self @ . dom () . contains (k @)` ~ cur: `first matches Some (k) ==> self @ . dom () . contains (k @)`
+src/Chap43/OrderedTableStEph.rs:754: info: `first_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | self @ . dom () . ...` ~ cur: `first matches Some (v) ==> forall | t : K | self @ . dom () ...`
+src/Chap43/OrderedTableStEph.rs:754: info: `first_key`: ensures clause fuzzy match — ref: `self @ . dom () . len () == 0 <==> key matches None` ~ cur: `self @ . dom () . len () == 0 <==> first matches None`
 src/Chap43/OrderedTableMtEph.rs:237: info: `first_key`: ensures clause fuzzy match — ref: `key matches Some (k) ==> self @ . dom () . contains (k @)` ~ cur: `first matches Some (k) ==> self @ . dom () . contains (k @)`
 src/Chap43/OrderedTableMtEph.rs:237: info: `first_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | self @ . dom () . ...` ~ cur: `first matches Some (v) ==> forall | t : K | self @ . dom () ...`
 src/Chap43/OrderedTableMtEph.rs:237: info: `first_key`: ensures clause fuzzy match — ref: `self @ . dom () . len () == 0 <==> key matches None` ~ cur: `self @ . dom () . len () == 0 <==> first matches None`
 src/Chap43/OrderedTableMtPer.rs:214: info: `last_key`: ensures clause fuzzy match — ref: `key matches Some (k) ==> self @ . dom () . contains (k @)` ~ cur: `last matches Some (k) ==> self @ . dom () . contains (k @)`
 src/Chap43/OrderedTableMtPer.rs:214: info: `last_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | self @ . dom () . ...` ~ cur: `last matches Some (v) ==> forall | t : K | self @ . dom () ....`
 src/Chap43/OrderedTableMtPer.rs:214: info: `last_key`: ensures clause fuzzy match — ref: `self @ . dom () . len () == 0 <==> key matches None` ~ cur: `self @ . dom () . len () == 0 <==> last matches None`
-src/Chap43/OrderedTableStEph.rs:767: info: `last_key`: ensures clause fuzzy match — ref: `key matches Some (k) ==> self @ . dom () . contains (k @)` ~ cur: `last matches Some (k) ==> self @ . dom () . contains (k @)`
-src/Chap43/OrderedTableStEph.rs:767: info: `last_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | self @ . dom () . ...` ~ cur: `last matches Some (v) ==> forall | t : K | self @ . dom () ....`
-src/Chap43/OrderedTableStEph.rs:767: info: `last_key`: ensures clause fuzzy match — ref: `self @ . dom () . len () == 0 <==> key matches None` ~ cur: `self @ . dom () . len () == 0 <==> last matches None`
+src/Chap43/OrderedTableStEph.rs:764: info: `last_key`: ensures clause fuzzy match — ref: `key matches Some (k) ==> self @ . dom () . contains (k @)` ~ cur: `last matches Some (k) ==> self @ . dom () . contains (k @)`
+src/Chap43/OrderedTableStEph.rs:764: info: `last_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | self @ . dom () . ...` ~ cur: `last matches Some (v) ==> forall | t : K | self @ . dom () ....`
+src/Chap43/OrderedTableStEph.rs:764: info: `last_key`: ensures clause fuzzy match — ref: `self @ . dom () . len () == 0 <==> key matches None` ~ cur: `self @ . dom () . len () == 0 <==> last matches None`
 src/Chap43/OrderedTableMtEph.rs:247: info: `last_key`: ensures clause fuzzy match — ref: `key matches Some (k) ==> self @ . dom () . contains (k @)` ~ cur: `last matches Some (k) ==> self @ . dom () . contains (k @)`
 src/Chap43/OrderedTableMtEph.rs:247: info: `last_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | self @ . dom () . ...` ~ cur: `last matches Some (v) ==> forall | t : K | self @ . dom () ....`
 src/Chap43/OrderedTableMtEph.rs:247: info: `last_key`: ensures clause fuzzy match — ref: `self @ . dom () . len () == 0 <==> key matches None` ~ cur: `self @ . dom () . len () == 0 <==> last matches None`
 src/Chap43/OrderedTableMtPer.rs:224: info: `previous_key`: ensures clause fuzzy match — ref: `key matches Some (pk) ==> self @ . dom () . contains (pk @)` ~ cur: `predecessor matches Some (pk) ==> self @ . dom () . contains...`
 src/Chap43/OrderedTableMtPer.rs:224: info: `previous_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> TotalOrder :: le (v , * k) && v @ !...` ~ cur: `predecessor matches Some (v) ==> TotalOrder :: le (v , * k) ...`
 src/Chap43/OrderedTableMtPer.rs:224: info: `previous_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | # ! [trigger t @] ...` ~ cur: `predecessor matches Some (v) ==> forall | t : K | # ! [trigg...`
-src/Chap43/OrderedTableStEph.rs:777: info: `previous_key`: ensures clause fuzzy match — ref: `key matches Some (pk) ==> self @ . dom () . contains (pk @)` ~ cur: `predecessor matches Some (pk) ==> self @ . dom () . contains...`
-src/Chap43/OrderedTableStEph.rs:777: info: `previous_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> TotalOrder :: le (v , * k) && v @ !...` ~ cur: `predecessor matches Some (v) ==> TotalOrder :: le (v , * k) ...`
-src/Chap43/OrderedTableStEph.rs:777: info: `previous_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | # ! [trigger t @] ...` ~ cur: `predecessor matches Some (v) ==> forall | t : K | # ! [trigg...`
+src/Chap43/OrderedTableStEph.rs:774: info: `previous_key`: ensures clause fuzzy match — ref: `key matches Some (pk) ==> self @ . dom () . contains (pk @)` ~ cur: `predecessor matches Some (pk) ==> self @ . dom () . contains...`
+src/Chap43/OrderedTableStEph.rs:774: info: `previous_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> TotalOrder :: le (v , * k) && v @ !...` ~ cur: `predecessor matches Some (v) ==> TotalOrder :: le (v , * k) ...`
+src/Chap43/OrderedTableStEph.rs:774: info: `previous_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | # ! [trigger t @] ...` ~ cur: `predecessor matches Some (v) ==> forall | t : K | # ! [trigg...`
 src/Chap43/OrderedTableMtEph.rs:257: info: `previous_key`: ensures clause fuzzy match — ref: `key matches Some (pk) ==> self @ . dom () . contains (pk @)` ~ cur: `predecessor matches Some (pk) ==> self @ . dom () . contains...`
 src/Chap43/OrderedTableMtEph.rs:257: info: `previous_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> TotalOrder :: le (v , * k) && v @ !...` ~ cur: `predecessor matches Some (v) ==> TotalOrder :: le (v , * k) ...`
 src/Chap43/OrderedTableMtEph.rs:257: info: `previous_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | # ! [trigger t @] ...` ~ cur: `predecessor matches Some (v) ==> forall | t : K | # ! [trigg...`
 src/Chap43/OrderedTableMtPer.rs:234: info: `next_key`: ensures clause fuzzy match — ref: `key matches Some (nk) ==> self @ . dom () . contains (nk @)` ~ cur: `successor matches Some (nk) ==> self @ . dom () . contains (...`
 src/Chap43/OrderedTableMtPer.rs:234: info: `next_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> TotalOrder :: le (* k , v) && v @ !...` ~ cur: `successor matches Some (v) ==> TotalOrder :: le (* k , v) &&...`
 src/Chap43/OrderedTableMtPer.rs:234: info: `next_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | # ! [trigger t @] ...` ~ cur: `successor matches Some (v) ==> forall | t : K | # ! [trigger...`
-src/Chap43/OrderedTableStEph.rs:787: info: `next_key`: ensures clause fuzzy match — ref: `key matches Some (nk) ==> self @ . dom () . contains (nk @)` ~ cur: `successor matches Some (nk) ==> self @ . dom () . contains (...`
-src/Chap43/OrderedTableStEph.rs:787: info: `next_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> TotalOrder :: le (* k , v) && v @ !...` ~ cur: `successor matches Some (v) ==> TotalOrder :: le (* k , v) &&...`
-src/Chap43/OrderedTableStEph.rs:787: info: `next_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | # ! [trigger t @] ...` ~ cur: `successor matches Some (v) ==> forall | t : K | # ! [trigger...`
+src/Chap43/OrderedTableStEph.rs:784: info: `next_key`: ensures clause fuzzy match — ref: `key matches Some (nk) ==> self @ . dom () . contains (nk @)` ~ cur: `successor matches Some (nk) ==> self @ . dom () . contains (...`
+src/Chap43/OrderedTableStEph.rs:784: info: `next_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> TotalOrder :: le (* k , v) && v @ !...` ~ cur: `successor matches Some (v) ==> TotalOrder :: le (* k , v) &&...`
+src/Chap43/OrderedTableStEph.rs:784: info: `next_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | # ! [trigger t @] ...` ~ cur: `successor matches Some (v) ==> forall | t : K | # ! [trigger...`
 src/Chap43/OrderedTableMtEph.rs:267: info: `next_key`: ensures clause fuzzy match — ref: `key matches Some (nk) ==> self @ . dom () . contains (nk @)` ~ cur: `successor matches Some (nk) ==> self @ . dom () . contains (...`
 src/Chap43/OrderedTableMtEph.rs:267: info: `next_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> TotalOrder :: le (* k , v) && v @ !...` ~ cur: `successor matches Some (v) ==> TotalOrder :: le (* k , v) &&...`
 src/Chap43/OrderedTableMtEph.rs:267: info: `next_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | # ! [trigger t @] ...` ~ cur: `successor matches Some (v) ==> forall | t : K | # ! [trigger...`
@@ -2517,24 +2517,24 @@ src/Chap43/OrderedTableMtPer.rs:244: warning: `split_key`: StPer has ensures cla
 src/Chap43/OrderedTableMtPer.rs:244: warning: `split_key`: StPer has ensures clause `parts . 1 matches Some (v) ==> self @ . contains_key (k @) && v @ == self @ [k @...` with no match in MtPer
 src/Chap43/OrderedTableMtPer.rs:244: info: `split_key`: StPer has ensures clause `parts . 2 . spec_orderedtable_wf ()` with no match in MtPer
 src/Chap43/OrderedTableMtPer.rs:244: warning: `split_key`: StPer has ensures clause `parts . 2 @ . dom () . subset_of (self @ . dom ())` with no match in MtPer
-src/Chap43/OrderedTableStEph.rs:797: info: `split_key`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:797: warning: `split_key`: ensures clause count 14 vs 11 (StPer has 11)
-src/Chap43/OrderedTableStEph.rs:797: info: `split_key`: ensures clause fuzzy match — ref: `! parts . 0 @ . dom () . contains (k @)` ~ cur: `! split . 0 @ . dom () . contains (k @)`
-src/Chap43/OrderedTableStEph.rs:797: info: `split_key`: ensures clause fuzzy match — ref: `! parts . 2 @ . dom () . contains (k @)` ~ cur: `! split . 2 @ . dom () . contains (k @)`
-src/Chap43/OrderedTableStEph.rs:797: info: `split_key`: ensures clause fuzzy match — ref: `forall | key | # [trigger] self @ . dom () . contains (key) ...` ~ cur: `forall | key | # [trigger] old (self) @ . dom () . contains ...`
-src/Chap43/OrderedTableStEph.rs:797: info: `split_key`: ensures clause fuzzy match — ref: `parts . 0 . spec_orderedtable_wf ()` ~ cur: `split . 0 . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:797: info: `split_key`: ensures clause fuzzy match — ref: `parts . 1 matches None ==> ! self @ . contains_key (k @)` ~ cur: `split . 1 matches None ==> ! old (self) @ . contains_key (k ...`
-src/Chap43/OrderedTableStEph.rs:797: info: `split_key`: ensures clause fuzzy match — ref: `parts . 1 matches Some (v) ==> self @ . contains_key (k @) &...` ~ cur: `split . 1 matches Some (v) ==> old (self) @ . contains_key (...`
-src/Chap43/OrderedTableStEph.rs:797: info: `split_key`: ensures clause fuzzy match — ref: `parts . 2 . spec_orderedtable_wf ()` ~ cur: `split . 2 . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:797: warning: `split_key`: StPer has ensures clause `parts . 0 @ . dom () . disjoint (parts . 2 @ . dom ())` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:797: warning: `split_key`: StPer has ensures clause `parts . 0 @ . dom () . subset_of (self @ . dom ())` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:797: warning: `split_key`: StPer has ensures clause `parts . 2 @ . dom () . subset_of (self @ . dom ())` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:797: info: `split_key`: StEph has extra ensures clause `old (self) @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:797: info: `split_key`: StEph has extra ensures clause `split . 0 @ . dom () . disjoint (split . 2 @ . dom ())` not in StPer
-src/Chap43/OrderedTableStEph.rs:797: info: `split_key`: StEph has extra ensures clause `split . 0 @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:797: info: `split_key`: StEph has extra ensures clause `split . 0 @ . dom () . subset_of (old (self) @ . dom ())` not in StPer
-src/Chap43/OrderedTableStEph.rs:797: info: `split_key`: StEph has extra ensures clause `split . 2 @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:797: info: `split_key`: StEph has extra ensures clause `split . 2 @ . dom () . subset_of (old (self) @ . dom ())` not in StPer
+src/Chap43/OrderedTableStEph.rs:794: info: `split_key`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:794: warning: `split_key`: ensures clause count 14 vs 11 (StPer has 11)
+src/Chap43/OrderedTableStEph.rs:794: info: `split_key`: ensures clause fuzzy match — ref: `! parts . 0 @ . dom () . contains (k @)` ~ cur: `! split . 0 @ . dom () . contains (k @)`
+src/Chap43/OrderedTableStEph.rs:794: info: `split_key`: ensures clause fuzzy match — ref: `! parts . 2 @ . dom () . contains (k @)` ~ cur: `! split . 2 @ . dom () . contains (k @)`
+src/Chap43/OrderedTableStEph.rs:794: info: `split_key`: ensures clause fuzzy match — ref: `forall | key | # [trigger] self @ . dom () . contains (key) ...` ~ cur: `forall | key | # [trigger] old (self) @ . dom () . contains ...`
+src/Chap43/OrderedTableStEph.rs:794: info: `split_key`: ensures clause fuzzy match — ref: `parts . 0 . spec_orderedtable_wf ()` ~ cur: `split . 0 . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:794: info: `split_key`: ensures clause fuzzy match — ref: `parts . 1 matches None ==> ! self @ . contains_key (k @)` ~ cur: `split . 1 matches None ==> ! old (self) @ . contains_key (k ...`
+src/Chap43/OrderedTableStEph.rs:794: info: `split_key`: ensures clause fuzzy match — ref: `parts . 1 matches Some (v) ==> self @ . contains_key (k @) &...` ~ cur: `split . 1 matches Some (v) ==> old (self) @ . contains_key (...`
+src/Chap43/OrderedTableStEph.rs:794: info: `split_key`: ensures clause fuzzy match — ref: `parts . 2 . spec_orderedtable_wf ()` ~ cur: `split . 2 . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:794: warning: `split_key`: StPer has ensures clause `parts . 0 @ . dom () . disjoint (parts . 2 @ . dom ())` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:794: warning: `split_key`: StPer has ensures clause `parts . 0 @ . dom () . subset_of (self @ . dom ())` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:794: warning: `split_key`: StPer has ensures clause `parts . 2 @ . dom () . subset_of (self @ . dom ())` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:794: info: `split_key`: StEph has extra ensures clause `old (self) @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:794: info: `split_key`: StEph has extra ensures clause `split . 0 @ . dom () . disjoint (split . 2 @ . dom ())` not in StPer
+src/Chap43/OrderedTableStEph.rs:794: info: `split_key`: StEph has extra ensures clause `split . 0 @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:794: info: `split_key`: StEph has extra ensures clause `split . 0 @ . dom () . subset_of (old (self) @ . dom ())` not in StPer
+src/Chap43/OrderedTableStEph.rs:794: info: `split_key`: StEph has extra ensures clause `split . 2 @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:794: info: `split_key`: StEph has extra ensures clause `split . 2 @ . dom () . subset_of (old (self) @ . dom ())` not in StPer
 src/Chap43/OrderedTableMtEph.rs:277: warning: `split_key`: ensures clause count 1 vs 11 (StPer has 11)
 src/Chap43/OrderedTableMtEph.rs:277: warning: `split_key`: StPer has ensures clause `! parts . 0 @ . dom () . contains (k @)` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:277: warning: `split_key`: StPer has ensures clause `! parts . 2 @ . dom () . contains (k @)` with no match in MtEph
@@ -2556,15 +2556,15 @@ src/Chap43/OrderedTableMtPer.rs:250: warning: `join_key`: ensures clause count 1
 src/Chap43/OrderedTableMtPer.rs:250: info: `join_key`: StPer has ensures clause `table . spec_orderedtable_wf ()` with no match in MtPer
 src/Chap43/OrderedTableMtPer.rs:250: warning: `join_key`: StPer has ensures clause `table @ . dom () =~= left @ . dom () . union (right @ . dom ())` with no match in MtPer
 src/Chap43/OrderedTableMtPer.rs:250: info: `join_key`: MtPer has extra ensures clause `joined @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:819: info: `join_key`: requires clause fuzzy match — ref: `left @ . dom () . len () + right @ . dom () . len () < usize...` ~ cur: `obeys_feq_clone :: < K > ()`
-src/Chap43/OrderedTableStEph.rs:819: info: `join_key`: requires clause fuzzy match — ref: `left . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:819: info: `join_key`: requires clause fuzzy match — ref: `obeys_feq_full :: < Pair < K , V > > ()` ~ cur: `old (self) @ . dom () . len () + other @ . dom () . len () <...`
-src/Chap43/OrderedTableStEph.rs:819: info: `join_key`: requires clause fuzzy match — ref: `right . spec_orderedtable_wf ()` ~ cur: `other . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:819: warning: `join_key`: ensures clause count 3 vs 2 (StPer has 2)
-src/Chap43/OrderedTableStEph.rs:819: info: `join_key`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `self . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:819: warning: `join_key`: StPer has ensures clause `table @ . dom () =~= left @ . dom () . union (right @ . dom ())` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:819: info: `join_key`: StEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:819: info: `join_key`: StEph has extra ensures clause `self @ . dom () =~= old (self) @ . dom () . union (other @ . dom ())` not in StPer
+src/Chap43/OrderedTableStEph.rs:816: info: `join_key`: requires clause fuzzy match — ref: `left @ . dom () . len () + right @ . dom () . len () < usize...` ~ cur: `obeys_feq_clone :: < K > ()`
+src/Chap43/OrderedTableStEph.rs:816: info: `join_key`: requires clause fuzzy match — ref: `left . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:816: info: `join_key`: requires clause fuzzy match — ref: `obeys_feq_full :: < Pair < K , V > > ()` ~ cur: `old (self) @ . dom () . len () + other @ . dom () . len () <...`
+src/Chap43/OrderedTableStEph.rs:816: info: `join_key`: requires clause fuzzy match — ref: `right . spec_orderedtable_wf ()` ~ cur: `other . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:816: warning: `join_key`: ensures clause count 3 vs 2 (StPer has 2)
+src/Chap43/OrderedTableStEph.rs:816: info: `join_key`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `self . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:816: warning: `join_key`: StPer has ensures clause `table @ . dom () =~= left @ . dom () . union (right @ . dom ())` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:816: info: `join_key`: StEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:816: info: `join_key`: StEph has extra ensures clause `self @ . dom () =~= old (self) @ . dom () . union (other @ . dom ())` not in StPer
 src/Chap43/OrderedTableMtEph.rs:283: warning: `join_key`: ensures clause count 1 vs 2 (StPer has 2)
 src/Chap43/OrderedTableMtEph.rs:283: info: `join_key`: StPer has ensures clause `table . spec_orderedtable_wf ()` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:283: warning: `join_key`: StPer has ensures clause `table @ . dom () =~= left @ . dom () . union (right @ . dom ())` with no match in MtEph
@@ -2574,12 +2574,12 @@ src/Chap43/OrderedTableMtPer.rs:256: warning: `get_key_range`: StPer has ensures
 src/Chap43/OrderedTableMtPer.rs:256: info: `get_key_range`: StPer has ensures clause `table . spec_orderedtable_wf ()` with no match in MtPer
 src/Chap43/OrderedTableMtPer.rs:256: warning: `get_key_range`: StPer has ensures clause `table @ . dom () . subset_of (self @ . dom ())` with no match in MtPer
 src/Chap43/OrderedTableMtPer.rs:256: info: `get_key_range`: MtPer has extra ensures clause `range @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:832: warning: `get_key_range`: ensures clause count 4 vs 3 (StPer has 3)
-src/Chap43/OrderedTableStEph.rs:832: info: `get_key_range`: ensures clause fuzzy match — ref: `forall | key | # [trigger] table @ . dom () . contains (key)...` ~ cur: `forall | key | # [trigger] range @ . dom () . contains (key)...`
-src/Chap43/OrderedTableStEph.rs:832: info: `get_key_range`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `range . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:832: warning: `get_key_range`: StPer has ensures clause `table @ . dom () . subset_of (self @ . dom ())` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:832: info: `get_key_range`: StEph has extra ensures clause `range @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:832: info: `get_key_range`: StEph has extra ensures clause `range @ . dom () . subset_of (self @ . dom ())` not in StPer
+src/Chap43/OrderedTableStEph.rs:829: warning: `get_key_range`: ensures clause count 4 vs 3 (StPer has 3)
+src/Chap43/OrderedTableStEph.rs:829: info: `get_key_range`: ensures clause fuzzy match — ref: `forall | key | # [trigger] table @ . dom () . contains (key)...` ~ cur: `forall | key | # [trigger] range @ . dom () . contains (key)...`
+src/Chap43/OrderedTableStEph.rs:829: info: `get_key_range`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `range . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:829: warning: `get_key_range`: StPer has ensures clause `table @ . dom () . subset_of (self @ . dom ())` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:829: info: `get_key_range`: StEph has extra ensures clause `range @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:829: info: `get_key_range`: StEph has extra ensures clause `range @ . dom () . subset_of (self @ . dom ())` not in StPer
 src/Chap43/OrderedTableMtEph.rs:288: warning: `get_key_range`: ensures clause count 4 vs 3 (StPer has 3)
 src/Chap43/OrderedTableMtEph.rs:288: info: `get_key_range`: ensures clause fuzzy match — ref: `forall | key | # [trigger] table @ . dom () . contains (key)...` ~ cur: `forall | key | # [trigger] range @ . dom () . contains (key)...`
 src/Chap43/OrderedTableMtEph.rs:288: info: `get_key_range`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `range . spec_orderedtable_wf ()`
@@ -2589,9 +2589,9 @@ src/Chap43/OrderedTableMtEph.rs:288: info: `get_key_range`: MtEph has extra ensu
 src/Chap43/OrderedTableMtPer.rs:270: info: `select_key`: ensures clause fuzzy match — ref: `i >= self @ . dom () . len () ==> key matches None` ~ cur: `i >= self @ . dom () . len () ==> selected matches None`
 src/Chap43/OrderedTableMtPer.rs:270: info: `select_key`: ensures clause fuzzy match — ref: `key matches Some (k) ==> self @ . dom () . contains (k @)` ~ cur: `selected matches Some (k) ==> self @ . dom () . contains (k ...`
 src/Chap43/OrderedTableMtPer.rs:270: info: `select_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> self @ . dom () . filter (| x : K :...` ~ cur: `selected matches Some (v) ==> self @ . dom () . filter (| x ...`
-src/Chap43/OrderedTableStEph.rs:853: info: `select_key`: ensures clause fuzzy match — ref: `i >= self @ . dom () . len () ==> key matches None` ~ cur: `i >= self @ . dom () . len () ==> selected matches None`
-src/Chap43/OrderedTableStEph.rs:853: info: `select_key`: ensures clause fuzzy match — ref: `key matches Some (k) ==> self @ . dom () . contains (k @)` ~ cur: `selected matches Some (k) ==> self @ . dom () . contains (k ...`
-src/Chap43/OrderedTableStEph.rs:853: info: `select_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> self @ . dom () . filter (| x : K :...` ~ cur: `selected matches Some (v) ==> self @ . dom () . filter (| x ...`
+src/Chap43/OrderedTableStEph.rs:850: info: `select_key`: ensures clause fuzzy match — ref: `i >= self @ . dom () . len () ==> key matches None` ~ cur: `i >= self @ . dom () . len () ==> selected matches None`
+src/Chap43/OrderedTableStEph.rs:850: info: `select_key`: ensures clause fuzzy match — ref: `key matches Some (k) ==> self @ . dom () . contains (k @)` ~ cur: `selected matches Some (k) ==> self @ . dom () . contains (k ...`
+src/Chap43/OrderedTableStEph.rs:850: info: `select_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> self @ . dom () . filter (| x : K :...` ~ cur: `selected matches Some (v) ==> self @ . dom () . filter (| x ...`
 src/Chap43/OrderedTableMtEph.rs:308: info: `select_key`: ensures clause fuzzy match — ref: `i >= self @ . dom () . len () ==> key matches None` ~ cur: `i >= self @ . dom () . len () ==> selected matches None`
 src/Chap43/OrderedTableMtEph.rs:308: info: `select_key`: ensures clause fuzzy match — ref: `key matches Some (k) ==> self @ . dom () . contains (k @)` ~ cur: `selected matches Some (k) ==> self @ . dom () . contains (k ...`
 src/Chap43/OrderedTableMtEph.rs:308: info: `select_key`: ensures clause fuzzy match — ref: `key matches Some (v) ==> self @ . dom () . filter (| x : K :...` ~ cur: `selected matches Some (v) ==> self @ . dom () . filter (| x ...`
@@ -2602,20 +2602,20 @@ src/Chap43/OrderedTableMtPer.rs:280: warning: `split_rank_key`: StPer has ensure
 src/Chap43/OrderedTableMtPer.rs:280: warning: `split_rank_key`: StPer has ensures clause `parts . 0 @ . dom () . subset_of (self @ . dom ())` with no match in MtPer
 src/Chap43/OrderedTableMtPer.rs:280: info: `split_rank_key`: StPer has ensures clause `parts . 1 . spec_orderedtable_wf ()` with no match in MtPer
 src/Chap43/OrderedTableMtPer.rs:280: warning: `split_rank_key`: StPer has ensures clause `parts . 1 @ . dom () . subset_of (self @ . dom ())` with no match in MtPer
-src/Chap43/OrderedTableStEph.rs:865: info: `split_rank_key`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:865: warning: `split_rank_key`: ensures clause count 10 vs 7 (StPer has 7)
-src/Chap43/OrderedTableStEph.rs:865: info: `split_rank_key`: ensures clause fuzzy match — ref: `forall | key | # [trigger] self @ . dom () . contains (key) ...` ~ cur: `forall | key | # [trigger] old (self) @ . dom () . contains ...`
-src/Chap43/OrderedTableStEph.rs:865: info: `split_rank_key`: ensures clause fuzzy match — ref: `parts . 0 . spec_orderedtable_wf ()` ~ cur: `split . 0 . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:865: info: `split_rank_key`: ensures clause fuzzy match — ref: `parts . 1 . spec_orderedtable_wf ()` ~ cur: `split . 1 . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:865: warning: `split_rank_key`: StPer has ensures clause `parts . 0 @ . dom () . disjoint (parts . 1 @ . dom ())` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:865: warning: `split_rank_key`: StPer has ensures clause `parts . 0 @ . dom () . subset_of (self @ . dom ())` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:865: warning: `split_rank_key`: StPer has ensures clause `parts . 1 @ . dom () . subset_of (self @ . dom ())` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:865: info: `split_rank_key`: StEph has extra ensures clause `old (self) @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:865: info: `split_rank_key`: StEph has extra ensures clause `split . 0 @ . dom () . disjoint (split . 1 @ . dom ())` not in StPer
-src/Chap43/OrderedTableStEph.rs:865: info: `split_rank_key`: StEph has extra ensures clause `split . 0 @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:865: info: `split_rank_key`: StEph has extra ensures clause `split . 0 @ . dom () . subset_of (old (self) @ . dom ())` not in StPer
-src/Chap43/OrderedTableStEph.rs:865: info: `split_rank_key`: StEph has extra ensures clause `split . 1 @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:865: info: `split_rank_key`: StEph has extra ensures clause `split . 1 @ . dom () . subset_of (old (self) @ . dom ())` not in StPer
+src/Chap43/OrderedTableStEph.rs:862: info: `split_rank_key`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:862: warning: `split_rank_key`: ensures clause count 10 vs 7 (StPer has 7)
+src/Chap43/OrderedTableStEph.rs:862: info: `split_rank_key`: ensures clause fuzzy match — ref: `forall | key | # [trigger] self @ . dom () . contains (key) ...` ~ cur: `forall | key | # [trigger] old (self) @ . dom () . contains ...`
+src/Chap43/OrderedTableStEph.rs:862: info: `split_rank_key`: ensures clause fuzzy match — ref: `parts . 0 . spec_orderedtable_wf ()` ~ cur: `split . 0 . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:862: info: `split_rank_key`: ensures clause fuzzy match — ref: `parts . 1 . spec_orderedtable_wf ()` ~ cur: `split . 1 . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:862: warning: `split_rank_key`: StPer has ensures clause `parts . 0 @ . dom () . disjoint (parts . 1 @ . dom ())` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:862: warning: `split_rank_key`: StPer has ensures clause `parts . 0 @ . dom () . subset_of (self @ . dom ())` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:862: warning: `split_rank_key`: StPer has ensures clause `parts . 1 @ . dom () . subset_of (self @ . dom ())` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:862: info: `split_rank_key`: StEph has extra ensures clause `old (self) @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:862: info: `split_rank_key`: StEph has extra ensures clause `split . 0 @ . dom () . disjoint (split . 1 @ . dom ())` not in StPer
+src/Chap43/OrderedTableStEph.rs:862: info: `split_rank_key`: StEph has extra ensures clause `split . 0 @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:862: info: `split_rank_key`: StEph has extra ensures clause `split . 0 @ . dom () . subset_of (old (self) @ . dom ())` not in StPer
+src/Chap43/OrderedTableStEph.rs:862: info: `split_rank_key`: StEph has extra ensures clause `split . 1 @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:862: info: `split_rank_key`: StEph has extra ensures clause `split . 1 @ . dom () . subset_of (old (self) @ . dom ())` not in StPer
 src/Chap43/OrderedTableMtEph.rs:319: warning: `split_rank_key`: ensures clause count 1 vs 7 (StPer has 7)
 src/Chap43/OrderedTableMtEph.rs:319: warning: `split_rank_key`: StPer has ensures clause `forall | key | # [trigger] self @ . dom () . contains (key) ==> parts . 0 @ . do...` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:319: info: `split_rank_key`: StPer has ensures clause `parts . 0 . spec_orderedtable_wf ()` with no match in MtEph
@@ -2623,80 +2623,80 @@ src/Chap43/OrderedTableMtEph.rs:319: warning: `split_rank_key`: StPer has ensure
 src/Chap43/OrderedTableMtEph.rs:319: warning: `split_rank_key`: StPer has ensures clause `parts . 0 @ . dom () . subset_of (self @ . dom ())` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:319: info: `split_rank_key`: StPer has ensures clause `parts . 1 . spec_orderedtable_wf ()` with no match in MtEph
 src/Chap43/OrderedTableMtEph.rs:319: warning: `split_rank_key`: StPer has ensures clause `parts . 1 @ . dom () . subset_of (self @ . dom ())` with no match in MtEph
-src/Chap43/OrderedTableStEph.rs:881: warning: `find_iter`: requires clause count 2 vs 3 (StPer has 3)
-src/Chap43/OrderedTableStEph.rs:881: warning: `find_iter`: StPer has requires clause `obeys_feq_full :: < V > ()` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:881: warning: `find_iter`: StPer has requires clause `self . spec_orderedtable_find_pre ()` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:881: info: `find_iter`: StEph has extra requires clause `self . spec_orderedtable_wf ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:881: info: `find_iter`: ensures clause fuzzy match — ref: `match found { Some (v) => self @ . contains_key (k @) && sel...` ~ cur: `match found { Some (v) => self @ . contains_key (k @) && v @...`
-src/Chap43/OrderedTableStEph.rs:889: warning: `insert_iter`: requires clause count 4 vs 3 (StPer has 3)
-src/Chap43/OrderedTableStEph.rs:889: info: `insert_iter`: requires clause fuzzy match — ref: `self @ . dom () . len () + 1 < usize :: MAX as nat` ~ cur: `! old (self) @ . contains_key (k @) ==> old (self) @ . dom (...`
-src/Chap43/OrderedTableStEph.rs:889: info: `insert_iter`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:889: info: `insert_iter`: StEph has extra requires clause `forall | v1 : & V , v2 : & V | combine . requires ((v1 , v2))` not in StPer
-src/Chap43/OrderedTableStEph.rs:889: warning: `insert_iter`: ensures clause count 7 vs 2 (StPer has 2)
-src/Chap43/OrderedTableStEph.rs:889: info: `insert_iter`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `self . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:889: info: `insert_iter`: ensures clause fuzzy match — ref: `table @ . dom () =~= self @ . dom () . insert (k @)` ~ cur: `self @ . dom () =~= old (self) @ . dom () . insert (k @)`
-src/Chap43/OrderedTableStEph.rs:889: info: `insert_iter`: StEph has extra ensures clause `! old (self) @ . contains_key (k @) ==> self @ [k @] == v @` not in StPer
-src/Chap43/OrderedTableStEph.rs:889: info: `insert_iter`: StEph has extra ensures clause `forall | key : K :: V | key != k @ && # [trigger] old (self) @ . contains_key (k...` not in StPer
-src/Chap43/OrderedTableStEph.rs:889: info: `insert_iter`: StEph has extra ensures clause `old (self) @ . contains_key (k @) ==> (exists | old_v : V , r : V | old_v @ == o...` not in StPer
-src/Chap43/OrderedTableStEph.rs:889: info: `insert_iter`: StEph has extra ensures clause `self @ . contains_key (k @)` not in StPer
-src/Chap43/OrderedTableStEph.rs:889: info: `insert_iter`: StEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:905: warning: `delete_iter`: requires clause count 2 vs 3 (StPer has 3)
-src/Chap43/OrderedTableStEph.rs:905: info: `delete_iter`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:905: warning: `delete_iter`: StPer has requires clause `obeys_feq_clone :: < Pair < K , V > > ()` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:905: warning: `delete_iter`: ensures clause count 3 vs 2 (StPer has 2)
-src/Chap43/OrderedTableStEph.rs:905: info: `delete_iter`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `self . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:905: info: `delete_iter`: ensures clause fuzzy match — ref: `table @ == self @ . remove (k @)` ~ cur: `self @ == old (self) @ . remove (k @)`
-src/Chap43/OrderedTableStEph.rs:905: info: `delete_iter`: StEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:911: info: `first_key_iter`: ensures clause fuzzy match — ref: `key matches Some (k) ==> self @ . dom () . contains (k @)` ~ cur: `first matches Some (k) ==> self @ . dom () . contains (k @)`
-src/Chap43/OrderedTableStEph.rs:911: info: `first_key_iter`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | self @ . dom () . ...` ~ cur: `first matches Some (v) ==> forall | t : K | self @ . dom () ...`
-src/Chap43/OrderedTableStEph.rs:911: info: `first_key_iter`: ensures clause fuzzy match — ref: `self @ . dom () . len () == 0 <==> key matches None` ~ cur: `self @ . dom () . len () == 0 <==> first matches None`
-src/Chap43/OrderedTableStEph.rs:920: info: `last_key_iter`: ensures clause fuzzy match — ref: `key matches Some (k) ==> self @ . dom () . contains (k @)` ~ cur: `last matches Some (k) ==> self @ . dom () . contains (k @)`
-src/Chap43/OrderedTableStEph.rs:920: info: `last_key_iter`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | self @ . dom () . ...` ~ cur: `last matches Some (v) ==> forall | t : K | self @ . dom () ....`
-src/Chap43/OrderedTableStEph.rs:920: info: `last_key_iter`: ensures clause fuzzy match — ref: `self @ . dom () . len () == 0 <==> key matches None` ~ cur: `self @ . dom () . len () == 0 <==> last matches None`
-src/Chap43/OrderedTableStEph.rs:929: info: `previous_key_iter`: ensures clause fuzzy match — ref: `key matches Some (pk) ==> self @ . dom () . contains (pk @)` ~ cur: `predecessor matches Some (pk) ==> self @ . dom () . contains...`
-src/Chap43/OrderedTableStEph.rs:929: info: `previous_key_iter`: ensures clause fuzzy match — ref: `key matches Some (v) ==> TotalOrder :: le (v , * k) && v @ !...` ~ cur: `predecessor matches Some (v) ==> TotalOrder :: le (v , * k) ...`
-src/Chap43/OrderedTableStEph.rs:929: info: `previous_key_iter`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | # ! [trigger t @] ...` ~ cur: `predecessor matches Some (v) ==> forall | t : K | # ! [trigg...`
-src/Chap43/OrderedTableStEph.rs:938: info: `next_key_iter`: ensures clause fuzzy match — ref: `key matches Some (nk) ==> self @ . dom () . contains (nk @)` ~ cur: `successor matches Some (nk) ==> self @ . dom () . contains (...`
-src/Chap43/OrderedTableStEph.rs:938: info: `next_key_iter`: ensures clause fuzzy match — ref: `key matches Some (v) ==> TotalOrder :: le (* k , v) && v @ !...` ~ cur: `successor matches Some (v) ==> TotalOrder :: le (* k , v) &&...`
-src/Chap43/OrderedTableStEph.rs:938: info: `next_key_iter`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | # ! [trigger t @] ...` ~ cur: `successor matches Some (v) ==> forall | t : K | # ! [trigger...`
-src/Chap43/OrderedTableStEph.rs:947: info: `split_key_iter`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:947: warning: `split_key_iter`: ensures clause count 14 vs 11 (StPer has 11)
-src/Chap43/OrderedTableStEph.rs:947: info: `split_key_iter`: ensures clause fuzzy match — ref: `! parts . 0 @ . dom () . contains (k @)` ~ cur: `! split . 0 @ . dom () . contains (k @)`
-src/Chap43/OrderedTableStEph.rs:947: info: `split_key_iter`: ensures clause fuzzy match — ref: `! parts . 2 @ . dom () . contains (k @)` ~ cur: `! split . 2 @ . dom () . contains (k @)`
-src/Chap43/OrderedTableStEph.rs:947: info: `split_key_iter`: ensures clause fuzzy match — ref: `forall | key | # [trigger] self @ . dom () . contains (key) ...` ~ cur: `forall | key | # [trigger] old (self) @ . dom () . contains ...`
-src/Chap43/OrderedTableStEph.rs:947: info: `split_key_iter`: ensures clause fuzzy match — ref: `parts . 0 . spec_orderedtable_wf ()` ~ cur: `split . 0 . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:947: info: `split_key_iter`: ensures clause fuzzy match — ref: `parts . 1 matches None ==> ! self @ . contains_key (k @)` ~ cur: `split . 1 matches None ==> ! old (self) @ . contains_key (k ...`
-src/Chap43/OrderedTableStEph.rs:947: info: `split_key_iter`: ensures clause fuzzy match — ref: `parts . 1 matches Some (v) ==> self @ . contains_key (k @) &...` ~ cur: `split . 1 matches Some (v) ==> old (self) @ . contains_key (...`
-src/Chap43/OrderedTableStEph.rs:947: info: `split_key_iter`: ensures clause fuzzy match — ref: `parts . 2 . spec_orderedtable_wf ()` ~ cur: `split . 2 . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:947: warning: `split_key_iter`: StPer has ensures clause `parts . 0 @ . dom () . disjoint (parts . 2 @ . dom ())` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:947: warning: `split_key_iter`: StPer has ensures clause `parts . 0 @ . dom () . subset_of (self @ . dom ())` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:947: warning: `split_key_iter`: StPer has ensures clause `parts . 2 @ . dom () . subset_of (self @ . dom ())` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:947: info: `split_key_iter`: StEph has extra ensures clause `old (self) @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:947: info: `split_key_iter`: StEph has extra ensures clause `split . 0 @ . dom () . disjoint (split . 2 @ . dom ())` not in StPer
-src/Chap43/OrderedTableStEph.rs:947: info: `split_key_iter`: StEph has extra ensures clause `split . 0 @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:947: info: `split_key_iter`: StEph has extra ensures clause `split . 0 @ . dom () . subset_of (old (self) @ . dom ())` not in StPer
-src/Chap43/OrderedTableStEph.rs:947: info: `split_key_iter`: StEph has extra ensures clause `split . 2 @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:947: info: `split_key_iter`: StEph has extra ensures clause `split . 2 @ . dom () . subset_of (old (self) @ . dom ())` not in StPer
-src/Chap43/OrderedTableStEph.rs:968: warning: `get_key_range_iter`: ensures clause count 4 vs 3 (StPer has 3)
-src/Chap43/OrderedTableStEph.rs:968: info: `get_key_range_iter`: ensures clause fuzzy match — ref: `forall | key | # [trigger] table @ . dom () . contains (key)...` ~ cur: `forall | key | # [trigger] range @ . dom () . contains (key)...`
-src/Chap43/OrderedTableStEph.rs:968: info: `get_key_range_iter`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `range . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:968: warning: `get_key_range_iter`: StPer has ensures clause `table @ . dom () . subset_of (self @ . dom ())` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:968: info: `get_key_range_iter`: StEph has extra ensures clause `range @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:968: info: `get_key_range_iter`: StEph has extra ensures clause `range @ . dom () . subset_of (self @ . dom ())` not in StPer
-src/Chap43/OrderedTableStEph.rs:987: info: `split_rank_key_iter`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:987: warning: `split_rank_key_iter`: ensures clause count 10 vs 7 (StPer has 7)
-src/Chap43/OrderedTableStEph.rs:987: info: `split_rank_key_iter`: ensures clause fuzzy match — ref: `forall | key | # [trigger] self @ . dom () . contains (key) ...` ~ cur: `forall | key | # [trigger] old (self) @ . dom () . contains ...`
-src/Chap43/OrderedTableStEph.rs:987: info: `split_rank_key_iter`: ensures clause fuzzy match — ref: `parts . 0 . spec_orderedtable_wf ()` ~ cur: `split . 0 . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:987: info: `split_rank_key_iter`: ensures clause fuzzy match — ref: `parts . 1 . spec_orderedtable_wf ()` ~ cur: `split . 1 . spec_orderedtable_wf ()`
-src/Chap43/OrderedTableStEph.rs:987: warning: `split_rank_key_iter`: StPer has ensures clause `parts . 0 @ . dom () . disjoint (parts . 1 @ . dom ())` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:987: warning: `split_rank_key_iter`: StPer has ensures clause `parts . 0 @ . dom () . subset_of (self @ . dom ())` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:987: warning: `split_rank_key_iter`: StPer has ensures clause `parts . 1 @ . dom () . subset_of (self @ . dom ())` with no match in StEph
-src/Chap43/OrderedTableStEph.rs:987: info: `split_rank_key_iter`: StEph has extra ensures clause `old (self) @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:987: info: `split_rank_key_iter`: StEph has extra ensures clause `split . 0 @ . dom () . disjoint (split . 1 @ . dom ())` not in StPer
-src/Chap43/OrderedTableStEph.rs:987: info: `split_rank_key_iter`: StEph has extra ensures clause `split . 0 @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:987: info: `split_rank_key_iter`: StEph has extra ensures clause `split . 0 @ . dom () . subset_of (old (self) @ . dom ())` not in StPer
-src/Chap43/OrderedTableStEph.rs:987: info: `split_rank_key_iter`: StEph has extra ensures clause `split . 1 @ . dom () . finite ()` not in StPer
-src/Chap43/OrderedTableStEph.rs:987: info: `split_rank_key_iter`: StEph has extra ensures clause `split . 1 @ . dom () . subset_of (old (self) @ . dom ())` not in StPer
+src/Chap43/OrderedTableStEph.rs:878: warning: `find_iter`: requires clause count 2 vs 3 (StPer has 3)
+src/Chap43/OrderedTableStEph.rs:878: warning: `find_iter`: StPer has requires clause `obeys_feq_full :: < V > ()` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:878: warning: `find_iter`: StPer has requires clause `self . spec_orderedtable_find_pre ()` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:878: info: `find_iter`: StEph has extra requires clause `self . spec_orderedtable_wf ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:878: info: `find_iter`: ensures clause fuzzy match — ref: `match found { Some (v) => self @ . contains_key (k @) && sel...` ~ cur: `match found { Some (v) => self @ . contains_key (k @) && v @...`
+src/Chap43/OrderedTableStEph.rs:886: warning: `insert_iter`: requires clause count 4 vs 3 (StPer has 3)
+src/Chap43/OrderedTableStEph.rs:886: info: `insert_iter`: requires clause fuzzy match — ref: `self @ . dom () . len () + 1 < usize :: MAX as nat` ~ cur: `! old (self) @ . contains_key (k @) ==> old (self) @ . dom (...`
+src/Chap43/OrderedTableStEph.rs:886: info: `insert_iter`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:886: info: `insert_iter`: StEph has extra requires clause `forall | v1 : & V , v2 : & V | combine . requires ((v1 , v2))` not in StPer
+src/Chap43/OrderedTableStEph.rs:886: warning: `insert_iter`: ensures clause count 7 vs 2 (StPer has 2)
+src/Chap43/OrderedTableStEph.rs:886: info: `insert_iter`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `self . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:886: info: `insert_iter`: ensures clause fuzzy match — ref: `table @ . dom () =~= self @ . dom () . insert (k @)` ~ cur: `self @ . dom () =~= old (self) @ . dom () . insert (k @)`
+src/Chap43/OrderedTableStEph.rs:886: info: `insert_iter`: StEph has extra ensures clause `! old (self) @ . contains_key (k @) ==> self @ [k @] == v @` not in StPer
+src/Chap43/OrderedTableStEph.rs:886: info: `insert_iter`: StEph has extra ensures clause `forall | key : K :: V | key != k @ && # [trigger] old (self) @ . contains_key (k...` not in StPer
+src/Chap43/OrderedTableStEph.rs:886: info: `insert_iter`: StEph has extra ensures clause `old (self) @ . contains_key (k @) ==> (exists | old_v : V , r : V | old_v @ == o...` not in StPer
+src/Chap43/OrderedTableStEph.rs:886: info: `insert_iter`: StEph has extra ensures clause `self @ . contains_key (k @)` not in StPer
+src/Chap43/OrderedTableStEph.rs:886: info: `insert_iter`: StEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:902: warning: `delete_iter`: requires clause count 2 vs 3 (StPer has 3)
+src/Chap43/OrderedTableStEph.rs:902: info: `delete_iter`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:902: warning: `delete_iter`: StPer has requires clause `obeys_feq_clone :: < Pair < K , V > > ()` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:902: warning: `delete_iter`: ensures clause count 3 vs 2 (StPer has 2)
+src/Chap43/OrderedTableStEph.rs:902: info: `delete_iter`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `self . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:902: info: `delete_iter`: ensures clause fuzzy match — ref: `table @ == self @ . remove (k @)` ~ cur: `self @ == old (self) @ . remove (k @)`
+src/Chap43/OrderedTableStEph.rs:902: info: `delete_iter`: StEph has extra ensures clause `self @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:908: info: `first_key_iter`: ensures clause fuzzy match — ref: `key matches Some (k) ==> self @ . dom () . contains (k @)` ~ cur: `first matches Some (k) ==> self @ . dom () . contains (k @)`
+src/Chap43/OrderedTableStEph.rs:908: info: `first_key_iter`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | self @ . dom () . ...` ~ cur: `first matches Some (v) ==> forall | t : K | self @ . dom () ...`
+src/Chap43/OrderedTableStEph.rs:908: info: `first_key_iter`: ensures clause fuzzy match — ref: `self @ . dom () . len () == 0 <==> key matches None` ~ cur: `self @ . dom () . len () == 0 <==> first matches None`
+src/Chap43/OrderedTableStEph.rs:917: info: `last_key_iter`: ensures clause fuzzy match — ref: `key matches Some (k) ==> self @ . dom () . contains (k @)` ~ cur: `last matches Some (k) ==> self @ . dom () . contains (k @)`
+src/Chap43/OrderedTableStEph.rs:917: info: `last_key_iter`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | self @ . dom () . ...` ~ cur: `last matches Some (v) ==> forall | t : K | self @ . dom () ....`
+src/Chap43/OrderedTableStEph.rs:917: info: `last_key_iter`: ensures clause fuzzy match — ref: `self @ . dom () . len () == 0 <==> key matches None` ~ cur: `self @ . dom () . len () == 0 <==> last matches None`
+src/Chap43/OrderedTableStEph.rs:926: info: `previous_key_iter`: ensures clause fuzzy match — ref: `key matches Some (pk) ==> self @ . dom () . contains (pk @)` ~ cur: `predecessor matches Some (pk) ==> self @ . dom () . contains...`
+src/Chap43/OrderedTableStEph.rs:926: info: `previous_key_iter`: ensures clause fuzzy match — ref: `key matches Some (v) ==> TotalOrder :: le (v , * k) && v @ !...` ~ cur: `predecessor matches Some (v) ==> TotalOrder :: le (v , * k) ...`
+src/Chap43/OrderedTableStEph.rs:926: info: `previous_key_iter`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | # ! [trigger t @] ...` ~ cur: `predecessor matches Some (v) ==> forall | t : K | # ! [trigg...`
+src/Chap43/OrderedTableStEph.rs:935: info: `next_key_iter`: ensures clause fuzzy match — ref: `key matches Some (nk) ==> self @ . dom () . contains (nk @)` ~ cur: `successor matches Some (nk) ==> self @ . dom () . contains (...`
+src/Chap43/OrderedTableStEph.rs:935: info: `next_key_iter`: ensures clause fuzzy match — ref: `key matches Some (v) ==> TotalOrder :: le (* k , v) && v @ !...` ~ cur: `successor matches Some (v) ==> TotalOrder :: le (* k , v) &&...`
+src/Chap43/OrderedTableStEph.rs:935: info: `next_key_iter`: ensures clause fuzzy match — ref: `key matches Some (v) ==> forall | t : K | # ! [trigger t @] ...` ~ cur: `successor matches Some (v) ==> forall | t : K | # ! [trigger...`
+src/Chap43/OrderedTableStEph.rs:944: info: `split_key_iter`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:944: warning: `split_key_iter`: ensures clause count 14 vs 11 (StPer has 11)
+src/Chap43/OrderedTableStEph.rs:944: info: `split_key_iter`: ensures clause fuzzy match — ref: `! parts . 0 @ . dom () . contains (k @)` ~ cur: `! split . 0 @ . dom () . contains (k @)`
+src/Chap43/OrderedTableStEph.rs:944: info: `split_key_iter`: ensures clause fuzzy match — ref: `! parts . 2 @ . dom () . contains (k @)` ~ cur: `! split . 2 @ . dom () . contains (k @)`
+src/Chap43/OrderedTableStEph.rs:944: info: `split_key_iter`: ensures clause fuzzy match — ref: `forall | key | # [trigger] self @ . dom () . contains (key) ...` ~ cur: `forall | key | # [trigger] old (self) @ . dom () . contains ...`
+src/Chap43/OrderedTableStEph.rs:944: info: `split_key_iter`: ensures clause fuzzy match — ref: `parts . 0 . spec_orderedtable_wf ()` ~ cur: `split . 0 . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:944: info: `split_key_iter`: ensures clause fuzzy match — ref: `parts . 1 matches None ==> ! self @ . contains_key (k @)` ~ cur: `split . 1 matches None ==> ! old (self) @ . contains_key (k ...`
+src/Chap43/OrderedTableStEph.rs:944: info: `split_key_iter`: ensures clause fuzzy match — ref: `parts . 1 matches Some (v) ==> self @ . contains_key (k @) &...` ~ cur: `split . 1 matches Some (v) ==> old (self) @ . contains_key (...`
+src/Chap43/OrderedTableStEph.rs:944: info: `split_key_iter`: ensures clause fuzzy match — ref: `parts . 2 . spec_orderedtable_wf ()` ~ cur: `split . 2 . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:944: warning: `split_key_iter`: StPer has ensures clause `parts . 0 @ . dom () . disjoint (parts . 2 @ . dom ())` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:944: warning: `split_key_iter`: StPer has ensures clause `parts . 0 @ . dom () . subset_of (self @ . dom ())` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:944: warning: `split_key_iter`: StPer has ensures clause `parts . 2 @ . dom () . subset_of (self @ . dom ())` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:944: info: `split_key_iter`: StEph has extra ensures clause `old (self) @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:944: info: `split_key_iter`: StEph has extra ensures clause `split . 0 @ . dom () . disjoint (split . 2 @ . dom ())` not in StPer
+src/Chap43/OrderedTableStEph.rs:944: info: `split_key_iter`: StEph has extra ensures clause `split . 0 @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:944: info: `split_key_iter`: StEph has extra ensures clause `split . 0 @ . dom () . subset_of (old (self) @ . dom ())` not in StPer
+src/Chap43/OrderedTableStEph.rs:944: info: `split_key_iter`: StEph has extra ensures clause `split . 2 @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:944: info: `split_key_iter`: StEph has extra ensures clause `split . 2 @ . dom () . subset_of (old (self) @ . dom ())` not in StPer
+src/Chap43/OrderedTableStEph.rs:965: warning: `get_key_range_iter`: ensures clause count 4 vs 3 (StPer has 3)
+src/Chap43/OrderedTableStEph.rs:965: info: `get_key_range_iter`: ensures clause fuzzy match — ref: `forall | key | # [trigger] table @ . dom () . contains (key)...` ~ cur: `forall | key | # [trigger] range @ . dom () . contains (key)...`
+src/Chap43/OrderedTableStEph.rs:965: info: `get_key_range_iter`: ensures clause fuzzy match — ref: `table . spec_orderedtable_wf ()` ~ cur: `range . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:965: warning: `get_key_range_iter`: StPer has ensures clause `table @ . dom () . subset_of (self @ . dom ())` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:965: info: `get_key_range_iter`: StEph has extra ensures clause `range @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:965: info: `get_key_range_iter`: StEph has extra ensures clause `range @ . dom () . subset_of (self @ . dom ())` not in StPer
+src/Chap43/OrderedTableStEph.rs:984: info: `split_rank_key_iter`: requires clause fuzzy match — ref: `self . spec_orderedtable_wf ()` ~ cur: `old (self) . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:984: warning: `split_rank_key_iter`: ensures clause count 10 vs 7 (StPer has 7)
+src/Chap43/OrderedTableStEph.rs:984: info: `split_rank_key_iter`: ensures clause fuzzy match — ref: `forall | key | # [trigger] self @ . dom () . contains (key) ...` ~ cur: `forall | key | # [trigger] old (self) @ . dom () . contains ...`
+src/Chap43/OrderedTableStEph.rs:984: info: `split_rank_key_iter`: ensures clause fuzzy match — ref: `parts . 0 . spec_orderedtable_wf ()` ~ cur: `split . 0 . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:984: info: `split_rank_key_iter`: ensures clause fuzzy match — ref: `parts . 1 . spec_orderedtable_wf ()` ~ cur: `split . 1 . spec_orderedtable_wf ()`
+src/Chap43/OrderedTableStEph.rs:984: warning: `split_rank_key_iter`: StPer has ensures clause `parts . 0 @ . dom () . disjoint (parts . 1 @ . dom ())` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:984: warning: `split_rank_key_iter`: StPer has ensures clause `parts . 0 @ . dom () . subset_of (self @ . dom ())` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:984: warning: `split_rank_key_iter`: StPer has ensures clause `parts . 1 @ . dom () . subset_of (self @ . dom ())` with no match in StEph
+src/Chap43/OrderedTableStEph.rs:984: info: `split_rank_key_iter`: StEph has extra ensures clause `old (self) @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:984: info: `split_rank_key_iter`: StEph has extra ensures clause `split . 0 @ . dom () . disjoint (split . 1 @ . dom ())` not in StPer
+src/Chap43/OrderedTableStEph.rs:984: info: `split_rank_key_iter`: StEph has extra ensures clause `split . 0 @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:984: info: `split_rank_key_iter`: StEph has extra ensures clause `split . 0 @ . dom () . subset_of (old (self) @ . dom ())` not in StPer
+src/Chap43/OrderedTableStEph.rs:984: info: `split_rank_key_iter`: StEph has extra ensures clause `split . 1 @ . dom () . finite ()` not in StPer
+src/Chap43/OrderedTableStEph.rs:984: info: `split_rank_key_iter`: StEph has extra ensures clause `split . 1 @ . dom () . subset_of (old (self) @ . dom ())` not in StPer
 src/Chap49/MinEditDistStEph.rs:106: info: `min_edit_distance`: requires clause fuzzy match — ref: `self . spec_source_len () + self . spec_target_len () < usiz...` ~ cur: `old (self) . spec_source_len () + old (self) . spec_target_l...`
 src/Chap49/MinEditDistMtEph.rs:107: info: `min_edit_distance`: requires clause fuzzy match — ref: `self . spec_source_len () + self . spec_target_len () < usiz...` ~ cur: `old (self) . spec_source_len () + old (self) . spec_target_l...`
 src/Chap50/MatrixChainMtPer.rs:144: warning: `new`: StPer has ensures clause `mc @ . memo =~= Map :: < (usize , usize) , usize > :: empty ()` with no match in MtPer

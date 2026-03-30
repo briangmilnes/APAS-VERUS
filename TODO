@@ -1,4 +1,3 @@
-
 1) New TOC ify. Adjust style guide.
 
 2) X{St,Mt}{Per,Eph} consistency.
@@ -9,14 +8,10 @@
 
 5) AI alg analysis including marking discrepencies.
 
-6) Are there any algorithmic external bodies?
-
 7) RTT test review for the missing chapters.
  Anything not running?
 
-8) PTT test review for the new iterators.
-
 9) Union Find z3 problems.
 
-10) Profile.
+
 
