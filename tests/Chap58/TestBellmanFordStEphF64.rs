@@ -151,3 +151,26 @@ fn test_longer_path_cheaper() {
     let result = bellman_ford(&graph, 0).unwrap();
     assert_eq!(result.get_distance(2).val, 3.0);
 }
+
+#[test]
+fn test_chain_4_vertices() {
+    let graph = mk_graph(4, SetLit![
+        WeightedEdge(0, 1, w(1.5)),
+        WeightedEdge(1, 2, w(2.5)),
+        WeightedEdge(2, 3, w(3.5))
+    ]);
+    let result = bellman_ford(&graph, 0).unwrap();
+    assert_eq!(result.get_distance(3).val, 7.5);
+}
+
+#[test]
+fn test_predecessor_f64() {
+    let graph = mk_graph(3, SetLit![
+        WeightedEdge(0, 1, w(1.0)),
+        WeightedEdge(1, 2, w(2.0))
+    ]);
+    let result = bellman_ford(&graph, 0).unwrap();
+    assert_eq!(result.get_predecessor(0), None);
+    assert_eq!(result.get_predecessor(1), Some(0));
+    assert_eq!(result.get_predecessor(2), Some(1));
+}

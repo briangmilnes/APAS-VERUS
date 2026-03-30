@@ -151,3 +151,50 @@ fn test_contract_round_small_complete() {
 
     assert!(contracted.sizeV() < 4);
 }
+
+#[test]
+fn test_edge_contract_triangle() {
+    let vertices = SetLit![0, 1, 2];
+    let mut edges = SetLit![];
+    let _ = edges.insert(Edge(0, 1));
+    let _ = edges.insert(Edge(1, 2));
+    let _ = edges.insert(Edge(0, 2));
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let matching = SetLit![Edge(0, 1)];
+    let contracted = edge_contract(&graph, &matching);
+    assert_eq!(contracted.sizeV(), 2); // {0,1} and {2}.
+}
+
+#[test]
+fn test_contract_round_large_cycle() {
+    let graph = create_cycle_graph(20);
+    let contracted = contract_round(&graph);
+    assert!(contracted.sizeV() < 20);
+    assert!(contracted.sizeV() > 0);
+}
+
+#[test]
+fn test_edge_contract_disconnected() {
+    // Two disconnected edges.
+    let mut vertices = SetLit![];
+    for i in 0..4usize {
+        let _ = vertices.insert(i);
+    }
+    let edges = SetLit![Edge(0, 1), Edge(2, 3)];
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let matching = SetLit![Edge(0, 1), Edge(2, 3)];
+    let contracted = edge_contract(&graph, &matching);
+    assert_eq!(contracted.sizeV(), 2);
+    assert_eq!(contracted.sizeE(), 0);
+}
+
+#[test]
+fn test_edge_contract_preserves_unmatched() {
+    // 3 vertices, match only one edge.
+    let vertices = SetLit![0, 1, 2];
+    let edges = SetLit![Edge(0, 1), Edge(1, 2)];
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let matching = SetLit![Edge(0, 1)];
+    let contracted = edge_contract(&graph, &matching);
+    assert_eq!(contracted.sizeV(), 2); // {0,1} merged, {2} singleton.
+}

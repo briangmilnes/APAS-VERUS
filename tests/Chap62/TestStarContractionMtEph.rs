@@ -101,3 +101,39 @@ fn test_complete_graph_mt() {
     let result = contract_to_vertices_mt(&graph, 123);
     assert!(result.size() > 0);
 }
+
+#[test]
+fn test_single_vertex_mt() {
+    let vertices = SetLit![0];
+    let edges: SetStEph<Edge<usize>> = SetLit![];
+    let graph = <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edges);
+    let result = contract_to_vertices_mt(&graph, 42);
+    assert_eq!(result.size(), 1);
+}
+
+#[test]
+fn test_triangle_mt() {
+    let vertices = SetLit![0, 1, 2];
+    let mut edges = SetLit![];
+    let _ = edges.insert(Edge(0, 1));
+    let _ = edges.insert(Edge(1, 2));
+    let _ = edges.insert(Edge(0, 2));
+    let graph = <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edges);
+    let result = contract_to_vertices_mt(&graph, 42);
+    assert!(result.size() >= 1 && result.size() <= 3);
+}
+
+#[test]
+fn test_path_graph_mt() {
+    let mut vertices = SetLit![];
+    for i in 0..10usize {
+        let _ = vertices.insert(i);
+    }
+    let mut edges = SetLit![];
+    for i in 0..9usize {
+        let _ = edges.insert(Edge(i, i + 1));
+    }
+    let graph = <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edges);
+    let result = contract_to_vertices_mt(&graph, 42);
+    assert!(result.size() > 0 && result.size() <= 10);
+}

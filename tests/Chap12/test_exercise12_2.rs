@@ -57,3 +57,54 @@ fn fetch_add_cas_wrapping() {
     assert_eq!(value.fetch_add_cas(1), usize::MAX);
     assert_eq!(value.load(Ordering::Relaxed), 0);
 }
+
+#[test]
+fn fetch_add_cas_sequential_accumulation() {
+    let value = AtomicUsize::new(0);
+    for i in 1..=100 {
+        let prev = value.fetch_add_cas(1);
+        assert_eq!(prev, i - 1);
+    }
+    assert_eq!(value.load(Ordering::Relaxed), 100);
+}
+
+#[test]
+fn fetch_add_cas_large_delta() {
+    let value = AtomicUsize::new(0);
+    assert_eq!(value.fetch_add_cas(1_000_000), 0);
+    assert_eq!(value.load(Ordering::Relaxed), 1_000_000);
+}
+
+#[test]
+fn fetch_add_cas_multiple_threads_stress() {
+    let value = Arc::new(AtomicUsize::new(0));
+    let mut handles = Vec::new();
+
+    for _ in 0..16 {
+        let shared = Arc::clone(&value);
+        handles.push(thread::spawn(move || {
+            for _ in 0..500 {
+                shared.fetch_add_cas(1);
+            }
+        }));
+    }
+
+    for handle in handles {
+        handle.join().expect("worker panicked");
+    }
+
+    assert_eq!(value.load(Ordering::Relaxed), 16 * 500);
+}
+
+#[test]
+fn fetch_add_cas_returns_monotonically_increasing() {
+    // In a single thread, returned values are monotonically increasing.
+    let value = AtomicUsize::new(0);
+    let mut prev = 0;
+    for _ in 0..50 {
+        let ret = value.fetch_add_cas(3);
+        assert!(ret >= prev);
+        prev = ret;
+    }
+    assert_eq!(value.load(Ordering::Relaxed), 150);
+}

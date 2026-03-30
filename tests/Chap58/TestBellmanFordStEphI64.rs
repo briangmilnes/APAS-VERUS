@@ -356,3 +356,139 @@ fn test_star_graph() {
     assert_eq!(result.get_distance(3), 30);
     assert_eq!(result.get_distance(4), 40);
 }
+
+#[test]
+fn test_parallel_paths() {
+    // Two paths from 0 to 3: 0->1->3 (cost 6) and 0->2->3 (cost 5).
+    let vertices = SetLit![0, 1, 2, 3];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 2),
+        WeightedEdge(1, 3, 4),
+        WeightedEdge(0, 2, 1),
+        WeightedEdge(2, 3, 4)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = bellman_ford(&graph, 0).unwrap();
+    assert_eq!(result.get_distance(3), 5); // 0->2->3
+}
+
+#[test]
+fn test_bidirectional_edges() {
+    let vertices = SetLit![0, 1, 2];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 3),
+        WeightedEdge(1, 0, 3),
+        WeightedEdge(1, 2, 2),
+        WeightedEdge(2, 1, 2)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = bellman_ford(&graph, 0).unwrap();
+    assert_eq!(result.get_distance(1), 3);
+    assert_eq!(result.get_distance(2), 5);
+}
+
+#[test]
+fn test_large_positive_weights() {
+    let vertices = SetLit![0, 1, 2];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 1_000_000),
+        WeightedEdge(1, 2, 1_000_000)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = bellman_ford(&graph, 0).unwrap();
+    assert_eq!(result.get_distance(2), 2_000_000);
+}
+
+#[test]
+fn test_multiple_negative_edges_no_cycle() {
+    let vertices = SetLit![0, 1, 2, 3];
+    let edges = SetLit![
+        WeightedEdge(0, 1, -5),
+        WeightedEdge(1, 2, -3),
+        WeightedEdge(2, 3, -1)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = bellman_ford(&graph, 0).unwrap();
+    assert_eq!(result.get_distance(3), -9);
+}
+
+#[test]
+fn test_path_extraction_source() {
+    let vertices = SetLit![0, 1];
+    let edges = SetLit![WeightedEdge(0, 1, 5)];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = bellman_ford(&graph, 0).unwrap();
+    let path = result.extract_path(0).unwrap();
+    assert_eq!(path.length(), 1);
+    assert_eq!(*path.nth(0), 0);
+}
+
+#[test]
+fn test_two_vertices_bidirectional() {
+    let vertices = SetLit![0, 1];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 5),
+        WeightedEdge(1, 0, 10)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = bellman_ford(&graph, 0).unwrap();
+    assert_eq!(result.get_distance(1), 5);
+    assert_eq!(result.get_predecessor(1), Some(0));
+}
+
+#[test]
+fn test_chain_5_vertices() {
+    let vertices = SetLit![0, 1, 2, 3, 4];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 1),
+        WeightedEdge(1, 2, 2),
+        WeightedEdge(2, 3, 3),
+        WeightedEdge(3, 4, 4)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = bellman_ford(&graph, 0).unwrap();
+    assert_eq!(result.get_distance(4), 10);
+    assert!(result.is_reachable(4));
+}
+
+#[test]
+fn test_negative_cycle_reachable() {
+    // Negative cycle that is reachable from source.
+    let vertices = SetLit![0, 1, 2, 3];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 1),
+        WeightedEdge(1, 2, -1),
+        WeightedEdge(2, 3, -1),
+        WeightedEdge(3, 1, -1)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    assert!(bellman_ford(&graph, 0).is_err());
+}
+
+#[test]
+fn test_self_loop_zero_weight() {
+    let vertices = SetLit![0, 1];
+    let edges = SetLit![
+        WeightedEdge(0, 0, 0),
+        WeightedEdge(0, 1, 5)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = bellman_ford(&graph, 0).unwrap();
+    assert_eq!(result.get_distance(0), 0);
+    assert_eq!(result.get_distance(1), 5);
+}
+
+#[test]
+fn test_multiple_shortest_paths_same_cost() {
+    // Two paths of same cost from 0 to 3.
+    let vertices = SetLit![0, 1, 2, 3];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 2),
+        WeightedEdge(0, 2, 2),
+        WeightedEdge(1, 3, 3),
+        WeightedEdge(2, 3, 3)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = bellman_ford(&graph, 0).unwrap();
+    assert_eq!(result.get_distance(3), 5); // Either path costs 5.
+}

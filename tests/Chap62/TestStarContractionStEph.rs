@@ -123,3 +123,45 @@ fn test_complete_graph_contraction() {
 
     assert!(result.size() > 0);
 }
+
+#[test]
+fn test_single_vertex_contraction() {
+    let vertices = SetLit![0];
+    let edges = SetLit![];
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let result = contract_to_vertices(&graph);
+    assert_eq!(result.size(), 1);
+}
+
+#[test]
+fn test_triangle_contraction() {
+    let vertices = SetLit![0, 1, 2];
+    let mut edges = SetLit![];
+    let _ = edges.insert(Edge(0, 1));
+    let _ = edges.insert(Edge(1, 2));
+    let _ = edges.insert(Edge(0, 2));
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let result = contract_to_vertices(&graph);
+    assert!(result.size() >= 1 && result.size() <= 3);
+}
+
+#[test]
+fn test_large_cycle_contraction() {
+    let graph = create_cycle_graph(30);
+    let result = contract_to_vertices(&graph);
+    assert!(result.size() > 0);
+    assert!(result.size() <= 30);
+}
+
+#[test]
+fn test_disconnected_contraction() {
+    // Two disconnected pairs.
+    let vertices = SetLit![0, 1, 2, 3];
+    let mut edges = SetLit![];
+    let _ = edges.insert(Edge(0, 1));
+    let _ = edges.insert(Edge(2, 3));
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let result = contract_to_vertices(&graph);
+    assert!(result.size() >= 2); // At least one per component.
+    assert!(result.size() <= 4);
+}

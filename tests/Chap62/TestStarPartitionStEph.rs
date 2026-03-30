@@ -190,3 +190,48 @@ fn test_path_graph() {
         assert!(partition_map.contains_key(&v));
     }
 }
+
+#[test]
+fn test_large_cycle() {
+    let graph = create_cycle_graph(50);
+    let (centers, partition_map) = sequential_star_partition(&graph);
+    assert_eq!(partition_map.len(), 50);
+    for v in 0..50 {
+        assert!(centers.mem(partition_map.get(&v).unwrap()));
+    }
+}
+
+#[test]
+fn test_wheel_graph() {
+    // Center 0 connected to cycle 1-2-3-4-5-1.
+    let mut vertices = SetLit![0];
+    for i in 1..6usize {
+        let _ = vertices.insert(i);
+    }
+    let mut edges = SetLit![];
+    for i in 1..6usize {
+        let _ = edges.insert(Edge(0, i));
+    }
+    for i in 1..5usize {
+        let _ = edges.insert(Edge(i, i + 1));
+    }
+    let _ = edges.insert(Edge(5, 1));
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let (centers, partition_map) = sequential_star_partition(&graph);
+    assert_eq!(partition_map.len(), 6);
+    for v in 0..6 {
+        assert!(centers.mem(partition_map.get(&v).unwrap()));
+    }
+}
+
+#[test]
+fn test_three_isolated() {
+    let vertices = SetLit![0, 1, 2];
+    let edges: SetStEph<Edge<usize>> = SetLit![];
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let (centers, partition_map) = sequential_star_partition(&graph);
+    assert_eq!(centers.size(), 3);
+    for v in 0..3 {
+        assert_eq!(partition_map.get(&v), Some(&v));
+    }
+}

@@ -103,3 +103,148 @@ fn test_fib_monotonically_increasing() {
         prev = curr;
     }
 }
+
+#[test]
+fn test_fib_even_indices_divisible_by_fib2() {
+    // fib(2) = 1, fib(4) = 3, fib(6) = 8, fib(8) = 21, fib(10) = 55
+    // Every third Fibonacci number is even.
+    for n in (3..=30).step_by(3) {
+        assert_eq!(fib(n) % 2, 0, "fib({n}) should be even");
+    }
+}
+
+#[test]
+fn test_fib_sum_of_first_n() {
+    // sum(fib(0)..fib(n)) = fib(n+2) - 1
+    for n in 0..=25u64 {
+        let sum: u64 = (0..=n).map(|i| fib(i)).sum();
+        assert_eq!(sum, fib(n + 2) - 1, "Sum formula fails at n={n}");
+    }
+}
+
+#[test]
+fn test_fib_gcd_property() {
+    // gcd(fib(m), fib(n)) = fib(gcd(m, n))
+    fn gcd(a: u64, b: u64) -> u64 { if b == 0 { a } else { gcd(b, a % b) } }
+    for m in 1..=15u64 {
+        for n in 1..=15u64 {
+            assert_eq!(
+                gcd(fib(m), fib(n)),
+                fib(gcd(m, n)),
+                "GCD property fails for m={m}, n={n}"
+            );
+        }
+    }
+}
+
+#[test]
+fn test_fib_cassini_identity() {
+    // fib(n-1)*fib(n+1) - fib(n)^2 = (-1)^n for n >= 1
+    for n in 1..=25u64 {
+        let product = fib(n - 1) as i64 * fib(n + 1) as i64 - (fib(n) as i64).pow(2);
+        let expected = if n % 2 == 0 { 1i64 } else { -1i64 };
+        assert_eq!(product, expected, "Cassini identity fails at n={n}");
+    }
+}
+
+#[test]
+fn test_fib_recursive_agrees_larger() {
+    // Check agreement for a few more values beyond 25.
+    for n in [26, 27, 28, 29, 30] {
+        assert_eq!(fib(n), fib_recursive(n), "Mismatch at n={n}");
+    }
+}
+
+#[test]
+fn test_fib_boundary_values() {
+    // Test specific boundary values.
+    assert_eq!(fib(46), 1836311903);
+    assert_eq!(fib(47), 2971215073);
+    assert_eq!(fib(50), 12586269025);
+}
+
+#[test]
+fn test_fib_last_digit_pisano_period() {
+    // Pisano period for mod 10 is 60.
+    // fib(60) mod 10 == fib(0) mod 10 == 0.
+    assert_eq!(fib(60) % 10, 0);
+    // fib(61) mod 10 == fib(1) mod 10 == 1.
+    assert_eq!(fib(61) % 10, 1);
+}
+
+#[test]
+fn test_fib_ratio_approaches_golden() {
+    // For large n, fib(n)/fib(n-1) approaches the golden ratio (1.618...).
+    let ratio = fib(40) as f64 / fib(39) as f64;
+    let golden = (1.0 + 5.0f64.sqrt()) / 2.0;
+    assert!((ratio - golden).abs() < 1e-8, "Ratio {ratio} not close to golden ratio");
+}
+
+#[test]
+fn test_fib_recursive_base_case_zero() {
+    assert_eq!(fib_recursive(0), 0);
+}
+
+#[test]
+fn test_fib_squares_sum() {
+    // fib(0)^2 + fib(1)^2 + ... + fib(n)^2 = fib(n)*fib(n+1)
+    for n in 0..=20u64 {
+        let sum_squares: u64 = (0..=n).map(|i| fib(i) * fib(i)).sum();
+        assert_eq!(sum_squares, fib(n) * fib(n + 1), "Squares sum fails at n={n}");
+    }
+}
+
+#[test]
+fn test_fib_adjacent_coprime() {
+    // Consecutive Fibonacci numbers are coprime.
+    fn gcd(a: u64, b: u64) -> u64 { if b == 0 { a } else { gcd(b, a % b) } }
+    for n in 1..=30u64 {
+        assert_eq!(gcd(fib(n), fib(n + 1)), 1, "fib({n}) and fib({}) not coprime", n + 1);
+    }
+}
+
+#[test]
+fn test_fib_divisibility_property() {
+    // If m divides n, then fib(m) divides fib(n).
+    for m in 2..=10u64 {
+        for k in 1..=5u64 {
+            let n = m * k;
+            if n <= 46 {
+                assert_eq!(fib(n) % fib(m), 0, "fib({n}) not divisible by fib({m})");
+            }
+        }
+    }
+}
+
+#[test]
+fn test_fib_parity_pattern() {
+    // fib(n) is even iff n % 3 == 0 (for n > 0).
+    for n in 1..=40u64 {
+        let is_even = fib(n) % 2 == 0;
+        let should_be_even = n % 3 == 0;
+        assert_eq!(is_even, should_be_even, "Parity pattern fails at n={n}");
+    }
+}
+
+#[test]
+fn test_fib_iterative_large_values() {
+    // Test some specific larger values.
+    assert_eq!(fib(60), 1548008755920);
+    assert_eq!(fib(70), 190392490709135);
+}
+
+#[test]
+fn test_fib_recursive_boundary() {
+    // fib_recursive may be slow for large n, but n=30 should be fine.
+    assert_eq!(fib_recursive(30), 832040);
+}
+
+#[test]
+fn test_fib_difference_identity() {
+    // fib(n+1)^2 - fib(n)^2 = fib(n-1)*fib(n+2) for n >= 1.
+    for n in 1..=20u64 {
+        let lhs = fib(n + 1) * fib(n + 1) - fib(n) * fib(n);
+        let rhs = fib(n - 1) * fib(n + 2);
+        assert_eq!(lhs, rhs, "Difference identity fails at n={n}");
+    }
+}
