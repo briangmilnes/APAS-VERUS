@@ -1,0 +1,61 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+error[E0428]: the name `points3d_loops_n0` is defined multiple times
+   --> tests/Chap21/TestChap21.rs:350:1
+    |
+267 | fn points3d_loops_n0() {
+    | ---------------------- previous definition of the value `points3d_loops_n0` here
+...
+350 | fn points3d_loops_n0() {
+    | ^^^^^^^^^^^^^^^^^^^^^^ `points3d_loops_n0` redefined here
+    |
+    = note: `points3d_loops_n0` must be defined only once in the value namespace of this module
+
+error[E0428]: the name `points3d_loops_n1` is defined multiple times
+   --> tests/Chap21/TestChap21.rs:356:1
+    |
+273 | fn points3d_loops_n1() {
+    | ---------------------- previous definition of the value `points3d_loops_n1` here
+...
+356 | fn points3d_loops_n1() {
+    | ^^^^^^^^^^^^^^^^^^^^^^ `points3d_loops_n1` redefined here
+    |
+    = note: `points3d_loops_n1` must be defined only once in the value namespace of this module
+
+error[E0428]: the name `points3d_loops_n3` is defined multiple times
+   --> tests/Chap21/TestChap21.rs:362:1
+    |
+279 | fn points3d_loops_n3() {
+    | ---------------------- previous definition of the value `points3d_loops_n3` here
+...
+362 | fn points3d_loops_n3() {
+    | ^^^^^^^^^^^^^^^^^^^^^^ `points3d_loops_n3` redefined here
+    |
+    = note: `points3d_loops_n3` must be defined only once in the value namespace of this module
+
+error[E0428]: the name `points3d_loops_matches_tab_flat` is defined multiple times
+   --> tests/Chap21/TestChap21.rs:374:1
+    |
+296 | fn points3d_loops_matches_tab_flat() {
+    | ------------------------------------ previous definition of the value `points3d_loops_matches_tab_flat` here
+...
+374 | fn points3d_loops_matches_tab_flat() {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `points3d_loops_matches_tab_flat` redefined here
+    |
+    = note: `points3d_loops_matches_tab_flat` must be defined only once in the value namespace of this module
+
+error[E0428]: the name `prime_sieve_n100` is defined multiple times
+   --> tests/Chap21/TestChap21.rs:418:1
+    |
+385 | fn prime_sieve_n100() {
+    | --------------------- previous definition of the value `prime_sieve_n100` here
+...
+418 | fn prime_sieve_n100() {
+    | ^^^^^^^^^^^^^^^^^^^^^ `prime_sieve_n100` redefined here
+    |
+    = note: `prime_sieve_n100` must be defined only once in the value namespace of this module
+
+For more information about this error, try `rustc --explain E0428`.
+error: could not compile `apas-verus` (test "TestChap21") due to 5 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 2s

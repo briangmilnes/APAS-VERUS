@@ -154,7 +154,6 @@ fn test_large_stack() {
     }
     assert_eq!(stack.size(), 200);
     assert_eq!(stack.peek(), Some(&199));
-
     for i in (0..200).rev() {
         assert_eq!(stack.pop(), Some(i));
     }
@@ -162,7 +161,7 @@ fn test_large_stack() {
 }
 
 #[test]
-fn test_push_pop_interleave() {
+fn test_push_pop_interleaved() {
     let mut stack = StackStEph::new();
     stack.push(1);
     stack.push(2);
@@ -176,10 +175,46 @@ fn test_push_pop_interleave() {
 }
 
 #[test]
-fn test_display() {
+fn test_peek_does_not_change_size() {
     let mut stack = StackStEph::new();
-    stack.push(1);
-    stack.push(2);
-    let s = format!("{:?}", stack);
-    assert!(!s.is_empty());
+    stack.push(42);
+    stack.push(99);
+    for _ in 0..10 {
+        assert_eq!(stack.peek(), Some(&99));
+        assert_eq!(stack.size(), 2);
+    }
+}
+
+#[test]
+fn test_string_stack() {
+    let mut stack = StackStEph::new();
+    stack.push(String::from("alpha"));
+    stack.push(String::from("beta"));
+    stack.push(String::from("gamma"));
+    assert_eq!(stack.pop().as_deref(), Some("gamma"));
+    assert_eq!(stack.pop().as_deref(), Some("beta"));
+    assert_eq!(stack.pop().as_deref(), Some("alpha"));
+}
+
+#[test]
+fn test_push_pop_one_by_one() {
+    let mut stack = StackStEph::new();
+    for i in 0..5 {
+        stack.push(i);
+        assert_eq!(stack.size(), 1);
+        assert_eq!(stack.pop(), Some(i));
+        assert_eq!(stack.size(), 0);
+    }
+}
+
+#[test]
+fn test_empty_after_drain() {
+    let mut stack = StackStEph::new();
+    for i in 0..10 {
+        stack.push(i);
+    }
+    while stack.pop().is_some() {}
+    assert!(stack.is_empty());
+    assert_eq!(stack.size(), 0);
+    assert_eq!(stack.peek(), None);
 }

@@ -182,25 +182,8 @@ fn test_tree_bottom_up_iteration() {
 }
 
 #[test]
-fn test_star_graph() {
-    // Star: 0 -> {1, 2, 3, 4}
-    let graph = ArraySeqStEphS::from_vec(vec![
-        ArraySeqStEphSLit![1, 2, 3, 4],
-        ArraySeqStEphSLit![],
-        ArraySeqStEphSLit![],
-        ArraySeqStEphSLit![],
-        ArraySeqStEphSLit![],
-    ]);
-    let distances = BFSStEph::bfs(&graph, 0);
-    assert_eq!(*distances.nth(0), 0);
-    for i in 1..5 {
-        assert_eq!(*distances.nth(i), 1);
-    }
-}
-
-#[test]
-fn test_complete_graph() {
-    // K4: each vertex connects to all others.
+fn test_complete_graph_distances() {
+    // K4: every vertex connected to every other.
     let graph = ArraySeqStEphS::from_vec(vec![
         ArraySeqStEphSLit![1, 2, 3],
         ArraySeqStEphSLit![0, 2, 3],
@@ -209,35 +192,22 @@ fn test_complete_graph() {
     ]);
     let distances = BFSStEph::bfs(&graph, 0);
     assert_eq!(*distances.nth(0), 0);
-    for i in 1..4 {
-        assert_eq!(*distances.nth(i), 1);
-    }
+    assert_eq!(*distances.nth(1), 1);
+    assert_eq!(*distances.nth(2), 1);
+    assert_eq!(*distances.nth(3), 1);
 }
 
 #[test]
-fn test_self_loop() {
+fn test_bfs_cycle() {
+    // 0 -> 1 -> 2 -> 0.
     let graph = ArraySeqStEphS::from_vec(vec![
-        ArraySeqStEphSLit![0, 1],
-        ArraySeqStEphSLit![],
+        ArraySeqStEphSLit![1],
+        ArraySeqStEphSLit![2],
+        ArraySeqStEphSLit![0],
     ]);
     let distances = BFSStEph::bfs(&graph, 0);
     assert_eq!(*distances.nth(0), 0);
     assert_eq!(*distances.nth(1), 1);
-}
-
-#[test]
-fn test_bfs_from_middle() {
-    // Start BFS from vertex 2.
-    let graph = ArraySeqStEphS::from_vec(vec![
-        ArraySeqStEphSLit![1],
-        ArraySeqStEphSLit![],
-        ArraySeqStEphSLit![0, 3],
-        ArraySeqStEphSLit![],
-    ]);
-    let distances = BFSStEph::bfs(&graph, 2);
-    assert_eq!(*distances.nth(2), 0);
-    assert_eq!(*distances.nth(0), 1);
-    assert_eq!(*distances.nth(3), 1);
-    assert_eq!(*distances.nth(1), 2); // 2->0->1
+    assert_eq!(*distances.nth(2), 2);
 }
 

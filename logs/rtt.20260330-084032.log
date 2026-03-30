@@ -1,0 +1,1246 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent1)
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap65/TestUnionFindStEph.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: `apas-verus` (test "TestUnionFindStEph") generated 1 warning
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:31:23
+   |
+31 |     assert_eq!(result.get_distance(0, 0).val, 0.0);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:32:23
+   |
+32 |     assert_eq!(result.get_distance(0, 1).val, 5.5);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:33:21
+   |
+33 |     assert!((result.get_distance(0, 2).val - 8.7).abs() < 1e-10);
+   |                     ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` in the current scope
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:31:23
+   |
+31 |     assert_eq!(result.get_distance(0).val, 0.0);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/SSSPResultStEphF64.rs:62:12
+   |
+62 |         fn get_distance(&self, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/SSSPResultStEphF64.rs:70:9
+   |
+70 | /         fn set_distance(&mut self, v: usize, dist: WrappedF64)
+71 | |             requires old(self).spec_ssspresultstephf64_wf(),
+72 | |             ensures
+73 | |                 self.spec_ssspresultstephf64_wf(),
+...  |
+77 | |                 self.spec_predecessors() == old(self).spec_predecessors(),
+78 | |                 self.spec_source() == old(self).spec_source();
+   | |______________________________________________________________^
+help: trait `SSSPResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 5 + use apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonStEphF64.rs:31:23
+   |
+31 |     assert_eq!(result.get_distance(0, 0).val, 0.0);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0425]: cannot find function `mst_weight` in module `BoruvkaStEph`
+   --> tests/Chap66/TestBoruvkaMtEph.rs:253:30
+    |
+253 |     let w_st = BoruvkaStEph::mst_weight(&edges, &BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42));
+    |                              ^^^^^^^^^^ not found in `BoruvkaStEph`
+    |
+help: consider importing one of these functions
+    |
+  4 + use crate::mst_weight;
+    |
+  4 + use apas_verus::Chap66::BoruvkaMtEph::BoruvkaMtEph::mst_weight;
+    |
+help: if you import `mst_weight`, refer to it directly
+    |
+253 -     let w_st = BoruvkaStEph::mst_weight(&edges, &BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42));
+253 +     let w_st = mst_weight(&edges, &BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42));
+    |
+
+error[E0425]: cannot find function `boruvka_mst_with_seed` in module `BoruvkaStEph`
+   --> tests/Chap66/TestBoruvkaMtEph.rs:253:64
+    |
+253 |     let w_st = BoruvkaStEph::mst_weight(&edges, &BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42));
+    |                                                                ^^^^^^^^^^^^^^^^^^^^^ not found in `BoruvkaStEph`
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:34:23
+   |
+34 |     assert_eq!(result.get_distance(1, 2).val, 3.2);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` in the current scope
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:32:23
+   |
+32 |     assert_eq!(result.get_distance(1).val, 1.5);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/SSSPResultStEphF64.rs:62:12
+   |
+62 |         fn get_distance(&self, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/SSSPResultStEphF64.rs:70:9
+   |
+70 | /         fn set_distance(&mut self, v: usize, dist: WrappedF64)
+71 | |             requires old(self).spec_ssspresultstephf64_wf(),
+72 | |             ensures
+73 | |                 self.spec_ssspresultstephf64_wf(),
+...  |
+77 | |                 self.spec_predecessors() == old(self).spec_predecessors(),
+78 | |                 self.spec_source() == old(self).spec_source();
+   | |______________________________________________________________^
+help: trait `SSSPResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 5 + use apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `is_reachable` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:35:21
+   |
+35 |     assert!(!result.is_reachable(1, 0));
+   |                     ^^^^^^^^^^^^ method not found in `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64`
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:75:12
+   |
+75 |         fn is_reachable(&self, u: usize, v: usize) -> (reachable: bool)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `AllPairsResultStEphF64Trait` which provides `is_reachable` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonStEphF64.rs:32:23
+   |
+32 |     assert_eq!(result.get_distance(0, 1).val, 5.5);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` in the current scope
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:33:23
+   |
+33 |     assert_eq!(result.get_distance(2).val, 4.0);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/SSSPResultStEphF64.rs:62:12
+   |
+62 |         fn get_distance(&self, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/SSSPResultStEphF64.rs:70:9
+   |
+70 | /         fn set_distance(&mut self, v: usize, dist: WrappedF64)
+71 | |             requires old(self).spec_ssspresultstephf64_wf(),
+72 | |             ensures
+73 | |                 self.spec_ssspresultstephf64_wf(),
+...  |
+77 | |                 self.spec_predecessors() == old(self).spec_predecessors(),
+78 | |                 self.spec_source() == old(self).spec_source();
+   | |______________________________________________________________^
+help: trait `SSSPResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 5 + use apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonStEphF64.rs:34:21
+   |
+34 |     assert!((result.get_distance(0, 2).val - 8.7).abs() < 1e-10);
+   |                     ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:46:21
+   |
+46 |     assert!((result.get_distance(0, 2).val - 0.7).abs() < 1e-10);
+   |                     ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` in the current scope
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:44:23
+   |
+44 |     assert_eq!(result.get_distance(0).val, 0.0);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/SSSPResultStEphF64.rs:62:12
+   |
+62 |         fn get_distance(&self, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/SSSPResultStEphF64.rs:70:9
+   |
+70 | /         fn set_distance(&mut self, v: usize, dist: WrappedF64)
+71 | |             requires old(self).spec_ssspresultstephf64_wf(),
+72 | |             ensures
+73 | |                 self.spec_ssspresultstephf64_wf(),
+...  |
+77 | |                 self.spec_predecessors() == old(self).spec_predecessors(),
+78 | |                 self.spec_source() == old(self).spec_source();
+   | |______________________________________________________________^
+help: trait `SSSPResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 5 + use apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonStEphF64.rs:35:23
+   |
+35 |     assert_eq!(result.get_distance(1, 2).val, 3.2);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:53:23
+   |
+53 |     assert_eq!(result.get_distance(0, 0).val, 0.0);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `is_reachable` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonStEphF64.rs:36:21
+   |
+36 |     assert!(!result.is_reachable(1, 0));
+   |                     ^^^^^^^^^^^^ method not found in `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64`
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:75:12
+   |
+75 |         fn is_reachable(&self, u: usize, v: usize) -> (reachable: bool)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `AllPairsResultStEphF64Trait` which provides `is_reachable` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` in the current scope
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:45:23
+   |
+45 |     assert_eq!(result.get_distance(1).val, 5.0);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/SSSPResultStEphF64.rs:62:12
+   |
+62 |         fn get_distance(&self, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/SSSPResultStEphF64.rs:70:9
+   |
+70 | /         fn set_distance(&mut self, v: usize, dist: WrappedF64)
+71 | |             requires old(self).spec_ssspresultstephf64_wf(),
+72 | |             ensures
+73 | |                 self.spec_ssspresultstephf64_wf(),
+...  |
+77 | |                 self.spec_predecessors() == old(self).spec_predecessors(),
+78 | |                 self.spec_source() == old(self).spec_source();
+   | |______________________________________________________________^
+help: trait `SSSPResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 5 + use apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` in the current scope
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:46:23
+   |
+46 |     assert_eq!(result.get_distance(2).val, 1.0);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/SSSPResultStEphF64.rs:62:12
+   |
+62 |         fn get_distance(&self, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/SSSPResultStEphF64.rs:70:9
+   |
+70 | /         fn set_distance(&mut self, v: usize, dist: WrappedF64)
+71 | |             requires old(self).spec_ssspresultstephf64_wf(),
+72 | |             ensures
+73 | |                 self.spec_ssspresultstephf64_wf(),
+...  |
+77 | |                 self.spec_predecessors() == old(self).spec_predecessors(),
+78 | |                 self.spec_source() == old(self).spec_source();
+   | |______________________________________________________________^
+help: trait `SSSPResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 5 + use apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:63:23
+   |
+63 |     assert_eq!(result.get_distance(0, 1).val, 2.5);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonStEphF64.rs:48:21
+   |
+48 |     assert!((result.get_distance(0, 2).val - 0.7).abs() < 1e-10);
+   |                     ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:64:23
+   |
+64 |     assert_eq!(result.get_distance(2, 3).val, 1.8);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` in the current scope
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:68:23
+   |
+68 |     assert_eq!(result.get_distance(0).val, 0.0);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/SSSPResultStEphF64.rs:62:12
+   |
+62 |         fn get_distance(&self, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/SSSPResultStEphF64.rs:70:9
+   |
+70 | /         fn set_distance(&mut self, v: usize, dist: WrappedF64)
+71 | |             requires old(self).spec_ssspresultstephf64_wf(),
+72 | |             ensures
+73 | |                 self.spec_ssspresultstephf64_wf(),
+...  |
+77 | |                 self.spec_predecessors() == old(self).spec_predecessors(),
+78 | |                 self.spec_source() == old(self).spec_source();
+   | |______________________________________________________________^
+help: trait `SSSPResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 5 + use apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonStEphF64.rs:55:23
+   |
+55 |     assert_eq!(result.get_distance(0, 0).val, 0.0);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `is_reachable` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:65:21
+   |
+65 |     assert!(!result.is_reachable(0, 2));
+   |                     ^^^^^^^^^^^^ method not found in `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64`
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:75:12
+   |
+75 |         fn is_reachable(&self, u: usize, v: usize) -> (reachable: bool)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `AllPairsResultStEphF64Trait` which provides `is_reachable` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` in the current scope
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:69:23
+   |
+69 |     assert_eq!(result.get_distance(1).val, 0.5);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/SSSPResultStEphF64.rs:62:12
+   |
+62 |         fn get_distance(&self, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/SSSPResultStEphF64.rs:70:9
+   |
+70 | /         fn set_distance(&mut self, v: usize, dist: WrappedF64)
+71 | |             requires old(self).spec_ssspresultstephf64_wf(),
+72 | |             ensures
+73 | |                 self.spec_ssspresultstephf64_wf(),
+...  |
+77 | |                 self.spec_predecessors() == old(self).spec_predecessors(),
+78 | |                 self.spec_source() == old(self).spec_source();
+   | |______________________________________________________________^
+help: trait `SSSPResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 5 + use apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonStEphF64.rs:65:23
+   |
+65 |     assert_eq!(result.get_distance(0, 1).val, 2.5);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:77:23
+   |
+77 |     assert_eq!(result.get_distance(0, 3).val, 3.0);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` in the current scope
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:70:23
+   |
+70 |     assert_eq!(result.get_distance(2).val, 1.75);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/SSSPResultStEphF64.rs:62:12
+   |
+62 |         fn get_distance(&self, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/SSSPResultStEphF64.rs:70:9
+   |
+70 | /         fn set_distance(&mut self, v: usize, dist: WrappedF64)
+71 | |             requires old(self).spec_ssspresultstephf64_wf(),
+72 | |             ensures
+73 | |                 self.spec_ssspresultstephf64_wf(),
+...  |
+77 | |                 self.spec_predecessors() == old(self).spec_predecessors(),
+78 | |                 self.spec_source() == old(self).spec_source();
+   | |______________________________________________________________^
+help: trait `SSSPResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 5 + use apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonStEphF64.rs:66:23
+   |
+66 |     assert_eq!(result.get_distance(2, 3).val, 1.8);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:88:23
+   |
+88 |     assert_eq!(result.get_distance(0, 2).val, 2.0);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` in the current scope
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:71:23
+   |
+71 |     assert_eq!(result.get_distance(3).val, 1.0);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/SSSPResultStEphF64.rs:62:12
+   |
+62 |         fn get_distance(&self, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/SSSPResultStEphF64.rs:70:9
+   |
+70 | /         fn set_distance(&mut self, v: usize, dist: WrappedF64)
+71 | |             requires old(self).spec_ssspresultstephf64_wf(),
+72 | |             ensures
+73 | |                 self.spec_ssspresultstephf64_wf(),
+...  |
+77 | |                 self.spec_predecessors() == old(self).spec_predecessors(),
+78 | |                 self.spec_source() == old(self).spec_source();
+   | |______________________________________________________________^
+help: trait `SSSPResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 5 + use apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `is_reachable` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonStEphF64.rs:67:21
+   |
+67 |     assert!(!result.is_reachable(0, 2));
+   |                     ^^^^^^^^^^^^ method not found in `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64`
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:75:12
+   |
+75 |         fn is_reachable(&self, u: usize, v: usize) -> (reachable: bool)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `AllPairsResultStEphF64Trait` which provides `is_reachable` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:89:23
+   |
+89 |     assert_eq!(result.get_distance(1, 0).val, 2.0);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `is_reachable` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonStEphF64.rs:68:21
+   |
+68 |     assert!(!result.is_reachable(1, 3));
+   |                     ^^^^^^^^^^^^ method not found in `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64`
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:75:12
+   |
+75 |         fn is_reachable(&self, u: usize, v: usize) -> (reachable: bool)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `AllPairsResultStEphF64Trait` which provides `is_reachable` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` in the current scope
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:78:23
+   |
+78 |     assert_eq!(result.get_distance(0).val, 0.0);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/SSSPResultStEphF64.rs:62:12
+   |
+62 |         fn get_distance(&self, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/SSSPResultStEphF64.rs:70:9
+   |
+70 | /         fn set_distance(&mut self, v: usize, dist: WrappedF64)
+71 | |             requires old(self).spec_ssspresultstephf64_wf(),
+72 | |             ensures
+73 | |                 self.spec_ssspresultstephf64_wf(),
+...  |
+77 | |                 self.spec_predecessors() == old(self).spec_predecessors(),
+78 | |                 self.spec_source() == old(self).spec_source();
+   | |______________________________________________________________^
+help: trait `SSSPResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 5 + use apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:99:23
+   |
+99 |     assert_eq!(result.get_distance(0, 2).val, 0.0);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` in the current scope
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:79:23
+   |
+79 |     assert_eq!(result.get_distance(1).val, 1.0);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/SSSPResultStEphF64.rs:62:12
+   |
+62 |         fn get_distance(&self, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/SSSPResultStEphF64.rs:70:9
+   |
+70 | /         fn set_distance(&mut self, v: usize, dist: WrappedF64)
+71 | |             requires old(self).spec_ssspresultstephf64_wf(),
+72 | |             ensures
+73 | |                 self.spec_ssspresultstephf64_wf(),
+...  |
+77 | |                 self.spec_predecessors() == old(self).spec_predecessors(),
+78 | |                 self.spec_source() == old(self).spec_source();
+   | |______________________________________________________________^
+help: trait `SSSPResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 5 + use apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonStEphF64.rs:80:23
+   |
+80 |     assert_eq!(result.get_distance(0, 3).val, 3.0); // via 0->1->3
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `is_reachable` found for struct `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` in the current scope
+   --> tests/Chap58/TestBellmanFordStEphF64.rs:80:21
+    |
+ 80 |     assert!(!result.is_reachable(2));
+    |                     ^^^^^^^^^^^^ method not found in `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64`
+    |
+   ::: src/Chap56/SSSPResultStEphF64.rs:103:12
+    |
+103 |         fn is_reachable(&self, v: usize) -> (b: bool)
+    |            ------------ the method is available for `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `SSSPResultStEphF64Trait` which provides `is_reachable` is implemented but not in scope; perhaps you want to import it
+    |
+  5 + use apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64Trait;
+    |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:106:23
+    |
+106 |     assert_eq!(result.get_distance(0, 1).val, 7.0);
+    |                       ^^^^^^^^^^^^
+    |
+   ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+    |
+ 49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+    |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+   --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+    |
+ 54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+ 55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+ 56 | |             ensures
+ 57 | |                 self.spec_allpairsresultstephf64_wf(),
+ 58 | |                 self.spec_n() == old(self).spec_n();
+    | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+    |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonStEphF64.rs:87:23
+   |
+87 |     assert_eq!(result.get_distance(0, 1).val, 7.0);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:49:12
+   |
+49 |         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/AllPairsResultStEphF64.rs:54:9
+   |
+54 | /         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
+55 | |             requires old(self).spec_allpairsresultstephf64_wf(),
+56 | |             ensures
+57 | |                 self.spec_allpairsresultstephf64_wf(),
+58 | |                 self.spec_n() == old(self).spec_n();
+   | |____________________________________________________^
+help: trait `AllPairsResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `is_reachable` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:107:21
+    |
+107 |     assert!(!result.is_reachable(1, 0));
+    |                     ^^^^^^^^^^^^ method not found in `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64`
+    |
+   ::: src/Chap56/AllPairsResultStEphF64.rs:75:12
+    |
+ 75 |         fn is_reachable(&self, u: usize, v: usize) -> (reachable: bool)
+    |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `AllPairsResultStEphF64Trait` which provides `is_reachable` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+    |
+
+error[E0599]: no method named `is_reachable` found for struct `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` in the current scope
+  --> tests/Chap59/TestJohnsonStEphF64.rs:88:21
+   |
+88 |     assert!(!result.is_reachable(1, 0));
+   |                     ^^^^^^^^^^^^ method not found in `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64`
+   |
+  ::: src/Chap56/AllPairsResultStEphF64.rs:75:12
+   |
+75 |         fn is_reachable(&self, u: usize, v: usize) -> (reachable: bool)
+   |            ------------ the method is available for `apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `AllPairsResultStEphF64Trait` which provides `is_reachable` is implemented but not in scope; perhaps you want to import it
+   |
+ 4 + use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::AllPairsResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` in the current scope
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:87:23
+   |
+87 |     assert_eq!(result.get_distance(0).val, 0.0);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/SSSPResultStEphF64.rs:62:12
+   |
+62 |         fn get_distance(&self, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/SSSPResultStEphF64.rs:70:9
+   |
+70 | /         fn set_distance(&mut self, v: usize, dist: WrappedF64)
+71 | |             requires old(self).spec_ssspresultstephf64_wf(),
+72 | |             ensures
+73 | |                 self.spec_ssspresultstephf64_wf(),
+...  |
+77 | |                 self.spec_predecessors() == old(self).spec_predecessors(),
+78 | |                 self.spec_source() == old(self).spec_source();
+   | |______________________________________________________________^
+help: trait `SSSPResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 5 + use apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64Trait;
+   |
+
+For more information about this error, try `rustc --explain E0599`.
+error[E0599]: no method named `len` found for struct `HashMapWithViewPlus<Key, Value>` in the current scope
+   --> tests/Chap66/TestBoruvkaMtEph.rs:159:24
+    |
+159 |     assert_eq!(bridges.len(), 3);
+    |                        ^^^ method not found in `HashMapWithViewPlus<{integer}, ({integer}, WrappedF64, usize)>`
+    |
+   ::: src/vstdplus/hash_map_with_view_plus.rs:64:8
+    |
+ 64 |     fn len(&self) -> (count: usize)
+    |        --- the method is available for `apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlus<{integer}, ({integer}, apas_verus::vstdplus::float::float::WrappedF64, usize)>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: the full name for the type has been written to '/home/milnes/projects/APAS-VERUS-agent1/target/release/deps/TestBoruvkaMtEph-7222d0e3e5749703.long-type-5271010232985348757.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: one of the expressions' fields has a method of the same name
+    |
+159 |     assert_eq!(bridges.inner.len(), 3);
+    |                        ++++++
+help: trait `HashMapWithViewPlusTrait` which provides `len` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait;
+    |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` in the current scope
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:97:23
+   |
+97 |     assert_eq!(result.get_distance(1).val, 0.0);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/SSSPResultStEphF64.rs:62:12
+   |
+62 |         fn get_distance(&self, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/SSSPResultStEphF64.rs:70:9
+   |
+70 | /         fn set_distance(&mut self, v: usize, dist: WrappedF64)
+71 | |             requires old(self).spec_ssspresultstephf64_wf(),
+72 | |             ensures
+73 | |                 self.spec_ssspresultstephf64_wf(),
+...  |
+77 | |                 self.spec_predecessors() == old(self).spec_predecessors(),
+78 | |                 self.spec_source() == old(self).spec_source();
+   | |______________________________________________________________^
+help: trait `SSSPResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 5 + use apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64Trait;
+   |
+
+error: could not compile `apas-verus` (test "TestJohnsonMtEphF64") due to 16 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `apas-verus` (test "TestJohnsonStEphF64") due to 14 previous errors
+error[E0599]: no method named `get` found for struct `HashMapWithViewPlus<Key, Value>` in the current scope
+   --> tests/Chap66/TestBoruvkaMtEph.rs:160:24
+    |
+160 |     assert_eq!(bridges.get(&1), Some(&(3, w(1.0), 2)));
+    |                        ^^^ method not found in `HashMapWithViewPlus<{integer}, ({integer}, WrappedF64, usize)>`
+    |
+   ::: src/vstdplus/hash_map_with_view_plus.rs:70:8
+    |
+ 70 |     fn get<'a>(&'a self, k: &Key) -> (value: Option<&'a Value>)
+    |        --- the method is available for `apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlus<{integer}, ({integer}, apas_verus::vstdplus::float::float::WrappedF64, usize)>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: the full name for the type has been written to '/home/milnes/projects/APAS-VERUS-agent1/target/release/deps/TestBoruvkaMtEph-7222d0e3e5749703.long-type-5271010232985348757.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: one of the expressions' fields has a method of the same name
+    |
+160 |     assert_eq!(bridges.inner.get(&1), Some(&(3, w(1.0), 2)));
+    |                        ++++++
+help: trait `HashMapWithViewPlusTrait` which provides `get` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait;
+    |
+
+error[E0599]: no method named `get_distance` found for struct `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` in the current scope
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:98:23
+   |
+98 |     assert_eq!(result.get_distance(2).val, 0.0);
+   |                       ^^^^^^^^^^^^
+   |
+  ::: src/Chap56/SSSPResultStEphF64.rs:62:12
+   |
+62 |         fn get_distance(&self, v: usize) -> (dist: WrappedF64)
+   |            ------------ the method is available for `apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: there is a method `set_distance` with a similar name, but with different arguments
+  --> src/Chap56/SSSPResultStEphF64.rs:70:9
+   |
+70 | /         fn set_distance(&mut self, v: usize, dist: WrappedF64)
+71 | |             requires old(self).spec_ssspresultstephf64_wf(),
+72 | |             ensures
+73 | |                 self.spec_ssspresultstephf64_wf(),
+...  |
+77 | |                 self.spec_predecessors() == old(self).spec_predecessors(),
+78 | |                 self.spec_source() == old(self).spec_source();
+   | |______________________________________________________________^
+help: trait `SSSPResultStEphF64Trait` which provides `get_distance` is implemented but not in scope; perhaps you want to import it
+   |
+ 5 + use apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::SSSPResultStEphF64Trait;
+   |
+
+error[E0599]: no method named `get` found for struct `HashMapWithViewPlus<Key, Value>` in the current scope
+   --> tests/Chap66/TestBoruvkaMtEph.rs:161:24
+    |
+161 |     assert_eq!(bridges.get(&2), Some(&(3, w(2.0), 1)));
+    |                        ^^^ method not found in `HashMapWithViewPlus<{integer}, ({

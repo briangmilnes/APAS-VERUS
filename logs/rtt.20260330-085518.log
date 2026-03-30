@@ -1,0 +1,14 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+error: this file contains an unclosed delimiter
+   --> tests/Chap57/TestDijkstraStEphU64.rs:304:3
+    |
+204 | fn test_diamond_graph() {
+    |                         - unclosed delimiter
+...
+304 | }
+    |  ^
+
+error: could not compile `apas-verus` (test "TestDijkstraStEphU64") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 2s

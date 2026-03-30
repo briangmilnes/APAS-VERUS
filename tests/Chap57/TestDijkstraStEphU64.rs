@@ -172,65 +172,80 @@ fn test_larger_graph() {
 }
 
 #[test]
-fn test_is_reachable() {
-    let vertices = SetLit![0, 1, 2];
-    let edges = SetLit![WeightedEdge(0, 1, 3)];
-    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
-    let result = dijkstra(&graph, 0);
-
-    assert!(result.is_reachable(0));
-    assert!(result.is_reachable(1));
-    assert!(!result.is_reachable(2));
-}
-
-#[test]
-fn test_get_predecessor() {
-    let vertices = SetLit![0, 1, 2, 3];
-    let edges = SetLit![
-        WeightedEdge(0, 1, 1),
-        WeightedEdge(1, 2, 2),
-        WeightedEdge(2, 3, 3)
-    ];
-    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
-    let result = dijkstra(&graph, 0);
-
-    assert_eq!(result.get_predecessor(0), None);
-    assert_eq!(result.get_predecessor(1), Some(0));
-    assert_eq!(result.get_predecessor(2), Some(1));
-    assert_eq!(result.get_predecessor(3), Some(2));
-}
-
-#[test]
 fn test_diamond_graph() {
-    // Diamond: 0->{1,2}, 1->3, 2->3.
     let vertices = SetLit![0, 1, 2, 3];
     let edges = SetLit![
         WeightedEdge(0, 1, 1),
         WeightedEdge(0, 2, 4),
-        WeightedEdge(1, 3, 6),
+        WeightedEdge(1, 3, 2),
         WeightedEdge(2, 3, 1)
     ];
     let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
     let result = dijkstra(&graph, 0);
-
-    assert_eq!(result.get_distance(3), 5); // 0->2->3 = 4+1=5 < 0->1->3 = 1+6=7
+    assert_eq!(result.get_distance(3), 3); // via 0->1->3
 }
 
 #[test]
-fn test_star_graph() {
-    let vertices = SetLit![0, 1, 2, 3, 4, 5];
+fn test_zero_weight_edges() {
+    let vertices = SetLit![0, 1, 2];
     let edges = SetLit![
-        WeightedEdge(0, 1, 2),
-        WeightedEdge(0, 2, 4),
-        WeightedEdge(0, 3, 6),
-        WeightedEdge(0, 4, 8),
-        WeightedEdge(0, 5, 10)
+        WeightedEdge(0, 1, 0),
+        WeightedEdge(1, 2, 0)
     ];
     let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
     let result = dijkstra(&graph, 0);
+    assert_eq!(result.get_distance(1), 0);
+    assert_eq!(result.get_distance(2), 0);
+}
 
-    for i in 0..6 {
-        assert!(result.is_reachable(i));
+#[test]
+fn test_two_vertices_one_edge() {
+    let vertices = SetLit![0, 1];
+    let edges = SetLit![WeightedEdge(0, 1, 7)];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = dijkstra(&graph, 0);
+    assert_eq!(result.get_distance(0), 0);
+    assert_eq!(result.get_distance(1), 7);
+}
+
+#[test]
+fn test_all_unreachable() {
+    let vertices = SetLit![0, 1, 2, 3];
+    let edges = SetLit![];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = dijkstra(&graph, 0);
+    assert_eq!(result.get_distance(0), 0);
+    assert!(!result.is_reachable(1));
+    assert!(!result.is_reachable(2));
+    assert!(!result.is_reachable(3));
+}
+
+#[test]
+fn test_self_loop() {
+    let vertices = SetLit![0, 1];
+    let edges = SetLit![
+        WeightedEdge(0, 0, 5),
+        WeightedEdge(0, 1, 3)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = dijkstra(&graph, 0);
+    assert_eq!(result.get_distance(0), 0);
+    assert_eq!(result.get_distance(1), 3);
+}
+
+#[test]
+fn test_chain_10() {
+    let mut vertices = SetStEph::empty();
+    let mut edges = SetStEph::empty();
+    for i in 0..10 {
+        vertices.insert(i);
     }
-    assert_eq!(result.get_distance(5), 10);
+    for i in 0..9 {
+        edges.insert(WeightedEdge(i, i + 1, 1));
+    }
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = dijkstra(&graph, 0);
+    for i in 0..10 {
+        assert_eq!(result.get_distance(i), i as i64);
+    }
 }

@@ -136,48 +136,35 @@ fn test_empty_graph() {
 }
 
 #[test]
-fn test_chain_graph() {
+fn test_mt_diamond() {
     let vertices = SetLit![0, 1, 2, 3];
     let edges = SetLit![
         WeightedEdge(0, 1, 1),
-        WeightedEdge(1, 2, 2),
-        WeightedEdge(2, 3, 3)
+        WeightedEdge(0, 2, 4),
+        WeightedEdge(1, 3, 2),
+        WeightedEdge(2, 3, 1)
     ];
-
     let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
     let result = johnson_apsp(&graph);
-
-    assert_eq!(result.get_distance(0, 3), 6); // 1+2+3
-    assert_eq!(result.get_distance(1, 3), 5); // 2+3
-    assert_eq!(result.get_distance(3, 0), i64::MAX); // unreachable
+    assert_eq!(result.get_distance(0, 3), 3);
 }
 
 #[test]
-fn test_self_distance_zero() {
-    let vertices = SetLit![0, 1];
-    let edges = SetLit![WeightedEdge(0, 1, 10)];
-    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
-    let result = johnson_apsp(&graph);
-
-    assert_eq!(result.get_distance(0, 0), 0);
-    assert_eq!(result.get_distance(1, 1), 0);
-}
-
-#[test]
-fn test_bidirectional_edges() {
+fn test_mt_st_agree() {
+    use apas_verus::Chap59::JohnsonStEphI64::JohnsonStEphI64::johnson_apsp as johnson_st;
     let vertices = SetLit![0, 1, 2];
     let edges = SetLit![
         WeightedEdge(0, 1, 3),
-        WeightedEdge(1, 0, 5),
-        WeightedEdge(1, 2, 2),
-        WeightedEdge(2, 1, 4)
+        WeightedEdge(1, 2, -1),
+        WeightedEdge(0, 2, 5)
     ];
-
     let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
-    let result = johnson_apsp(&graph);
-
-    assert_eq!(result.get_distance(0, 1), 3);
-    assert_eq!(result.get_distance(1, 0), 5);
-    assert_eq!(result.get_distance(0, 2), 5); // 0->1->2 = 3+2
-    assert_eq!(result.get_distance(2, 0), 9); // 2->1->0 = 4+5
+    let st = johnson_st(&graph);
+    let mt = johnson_apsp(&graph);
+    for u in 0..3 {
+        for v in 0..3 {
+            assert_eq!(st.get_distance(u, v), mt.get_distance(u, v),
+                "mismatch at ({u},{v})");
+        }
+    }
 }

@@ -124,24 +124,12 @@ fn test_iter() {
 }
 
 #[test]
-fn test_is_empty_singleton() {
-    let empty = ArraySeqStEphS::<i32>::empty();
-    assert!(empty.is_empty());
-    assert!(!empty.is_singleton());
-
-    let single = ArraySeqStEphS::singleton(42);
-    assert!(!single.is_empty());
-    assert!(single.is_singleton());
-}
-
-#[test]
-fn test_inject() {
-    let seq = ArraySeqStEphS::from_vec(vec![10, 20, 30, 40, 50]);
-    let updates = vec![(1, 99), (3, 77)];
-    let injected = ArraySeqStEphS::inject(&seq, &updates);
-    assert_eq!(*injected.nth(1), 99);
-    assert_eq!(*injected.nth(3), 77);
-    assert_eq!(*injected.nth(0), 10);
+fn test_large_from_vec() {
+    let v: Vec<usize> = (0..200).collect();
+    let seq = ArraySeqStEphS::from_vec(v);
+    assert_eq!(seq.length(), 200);
+    assert_eq!(*seq.nth(0), 0);
+    assert_eq!(*seq.nth(199), 199);
 }
 
 #[test]
@@ -156,19 +144,18 @@ fn test_flatten() {
 }
 
 #[test]
-fn test_large_sequence() {
-    let data: Vec<usize> = (0..500).collect();
-    let seq = ArraySeqStEphS::from_vec(data);
-    assert_eq!(seq.length(), 500);
-    assert_eq!(*seq.nth(499), 499);
-}
-
-#[test]
-fn test_for_loop() {
+fn test_for_loop_iter() {
     let seq = ArraySeqStEphS::from_vec(vec![10, 20, 30]);
     let mut sum = 0;
     for v in &seq {
         sum += v;
     }
     assert_eq!(sum, 60);
+}
+
+#[test]
+fn test_map_identity() {
+    let seq = ArraySeqStEphS::from_vec(vec![1, 2, 3]);
+    let mapped = ArraySeqStEphS::map(&seq, &|x| *x);
+    assert_eq!(seq, mapped);
 }

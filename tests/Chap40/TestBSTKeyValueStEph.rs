@@ -241,3 +241,48 @@ fn key_value_bst_large_sequential_insert() {
     let height = bst.height();
     assert!(height <= 30, "Height {height} too large for 200 sequential inserts");
 }
+
+#[test]
+fn key_value_bst_insert_duplicate_key_updates_value() {
+    let mut bst = BSTreeKeyValue::new();
+    bst.insert(1, "first", rand_priority());
+    bst.insert(1, "second", rand_priority());
+    assert_eq!(bst.size(), 1);
+    assert_eq!(bst.find(&1), Some(&"second"));
+}
+
+#[test]
+fn key_value_bst_delete_absent_key() {
+    let mut bst = BSTreeKeyValue::new();
+    bst.insert(1, 10, rand_priority());
+    bst.delete(&99);
+    assert_eq!(bst.size(), 1);
+}
+
+#[test]
+fn key_value_bst_delete_all_keys() {
+    let mut bst = BSTreeKeyValue::new();
+    for i in 0..10 {
+        bst.insert(i, i, rand_priority());
+    }
+    for i in 0..10 {
+        bst.delete(&i);
+    }
+    assert_eq!(bst.size(), 0);
+    assert!(bst.is_empty());
+}
+
+#[test]
+fn key_value_bst_keys_order() {
+    let mut bst = BSTreeKeyValue::new();
+    bst.insert(5, 50, rand_priority());
+    bst.insert(1, 10, rand_priority());
+    bst.insert(9, 90, rand_priority());
+    bst.insert(3, 30, rand_priority());
+    let keys = bst.keys();
+    assert_eq!(keys.length(), 4);
+    assert_eq!(keys.nth(0), &1);
+    assert_eq!(keys.nth(1), &3);
+    assert_eq!(keys.nth(2), &5);
+    assert_eq!(keys.nth(3), &9);
+}

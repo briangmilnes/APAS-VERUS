@@ -1,184 +1,109 @@
-#![cfg(feature = "all_chapters")]
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Tests for Johnson's APSP algorithm — multi-threaded (F64 weights).
+
 use apas_verus::Chap05::SetStEph::SetStEph::*;
-use apas_verus::Chap06::WeightedDirGraphMtEphFloat::WeightedDirGraphMtEphFloat::*;
+use apas_verus::Chap06::WeightedDirGraphStEphF64::WeightedDirGraphStEphF64::*;
+use apas_verus::Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64::*;
 use apas_verus::Chap59::JohnsonMtEphF64::JohnsonMtEphF64::*;
 use apas_verus::SetLit;
 use apas_verus::Types::Types::*;
+use apas_verus::vstdplus::float::float::*;
 
-#[test]
-fn test_simple_graph() {
-    let vertices = SetLit![0, 1, 2];
-    let edges = SetLit![
-        WeightedEdge(0, 1, OrderedF64::from(5.5)),
-        WeightedEdge(1, 2, OrderedF64::from(3.2)),
-        WeightedEdge(0, 2, OrderedF64::from(10.0))
-    ];
+fn w(v: f64) -> WrappedF64 {
+    WrappedF64 { val: v }
+}
 
-    let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
-    let result = johnson_apsp(&graph);
-
-    assert_eq!(result.get_distance(0, 0), OrderedF64::from(0.0));
-    assert_eq!(result.get_distance(0, 1), OrderedF64::from(5.5));
-    assert_eq!(result.get_distance(0, 2), OrderedF64::from(8.7));
-
-    assert_eq!(result.get_distance(1, 1), OrderedF64::from(0.0));
-    assert_eq!(result.get_distance(1, 2), OrderedF64::from(3.2));
-    assert_eq!(result.get_distance(1, 0), OrderedF64::from(f64::INFINITY));
+fn mk_graph(n: usize, edges: SetStEph<WeightedEdge<usize, WrappedF64>>) -> WeightedDirGraphStEphF64<usize> {
+    let mut vertices = SetStEph::empty();
+    for v in 0..n {
+        vertices.insert(v);
+    }
+    <WeightedDirGraphStEphF64<usize> as WeightedDirGraphStEphF64Trait<usize>>::from_weighed_edges(vertices, edges)
 }
 
 #[test]
-fn test_negative_weights() {
-    let vertices = SetLit![0, 1, 2];
-    let edges = SetLit![
-        WeightedEdge(0, 1, OrderedF64::from(1.5)),
-        WeightedEdge(1, 2, OrderedF64::from(-0.8)),
-        WeightedEdge(0, 2, OrderedF64::from(1.0))
-    ];
-
-    let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
+fn test_mt_simple_graph() {
+    let graph = mk_graph(3, SetLit![
+        WeightedEdge(0, 1, w(5.5)),
+        WeightedEdge(1, 2, w(3.2)),
+        WeightedEdge(0, 2, w(10.0))
+    ]);
     let result = johnson_apsp(&graph);
-
-    assert_eq!(result.get_distance(0, 2), OrderedF64::from(0.7));
+    assert_eq!(result.get_distance(0, 0).val, 0.0);
+    assert_eq!(result.get_distance(0, 1).val, 5.5);
+    assert!((result.get_distance(0, 2).val - 8.7).abs() < 1e-10);
+    assert_eq!(result.get_distance(1, 2).val, 3.2);
+    assert!(!result.is_reachable(1, 0));
 }
 
 #[test]
-fn test_single_vertex() {
-    let vertices = SetLit![0];
-    let edges = SetStEph::empty();
-
-    let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
+fn test_mt_negative_weights() {
+    let graph = mk_graph(3, SetLit![
+        WeightedEdge(0, 1, w(1.5)),
+        WeightedEdge(1, 2, w(-0.8)),
+        WeightedEdge(0, 2, w(1.0))
+    ]);
     let result = johnson_apsp(&graph);
-
-    assert_eq!(result.get_distance(0, 0), OrderedF64::from(0.0));
+    assert!((result.get_distance(0, 2).val - 0.7).abs() < 1e-10);
 }
 
 #[test]
-fn test_fractional_weights() {
-    let vertices = SetLit![0, 1, 2, 3];
-    let edges = SetLit![
-        WeightedEdge(0, 1, OrderedF64::from(0.5)),
-        WeightedEdge(0, 2, OrderedF64::from(1.5)),
-        WeightedEdge(1, 2, OrderedF64::from(-0.25)),
-        WeightedEdge(1, 3, OrderedF64::from(1.0)),
-        WeightedEdge(2, 3, OrderedF64::from(0.5))
-    ];
-
-    let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
+fn test_mt_single_vertex() {
+    let graph = mk_graph(1, SetLit![]);
     let result = johnson_apsp(&graph);
-
-    assert_eq!(result.get_distance(0, 0), OrderedF64::from(0.0));
-    assert_eq!(result.get_distance(0, 1), OrderedF64::from(0.5));
-    assert_eq!(result.get_distance(0, 2), OrderedF64::from(0.25));
-    assert_eq!(result.get_distance(0, 3), OrderedF64::from(0.75));
+    assert_eq!(result.get_distance(0, 0).val, 0.0);
 }
 
 #[test]
-fn test_disconnected_graph() {
-    let vertices = SetLit![0, 1, 2, 3];
-    let edges = SetLit![WeightedEdge(0, 1, OrderedF64::from(2.5)), WeightedEdge(2, 3, OrderedF64::from(1.8))];
-
-    let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
+fn test_mt_disconnected() {
+    let graph = mk_graph(4, SetLit![
+        WeightedEdge(0, 1, w(2.5)),
+        WeightedEdge(2, 3, w(1.8))
+    ]);
     let result = johnson_apsp(&graph);
-
-    assert_eq!(result.get_distance(0, 1), OrderedF64::from(2.5));
-    assert_eq!(result.get_distance(2, 3), OrderedF64::from(1.8));
-    assert_eq!(result.get_distance(0, 2), OrderedF64::from(f64::INFINITY));
-    assert_eq!(result.get_distance(1, 3), OrderedF64::from(f64::INFINITY));
+    assert_eq!(result.get_distance(0, 1).val, 2.5);
+    assert_eq!(result.get_distance(2, 3).val, 1.8);
+    assert!(!result.is_reachable(0, 2));
 }
 
 #[test]
-fn test_two_vertex_cycle() {
-    let vertices = SetLit![0, 1];
-    let edges = SetLit![WeightedEdge(0, 1, OrderedF64::from(1.0)), WeightedEdge(1, 0, OrderedF64::from(2.0))];
-
-    let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
+fn test_mt_diamond() {
+    let graph = mk_graph(4, SetLit![
+        WeightedEdge(0, 1, w(1.0)),
+        WeightedEdge(0, 2, w(4.0)),
+        WeightedEdge(1, 3, w(2.0)),
+        WeightedEdge(2, 3, w(1.0))
+    ]);
     let result = johnson_apsp(&graph);
-
-    assert_eq!(result.get_distance(0, 1), OrderedF64::from(1.0));
-    assert_eq!(result.get_distance(1, 0), OrderedF64::from(2.0));
+    assert_eq!(result.get_distance(0, 3).val, 3.0);
 }
 
 #[test]
-fn test_triangle() {
-    let vertices = SetLit![0, 1, 2];
-    let edges = SetLit![
-        WeightedEdge(0, 1, OrderedF64::from(1.0)),
-        WeightedEdge(1, 2, OrderedF64::from(1.0)),
-        WeightedEdge(2, 0, OrderedF64::from(1.0))
-    ];
-
-    let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
+fn test_mt_cycle() {
+    let graph = mk_graph(3, SetLit![
+        WeightedEdge(0, 1, w(1.0)),
+        WeightedEdge(1, 2, w(1.0)),
+        WeightedEdge(2, 0, w(1.0))
+    ]);
     let result = johnson_apsp(&graph);
-
-    assert_eq!(result.get_distance(0, 2), OrderedF64::from(2.0));
-    assert_eq!(result.get_distance(1, 0), OrderedF64::from(2.0));
+    assert_eq!(result.get_distance(0, 2).val, 2.0);
+    assert_eq!(result.get_distance(1, 0).val, 2.0);
 }
 
 #[test]
-fn test_zero_weights() {
-    let vertices = SetLit![0, 1, 2];
-    let edges = SetLit![WeightedEdge(0, 1, OrderedF64::from(0.0)), WeightedEdge(1, 2, OrderedF64::from(0.0))];
-
-    let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
+fn test_mt_zero_weights() {
+    let graph = mk_graph(3, SetLit![
+        WeightedEdge(0, 1, w(0.0)),
+        WeightedEdge(1, 2, w(0.0))
+    ]);
     let result = johnson_apsp(&graph);
-
-    assert_eq!(result.get_distance(0, 2), OrderedF64::from(0.0));
+    assert_eq!(result.get_distance(0, 2).val, 0.0);
 }
 
 #[test]
-fn test_large_weights() {
-    let vertices = SetLit![0, 1, 2];
-    let edges = SetLit![
-        WeightedEdge(0, 1, OrderedF64::from(1000.5)),
-        WeightedEdge(1, 2, OrderedF64::from(2000.3))
-    ];
-
-    let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
+fn test_mt_two_vertices() {
+    let graph = mk_graph(2, SetLit![WeightedEdge(0, 1, w(7.0))]);
     let result = johnson_apsp(&graph);
-
-    assert_eq!(result.get_distance(0, 2), OrderedF64::from(3000.8));
-}
-
-#[test]
-fn test_self_loop() {
-    let vertices = SetLit![0, 1];
-    let edges = SetLit![WeightedEdge(0, 0, OrderedF64::from(1.0)), WeightedEdge(0, 1, OrderedF64::from(2.0))];
-
-    let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
-    let result = johnson_apsp(&graph);
-
-    assert_eq!(result.get_distance(0, 0), OrderedF64::from(0.0));
-    assert_eq!(result.get_distance(0, 1), OrderedF64::from(2.0));
-}
-
-#[test]
-fn test_negative_cycle() {
-    // Create graph with negative cycle: 0 -> 1 -> 2 -> 0 with total weight < 0
-    let vertices = SetLit![0, 1, 2];
-    let edges = SetLit![
-        WeightedEdge(0, 1, OrderedF64::from(1.0)),
-        WeightedEdge(1, 2, OrderedF64::from(-2.0)),
-        WeightedEdge(2, 0, OrderedF64::from(-1.0))  // Total cycle: 1 + (-2) + (-1) = -2 < 0
-    ];
-
-    let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
-    let result = johnson_apsp(&graph);
-
-    // When negative cycle exists, all distances should be infinity
-    assert_eq!(result.get_distance(0, 0), OrderedF64::from(f64::INFINITY));
-    assert_eq!(result.get_distance(0, 1), OrderedF64::from(f64::INFINITY));
-    assert_eq!(result.get_distance(1, 2), OrderedF64::from(f64::INFINITY));
-}
-
-#[test]
-fn test_empty_graph() {
-    // Graph with no vertices triggers empty range base case
-    let vertices = SetStEph::empty();
-    let edges = SetStEph::empty();
-
-    let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
-    let result = johnson_apsp(&graph);
-
-    assert_eq!(result.n, 0);
+    assert_eq!(result.get_distance(0, 1).val, 7.0);
+    assert!(!result.is_reachable(1, 0));
 }

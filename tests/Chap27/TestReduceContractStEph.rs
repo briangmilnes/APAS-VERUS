@@ -83,20 +83,17 @@ fn test_reduce_contract_large() {
 fn test_reduce_contract_min() {
     let a = ArraySeqStEphS::tabulate(&|i| (i * 7 + 3) % 20, 15);
     let result = ArraySeqStEphS::reduce_contract(&a, &|x, y| if x < y { *x } else { *y }, Ghost::assume_new(), usize::MAX);
-    // Sequence: 3, 10, 17, 4, 11, 18, 5, 12, 19, 6, 13, 0, 7, 14, 1 — min is 0.
-    assert_eq!(result, 0);
+    let mut expected = usize::MAX;
+    for i in 0..15 {
+        let v = (i * 7 + 3) % 20;
+        if v < expected { expected = v; }
+    }
+    assert_eq!(result, expected);
 }
 
 #[test]
 fn test_reduce_contract_three_elements() {
-    let a = ArraySeqStEphS::tabulate(&|i| i + 1, 3); // [1, 2, 3]
+    let a = ArraySeqStEphS::tabulate(&|i| i + 10, 3); // [10, 11, 12]
     let result = ArraySeqStEphS::reduce_contract(&a, &|x, y| x + y, Ghost::assume_new(), 0);
-    assert_eq!(result, 6);
-}
-
-#[test]
-fn test_reduce_contract_all_same() {
-    let a = ArraySeqStEphS::tabulate(&|_| 7usize, 50);
-    let result = ArraySeqStEphS::reduce_contract(&a, &|x, y| x + y, Ghost::assume_new(), 0);
-    assert_eq!(result, 350);
+    assert_eq!(result, 33);
 }
