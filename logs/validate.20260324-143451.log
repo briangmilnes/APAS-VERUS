@@ -1,0 +1,29 @@
+error: invalid suffix `int` for number literal
+   --> src/Chap37/AVLTreeSeqStEph.rs:941:22
+    |
+941 |                 pos: 0int,
+    |                      ^^^^ invalid suffix `int`
+    |
+    = help: the suffix must be one of the numeric types (`u32`, `isize`, `f32`, etc.)
+
+error[E0599]: the method `view` exists for reference `&'a Self`, but its trait bounds were not satisfied
+   --> src/Chap37/AVLTreeSeqStEph.rs:337:30
+    |
+337 |                 it@.1 == self@,
+    |                              ^ method cannot be called on `&'a Self` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `Self: vstd::string::View`
+            which is required by `&Self: vstd::string::View`
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+263 |     pub trait AVLTreeSeqStEphTrait<T: StT>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                   ++++++++++++++++++++++++++++++++++++++++++++++++++
+263 |     pub trait AVLTreeSeqStEphTrait<T: StT>: Sized + vstd::string::View {
+    |                                                   ++++++++++++++++++++
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 15s

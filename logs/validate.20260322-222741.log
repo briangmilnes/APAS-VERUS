@@ -1,0 +1,36 @@
+error[E0277]: the trait bound `T: std::cmp::Eq` is not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:135:30
+    |
+135 |             obeys_feq_full::<T>(),
+    |                              ^ the trait `std::cmp::Eq` is not implemented for `T`
+    |
+note: required by a bound in `vstdplus::feq::feq::obeys_feq_full`
+   --> src/vstdplus/feq.rs:67:40
+    |
+ 67 |     pub open spec fn obeys_feq_full<T: Eq + View + Clone + Sized>() -> bool {
+    |                                        ^^ required by this bound in `obeys_feq_full`
+help: consider further restricting type parameter `T` with trait `Eq`
+    |
+132 |     proof fn lemma_map_view_feq_implies_ext_eq_per<T: View + std::cmp::Eq>(a: Seq<T>, b: Seq<T>)
+    |                                                            ++++++++++++++
+
+error[E0277]: the trait bound `T: std::clone::Clone` is not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:135:30
+    |
+135 |             obeys_feq_full::<T>(),
+    |                              ^ the trait `std::clone::Clone` is not implemented for `T`
+    |
+note: required by a bound in `vstdplus::feq::feq::obeys_feq_full`
+   --> src/vstdplus/feq.rs:67:52
+    |
+ 67 |     pub open spec fn obeys_feq_full<T: Eq + View + Clone + Sized>() -> bool {
+    |                                                    ^^^^^ required by this bound in `obeys_feq_full`
+help: consider further restricting type parameter `T` with trait `Clone`
+    |
+132 |     proof fn lemma_map_view_feq_implies_ext_eq_per<T: View + std::clone::Clone>(a: Seq<T>, b: Seq<T>)
+    |                                                            +++++++++++++++++++
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0277`.
+Elapsed: 16s

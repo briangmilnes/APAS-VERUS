@@ -1,0 +1,9 @@
+error: only one module-level `broadcast use` allowed for each module
+  --> src/Chap38/BSTParaStEph.rs:38:5
+   |
+38 |     broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 37s

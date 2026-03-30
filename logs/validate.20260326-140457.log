@@ -1,0 +1,42 @@
+error: invariant not satisfied before loop
+   --> src/Chap55/SCCStEph.rs:523:21
+    |
+523 |                     1 <= i <= finish_len,
+    |                     ^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap55/SCCStEph.rs:538:21
+    |
+538 |                     components_vec@.len() >= 1,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/SCCStEph.rs:539:21
+    |
+539 |                     components_vec@.len() <= n,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap55/SCCStPer.rs:586:21
+    |
+586 |                     1 <= i <= finish_len,
+    |                     ^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap55/SCCStPer.rs:600:21
+    |
+600 |                     components_vec@.len() >= 1,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/SCCStPer.rs:601:21
+    |
+601 |                     components_vec@.len() <= n,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 2100 verified, 4 errors
+error: aborting due to 6 previous errors
+
+Elapsed: 16s
+Sampled Memory Usage: peak rust_verify RSS: 1546MB, peak z3 RSS: 316MB, min free: 20607MB
+Sampled CPU Usage: rust_verify: 27s, z3 children: 35s

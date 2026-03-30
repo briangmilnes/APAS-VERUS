@@ -1,0 +1,17 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap37/BSTSplayMtEph.rs:41:14
+   |
+41 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: Type parameter T of lib::Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEph must be declared #[verifier::reject_recursive_types] to be used in a non-positive position
+  --> src/Chap37/BSTSetSplayMtEph.rs:34:5
+   |
+34 | /     pub struct BSTSetSplayMtEph<T: StTInMtT + Ord + TotalOrder> {
+35 | |         pub tree: BSTSplayMtEph<T>,
+36 | |     }
+   | |_____^
+
+error: aborting due to 1 previous error; 1 warning emitted
+
+Elapsed: 31s

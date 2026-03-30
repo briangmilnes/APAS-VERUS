@@ -1,0 +1,13 @@
+error[E0609]: no field `base_set` on type `&Self`
+   --> src/Chap43/OrderedSetStPer.rs:237:66
+    |
+ 67 |     pub trait OrderedSetStPerTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
+    |     ----------------------------------------------------------------------------------- type parameter 'Self' declared here
+...
+237 |                 spec_seq_sorted_per(spec_inorder_values_per(self.base_set.elements.root)),
+    |                                                                  ^^^^^^^^ unknown field
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0609`.
+Elapsed: 17s

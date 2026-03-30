@@ -1,0 +1,10 @@
+error[E0433]: failed to resolve: `Self` is only available in impls, traits, and type definitions
+   --> src/Chap66/BoruvkaMtEph.rs:933:13
+    |
+933 |             Self::spec_boruvkamteph_wf(edges@),
+    |             ^^^^ `Self` is only available in impls, traits, and type definitions
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0433`.
+Elapsed: 10s

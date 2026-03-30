@@ -1,0 +1,13 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent3)
+error[E0432]: unresolved import `crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent`
+  --> src/Chap41/AVLTreeSetMtPer.rs:31:9
+   |
+31 |     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `view_ord_consistent` in `Chap38::BSTParaStEph::BSTParaStEph`
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `apas-verus` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `apas-verus` (lib test) due to 1 previous error
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 6s

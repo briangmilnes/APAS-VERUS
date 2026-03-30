@@ -1,0 +1,29 @@
+error: assertion failed
+   --> src/Chap63/ConnectivityMtEph.rs:155:24
+    |
+155 |                 assert(partition_map@.contains_key(kv_seq[idx].0@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+partition_map.view().dom().contains(kv_seq.index(idx).0.view()) 
+    function is uninterpreted
+
+note: recommendation not met
+   --> src/Chap63/ConnectivityMtEph.rs:155:52
+    |
+155 |                 assert(partition_map@.contains_key(kv_seq[idx].0@));
+    |                                                    ^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 1242 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 1715MB, peak z3 RSS: 312MB, min free: 20151MB
+Sampled CPU Usage: rust_verify: 24s, z3 children: 16s

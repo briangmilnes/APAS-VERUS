@@ -1,0 +1,267 @@
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1125:13
+     |
+1125 |             reveal(spec_uf_wf);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1326:21
+     |
+1326 |                     reveal(spec_uf_wf);
+     |                     ^^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStPer.rs:55:14
+   |
+55 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap52/AdjTableGraphStPer.rs:318:37
+    |
+318 |   ...                   let j = choose|j: int| 0 <= j < i
+    |  _______________________________^
+319 | | ...                       && self.adj.entries@[j].0 == v;
+    | |________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap52/AdjTableGraphStPer.rs:319:36
+    |
+319 | ...                   && self.adj.entries@[j].0 == v;
+    |                          ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap52/AdjTableGraphStPer.rs:314:33
+    |
+314 |                           implies exists|j: int| 0 <= j < i + 1
+    |  _________________________________^
+315 | |                             && self.adj.entries@[j].0 == v
+    | |__________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap52/AdjTableGraphStPer.rs:315:32
+    |
+315 | ...                   && self.adj.entries@[j].0 == v
+    |                          ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap52/AdjTableGraphStPer.rs:292:29
+    |
+292 |                           ==> exists|j: int| 0 <= j < i
+    |  _____________________________^
+293 | |                             && self.adj.entries@[j].0 == v,
+    | |__________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap52/AdjTableGraphStPer.rs:293:32
+    |
+293 | ...                   && self.adj.entries@[j].0 == v,
+    |                          ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap52/AdjTableGraphStPer.rs:335:33
+    |
+335 |                           let j = choose|j: int| 0 <= j < len as int
+    |  _________________________________^
+336 | |                             && self.adj.entries@[j].0 == v;
+    | |__________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap52/AdjTableGraphStPer.rs:336:32
+    |
+336 | ...                   && self.adj.entries@[j].0 == v;
+    |                          ^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap52/AdjTableGraphStPer.rs:335:33
+    |
+335 |                           let j = choose|j: int| 0 <= j < len as int
+    |  _________________________________^
+336 | |                             && self.adj.entries@[j].0 == v;
+    | |__________________________________________________________^
+
+verification results:: 5386 verified, 0 errors
+warning: 4 warnings emitted
+
+    Finished `release` profile [optimized] target(s) in 0.04s
+────────────
+ Nextest run ID 2cb4357f-dfb5-4c70-8d7d-3bc6608e5590 with nextest profile: default
+    Starting 157 tests across 37 binaries
+        PASS [   1.369s] rust_verify_test::HashSetWithViewPlus hash_set_wvp_loop_loop
+        PASS [   1.386s] rust_verify_test::HashSetWithViewPlus hash_set_wvp_for_iter
+        PASS [   1.436s] rust_verify_test::HashMapWithViewPlus hash_map_wvp_loop_loop
+        PASS [   1.494s] rust_verify_test::HashMapWithViewPlus hash_map_wvp_for_iter
+        PASS [   1.527s] rust_verify_test::MappingStEph mapping_st_eph_loop_loop
+        PASS [   1.623s] rust_verify_test::MappingStEph mapping_st_eph_for_iter
+        PASS [   1.424s] rust_verify_test::ProveAVLTreeSeq avltreeseq_loop_borrow_iter
+        PASS [   1.407s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_for_borrow_into
+        PASS [   1.505s] rust_verify_test::ProveAVLTreeSeq avltreeseq_for_borrow_iter
+        PASS [   1.413s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_loop_borrow_iter
+        PASS [   1.467s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_for_borrow_iter
+        PASS [   1.393s] rust_verify_test::ProveArraySeq arrayseq_filter
+        PASS [   1.274s] rust_verify_test::ProveArraySeq arrayseq_iterate
+        PASS [   1.386s] rust_verify_test::ProveArraySeq arrayseq_iterate_prefixes
+        PASS [   1.312s] rust_verify_test::ProveArraySeq arrayseq_map
+        PASS [   1.507s] rust_verify_test::ProveArraySeq arrayseq_for_iter
+        PASS [   1.435s] rust_verify_test::ProveArraySeq arrayseq_loop_loop
+        PASS [   1.549s] rust_verify_test::ProveArraySeq arrayseq_reduce
+        PASS [   1.599s] rust_verify_test::ProveArraySeq arrayseq_scan
+        PASS [   1.423s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_loop_loop
+        PASS [   1.547s] rust_verify_test::ProveArraySeq arrayseq_scan_inclusive
+        PASS [   1.536s] rust_verify_test::ProveArraySeq arrayseq_tabulate
+        PASS [   1.558s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_for_iter
+        PASS [   1.439s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_for_iter
+        PASS [   1.474s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_borrow_into
+        PASS [   1.565s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_loop_loop
+        PASS [   1.409s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_borrow_into
+        PASS [   1.494s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_consume
+        PASS [   1.420s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_borrow_iter
+        PASS [   1.819s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_borrow_iter
+        PASS [   1.378s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_consume
+        PASS [   1.391s] rust_verify_test::ProveArraySeqStPer arrayseqstper_loop_loop
+        PASS [   1.516s] rust_verify_test::ProveArraySeqStPer arrayseqstper_for_iter
+        PASS [   1.422s] rust_verify_test::ProveBFSMtEph chap54_bfsmteph_top_down_loop
+        PASS [   1.630s] rust_verify_test::ProveBFSMtEph chap54_bfsmteph_bottom_up_loop
+        PASS [   1.387s] rust_verify_test::ProveBFSStEph chap54_bfssteph_bottom_up_loop
+        PASS [   1.481s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_inorder
+        PASS [   1.542s] rust_verify_test::ProveBFSStEph chap54_bfssteph_top_down_loop
+        PASS [   1.402s] rust_verify_test::ProveBalBinTreeStEph balbintree_inorder_spec_match
+        PASS [   1.364s] rust_verify_test::ProveBalBinTreeStEph balbintree_leaf_iter_exhausted
+        PASS [   1.609s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_postorder
+        PASS [   1.661s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_preorder
+        PASS [   1.474s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_inorder
+        PASS [   1.436s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_postorder
+        PASS [   1.654s] rust_verify_test::ProveBalBinTreeStEph balbintree_leaf_traversals_empty
+        PASS [   1.412s] rust_verify_test::ProveBalBinTreeStEph balbintree_postorder_spec_match
+        PASS [   1.569s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_preorder
+        PASS [   1.551s] rust_verify_test::ProveBalBinTreeStEph balbintree_preorder_spec_match
+        PASS [   1.573s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_borrow_into
+        PASS [   1.426s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_borrow_into
+        PASS [   1.466s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_consume
+        PASS [   1.585s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_borrow_iter
+        PASS [   1.537s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_borrow_iter
+        PASS [   1.597s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_consume
+        PASS [   1.460s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_for_borrow_iter
+        PASS [   1.460s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_iter_over_subslice
+        PASS [   1.413s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_loop_borrow_iter
+        PASS [   1.544s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_for_borrow_into
+        PASS [   1.436s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_borrow_into
+        PASS [   1.773s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_operations
+        PASS [   1.565s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_borrow_into
+        PASS [   1.653s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_consume
+        PASS [   1.620s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_borrow_iter
+        PASS [   1.729s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_borrow_iter
+        PASS [   1.535s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_consume
+        PASS [   1.458s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_borrow_into
+        PASS [   1.499s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_borrow_into
+        PASS [   1.524s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_borrow_iter
+        PASS [   1.681s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_borrow_iter
+        PASS [   1.629s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_consume
+        PASS [   1.454s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_consume
+        PASS [   1.496s] rust_verify_test::ProveKleeneStPer kleene_alphabet
+        PASS [   1.541s] rust_verify_test::ProveKleeneStPer kleene_mem_plus
+        PASS [   1.493s] rust_verify_test::ProveLinkedListStEph linkedliststeph_for_iter
+        PASS [   1.552s] rust_verify_test::ProveKleeneStPer kleene_mem_star
+        PASS [   1.597s] rust_verify_test::ProveLinkedListStEph linkedliststeph_loop_loop
+        PASS [   1.560s] rust_verify_test::ProveLinkedListStPer linkedliststper_for_iter
+        PASS [   1.431s] rust_verify_test::ProveLinkedListStPer linkedliststper_loop_loop
+        PASS [   1.481s] rust_verify_test::ProveMathSeq mathseq_for_consume
+        PASS [   1.446s] rust_verify_test::ProveMathSeq mathseq_loop_borrow_into
+        PASS [   1.430s] rust_verify_test::ProveMathSeq mathseq_loop_borrow_iter
+        PASS [   1.680s] rust_verify_test::ProveMathSeq mathseq_for_borrow_into
+        PASS [   1.613s] rust_verify_test::ProveMathSeq mathseq_for_borrow_iter
+        PASS [   1.578s] rust_verify_test::ProveMathSeq mathseq_loop_consume
+        PASS [   1.702s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_for_borrow_into
+        PASS [   1.620s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_loop_borrow_into
+        PASS [   1.641s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_for_borrow_iter
+        PASS [   1.599s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_for_borrow_into
+        PASS [   1.577s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_for_borrow_iter
+        PASS [   1.958s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_loop_borrow_iter
+        PASS [   1.582s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_loop_borrow_iter
+        PASS [   1.581s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_for_borrow_into
+        PASS [   1.612s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_for_borrow_iter
+        PASS [   1.660s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_loop_borrow_into
+        PASS [   1.571s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_loop_borrow_into
+        PASS [   1.671s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_loop_borrow_iter
+        PASS [   1.472s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_borrow_into
+        PASS [   1.456s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_borrow_iter
+        PASS [   1.501s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_borrow_into
+        PASS [   1.637s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_borrow_iter
+        PASS [   1.627s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_consume
+        PASS [   1.441s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_consume
+        PASS [   1.545s] rust_verify_test::ProveSetMtEph set_mt_eph_for_borrow_into
+        PASS [   1.517s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_borrow_into
+        PASS [   1.593s] rust_verify_test::ProveSetMtEph set_mt_eph_loop_borrow_iter
+        PASS [   1.644s] rust_verify_test::ProveSetMtEph set_mt_eph_for_borrow_iter
+        PASS [   1.715s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_consume
+        PASS [   1.955s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_borrow_iter
+        PASS [   1.741s] rust_verify_test::Provedeep_view_standard deep_view_standard_simple
+        PASS [   2.095s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_borrow_into
+        PASS [   2.037s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_consume
+        PASS [   2.150s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_borrow_iter
+        PASS [   2.064s] rust_verify_test::Proveiterators_standard iterators_standard_for_borrow_into
+        PASS [   2.079s] rust_verify_test::Proveiterators_standard iterators_standard_for_borrow_iter
+        PASS [   2.014s] rust_verify_test::Proveiterators_standard iterators_standard_for_consume
+        PASS [   1.759s] rust_verify_test::Proveiterators_standard iterators_standard_loop_borrow_iter
+        PASS [   2.100s] rust_verify_test::Proveiterators_standard iterators_standard_loop_borrow_into
+        PASS [   1.976s] rust_verify_test::Proveiterators_standard iterators_standard_loop_consume
+        PASS [   1.751s] rust_verify_test::Provemod_standard mod_standard_for_borrow_into
+        PASS [   2.169s] rust_verify_test::Provemod_standard mod_standard_for_borrow_iter
+        PASS [   1.809s] rust_verify_test::Provemod_standard mod_standard_loop_borrow_into
+        PASS [   1.832s] rust_verify_test::Provemod_standard mod_standard_loop_consume
+        PASS [   2.183s] rust_verify_test::Provemod_standard mod_standard_for_consume
+        PASS [   2.023s] rust_verify_test::Provemod_standard mod_standard_loop_borrow_iter
+        PASS [   2.147s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_borrow_into
+        PASS [   1.842s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_borrow_iter
+        PASS [   2.020s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_consume
+        PASS [   1.856s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_borrow_iter
+        PASS [   1.886s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_consume
+        PASS [   2.105s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_borrow_into
+        PASS [   2.043s] rust_verify_test::Proveusing_closures_standard closures_ghost_spec_fn
+        PASS [   1.999s] rust_verify_test::Proveusing_closures_standard closures_inline_requires_ensures
+        PASS [   2.185s] rust_verify_test::Proveusing_closures_standard closures_let_bind_ensures
+        PASS [   2.100s] rust_verify_test::Proveusing_closures_standard closures_map_apply
+        PASS [   2.042s] rust_verify_test::Proveview_standard view_standard_collection
+        PASS [   2.204s] rust_verify_test::Proveview_standard view_standard_for_borrow_into
+        PASS [   2.138s] rust_verify_test::Proveview_standard view_standard_for_borrow_iter
+        PASS [   2.199s] rust_verify_test::Proveview_standard view_standard_for_consume
+        PASS [   2.090s] rust_verify_test::Proveview_standard view_standard_loop_borrow_into
+        PASS [   2.054s] rust_verify_test::Proveview_standard view_standard_loop_borrow_iter
+        PASS [   2.064s] rust_verify_test::Proveview_standard view_standard_loop_consume
+        PASS [   1.983s] rust_verify_test::Proveview_standard view_standard_simple
+        PASS [   2.180s] rust_verify_test::Provewrapping_iterators_standard wrapping_for_borrow_into
+        PASS [   2.097s] rust_verify_test::Provewrapping_iterators_standard wrapping_for_borrow_iter
+        PASS [   1.644s] rust_verify_test::Provewrapping_iterators_standard wrapping_loop_borrow_into
+        PASS [   2.039s] rust_verify_test::Provewrapping_iterators_standard wrapping_loop_borrow_iter
+        PASS [   2.018s] rust_verify_test::RelationStEph relation_st_eph_for_iter
+        PASS [   1.848s] rust_verify_test::RelationStEph relation_st_eph_loop_loop
+        PASS [   1.650s] rust_verify_test::SetMtEph set_mt_eph_for_iter
+        PASS [   1.716s] rust_verify_test::SetMtEph set_mt_eph_from_vec
+        PASS [   1.782s] rust_verify_test::SetMtEph set_mt_eph_loop_loop
+        PASS [   1.555s] rust_verify_test::SetStEph set_st_eph_from_vec
+        PASS [   1.680s] rust_verify_test::SetStEph set_st_eph_for_iter
+        PASS [   1.632s] rust_verify_test::SetStEph set_st_eph_loop_loop
+        PASS [   1.511s] rust_verify_test::prove_MathSeq_iters mathseq_iter_nested
+        PASS [   1.844s] rust_verify_test::prove_MathSeq_iters mathseq_iter_consuming
+        PASS [   1.596s] rust_verify_test::prove_MathSeq_iters mathseq_iter_range
+────────────
+     Summary [  44.371s] 157 tests run: 157 passed, 0 skipped
+Elapsed: 198s

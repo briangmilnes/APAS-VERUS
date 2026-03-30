@@ -1,0 +1,328 @@
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:1034:23
+     |
+1034 |             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:231:22
+     |
+ 231 |             requires values@.len() < usize::MAX,
+     |                      -------------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+result_vec.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:1125:23
+     |
+1125 |             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:231:22
+     |
+ 231 |             requires values@.len() < usize::MAX,
+     |                      -------------------------- failed precondition
+
+note: 
+
+result_vec.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:1243:23
+     |
+1243 |             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:231:22
+     |
+ 231 |             requires values@.len() < usize::MAX,
+     |                      -------------------------- failed precondition
+
+note: 
+
+result_vec.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:1400:23
+     |
+1400 |             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:231:22
+     |
+ 231 |             requires values@.len() < usize::MAX,
+     |                      -------------------------- failed precondition
+
+note: 
+
+result_vec.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStPer.rs:1339:46
+     |
+1339 |                         &&& result_v1[j]@ == self@[self.base_set.elements@[src].0]
+     |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:1685:23
+     |
+1685 |             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:231:22
+     |
+ 231 |             requires values@.len() < usize::MAX,
+     |                      -------------------------- failed precondition
+
+note: 
+
+result_vec.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStPer.rs:1521:48
+     |
+1521 |                         &&& combined_v1[j]@ == self@[self.base_set.elements@[j].0]
+     |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStPer.rs:1623:25
+     |
+1623 |                         (#[trigger] self_in_other[j]) == other@.contains_key(self.base_set.elements@[j].0),
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStPer.rs:1624:60
+     |
+1624 |                     forall|j: int| 0 <= j < phase1_len && !(#[trigger] self_in_other[j]) ==>
+     |                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStPer.rs:1626:59
+     |
+1626 |                     forall|j: int| 0 <= j < phase1_len && (#[trigger] self_in_other[j]) ==> {
+     |                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStPer.rs:1627:29
+     |
+1627 |                         &&& combined_v1[j]@ == self@[self.base_set.elements@[j].0]
+     |                             ^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStPer.rs:1627:48
+     |
+1627 |                         &&& combined_v1[j]@ == self@[self.base_set.elements@[j].0]
+     |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStPer.rs:1628:29
+     |
+1628 |                         &&& combined_v2[j]@ == other@[self.base_set.elements@[j].0]
+     |                             ^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStPer.rs:1629:41
+     |
+1629 |                         &&& f.ensures((&combined_v1[j], &combined_v2[j]), combined_r[j])
+     |                                         ^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStPer.rs:1629:58
+     |
+1629 |                         &&& f.ensures((&combined_v1[j], &combined_v2[j]), combined_r[j])
+     |                                                          ^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStPer.rs:1629:75
+     |
+1629 |                         &&& f.ensures((&combined_v1[j], &combined_v2[j]), combined_r[j])
+     |                                                                           ^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStPer.rs:1630:50
+     |
+1630 |                         &&& result_vec@[j]@.1 == combined_r[j]@
+     |                                                  ^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:1878:23
+     |
+1878 |             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:231:22
+     |
+ 231 |             requires values@.len() < usize::MAX,
+     |                      -------------------------- failed precondition
+
+note: 
+
+result_vec.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:1993:23
+     |
+1993 |             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:231:22
+     |
+ 231 |             requires values@.len() < usize::MAX,
+     |                      -------------------------- failed precondition
+
+note: 
+
+result_vec.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:2110:23
+     |
+2110 |             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:231:22
+     |
+ 231 |             requires values@.len() < usize::MAX,
+     |                      -------------------------- failed precondition
+
+note: 
+
+result_vec.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:2653:28
+     |
+2653 |             let left_seq = AVLTreeSeqStPerS::from_vec(left_vec);
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:231:22
+     |
+ 231 |             requires values@.len() < usize::MAX,
+     |                      -------------------------- failed precondition
+
+note: 
+
+left_vec.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:2776:23
+     |
+2776 |             let seq = AVLTreeSeqStPerS::from_vec(result_vec);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:231:22
+     |
+ 231 |             requires values@.len() < usize::MAX,
+     |                      -------------------------- failed precondition
+
+note: 
+
+result_vec.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:3055:28
+     |
+3055 |             let left_seq = AVLTreeSeqStPerS::from_vec(left_vec);
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:231:22
+     |
+ 231 |             requires values@.len() < usize::MAX,
+     |                      -------------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:3056:29
+     |
+3056 |             let right_seq = AVLTreeSeqStPerS::from_vec(right_vec);
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:231:22
+     |
+ 231 |             requires values@.len() < usize::MAX,
+     |                      -------------------------- failed precondition
+
+note: 
+
+left_vec.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2969:28
+     |
+2969 |             let left_seq = AVLTreeSeqStPerS::from_vec(left_entries);
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:231:22
+     |
+ 231 |             requires values@.len() < usize::MAX,
+     |                      -------------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2970:29
+     |
+2970 |             let right_seq = AVLTreeSeqStPerS::from_vec(right_entries);
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:231:22
+     |
+ 231 |             requires values@.len() < usize::MAX,
+     |                      -------------------------- failed precondition
+
+note: 
+
+right_entries.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+verification results:: 4466 verified, 12 errors
+error: aborting due to 14 previous errors
+
+Elapsed: 77s

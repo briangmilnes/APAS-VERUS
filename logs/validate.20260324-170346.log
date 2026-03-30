@@ -1,0 +1,24 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap37/BSTSplayMtEph.rs:41:14
+   |
+41 |     #[derive(Clone)]
+   |              ^^^^^
+
+error[E0310]: the parameter type `T` may not live long enough
+   --> src/Chap37/BSTSetSplayMtEph.rs:465:13
+    |
+465 |             self.iter()
+    |             ^^^^^^^^^^^
+    |             |
+    |             the parameter type `T` must be valid for the static lifetime...
+    |             ...so that the type `T` will meet its required lifetime bounds
+    |
+help: consider adding an explicit lifetime bound
+    |
+458 |     impl<'a, T: StTInMtT + Ord + TotalOrder + 'static> std::iter::IntoIterator for &'a BSTSetSplayMtEph<T> {
+    |                                             +++++++++
+
+error: aborting due to 1 previous error; 1 warning emitted
+
+For more information about this error, try `rustc --explain E0310`.
+Elapsed: 26s

@@ -1,0 +1,146 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent3)
+error[E0433]: failed to resolve: could not find `Chap57` in `apas_verus`
+ --> tests/Chap57/TestStackStEph.rs:5:17
+  |
+5 | use apas_verus::Chap57::StackStEph::StackStEph::*;
+  |                 ^^^^^^ could not find `Chap57` in `apas_verus`
+
+error[E0433]: failed to resolve: could not find `Chap56` in `apas_verus`
+ --> tests/Chap56/TestSSSPResultStPerI64.rs:6:17
+  |
+6 | use apas_verus::Chap56::SSSPResultStPerI64::SSSPResultStPerI64::*;
+  |                 ^^^^^^ could not find `Chap56` in `apas_verus`
+
+error[E0433]: failed to resolve: use of undeclared type `StackStEph`
+  --> tests/Chap57/TestStackStEph.rs:10:17
+   |
+10 |     let stack = StackStEph::<i32>::new();
+   |                 ^^^^^^^^^^ use of undeclared type `StackStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `StackStEph`
+  --> tests/Chap57/TestStackStEph.rs:17:21
+   |
+17 |     let mut stack = StackStEph::new();
+   |                     ^^^^^^^^^^ use of undeclared type `StackStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `StackStEph`
+  --> tests/Chap57/TestStackStEph.rs:25:21
+   |
+25 |     let mut stack = StackStEph::new();
+   |                     ^^^^^^^^^^ use of undeclared type `StackStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `StackStEph`
+  --> tests/Chap57/TestStackStEph.rs:40:21
+   |
+40 |     let mut stack = StackStEph::new();
+   |                     ^^^^^^^^^^ use of undeclared type `StackStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `StackStEph`
+  --> tests/Chap57/TestStackStEph.rs:57:21
+   |
+57 |     let mut stack = StackStEph::<String>::new();
+   |                     ^^^^^^^^^^ use of undeclared type `StackStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `StackStEph`
+  --> tests/Chap57/TestStackStEph.rs:64:21
+   |
+64 |     let mut stack = StackStEph::new();
+   |                     ^^^^^^^^^^ use of undeclared type `StackStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `StackStEph`
+  --> tests/Chap57/TestStackStEph.rs:89:21
+   |
+89 |     let mut stack = StackStEph::new();
+   |                     ^^^^^^^^^^ use of undeclared type `StackStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `StackStEph`
+   --> tests/Chap57/TestStackStEph.rs:104:21
+    |
+104 |     let mut stack = StackStEph::new();
+    |                     ^^^^^^^^^^ use of undeclared type `StackStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `SSSPResultStPerI64`
+  --> tests/Chap56/TestSSSPResultStPerI64.rs:11:18
+   |
+11 |     let result = SSSPResultStPerI64::new(5, 0);
+   |                  ^^^^^^^^^^^^^^^^^^ use of undeclared type `SSSPResultStPerI64`
+
+error[E0433]: failed to resolve: use of undeclared type `StackStEph`
+   --> tests/Chap57/TestStackStEph.rs:125:17
+    |
+125 |     let stack = StackStEph::<i32>::default();
+    |                 ^^^^^^^^^^ use of undeclared type `StackStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `StackStEph`
+   --> tests/Chap57/TestStackStEph.rs:132:22
+    |
+132 |     let mut stack1 = StackStEph::new();
+    |                      ^^^^^^^^^^ use of undeclared type `StackStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `SSSPResultStPerI64`
+  --> tests/Chap56/TestSSSPResultStPerI64.rs:20:18
+   |
+20 |     let result = SSSPResultStPerI64::new(3, 0);
+   |                  ^^^^^^^^^^^^^^^^^^ use of undeclared type `SSSPResultStPerI64`
+
+error[E0433]: failed to resolve: use of undeclared type `SSSPResultStPerI64`
+  --> tests/Chap56/TestSSSPResultStPerI64.rs:29:18
+   |
+29 |     let result = SSSPResultStPerI64::new(3, 0);
+   |                  ^^^^^^^^^^^^^^^^^^ use of undeclared type `SSSPResultStPerI64`
+
+error[E0433]: failed to resolve: use of undeclared type `SSSPResultStPerI64`
+  --> tests/Chap56/TestSSSPResultStPerI64.rs:38:18
+   |
+38 |     let result = SSSPResultStPerI64::new(4, 0);
+   |                  ^^^^^^^^^^^^^^^^^^ use of undeclared type `SSSPResultStPerI64`
+
+For more information about this error, try `rustc --explain E0433`.
+error[E0433]: failed to resolve: use of undeclared type `SSSPResultStPerI64`
+  --> tests/Chap56/TestSSSPResultStPerI64.rs:53:18
+   |
+53 |     let result = SSSPResultStPerI64::new(3, 0);
+   |                  ^^^^^^^^^^^^^^^^^^ use of undeclared type `SSSPResultStPerI64`
+
+error[E0433]: failed to resolve: could not find `Chap56` in `apas_verus`
+ --> tests/Chap56/TestPathWeightUtilsStEph.rs:7:17
+  |
+7 | use apas_verus::Chap56::PathWeightUtilsStEph::PathWeightUtilsStEph::*;
+  |                 ^^^^^^ could not find `Chap56` in `apas_verus`
+
+error: could not compile `apas-verus` (test "TestStackStEph") due to 11 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `apas-verus` (test "TestSSSPResultStPerI64") due to 6 previous errors
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStEphS`
+  --> tests/Chap56/TestPathWeightUtilsStEph.rs:22:16
+   |
+22 |     assert_eq!(PathWeightUtilsStEphS::path_weight_int(&path, &weights), Some(3));
+   |                ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStEphS`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStEphS`
+  --> tests/Chap56/TestPathWeightUtilsStEph.rs:33:16
+   |
+33 |     assert_eq!(PathWeightUtilsStEphS::path_weight_int(&path, &weights), Some(2));
+   |                ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStEphS`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStEphS`
+  --> tests/Chap56/TestPathWeightUtilsStEph.rs:44:16
+   |
+44 |     assert_eq!(PathWeightUtilsStEphS::path_weight_float(&path, &weights), Some(dist(4.0)));
+   |                ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStEphS`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStEphS`
+  --> tests/Chap56/TestPathWeightUtilsStEph.rs:56:13
+   |
+56 |     assert!(PathWeightUtilsStEphS::validate_subpath_property_int(&path, &distances, &weights));
+   |             ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStEphS`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStEphS`
+  --> tests/Chap56/TestPathWeightUtilsStEph.rs:68:13
+   |
+68 |     assert!(PathWeightUtilsStEphS::validate_subpath_property_float(&path, &distances, &weights));
+   |             ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStEphS`
+
+error: could not compile `apas-verus` (test "TestPathWeightUtilsStEph") due to 6 previous errors
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 2s

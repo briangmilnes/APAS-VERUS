@@ -1,0 +1,18 @@
+error: assertion failed
+   --> src/Chap55/SCCStPer.rs:361:29
+    |
+361 |                     implies (#[trigger] new_arr@[j]) < graph@.len() by {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+new_arr.view().index(j) < graph.view().len() 
+
+verification results:: 2098 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 1537MB, peak z3 RSS: 355MB, min free: 23000MB
+Sampled CPU Usage: rust_verify: 27s, z3 children: 35s

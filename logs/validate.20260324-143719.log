@@ -1,0 +1,17 @@
+verification results:: 4433 verified, 0 errors
+error[E0425]: cannot find value `elem` in this scope
+   --> src/Chap37/AVLTreeSeqStEph.rs:942:27
+    |
+942 |                 elements: elem,
+    |                           ^^^^ not found in this scope
+
+error[E0425]: cannot find value `p` in this scope
+   --> src/Chap37/AVLTreeSeqStEph.rs:943:22
+    |
+943 |                 pos: p,
+    |                      ^ not found in this scope
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 72s

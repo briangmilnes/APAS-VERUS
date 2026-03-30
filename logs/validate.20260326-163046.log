@@ -1,0 +1,25 @@
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:293:9
+    |
+293 |         while i < edges_vec.len()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap65/KruskalStEph.rs:298:17
+    |
+298 | /                 forall|v: <V as View>::V| #[trigger] graph@.V.contains(v) ==>
+299 | |                     uf@.parent.contains_key(v),
+    | |______________________________________________^
+
+error: invariant not satisfied before loop
+   --> src/Chap65/KruskalStEph.rs:302:17
+    |
+302 |                 pre_sort.len() == eseq.len(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 2396 verified, 2 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 152s
+Sampled Memory Usage: peak rust_verify RSS: 5486MB, peak z3 RSS: 18231MB, min free: 9MB
+Sampled CPU Usage: rust_verify: 97s, z3 children: 231s

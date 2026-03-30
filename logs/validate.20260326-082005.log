@@ -1,0 +1,670 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphStEph.rs:32:14
+   |
+32 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphStPer.rs:36:14
+   |
+36 |     #[derive(Clone, PartialEq, Eq)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap53/GraphSearchMtPer.rs:23:14
+   |
+23 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:161:49
+    |
+161 |         fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
+    |                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:279:17
+    |
+279 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStEph.rs:279:17
+    |
+279 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+tmp%.spec_avltreesetsteph_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:167:28
+    |
+167 |               let filtered = self.edges.filter(
+    |  ____________________________^
+168 | |                 |edge| edge.0 == u_clone,
+169 | |                 Ghost(|v: (V::V, V::V)| v.0 == u@),
+170 | |             );
+    | |_____________^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:232:17
+    |
+232 |                   vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                   ------------------------------------- failed precondition
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap52/EdgeSetGraphStEph.rs:190:21
+    |
+190 | /                     forall|v: <V as View>::V| #[trigger] neighbors@.contains(v) ==>
+191 | |                         self.edges@.contains((u@, v)),
+    | |_____________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap52/EdgeSetGraphStEph.rs:192:21
+    |
+192 | /                     forall|j: int| 0 <= j < i ==>
+193 | |                         #[trigger] neighbors@.contains(seq@[j].1),
+    | |_________________________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:204:17
+    |
+204 |                 neighbors.insert(v);
+    |                 ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:295:17
+    |
+295 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStEph.rs:295:17
+    |
+295 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+neighbors.spec_avltreesetsteph_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+clip(nat, neighbors.view().len() + 1) < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:226:44
+    |
+226 |         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:193:22
+    |
+193 |             requires self.spec_avltreesetsteph_wf(),
+    |                      ------------------------------ failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+tmp%.spec_avltreesetsteph_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:101:21
+    |
+101 |             ensures self.spec_edgesetgraphsteph_wf();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+228 |         fn insert_vertex(&mut self, v: V) { self.vertices.insert(v); }
+    |         --------------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:228:45
+    |
+228 |         fn insert_vertex(&mut self, v: V) { self.vertices.insert(v); }
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:295:17
+    |
+295 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: 
+
+self.spec_edgesetgraphsteph_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:106:21
+    |
+106 |             ensures self.spec_edgesetgraphsteph_wf(), !self.spec_vertices().contains(v@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+252 |             while j < to_remove.len()
+    |             ------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:234:13
+    |
+234 |             self.vertices.delete(&v_clone);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:286:17
+    |
+286 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:243:32
+    |
+243 |                 let edge_ref = seq.nth(i);
+    |                                ^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:278:22
+    |
+278 |             requires self.spec_avltreeseqsteph_wf(), (index as int) < self.spec_seq().len(),
+    |                      ------------------------------ failed precondition
+
+error: invariant not satisfied before loop
+   --> src/Chap52/EdgeSetGraphStEph.rs:255:21
+    |
+255 |                     !self.spec_vertices().contains(v@),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:259:17
+    |
+259 |                 self.edges.delete(&to_remove[j]);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:286:17
+    |
+286 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap37/AVLTreeSeqStEph.rs:278:22
+    |
+278 |             requires self.spec_avltreeseqsteph_wf(), (index as int) < self.spec_seq().len(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+seq.spec_avltreeseqsteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+i < seq.spec_seq().len() ✔
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:111:21
+    |
+111 |             ensures self.spec_edgesetgraphsteph_wf();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+264 |         fn insert_edge(&mut self, u: V, v: V) {
+    |         ------------------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:265:13
+    |
+265 |             self.vertices.insert(u.clone());
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:295:17
+    |
+295 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:266:13
+    |
+266 |             self.vertices.insert(v.clone());
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:295:17
+    |
+295 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:267:13
+    |
+267 |             self.edges.insert(Pair(u, v));
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:295:17
+    |
+295 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: 
+
+self.vertices.spec_avltreesetsteph_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+clip(nat, self.vertices.view().len() + 1) < UnsignedMax.Exec(usize::BITS) 
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:116:21
+    |
+116 |             ensures self.spec_edgesetgraphsteph_wf();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+270 |         fn delete_edge(&mut self, u: &V, v: &V) { self.edges.delete(&Pair(u.clone(), v.clone())); }
+    |         --------------------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:270:51
+    |
+270 |         fn delete_edge(&mut self, u: &V, v: &V) { self.edges.delete(&Pair(u.clone(), v.clone())); }
+    |                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:286:17
+    |
+286 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: 
+
+self.spec_edgesetgraphsteph_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:147:49
+    |
+147 |         fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
+    |                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:272:17
+    |
+272 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:272:17
+    |
+272 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:153:28
+    |
+153 |               let filtered = self.edges.filter(
+    |  ____________________________^
+154 | |                 |edge| edge.0 == u_clone,
+155 | |                 Ghost(|v: (V::V, V::V)| v.0 == u@),
+156 | |             );
+    | |_____________^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:225:17
+    |
+225 |                   vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                   ------------------------------------- failed precondition
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap52/EdgeSetGraphStPer.rs:176:21
+    |
+176 | /                     forall|v: <V as View>::V| #[trigger] neighbors@.contains(v) ==>
+177 | |                         self.edges@.contains((u@, v)),
+    | |_____________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap52/EdgeSetGraphStPer.rs:178:21
+    |
+178 | /                     forall|j: int| 0 <= j < i ==>
+179 | |                         #[trigger] neighbors@.contains(seq@[j].1),
+    | |_________________________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:190:29
+    |
+190 |                 neighbors = neighbors.insert(v);
+    |                             ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:288:17
+    |
+288 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:288:17
+    |
+288 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+neighbors.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+clip(nat, neighbors.view().len() + 1) < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:212:44
+    |
+212 |         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:186:22
+    |
+186 |             requires self.spec_avltreesetstper_wf(),
+    |                      ------------------------------ failed precondition
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:216:27
+    |
+216 |                 vertices: self.vertices.insert(v),
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:288:17
+    |
+288 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+clip(nat, tmp%.view().len() + 1) < UnsignedMax.Exec(usize::BITS) 
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:98:58
+    |
+ 98 |               ensures updated.spec_edgesetgraphstper_wf(), !updated.spec_vertices().contains(v@);
+    |                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+250 | /             EdgeSetGraphStPer {
+251 | |                 vertices: new_vertices,
+252 | |                 edges: new_edges,
+253 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:222:21
+    |
+222 |               ensures !updated.vertices@.contains(v@)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+250 | /             EdgeSetGraphStPer {
+251 | |                 vertices: new_vertices,
+252 | |                 edges: new_edges,
+253 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:226:32
+    |
+226 |             let new_vertices = self.vertices.delete(&v_clone);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:279:17
+    |
+279 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:227:29
+    |
+227 |               let new_edges = self.edges.filter(
+    |  _____________________________^
+228 | |                 |edge| {
+229 | |                     let Pair(u, w) = edge;
+230 | |                     *u != v_clone && *w != v_clone
+231 | |                 },
+232 | |                 Ghost(|p: (V::V, V::V)| p.0 != v_view && p.1 != v_view),
+233 | |             );
+    | |_____________^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:225:17
+    |
+225 |                   vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                   ------------------------------------- failed precondition
+
+error: assertion failed
+   --> src/Chap52/EdgeSetGraphStPer.rs:246:28
+    |
+246 |                     assert(new_vertices@.contains(a));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/EdgeSetGraphStPer.rs:247:28
+    |
+247 |                     assert(new_vertices@.contains(b));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:225:17
+    |
+225 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+forall |t|
+    ClosureReq(tmp%%, (t)) 
+forall |x, keep|
+    ClosureEns(tmp%%, (x), keep) ==>
+        keep == tmp%(x.view()) 
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:102:21
+    |
+102 |               ensures updated.spec_edgesetgraphstper_wf();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+259 | /             EdgeSetGraphStPer {
+260 | |                 vertices: new_vertices,
+261 | |                 edges: new_edges,
+262 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:257:32
+    |
+257 |             let new_vertices = self.vertices.insert(u.clone()).insert(v.clone());
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:288:17
+    |
+288 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:257:32
+    |
+257 |             let new_vertices = self.vertices.insert(u.clone()).insert(v.clone());
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:288:17
+    |
+288 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:258:29
+    |
+258 |             let new_edges = self.edges.insert(Pair(u, v));
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:288:17
+    |
+288 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+clip(nat, tmp%.view().len() + 1) < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:266:29
+    |
+266 |             let new_edges = self.edges.delete(&Pair(u.clone(), v.clone()));
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:279:17
+    |
+279 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:279:17
+    |
+279 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+
+verification results:: 4626 verified, 16 errors
+error: aborting due to 37 previous errors; 3 warnings emitted
+
+Elapsed: 103s
+Sampled Memory Usage: peak rust_verify RSS: 16393MB, peak z3 RSS: 837MB, min free: 8438MB
+Sampled CPU Usage: rust_verify: 402s, z3 children: 307s

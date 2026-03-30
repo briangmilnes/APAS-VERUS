@@ -1,0 +1,49 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStEph.rs:36:14
+   |
+36 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStPer.rs:39:14
+   |
+39 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphStEph.rs:32:14
+   |
+32 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphStPer.rs:36:14
+   |
+36 |     #[derive(Clone, PartialEq, Eq)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap53/GraphSearchMtPer.rs:23:14
+   |
+23 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: disallowed: field expression for an opaque datatype
+   --> src/Chap52/EdgeSetGraphStEph.rs:122:13
+    |
+ 33 | /     pub struct EdgeSetGraphStEph<V: StT + Ord> {
+ 34 | |         vertices: AVLTreeSetStEph<V>,
+ 35 | |         edges: AVLTreeSetStEph<Pair<V, V>>,
+ 36 | |     }
+    | |_____- Verus treats this datatype as 'opaque' outside `lib::Chap52::EdgeSetGraphStEph::EdgeSetGraphStEph` (note that Verus always considers the most restrictive field for determining this)
+...
+122 |               self.vertices.spec_avltreesetsteph_wf()
+    |               ^^^^^^^^^^^^^ this field expression is disallowed because of datatype opaqueness
+    |
+    = help: note that because this is a pub open spec function, this field expression must be well-formed everywhere, which is wider than `lib::Chap52::EdgeSetGraphStEph::EdgeSetGraphStEph`
+
+error: aborting due to 1 previous error; 5 warnings emitted
+
+Elapsed: 35s
+Sampled Memory Usage: peak rust_verify RSS: 7348MB, peak z3 RSS: 353MB, min free: 17560MB
+Sampled CPU Usage: rust_verify: 140s, z3 children: 90s

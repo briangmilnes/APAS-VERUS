@@ -1,0 +1,128 @@
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetStEph.rs:352:26
+    |
+352 |             let result = AVLTreeSeqStPerS::from_vec(elements);
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStPer.rs:231:22
+    |
+231 |             requires values@.len() < usize::MAX,
+    |                      -------------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+elements.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:278:27
+    |
+278 |                 base_set: self.base_set.insert(x),
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:155:17
+    |
+155 |                 self@.len() + 1 < usize::MAX as nat,
+    |                 ----------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:155:17
+    |
+155 |                 self@.len() + 1 < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+clip(nat, tmp%.view().len() + 1) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap45/BalancedTreePQ.rs:252:31
+    |
+252 |                     elements: AVLTreeSeqStPerS::from_vec(vals),
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStPer.rs:231:22
+    |
+231 |             requires values@.len() < usize::MAX,
+    |                      -------------------------- failed precondition
+
+note: 
+
+vals.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+   --> src/Chap45/BalancedTreePQ.rs:358:31
+    |
+358 |                     elements: AVLTreeSeqStPerS::from_vec(values),
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStPer.rs:231:22
+    |
+231 |             requires values@.len() < usize::MAX,
+    |                      -------------------------- failed precondition
+
+note: 
+
+values.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+   --> src/Chap45/BalancedTreePQ.rs:469:45
+    |
+469 |                 (BalancedTreePQ { elements: AVLTreeSeqStPerS::from_vec(values) }, found)
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStPer.rs:231:22
+    |
+231 |             requires values@.len() < usize::MAX,
+    |                      -------------------------- failed precondition
+
+note: 
+
+values.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+   --> src/Chap45/BalancedTreePQ.rs:487:17
+    |
+487 |                 AVLTreeSeqStPerS::from_vec(values)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStPer.rs:231:22
+    |
+231 |             requires values@.len() < usize::MAX,
+    |                      -------------------------- failed precondition
+
+note: 
+
+values.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:843:36
+    |
+843 |                     let inserted = deleted.insert(new_pair);
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:155:17
+    |
+155 |                 self@.len() + 1 < usize::MAX as nat,
+    |                 ----------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:863:28
+    |
+863 |             let inserted = self.base_set.insert(new_pair);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:155:17
+    |
+155 |                 self@.len() + 1 < usize::MAX as nat,
+    |                 ----------------------------------- failed precondition
+
+note: 
+
+deleted.spec_avltreesetstper_wf() ✔
+clip(nat, deleted.view().len() + 1) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+    --> src/Cha

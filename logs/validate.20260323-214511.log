@@ -1,0 +1,125 @@
+error: postcondition not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:448:59
+    |
+448 |             ensures table@ == Map::<K::V, V::V>::empty(), table.spec_orderedtablestper_wf();
+    |                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+842 |             OrderedTableStPer { tree }
+    |             -------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:448:59
+    |
+448 |             ensures table@ == Map::<K::V, V::V>::empty(), table.spec_orderedtablestper_wf();
+    |                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view() =~= empty() ✔
+%return.spec_orderedtablestper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:452:97
+    |
+452 |             ensures table@ == Map::<K::V, V::V>::empty().insert(k@, v@), table@.dom().finite(), table.spec_orderedtablestper_wf();
+    |                                                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+854 |             OrderedTableStPer { tree: bst }
+    |             ------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:452:97
+    |
+452 |             ensures table@ == Map::<K::V, V::V>::empty().insert(k@, v@), table@.dom().finite(), table.spec_orderedtablestper_wf();
+    |                                                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view() =~= empty().insert(old(k).view(), old(v).view()) ✔
+%return.view().dom().finite() ✔
+%return.spec_orderedtablestper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:502:17
+     |
+ 502 | /                 forall|k: K::V| #[trigger] table@.contains_key(k) ==>
+ 503 | |                     (exists|old_val: V, result: V|
+ 504 | |                         old_val@ == self@[k]
+ 505 | |                         && f.ensures((&old_val,), result)
+ 506 | |                         && table@[k] == result@),
+     | |________________________________________________^ failed this postcondition
+...
+1219 |               mapped
+     |               ------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:503:21
+    |
+503 | /                     (exists|old_val: V, result: V|
+504 | |                         old_val@ == self@[k]
+505 | |                         && f.ensures((&old_val,), result)
+506 | |                         && table@[k] == result@),
+    | |________________________________________________^
+
+note: 
+
+%return.view().dom() =~= old(self).view().dom() ✔
+forall |k|
+    %return.view().dom().contains(k) ==>
+        (exists |old_val, result| old_val.view() == old(self).view().index(k) && ClosureEns(old(f), (old_val), result) && %return.view().index(k) == result.view()) ✘
+%return.view().dom().finite() ✔
+%return.spec_orderedtablestper_wf() ✔
+
+error: invariant not satisfied before loop
+    --> src/Chap43/OrderedTableStPer.rs:1869:25
+     |
+1869 |                         self@.dom().contains(max_key@),
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:2638:25
+     |
+ 444 |             requires self.spec_orderedtablestper_wf(),
+     |                      -------------------------------- failed precondition
+...
+2638 |             let equal = self.size() == other.size();
+     |                         ^^^^^^^^^^^
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:2638:40
+     |
+ 444 |             requires self.spec_orderedtablestper_wf(),
+     |                      -------------------------------- failed precondition
+...
+2638 |             let equal = self.size() == other.size();
+     |                                        ^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+other.spec_orderedtablestper_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: precondition not satisfied
+   --> src/Chap43/AugOrderedTableStPer.rs:888:17
+    |
+888 |                 lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:101:18
+    |
+101 |         requires s.finite()
+    |                  ---------- failed precondition
+
+note: 
+
+tmp%.finite() 
+    function is uninterpreted
+
+verification results:: 4347 verified, 6 errors
+error: aborting due to 7 previous errors
+
+Elapsed: 53s

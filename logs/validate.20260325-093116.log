@@ -1,0 +1,37 @@
+error: precondition not satisfied
+   --> src/Chap66/BoruvkaMtEph.rs:761:27
+    |
+464 |             spec_all_weights_finite_seq(edges@),
+    |             ----------------------------------- failed precondition
+...
+761 |             let bridges = vertex_bridges_mt(edges_arc.clone(), 0, edges_len);
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap66/BoruvkaMtEph.rs:464:13
+    |
+464 |             spec_all_weights_finite_seq(edges@),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+0 <= edges_len ✔
+edges_len <= edges_arc.view().len() ✔
+spec_all_weights_finite_seq(edges_arc.view()) ✘
+|   forall |i|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = edges_arc.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+|           edges_arc.view().index(i).2.spec_is_finite()
+|           |   edges_arc.view().index(i).2.val.is_finite_spec()
+|           |   |   edges_arc.view().index(i).2.val.to_bits_abs_spec() < 9218868437227405312 
+|           |   +---
+|           +---
++---
+obeys_key_model() ✔
+forall |k1, k2|
+    k1.view() == k2.view() ==>
+        k1 == k2 ✔
+
+verification results:: 4828 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 62s

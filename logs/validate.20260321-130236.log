@@ -1,0 +1,42 @@
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:931:55
+    |
+931 |             let updated = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::from_vec(new_vec) };
+    |                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStPer.rs:231:22
+    |
+231 |             requires values@.len() < usize::MAX,
+    |                      -------------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+new_vec.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:706:55
+    |
+706 |             let updated = AVLTreeSetStPer { elements: AVLTreeSeqStPerS::from_vec(result_vec) };
+    |                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStPer.rs:231:22
+    |
+231 |             requires values@.len() < usize::MAX,
+    |                      -------------------------- failed precondition
+
+note: 
+
+result_vec.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+error: invariant not satisfied before loop
+   --> src/Chap37/AVLTreeSeqStPer.rs:688:21
+    |
+688 |                     n < usize::MAX,
+    |                     ^^^^^^^^^^^^^^
+
+verification results:: 2179 verified, 3 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 34s

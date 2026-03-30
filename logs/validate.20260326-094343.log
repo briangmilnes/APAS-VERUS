@@ -1,0 +1,15 @@
+error[E0609]: no field `adj` on type `&Self`
+   --> src/Chap52/AdjTableGraphStEph.rs:103:62
+    |
+ 82 |     pub trait AdjTableGraphStEphTrait<V: StT + Ord>: Sized {
+    |     ------------------------------------------------------ type parameter 'Self' declared here
+...
+103 |             requires self.spec_adjtablegraphsteph_wf(), self.adj.spec_tablesteph_wf();
+    |                                                              ^^^ unknown field
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0609`.
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 927MB, peak z3 RSS: 0MB, min free: 24444MB
+Sampled CPU Usage: rust_verify: 12s, z3 children: 0s

@@ -1,0 +1,17 @@
+error: found a cyclic self-reference in a definition, which may result in nontermination
+    --> src/Chap37/BSTSplayMtEph.rs:1832:9
+     |
+1831 | /     impl<T: StTInMtT + Ord + TotalOrder> Clone for Node<T> {
+1832 | |         fn clone(&self) -> (r: Self)
+     | |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^ may be part of cycle (node 1 of 3 in cycle): function definition, whose body may have dependencies
+1833 | |             ensures r == *self,
+...    |
+1839 | |                 right: self.right.clone(),
+     | |                        ------------------ may be part of cycle (node 2 of 3 in cycle): application of a function to some type arguments, which may depend on other trait implementations to satisfy trait bounds
+...    |
+1842 | |     }
+     | |_____- may be part of cycle (node 3 of 3 in cycle): implementation of trait for a type
+
+error: aborting due to 1 previous error
+
+Elapsed: 27s

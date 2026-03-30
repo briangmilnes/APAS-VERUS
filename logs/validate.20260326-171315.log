@@ -1,0 +1,47 @@
+error: precondition not satisfied
+   --> src/Chap65/KruskalStEph.rs:147:17
+    |
+ 61 |               forall|v: <V as View>::V| #[trigger] graph_V.contains(v) ==> uf_parent_dom.contains(v),
+    |               -------------------------------------------------------------------------------------- failed precondition
+...
+147 | /                 lemma_sorted_edge_in_uf::<V>(
+148 | |                     edges_vec@[i as int], pre_sort, edge_seq, mapped_es,
+149 | |                     labeled_view, graph_V, graph_A, initial_dom,
+150 | |                 );
+    | |_________________^
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:122:9
+    |
+122 |         while i < edges_vec.len()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+  --> src/Chap65/KruskalStEph.rs:61:74
+   |
+61 |             forall|v: <V as View>::V| #[trigger] graph_V.contains(v) ==> uf_parent_dom.contains(v),
+   |                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+pre_sort.contains(tmp%) ✔
+pre_sort.len() == edge_seq.len() ✔
+forall |k|
+    let tmp%% = 0 in let tmp%% = k in let tmp%% = pre_sort.len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        pre_sort.index(k).view() == edge_seq.index(k).view() ✔
+mapped_es == edge_seq.map((|_i, e| e.view())) ✔
+forall |x|
+    labeled_view.contains(x) == mapped_es.contains(x) ✔
+labeled_view =~= graph_A ✔
+spec_labgraphview_wf(LabGraphView { V: graph_V, A: graph_A }) ✔
+forall |v|
+    graph_V.contains(v) ==>
+        initial_dom.contains(v) ✘
+            function is uninterpreted
+
+verification results:: 2399 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 114s
+Sampled Memory Usage: peak rust_verify RSS: 10555MB, peak z3 RSS: 11765MB, min free: 1253MB
+Sampled CPU Usage: rust_verify: 225s, z3 children: 228s

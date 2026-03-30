@@ -1,0 +1,37 @@
+error: invariant not satisfied at end of loop body
+   --> src/Chap66/BoruvkaStEph.rs:221:21
+    |
+221 | /                     forall|v: V| #[trigger] bridges@.contains_key(v@) ==> {
+222 | |                         let (neighbor, weight, label) = bridges@[v@];
+223 | |                         spec_valid_bridge(v, neighbor, weight, label, edges@)
+224 | |                     },
+    | |_____________________^
+
+error: assertion failed
+   --> src/Chap66/BoruvkaStEph.rs:238:28
+    |
+238 |                     assert(edges@.contains(LabeledEdge(u, v, w, label)));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+edges.view().contains(LabeledEdge(u, v, w, label)) 
+    function is uninterpreted
+
+error: assertion failed
+   --> src/Chap66/BoruvkaStEph.rs:457:28
+    |
+457 |                     assert(edges@.contains(LabeledEdge(u, v, w, label)));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+edges.view().contains(LabeledEdge(u, v, w, label)) 
+    function is uninterpreted
+
+verification results:: 4827 verified, 2 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 77s

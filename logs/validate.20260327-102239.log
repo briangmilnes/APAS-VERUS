@@ -1,0 +1,12 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap26/ETSPMtEph.rs:341:5
+    |
+341 |     fn etsp_parallel_inner(points: &Vec<Point>) -> (tour: Vec<Edge>)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1051 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 16s
+Sampled Memory Usage: peak rust_verify RSS: 1268MB, peak z3 RSS: 218MB, min free: 21125MB
+Sampled CPU Usage: rust_verify: 13s, z3 children: 11s

@@ -1,0 +1,56 @@
+error: invariant not satisfied at end of loop body
+   --> src/Chap66/BoruvkaStEph.rs:221:21
+    |
+221 | /                     forall|v: V| #[trigger] bridges@.contains_key(v@) ==> {
+222 | |                         let (neighbor, weight, label) = bridges@[v@];
+223 | |                         spec_valid_bridge(v, neighbor, weight, label, edges@)
+224 | |                     },
+    | |_____________________^
+
+error: assertion failed
+   --> src/Chap66/BoruvkaStEph.rs:237:28
+    |
+237 |                     assert(edges@.contains(LabeledEdge(u, v, w, label)));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+edges.view().contains(LabeledEdge(u, v, w, label)) 
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap66/BoruvkaStEph.rs:467:13
+    |
+157 |                 Self::spec_boruvkasteph_wf(edges@),
+    |                 ---------------------------------- failed precondition
+...
+467 |             Self::boruvka_mst(&remaining_vertices, &new_edges, new_mst_labels, seed)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap66/BoruvkaStEph.rs:157:17
+    |
+157 |                 Self::spec_boruvkasteph_wf(edges@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+remaining_vertices.spec_setsteph_wf() ✔
+new_edges.spec_setsteph_wf() ✔
+new_mst_labels.spec_setsteph_wf() ✔
+spec_boruvkasteph_wf(new_edges.view()) ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_key_model() ✔
+obeys_feq_full() ✔
+obeys_key_model() ✔
+obeys_feq_full() ✔
+forall |k1, k2|
+    k1.view() == k2.view() ==>
+        k1 == k2 ✔
+
+verification results:: 4827 verified, 2 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 92s

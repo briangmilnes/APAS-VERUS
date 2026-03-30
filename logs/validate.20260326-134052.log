@@ -1,0 +1,89 @@
+error: assertion failed
+  --> src/Chap55/SCCStEph.rs:99:67
+   |
+99 |             assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {
+   |                                                                   ^^^^^^^^^^^^ assertion failed
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/SCCStEph.rs:115:17
+    |
+115 |                 forall|j: int| 0 <= j < start as int ==> #[trigger] visited@[j],
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap55/SCCStEph.rs:151:16
+    |
+151 |         assert(reversed@.len() < usize::MAX) by {
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(visited.view().index(j)) 
+    function is uninterpreted
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/SCCStEph.rs:248:17
+    |
+248 | /                 forall|r: int, j: int|
+249 | |                     0 <= r < m as int && 0 <= j < result_vecs@[r]@.len()
+250 | |                     ==> (#[trigger] result_vecs@[r]@[j]) < graph@.len(),
+    | |_______________________________________________________________________^
+
+error: assertion failed
+   --> src/Chap55/SCCStEph.rs:262:24
+    |
+262 |                 assert(transposed@[v][i] < graph@.len());
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+transposed.view().index(v).index(i) < graph.view().len() 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/SCCStPer.rs:208:17
+    |
+208 |                 forall|j: int| 0 <= j < start as int ==> #[trigger] visited@[j],
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap55/SCCStPer.rs:240:16
+    |
+240 |         assert(reversed@.len() < usize::MAX) by {
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+reversed.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+error: assertion failed
+   --> src/Chap55/SCCStPer.rs:304:24
+    |
+304 |                 assert(v < n);
+    |                        ^^^^^ assertion failed
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/SCCStPer.rs:326:17
+    |
+326 | /                 forall|r: int, j: int|
+327 | |                     0 <= r < m as int && 0 <= j < result_vecs@[r]@.len()
+328 | |                     ==> (#[trigger] result_vecs@[r]@[j]) < graph@.len(),
+    | |_______________________________________________________________________^
+
+error: assertion failed
+   --> src/Chap55/SCCStPer.rs:340:24
+    |
+340 |                 assert(transposed@[v][i] < graph@.len());
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+v < n 
+
+verification results:: 2090 verified, 9 errors
+error: aborting due to 10 previous errors
+
+Elapsed: 16s
+Sampled Memory Usage: peak rust_verify RSS: 1519MB, peak z3 RSS: 321MB, min free: 23033MB
+Sampled CPU Usage: rust_verify: 23s, z3 children: 30s

@@ -1,0 +1,42 @@
+error: precondition not satisfied
+   --> src/Chap63/ConnectivityMtEph.rs:132:53
+    |
+132 |         let mut result: HashMapWithViewPlus<V, V> = HashMapWithViewPlus::new();
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/hash_map_with_view_plus.rs:58:13
+    |
+ 58 |             forall|k1: Key, k2: Key| k1@ == k2@ ==> k1 == k2,
+    |             ------------------------------------------------ failed precondition
+
+error: invariant not satisfied before loop
+   --> src/Chap63/ConnectivityMtEph.rs:138:17
+    |
+138 |                 forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap63/ConnectivityMtEph.rs:139:17
+    |
+139 |                 forall|k: V::V| #[trigger] result@.contains_key(k) ==> partition_map@.contains_key(k),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+  --> src/vstdplus/hash_map_with_view_plus.rs:58:53
+   |
+58 |             forall|k1: Key, k2: Key| k1@ == k2@ ==> k1 == k2,
+   |                                                     ^^^^^^^^
+
+note: 
+
+obeys_key_model() ✔
+forall |k1, k2|
+    k1.view() == k2.view() ==>
+        k1 == k2 ✘
+
+verification results:: 1241 verified, 2 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 1707MB, peak z3 RSS: 269MB, min free: 20275MB
+Sampled CPU Usage: rust_verify: 24s, z3 children: 18s

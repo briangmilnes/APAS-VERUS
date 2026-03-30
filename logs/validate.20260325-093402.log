@@ -1,0 +1,10 @@
+error: invariant not satisfied at end of loop body
+   --> src/Chap66/BoruvkaMtEph.rs:999:17
+    |
+999 |                 spec_all_weights_finite_seq(edges_vec@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 4828 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 100s

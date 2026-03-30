@@ -1,0 +1,49 @@
+error: precondition not satisfied
+   --> src/Chap65/KruskalStEph.rs:339:17
+    |
+ 54 |               pre_sort.len() == edge_seq.len(),
+    |               -------------------------------- failed precondition
+...
+339 | /                 lemma_sorted_edge_in_uf::<V>(
+340 | |                     edges_vec@[i as int], pre_sort, edge_seq@, mapped_es,
+341 | |                     labeled_view, graph@.V, graph@.A, uf@.parent.dom(),
+342 | |                 );
+    | |_________________^
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:322:9
+    |
+322 |         while i < edges_vec.len()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+  --> src/Chap65/KruskalStEph.rs:54:13
+   |
+54 |             pre_sort.len() == edge_seq.len(),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+55 |             forall|k: int| 0 <= k < pre_sort.len() ==> #[trigger] pre_sort[k]@ == edge_seq[k]@,
+   |                                                        ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+pre_sort.contains(tmp%) ✔
+pre_sort.len() == tmp%.len() ✘
+forall |k|
+    let tmp%% = 0 in let tmp%% = k in let tmp%% = pre_sort.len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        pre_sort.index(k).view() == tmp%.index(k).view() ✘
+        |   pre_sort.index(k).view().0 == tmp%.index(k).view().0 ✘
+        |   pre_sort.index(k).view().1 == tmp%.index(k).view().1 ✘
+        |   pre_sort.index(k).view().2 == tmp%.index(k).view().2 ✘
+        +---
+mapped_es == tmp%.map((|_i, e| e.view())) 
+forall |x|
+    labeled_view.contains(x) == mapped_es.contains(x) 
+labeled_view =~= tmp% 
+spec_labgraphview_wf(LabGraphView { V: tmp%, A: tmp% }) 
+forall |v|
+    tmp%.contains(v) ==>
+        tmp%.contains(v) 
+
+verification results:: 2398 verified, 1 errors
+error: aborting due to 2 previous errors
+

@@ -1,0 +1,45 @@
+error[E0599]: no method named `spec_len` found for struct `Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeSeqStEphS<T>` in the current scope
+   --> src/Chap52/EdgeSetGraphStEph.rs:240:56
+    |
+240 |                 invariant i <= seq_len, seq_len == seq.spec_len()
+    |                                                        ^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:88:5
+    |
+ 88 |     pub struct AVLTreeSeqStEphS<T: StT> {
+    |     ----------------------------------- method `spec_len` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `spec_len`, perhaps you need to implement one of them:
+            candidate #1: `Chap17::MathSeq::MathSeq::MathSeqSTrait`
+            candidate #2: `Chap18::ArraySeq::ArraySeq::ArraySeqTrait`
+            candidate #3: `Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphBaseTrait`
+            candidate #4: `Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerBaseTrait`
+            candidate #5: `Chap18::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphBaseTrait`
+            candidate #6: `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait`
+            candidate #7: `Chap18::LinkedListStEph::LinkedListStEph::LinkedListStEphBaseTrait`
+            candidate #8: `Chap18::LinkedListStPer::LinkedListStPer::LinkedListStPerBaseTrait`
+            candidate #9: `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphTrait`
+            candidate #10: `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceTrait`
+            candidate #11: `Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphTrait`
+            candidate #12: `Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerTrait`
+            candidate #13: `Chap23::PrimTreeSeqStPer::PrimTreeSeqStPer::PrimTreeSeqStSpec`
+            candidate #14: `standards::iterators_standard::iterators_standard::ExampleTrait`
+            candidate #15: `standards::mod_standard::mod_standard::ExampleTrait`
+            candidate #16: `standards::table_of_contents_standard::table_of_contents_standard::ExampleTrait`
+            candidate #17: `standards::using_closures_standard::using_closures_standard::ExampleTrait`
+            candidate #18: `standards::view_standard::view_standard::CollectionTrait`
+            candidate #19: `standards::wrapping_iterators_standard::wrapping_iterators_standard::InnerTrait`
+            candidate #20: `standards::wrapping_iterators_standard::wrapping_iterators_standard::OuterTrait`
+help: there is a method `spec_seq` with a similar name
+    |
+240 -                 invariant i <= seq_len, seq_len == seq.spec_len()
+240 +                 invariant i <= seq_len, seq_len == seq.spec_seq()
+    |
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 25s
+Sampled Memory Usage: peak rust_verify RSS: 7940MB, peak z3 RSS: 512MB, min free: 16905MB
+Sampled CPU Usage: rust_verify: 185s, z3 children: 119s

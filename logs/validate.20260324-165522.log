@@ -1,0 +1,82 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap37/BSTSplayMtEph.rs:41:14
+   |
+41 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: `core::cmp::impls::impl&%10::gt` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetSplayMtEph.rs:311:27
+    |
+311 |                 } else if value > pivot {
+    |                           ^^^^^^^^^^^^^
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification<'a, 'b, A, B> [<&'b A as std::cmp::PartialOrd<&B>>::gt] (_0: &&'b A, _1: &&B) -> bool
+            where
+            A: std::cmp::PartialOrd<B> + ?Sized,
+            B: ?Sized,;
+
+error: `alloc::vec::into_iter::impl&%6%default%collect` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetSplayMtEph.rs:327:32
+    |
+327 |             let mut combined = left_values.into_iter().collect::<BTreeSet<T>>();
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+341 |             let mut combined = left_values.into_iter().collect::<BTreeSet<T>>();
+    |                                ------------------------------------------------
+
+error: `alloc::collections::btree::set::impl&%37%default%collect` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetSplayMtEph.rs:331:30
+    |
+331 |             from_sorted_iter(combined.into_iter().collect())
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+346 |             from_sorted_iter(combined.into_iter().collect())
+    |                              ------------------------------
+
+error: `alloc::collections::btree::set::IntoIter` is not supported (note: you may be able to add a Verus specification to this type with the `external_type_specification` attribute) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetSplayMtEph.rs:331:30
+    |
+331 |             from_sorted_iter(combined.into_iter().collect())
+    |                              --------------------^^^^^^^^^^
+...
+346 |             from_sorted_iter(combined.into_iter().collect())
+    |                              ------------------------------
+    |
+    = help: The following declaration may resolve this error:
+            #[verifier::reject_recursive_types(A)]
+            #[verifier::reject_recursive_types(T)]
+            #[verifier::external_type_specification]
+            pub struct ExIntoIter<T, A>(std::collections::btree_set::IntoIter<T, A>)
+            where
+            A: std::alloc::Allocator + std::clone::Clone,;
+
+error: `alloc::collections::btree::set::impl&%18::into_iter` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetSplayMtEph.rs:331:30
+    |
+331 |             from_sorted_iter(combined.into_iter().collect())
+    |                              ^^^^^^^^^^^^^^^^^^^^
+...
+346 |             from_sorted_iter(combined.into_iter().collect())
+    |                              --------------------
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification<T, A> [<std::collections::BTreeSet<T, A> as std::iter::IntoIterator>::into_iter] (_0: std::collections::BTreeSet<T, A>) -> std::collections::btree_set::IntoIter<T, A>
+            where
+            A: std::alloc::Allocator + std::clone::Clone,;
+
+error: `core::cmp::impls::impl&%10::lt` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetSplayMtEph.rs:309:20
+    |
+309 |                 if value < pivot {
+    |                    ^^^^^^^^^^^^^
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification<'a, 'b, A, B> [<&'b A as std::cmp::PartialOrd<&B>>::lt] (_0: &&'b A, _1: &&B) -> bool
+            where
+            A: std::cmp::PartialOrd<B> + ?Sized,
+            B: ?Sized,;
+
+error: aborting due to 6 previous errors; 1 warning emitted
+
+Elapsed: 36s

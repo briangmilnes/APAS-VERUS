@@ -1,0 +1,30 @@
+error: invariant not satisfied before loop
+   --> src/Chap44/DocumentIndex.rs:187:21
+    |
+187 |                     obeys_view_eq::<Word>(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap44/DocumentIndex.rs:188:21
+    |
+188 |                     obeys_feq_full::<Pair<Word, DocumentSet>>(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap44/DocumentIndex.rs:189:21
+    |
+189 |                     vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap44/DocumentIndex.rs:190:21
+    |
+190 |                     view_ord_consistent::<DocumentId>(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 2187 verified, 1 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 1803MB, peak z3 RSS: 393MB, min free: 19157MB
+Sampled CPU Usage: rust_verify: 27s, z3 children: 32s

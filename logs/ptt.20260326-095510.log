@@ -1,0 +1,1124 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStEph.rs:36:14
+   |
+36 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStPer.rs:38:14
+   |
+38 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphStEph.rs:34:14
+   |
+34 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphStPer.rs:38:14
+   |
+38 |     #[derive(Clone, PartialEq, Eq)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap53/GraphSearchMtPer.rs:23:14
+   |
+23 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:179:39
+    |
+179 |         fn num_vertices(&self) -> N { self.adj.size() }
+    |                                       ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStEph.rs:294:22
+    |
+294 |             requires self.spec_tablesteph_wf()
+    |                      ------------------------- failed precondition
+
+note: while loop: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/AdjTableGraphStEph.rs:187:13
+    |
+187 |             while i < len
+    |             ^^^^^^^^^^^^^
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/AdjTableGraphStEph.rs:181:9
+    |
+181 |         fn num_edges(&self) -> (m: N) {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:108:21
+    |
+108 |             ensures m as nat == self.spec_num_edges();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+197 |             count
+    |             ----- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:182:26
+    |
+182 |             let domain = self.adj.domain();
+    |                          ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStEph.rs:308:22
+    |
+308 |             requires obeys_feq_clone::<K>()
+    |                      ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:183:23
+    |
+183 |             let seq = domain.to_seq();
+    |                       ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/ArraySetStEph.rs:314:22
+    |
+314 |             requires self.spec_arraysetsteph_wf(),
+    |                      ---------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:192:42
+    |
+192 |                 if let Some(neighbors) = self.adj.find(&v) {
+    |                                          ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStEph.rs:400:22
+    |
+400 |             requires self.spec_tablesteph_wf(), obeys_view_eq::<K>()
+    |                      ------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:193:30
+    |
+193 |                     count += neighbors.size();
+    |                              ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:193:22
+    |
+193 |             requires self.spec_avltreesetsteph_wf(),
+    |                      ------------------------------ failed precondition
+
+note: while loop: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/AdjTableGraphStEph.rs:208:13
+    |
+208 |             while i < len
+    |             ^^^^^^^^^^^^^
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/AdjTableGraphStEph.rs:200:9
+    |
+200 |         fn vertices(&self) -> (verts: AVLTreeSetStEph<V>)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:201:21
+    |
+201 |             ensures verts@ == self.spec_adj().dom()
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+219 |             verts
+    |             ----- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:203:26
+    |
+203 |             let domain = self.adj.domain();
+    |                          ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStEph.rs:308:22
+    |
+308 |             requires obeys_feq_clone::<K>()
+    |                      ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:204:23
+    |
+204 |             let seq = domain.to_seq();
+    |                       ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/ArraySetStEph.rs:314:22
+    |
+314 |             requires self.spec_arraysetsteph_wf(),
+    |                      ---------------------------- failed precondition
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap52/AdjTableGraphStEph.rs:213:21
+    |
+213 |                     verts@ == seq@.subrange(0, i as int).to_set(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:216:17
+    |
+216 |                 verts.insert(seq.nth(i).clone());
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:294:17
+    |
+294 |                 old(self).spec_avltreesetsteph_wf(),
+    |                 ----------------------------------- failed precondition
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/AdjTableGraphStEph.rs:222:9
+    |
+222 |         fn has_edge(&self, u: &V, v: &V) -> (found: B)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:225:19
+    |
+225 |             match self.adj.find(u) {
+    |                   ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStEph.rs:400:22
+    |
+400 |             requires self.spec_tablesteph_wf(), obeys_view_eq::<K>()
+    |                      ------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:226:36
+    |
+226 |                 Some(neighbors) => neighbors.find(v),
+    |                                    ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:278:17
+    |
+278 |                 self.spec_avltreesetsteph_wf(),
+    |                 ------------------------------ failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:236:19
+    |
+236 |             match self.adj.find(u) {
+    |                   ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStEph.rs:400:22
+    |
+400 |             requires self.spec_tablesteph_wf(), obeys_view_eq::<K>()
+    |                      ------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:242:44
+    |
+242 |         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:193:22
+    |
+193 |             requires self.spec_avltreesetsteph_wf(),
+    |                      ------------------------------ failed precondition
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/AdjTableGraphStEph.rs:244:9
+    |
+244 |         fn insert_vertex(&mut self, v: V)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:129:21
+    |
+129 |             ensures self.spec_adjtablegraphsteph_wf(), self.spec_adj().dom().contains(v@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+244 |         fn insert_vertex(&mut self, v: V)
+    |         --------------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:247:13
+    |
+247 |             self.adj.insert(v, AVLTreeSetStEph::empty(), |old, _new| old.clone());
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStEph.rs:415:17
+    |
+415 |                 old(self).spec_tablesteph_wf(),
+    |                 ------------------------------ failed precondition
+
+note: while loop: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/AdjTableGraphStEph.rs:259:13
+    |
+259 |             while i < len
+    |             ^^^^^^^^^^^^^
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/AdjTableGraphStEph.rs:250:9
+    |
+250 |         fn delete_vertex(&mut self, v: &V)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:254:26
+    |
+254 |             let domain = self.adj.domain();
+    |                          ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStEph.rs:308:22
+    |
+308 |             requires obeys_feq_clone::<K>()
+    |                      ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:255:23
+    |
+255 |             let seq = domain.to_seq();
+    |                       ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/ArraySetStEph.rs:314:22
+    |
+314 |             requires self.spec_arraysetsteph_wf(),
+    |                      ---------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:258:13
+    |
+258 |             self.adj.delete(&v_clone);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStEph.rs:409:22
+    |
+409 |             requires old(self).spec_tablesteph_wf(), obeys_view_eq::<K>()
+    |                      ------------------------------ failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:264:42
+    |
+264 |                 if let Some(neighbors) = self.adj.find(&u) {
+    |                                          ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStEph.rs:400:22
+    |
+400 |             requires self.spec_tablesteph_wf(), obeys_view_eq::<K>()
+    |                      ------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:266:21
+    |
+266 |                     neighbors.delete(&v_clone);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:285:17
+    |
+285 |                 old(self).spec_avltreesetsteph_wf(),
+    |                 ----------------------------------- failed precondition
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/AdjTableGraphStEph.rs:273:9
+    |
+273 |         fn insert_edge(&mut self, u: V, v: V)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:279:35
+    |
+279 |             let neighbors = match self.adj.find(&u) {
+    |                                   ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStEph.rs:400:22
+    |
+400 |             requires self.spec_tablesteph_wf(), obeys_view_eq::<K>()
+    |                      ------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:282:21
+    |
+282 |                     ns.insert(v.clone());
+    |                     ^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:294:17
+    |
+294 |                 old(self).spec_avltreesetsteph_wf(),
+    |                 ----------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:287:13
+    |
+287 |             self.adj.insert(u, neighbors, |_old, new| new.clone());
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStEph.rs:415:17
+    |
+415 |                 old(self).spec_tablesteph_wf(),
+    |                 ------------------------------ failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:288:16
+    |
+288 |             if self.adj.find(&v).is_none() {
+    |                ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStEph.rs:400:22
+    |
+400 |             requires self.spec_tablesteph_wf(), obeys_view_eq::<K>()
+    |                      ------------------------- failed precondition
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/AdjTableGraphStEph.rs:293:9
+    |
+293 |         fn delete_edge(&mut self, u: &V, v: &V)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:298:38
+    |
+298 |             if let Some(neighbors) = self.adj.find(u) {
+    |                                      ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStEph.rs:400:22
+    |
+400 |             requires self.spec_tablesteph_wf(), obeys_view_eq::<K>()
+    |                      ------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:300:17
+    |
+300 |                 neighbors.delete(v);
+    |                 ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:285:17
+    |
+285 |                 old(self).spec_avltreesetsteph_wf(),
+    |                 ----------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:301:17
+    |
+301 |                 self.adj.insert(u.clone(), neighbors, |_old, new| new.clone());
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStEph.rs:415:17
+    |
+415 |                 old(self).spec_tablesteph_wf(),
+    |                 ------------------------------ failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:143:39
+    |
+143 |         fn num_vertices(&self) -> N { self.adj.size() }
+    |                                       ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:379:22
+    |
+379 |             requires self.spec_tablestper_wf(),
+    |                      ------------------------- failed precondition
+
+note: while loop: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/AdjTableGraphStPer.rs:151:13
+    |
+151 |             while i < len
+    |             ^^^^^^^^^^^^^
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/AdjTableGraphStPer.rs:145:9
+    |
+145 |         fn num_edges(&self) -> (m: N) {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:75:21
+    |
+ 75 |             ensures m as nat == self.spec_num_edges();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+161 |             count
+    |             ----- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:146:26
+    |
+146 |             let domain = self.adj.domain();
+    |                          ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:396:22
+    |
+396 |             requires obeys_feq_clone::<K>()
+    |                      ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:147:23
+    |
+147 |             let seq = domain.to_seq();
+    |                       ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/ArraySetStEph.rs:314:22
+    |
+314 |             requires self.spec_arraysetsteph_wf(),
+    |                      ---------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:156:42
+    |
+156 |                 if let Some(neighbors) = self.adj.find(&v) {
+    |                                          ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:499:22
+    |
+499 |             requires self.spec_tablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:157:30
+    |
+157 |                     count += neighbors.size();
+    |                              ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:186:22
+    |
+186 |             requires self.spec_avltreesetstper_wf(),
+    |                      ------------------------------ failed precondition
+
+note: while loop: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/AdjTableGraphStPer.rs:172:13
+    |
+172 |             while i < len
+    |             ^^^^^^^^^^^^^
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/AdjTableGraphStPer.rs:164:9
+    |
+164 |         fn vertices(&self) -> (verts: AVLTreeSetStPer<V>)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:79:21
+    |
+ 79 |             ensures verts@ == self.spec_adj().dom();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+183 |             vertices
+    |             -------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:167:30
+    |
+167 |             let domain_set = self.adj.domain();
+    |                              ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:396:22
+    |
+396 |             requires obeys_feq_clone::<K>()
+    |                      ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:168:23
+    |
+168 |             let seq = domain_set.to_seq();
+    |                       ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/ArraySetStEph.rs:314:22
+    |
+314 |             requires self.spec_arraysetsteph_wf(),
+    |                      ---------------------------- failed precondition
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap52/AdjTableGraphStPer.rs:177:21
+    |
+177 |                     vertices@ == seq@.subrange(0, i as int).to_set(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:180:28
+    |
+180 |                 vertices = vertices.insert(seq.nth(i).clone());
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:287:17
+    |
+287 |                 self.spec_avltreesetstper_wf(),
+    |                 ------------------------------ failed precondition
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/AdjTableGraphStPer.rs:186:9
+    |
+186 |         fn has_edge(&self, u: &V, v: &V) -> (found: B)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:189:19
+    |
+189 |             match self.adj.find(u) {
+    |                   ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:499:22
+    |
+499 |             requires self.spec_tablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:190:36
+    |
+190 |                 Some(neighbors) => neighbors.find(v),
+    |                                    ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:271:17
+    |
+271 |                 self.spec_avltreesetstper_wf(),
+    |                 ------------------------------ failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:200:19
+    |
+200 |             match self.adj.find(u) {
+    |                   ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:499:22
+    |
+499 |             requires self.spec_tablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:206:44
+    |
+206 |         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:186:22
+    |
+186 |             requires self.spec_avltreesetstper_wf(),
+    |                      ------------------------------ failed precondition
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/AdjTableGraphStPer.rs:208:9
+    |
+208 |         fn insert_vertex(&self, v: V) -> (updated: Self)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:96:21
+    |
+ 96 |             ensures updated.spec_adjtablegraphstper_wf(), updated.spec_adj().dom().contains(v@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+212 |             AdjTableGraphStPer { adj: new_adj }
+    |             ----------------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:211:27
+    |
+211 |             let new_adj = self.adj.insert(v, AVLTreeSetStPer::empty(), |old, _new| old.clone());
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:520:17
+    |
+520 |                 self.spec_tablestper_wf(),
+    |                 ------------------------- failed precondition
+
+note: while loop: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/AdjTableGraphStPer.rs:225:13
+    |
+225 |             while i < len
+    |             ^^^^^^^^^^^^^
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/AdjTableGraphStPer.rs:215:9
+    |
+215 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:219:27
+    |
+219 |             let new_adj = self.adj.delete(&v_clone);
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:510:17
+    |
+510 |                 self.spec_tablestper_wf(),
+    |                 ------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:220:26
+    |
+220 |             let domain = new_adj.domain();
+    |                          ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:396:22
+    |
+396 |             requires obeys_feq_clone::<K>()
+    |                      ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:221:23
+    |
+221 |             let seq = domain.to_seq();
+    |                       ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/ArraySetStEph.rs:314:22
+    |
+314 |             requires self.spec_arraysetsteph_wf(),
+    |                      ---------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:230:42
+    |
+230 |                 if let Some(neighbors) = result_adj.find(&u) {
+    |                                          ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:499:22
+    |
+499 |             requires self.spec_tablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:231:41
+    |
+231 |                     let new_neighbors = neighbors.delete(&v_clone);
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:278:17
+    |
+278 |                 self.spec_avltreesetstper_wf(),
+    |                 ------------------------------ failed precondition
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/AdjTableGraphStPer.rs:239:9
+    |
+239 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:245:35
+    |
+245 |             let neighbors = match self.adj.find(&u) {
+    |                                   ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:499:22
+    |
+499 |             requires self.spec_tablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:246:29
+    |
+246 |                 Some(ns) => ns.insert(v.clone()),
+    |                             ^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:287:17
+    |
+287 |                 self.spec_avltreesetstper_wf(),
+    |                 ------------------------------ failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:249:27
+    |
+249 |             let new_adj = self.adj.insert(u, neighbors, |_old, new| new.clone());
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:520:17
+    |
+520 |                 self.spec_tablestper_wf(),
+    |                 ------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:250:32
+    |
+250 |             let final_adj = if new_adj.find(&v).is_none() {
+    |                                ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:499:49
+    |
+499 |             requires self.spec_tablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                                                 -------------------- failed precondition
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/AdjTableGraphStPer.rs:258:9
+    |
+258 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:113:17
+    |
+113 |                   updated.spec_adjtablegraphstper_wf(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+263 | /             match self.adj.find(u) {
+264 | |                 Some(neighbors) => {
+265 | |                     let new_neighbors = neighbors.delete(v);
+266 | |                     let new_adj = self.adj.insert(u.clone(), new_neighbors, |_old, new| new.clone());
+...   |
+269 | |                 None => self.clone(),
+270 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:114:17
+    |
+114 | /                 !updated.spec_adj().dom().contains(u@)
+115 | |                     || !updated.spec_adj()[u@].contains(v@);
+    | |___________________________________________________________^ failed this postcondition
+...
+263 | /             match self.adj.find(u) {
+264 | |                 Some(neighbors) => {
+265 | |                     let new_neighbors = neighbors.delete(v);
+266 | |                     let new_adj = self.adj.insert(u.clone(), new_neighbors, |_old, new| new.clone());
+...   |
+269 | |                 None => self.clone(),
+270 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:263:19
+    |
+263 |             match self.adj.find(u) {
+    |                   ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:499:22
+    |
+499 |             requires self.spec_tablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:265:41
+    |
+265 |                     let new_neighbors = neighbors.delete(v);
+    |                                         ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:278:17
+    |
+278 |                 self.spec_avltreesetstper_wf(),
+    |                 ------------------------------ failed precondition
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/EdgeSetGraphStEph.rs:183:9
+    |
+183 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:187:28
+    |
+187 |               let filtered = self.edges.filter(
+    |  ____________________________^
+188 | |                 |edge| edge.0 == u_clone,
+189 | |                 Ghost(|v: (V::V, V::V)| v.0 == u@),
+190 | |             );
+    | |_____________^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:235:17
+    |
+235 | /                 forall|x: T, keep: bool|
+236 | |                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
+    | |____________________________________________________________________- failed precondition
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap52/EdgeSetGraphStEph.rs:210:21
+    |
+210 | /                     forall|v: <V as View>::V| #[trigger] neighbors@.contains(v) ==>
+211 | |                         self.edges@.contains((u@, v)),
+    | |_____________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:224:17
+    |
+224 |                 neighbors.insert(v);
+    |                 ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:297:17
+    |
+297 |                 old(self)@.len() + 1 < usize::MAX as nat,
+    |                 ---------------------------------------- failed precondition
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:114:21
+    |
+114 |             ensures self.spec_edgesetgraphsteph_wf();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+248 |         fn insert_vertex(&mut self, v: V) { self.vertices.insert(v); }
+    |         --------------------------------- at the end of the function body
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/EdgeSetGraphStEph.rs:250:9
+    |
+250 |         fn delete_vertex(&mut self, v: &V)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:119:21
+    |
+119 |             ensures self.spec_edgesetgraphsteph_wf(), !self.spec_vertices().contains(v@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+275 |             while j < to_remove.len()
+    |             ------------------------- at the end of the function body
+
+error: invariant not satisfied before loop
+   --> src/Chap52/EdgeSetGraphStEph.rs:278:21
+    |
+278 |                     !self.spec_vertices().contains(v@),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:127:21
+    |
+127 |             ensures self.spec_edgesetgraphsteph_wf();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+289 |         fn insert_edge(&mut self, u: V, v: V) {
+    |         ------------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:132:21
+    |
+132 |             ensures self.spec_edgesetgraphsteph_wf();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+295 |         fn delete_edge(&mut self, u: &V, v: &V) { self.edges.delete(&Pair(u.clone(), v.clone())); }
+    |         --------------------------------------- at the end of the function body
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/EdgeSetGraphStPer.rs:174:9
+    |
+174 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:178:28
+    |
+178 |               let filtered = self.edges.filter(
+    |  ____________________________^
+179 | |                 |edge| edge.0 == u_clone,
+180 | |                 Ghost(|v: (V::V, V::V)| v.0 == u@),
+181 | |             );
+    | |_____________^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:228:17
+    |
+228 | /                 forall|x: T, keep: bool|
+229 | |                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
+    | |____________________________________________________________________- failed precondition
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap52/EdgeSetGraphStPer.rs:201:21
+    |
+201 | /                     forall|v: <V as View>::V| #[trigger] neighbors@.contains(v) ==>
+202 | |                         self.edges@.contains((u@, v)),
+    | |_____________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:215:29
+    |
+215 |                 neighbors = neighbors.insert(v);
+    |                             ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:290:17
+    |
+290 |                 self@.len() + 1 < usize::MAX as nat,
+    |                 ----------------------------------- failed precondition
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap52/EdgeSetGraphStPer.rs:246:9
+    |
+246 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:252:29
+    |
+252 |               let new_edges = self.edges.filter(
+    |  _____________________________^
+253 | |                 |edge| {
+254 | |                     let Pair(u, w) = edge;
+255 | |                     *u != v_clone && *w != v_clone
+256 | |                 },
+257 | |                 Ghost(|p: (V::V, V::V)| p.0 != v_view && p.1 != v_view),
+258 | |             );
+    | |_____________^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:228:17
+    |
+228 | /                 forall|x: T, keep: bool|
+229 | |                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
+    | |____________________________________________________________________- failed precondition
+
+error: assertion failed
+   --> src/Chap52/EdgeSetGraphStPer.rs:271:28
+    |
+271 |                     assert(new_vertices@.contains(a));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:119:21
+    |
+119 |               ensures updated.spec_edgesetgraphstper_wf();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+284 | /             EdgeSetGraphStPer {
+285 | |                 vertices: new_vertices,
+286 | |                 edges: new_edges,
+287 | |             }
+    | |_____________- at the end of the function body
+
+verification results:: 4723 verified, 34 errors
+error: aborting due to 73 previous errors; 5 warnings emitted
+
+    Finished `release` profile [optimized] target(s) in 0.03s
+────────────
+ Nextest run ID 4a979488-a3e7-4f24-8b5e-a06da0bbadde with nextest profile: default
+    Starting 157 tests across 37 binaries
+        PASS [   1.220s] rust_verify_test::HashMapWithViewPlus hash_map_wvp_loop_loop
+        PASS [   1.278s] rust_verify_test::HashMapWithViewPlus hash_map_wvp_for_iter
+        PASS [   1.281s] rust_verify_test::HashSetWithViewPlus hash_set_wvp_loop_loop
+        PASS [   1.300s] rust_verify_test::HashSetWithViewPlus hash_set_wvp_for_iter
+        PASS [   1.379s] rust_verify_test::MappingStEph mapping_st_eph_loop_loop
+        PASS [   1.988s] rust_verify_test::MappingStEph mapping_st_eph_for_iter
+        PASS [   1.259s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_for_borrow_into
+        PASS [   1.282s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_for_borrow_iter
+        PASS [   1.316s] rust_verify_test::ProveAVLTreeSeq avltreeseq_loop_borrow_iter
+        PASS [   1.265s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_loop_borrow_iter
+        PASS [   1.424s] rust_verify_test::ProveAVLTreeSeq avltreeseq_for_borrow_iter
+        PASS [   1.199s] rust_verify_test::ProveArraySeq arrayseq_filter
+        PASS [   1.312s] rust_verify_test::ProveArraySeq arrayseq_for_iter
+        PASS [   1.336s] rust_verify_test::ProveArraySeq arrayseq_iterate_prefixes
+        PASS [   1.367s] rust_verify_test::ProveArraySeq arrayseq_iterate
+        PASS [   1.344s] rust_verify_test::ProveArraySeq arrayseq_loop_loop
+        PASS [   1.450s] rust_verify_test::ProveArraySeq arrayseq_map
+        PASS [   1.462s] rust_verify_test::ProveArraySeq arrayseq_reduce
+        PASS [   1.150s] rust_verify_test::ProveArraySeq arrayseq_tabulate
+        PASS [   1.446s] rust_verify_test::ProveArraySeq arrayseq_scan
+        PASS [   1.421s] rust_verify_test::ProveArraySeq arrayseq_scan_inclusive
+        PASS [   1.449s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_for_iter
+        PASS [   1.374s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_loop_loop
+        PASS [   1.436s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_for_iter
+        PASS [   1.327s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_loop_loop
+        PASS [   1.256s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_consume
+        PASS [   1.392s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_borrow_iter
+        PASS [   1.285s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_borrow_into
+        PASS [   1.560s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_borrow_into
+        PASS [   1.284s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_borrow_iter
+        PASS [   1.268s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_consume
+        PASS [   1.249s] rust_verify_test::ProveBFSMtEph chap54_bfsmteph_bottom_up_loop
+        PASS [   1.259s] rust_verify_test::ProveArraySeqStPer arrayseqstper_loop_loop
+        PASS [   1.212s] rust_verify_test::ProveBFSMtEph chap54_bfsmteph_top_down_loop
+        PASS [   1.672s] rust_verify_test::ProveArraySeqStPer arrayseqstper_for_iter
+        PASS [   1.261s] rust_verify_test::ProveBFSStEph chap54_bfssteph_bottom_up_loop
+        PASS [   1.315s] rust_verify_test::ProveBFSStEph chap54_bfssteph_top_down_loop
+        PASS [   1.313s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_postorder
+        PASS [   1.436s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_inorder
+        PASS [   1.496s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_preorder
+        PASS [   1.316s] rust_verify_test::ProveBalBinTreeStEph balbintree_inorder_spec_match
+        PASS [   1.282s] rust_verify_test::ProveBalBinTreeStEph balbintree_leaf_iter_exhausted
+        PASS [   1.242s] rust_verify_test::ProveBalBinTreeStEph balbintree_leaf_traversals_empty
+        PASS [   1.323s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_inorder
+        PASS [   1.272s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_postorder
+        PASS [   1.197s] rust_verify_test::ProveBalBinTreeStEph balbintree_postorder_spec_match
+        PASS [   1.385s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_preorder
+        PASS [   1.200s] rust_verify_test::ProveBalBinTreeStEph balbintree_preorder_spec_match
+        PASS [   1.252s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_borrow_into
+        PASS [   1.316s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_borrow_iter
+        PASS [   1.311s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_consume
+        PASS [   1.310s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_borrow_into
+        PASS [   1.242s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_borrow_iter
+        PASS [   1.244s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_consume
+        PASS [   1.253s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_for_borrow_into
+        PASS [   1.383s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_for_borrow_iter
+        PASS [   1.392s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_iter_over_subslice
+        PASS [   1.320s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_operations
+        PASS [   1.354s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_borrow_into
+        PASS [   1.610s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_loop_borrow_iter
+        PASS [   1.268s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_borrow_iter
+        PASS [   1.454s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_borrow_into
+        PASS [   1.402s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_borrow_iter
+        PASS [   1.579s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_consume
+        PASS [   1.311s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_consume
+        PASS [   1.352s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_borrow_into
+        PASS [   1.296s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_borrow_iter
+        PASS [   1.247s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_consume
+        PASS [   1.224s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_borrow_iter
+        PASS [   1.297s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_borrow_into
+        PASS [   1.265s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_consume
+        PASS [   1.275s] rust_verify_test::ProveKleeneStPer kleene_alphabet
+        PASS [   1.307s] rust_verify_test::ProveKleeneStPer kleene_mem_plus
+        PASS [   1.270s] rust_verify_test::ProveKleeneStPer kleene_mem_star
+        PASS [   1.264s] rust_verify_test::ProveLinkedListStEph linkedliststeph_for_iter
+        PASS [   1.246s] rust_verify_test::ProveLinkedListStEph linkedliststeph_loop_loop
+        PASS [   1.361s] rust_verify_test::ProveLinkedListStPer linkedliststper_for_iter
+        PASS [   1.406s] rust_verify_test::ProveLinkedListStPer linkedliststper_loop_loop
+        PASS [   1.452s] rust_verify_test::ProveMathSeq mathseq_for_borrow_into
+        PASS [   1.251s] rust_verify_test::ProveMathSeq mathseq_for_borrow_iter
+        PASS [   1.262s] rust_verify_test::ProveMathSeq mathseq_loop_borrow_into
+        PASS [   1.369s] rust_verify_test::ProveMathSeq mathseq_for_consume
+        PASS [   1.413s] rust_verify_test::ProveMathSeq mathseq_loop_borrow_iter
+        PASS [   1.288s] rust_verify_test::ProveMathSeq mathseq_loop_consume
+        PASS [   1.389s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_for_borrow_into
+        PASS [   1.302s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_for_borrow_iter
+        PASS [   1.290s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_loop_borrow_iter
+        PASS [   1.443s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_loop_borrow_into
+        PASS [   1.347s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_for_borrow_into
+        PASS [   1.377s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_for_borrow_iter
+        PASS [   1.423s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_loop_borrow_into
+        PASS [   1.344s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_for_borrow_into
+        PASS [   1.342s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_for_borrow_iter
+        PASS [   1.634s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_loop_borrow_iter
+        PASS [   1.271s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_loop_borrow_into
+        PASS [   1.316s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_loop_borrow_iter
+        PASS [   1.492s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_borrow_into
+        PASS [   1.368s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_borrow_iter
+        PASS [   1.284s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_consume
+        PASS [   1.189s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_borrow_iter
+        PASS [   1.312s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_borrow_into
+        PASS [   1.246s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_consume
+        PASS [   1.581s] rust_verify_test::ProveSetMtEph set_mt_eph_for_borrow_into
+        PASS [   1.223s] rust_verify_test::ProveSetMtEph set_mt_eph_loop_borrow_iter
+        PASS [   1.210s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_borrow_into
+        PASS [   1.411s] rust_verify_test::ProveSetMtEph set_mt_eph_for_borrow_iter
+        PASS [   1.307s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_consume
+        PASS [   1.557s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_borrow_iter
+        PASS [   1.267s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_borrow_into
+        PASS [   1.300s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_borrow_iter
+        PASS [   1.256s] rust_verify_test::Provedeep_view_standard deep_view_standard_simple
+        PASS [   1.388s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_consume
+        PASS [   1.325s] rust_verify_test::Proveiterators_standard iterators_standard_for_borrow_into
+        PASS [   1.378s] rust_verify_test::Proveiterators_standard iterators_standard_for_borrow_iter
+        PASS [   1.297s] rust_verify_test::Proveiterators_standard iterators_standard_for_consume
+        PASS [   1.267s] rust_verify_test::Proveiterators_standard iterators_standard_loop_borrow_into
+        PASS [   1.206s] rust_verify_test::Proveiterators_standard iterators_standard_loop_consume
+        PASS [   1.413s] rust_verify_test::Proveiterators_standard iterators_standard_loop_borrow_iter
+        PASS [   1.238s] rust_verify_test::Provemod_standard mod_standard_for_borrow_into
+        PASS [   1.269s] rust_verify_test::Provemod_standard mod_standard_for_borrow_iter
+        PASS [   1.205s] rust_verify_test::Provemod_standard mod_standard_for_consume
+        PASS [   1.166s] rust_verify_test::Provemod_standard mod_standard_loop_borrow_into
+        PASS [   1.299s] rust_verify_test::Provemod_standard mod_standard_loop_borrow_iter
+        PASS [   1.288s] rust_verify_test::Provemod_standard mod_standard_loop_consume
+        PASS [   1.320s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_borrow_into
+        PASS [   1.270s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_borrow_iter
+        PASS [   1.188s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_borrow_into
+        PASS [   1.225s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_consume
+        PASS [   1.226s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_consume
+        PASS [   1.247s] rust_verify_test::Proveusing_closures_standard closures_ghost_spec_fn
+        PASS [   1.533s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_borrow_iter
+        PASS [   1.201s] rust_verify_test::Proveusing_closures_standard closures_inline_requires_ensures
+        PASS [   1.137s] rust_verify_test::Proveusing_closures_standard closures_map_apply
+        PASS [   1.218s] rust_verify_test::Proveusing_closures_standard closures_let_bind_ensures
+        PASS [   1.303s] rust_verify_test::Proveview_standard view_standard_for_borrow_into
+        PASS [   1.244s] rust_verify_test::Proveview_standard view_standard_for_consume
+        PASS [   1.391s] rust_verify_test::Proveview_standard view_standard_for_borrow_iter
+        PASS [   1.541s] rust_verify_test::Proveview_standard view_standard_collection
+        PASS [   1.238s] rust_verify_test::Proveview_standard view_standard_loop_borrow_into
+        PASS [   1.203s] rust_verify_test::Proveview_standard view_standard_loop_borrow_iter
+        PASS [   1.254s] rust_verify_test::Provewrapping_iterators_standard wrapping_for_borrow_into
+        PASS [   1.362s] rust_verify_test::Proveview_standard view_standard_simple
+        PASS [   1.270s] rust_verify_test::Provewrapping_iterators_standard wrapping_for_borrow_iter
+        PASS [   1.416s] rust_verify_test::Proveview_standard view_standard_loop_consume
+        PASS [   1.186s] rust_verify_test::Provewrapping_iterators_standard wrapping_loop_borrow_iter
+        PASS [   1.209s] rust_verify_test::Provewrapping_iterators_standard wrapping_loop_borrow_into
+        PASS [   1.255s] rust_verify_test::SetMtEph set_mt_eph_from_vec
+        PASS [   1.395s] rust_verify_test::RelationStEph relation_st_eph_loop_loop
+        PASS [   1.431s] rust_verify_test::SetMtEph set_mt_eph_for_iter
+        PASS [   1.474s] rust_verify_test::RelationStEph relation_st_eph_for_iter
+        PASS [   1.338s] rust_verify_test::SetMtEph set_mt_eph_loop_loop
+        PASS [   1.504s] rust_verify_test::SetStEph set_st_eph_for_iter
+        PASS [   1.217s] rust_verify_test::SetStEph set_st_eph_from_vec
+        PASS [   1.196s] rust_verify_test::prove_MathSeq_iters mathseq_iter_consuming
+        PASS [   1.209s] rust_verify_test::prove_MathSeq_iters mathseq_iter_nested
+        PASS [   1.290s] rust_verify_test::SetStEph set_st_eph_loop_loop
+        PASS [   1.147s] rust_verify_test::prove_MathSeq_iters mathseq_iter_range
+────────────
+     Summary [  35.027s] 157 tests run: 157 passed, 0 skipped
+Elapsed: 85s

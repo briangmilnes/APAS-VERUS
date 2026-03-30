@@ -1,0 +1,54 @@
+error[E0308]: mismatched types
+   --> src/Chap55/SCCStEph.rs:266:63
+    |
+266 |                     assert(new_arr.spec_index(j) == adj_vecs@[m][j]);
+    |                                                     ----------^-
+    |                                                     |         |
+    |                                                     |         expected `int`, found `usize`
+    |                                                     arguments to this method are incorrect
+    |
+note: method defined here
+   --> vstd/seq.rs:60:21
+
+error[E0308]: mismatched types
+   --> src/Chap55/SCCStEph.rs:267:39
+    |
+267 |                     assert((adj_vecs@[m][j] as int) < (n as int));
+    |                             ----------^-
+    |                             |         |
+    |                             |         expected `int`, found `usize`
+    |                             arguments to this method are incorrect
+    |
+note: method defined here
+   --> vstd/seq.rs:60:21
+
+error[E0308]: mismatched types
+   --> src/Chap55/SCCStPer.rs:351:63
+    |
+351 |                     assert(new_arr.spec_index(j) == adj_vecs@[m][j]);
+    |                                                     ----------^-
+    |                                                     |         |
+    |                                                     |         expected `int`, found `usize`
+    |                                                     arguments to this method are incorrect
+    |
+note: method defined here
+   --> vstd/seq.rs:60:21
+
+error[E0308]: mismatched types
+   --> src/Chap55/SCCStPer.rs:352:39
+    |
+352 |                     assert((adj_vecs@[m][j] as int) < (n as int));
+    |                             ----------^-
+    |                             |         |
+    |                             |         expected `int`, found `usize`
+    |                             arguments to this method are incorrect
+    |
+note: method defined here
+   --> vstd/seq.rs:60:21
+
+error: aborting due to 4 previous errors
+
+For more information about this error, try `rustc --explain E0308`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 463MB, peak z3 RSS: 0MB, min free: 24682MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

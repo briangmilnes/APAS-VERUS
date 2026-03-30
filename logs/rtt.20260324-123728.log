@@ -1,0 +1,28 @@
+   Compiling vstd v0.0.0-2026-03-22-0106 (/home/milnes/projects/verus/source/vstd)
+   Compiling verus_builtin v0.0.0-2026-03-22-0106 (/home/milnes/projects/verus/source/builtin)
+   Compiling verus_builtin_macros v0.0.0-2026-03-17-2326 (/home/milnes/projects/verus/source/builtin_macros)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent3)
+error[E0432]: unresolved import `crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent`
+  --> src/Chap43/AugOrderedTableStEph.rs:25:9
+   |
+25 |     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `view_ord_consistent` in `Chap38::BSTParaStEph::BSTParaStEph`
+
+error[E0432]: unresolved import `crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent`
+  --> src/Chap43/AugOrderedTableMtEph.rs:27:9
+   |
+27 |     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `view_ord_consistent` in `Chap38::BSTParaStEph::BSTParaStEph`
+
+error[E0432]: unresolved import `crate::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order`
+  --> src/Chap43/AugOrderedTableMtEph.rs:29:9
+   |
+29 |     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `spec_pair_key_determines_order` in `Chap43::OrderedTableStEph::OrderedTableStEph`
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `apas-verus` (lib) due to 3 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `apas-verus` (lib test) due to 3 previous errors
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 14s

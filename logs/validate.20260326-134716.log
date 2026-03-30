@@ -1,0 +1,51 @@
+error: assertion failed
+   --> src/Chap55/SCCStEph.rs:103:24
+    |
+103 |                 assert(visited.seq@[j] == false);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/SCCStEph.rs:120:17
+    |
+120 |                 forall|j: int| 0 <= j < start as int ==> #[trigger] visited@[j],
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap55/SCCStEph.rs:103:43
+    |
+103 |                 assert(visited.seq@[j] == false);
+    |                                           ^^^^^
+
+note: 
+
+visited.seq.view().index(j) == false
+|   visited.seq.view().index(j) ==>
+|       false ✘
+|   false ==>
+|       visited.seq.view().index(j) ✔
++---
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/SCCStPer.rs:212:17
+    |
+212 |                 forall|j: int| 0 <= j < start as int ==> #[trigger] visited@[j],
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap55/SCCStPer.rs:349:29
+    |
+349 |                     implies (#[trigger] new_arr@[j]) < graph@.len() by {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+new_arr.view().index(j) < graph.view().len() 
+
+verification results:: 2095 verified, 4 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 16s
+Sampled Memory Usage: peak rust_verify RSS: 1522MB, peak z3 RSS: 348MB, min free: 23340MB
+Sampled CPU Usage: rust_verify: 27s, z3 children: 33s

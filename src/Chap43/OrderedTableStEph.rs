@@ -76,10 +76,10 @@ broadcast use {
     }
 
     /// Key uniqueness for a set of pairs: no two pairs share the same first component.
-    #[verifier::opaque]
+    /// Nested quantifiers break the symmetric trigger loop that the flat form causes.
     pub open spec fn spec_key_unique_pairs_set<KV, VV>(s: Set<(KV, VV)>) -> bool {
-        forall|k: KV, v1: VV, v2: VV|
-            s.contains((k, v1)) && s.contains((k, v2)) ==> v1 == v2
+        forall|k: KV, v: VV| #[trigger] s.contains((k, v)) ==>
+            forall|v2: VV| s.contains((k, v2)) ==> v == v2
     }
 
     /// Pair ordering is determined by key ordering when keys differ.
@@ -122,7 +122,6 @@ broadcast use {
         requires s.finite(), spec_key_unique_pairs_set(s)
         ensures spec_pair_set_to_map(s).dom().len() == s.len()
     {
-        reveal(spec_key_unique_pairs_set);
         lemma_pair_set_to_map_dom_finite(s);
         let dom_set = spec_pair_set_to_map(s).dom();
         let proj = |p: (KV, VV)| -> KV { p.0 };
@@ -163,7 +162,6 @@ broadcast use {
             spec_pair_set_to_map(s).contains_key(k),
             spec_pair_set_to_map(s)[k] == v,
     {
-        reveal(spec_key_unique_pairs_set);
         let m = spec_pair_set_to_map(s);
         assert(m.dom().contains(k));
         // m[k] == choose|v_| s.contains((k, v_)).
@@ -189,7 +187,6 @@ broadcast use {
         ensures
             spec_key_unique_pairs_set(s.insert((k, v)))
     {
-        reveal(spec_key_unique_pairs_set);
         assert forall|k2: KV, v1: VV, v2: VV|
             s.insert((k, v)).contains((k2, v1)) && s.insert((k, v)).contains((k2, v2))
             implies v1 == v2
@@ -239,7 +236,7 @@ broadcast use {
                 0 <= i < sorted.len() && 0 <= j < sorted.len() && i != j
                 ==> (#[trigger] sorted[i]).0 != (#[trigger] sorted[j]).0,
     {
-        reveal(spec_key_unique_pairs_set);
+
         // sorted.to_set() =~= tree.
         assert(sorted.to_set() =~= tree) by {
             assert forall|v: (KV, VV)| sorted.to_set().contains(v) <==> #[trigger] tree.contains(v) by {};
@@ -266,7 +263,7 @@ broadcast use {
         requires spec_key_unique_pairs_set(s)
         ensures spec_key_unique_pairs_set(s.remove(pair))
     {
-        reveal(spec_key_unique_pairs_set);
+
     }
 
     /// Key uniqueness is preserved by subset.
@@ -277,14 +274,14 @@ broadcast use {
         ensures
             spec_key_unique_pairs_set(sub)
     {
-        reveal(spec_key_unique_pairs_set);
+
     }
 
     /// Key uniqueness holds trivially for the empty set.
     proof fn lemma_key_unique_empty<KV, VV>()
         ensures spec_key_unique_pairs_set(Set::<(KV, VV)>::empty())
     {
-        reveal(spec_key_unique_pairs_set);
+
     }
 
     /// Key uniqueness for union of disjoint sets (by key) that are individually key-unique.
@@ -305,7 +302,7 @@ broadcast use {
         ensures
             spec_key_unique_pairs_set(s1.union(s2).insert(root))
     {
-        reveal(spec_key_unique_pairs_set);
+
         let combined = s1.union(s2).insert(root);
         assert forall|k: KV, v1: VV, v2: VV|
             combined.contains((k, v1)) && combined.contains((k, v2))
@@ -349,7 +346,7 @@ broadcast use {
             spec_pair_set_to_map(s.insert((k, v)))
                 =~= spec_pair_set_to_map(s).insert(k, v),
     {
-        reveal(spec_key_unique_pairs_set);
+
         let old_m = spec_pair_set_to_map(s);
         let new_s = s.insert((k, v));
         let new_m = spec_pair_set_to_map(new_s);
@@ -400,7 +397,7 @@ broadcast use {
             spec_pair_set_to_map(s.remove((k, v)))
                 =~= spec_pair_set_to_map(s).remove(k),
     {
-        reveal(spec_key_unique_pairs_set);
+
         let old_m = spec_pair_set_to_map(s);
         let new_s = s.remove((k, v));
         let new_m = spec_pair_set_to_map(new_s);
@@ -463,7 +460,7 @@ broadcast use {
                 &&& combined_map.contains_key(root_k) && combined_map[root_k] == root_v
             })
     {
-        reveal(spec_key_unique_pairs_set);
+
         let combined = left.union(right).insert((root_k, root_v));
         let cm = spec_pair_set_to_map(combined);
         let lm = spec_pair_set_to_map(left);
@@ -4043,7 +4040,7 @@ broadcast use {
                 };
                 // Prove key uniqueness is maintained.
                 assert(spec_key_unique_pairs_set(tree@)) by {
-                    reveal(spec_key_unique_pairs_set);
+            
                     assert forall|k: K::V, v1: V::V, v2: V::V|
                         tree@.contains((k, v1)) && tree@.contains((k, v2)) implies v1 == v2 by {
                         if old_tree.contains((k, v1)) && old_tree.contains((k, v2)) {

@@ -1,0 +1,21 @@
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStPer.rs:1181:21
+     |
+1181 | /                     forall|j: int| #![trigger sorted@[j]] 0 <= j < i as int ==>
+1182 | |                         spec_pair_set_to_map(new_tree@).dom().contains(sorted@[j].0),
+     | |____________________________________________________________________________________^
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStPer.rs:1185:41
+     |
+1185 | ...                   old_val@ == spec_pair_set_to_map(self.tree@)[p.0]
+     |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+verification results:: 4369 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 55s

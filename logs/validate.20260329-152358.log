@@ -1,0 +1,85 @@
+error: invariant not satisfied before loop
+   --> src/Chap44/DocumentIndex.rs:187:21
+    |
+187 |                     obeys_view_eq::<Word>(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap44/DocumentIndex.rs:188:21
+    |
+188 |                     obeys_feq_full::<Pair<Word, DocumentSet>>(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap44/DocumentIndex.rs:189:21
+    |
+189 |                     vstd::laws_cmp::obeys_cmp_spec::<DocumentId>(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap44/DocumentIndex.rs:190:21
+    |
+190 |                     view_ord_consistent::<DocumentId>(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap44/DocumentIndex.rs:249:29
+    |
+249 | ...                   existing.union(&singleton)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:265:17
+    |
+265 |                 self@.len() + other@.len() < usize::MAX as nat,
+    |                 ---------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:265:17
+    |
+265 |                 self@.len() + other@.len() < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+existing.spec_avltreesetstper_wf() ✔
+singleton.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✔
+view_ord_consistent() ✔
+clip(nat, existing.view().len() + singleton.view().len()) < UnsignedMax.Exec(usize::BITS) ✘
+
+note: automatically chose triggers for this expression:
+   --> src/Chap44/DocumentIndex.rs:214:25
+    |
+214 |                         assert forall|v: Seq<char>| ds@.contains(v) implies gds.contains(v) by {
+    |                         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap44/DocumentIndex.rs:214:77
+    |
+214 |                         assert forall|v: Seq<char>| ds@.contains(v) implies gds.contains(v) by {
+    |                                                                             ^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap44/DocumentIndex.rs:214:25
+    |
+214 |                         assert forall|v: Seq<char>| ds@.contains(v) implies gds.contains(v) by {
+    |                         ^^^^^^
+
+verification results:: 2186 verified, 2 errors
+error: aborting due to 5 previous errors
+
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 1799MB, peak z3 RSS: 350MB, min free: 19166MB
+Sampled CPU Usage: rust_verify: 27s, z3 children: 36s

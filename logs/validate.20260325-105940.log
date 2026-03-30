@@ -1,0 +1,192 @@
+error: precondition not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:268:17
+    |
+268 |                 self.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:270:17
+    |
+270 |                 other.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+tmp% is Some 
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:299:17
+    |
+299 |                 self.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:301:17
+    |
+301 |                 other.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+note: 
+
+tmp% is Some 
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:332:25
+    |
+332 |             let pivot = self.tree.minimum().unwrap();
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+note: 
+
+tmp% is Some 
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetRBMtEph.rs:267:17
+    |
+267 |                 self.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetRBMtEph.rs:269:17
+    |
+269 |                 other.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+note: 
+
+tmp% is Some 
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetRBMtEph.rs:298:17
+    |
+298 |                 self.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetRBMtEph.rs:300:17
+    |
+300 |                 other.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+note: 
+
+tmp% is Some 
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetRBMtEph.rs:331:25
+    |
+331 |             let pivot = self.tree.minimum().unwrap();
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+note: 
+
+tmp% is Some 
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetSplayMtEph.rs:268:17
+    |
+268 |                 self.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetSplayMtEph.rs:270:17
+    |
+270 |                 other.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+note: 
+
+tmp% is Some 
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetSplayMtEph.rs:299:17
+    |
+299 |                 self.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetSplayMtEph.rs:301:17
+    |
+301 |                 other.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+note: 
+
+tmp% is Some 
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetSplayMtEph.rs:332:25
+    |
+332 |             let pivot = self.tree.minimum().unwrap();
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+note: 
+
+tmp% is Some 
+
+verification results:: 4881 verified, 9 errors
+error: aborting due to 15 previous errors
+
+Elapsed: 113s

@@ -1,0 +1,25 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap37/BSTSplayMtEph.rs:41:14
+   |
+41 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: disallowed: field expression for a non-visible datatype
+  --> src/Chap37/BSTSplayMtEph.rs:59:46
+   |
+42 | /     struct Node<T: StTInMtT + Ord + TotalOrder> {
+43 | |         key: T,
+44 | |         size: N,
+45 | |         left: Option<Box<Node<T>>>,
+46 | |         right: Option<Box<Node<T>>>,
+47 | |     }
+   | |_____- this datatype is only visible to `lib::Chap37::BSTSplayMtEph::BSTSplayMtEph`
+...
+59 |               Some(node) => 1 + link_spec_size(node.left) + link_spec_size(node.right),
+   |                                                ^^^^^^^^^ this field expression is disallowed because of non-visibility
+   |
+   = help: note that because this is a pub open spec function, this field expression must be well-formed everywhere, which is wider than `lib::Chap37::BSTSplayMtEph::BSTSplayMtEph`
+
+error: aborting due to 1 previous error; 1 warning emitted
+
+Elapsed: 39s

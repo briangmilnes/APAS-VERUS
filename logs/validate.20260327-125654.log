@@ -1,0 +1,12 @@
+error[E0425]: cannot find value `result` in this scope
+  --> src/Chap59/JohnsonMtEphI64.rs:47:21
+   |
+47 |                     result.spec_n() as nat == graph@.V.len();
+   |                     ^^^^^^ not found in this scope
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 307MB, peak z3 RSS: 0MB, min free: 22055MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

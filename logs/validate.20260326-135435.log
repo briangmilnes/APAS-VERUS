@@ -1,0 +1,98 @@
+error: postcondition not satisfied
+   --> src/Chap55/SCCStEph.rs:80:17
+    |
+ 80 |                 components@.len() >= 1 || graph@.len() == 0,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+532 |             AVLTreeSeqStEphS::from_vec(components_vec)
+    |             ------------------------------------------ at the end of the function body
+
+error: assertion failed
+   --> src/Chap55/SCCStEph.rs:484:71
+    |
+484 |                 assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {
+    |                                                                       ^^^^^^^^^^^^ assertion failed
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/SCCStEph.rs:504:21
+    |
+504 |                     spec_num_false(visited@) + i as nat == n,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/SCCStEph.rs:507:21
+    |
+507 |                     components_vec@.len() < usize::MAX,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap55/SCCStEph.rs:518:28
+    |
+518 |                     assert(component@.len() + spec_num_false(visited@) < usize::MAX as nat) by {
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap55/SCCStEph.rs:532:13
+    |
+532 |             AVLTreeSeqStEphS::from_vec(components_vec)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:319:17
+    |
+319 |                 obeys_feq_full::<T>(),
+    |                 --------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+clip(nat, component.view().len() + spec_num_false(visited.view())) < UnsignedMax.Exec(usize::BITS) 
+
+error: postcondition not satisfied
+   --> src/Chap55/SCCStPer.rs:73:17
+    |
+ 73 |                 components@.len() >= 1 || graph@.len() == 0,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+592 |             AVLTreeSeqStPerS::from_vec(components_vec)
+    |             ------------------------------------------ at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap55/SCCStPer.rs:552:17
+    |
+552 |                 lemma_all_false_num_false_eq_len(visited_bool@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap55/TopoSortStEph.rs:215:18
+    |
+215 |         requires forall|j: int| #![trigger s[j]] 0 <= j < s.len() ==> !s[j],
+    |                  ---------------------------------------------------------- failed precondition
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/SCCStPer.rs:569:21
+    |
+569 |                     spec_num_false(visited_bool@) + i as nat == n,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/SCCStPer.rs:572:21
+    |
+572 |                     components_vec@.len() < usize::MAX,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap55/SCCStPer.rs:579:28
+    |
+579 |                     assert(component@.len() + spec_num_false(visited_bool@) < usize::MAX as nat) by {
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+clip(nat, component.view().len() + spec_num_false(visited_bool.view())) < UnsignedMax.Exec(usize::BITS) 
+
+verification results:: 2100 verified, 4 errors
+error: aborting due to 11 previous errors
+
+Elapsed: 21s
+Sampled Memory Usage: peak rust_verify RSS: 5758MB, peak z3 RSS: 1615MB, min free: 17615MB
+Sampled CPU Usage: rust_verify: 105s, z3 children: 105s

@@ -1,0 +1,46 @@
+error: precondition not satisfied
+   --> src/Chap57/DijkstraStEphF64.rs:242:17
+    |
+242 |                 sssp.set_distance(v, dist);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap56/SSSPResultStEphF64.rs:71:22
+    |
+ 71 |             requires old(self).spec_ssspresultstephf64_wf(),
+    |                      -------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap57/DijkstraStEphF64.rs:285:50
+    |
+285 | ...                   let u_dist = sssp.get_distance(*u);
+    |                                    ^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap56/SSSPResultStEphF64.rs:63:22
+    |
+ 63 |             requires self.spec_ssspresultstephf64_wf(),
+    |                      --------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap57/DijkstraStEphF64.rs:314:41
+    |
+314 | ...                   sssp.set_predecessor(*u, v);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap56/SSSPResultStEphF64.rs:92:22
+    |
+ 92 |             requires old(self).spec_ssspresultstephf64_wf(),
+    |                      -------------------------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+sssp.spec_ssspresultstephf64_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 2509 verified, 1 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 25s
+Sampled Memory Usage: peak rust_verify RSS: 2901MB, peak z3 RSS: 351MB, min free: 18419MB
+Sampled CPU Usage: rust_verify: 50s, z3 children: 48s

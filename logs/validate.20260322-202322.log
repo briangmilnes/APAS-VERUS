@@ -1,0 +1,15 @@
+error: trigger does not cover variable j1
+    --> src/Chap43/OrderedSetStEph.rs:1170:25
+     |
+1170 |                         assert forall|j1: int, j2: int|
+     |                         ^^^^^^
+
+error: trigger does not cover variable j1
+    --> src/Chap43/OrderedSetStPer.rs:1136:25
+     |
+1136 |                         assert forall|j1: int, j2: int|
+     |                         ^^^^^^
+
+error: aborting due to 2 previous errors
+
+Elapsed: 57s

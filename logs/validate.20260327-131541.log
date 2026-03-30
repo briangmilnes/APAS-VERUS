@@ -1,0 +1,58 @@
+error[E0599]: no method named `iter` found for struct `vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus<Key>` in the current scope
+   --> src/Chap64/SpanTreeMtEph.rs:111:48
+    |
+111 |             let it_qt = quotient_tree.elements.iter();
+    |                                                ^^^^ method not found in `HashSetWithViewPlus<Edge<V>>`
+    |
+   ::: src/vstdplus/hash_set_with_view_plus.rs:48:1
+    |
+ 48 | pub struct HashSetWithViewPlus<Key: View + Eq + Hash> {
+    | ----------------------------------------------------- method `iter` not found for this struct
+...
+ 83 |     fn iter(&self) -> (r: HashSetWithViewPlusIter<'_, Key>)
+    |        ---- the method is available for `vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus<Types::Types::Edge<V>>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: the full name for the type has been written to 'lib.long-type-5346303567233491808.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: one of the expressions' fields has a method of the same name
+    |
+111 |             let it_qt = quotient_tree.elements.inner.iter();
+    |                                                ++++++
+help: trait `HashSetWithViewPlusTrait` which provides `iter` is implemented but not in scope; perhaps you want to import it
+    |
+  8 +     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
+    |
+
+error[E0599]: no method named `iter` found for struct `vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus<Key>` in the current scope
+   --> src/Chap64/SpanTreeMtEph.rs:123:57
+    |
+123 |                 let mut it_oe = original_edges.elements.iter();
+    |                                                         ^^^^ method not found in `HashSetWithViewPlus<Edge<V>>`
+    |
+   ::: src/vstdplus/hash_set_with_view_plus.rs:48:1
+    |
+ 48 | pub struct HashSetWithViewPlus<Key: View + Eq + Hash> {
+    | ----------------------------------------------------- method `iter` not found for this struct
+...
+ 83 |     fn iter(&self) -> (r: HashSetWithViewPlusIter<'_, Key>)
+    |        ---- the method is available for `vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus<Types::Types::Edge<V>>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: the full name for the type has been written to 'lib.long-type-5346303567233491808.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: one of the expressions' fields has a method of the same name
+    |
+123 |                 let mut it_oe = original_edges.elements.inner.iter();
+    |                                                         ++++++
+help: trait `HashSetWithViewPlusTrait` which provides `iter` is implemented but not in scope; perhaps you want to import it
+    |
+  8 +     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
+    |
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 9023MB, peak z3 RSS: 0MB, min free: 13003MB
+Sampled CPU Usage: rust_verify: 229s, z3 children: 205s

@@ -1,0 +1,28 @@
+error: assertion failed
+    --> src/Chap43/OrderedTableStPer.rs:2351:36
+     |
+2351 | ...                   assert(sorted@[i as int].0 != k@) by { reveal(obeys_view_eq); };
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStPer.rs:2381:36
+     |
+2381 | ...                   assert(sorted@[i as int].0 != k@) by { reveal(obeys_view_eq); };
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStPer.rs:2391:40
+     |
+2391 |                         proof { assert(sorted@[i as int].0 == k@) by { reveal(obeys_view_eq); }; }
+     |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(sorted.view().index(i).0 == k.view()) 
+
+verification results:: 4369 verified, 1 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 60s

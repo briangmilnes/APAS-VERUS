@@ -1,0 +1,628 @@
+error: recursive function must have a decreases clause
+   --> src/Chap37/BSTSetSplayMtEph.rs:222:9
+    |
+222 |         fn union(&self, other: &Self) -> Self {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: to disable this check, use #[verifier::exec_allows_no_decreases_clause] on the function
+
+error: postcondition not satisfied
+    --> src/Chap37/BSTSplayMtEph.rs:1646:21
+     |
+1646 |               ensures tree.spec_bstsplaymteph_wf();
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1708 | /             BSTSplayMtEph {
+1709 | |                 root: RwLock::new(link, Ghost(BSTSplayMtEphInv)),
+1710 | |                 ghost_root: Ghost(ghost_link),
+1711 | |             }
+     | |_____________- at the end of the function body
+
+error: constructed value may fail to meet its declared type invariant
+    --> src/Chap37/BSTSplayMtEph.rs:1708:13
+     |
+1624 |           spec fn wf(self) -> bool {
+     |                ------------------- type invariant declared here
+...
+1708 | /             BSTSplayMtEph {
+1709 | |                 root: RwLock::new(link, Ghost(BSTSplayMtEphInv)),
+1710 | |                 ghost_root: Ghost(ghost_link),
+1711 | |             }
+     | |_____________^
+
+error: precondition not satisfied
+    --> src/Chap37/BSTSplayMtEph.rs:1709:23
+     |
+1709 |                 root: RwLock::new(link, Ghost(BSTSplayMtEphInv)),
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/rwlock.rs:504:12
+     |
+     = note: failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+tmp%.wf()
+|   link_spec_size(tmp%.ghost_root) <= UnsignedMax.Exec(usize::BITS) 
++---
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSplayMtEph.rs:143:18
+    |
+126 |         requires link_spec_size(*link) <= usize::MAX as nat,
+    |                  ------------------------------------------ failed precondition
+...
+143 |         let ls = size_link(&node.left);
+    |                  ^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSplayMtEph.rs:144:18
+    |
+126 |         requires link_spec_size(*link) <= usize::MAX as nat,
+    |                  ------------------------------------------ failed precondition
+...
+144 |         let rs = size_link(&node.right);
+    |                  ^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+link_spec_size(tmp%) <= UnsignedMax.Exec(usize::BITS) 
+
+error: assertion failed
+    --> src/Chap37/BSTSplayMtEph.rs:1118:40
+     |
+1118 | ...                   assert(spec_is_bst_link(Some(right))) by {
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_is_bst_link(Some(right))
+|   let tmp%% = Some(right);
+|       tmp%% is None ==>
+|           true ✔
+|       !(tmp%% is None) ==>
+|           let node = tmp%%.0;
+|               spec_is_bst_link(node.left) ✔
+|               spec_is_bst_link(node.right) ✔
+|               forall |x|
+|                   link_contains(node.left, x) ==>
+|                       x.le(node.key) ✔
+|                       !(x == node.key) ✔
+|               forall |x|
+|                   link_contains(node.right, x) ==>
+|                       node.key.le(x) ✔
+|                       !(x == node.key) ✔
++---
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+error: postcondition not satisfied
+    --> src/Chap37/BSTSplayMtEph.rs:1651:21
+     |
+1651 | /                     match r {
+1652 | |                         Ok(_) => link_spec_size(self@) <= link_spec_size(old(self)@) + 1,
+1653 | |                         Err(_) => self@ == old(self)@,
+1654 | |                     };
+     | |_____________________^ failed this postcondition
+...
+1719 | /             if sz < usize::MAX {
+1720 | |                 insert_link(&mut current, value);
+1721 | |                 let ghost new_root = current;
+1722 | |                 self.ghost_root = Ghost(new_root);
+...    |
+1727 | |                 Err(())
+1728 | |             }
+     | |_____________- at the end of the function body
+
+error: constructed value may fail to meet its declared type invariant
+    --> src/Chap37/BSTSplayMtEph.rs:1722:17
+     |
+1624 |         spec fn wf(self) -> bool {
+     |              ------------------- type invariant declared here
+...
+1722 |                 self.ghost_root = Ghost(new_root);
+     |                 ^^^^
+
+note: 
+
+tmp%.wf()
+|   link_spec_size(tmp%.ghost_root) <= UnsignedMax.Exec(usize::BITS) 
++---
+
+error: precondition not satisfied
+    --> src/Chap37/BSTSplayMtEph.rs:1734:25
+     |
+1282 |         requires spec_is_bst_link(*link),
+     |                  ----------------------- failed precondition
+...
+1734 |             let found = find_link(handle.borrow(), target).is_some();
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+  --> src/Chap37/BSTSplayMtEph.rs:95:17
+   |
+95 |                 spec_is_bst_link(node.left)
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+96 |                 && spec_is_bst_link(node.right)
+   |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+97 |                 && (forall|x: T| (#[trigger] link_contains(node.left, x)) ==>
+98 |                     TotalOrder::le(x, node.key) && x != node.key)
+   |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^
+
+note: 
+
+spec_is_bst_link(tmp%)
+|   let tmp%% = tmp%;
+|       tmp%% is None ==>
+|           true ✔
+|       !(tmp%% is None) ==>
+|           let node = tmp%%.0;
+|               spec_is_bst_link(node.left) ✘
+|                   reached fuel limit for recursion
+|               spec_is_bst_link(node.right) ✘
+|                   reached fuel limit for recursion
+|               forall |x|
+|                   link_contains(node.left, x) ==>
+|                       x.le(node.key) ✘
+|                           trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|                       !(x == node.key) ✘
+|               forall |x|
+|                   link_contains(node.right, x) ==>
+|                       node.key.le(x) 
+|                       !(x == node.key) 
++---
+
+error: precondition not satisfied
+    --> src/Chap37/BSTSplayMtEph.rs:1761:21
+     |
+1577 |         requires link_height(*link) < usize::MAX as nat,
+     |                  -------------------------------------- failed precondition
+...
+1761 |             let h = height_rec(handle.borrow());
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+link_height(tmp%) < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+    --> src/Chap37/BSTSplayMtEph.rs:1769:25
+     |
+1282 |         requires spec_is_bst_link(*link),
+     |                  ----------------------- failed precondition
+...
+1769 |             let found = find_link(handle.borrow(), target).cloned();
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_is_bst_link(tmp%)
+|   let tmp%% = tmp%;
+|       tmp%% is None ==>
+|           true ✔
+|       !(tmp%% is None) ==>
+|           let node = tmp%%.0;
+|               spec_is_bst_link(node.left) ✘
+|                   reached fuel limit for recursion
+|               spec_is_bst_link(node.right) ✘
+|                   reached fuel limit for recursion
+|               forall |x|
+|                   link_contains(node.left, x) ==>
+|                       x.le(node.key) ✘
+|                           trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|                       !(x == node.key) ✘
+|               forall |x|
+|                   link_contains(node.right, x) ==>
+|                       node.key.le(x) 
+|                       !(x == node.key) 
++---
+
+error: precondition not satisfied
+    --> src/Chap37/BSTSplayMtEph.rs:1776:23
+     |
+1319 |         requires spec_is_bst_link(*link),
+     |                  ----------------------- failed precondition
+...
+1776 |             let min = min_link(handle.borrow()).cloned();
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_is_bst_link(tmp%)
+|   let tmp%% = tmp%;
+|       tmp%% is None ==>
+|           true ✔
+|       !(tmp%% is None) ==>
+|           let node = tmp%%.0;
+|               spec_is_bst_link(node.left) ✘
+|                   reached fuel limit for recursion
+|               spec_is_bst_link(node.right) ✘
+|                   reached fuel limit for recursion
+|               forall |x|
+|                   link_contains(node.left, x) ==>
+|                       x.le(node.key) ✘
+|                           trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|                       !(x == node.key) ✘
+|               forall |x|
+|                   link_contains(node.right, x) ==>
+|                       node.key.le(x) 
+|                       !(x == node.key) 
++---
+
+error: precondition not satisfied
+    --> src/Chap37/BSTSplayMtEph.rs:1783:23
+     |
+1367 |         requires spec_is_bst_link(*link),
+     |                  ----------------------- failed precondition
+...
+1783 |             let max = max_link(handle.borrow()).cloned();
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_is_bst_link(tmp%)
+|   let tmp%% = tmp%;
+|       tmp%% is None ==>
+|           true ✔
+|       !(tmp%% is None) ==>
+|           let node = tmp%%.0;
+|               spec_is_bst_link(node.left) ✘
+|                   reached fuel limit for recursion
+|               spec_is_bst_link(node.right) ✘
+|                   reached fuel limit for recursion
+|               forall |x|
+|                   link_contains(node.left, x) ==>
+|                       x.le(node.key) ✘
+|                           trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|                       !(x == node.key) ✘
+|               forall |x|
+|                   link_contains(node.right, x) ==>
+|                       node.key.le(x) 
+|                       !(x == node.key) 
++---
+
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:243:22
+    |
+243 |                 st = st.insert(vals[i].clone());
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:288:17
+    |
+288 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:288:17
+    |
+288 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+clip(nat, tmp%.view().len() + 1) < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:261:34
+    |
+261 |             let inner_filtered = handle.borrow().filter(f, Ghost(spec_pred));
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:225:17
+    |
+225 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:225:17
+    |
+225 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+forall |t|
+    ClosureReq(f, (t)) 
+forall |x, keep|
+    ClosureEns(f, (x), keep) ==>
+        keep == spec_pred(x.view()) 
+
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:283:29
+    |
+283 |             let common_st = self_handle.borrow().intersection(other_handle.borrow());
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:242:17
+    |
+242 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:242:17
+    |
+242 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+tmp%.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:302:32
+    |
+302 |             let remaining_st = self_handle.borrow().difference(other_handle.borrow());
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:252:17
+    |
+252 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:252:17
+    |
+252 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+tmp%.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:321:31
+    |
+321 |             let combined_st = self_handle.borrow().union(other_handle.borrow());
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:262:17
+    |
+262 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:262:17
+    |
+262 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+tmp%.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+clip(nat, tmp%.view().len() + tmp%.view().len()) < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:339:25
+    |
+339 |             let found = handle.borrow().find(x);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:272:17
+    |
+272 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:272:17
+    |
+272 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:351:30
+    |
+351 |             let updated_st = handle.borrow().delete(x);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:279:17
+    |
+279 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:279:17
+    |
+279 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:368:30
+    |
+368 |             let updated_st = handle.borrow().insert(x);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:288:17
+    |
+288 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+clip(nat, tmp%.view().len() + 1) < UnsignedMax.Exec(usize::BITS) 
+
+error: postcondition not satisfied
+   --> vstd/std_specs/cmp.rs:51:12
+    |
+    = note: failed this postcondition
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:416:13
+    |
+416 |             ord
+    |             --- at the end of the function body
+
+note: diagnostics via expansion
+ --> vstd/std_specs/cmp.rs:51:47
+
+note: 
+
+obeys_partial_cmp_spec() ==>
+    %return =~= old(self).partial_cmp_spec(old(other))
+    |   %return is None ==>
+    |       old(self).partial_cmp_spec(old(other)) is None ✔
+    |   %return is Some ==>
+    |       old(self).partial_cmp_spec(old(other)) is Some ✘
+    |       %return.0 =~= old(self).partial_cmp_spec(old(other)).0 ✘
+    |       |   %return.0 is Less ==>
+    |       |       old(self).partial_cmp_spec(old(other)).0 is Less ✘
+    |       |   %return.0 is Equal ==>
+    |       |       old(self).partial_cmp_spec(old(other)).0 is Equal ✘
+    |       |   %return.0 is Greater ==>
+    |       |       old(self).partial_cmp_spec(old(other)).0 is Greater ✘
+    |       +---
+    +---
+
+error: aborting due to 23 previous errors
+
+Elapsed: 57s

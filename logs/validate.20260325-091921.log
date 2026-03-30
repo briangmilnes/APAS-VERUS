@@ -1,0 +1,13 @@
+error: invariant not satisfied at end of loop body
+   --> src/Chap66/BoruvkaStEph.rs:223:21
+    |
+223 | /                     forall|v: V| #[trigger] bridges@.contains_key(v@) ==> {
+224 | |                         let (neighbor, weight, label) = bridges@[v@];
+225 | |                         spec_valid_bridge(v, neighbor, weight, label, edges@)
+226 | |                     },
+    | |_____________________^
+
+verification results:: 4828 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 68s
