@@ -60,7 +60,7 @@ pub mod feq {
     }
 
     // View injectivity: equal views imply equal values
-    pub open spec fn obeys_feq_view_injective<T: Eq + View + Sized>() -> bool {
+    pub closed spec fn obeys_feq_view_injective<T: Eq + View + Sized>() -> bool {
         forall|x: T, y: T| #[trigger] x.view() == #[trigger] y.view() ==> x == y
     }
 
@@ -93,11 +93,20 @@ pub mod feq {
         // obeys_feq_view: x.eq_spec(&y) ==> x@ == y@
     }
 
+    /// Lemma: reveal the body of obeys_feq_view_injective into the caller's context.
+    pub proof fn lemma_reveal_view_injective<T: Eq + View + Sized>()
+        requires obeys_feq_view_injective::<T>(),
+        ensures forall|x: T, y: T| #[trigger] x.view() == #[trigger] y.view() ==> x == y,
+    {
+        reveal(obeys_feq_view_injective);
+    }
+
     /// Lemma: obeys_feq_view_injective implies vstd::relations::injective on view
     pub proof fn lemma_view_injective<T: Eq + View + Sized>()
         requires obeys_feq_view_injective::<T>(),
         ensures vstd::relations::injective(|k: T| k@),
     {
+        lemma_reveal_view_injective::<T>();
         let f = |k: T| k@;
         assert forall |x: T, y: T| #[trigger] f(x) == #[trigger] f(y) implies x == y by {
             // obeys_feq_view_injective gives us: x@ == y@ ==> x == y

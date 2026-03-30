@@ -17,8 +17,11 @@ test_verify_one_file! {
     #[test] arrayseq_loop_loop verus_code! {
         use vstd::prelude::*;
         use apas_verus::Chap18::ArraySeq::ArraySeq::*;
-        
+        use apas_verus::vstdplus::feq::feq::*;
+        broadcast use group_feq_axioms;
+
         fn test_loop_loop() {
+            proof { assert(obeys_feq_full_trigger::<u64>()); }
             let a: ArraySeqS<u64> = ArraySeqS::new(3, 42);
             
             let mut it: ArraySeqIter<u64> = a.iter();
@@ -54,8 +57,11 @@ test_verify_one_file! {
     #[test] arrayseq_for_iter verus_code! {
         use vstd::prelude::*;
         use apas_verus::Chap18::ArraySeq::ArraySeq::*;
+        use apas_verus::vstdplus::feq::feq::*;
+        broadcast use group_feq_axioms;
 
         fn test_for_iter() {
+            proof { assert(obeys_feq_full_trigger::<u64>()); }
             let a: ArraySeqS<u64> = ArraySeqS::new(3, 99);
             
             let it: ArraySeqIter<u64> = a.iter();
@@ -153,6 +159,8 @@ test_verify_one_file! {
         use vstd::prelude::*;
         use apas_verus::Chap18::ArraySeq::ArraySeq::*;
         use apas_verus::vstdplus::monoid::monoid::*;
+        use apas_verus::vstdplus::feq::feq::*;
+        broadcast use group_feq_axioms;
 
         proof fn bitor_is_monoid()
             ensures spec_monoid(|a: u64, b: u64| a | b, 0u64),
@@ -170,6 +178,7 @@ test_verify_one_file! {
         }
 
         fn test_scan() {
+            proof { assert(obeys_feq_full_trigger::<u64>()); }
             let a: ArraySeqS<u64> = ArraySeqS::singleton(7);
 
             let f = |acc: &u64, x: &u64| -> (ret: u64)
@@ -195,6 +204,8 @@ test_verify_one_file! {
         use vstd::prelude::*;
         use apas_verus::Chap18::ArraySeq::ArraySeq::*;
         use apas_verus::vstdplus::monoid::monoid::*;
+        use apas_verus::vstdplus::feq::feq::*;
+        broadcast use group_feq_axioms;
 
         proof fn bitor_is_monoid()
             ensures spec_monoid(|a: u64, b: u64| a | b, 0u64),
@@ -212,6 +223,7 @@ test_verify_one_file! {
         }
 
         fn test_scan_inclusive() {
+            proof { assert(obeys_feq_full_trigger::<u64>()); }
             let a: ArraySeqS<u64> = ArraySeqS::singleton(7);
 
             let f = |acc: &u64, x: &u64| -> (ret: u64)
@@ -235,8 +247,11 @@ test_verify_one_file! {
     #[test] arrayseq_filter verus_code! {
         use vstd::prelude::*;
         use apas_verus::Chap18::ArraySeq::ArraySeq::*;
+        use apas_verus::vstdplus::feq::feq::*;
+        broadcast use group_feq_axioms;
 
         fn test_filter() {
+            proof { assert(obeys_feq_full_trigger::<u64>()); }
             let a: ArraySeqS<u64> = ArraySeqS::singleton(7);
 
             // Keep values > 5.
@@ -259,8 +274,11 @@ test_verify_one_file! {
     #[test] arrayseq_iterate_prefixes verus_code! {
         use vstd::prelude::*;
         use apas_verus::Chap18::ArraySeq::ArraySeq::*;
+        use apas_verus::vstdplus::feq::feq::*;
+        broadcast use group_feq_axioms;
 
         fn test_iterate_prefixes() {
+            proof { assert(obeys_feq_full_trigger::<u64>()); }
             let a: ArraySeqS<u64> = ArraySeqS::singleton(10);
 
             let f = |acc: &u64, x: &u64| -> (ret: u64)

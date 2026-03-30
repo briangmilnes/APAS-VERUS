@@ -1,0 +1,17 @@
+error[E0425]: cannot find function `lemma_reveal_view_injective` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:149:9
+    |
+149 |         lemma_reveal_view_injective::<T>();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::vstdplus::feq::feq::lemma_reveal_view_injective;
+    |
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 298MB, peak z3 RSS: 0MB, min free: 22202MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

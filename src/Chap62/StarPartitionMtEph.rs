@@ -19,7 +19,7 @@ pub mod StarPartitionMtEph {
     use crate::vstdplus::rand::rand::{seeded_rng, random_bool_seeded};
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::{obeys_feq_view_injective, obeys_feq_full};
+    use crate::vstdplus::feq::feq::{obeys_feq_view_injective, obeys_feq_full, lemma_reveal_view_injective};
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
@@ -138,7 +138,7 @@ pub mod StarPartitionMtEph {
                             assert(vertex_to_index@[jv] as usize == j);
                         } else {
                             // jv == iv (view-equal). By obeys_feq_view_injective, value-equal.
-                            assert(obeys_feq_view_injective::<V>());
+                            lemma_reveal_view_injective::<V>();
                             assert(vertices_vec@[j as int] == vertices_vec@[i as int]);
                             assert(vertices_vec@.no_duplicates());
                             assert(false);
@@ -197,7 +197,7 @@ pub mod StarPartitionMtEph {
                         if jjv != jv2 {
                             assert(coin_flips@.contains_key(jjv));
                         } else {
-                            assert(obeys_feq_view_injective::<V>());
+                            lemma_reveal_view_injective::<V>();
                             assert(vertices_vec@[jj as int] == vertices_vec@[j as int]);
                             assert(vertices_vec@.no_duplicates());
                             assert(false);
@@ -608,6 +608,7 @@ pub mod StarPartitionMtEph {
             partition_map.insert(vertex.clone_view(), center.clone_view());
 
             proof {
+                lemma_reveal_view_injective::<V>();
                 assert(partition_map@ == pre_pm.insert(qv, center));
                 assert(cv == p_vec@[q as int]@);
                 assert(partition_map@[qv]@ == cv);
@@ -621,7 +622,6 @@ pub mod StarPartitionMtEph {
                         assert(partition_map@[jv] == pre_pm[jv]);
                     } else {
                         // jv == qv (view-equal). By obeys_feq_view_injective, value-equal.
-                        assert(obeys_feq_view_injective::<V>());
                         assert(vertices_vec@[j2 as int] == vertices_vec@[q as int]);
                         assert(vertices_vec@.no_duplicates());
                         assert(false);

@@ -321,6 +321,7 @@ verus! {
                 match it.next() {
                     None => {
                         proof {
+                            lemma_reveal_view_injective::<LabEdge<V, u32>>();
                             lemma_seq_fold_left_plus_is_weighted_seq_sum::<LabEdge<V, u32>, V::V, V::V>(wa_seq);
                             lemma_fold_left_int_equals_nat_as_int::<LabEdge<V, u32>, V::V, V::V>(wa_seq);
                             lemma_weighted_seq_fold_equals_set_fold(wa_seq.map(|_i: int, e: LabEdge<V, u32>| e@));

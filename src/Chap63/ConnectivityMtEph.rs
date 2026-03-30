@@ -21,6 +21,8 @@ pub mod ConnectivityMtEph {
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_view_injective;
     use crate::Chap62::StarContractionMtEph::StarContractionMtEph::star_contract_mt;
 
     verus! {
@@ -127,7 +129,7 @@ pub mod ConnectivityMtEph {
     ) -> (composed: HashMapWithViewPlus<V, V>)
         requires
             obeys_key_model::<V>(),
-            forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            obeys_feq_view_injective::<V>(),
         ensures
             forall|k: V::V| #[trigger] composed@.contains_key(k) ==> partition_map@.contains_key(k),
     {
@@ -137,7 +139,7 @@ pub mod ConnectivityMtEph {
         for pair in iter: it
             invariant
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
                 forall|k: V::V| #[trigger] result@.contains_key(k) ==> partition_map@.contains_key(k),
         {
             let (u_ref, v_ref) = pair;
@@ -194,7 +196,7 @@ pub mod ConnectivityMtEph {
             requires
                 vertices.spec_setsteph_wf(),
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
             ensures r.0@ == vertices@,
         {
             let mut map = HashMapWithViewPlus::new();
@@ -204,7 +206,7 @@ pub mod ConnectivityMtEph {
                 invariant
                     iter.elements == elem_seq,
                     obeys_key_model::<V>(),
-                    forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                    obeys_feq_view_injective::<V>(),
             {
                 let _ = map.insert(v.clone(), v.clone());
             }
@@ -219,7 +221,7 @@ pub mod ConnectivityMtEph {
             -> (expanded: (SetStEph<V>, HashMapWithViewPlus<V, V>))
             requires
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
         {
             let (reps, component_map) = reps_and_map;
             let mut result_map = HashMapWithViewPlus::new();
@@ -227,7 +229,7 @@ pub mod ConnectivityMtEph {
             for pair in iter: it
                 invariant
                     obeys_key_model::<V>(),
-                    forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                    obeys_feq_view_injective::<V>(),
             {
                 let (u, v) = pair;
                 let component = component_map.get(v).unwrap_or(v);

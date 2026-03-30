@@ -1,0 +1,236 @@
+error: precondition not satisfied
+    --> src/Chap06/WeightedDirGraphStEphI16.rs:325:29
+     |
+ 325 | ...                   lemma_signed_weighted_seq_fold_equals_set_fold_i16(wa_seq.map(|_i: int, e: LabEdge<V, i16>| e@));
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/seq_set.rs:1114:14
+     |
+1114 |     requires seq.no_duplicates(),
+     |              ------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+    --> src/Chap06/WeightedDirGraphStEphI128.rs:342:29
+     |
+ 342 | ...                   lemma_signed_weighted_seq_fold_equals_set_fold_i128(wa_seq.map(|_i: int, e: LabEdge<V, i128>| e@));
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/seq_set.rs:1240:14
+     |
+1240 |     requires seq.no_duplicates(),
+     |              ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+    --> src/Chap06/WeightedDirGraphStEphI32.rs:325:29
+     |
+ 325 | ...                   lemma_signed_weighted_seq_fold_equals_set_fold(wa_seq.map(|_i: int, e: LabEdge<V, i32>| e@));
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/seq_set.rs:1157:14
+     |
+1157 |     requires seq.no_duplicates(),
+     |              ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+    --> src/Chap06/WeightedDirGraphStEphI64.rs:325:29
+     |
+ 325 | ...                   lemma_signed_weighted_seq_fold_equals_set_fold_i64(wa_seq.map(|_i: int, e: LabEdge<V, i64>| e@));
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/seq_set.rs:1198:14
+     |
+1198 |     requires seq.no_duplicates(),
+     |              ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+    --> src/Chap06/WeightedDirGraphStEphI8.rs:325:29
+     |
+ 325 | ...                   lemma_signed_weighted_seq_fold_equals_set_fold_i8(wa_seq.map(|_i: int, e: LabEdge<V, i8>| e@));
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/seq_set.rs:1072:14
+     |
+1072 |     requires seq.no_duplicates(),
+     |              ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+    --> src/Chap06/WeightedDirGraphStEphIsize.rs:325:29
+     |
+ 325 | ...                   lemma_signed_weighted_seq_fold_equals_set_fold_isize(wa_seq.map(|_i: int, e: LabEdge<V, isize>| e@));
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/seq_set.rs:1282:14
+     |
+1282 |     requires seq.no_duplicates(),
+     |              ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+   --> src/Chap06/WeightedDirGraphStEphU128.rs:326:29
+    |
+326 | ...                   lemma_weighted_seq_fold_equals_set_fold_u128(wa_seq.map(|_i: int, e: LabEdge<V, u128>| e@));
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/seq_set.rs:978:14
+    |
+978 |     requires seq.no_duplicates(),
+    |              ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+   --> src/Chap06/WeightedDirGraphStEphU16.rs:326:29
+    |
+326 | ...                   lemma_weighted_seq_fold_equals_set_fold_u16(wa_seq.map(|_i: int, e: LabEdge<V, u16>| e@));
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/seq_set.rs:879:14
+    |
+879 |     requires seq.no_duplicates(),
+    |              ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+   --> src/Chap06/WeightedDirGraphStEphU32.rs:326:29
+    |
+326 | ...                   lemma_weighted_seq_fold_equals_set_fold(wa_seq.map(|_i: int, e: LabEdge<V, u32>| e@));
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/seq_set.rs:667:9
+    |
+667 |         seq.no_duplicates(),
+    |         ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+   --> src/Chap06/WeightedDirGraphStEphU64.rs:326:29
+    |
+326 | ...                   lemma_weighted_seq_fold_equals_set_fold_u64(wa_seq.map(|_i: int, e: LabEdge<V, u64>| e@));
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/seq_set.rs:928:14
+    |
+928 |     requires seq.no_duplicates(),
+    |              ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+   --> src/Chap06/WeightedDirGraphStEphU8.rs:326:29
+    |
+326 | ...                   lemma_weighted_seq_fold_equals_set_fold_u8(wa_seq.map(|_i: int, e: LabEdge<V, u8>| e@));
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/seq_set.rs:829:14
+    |
+829 |     requires seq.no_duplicates(),
+    |              ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+    --> src/Chap06/WeightedDirGraphStEphUsize.rs:326:29
+     |
+ 326 | ...                   lemma_weighted_seq_fold_equals_set_fold_usize(wa_seq.map(|_i: int, e: LabEdge<V, usize>| e@));
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/seq_set.rs:1028:14
+     |
+1028 |     requires seq.no_duplicates(),
+     |              ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+verification results:: 1053 verified, 12 errors
+error: aborting due to 12 previous errors
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 1493MB, peak z3 RSS: 308MB, min free: 20767MB
+Sampled CPU Usage: rust_verify: 14s, z3 children: 10s

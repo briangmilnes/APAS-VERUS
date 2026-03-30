@@ -609,6 +609,7 @@ verus! {
                             }
                             if count > 1 {
                                 proof {
+                                    lemma_reveal_view_injective::<SetStEph<T>>();
                                     let prev_idx = match prev_found_index { Some(i) => i, None => arbitrary() };
                                     lemma_seq_index_in_map_to_set(parts_seq, prev_idx);
                                     lemma_seq_index_in_map_to_set(parts_seq, old_pos);
@@ -707,6 +708,7 @@ verus! {
                         }
                     };
                     assert(!iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set().contains(x@)) by {
+                        lemma_reveal_view_injective::<T>();
                         if iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set().contains(x@) {
                             let mapped = iter_seq.take(iter.pos).map(|_i: int, k: T| k@);
                             let j = mapped.lemma_contains_to_index(x@);

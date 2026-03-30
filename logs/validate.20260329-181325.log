@@ -1,0 +1,490 @@
+error: assertion failed
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:289:40
+    |
+289 | ...                   assert(spec_flat_has_key(old_table_seq[slot as int], key));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+  --> src/Chap47/FlatHashTable.rs:47:43
+   |
+47 |             FlatEntry::Occupied(ek, _) => ek == k,
+   |                                           ^^^^^^^
+
+note: 
+
+spec_flat_has_key(old_table_seq.index(slot), key)
+|   let tmp%% = old_table_seq.index(slot);
+|       tmp%% is Occupied && true && true ==>
+|           let ek = tmp%%.0;
+|               ek == key ✘
+|       !(tmp%% is Occupied && true && true) ==>
+|           false ✔
++---
+
+error: assertion failed
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:562:40
+    |
+562 | ...                   assert(spec_flat_has_key(table.table@[slot as int], *key));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_flat_has_key(table.table.view().index(slot), key)
+|   let tmp%% = table.table.view().index(slot);
+|       tmp%% is Occupied && true && true ==>
+|           let ek = tmp%%.0;
+|               ek == key ✘
+|       !(tmp%% is Occupied && true && true) ==>
+|           false ✔
++---
+
+error: assertion failed
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:696:40
+    |
+696 | ...                   assert(spec_flat_has_key(old_table_seq[slot as int], *key));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_flat_has_key(old_table_seq.index(slot), key)
+|   let tmp%% = old_table_seq.index(slot);
+|       tmp%% is Occupied && true && true ==>
+|           let ek = tmp%%.0;
+|               ek == key ✘
+|       !(tmp%% is Occupied && true && true) ==>
+|           false ✔
++---
+
+error: assertion failed
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:243:40
+    |
+243 | ...                   assert(spec_flat_has_key(old_table_seq[slot as int], key));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_flat_has_key(old_table_seq.index(slot), key)
+|   let tmp%% = old_table_seq.index(slot);
+|       tmp%% is Occupied && true && true ==>
+|           let ek = tmp%%.0;
+|               ek == key ✘
+|       !(tmp%% is Occupied && true && true) ==>
+|           false ✔
++---
+
+error: assertion failed
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:515:40
+    |
+515 | ...                   assert(spec_flat_has_key(table.table@[slot as int], *key));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_flat_has_key(table.table.view().index(slot), key)
+|   let tmp%% = table.table.view().index(slot);
+|       tmp%% is Occupied && true && true ==>
+|           let ek = tmp%%.0;
+|               ek == key ✘
+|       !(tmp%% is Occupied && true && true) ==>
+|           false ✔
++---
+
+error: assertion failed
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:627:40
+    |
+627 | ...                   assert(spec_flat_has_key(old_table_seq[slot as int], *key));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_flat_has_key(old_table_seq.index(slot), key)
+|   let tmp%% = old_table_seq.index(slot);
+|       tmp%% is Occupied && true && true ==>
+|           let ek = tmp%%.0;
+|               ek == key ✘
+|       !(tmp%% is Occupied && true && true) ==>
+|           false ✔
++---
+
+error: loop invariant not satisfied
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:201:25
+    |
+192 | /                         existed ==> found_idx < bucket_len
+193 | |                             && original[found_idx as int].0 == key,
+    | |                                                                  -
+    | |                                                                  |
+    | |__________________________________________________________________failed this invariant
+    |                                                                    (hint: if this is not supposed to be true at the break, use 'invariant_except_break' for it instead of 'invariant', and use 'ensures' for what is true at the break)
+...
+201 |                           break;
+    |                           ^^^^^ at this loop exit
+
+error: precondition not satisfied
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:301:29
+    |
+301 | / ...                   lemma_seq_pairs_last_key_gives_value::<Key, Value>(
+302 | | ...                       bv, *key, i as int);
+    | |_____________________________________________^
+    |
+   ::: src/Chap47/ChainedHashTable.rs:132:17
+    |
+132 |                   pairs[i].0 == key,
+    |                   ----------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap47/ChainedHashTable.rs:132:17
+    |
+132 |                 pairs[i].0 == key,
+    |                 ^^^^^^^^^^^^^^^^^
+
+note: 
+
+let tmp%% = 0;
+    let tmp%% = i;
+        let tmp%% = bv.len();
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✔
+bv.index(i).0 == key ✘
+forall |j|
+    let tmp%% = i in let tmp%% = j in let tmp%% = bv.len() in tmp%% < tmp%% && tmp%% < tmp%% ==>
+        !(bv.index(j).0 == key) ✔
+
+note: recommendation not met
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:271:51
+    |
+271 |                 let ghost bv: Seq<(Key, Value)> = table.table@[index as int].seq@;
+    |                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:349:25
+    |
+349 |                         spec_seq_pairs_to_map(new_seq@) =~= prefix_map.remove(*key),
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:352:25
+    |
+352 | /                         deleted ==> exists |j: int| 0 <= j < i as int
+353 | |                             && (#[trigger] original[j]).0 == *key,
+    | |_________________________________________________________________^
+
+error: assertion failed
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:605:40
+    |
+605 | ...                   assert(spec_flat_has_key(old_table_seq[slot as int], key));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_flat_has_key(old_table_seq.index(slot), key)
+|   let tmp%% = old_table_seq.index(slot);
+|       tmp%% is Occupied && true && true ==>
+|           let ek = tmp%%.0;
+|               ek == key ✘
+|       !(tmp%% is Occupied && true && true) ==>
+|           false ✔
++---
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:843:29
+    |
+843 |                   let s_wit = choose |s: int| #![trigger old(table).table@[s]]
+    |  _____________________________^
+844 | |                     0 <= s < old(table).table@.len() && old(table).table@[s] is Empty;
+    | |_____________________________________________________________________________________^
+
+note: recommendation not met
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:845:24
+    |
+845 |                 assert(table.table@[s_wit] is Empty);
+    |                        ^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: assertion failed
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:888:40
+    |
+888 | ...                   assert(spec_flat_has_key(table.table@[slot as int], *key));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_flat_has_key(table.table.view().index(slot), key)
+|   let tmp%% = table.table.view().index(slot);
+|       tmp%% is Occupied && true && true ==>
+|           let ek = tmp%%.0;
+|               ek == key ✘
+|       !(tmp%% is Occupied && true && true) ==>
+|           false ✔
++---
+
+error: assertion failed
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1012:40
+     |
+1012 | ...                   assert(spec_flat_has_key(old_table_seq[slot as int], *key));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_flat_has_key(old_table_seq.index(slot), key)
+|   let tmp%% = old_table_seq.index(slot);
+|       tmp%% is Occupied && true && true ==>
+|           let ek = tmp%%.0;
+|               ek == key ✘
+|       !(tmp%% is Occupied && true && true) ==>
+|           false ✔
++---
+
+error: postcondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:132:17
+    |
+132 |                   spec_chain_to_map(inserted.0) == spec_chain_to_map(chain).insert(key, value),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+137 | /             match chain {
+138 | |                 None => {
+139 | |                     let out = Some(Box::new(Node { key, value, next: None }));
+140 | |                     proof {
+...   |
+174 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:133:17
+    |
+133 |                   inserted.1 == spec_chain_to_map(chain).dom().contains(key),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+137 | /             match chain {
+138 | |                 None => {
+139 | |                     let out = Some(Box::new(Node { key, value, next: None }));
+140 | |                     proof {
+...   |
+174 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:134:17
+    |
+134 |                   spec_chain_keys_unique(chain) ==> spec_chain_keys_unique(inserted.0),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+137 | /             match chain {
+138 | |                 None => {
+139 | |                     let out = Some(Box::new(Node { key, value, next: None }));
+140 | |                     proof {
+...   |
+174 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap47/StructChainedHashTable.rs:81:22
+    |
+ 81 |                     !spec_chain_to_map(node.next).dom().contains(node.key)
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+132 |                 spec_chain_to_map(inserted.0) == spec_chain_to_map(chain).insert(key, value),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+133 |                 inserted.1 == spec_chain_to_map(chain).dom().contains(key),
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+134 |                 spec_chain_keys_unique(chain) ==> spec_chain_keys_unique(inserted.0),
+    |                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+inserted.0 is Some ✔
+spec_chain_to_map(inserted.0) =~= spec_chain_to_map(old(chain)).insert(old(key), old(value)) ✘
+inserted.1 == spec_chain_to_map(old(chain)).dom().contains(old(key)) ✘
+|   inserted.1 ==>
+|       spec_chain_to_map(old(chain)).dom().contains(old(key)) ✘
+|           function is uninterpreted
+|   spec_chain_to_map(old(chain)).dom().contains(old(key)) ==>
+|       inserted.1 ✔
++---
+spec_chain_keys_unique(old(chain)) ==>
+    spec_chain_keys_unique(inserted.0) ✘
+    |   let tmp%% = inserted.0;
+    |       tmp%% is None ==>
+    |           true ✔
+    |       !(tmp%% is None) ==>
+    |           let node = tmp%%.0;
+    |               !(spec_chain_to_map(node.next).dom().contains(node.key)) ✘
+    |                   function is uninterpreted
+    |               spec_chain_keys_unique(node.next) ✔
+    +---
+
+error: postcondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:185:17
+    |
+185 | /                 spec_chain_to_map(*chain).dom().contains(*key)
+186 | |                     ==> found == Some(spec_chain_to_map(*chain)[*key]),
+    | |______________________________________________________________________^ failed this postcondition
+...
+191 | /             match chain {
+192 | |                 None => {
+193 | |                     proof { reveal_with_fuel(spec_chain_to_map, 1); }
+194 | |                     None
+...   |
+215 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:187:17
+    |
+187 | /                 !spec_chain_to_map(*chain).dom().contains(*key)
+188 | |                     ==> found is None,
+    | |_____________________________________^ failed this postcondition
+...
+191 | /             match chain {
+192 | |                 None => {
+193 | |                     proof { reveal_with_fuel(spec_chain_to_map, 1); }
+194 | |                     None
+...   |
+215 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap47/StructChainedHashTable.rs:186:25
+    |
+186 |                     ==> found == Some(spec_chain_to_map(*chain)[*key]),
+    |                         ^^^^^
+187 |                 !spec_chain_to_map(*chain).dom().contains(*key)
+188 |                     ==> found is None,
+    |                         ^^^^^^^^^^^^^
+
+note: 
+
+spec_chain_to_map(old(chain)).dom().contains(old(key)) ==>
+    found =~= Some(spec_chain_to_map(old(chain)).index(old(key))) ✘
+    |   !(found is None) ✔
+    |   found is Some ==>
+    |       found.0 =~= spec_chain_to_map(old(chain)).index(old(key)) ✘
+    +---
+!(spec_chain_to_map(old(chain)).dom().contains(old(key))) ==>
+    found is None ✘
+
+error: postcondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:225:17
+    |
+225 | /                 spec_chain_to_map(remaining_and_deleted.0)
+226 | |                     == spec_chain_to_map(chain).remove(*key),
+    | |____________________________________________________________^ failed this postcondition
+...
+232 | /             match chain {
+233 | |                 None => {
+234 | |                     proof { reveal_with_fuel(spec_chain_to_map, 1); }
+235 | |                     (None, false)
+...   |
+264 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:227:17
+    |
+227 | /                 remaining_and_deleted.1
+228 | |                     == spec_chain_to_map(chain).dom().contains(*key),
+    | |____________________________________________________________________^ failed this postcondition
+...
+232 | /             match chain {
+233 | |                 None => {
+234 | |                     proof { reveal_with_fuel(spec_chain_to_map, 1); }
+235 | |                     (None, false)
+...   |
+264 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap47/StructChainedHashTable.rs:225:17
+    |
+225 | /                 spec_chain_to_map(remaining_and_deleted.0)
+226 | |                     == spec_chain_to_map(chain).remove(*key),
+    | |____________________________________________________________^
+227 |                   remaining_and_deleted.1
+228 |                       == spec_chain_to_map(chain).dom().contains(*key),
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_chain_to_map(remaining_and_deleted.0) =~= spec_chain_to_map(old(chain)).remove(old(key)) ✘
+remaining_and_deleted.1 == spec_chain_to_map(old(chain)).dom().contains(old(key)) ✘
+|   remaining_and_deleted.1 ==>
+|       spec_chain_to_map(old(chain)).dom().contains(old(key)) ✘
+|           function is uninterpreted
+|   spec_chain_to_map(old(chain)).dom().contains(old(key)) ==>
+|       remaining_and_deleted.1 ✔
++---
+spec_chain_keys_unique(old(chain)) ==>
+    spec_chain_keys_unique(remaining_and_deleted.0) ✔
+
+error: loop invariant not satisfied
+   --> src/Chap47/VecChainedHashTableStEph.rs:202:25
+    |
+193 | /                         existed ==> found_idx < bucket_len
+194 | |                             && original[found_idx as int].0 == key,
+    | |                                                                  -
+    | |                                                                  |
+    | |__________________________________________________________________failed this invariant
+    |                                                                    (hint: if this is not supposed to be true at the break, use 'invariant_except_break' for it instead of 'invariant', and use 'ensures' for what is true at the break)
+...
+202 |                           break;
+    |                           ^^^^^ at this loop exit
+
+error: precondition not satisfied
+   --> src/Chap47/VecChainedHashTableStEph.rs:303:29
+    |
+303 | / ...                   lemma_seq_pairs_last_key_gives_value::<Key, Value>(
+304 | | ...                       bv, *key, i as int);
+    | |_____________________________________________^
+    |
+   ::: src/Chap47/ChainedHashTable.rs:132:17
+    |
+132 |                   pairs[i].0 == key,
+    |                   ----------------- failed precondition
+
+note: 
+
+let tmp%% = 0;
+    let tmp%% = i;
+        let tmp%% = bv.len();
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✔
+bv.index(i).0 == key ✘
+forall |j|
+    let tmp%% = i in let tmp%% = j in let tmp%% = bv.len() in tmp%% < tmp%% && tmp%% < tmp%% ==>
+        !(bv.index(j).0 == key) ✔
+
+note: recommendation not met
+   --> src/Chap47/VecChainedHashTableStEph.rs:271:51
+    |
+271 |                 let ghost bv: Seq<(Key, Value)> = table.table@[index as int]@;
+    |                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap47/VecChainedHashTableStEph.rs:350:25
+    |
+350 |                         spec_seq_pairs_to_map(new_bucket@) =~= prefix_map.remove(*key),
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap47/VecChainedHashTableStEph.rs:353:25
+    |
+353 | /                         deleted ==> exists |j: int| 0 <= j < i as int
+354 | |                             && (#[trigger] original[j]).0 == *key,
+    | |_________________________________________________________________^
+
+verification results:: 1133 verified, 18 errors
+error: aborting due to 24 previous errors
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 939MB, peak z3 RSS: 284MB, min free: 21162MB
+Sampled CPU Usage: rust_verify: 9s, z3 children: 9s

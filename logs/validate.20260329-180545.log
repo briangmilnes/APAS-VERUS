@@ -1,0 +1,178 @@
+error: assertion failed
+   --> src/Chap41/AVLTreeSetStPer.rs:153:21
+    |
+153 |             implies #[trigger] a[k] == b[k] by {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+a.index(k) == b.index(k) 
+
+error: invariant not satisfied before loop
+    --> src/Chap43/OrderedTableStEph.rs:2682:25
+     |
+2682 |                         self@.dom().contains(min_key@),
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2722:32
+     |
+2722 |                         assert(sorted.spec_index(j).0 == t);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+sorted.spec_index(j).0 == t 
+
+error: invariant not satisfied before loop
+    --> src/Chap43/OrderedTableStEph.rs:2769:25
+     |
+2769 |                         self@.dom().contains(max_key@),
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2809:32
+     |
+2809 |                         assert(sorted.spec_index(j).0 == t);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+sorted.spec_index(j).0 == t 
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:2852:21
+     |
+2852 |                     found ==> TotalOrder::le(best->Some_0, *k) && best->Some_0@ != k@,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2924:32
+     |
+2924 |                         assert(sorted.spec_index(j).0 == t);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+sorted.spec_index(j).0 == t 
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:2967:21
+     |
+2967 |                     found ==> TotalOrder::le(*k, best->Some_0) && best->Some_0@ != k@,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:3039:32
+     |
+3039 |                         assert(sorted.spec_index(j).0 == t);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+sorted.spec_index(j).0 == t 
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:3466:36
+     |
+3466 | ...                   assert(pair.0@ != k@);
+     |                              ^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:3505:36
+     |
+3505 | ...                   assert(pair.0@ != k@);
+     |                              ^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:3511:44
+     |
+3511 | ...                   assert(t == pair.0);
+     |                              ^^^^^^^^^^^ assertion failed
+
+note: 
+
+!(pair.0.view() == k.view()) 
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStPer.rs:2262:32
+     |
+2262 |                         assert(sorted.spec_index(j).0 == t);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+sorted.spec_index(j).0 == t 
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStPer.rs:2347:32
+     |
+2347 |                         assert(sorted.spec_index(j).0 == t);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+sorted.spec_index(j).0 == t 
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStPer.rs:2386:21
+     |
+2386 |                     found ==> TotalOrder::le(best->Some_0, *k) && best->Some_0@ != k@,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStPer.rs:2456:32
+     |
+2456 |                         assert(sorted.spec_index(j).0 == t);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+sorted.spec_index(j).0 == t 
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStPer.rs:2495:21
+     |
+2495 |                     found ==> TotalOrder::le(*k, best->Some_0) && best->Some_0@ != k@,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStPer.rs:2565:32
+     |
+2565 |                         assert(sorted.spec_index(j).0 == t);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+sorted.spec_index(j).0 == t 
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStPer.rs:2948:36
+     |
+2948 | ...                   assert(pair.0@ != k@);
+     |                              ^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStPer.rs:2987:36
+     |
+2987 | ...                   assert(pair.0@ != k@);
+     |                              ^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStPer.rs:2993:44
+     |
+2993 | ...                   assert(t == pair.0);
+     |                              ^^^^^^^^^^^ assertion failed
+
+note: 
+
+!(pair.0.view() == k.view()) 
+
+verification results:: 2570 verified, 13 errors
+error: aborting due to 21 previous errors
+
+Elapsed: 30s
+Sampled Memory Usage: peak rust_verify RSS: 4623MB, peak z3 RSS: 548MB, min free: 17473MB
+Sampled CPU Usage: rust_verify: 73s, z3 children: 69s

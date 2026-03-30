@@ -176,6 +176,7 @@ pub mod SCCStEph {
             reversed.push(finish_order[k]);
         }
         assert(reversed@.len() < usize::MAX);
+        proof { assert(obeys_feq_full_trigger::<usize>()); }
         AVLTreeSeqStEphS::from_vec(reversed)
     }
 

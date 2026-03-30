@@ -26,7 +26,7 @@ pub mod StructChainedHashTable {
     use crate::Types::Types::*;
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger};
+    use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger, lemma_reveal_view_injective};
 
     verus! {
 
@@ -150,6 +150,7 @@ pub mod StructChainedHashTable {
                     if eq {
                         let out = Some(Box::new(Node { key, value, next: nn }));
                         proof {
+                            lemma_reveal_view_injective::<Key>();
                             reveal_with_fuel(spec_chain_to_map, 2);
                             reveal_with_fuel(spec_chain_keys_unique, 2);
                         }
@@ -194,7 +195,7 @@ pub mod StructChainedHashTable {
                     None
                 }
                 Some(node) => {
-                    proof { assert(obeys_feq_full_trigger::<Key>()); }
+                    proof { assert(obeys_feq_full_trigger::<Key>()); lemma_reveal_view_injective::<Key>(); }
                     let eq = feq(&node.key, key);
                     if eq {
                         let v = clone_elem(&node.value);
@@ -236,7 +237,7 @@ pub mod StructChainedHashTable {
                 }
                 Some(node) => {
                     let Node { key: nk, value: nv, next: nn } = *node;
-                    proof { assert(obeys_feq_full_trigger::<Key>()); }
+                    proof { assert(obeys_feq_full_trigger::<Key>()); lemma_reveal_view_injective::<Key>(); }
                     let eq = feq(&nk, key);
                     let (new_next, tail_deleted) = chain_delete(nn, key);
                     if eq {

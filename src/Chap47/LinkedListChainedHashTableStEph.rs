@@ -22,7 +22,7 @@ pub mod LinkedListChainedHashTableStEph {
     use crate::Types::Types::*;
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger};
+    use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger, lemma_reveal_view_injective};
 
     verus! {
 
@@ -193,7 +193,7 @@ pub mod LinkedListChainedHashTableStEph {
                             && original[found_idx as int].0 == key,
                     decreases bucket_len - scan_i,
                 {
-                    proof { assert(obeys_feq_full_trigger::<Key>()); }
+                    proof { assert(obeys_feq_full_trigger::<Key>()); lemma_reveal_view_injective::<Key>(); }
                     let eq = feq(&bucket_seq[scan_i].0, &key);
                     if eq {
                         existed = true;
@@ -293,7 +293,7 @@ pub mod LinkedListChainedHashTableStEph {
                     decreases i,
                 {
                     i = i - 1;
-                    proof { assert(obeys_feq_full_trigger::<Key>()); }
+                    proof { assert(obeys_feq_full_trigger::<Key>()); lemma_reveal_view_injective::<Key>(); }
                     let eq = feq(&table.table[index].seq[i].0, key);
                     if eq {
                         let v = clone_elem(&table.table[index].seq[i].1);
@@ -355,7 +355,7 @@ pub mod LinkedListChainedHashTableStEph {
                         obeys_feq_clone::<Value>(),
                     decreases bucket_len - i,
                 {
-                    proof { assert(obeys_feq_full_trigger::<Key>()); }
+                    proof { assert(obeys_feq_full_trigger::<Key>()); lemma_reveal_view_injective::<Key>(); }
                     let eq = feq(&bucket_seq[i].0, key);
 
                     proof {

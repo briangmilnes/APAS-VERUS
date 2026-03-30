@@ -609,6 +609,7 @@ verus! {
                     
                     // Prove a_view is not in the joined_views.
                     assert(!joined_views.contains(a_view)) by {
+                        lemma_reveal_view_injective::<T>();
                         if joined_views.contains(a_view) {
                             // Then exists j in [idx+1, n) with spawned_views[j] == a_view
                             // But spawned_views[idx] == a_view and it_seq.no_duplicates()
@@ -730,6 +731,7 @@ verus! {
                             }
                             if count > 1 {
                                 proof {
+                                    lemma_reveal_view_injective::<SetMtEph<T>>();
                                     let prev_idx = match prev_found_index { Some(i) => i, None => arbitrary() };
                                     lemma_seq_index_in_map_to_set(parts_seq, prev_idx);
                                     lemma_seq_index_in_map_to_set(parts_seq, old_pos);

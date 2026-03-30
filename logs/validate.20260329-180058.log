@@ -1,0 +1,122 @@
+error: assertion failed
+   --> src/Chap05/SetMtEph.rs:611:28
+    |
+611 |                     assert(!joined_views.contains(a_view)) by {
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(joined_views.contains(a_view)) 
+    function is uninterpreted
+
+note: recommendation not met
+   --> src/Chap05/SetMtEph.rs:522:76
+    |
+522 | ...   forall |i: int, ret: SetMtEph<Pair<T, U>>| (#[trigger] handles@[i].predicate(ret) && 0 <= i < handles@.len()) ==> (
+    |                                                              ^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap05/SetMtEph.rs:587:76
+    |
+587 | ...   forall |i: int, ret: SetMtEph<Pair<T, U>>| (#[trigger] handles@[i].predicate(ret) && 0 <= i < handles@.len()) ==> (
+    |                                                              ^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: postcondition not satisfied
+   --> src/Chap05/SetMtEph.rs:259:17
+    |
+259 | /                 partition_on_elt <==> (
+260 | |                     (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x@)) &&
+261 | |                     (forall |s1: Set<T::V>, s2: Set<T::V>|
+262 | |                         #![trigger parts@.contains(s1), parts@.contains(s2)]
+263 | |                         parts@.contains(s1) && s1.contains(x@) &&
+264 | |                         parts@.contains(s2) && s2.contains(x@) ==> s1 == s2)
+265 | |                 );
+    | |_________________^ failed this postcondition
+...
+737 |                                   return false;
+    |                                   ------------ at this exit
+
+note: diagnostics via expansion
+   --> src/Chap05/SetMtEph.rs:259:17
+    |
+259 |                 partition_on_elt <==> (
+    |                 ^^^^^^^^^^^^^^^^
+...
+264 |                         parts@.contains(s2) && s2.contains(x@) ==> s1 == s2)
+    |                                                                    ^^^^^^^^
+
+note: 
+
+%return == ((exists |s| ) && (forall |s1, s2| ))
+|   %return ==>
+|       (exists |s| ) ✔
+|       forall |s1, s2|
+|           old(parts).view().contains(s1) && s1.contains(old(x).view()) && old(parts).view().contains(s2) && s2.contains(old(x).view()) ==>
+|               s1 == s2 ✘
+|   (exists |s| ) && (forall |s1, s2| ) ==>
+|       %return ✘
++---
+
+error: postcondition not satisfied
+   --> src/Chap05/SetStEph.rs:246:17
+    |
+246 | /                 partition_on_elt <==> (
+247 | |                     (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x@)) &&
+248 | |                     (forall |s1: Set<T::V>, s2: Set<T::V>|
+249 | |                         #![trigger parts@.contains(s1), parts@.contains(s2)]
+250 | |                         parts@.contains(s1) && s1.contains(x@) &&
+251 | |                         parts@.contains(s2) && s2.contains(x@) ==> s1 == s2)
+252 | |                 );
+    | |_________________^ failed this postcondition
+...
+616 |                                   return false;
+    |                                   ------------ at this exit
+
+note: diagnostics via expansion
+   --> src/Chap05/SetStEph.rs:246:17
+    |
+246 |                 partition_on_elt <==> (
+    |                 ^^^^^^^^^^^^^^^^
+...
+251 |                         parts@.contains(s2) && s2.contains(x@) ==> s1 == s2)
+    |                                                                    ^^^^^^^^
+
+note: 
+
+%return == ((exists |s| ) && (forall |s1, s2| ))
+|   %return ==>
+|       (exists |s| ) ✔
+|       forall |s1, s2|
+|           old(parts).view().contains(s1) && s1.contains(old(x).view()) && old(parts).view().contains(s2) && s2.contains(old(x).view()) ==>
+|               s1 == s2 ✘
+|   (exists |s| ) && (forall |s1, s2| ) ==>
+|       %return ✘
++---
+
+error: assertion failed
+   --> src/Chap05/SetStEph.rs:709:28
+    |
+709 |                     assert(!iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set().contains(x@)) by {
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+!(iter_seq.subrange(0, iter.pos).map((|_i, k| k.view())).to_set().contains(x.view())) 
+    function is uninterpreted
+
+verification results:: 776 verified, 4 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 455MB, peak z3 RSS: 0MB, min free: 22289MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s
