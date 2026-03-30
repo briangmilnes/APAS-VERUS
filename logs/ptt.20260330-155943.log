@@ -1,0 +1,9 @@
+verification results:: 5388 verified, 0 errors
+    Finished `release` profile [optimized] target(s) in 0.02s
+────────────
+ Nextest run ID c7f1f38d-d913-426e-b56c-d838e1cb1685 with nextest profile: default
+    Starting 0 tests across 48 binaries (221 tests skipped)
+────────────
+     Summary [   0.000s] 0 tests run: 0 passed, 221 skipped
+warning: no tests to run
+Elapsed: 81s

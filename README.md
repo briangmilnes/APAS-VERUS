@@ -668,6 +668,10 @@ We use Verus to prove:
 
 For generic algorithms, we use traits like `TotalOrdered` to abstract over ordering relationships while maintaining provability.
 
+## Scripts
+
+See [docs/scripts.md](docs/scripts.md) for a reference of all scripts in `scripts/`.
+
 ## License
 
 Copyright (C) 2025 Acar, Blelloch and Milnes

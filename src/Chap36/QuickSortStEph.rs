@@ -469,6 +469,11 @@ pub mod QuickSortStEph {
                 lemma_total_ordering::<T>();
                 left_view.lemma_sort_by_ensures(leq);
                 right_view.lemma_sort_by_ensures(leq);
+                // Re-assert partition properties Z3 forgets across &mut quick_sort_first calls.
+                assert(forall|j: int| 0 <= j < left_view.len() ==>
+                    (#[trigger] T::le(left_view[j], pivot)) && left_view[j] != pivot);
+                assert(forall|j: int| 0 <= j < right_view.len() ==>
+                    (#[trigger] T::le(pivot, right_view[j])) && right_view[j] != pivot);
             }
 
             let sorted = Self::concat_three(&left_a, &equals_a, &right_a);
