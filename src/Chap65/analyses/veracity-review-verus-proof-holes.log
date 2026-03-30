@@ -21,40 +21,58 @@ Table of Contents:
 =================================================================
 
 ❌ KruskalStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:40: error: opaque - #[verifier::opaque]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/KruskalStEph.rs:40: error: opaque - #[verifier::opaque]
         41 |         pub open spec fn uf_wf_opaque<V: HashOrd>(uf: &UnionFindStEph<V>) -> bool {
-/home/milnes/projects/APAS-VERUS/src/Chap65/KruskalStEph.rs:49: error: external_body - #[verifier::external_body]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/KruskalStEph.rs:49: error: external_body - #[verifier::external_body]
         50 |         pub fn kruskal_process_edge<V: HashOrd>(
    Holes: 2 total
       1 × external_body
       1 × opaque
    Proof functions: 1 total (1 clean, 0 holed)
 ⚠ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:457: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:457: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        453 |         fn clone(&self) -> (cloned: Self)
             ...
        455 |         {
        456 |             let cloned = PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() };
        458 |             cloned
        459 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:217: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:217: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
 ❌ UnionFindStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1167: error: external_body - #[verifier::external_body]
-      1168 |     fn union_merge<V: StT + Hash>(
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1404: error: external_body [blocked_by: union_merge] - #[verifier::external_body]
-      1405 |         fn union(&mut self, u: &V, v: &V) {
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:918: error: fn_missing_wf_requires - fn union_merge_exec — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
-       894 |     proof fn lemma_union_wf_frame<V: StT + Hash>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindStEph.rs:1683: error: external_body - #[verifier::external_body]
+      1684 |         fn union(&mut self, u: &V, v: &V) {
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindStEph.rs:1693: error: assume() [algorithmic] - assume(self.rank@[root_u@] < self.elements@.len());
+      1684 |         fn union(&mut self, u: &V, v: &V) {
             ...
-       916 |     /// the quantified wf proof, keeping Z3 under 4 GB.
-       917 |     #[verifier::rlimit(30)]
-       919 |         uf: &mut UnionFindStEph<V>,
-       920 |         root_u: V,
-   Holes: 2 total
-      2 × external_body
-         1 × root cause
-         1 × downstream (blocked by root causes)
-   Proof functions: 15 total (15 clean, 0 holed)
+      1691 |                 proof {
+      1692 |                     // BLOCKED: rank bounds not derivable from wf.
+      1694 |                     assume(self.rank@[root_v@] < self.elements@.len());
+      1695 |                 }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindStEph.rs:1694: error: assume() [algorithmic] - assume(self.rank@[root_v@] < self.elements@.len());
+      1684 |         fn union(&mut self, u: &V, v: &V) {
+            ...
+      1692 |                     // BLOCKED: rank bounds not derivable from wf.
+      1693 |                     assume(self.rank@[root_u@] < self.elements@.len());
+      1695 |                 }
+      1696 |                 let info = union_merge(self, root_u, root_v);
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindStEph.rs:958: error: fn_missing_wf_requires - fn union_merge_exec — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
+       934 |     proof fn lemma_union_wf_frame<V: StT + Hash>(
+            ...
+       956 |     /// the quantified wf proof, keeping Z3 under 4 GB.
+       957 |     #[verifier::rlimit(30)]
+       959 |         uf: &mut UnionFindStEph<V>,
+       960 |         root_u: V,
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindStEph.rs:1406: error: fn_missing_wf_requires - fn union_merge — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
+      1356 |     proof fn lemma_union_merge_ensures_bridge<V: StT + Hash>(
+            ...
+      1404 |     /// lemma_union_merge_wf to keep &mut encoding out of the proof context.
+      1405 |     #[verifier::rlimit(30)]
+      1407 |         uf: &mut UnionFindStEph<V>,
+      1408 |         root_u: V,
+   Holes: 3 total
+      2 × assume()
+      1 × external_body
+   Proof functions: 21 total (21 clean, 0 holed)
 
 =================================================================
 2. Depends Upon
@@ -86,27 +104,26 @@ Modules:
    3 total
 
 Proof Functions:
-   20 clean (100%)
+   26 clean (100%)
    0 holed (0%)
-   20 total
+   26 total
 
 Function Specs:
-   29 exec fns with complete spec (requires+ensures) (37%)
+   29 exec fns with complete spec (requires+ensures) (34%)
    2 exec fns missing spec (2%)
-   46 proof/spec fns clean (59%)
+   54 proof/spec fns clean (63%)
    0 proof/spec fns with holes (0%)
-   77 total fns
+   85 total fns
 
 
-Holes Found: 4 (actionable)
-   3 × external_body (75%)
-      2 × root cause
-      1 × downstream (blocked by root causes)
-   1 × opaque (25%)
-Real Proof Targets: 4 (all actionable)
+Holes Found: 5 (actionable)
+   2 × assume() [algorithmic] (40%)
+   2 × external_body (40%)
+   1 × opaque (20%)
+Real Proof Targets: 5 (all actionable)
 
-Warnings: 2 total
-   1 × fn_missing_wf_requires
+Warnings: 3 total
+   2 × fn_missing_wf_requires
    1 × assume_eq_clone_workaround
 
 Structural (info only): 1
@@ -116,13 +133,8 @@ Structural (info only): 1
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-30 07:13:39 -07:00
-Ended:     2026-03-30 07:13:39 -07:00
-Duration:  24ms
-
-Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
--07:00
-Ended:     2026-03-30 07:13:39 -07:00
-Duration:  24ms
+Started:   2026-03-29 23:04:29 -07:00
+Ended:     2026-03-29 23:04:29 -07:00
+Duration:  31ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log

@@ -1,0 +1,42 @@
+error[E0308]: arguments to this function are incorrect
+    --> src/Chap65/UnionFindStEph.rs:1582:17
+     |
+1523 |     pub trait UnionFindStEphTrait<V: StT + Hash>: Sized + View<V = UnionFindStEphV<V>> {
+     |     ----------------------------------------------------------------------------------
+     |     |
+     |     found this type parameter
+     |     found this type parameter
+...
+1582 |                 spec_union_result(self, old(self), u@, v@);
+     |                 ^^^^^^^^^^^^^^^^^
+     |
+note: expected `&UnionFindStEph<_>`, found `&mut Self`
+    --> src/Chap65/UnionFindStEph.rs:1582:35
+     |
+1582 |                 spec_union_result(self, old(self), u@, v@);
+     |                                   ^^^^
+     = note:      expected reference `&Chap65::UnionFindStEph::UnionFindStEph::UnionFindStEph<_>`
+             found mutable reference `&mut Self`
+note: expected `&UnionFindStEph<_>`, found `&mut Self`
+    --> src/Chap65/UnionFindStEph.rs:1582:41
+     |
+1582 |                 spec_union_result(self, old(self), u@, v@);
+     |                                         ^^^^^^^^^
+     = note:      expected reference `&Chap65::UnionFindStEph::UnionFindStEph::UnionFindStEph<_>`
+             found mutable reference `&mut Self`
+note: function defined here
+    --> src/Chap65/UnionFindStEph.rs:166:24
+     |
+ 166 |     pub closed spec fn spec_union_result<V: StT + Hash>(
+     |                        ^^^^^^^^^^^^^^^^^
+ 167 |         uf_new: &UnionFindStEph<V>,
+     |         --------------------------
+ 168 |         uf_old: &UnionFindStEph<V>,
+     |         --------------------------
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0308`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 453MB, peak z3 RSS: 0MB, min free: 25767MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s
