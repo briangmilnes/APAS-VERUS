@@ -25,6 +25,7 @@ pub mod OrderedTableMtEph {
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::*;
+    use crate::vstdplus::accept::accept;
     #[cfg(verus_keep_ghost)]
     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::*;
@@ -894,7 +895,7 @@ broadcast use {
         {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow().clone();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             read_handle.release_read();
             let ghost view = inner@;
             proof {

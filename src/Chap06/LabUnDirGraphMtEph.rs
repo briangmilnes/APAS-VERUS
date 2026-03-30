@@ -33,6 +33,7 @@ pub mod LabUnDirGraphMtEph {
     use crate::Concurrency::Concurrency::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::{ParaPair, SetLit};
+    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -781,7 +782,7 @@ pub mod LabUnDirGraphMtEph {
         fn vertices(&self) -> (v: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let v = inner.vertices().clone();
             read_handle.release_read();
             v
@@ -790,7 +791,7 @@ pub mod LabUnDirGraphMtEph {
         fn labeled_edges(&self) -> (e: SetStEph<LabEdge<V, L>>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let e = inner.labeled_edges().clone();
             read_handle.release_read();
             e
@@ -799,7 +800,7 @@ pub mod LabUnDirGraphMtEph {
         fn edges(&self) -> (edges: SetStEph<Edge<V>>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let edges = inner.edges();
             read_handle.release_read();
             edges
@@ -808,7 +809,7 @@ pub mod LabUnDirGraphMtEph {
         fn has_edge(&self, v1: V, v2: V) -> (b: bool) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let b = inner.has_edge(&v1, &v2);
             read_handle.release_read();
             b
@@ -817,7 +818,7 @@ pub mod LabUnDirGraphMtEph {
         fn ng(&self, v: V) -> (ng: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let ng = inner.ng(&v);
             read_handle.release_read();
             ng

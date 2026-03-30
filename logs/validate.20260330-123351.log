@@ -1,0 +1,226 @@
+error[E0252]: the name `accept` is defined multiple times
+  --> src/Chap43/OrderedTableMtEph.rs:34:9
+   |
+28 |     use crate::vstdplus::accept::accept;
+   |         ------------------------------- previous import of the value `accept` here
+...
+34 |     use crate::vstdplus::accept::accept;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `accept` reimported here
+   |
+   = note: `accept` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `accept` is defined multiple times
+  --> src/Chap43/OrderedTableMtEph.rs:38:9
+   |
+28 |     use crate::vstdplus::accept::accept;
+   |         ------------------------------- previous import of the value `accept` here
+...
+38 |     use crate::vstdplus::accept::accept;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `accept` reimported here
+   |
+   = note: `accept` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `accept` is defined multiple times
+  --> src/Chap43/OrderedTableMtEph.rs:43:9
+   |
+28 |     use crate::vstdplus::accept::accept;
+   |         ------------------------------- previous import of the value `accept` here
+...
+43 |     use crate::vstdplus::accept::accept;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `accept` reimported here
+   |
+   = note: `accept` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `accept` is defined multiple times
+   --> src/Chap43/OrderedTableMtEph.rs:923:9
+    |
+ 28 |     use crate::vstdplus::accept::accept;
+    |         ------------------------------- previous import of the value `accept` here
+...
+923 |     use crate::vstdplus::accept::accept;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `accept` reimported here
+    |
+    = note: `accept` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `accept` is defined multiple times
+  --> src/Chap43/OrderedTableMtPer.rs:30:9
+   |
+27 |     use crate::vstdplus::accept::accept;
+   |         ------------------------------- previous import of the value `accept` here
+...
+30 |     use crate::vstdplus::accept::accept;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `accept` reimported here
+   |
+   = note: `accept` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `accept` is defined multiple times
+  --> src/Chap43/OrderedTableMtPer.rs:33:9
+   |
+27 |     use crate::vstdplus::accept::accept;
+   |         ------------------------------- previous import of the value `accept` here
+...
+33 |     use crate::vstdplus::accept::accept;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `accept` reimported here
+   |
+   = note: `accept` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `accept` is defined multiple times
+  --> src/Chap05/SetMtEph.rs:49:9
+   |
+31 |     use crate::vstdplus::accept::accept;
+   |         ------------------------------- previous import of the value `accept` here
+...
+49 |     use crate::vstdplus::accept::accept;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `accept` reimported here
+   |
+   = note: `accept` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `accept` is defined multiple times
+  --> src/Chap05/SetMtEph.rs:57:9
+   |
+31 |     use crate::vstdplus::accept::accept;
+   |         ------------------------------- previous import of the value `accept` here
+...
+57 |     use crate::vstdplus::accept::accept;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `accept` reimported here
+   |
+   = note: `accept` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `accept` is defined multiple times
+  --> src/Chap06/DirGraphMtEph.rs:47:9
+   |
+36 |     use crate::vstdplus::accept::accept;
+   |         ------------------------------- previous import of the value `accept` here
+...
+47 |     use crate::vstdplus::accept::accept;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `accept` reimported here
+   |
+   = note: `accept` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `accept` is defined multiple times
+  --> src/Chap06/DirGraphMtEph.rs:52:9
+   |
+36 |     use crate::vstdplus::accept::accept;
+   |         ------------------------------- previous import of the value `accept` here
+...
+52 |     use crate::vstdplus::accept::accept;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `accept` reimported here
+   |
+   = note: `accept` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `accept` is defined multiple times
+  --> src/Chap06/DirGraphMtEph.rs:55:9
+   |
+36 |     use crate::vstdplus::accept::accept;
+   |         ------------------------------- previous import of the value `accept` here
+...
+55 |     use crate::vstdplus::accept::accept;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `accept` reimported here
+   |
+   = note: `accept` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `accept` is defined multiple times
+  --> src/Chap06/UnDirGraphMtEph.rs:47:9
+   |
+36 |     use crate::vstdplus::accept::accept;
+   |         ------------------------------- previous import of the value `accept` here
+...
+47 |     use crate::vstdplus::accept::accept;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `accept` reimported here
+   |
+   = note: `accept` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `accept` is defined multiple times
+  --> src/Chap06/UnDirGraphMtEph.rs:51:9
+   |
+36 |     use crate::vstdplus::accept::accept;
+   |         ------------------------------- previous import of the value `accept` here
+...
+51 |     use crate::vstdplus::accept::accept;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `accept` reimported here
+   |
+   = note: `accept` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `accept` is defined multiple times
+  --> src/Chap06/UnDirGraphMtEph.rs:54:9
+   |
+36 |     use crate::vstdplus::accept::accept;
+   |         ------------------------------- previous import of the value `accept` here
+...
+54 |     use crate::vstdplus::accept::accept;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `accept` reimported here
+   |
+   = note: `accept` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `accept` is defined multiple times
+  --> src/Chap06/LabDirGraphMtEph.rs:44:9
+   |
+36 |     use crate::vstdplus::accept::accept;
+   |         ------------------------------- previous import of the value `accept` here
+...
+44 |     use crate::vstdplus::accept::accept;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `accept` reimported here
+   |
+   = note: `accept` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `accept` is defined multiple times
+  --> src/Chap06/LabDirGraphMtEph.rs:49:9
+   |
+36 |     use crate::vstdplus::accept::accept;
+   |         ------------------------------- previous import of the value `accept` here
+...
+49 |     use crate::vstdplus::accept::accept;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `accept` reimported here
+   |
+   = note: `accept` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `accept` is defined multiple times
+  --> src/Chap06/LabDirGraphMtEph.rs:52:9
+   |
+36 |     use crate::vstdplus::accept::accept;
+   |         ------------------------------- previous import of the value `accept` here
+...
+52 |     use crate::vstdplus::accept::accept;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `accept` reimported here
+   |
+   = note: `accept` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `accept` is defined multiple times
+  --> src/Chap06/LabUnDirGraphMtEph.rs:44:9
+   |
+36 |     use crate::vstdplus::accept::accept;
+   |         ------------------------------- previous import of the value `accept` here
+...
+44 |     use crate::vstdplus::accept::accept;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `accept` reimported here
+   |
+   = note: `accept` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `accept` is defined multiple times
+  --> src/Chap06/LabUnDirGraphMtEph.rs:49:9
+   |
+36 |     use crate::vstdplus::accept::accept;
+   |         ------------------------------- previous import of the value `accept` here
+...
+49 |     use crate::vstdplus::accept::accept;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `accept` reimported here
+   |
+   = note: `accept` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `accept` is defined multiple times
+  --> src/Chap06/LabUnDirGraphMtEph.rs:52:9
+   |
+36 |     use crate::vstdplus::accept::accept;
+   |         ------------------------------- previous import of the value `accept` here
+...
+52 |     use crate::vstdplus::accept::accept;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `accept` reimported here
+   |
+   = note: `accept` must be defined only once in the value namespace of this module
+
+error: aborting due to 20 previous errors
+
+For more information about this error, try `rustc --explain E0252`.
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 550MB, peak z3 RSS: 0MB, min free: 23387MB
+Sampled CPU Usage: rust_verify: 8s, z3 children: 0s

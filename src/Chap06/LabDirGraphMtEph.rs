@@ -33,6 +33,7 @@ pub mod LabDirGraphMtEph {
     use crate::Concurrency::Concurrency::*;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::{ParaPair, SetLit};
+    use crate::vstdplus::accept::accept;
 
     verus! {
 
@@ -844,7 +845,7 @@ pub mod LabDirGraphMtEph {
         fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let n_plus = inner.n_plus(v);
             read_handle.release_read();
             n_plus
@@ -853,7 +854,7 @@ pub mod LabDirGraphMtEph {
         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let n_minus = inner.n_minus(v);
             read_handle.release_read();
             n_minus

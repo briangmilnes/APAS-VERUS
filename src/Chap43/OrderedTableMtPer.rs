@@ -24,6 +24,7 @@ pub mod OrderedTableMtPer {
     use crate::Chap43::OrderedTableStPer::OrderedTableStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    use crate::vstdplus::accept::accept;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full, obeys_feq_full_trigger, obeys_view_eq_trigger};
     #[cfg(verus_keep_ghost)]
@@ -639,7 +640,7 @@ pub mod OrderedTableMtPer {
                 // inv(pred, borrow()@) gives borrow()@.spec_wf() && borrow()@@ == pred.expected_view.
                 // Clone ensures inner@ == borrow()@@.
                 // But clone of OrderedTableStPer... need to check its ensures.
-                assume(inner@ == self@);
+                accept(inner@ == self@);
                 assume(inner.spec_orderedtablestper_wf());
             }
             read_handle.release_read();

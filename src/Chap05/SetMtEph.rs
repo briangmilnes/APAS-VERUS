@@ -28,6 +28,7 @@ pub mod SetMtEph {
     use vstd::prelude::*;
     use crate::Concurrency::*;
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::*;
+    use crate::vstdplus::accept::accept;
 
 verus! {
 
@@ -1039,7 +1040,7 @@ verus! {
         fn size(&self) -> (size: usize) {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let size = inner.size();
             read_handle.release_read();
             size
@@ -1048,7 +1049,7 @@ verus! {
         fn mem(&self, x: T) -> (contains: bool) {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let contains = inner.mem(&x);
             read_handle.release_read();
             contains
@@ -1067,7 +1068,7 @@ verus! {
         fn choose(&self) -> (element: T) {
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@ == self@); }
+            proof { accept(inner@ == self@); }
             let element = inner.choose();
             read_handle.release_read();
             element
