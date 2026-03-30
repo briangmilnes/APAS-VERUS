@@ -230,3 +230,47 @@ fn test_pq_min_self_loop() {
     assert!(result.visited.find(&1));
     assert!(result.visited.find(&2));
 }
+
+#[test]
+fn test_pq_min_diamond() {
+    let graph = |v: &usize| match *v {
+        | 1 => AVLTreeSetStEph::singleton(2).union(&AVLTreeSetStEph::singleton(3)),
+        | 2 => AVLTreeSetStEph::singleton(4),
+        | 3 => AVLTreeSetStEph::singleton(4),
+        | _ => AVLTreeSetStEph::empty(),
+    };
+    let prio_fn = |v: &usize| *v;
+    let result = pq_min(&graph, 1, &prio_fn, Ghost::assume_new());
+    assert_eq!(result.visited.size(), 4);
+    assert!(result.visited.find(&4));
+}
+
+#[test]
+fn test_pq_min_reversed_priority() {
+    let graph = |v: &usize| match *v {
+        | 1 => AVLTreeSetStEph::singleton(2).union(&AVLTreeSetStEph::singleton(3)),
+        | 2 => AVLTreeSetStEph::singleton(4),
+        | 3 => AVLTreeSetStEph::singleton(4),
+        | _ => AVLTreeSetStEph::empty(),
+    };
+    let prio_fn = |v: &usize| 100 - *v;
+    let result = pq_min(&graph, 1, &prio_fn, Ghost::assume_new());
+    assert_eq!(result.visited.size(), 4);
+}
+
+#[test]
+fn test_pq_min_multi_disconnected() {
+    let graph = |v: &usize| match *v {
+        | 1 => AVLTreeSetStEph::singleton(2),
+        | 3 => AVLTreeSetStEph::singleton(4),
+        | _ => AVLTreeSetStEph::empty(),
+    };
+    let sources = AVLTreeSetStEph::singleton(1).union(&AVLTreeSetStEph::singleton(3));
+    let prio_fn = |v: &usize| *v;
+    let result = pq_min_multi(&graph, sources, &prio_fn, Ghost::assume_new());
+    assert_eq!(result.visited.size(), 4);
+    assert!(result.visited.find(&1));
+    assert!(result.visited.find(&2));
+    assert!(result.visited.find(&3));
+    assert!(result.visited.find(&4));
+}

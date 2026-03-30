@@ -155,3 +155,45 @@ fn test_tree_bottom_up_iteration() {
     assert_eq!(collected, vec![2, 1, 0]);
 }
 
+#[test]
+fn test_star_graph() {
+    let graph = ArraySeqStPerS::from_vec(vec![
+        ArraySeqStPerSLit![1, 2, 3, 4],
+        ArraySeqStPerSLit![],
+        ArraySeqStPerSLit![],
+        ArraySeqStPerSLit![],
+        ArraySeqStPerSLit![],
+    ]);
+    let distances = BFSStPer::bfs(&graph, 0);
+    assert_eq!(*distances.nth(0), 0);
+    for i in 1..5 {
+        assert_eq!(*distances.nth(i), 1);
+    }
+}
+
+#[test]
+fn test_self_loop() {
+    let graph = ArraySeqStPerS::from_vec(vec![
+        ArraySeqStPerSLit![0, 1],
+        ArraySeqStPerSLit![],
+    ]);
+    let distances = BFSStPer::bfs(&graph, 0);
+    assert_eq!(*distances.nth(0), 0);
+    assert_eq!(*distances.nth(1), 1);
+}
+
+#[test]
+fn test_bfs_from_middle() {
+    let graph = ArraySeqStPerS::from_vec(vec![
+        ArraySeqStPerSLit![1],
+        ArraySeqStPerSLit![],
+        ArraySeqStPerSLit![0, 3],
+        ArraySeqStPerSLit![],
+    ]);
+    let distances = BFSStPer::bfs(&graph, 2);
+    assert_eq!(*distances.nth(2), 0);
+    assert_eq!(*distances.nth(0), 1);
+    assert_eq!(*distances.nth(3), 1);
+    assert_eq!(*distances.nth(1), 2);
+}
+

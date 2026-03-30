@@ -7,6 +7,7 @@ use apas_verus::Chap06::WeightedDirGraphStEphF64::WeightedDirGraphStEphF64::*;
 use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
 use apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::*;
 use apas_verus::Chap57::DijkstraStEphF64::DijkstraStEphF64::*;
+use apas_verus::SetLit;
 use apas_verus::Types::Types::*;
 use apas_verus::vstdplus::float::float::*;
 
@@ -156,4 +157,43 @@ fn test_larger_graph() {
     assert_eq!(result.get_distance(0).val, 0.0);
     assert_eq!(result.get_distance(5).val, 3.0);
     assert_eq!(result.get_distance(9).val, 7.0);
+}
+
+#[test]
+fn test_is_reachable() {
+    let vertices = SetLit![0, 1, 2];
+    let edges = SetLit![WeightedEdge(0, 1, w(3.5))];
+    let graph = <WeightedDirGraphStEphF64<usize> as WeightedDirGraphStEphF64Trait<usize>>::from_weighed_edges(vertices, edges);
+    let result = dijkstra(&graph, 0);
+
+    assert!(result.is_reachable(0));
+    assert!(result.is_reachable(1));
+    assert!(!result.is_reachable(2));
+}
+
+#[test]
+fn test_get_predecessor() {
+    let vertices = SetLit![0, 1, 2];
+    let edges = SetLit![WeightedEdge(0, 1, w(1.0)), WeightedEdge(1, 2, w(2.0))];
+    let graph = <WeightedDirGraphStEphF64<usize> as WeightedDirGraphStEphF64Trait<usize>>::from_weighed_edges(vertices, edges);
+    let result = dijkstra(&graph, 0);
+
+    assert_eq!(result.get_predecessor(0), None);
+    assert_eq!(result.get_predecessor(1), Some(0));
+    assert_eq!(result.get_predecessor(2), Some(1));
+}
+
+#[test]
+fn test_diamond_graph_fractional() {
+    let vertices = SetLit![0, 1, 2, 3];
+    let edges = SetLit![
+        WeightedEdge(0, 1, w(0.5)),
+        WeightedEdge(0, 2, w(2.5)),
+        WeightedEdge(1, 3, w(4.0)),
+        WeightedEdge(2, 3, w(0.5))
+    ];
+    let graph = <WeightedDirGraphStEphF64<usize> as WeightedDirGraphStEphF64Trait<usize>>::from_weighed_edges(vertices, edges);
+    let result = dijkstra(&graph, 0);
+
+    assert_eq!(result.get_distance(3).val, 3.0); // 0->2->3 = 2.5+0.5=3.0 < 0->1->3 = 0.5+4.0=4.5
 }

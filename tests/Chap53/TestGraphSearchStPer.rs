@@ -129,3 +129,29 @@ fn test_select_one_dfs_style() {
     assert!(result.visited.size() >= 1);
     assert!(result.visited.find(&1));
 }
+
+#[test]
+fn test_star_graph() {
+    let graph = |v: &usize| match *v {
+        | 1 => {
+            let mut s = AVLTreeSetStPer::singleton(2);
+            s = s.union(&AVLTreeSetStPer::singleton(3));
+            s = s.union(&AVLTreeSetStPer::singleton(4));
+            s = s.union(&AVLTreeSetStPer::singleton(5));
+            s
+        }
+        | _ => AVLTreeSetStPer::empty(),
+    };
+    let reachable_set = reachable(&graph, 1, Ghost::assume_new());
+    assert_eq!(reachable_set.size(), 5);
+}
+
+#[test]
+fn test_self_loop() {
+    let graph = |v: &usize| match *v {
+        | 1 => AVLTreeSetStPer::singleton(1).union(&AVLTreeSetStPer::singleton(2)),
+        | _ => AVLTreeSetStPer::empty(),
+    };
+    let reachable_set = reachable(&graph, 1, Ghost::assume_new());
+    assert_eq!(reachable_set.size(), 2);
+}

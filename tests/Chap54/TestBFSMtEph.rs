@@ -174,3 +174,30 @@ fn test_tree_bottom_up_iteration() {
     assert_eq!(collected, vec![2, 1, 0]);
 }
 
+#[test]
+fn test_star_graph() {
+    let graph = ArraySeqMtEphS::from_vec(vec![
+        ArraySeqMtEphChap19SLit![1, 2, 3, 4],
+        ArraySeqMtEphChap19SLit![],
+        ArraySeqMtEphChap19SLit![],
+        ArraySeqMtEphChap19SLit![],
+        ArraySeqMtEphChap19SLit![],
+    ]);
+    let distances = BFSMtEph::bfs(&graph, 0);
+    assert_eq!(*distances.nth(0), 0);
+    for i in 1..5 {
+        assert_eq!(*distances.nth(i), 1);
+    }
+}
+
+#[test]
+fn test_self_loop() {
+    let graph = ArraySeqMtEphS::from_vec(vec![
+        ArraySeqMtEphChap19SLit![0, 1],
+        ArraySeqMtEphChap19SLit![],
+    ]);
+    let distances = BFSMtEph::bfs(&graph, 0);
+    assert_eq!(*distances.nth(0), 0);
+    assert_eq!(*distances.nth(1), 1);
+}
+

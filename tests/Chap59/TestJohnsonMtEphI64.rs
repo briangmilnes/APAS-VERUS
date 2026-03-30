@@ -134,3 +134,50 @@ fn test_empty_graph() {
 
     assert_eq!(result.n, 0);
 }
+
+#[test]
+fn test_chain_graph() {
+    let vertices = SetLit![0, 1, 2, 3];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 1),
+        WeightedEdge(1, 2, 2),
+        WeightedEdge(2, 3, 3)
+    ];
+
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = johnson_apsp(&graph);
+
+    assert_eq!(result.get_distance(0, 3), 6); // 1+2+3
+    assert_eq!(result.get_distance(1, 3), 5); // 2+3
+    assert_eq!(result.get_distance(3, 0), i64::MAX); // unreachable
+}
+
+#[test]
+fn test_self_distance_zero() {
+    let vertices = SetLit![0, 1];
+    let edges = SetLit![WeightedEdge(0, 1, 10)];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = johnson_apsp(&graph);
+
+    assert_eq!(result.get_distance(0, 0), 0);
+    assert_eq!(result.get_distance(1, 1), 0);
+}
+
+#[test]
+fn test_bidirectional_edges() {
+    let vertices = SetLit![0, 1, 2];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 3),
+        WeightedEdge(1, 0, 5),
+        WeightedEdge(1, 2, 2),
+        WeightedEdge(2, 1, 4)
+    ];
+
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = johnson_apsp(&graph);
+
+    assert_eq!(result.get_distance(0, 1), 3);
+    assert_eq!(result.get_distance(1, 0), 5);
+    assert_eq!(result.get_distance(0, 2), 5); // 0->1->2 = 3+2
+    assert_eq!(result.get_distance(2, 0), 9); // 2->1->0 = 4+5
+}

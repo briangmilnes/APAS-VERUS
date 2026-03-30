@@ -270,3 +270,80 @@ fn test_boruvka_mst_direct_empty() {
     // No edges = empty MST.
     assert_eq!(mst_labels.size(), 0);
 }
+
+#[test]
+fn test_boruvka_larger_graph() {
+    // 8 vertices with ring + cross edges.
+    let vertices = SetLit![1, 2, 3, 4, 5, 6, 7, 8];
+    let edges = SetLit![
+        LabeledEdge(1, 2, OrderedFloat(1.0), 0),
+        LabeledEdge(2, 3, OrderedFloat(2.0), 1),
+        LabeledEdge(3, 4, OrderedFloat(3.0), 2),
+        LabeledEdge(4, 5, OrderedFloat(4.0), 3),
+        LabeledEdge(5, 6, OrderedFloat(5.0), 4),
+        LabeledEdge(6, 7, OrderedFloat(6.0), 5),
+        LabeledEdge(7, 8, OrderedFloat(7.0), 6),
+        LabeledEdge(8, 1, OrderedFloat(8.0), 7),
+        LabeledEdge(1, 5, OrderedFloat(9.0), 8),
+        LabeledEdge(2, 6, OrderedFloat(10.0), 9),
+    ];
+
+    let mst_labels = BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42);
+    let mst_w = BoruvkaStEph::mst_weight(&edges, &mst_labels);
+
+    assert_eq!(mst_labels.size(), 7); // n-1 edges
+    assert!(mst_w <= OrderedFloat(28.0)); // 1+2+3+4+5+6+7 = 28
+}
+
+#[test]
+fn test_boruvka_equal_weights() {
+    // All edges have equal weight.
+    let vertices = SetLit![1, 2, 3, 4];
+    let edges = SetLit![
+        LabeledEdge(1, 2, OrderedFloat(5.0), 0),
+        LabeledEdge(2, 3, OrderedFloat(5.0), 1),
+        LabeledEdge(3, 4, OrderedFloat(5.0), 2),
+        LabeledEdge(4, 1, OrderedFloat(5.0), 3),
+        LabeledEdge(1, 3, OrderedFloat(5.0), 4),
+    ];
+
+    let mst_labels = BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42);
+    let mst_w = BoruvkaStEph::mst_weight(&edges, &mst_labels);
+
+    assert_eq!(mst_labels.size(), 3);
+    assert_eq!(mst_w, OrderedFloat(15.0)); // 3 * 5.0
+}
+
+#[test]
+fn test_boruvka_parallel_edges_different_weights() {
+    // Two alternative paths between same components.
+    let vertices = SetLit![1, 2, 3];
+    let edges = SetLit![
+        LabeledEdge(1, 2, OrderedFloat(1.0), 0),
+        LabeledEdge(2, 3, OrderedFloat(10.0), 1),
+        LabeledEdge(1, 3, OrderedFloat(2.0), 2),
+    ];
+
+    let mst_labels = BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42);
+    let mst_w = BoruvkaStEph::mst_weight(&edges, &mst_labels);
+
+    assert_eq!(mst_labels.size(), 2);
+    assert_eq!(mst_w, OrderedFloat(3.0)); // 1.0 + 2.0 = 3.0 (cheapest spanning)
+}
+
+#[test]
+fn test_boruvka_mst_weight_empty() {
+    let edges: SetStEph<LabeledEdge<i32>> = SetLit![];
+    let mst_labels: SetStEph<usize> = SetLit![];
+    let w = BoruvkaStEph::mst_weight(&edges, &mst_labels);
+    assert_eq!(w, OrderedFloat(0.0));
+}
+
+#[test]
+fn test_vertex_bridges_single_edge() {
+    let edges = SetLit![LabeledEdge(1, 2, OrderedFloat(7.0), 0)];
+    let bridges = BoruvkaStEph::vertex_bridges(&edges);
+    assert_eq!(bridges.inner.len(), 2);
+    assert_eq!(bridges.inner.get(&1), Some(&(2, OrderedFloat(7.0), 0)));
+    assert_eq!(bridges.inner.get(&2), Some(&(1, OrderedFloat(7.0), 0)));
+}
