@@ -120,3 +120,14 @@ fn test_scan_contract_max() {
     assert_eq!(result.nth(3), &4); // max(0, 3, 1, 4)
     assert_eq!(result.nth(4), &4); // max(0, 3, 1, 4, 1)
 }
+
+
+#[test]
+fn test_scan_contract_all_same() {
+    let a = ArraySeqStEphS::tabulate(&|_| 5usize, 6);
+    let result = ArraySeqStEphS::scan_contract(&a, &|x, y| x + y, Ghost::assume_new(), 0);
+    assert_eq!(result.length(), 6);
+    for i in 0..6 {
+        assert_eq!(result.nth(i), &(i * 5));
+    }
+}

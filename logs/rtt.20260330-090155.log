@@ -1,0 +1,132 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap65/TestUnionFindStEph.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: `apas-verus` (test "TestUnionFindStEph") generated 1 warning
+error[E0425]: cannot find function, tuple struct or tuple variant `OrderedFloat` in this scope
+   --> tests/Chap66/TestBoruvkaStEph.rs:288:27
+    |
+288 |         LabeledEdge(1, 2, OrderedFloat(1.0), 0),
+    |                           ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function, tuple struct or tuple variant `OrderedFloat` in this scope
+   --> tests/Chap66/TestBoruvkaStEph.rs:289:27
+    |
+289 |         LabeledEdge(2, 3, OrderedFloat(2.0), 1),
+    |                           ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function, tuple struct or tuple variant `OrderedFloat` in this scope
+   --> tests/Chap66/TestBoruvkaStEph.rs:290:27
+    |
+290 |         LabeledEdge(3, 4, OrderedFloat(3.0), 2),
+    |                           ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function, tuple struct or tuple variant `OrderedFloat` in this scope
+   --> tests/Chap66/TestBoruvkaStEph.rs:291:27
+    |
+291 |         LabeledEdge(4, 5, OrderedFloat(4.0), 3),
+    |                           ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function, tuple struct or tuple variant `OrderedFloat` in this scope
+   --> tests/Chap66/TestBoruvkaStEph.rs:292:27
+    |
+292 |         LabeledEdge(5, 6, OrderedFloat(5.0), 4),
+    |                           ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function, tuple struct or tuple variant `OrderedFloat` in this scope
+   --> tests/Chap66/TestBoruvkaStEph.rs:293:27
+    |
+293 |         LabeledEdge(6, 7, OrderedFloat(6.0), 5),
+    |                           ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function, tuple struct or tuple variant `OrderedFloat` in this scope
+   --> tests/Chap66/TestBoruvkaStEph.rs:294:27
+    |
+294 |         LabeledEdge(7, 8, OrderedFloat(7.0), 6),
+    |                           ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function, tuple struct or tuple variant `OrderedFloat` in this scope
+   --> tests/Chap66/TestBoruvkaStEph.rs:295:27
+    |
+295 |         LabeledEdge(8, 1, OrderedFloat(8.0), 7),
+    |                           ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function, tuple struct or tuple variant `OrderedFloat` in this scope
+   --> tests/Chap66/TestBoruvkaStEph.rs:296:27
+    |
+296 |         LabeledEdge(1, 5, OrderedFloat(9.0), 8),
+    |                           ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function, tuple struct or tuple variant `OrderedFloat` in this scope
+   --> tests/Chap66/TestBoruvkaStEph.rs:297:27
+    |
+297 |         LabeledEdge(2, 6, OrderedFloat(10.0), 9),
+    |                           ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function, tuple struct or tuple variant `OrderedFloat` in this scope
+   --> tests/Chap66/TestBoruvkaStEph.rs:304:22
+    |
+304 |     assert!(mst_w <= OrderedFloat(28.0)); // 1+2+3+4+5+6+7 = 28
+    |                      ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function, tuple struct or tuple variant `OrderedFloat` in this scope
+   --> tests/Chap66/TestBoruvkaStEph.rs:313:19
+    |
+313 |     assert_eq!(w, OrderedFloat(0.0));
+    |                   ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function, tuple struct or tuple variant `OrderedFloat` in this scope
+   --> tests/Chap66/TestBoruvkaStEph.rs:322:27
+    |
+322 |         LabeledEdge(1, 2, OrderedFloat(1.0), 0),
+    |                           ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function, tuple struct or tuple variant `OrderedFloat` in this scope
+   --> tests/Chap66/TestBoruvkaStEph.rs:323:27
+    |
+323 |         LabeledEdge(2, 3, OrderedFloat(10.0), 1),
+    |                           ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function, tuple struct or tuple variant `OrderedFloat` in this scope
+   --> tests/Chap66/TestBoruvkaStEph.rs:324:27
+    |
+324 |         LabeledEdge(1, 3, OrderedFloat(2.0), 2),
+    |                           ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function, tuple struct or tuple variant `OrderedFloat` in this scope
+   --> tests/Chap66/TestBoruvkaStEph.rs:331:23
+    |
+331 |     assert_eq!(mst_w, OrderedFloat(3.0)); // 1.0 + 2.0 = 3.0 (cheapest spanning)
+    |                       ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function, tuple struct or tuple variant `OrderedFloat` in this scope
+   --> tests/Chap66/TestBoruvkaStEph.rs:337:43
+    |
+337 |     let edges = SetLit![LabeledEdge(1, 2, OrderedFloat(7.0), 0)];
+    |                                           ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function, tuple struct or tuple variant `OrderedFloat` in this scope
+   --> tests/Chap66/TestBoruvkaStEph.rs:340:49
+    |
+340 |     assert_eq!(bridges.inner.get(&1), Some(&(2, OrderedFloat(7.0), 0)));
+    |                                                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function, tuple struct or tuple variant `OrderedFloat` in this scope
+   --> tests/Chap66/TestBoruvkaStEph.rs:341:49
+    |
+341 |     assert_eq!(bridges.inner.get(&2), Some(&(1, OrderedFloat(7.0), 0)));
+    |                                                 ^^^^^^^^^^^^ not found in this scope
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `apas-verus` (test "TestBoruvkaStEph") due to 19 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 1s

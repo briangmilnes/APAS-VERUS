@@ -125,3 +125,34 @@ fn test_self_loop() {
     let reachable_set = reachable(&graph, 1, Ghost::assume_new());
     assert_eq!(reachable_set.size(), 1);
 }
+
+
+#[test]
+fn test_diamond_graph() {
+    let graph = |v: &i32| match *v {
+        | 1 => {
+            let mut s = AVLTreeSetStEph::singleton(2);
+            s.insert(3);
+            s
+        }
+        | 2 => AVLTreeSetStEph::singleton(4),
+        | 3 => AVLTreeSetStEph::singleton(4),
+        | _ => AVLTreeSetStEph::empty(),
+    };
+    let result = graph_search(&graph, 1, &SelectAll, Ghost::assume_new());
+    assert_eq!(result.visited.size(), 4);
+}
+
+
+#[test]
+fn test_linear_chain() {
+    let graph = |v: &i32| match *v {
+        | 1 => AVLTreeSetStEph::singleton(2),
+        | 2 => AVLTreeSetStEph::singleton(3),
+        | 3 => AVLTreeSetStEph::singleton(4),
+        | 4 => AVLTreeSetStEph::singleton(5),
+        | _ => AVLTreeSetStEph::empty(),
+    };
+    let reachable_set = reachable(&graph, 1, Ghost::assume_new());
+    assert_eq!(reachable_set.size(), 5);
+}

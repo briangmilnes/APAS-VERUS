@@ -242,3 +242,117 @@ fn test_longer_path_cheaper() {
     let result = bellman_ford(&graph, 0).unwrap();
     assert_eq!(result.get_distance(2), 3);
 }
+
+
+#[test]
+fn test_complete_graph_4() {
+    // Complete graph K4 with varying weights.
+    let vertices = SetLit![0, 1, 2, 3];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 1),
+        WeightedEdge(0, 2, 10),
+        WeightedEdge(0, 3, 100),
+        WeightedEdge(1, 2, 1),
+        WeightedEdge(1, 3, 10),
+        WeightedEdge(2, 3, 1)
+    ];
+
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = bellman_ford(&graph, 0).unwrap();
+
+    assert_eq!(result.get_distance(0), 0);
+    assert_eq!(result.get_distance(1), 1);
+    assert_eq!(result.get_distance(2), 2);  // via 0->1->2
+    assert_eq!(result.get_distance(3), 3);  // via 0->1->2->3
+}
+
+
+#[test]
+fn test_get_predecessor() {
+    let vertices = SetLit![0, 1, 2];
+    let edges = SetLit![WeightedEdge(0, 1, 3), WeightedEdge(1, 2, 4)];
+
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = bellman_ford(&graph, 0).unwrap();
+
+    assert_eq!(result.get_predecessor(0), None); // source has no predecessor
+    assert_eq!(result.get_predecessor(1), Some(0));
+    assert_eq!(result.get_predecessor(2), Some(1));
+}
+
+
+#[test]
+fn test_is_reachable() {
+    let vertices = SetLit![0, 1, 2];
+    let edges = SetLit![WeightedEdge(0, 1, 5)];
+
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = bellman_ford(&graph, 0).unwrap();
+
+    assert!(result.is_reachable(0));
+    assert!(result.is_reachable(1));
+    assert!(!result.is_reachable(2));
+}
+
+
+#[test]
+fn test_longer_path_with_negatives() {
+    // Longer indirect path through negative edges beats short direct path.
+    let vertices = SetLit![0, 1, 2, 3];
+    let edges = SetLit![
+        WeightedEdge(0, 3, 50),
+        WeightedEdge(0, 1, 10),
+        WeightedEdge(1, 2, 20),
+        WeightedEdge(2, 3, -100)
+    ];
+
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = bellman_ford(&graph, 0).unwrap();
+
+    assert_eq!(result.get_distance(3), -70); // 10 + 20 + (-100) = -70 < 50
+}
+
+
+#[test]
+fn test_path_extraction_chain() {
+    // Chain: 0 -> 1 -> 2 -> 3
+    let vertices = SetLit![0, 1, 2, 3];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 2),
+        WeightedEdge(1, 2, 3),
+        WeightedEdge(2, 3, 4)
+    ];
+
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = bellman_ford(&graph, 0).unwrap();
+
+    let path = result.extract_path(3).unwrap();
+    assert_eq!(path.length(), 4);
+    assert_eq!(*path.nth(0), 0);
+    assert_eq!(*path.nth(1), 1);
+    assert_eq!(*path.nth(2), 2);
+    assert_eq!(*path.nth(3), 3);
+    assert_eq!(result.get_distance(3), 9);
+}
+
+
+#[test]
+fn test_star_graph() {
+    // Star topology: source connects to all other vertices.
+    let vertices = SetLit![0, 1, 2, 3, 4];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 10),
+        WeightedEdge(0, 2, 20),
+        WeightedEdge(0, 3, 30),
+        WeightedEdge(0, 4, 40)
+    ];
+
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = bellman_ford(&graph, 0).unwrap();
+
+    assert_eq!(result.get_distance(0), 0);
+    assert_eq!(result.get_distance(1), 10);
+    assert_eq!(result.get_distance(2), 20);
+    assert_eq!(result.get_distance(3), 30);
+    assert_eq!(result.get_distance(4), 40);
+}

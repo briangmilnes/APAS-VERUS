@@ -278,3 +278,65 @@ fn test_boruvka_deterministic_across_seeds() {
     let w2 = BoruvkaStEph::mst_weight(&edges, &BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 99));
     assert_eq!(w1, w2);
 }
+
+
+#[test]
+fn test_boruvka_larger_graph() {
+    // 8 vertices with ring + cross edges.
+    let vertices = SetLit![1, 2, 3, 4, 5, 6, 7, 8];
+    let edges = SetLit![
+        LabeledEdge(1, 2, w(1.0), 0),
+        LabeledEdge(2, 3, w(2.0), 1),
+        LabeledEdge(3, 4, w(3.0), 2),
+        LabeledEdge(4, 5, w(4.0), 3),
+        LabeledEdge(5, 6, w(5.0), 4),
+        LabeledEdge(6, 7, w(6.0), 5),
+        LabeledEdge(7, 8, w(7.0), 6),
+        LabeledEdge(8, 1, w(8.0), 7),
+        LabeledEdge(1, 5, w(9.0), 8),
+        LabeledEdge(2, 6, w(10.0), 9),
+    ];
+
+    let mst_labels = BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42);
+    let mst_w = BoruvkaStEph::mst_weight(&edges, &mst_labels);
+
+    assert_eq!(mst_labels.size(), 7); // n-1 edges
+    assert!(mst_w <= w(28.0)); // 1+2+3+4+5+6+7 = 28
+}
+
+
+#[test]
+fn test_boruvka_mst_weight_empty() {
+    let edges: SetStEph<LabeledEdge<i32>> = SetLit![];
+    let mst_labels: SetStEph<usize> = SetLit![];
+    let mst_w = BoruvkaStEph::mst_weight(&edges, &mst_labels);
+    assert_eq!(mst_w, w(0.0));
+}
+
+
+#[test]
+fn test_boruvka_parallel_edges_different_weights() {
+    // Two alternative paths between same components.
+    let vertices = SetLit![1, 2, 3];
+    let edges = SetLit![
+        LabeledEdge(1, 2, w(1.0), 0),
+        LabeledEdge(2, 3, w(10.0), 1),
+        LabeledEdge(1, 3, w(2.0), 2),
+    ];
+
+    let mst_labels = BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42);
+    let mst_w = BoruvkaStEph::mst_weight(&edges, &mst_labels);
+
+    assert_eq!(mst_labels.size(), 2);
+    assert_eq!(mst_w, w(3.0)); // 1.0 + 2.0 = 3.0 (cheapest spanning)
+}
+
+
+#[test]
+fn test_vertex_bridges_single_edge() {
+    let edges = SetLit![LabeledEdge(1, 2, w(7.0), 0)];
+    let bridges = BoruvkaStEph::vertex_bridges(&edges);
+    assert_eq!(bridges.inner.len(), 2);
+    assert_eq!(bridges.inner.get(&1), Some(&(2, w(7.0), 0)));
+    assert_eq!(bridges.inner.get(&2), Some(&(1, w(7.0), 0)));
+}

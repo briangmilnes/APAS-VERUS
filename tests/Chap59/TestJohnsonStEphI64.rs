@@ -164,3 +164,66 @@ fn test_cycle_no_negative() {
     assert_eq!(result.get_distance(0, 2), 2); // 0->1->2
     assert_eq!(result.get_distance(1, 0), 2); // 1->2->0
 }
+
+
+#[test]
+fn test_chain_graph() {
+    // Chain: 0->1->2->3->4
+    let vertices = SetLit![0, 1, 2, 3, 4];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 2),
+        WeightedEdge(1, 2, 3),
+        WeightedEdge(2, 3, 4),
+        WeightedEdge(3, 4, 5)
+    ];
+
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = johnson_apsp(&graph);
+
+    assert_eq!(result.get_distance(0, 4), 14); // 2+3+4+5
+    assert_eq!(result.get_distance(0, 2), 5);  // 2+3
+    assert_eq!(result.get_distance(2, 4), 9);  // 4+5
+    assert_eq!(result.get_distance(4, 0), i64::MAX); // unreachable backwards
+}
+
+
+#[test]
+fn test_complete_graph_4() {
+    // K4 with all edges weight 1 (bidirectional).
+    let vertices = SetLit![0, 1, 2, 3];
+    let mut edges = SetStEph::empty();
+    for i in 0..4usize {
+        for j in 0..4usize {
+            if i != j {
+                edges.insert(WeightedEdge(i, j, 1));
+            }
+        }
+    }
+
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = johnson_apsp(&graph);
+
+    // All pairs should have distance 1 (direct edge).
+    for i in 0..4usize {
+        for j in 0..4usize {
+            if i == j {
+                assert_eq!(result.get_distance(i, j), 0);
+            } else {
+                assert_eq!(result.get_distance(i, j), 1);
+            }
+        }
+    }
+}
+
+
+#[test]
+fn test_self_distance_zero() {
+    let vertices = SetLit![0, 1, 2];
+    let edges = SetLit![WeightedEdge(0, 1, 5), WeightedEdge(1, 2, 3)];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = johnson_apsp(&graph);
+
+    for v in 0..3 {
+        assert_eq!(result.get_distance(v, v), 0);
+    }
+}

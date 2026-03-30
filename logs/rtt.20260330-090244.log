@@ -1,0 +1,30 @@
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap65/TestUnionFindStEph.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: `apas-verus` (test "TestUnionFindStEph") generated 1 warning
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+error[E0618]: expected function, found `apas_verus::vstdplus::float::float::WrappedF64`
+   --> tests/Chap66/TestBoruvkaStEph.rs:313:19
+    |
+ 10 | fn w(v: f64) -> WrappedF64 {
+    | -------------------------- this function of the same name is available here, but it's shadowed by the local binding
+...
+312 |     let w = BoruvkaStEph::mst_weight(&edges, &mst_labels);
+    |         - `w` has type `apas_verus::vstdplus::float::float::WrappedF64`
+313 |     assert_eq!(w, w(0.0));
+    |                   ^-----
+    |                   |
+    |                   call expression requires function
+
+For more information about this error, try `rustc --explain E0618`.
+error: could not compile `apas-verus` (test "TestBoruvkaStEph") due to 1 previous error
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 0s

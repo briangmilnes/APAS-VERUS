@@ -218,3 +218,28 @@ fn test_empty_after_drain() {
     assert_eq!(stack.size(), 0);
     assert_eq!(stack.peek(), None);
 }
+
+
+#[test]
+fn test_display() {
+    let mut stack = StackStEph::new();
+    stack.push(1);
+    stack.push(2);
+    let s = format!("{:?}", stack);
+    assert!(!s.is_empty());
+}
+
+
+#[test]
+fn test_push_pop_interleave() {
+    let mut stack = StackStEph::new();
+    stack.push(1);
+    stack.push(2);
+    assert_eq!(stack.pop(), Some(2));
+    stack.push(3);
+    stack.push(4);
+    assert_eq!(stack.pop(), Some(4));
+    assert_eq!(stack.pop(), Some(3));
+    assert_eq!(stack.pop(), Some(1));
+    assert_eq!(stack.pop(), None);
+}

@@ -97,3 +97,11 @@ fn test_reduce_contract_three_elements() {
     let result = ArraySeqStEphS::reduce_contract(&a, &|x, y| x + y, Ghost::assume_new(), 0);
     assert_eq!(result, 33);
 }
+
+
+#[test]
+fn test_reduce_contract_all_same() {
+    let a = ArraySeqStEphS::tabulate(&|_| 7usize, 50);
+    let result = ArraySeqStEphS::reduce_contract(&a, &|x, y| x + y, Ghost::assume_new(), 0);
+    assert_eq!(result, 350);
+}
