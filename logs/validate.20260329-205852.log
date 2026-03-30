@@ -1,0 +1,11 @@
+error: triggers cannot contain let/forall/exists/lambda/choose
+   --> src/Chap37/AVLTreeSeqMtPer.rs:515:58
+    |
+515 |                     #[trigger] out_after_push.map_values(|t: T| t@)[i] ==
+    |                                                          ^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 1425MB, peak z3 RSS: 258MB, min free: 20299MB
+Sampled CPU Usage: rust_verify: 23s, z3 children: 24s
