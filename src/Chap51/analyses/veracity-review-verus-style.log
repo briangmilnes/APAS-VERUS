@@ -1,204 +1,205 @@
 Verus Style Review
 ==================
 
-Path: /home/milnes/projects/APAS-VERUS-agent4/src/Chap51/
-Codebase: /home/milnes/projects/APAS-VERUS-agent4
+Path: /home/milnes/projects/APAS-VERUS-agent3/src/Chap51/
+Codebase: /home/milnes/projects/APAS-VERUS-agent3
 Mode: basic
-Logging to: /home/milnes/projects/APAS-VERUS-agent4/src/Chap51/analyses/veracity-review-verus-style.log
+Excluding: ["experiments", "lib.rs", "standards"]
+Logging to: /home/milnes/projects/APAS-VERUS-agent3/src/Chap51/analyses/veracity-review-verus-style.log
 
 Checking 8 files...
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtEph.rs:39: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtEph.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtEph.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtEph.rs:39: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPMtPer.rs:39: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtPer.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtPer.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtPer.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtPer.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtPer.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtPer.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPMtPer.rs:39: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStEph.rs:38: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStEph.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStEph.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStEph.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStEph.rs:38: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:1: info: [21] no broadcast use entries
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/BottomUpDPStPer.rs:39: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStPer.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStPer.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStPer.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStPer.rs:1: info: [21] no broadcast use entries
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStPer.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStPer.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/BottomUpDPStPer.rs:39: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:67: warning: [18] spec fn spec_min should come before top level coarse locking (expected spec fns before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:72: warning: [18] spec fn spec_med_fn should come before top level coarse locking (expected spec fns before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:87: warning: [18] spec fn spec_memo_correct should come before top level coarse locking (expected spec fns before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:97: warning: [18] proof fn lemma_spec_med_fn_bounded should come before top level coarse locking (expected proof fns/broadcast groups before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:111: warning: [18] trait TopDownDPMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:189: warning: [18] fn med_recursive_sequential should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:265: warning: [18] fn med_recursive_parallel should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:393: warning: [18] impl TopDownDPMtEphTrait for TopDownDPMtEphS should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:446: warning: [18] impl PartialEqSpecImpl for TopDownDPMtEphS should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:453: warning: [18] impl Default for TopDownDPMtEphS should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:67: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:72: warning: [22] free spec fn spec_med_fn should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtEph.rs:87: warning: [22] free spec fn spec_memo_correct should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:67: warning: [18] spec fn spec_min should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:72: warning: [18] spec fn spec_med_fn should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:87: warning: [18] spec fn spec_memo_correct should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:97: warning: [18] proof fn lemma_spec_med_fn_bounded should come before top level coarse locking (expected proof fns/broadcast groups before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:111: warning: [18] trait TopDownDPMtEphTrait should come before top level coarse locking (expected traits before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:189: warning: [18] fn med_recursive_sequential should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:265: warning: [18] fn med_recursive_parallel should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:393: warning: [18] impl TopDownDPMtEphTrait for TopDownDPMtEphS should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:446: warning: [18] impl PartialEqSpecImpl for TopDownDPMtEphS should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:453: warning: [18] impl Default for TopDownDPMtEphS should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:67: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:72: warning: [22] free spec fn spec_med_fn should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtEph.rs:87: warning: [22] free spec fn spec_memo_correct should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:67: warning: [18] spec fn spec_min should come before top level coarse locking (expected spec fns before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:72: warning: [18] spec fn spec_med_fn should come before top level coarse locking (expected spec fns before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:87: warning: [18] spec fn spec_memo_correct should come before top level coarse locking (expected spec fns before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:97: warning: [18] proof fn lemma_spec_med_fn_bounded should come before top level coarse locking (expected proof fns/broadcast groups before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:111: warning: [18] trait TopDownDPMtPerTrait should come before top level coarse locking (expected traits before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:149: warning: [18] fn med_recursive_sequential should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:223: warning: [18] fn med_recursive_parallel should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:351: warning: [18] impl TopDownDPMtPerTrait for TopDownDPMtPerS should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:401: warning: [18] impl PartialEqSpecImpl for TopDownDPMtPerS should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:408: warning: [18] impl Default for TopDownDPMtPerS should come before top level coarse locking (expected impls before top level coarse locking)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:67: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:72: warning: [22] free spec fn spec_med_fn should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPMtPer.rs:87: warning: [22] free spec fn spec_memo_correct should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:67: warning: [18] spec fn spec_min should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:72: warning: [18] spec fn spec_med_fn should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:87: warning: [18] spec fn spec_memo_correct should come before top level coarse locking (expected spec fns before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:97: warning: [18] proof fn lemma_spec_med_fn_bounded should come before top level coarse locking (expected proof fns/broadcast groups before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:111: warning: [18] trait TopDownDPMtPerTrait should come before top level coarse locking (expected traits before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:149: warning: [18] fn med_recursive_sequential should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:223: warning: [18] fn med_recursive_parallel should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:351: warning: [18] impl TopDownDPMtPerTrait for TopDownDPMtPerS should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:401: warning: [18] impl PartialEqSpecImpl for TopDownDPMtPerS should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:408: warning: [18] impl Default for TopDownDPMtPerS should come before top level coarse locking (expected impls before top level coarse locking)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:67: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:72: warning: [22] free spec fn spec_med_fn should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPMtPer.rs:87: warning: [22] free spec fn spec_memo_correct should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:50: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStEph.rs:55: warning: [22] free spec fn spec_med_fn should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStEph.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStEph.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStEph.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStEph.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStEph.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStEph.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStEph.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStEph.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStEph.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStEph.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStEph.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStEph.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStEph.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStEph.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStEph.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStEph.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStEph.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStEph.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStEph.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStEph.rs:50: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStEph.rs:55: warning: [22] free spec fn spec_med_fn should be an abstract signature in a trait with body in the impl
 
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:1: info: [1] has mod declarations
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:1: info: [2] vstd::prelude::* before verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:1: info: [3] has verus! macro
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:1: info: [4] std imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:1: info: [5] vstd imports grouped with trailing blank
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:1: info: [12] all trait fns have specs
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:1: info: [13] trait impls inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:1: info: [14] Debug, Display outside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:1: info: [16] no Lit macro definitions (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:1: info: [17] no collection structs (ok)
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:1: info: [18] definition order correct
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:1: info: [19] no generic return names
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:1: info: [20] all traits have impls
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:1: info: [23] free fn type bounds: N/A
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:1: info: [24] copyright line present
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:50: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
-/home/milnes/projects/APAS-VERUS-agent4/src/Chap51/TopDownDPStPer.rs:55: warning: [22] free spec fn spec_med_fn should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStPer.rs:
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStPer.rs:1: info: [1] has mod declarations
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStPer.rs:1: info: [2] vstd::prelude::* before verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStPer.rs:1: info: [3] has verus! macro
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStPer.rs:1: info: [4] std imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStPer.rs:1: info: [5] vstd imports grouped with trailing blank
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStPer.rs:1: info: [11] Set/Seq usage has broadcast groups
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStPer.rs:1: info: [12] all trait fns have specs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStPer.rs:1: info: [13] trait impls inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStPer.rs:1: info: [14] Debug, Display outside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStPer.rs:1: info: [15] Clone, PartialEq, Eq inside verus!
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStPer.rs:1: info: [16] no Lit macro definitions (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStPer.rs:1: info: [17] no collection structs (ok)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStPer.rs:1: info: [18] definition order correct
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStPer.rs:1: info: [19] no generic return names
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStPer.rs:1: info: [20] all traits have impls
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStPer.rs:1: info: [21] broadcast use: vstd:: before crate::
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStPer.rs:1: info: [23] free fn type bounds: N/A
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStPer.rs:1: info: [24] copyright line present
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStPer.rs:50: warning: [22] free spec fn spec_min should be an abstract signature in a trait with body in the impl
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap51/TopDownDPStPer.rs:55: warning: [22] free spec fn spec_med_fn should be an abstract signature in a trait with body in the impl
 
 ════════════════════════════════════════════════════════════════
 Summary: 142 passed, 34 warnings in 8 files (checked 8 files)

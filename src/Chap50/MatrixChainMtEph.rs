@@ -170,7 +170,9 @@ broadcast use {
                 cost as nat == if old(self)@.dimensions.len() <= 1 { 0 }
                     else { spec_chain_cost(old(self)@.dimensions, 0, (old(self)@.dimensions.len() - 1) as int, 0) };
 
-        fn dimensions(&self) -> (dims: Vec<MatrixDim>);
+        fn dimensions(&self) -> (dims: Vec<MatrixDim>)
+            requires self.spec_matrixchainmteph_wf(),
+            ensures dims@ =~= self@.dimensions;
 
         fn set_dimension(&mut self, index: usize, dim: MatrixDim)
             requires index < old(self)@.dimensions.len(), old(self).spec_matrixchainmteph_wf(),
@@ -422,7 +424,9 @@ broadcast use {
         fn dimensions(&self) -> (dims: Vec<MatrixDim>) {
             let rwlock = arc_deref(&self.dimensions);
             let handle = rwlock.acquire_read();
-            let dims = handle.borrow().clone();
+            let borrowed = handle.borrow();
+            assert(borrowed@ =~= self.ghost_dimensions@);
+            let dims = borrowed.clone();
             handle.release_read();
             dims
         }
