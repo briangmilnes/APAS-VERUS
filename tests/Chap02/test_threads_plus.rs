@@ -102,3 +102,18 @@ fn test_many_threads() {
     
     assert_eq!(results, vec![0, 1, 4, 9, 16, 25, 36, 49, 64, 81]);
 }
+
+#[test]
+fn test_thread_returns_string() {
+    let h = spawn_plus(|| "hello world".to_string());
+    let result = h.join();
+    assert!(matches!(result, Ok(s) if s == "hello world"));
+}
+
+#[test]
+fn test_thread_returns_vec() {
+    let h = spawn_plus(|| (0..20).collect::<Vec<i32>>());
+    let result = h.join().unwrap();
+    assert_eq!(result.len(), 20);
+    assert_eq!(result[19], 19);
+}

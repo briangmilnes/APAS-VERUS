@@ -195,3 +195,26 @@ fn test_string_stack() {
     assert_eq!(stack.pop().as_deref(), Some("beta"));
     assert_eq!(stack.pop().as_deref(), Some("alpha"));
 }
+
+#[test]
+fn test_push_pop_one_by_one() {
+    let mut stack = StackStEph::new();
+    for i in 0..5 {
+        stack.push(i);
+        assert_eq!(stack.size(), 1);
+        assert_eq!(stack.pop(), Some(i));
+        assert_eq!(stack.size(), 0);
+    }
+}
+
+#[test]
+fn test_empty_after_drain() {
+    let mut stack = StackStEph::new();
+    for i in 0..10 {
+        stack.push(i);
+    }
+    while stack.pop().is_some() {}
+    assert!(stack.is_empty());
+    assert_eq!(stack.size(), 0);
+    assert_eq!(stack.peek(), None);
+}
