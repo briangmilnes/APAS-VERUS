@@ -4,6 +4,8 @@
 
 use apas_verus::Chap05::SetStEph::SetStEph::*;
 use apas_verus::Chap06::WeightedDirGraphStEphF64::WeightedDirGraphStEphF64::*;
+use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+use apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::*;
 use apas_verus::Chap58::BellmanFordStEphF64::BellmanFordStEphF64::*;
 use apas_verus::SetLit;
 use apas_verus::Types::Types::*;

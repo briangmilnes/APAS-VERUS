@@ -1,6 +1,7 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 use apas_verus::Chap05::SetStEph::SetStEph::*;
 use apas_verus::Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128::*;
+use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
 use apas_verus::Chap56::AllPairsResultStEphI64::AllPairsResultStEphI64::*;
 use apas_verus::Chap59::JohnsonStEphI64::JohnsonStEphI64::*;
 use apas_verus::SetLit;
@@ -121,4 +122,45 @@ fn test_negative_cycle() {
     assert_eq!(result.get_distance(0, 0), i64::MAX);
     assert_eq!(result.get_distance(0, 1), i64::MAX);
     assert_eq!(result.get_distance(1, 2), i64::MAX);
+}
+
+#[test]
+fn test_diamond() {
+    let vertices = SetLit![0, 1, 2, 3];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 1),
+        WeightedEdge(0, 2, 4),
+        WeightedEdge(1, 3, 2),
+        WeightedEdge(2, 3, 1)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = johnson_apsp(&graph);
+    assert_eq!(result.get_distance(0, 3), 3); // via 0->1->3
+}
+
+#[test]
+fn test_path_extraction() {
+    let vertices = SetLit![0, 1, 2];
+    let edges = SetLit![WeightedEdge(0, 1, 2), WeightedEdge(1, 2, 3)];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = johnson_apsp(&graph);
+    let path = result.extract_path(0, 2).unwrap();
+    assert_eq!(path.length(), 3);
+    assert_eq!(*path.nth(0), 0);
+    assert_eq!(*path.nth(1), 1);
+    assert_eq!(*path.nth(2), 2);
+}
+
+#[test]
+fn test_cycle_no_negative() {
+    let vertices = SetLit![0, 1, 2];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 1),
+        WeightedEdge(1, 2, 1),
+        WeightedEdge(2, 0, 1)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = johnson_apsp(&graph);
+    assert_eq!(result.get_distance(0, 2), 2); // 0->1->2
+    assert_eq!(result.get_distance(1, 0), 2); // 1->2->0
 }

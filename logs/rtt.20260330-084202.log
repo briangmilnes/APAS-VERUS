@@ -1,0 +1,133 @@
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap65/TestUnionFindStEph.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: `apas-verus` (test "TestUnionFindStEph") generated 1 warning
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent1)
+error[E0599]: no method named `len` found for struct `HashMapWithViewPlus<Key, Value>` in the current scope
+   --> tests/Chap66/TestBoruvkaMtEph.rs:159:24
+    |
+159 |     assert_eq!(bridges.len(), 3);
+    |                        ^^^ method not found in `HashMapWithViewPlus<{integer}, ({integer}, WrappedF64, usize)>`
+    |
+   ::: src/vstdplus/hash_map_with_view_plus.rs:64:8
+    |
+ 64 |     fn len(&self) -> (count: usize)
+    |        --- the method is available for `apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlus<{integer}, ({integer}, apas_verus::vstdplus::float::float::WrappedF64, usize)>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: the full name for the type has been written to '/home/milnes/projects/APAS-VERUS-agent1/target/release/deps/TestBoruvkaMtEph-7222d0e3e5749703.long-type-9391522165322201880.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: one of the expressions' fields has a method of the same name
+    |
+159 |     assert_eq!(bridges.inner.len(), 3);
+    |                        ++++++
+help: trait `HashMapWithViewPlusTrait` which provides `len` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait;
+    |
+
+error[E0599]: no method named `get` found for struct `HashMapWithViewPlus<Key, Value>` in the current scope
+   --> tests/Chap66/TestBoruvkaMtEph.rs:160:24
+    |
+160 |     assert_eq!(bridges.get(&1), Some(&(3, w(1.0), 2)));
+    |                        ^^^ method not found in `HashMapWithViewPlus<{integer}, ({integer}, WrappedF64, usize)>`
+    |
+   ::: src/vstdplus/hash_map_with_view_plus.rs:70:8
+    |
+ 70 |     fn get<'a>(&'a self, k: &Key) -> (value: Option<&'a Value>)
+    |        --- the method is available for `apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlus<{integer}, ({integer}, apas_verus::vstdplus::float::float::WrappedF64, usize)>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: the full name for the type has been written to '/home/milnes/projects/APAS-VERUS-agent1/target/release/deps/TestBoruvkaMtEph-7222d0e3e5749703.long-type-9391522165322201880.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: one of the expressions' fields has a method of the same name
+    |
+160 |     assert_eq!(bridges.inner.get(&1), Some(&(3, w(1.0), 2)));
+    |                        ++++++
+help: trait `HashMapWithViewPlusTrait` which provides `get` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait;
+    |
+
+error[E0599]: no method named `get` found for struct `HashMapWithViewPlus<Key, Value>` in the current scope
+   --> tests/Chap66/TestBoruvkaMtEph.rs:161:24
+    |
+161 |     assert_eq!(bridges.get(&2), Some(&(3, w(2.0), 1)));
+    |                        ^^^ method not found in `HashMapWithViewPlus<{integer}, ({integer}, WrappedF64, usize)>`
+    |
+   ::: src/vstdplus/hash_map_with_view_plus.rs:70:8
+    |
+ 70 |     fn get<'a>(&'a self, k: &Key) -> (value: Option<&'a Value>)
+    |        --- the method is available for `apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlus<{integer}, ({integer}, apas_verus::vstdplus::float::float::WrappedF64, usize)>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: the full name for the type has been written to '/home/milnes/projects/APAS-VERUS-agent1/target/release/deps/TestBoruvkaMtEph-7222d0e3e5749703.long-type-9391522165322201880.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: one of the expressions' fields has a method of the same name
+    |
+161 |     assert_eq!(bridges.inner.get(&2), Some(&(3, w(2.0), 1)));
+    |                        ++++++
+help: trait `HashMapWithViewPlusTrait` which provides `get` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait;
+    |
+
+error[E0599]: no method named `get` found for struct `HashMapWithViewPlus<Key, Value>` in the current scope
+   --> tests/Chap66/TestBoruvkaMtEph.rs:162:24
+    |
+162 |     assert_eq!(bridges.get(&3), Some(&(1, w(1.0), 2)));
+    |                        ^^^ method not found in `HashMapWithViewPlus<{integer}, ({integer}, WrappedF64, usize)>`
+    |
+   ::: src/vstdplus/hash_map_with_view_plus.rs:70:8
+    |
+ 70 |     fn get<'a>(&'a self, k: &Key) -> (value: Option<&'a Value>)
+    |        --- the method is available for `apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlus<{integer}, ({integer}, apas_verus::vstdplus::float::float::WrappedF64, usize)>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: the full name for the type has been written to '/home/milnes/projects/APAS-VERUS-agent1/target/release/deps/TestBoruvkaMtEph-7222d0e3e5749703.long-type-9391522165322201880.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: one of the expressions' fields has a method of the same name
+    |
+162 |     assert_eq!(bridges.inner.get(&3), Some(&(1, w(1.0), 2)));
+    |                        ++++++
+help: trait `HashMapWithViewPlusTrait` which provides `get` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait;
+    |
+
+error[E0599]: no method named `len` found for struct `HashMapWithViewPlus<Key, Value>` in the current scope
+   --> tests/Chap66/TestBoruvkaMtEph.rs:171:24
+    |
+171 |     assert_eq!(bridges.len(), 0);
+    |                        ^^^ method not found in `HashMapWithViewPlus<i32, (i32, WrappedF64, usize)>`
+    |
+   ::: src/vstdplus/hash_map_with_view_plus.rs:64:8
+    |
+ 64 |     fn len(&self) -> (count: usize)
+    |        --- the method is available for `apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlus<i32, (i32, apas_verus::vstdplus::float::float::WrappedF64, usize)>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: the full name for the type has been written to '/home/milnes/projects/APAS-VERUS-agent1/target/release/deps/TestBoruvkaMtEph-7222d0e3e5749703.long-type-9391522165322201880.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: one of the expressions' fields has a method of the same name
+    |
+171 |     assert_eq!(bridges.inner.len(), 0);
+    |                        ++++++
+help: trait `HashMapWithViewPlusTrait` which provides `len` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait;
+    |
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `apas-verus` (test "TestBoruvkaMtEph") due to 5 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 0s

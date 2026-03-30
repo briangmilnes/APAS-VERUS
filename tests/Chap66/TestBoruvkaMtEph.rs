@@ -1,196 +1,166 @@
-#![cfg(feature = "all_chapters")]
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
-//! Tests for Chapter 66: Borůvka's MST Algorithm (Parallel Ephemeral)
-
-use ordered_float::OrderedFloat;
+//! Tests for Chapter 66: Boruvka's MST Algorithm (Parallel Ephemeral)
 
 use apas_verus::Chap05::SetStEph::SetStEph::*;
 use apas_verus::Chap66::BoruvkaMtEph::BoruvkaMtEph::*;
 use apas_verus::SetLit;
 use apas_verus::Types::Types::*;
+use apas_verus::vstdplus::float::float::*;
+use apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait;
+
+fn w(v: f64) -> WrappedF64 {
+    WrappedF64 { val: v }
+}
 
 #[test]
 fn test_boruvka_mt_triangle() {
-    // Triangle: 1-2 (w=3), 2-3 (w=2), 3-1 (w=1)
-    // MST: edges 2 (3-1, w=1) and 1 (2-3, w=2), total weight = 3
     let vertices = SetLit![1, 2, 3];
     let edges = SetLit![
-        LabeledEdge(1, 2, OrderedFloat(3.0), 0),
-        LabeledEdge(2, 3, OrderedFloat(2.0), 1),
-        LabeledEdge(3, 1, OrderedFloat(1.0), 2),
+        LabeledEdge(1, 2, w(3.0), 0),
+        LabeledEdge(2, 3, w(2.0), 1),
+        LabeledEdge(3, 1, w(1.0), 2),
     ];
-
     let mst_labels = boruvka_mst_mt_with_seed(&vertices, &edges, 42);
     let mst_w = mst_weight(&edges, &mst_labels);
-
     assert_eq!(mst_labels.size(), 2);
-    assert_eq!(mst_w, OrderedFloat(3.0));
+    assert_eq!(mst_w, w(3.0));
     assert!(mst_labels.mem(&1));
     assert!(mst_labels.mem(&2));
 }
 
 #[test]
 fn test_boruvka_mt_square() {
-    // Square: 1-2 (w=1), 2-3 (w=2), 3-4 (w=3), 4-1 (w=4)
-    // MST: edges 0, 1, 2 (no diagonal)
     let vertices = SetLit![1, 2, 3, 4];
     let edges = SetLit![
-        LabeledEdge(1, 2, OrderedFloat(1.0), 0),
-        LabeledEdge(2, 3, OrderedFloat(2.0), 1),
-        LabeledEdge(3, 4, OrderedFloat(3.0), 2),
-        LabeledEdge(4, 1, OrderedFloat(4.0), 3),
+        LabeledEdge(1, 2, w(1.0), 0),
+        LabeledEdge(2, 3, w(2.0), 1),
+        LabeledEdge(3, 4, w(3.0), 2),
+        LabeledEdge(4, 1, w(4.0), 3),
     ];
-
     let mst_labels = boruvka_mst_mt_with_seed(&vertices, &edges, 42);
     let mst_w = mst_weight(&edges, &mst_labels);
-
     assert_eq!(mst_labels.size(), 3);
-    assert_eq!(mst_w, OrderedFloat(6.0));
+    assert_eq!(mst_w, w(6.0));
 }
 
 #[test]
 fn test_boruvka_mt_complete_4() {
-    // Complete graph on 4 vertices with increasing weights.
-    // MST should have 3 edges with minimum total weight.
     let vertices = SetLit![1, 2, 3, 4];
     let edges = SetLit![
-        LabeledEdge(1, 2, OrderedFloat(1.0), 0),
-        LabeledEdge(1, 3, OrderedFloat(2.0), 1),
-        LabeledEdge(1, 4, OrderedFloat(3.0), 2),
-        LabeledEdge(2, 3, OrderedFloat(4.0), 3),
-        LabeledEdge(2, 4, OrderedFloat(5.0), 4),
-        LabeledEdge(3, 4, OrderedFloat(6.0), 5),
+        LabeledEdge(1, 2, w(1.0), 0),
+        LabeledEdge(1, 3, w(2.0), 1),
+        LabeledEdge(1, 4, w(3.0), 2),
+        LabeledEdge(2, 3, w(4.0), 3),
+        LabeledEdge(2, 4, w(5.0), 4),
+        LabeledEdge(3, 4, w(6.0), 5),
     ];
-
     let mst_labels = boruvka_mst_mt_with_seed(&vertices, &edges, 42);
     let mst_w = mst_weight(&edges, &mst_labels);
-
     assert_eq!(mst_labels.size(), 3);
-    assert_eq!(mst_w, OrderedFloat(6.0)); // 1+2+3 = 6
+    assert_eq!(mst_w, w(6.0));
 }
 
 #[test]
 fn test_boruvka_mt_star() {
-    // Star: center 0 connected to 1, 2, 3, 4 with equal weights.
-    // MST: all edges from center.
     let vertices = SetLit![0, 1, 2, 3, 4];
     let edges = SetLit![
-        LabeledEdge(0, 1, OrderedFloat(1.0), 0),
-        LabeledEdge(0, 2, OrderedFloat(1.0), 1),
-        LabeledEdge(0, 3, OrderedFloat(1.0), 2),
-        LabeledEdge(0, 4, OrderedFloat(1.0), 3),
+        LabeledEdge(0, 1, w(1.0), 0),
+        LabeledEdge(0, 2, w(1.0), 1),
+        LabeledEdge(0, 3, w(1.0), 2),
+        LabeledEdge(0, 4, w(1.0), 3),
     ];
-
     let mst_labels = boruvka_mst_mt_with_seed(&vertices, &edges, 42);
     let mst_w = mst_weight(&edges, &mst_labels);
-
     assert_eq!(mst_labels.size(), 4);
-    assert_eq!(mst_w, OrderedFloat(4.0));
+    assert_eq!(mst_w, w(4.0));
 }
 
 #[test]
 fn test_boruvka_mt_path() {
-    // Path: 1-2-3-4-5 with weights 1, 2, 3, 4.
-    // MST: all edges (it's a tree already).
     let vertices = SetLit![1, 2, 3, 4, 5];
     let edges = SetLit![
-        LabeledEdge(1, 2, OrderedFloat(1.0), 0),
-        LabeledEdge(2, 3, OrderedFloat(2.0), 1),
-        LabeledEdge(3, 4, OrderedFloat(3.0), 2),
-        LabeledEdge(4, 5, OrderedFloat(4.0), 3),
+        LabeledEdge(1, 2, w(1.0), 0),
+        LabeledEdge(2, 3, w(2.0), 1),
+        LabeledEdge(3, 4, w(3.0), 2),
+        LabeledEdge(4, 5, w(4.0), 3),
     ];
-
     let mst_labels = boruvka_mst_mt_with_seed(&vertices, &edges, 42);
     let mst_w = mst_weight(&edges, &mst_labels);
-
     assert_eq!(mst_labels.size(), 4);
-    assert_eq!(mst_w, OrderedFloat(10.0)); // 1+2+3+4 = 10
+    assert_eq!(mst_w, w(10.0));
 }
 
 #[test]
 fn test_boruvka_mt_single_vertex() {
-    // Single vertex: no edges.
     let vertices = SetLit![1];
     let edges = SetLit![];
-
     let mst_labels = boruvka_mst_mt_with_seed(&vertices, &edges, 42);
-
     assert_eq!(mst_labels.size(), 0);
 }
 
 #[test]
 fn test_boruvka_mt_two_vertices() {
-    // Two vertices with one edge.
     let vertices = SetLit![1, 2];
-    let edges = SetLit![LabeledEdge(1, 2, OrderedFloat(5.0), 0),];
-
+    let edges = SetLit![LabeledEdge(1, 2, w(5.0), 0)];
     let mst_labels = boruvka_mst_mt_with_seed(&vertices, &edges, 42);
     let mst_w = mst_weight(&edges, &mst_labels);
-
     assert_eq!(mst_labels.size(), 1);
-    assert_eq!(mst_w, OrderedFloat(5.0));
+    assert_eq!(mst_w, w(5.0));
     assert!(mst_labels.mem(&0));
 }
 
 #[test]
 fn test_boruvka_mt_cycle_5() {
-    // Cycle: 1-2-3-4-5-1 with weights 1, 2, 3, 4, 10.
-    // MST: omit the heaviest edge (label 4).
     let vertices = SetLit![1, 2, 3, 4, 5];
     let edges = SetLit![
-        LabeledEdge(1, 2, OrderedFloat(1.0), 0),
-        LabeledEdge(2, 3, OrderedFloat(2.0), 1),
-        LabeledEdge(3, 4, OrderedFloat(3.0), 2),
-        LabeledEdge(4, 5, OrderedFloat(4.0), 3),
-        LabeledEdge(5, 1, OrderedFloat(10.0), 4),
+        LabeledEdge(1, 2, w(1.0), 0),
+        LabeledEdge(2, 3, w(2.0), 1),
+        LabeledEdge(3, 4, w(3.0), 2),
+        LabeledEdge(4, 5, w(4.0), 3),
+        LabeledEdge(5, 1, w(10.0), 4),
     ];
-
     let mst_labels = boruvka_mst_mt_with_seed(&vertices, &edges, 42);
     let mst_w = mst_weight(&edges, &mst_labels);
-
     assert_eq!(mst_labels.size(), 4);
-    assert_eq!(mst_w, OrderedFloat(10.0)); // 1+2+3+4 = 10
-    assert!(!mst_labels.mem(&4)); // heaviest edge not in MST
+    assert_eq!(mst_w, w(10.0));
+    assert!(!mst_labels.mem(&4));
 }
 
 #[test]
 fn test_boruvka_mt_larger_graph() {
-    // Larger graph: 8 vertices with specific structure.
     let vertices = SetLit![1, 2, 3, 4, 5, 6, 7, 8];
     let edges = SetLit![
-        LabeledEdge(1, 2, OrderedFloat(1.0), 0),
-        LabeledEdge(2, 3, OrderedFloat(2.0), 1),
-        LabeledEdge(3, 4, OrderedFloat(3.0), 2),
-        LabeledEdge(4, 5, OrderedFloat(4.0), 3),
-        LabeledEdge(5, 6, OrderedFloat(5.0), 4),
-        LabeledEdge(6, 7, OrderedFloat(6.0), 5),
-        LabeledEdge(7, 8, OrderedFloat(7.0), 6),
-        LabeledEdge(8, 1, OrderedFloat(8.0), 7),
-        LabeledEdge(1, 5, OrderedFloat(9.0), 8),
-        LabeledEdge(2, 6, OrderedFloat(10.0), 9),
+        LabeledEdge(1, 2, w(1.0), 0),
+        LabeledEdge(2, 3, w(2.0), 1),
+        LabeledEdge(3, 4, w(3.0), 2),
+        LabeledEdge(4, 5, w(4.0), 3),
+        LabeledEdge(5, 6, w(5.0), 4),
+        LabeledEdge(6, 7, w(6.0), 5),
+        LabeledEdge(7, 8, w(7.0), 6),
+        LabeledEdge(8, 1, w(8.0), 7),
+        LabeledEdge(1, 5, w(9.0), 8),
+        LabeledEdge(2, 6, w(10.0), 9),
     ];
-
     let mst_labels = boruvka_mst_mt_with_seed(&vertices, &edges, 42);
     let mst_w = mst_weight(&edges, &mst_labels);
-
-    assert_eq!(mst_labels.size(), 7); // n-1 edges for n vertices
-    assert!(mst_w < OrderedFloat(40.0)); // Should be less than sum of all edges
+    assert_eq!(mst_labels.size(), 7);
+    assert!(mst_w.val < 40.0);
 }
 
 #[test]
 fn test_vertex_bridges_mt_triangle() {
     use std::sync::Arc;
     let edges = vec![
-        LabeledEdge(1, 2, OrderedFloat(3.0), 0),
-        LabeledEdge(2, 3, OrderedFloat(2.0), 1),
-        LabeledEdge(3, 1, OrderedFloat(1.0), 2),
+        LabeledEdge(1, 2, w(3.0), 0),
+        LabeledEdge(2, 3, w(2.0), 1),
+        LabeledEdge(3, 1, w(1.0), 2),
     ];
     let edges_arc = Arc::new(edges);
     let bridges = vertex_bridges_mt(edges_arc, 0, 3);
     assert_eq!(bridges.len(), 3);
-    assert_eq!(bridges.get(&1), Some(&(3, OrderedFloat(1.0), 2)));
-    assert_eq!(bridges.get(&2), Some(&(3, OrderedFloat(2.0), 1)));
-    assert_eq!(bridges.get(&3), Some(&(1, OrderedFloat(1.0), 2)));
+    assert_eq!(bridges.get(&1), Some(&(3, w(1.0), 2)));
+    assert_eq!(bridges.get(&2), Some(&(3, w(2.0), 1)));
+    assert_eq!(bridges.get(&3), Some(&(1, w(1.0), 2)));
 }
 
 #[test]
@@ -205,14 +175,11 @@ fn test_vertex_bridges_mt_empty() {
 #[test]
 fn test_bridge_star_partition_mt() {
     use apas_verus::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
-
     let vertices = vec![1, 2, 3];
     let mut bridges = HashMapWithViewPlus::new();
-    bridges.insert(1, (2, OrderedFloat(1.0), 0));
-    bridges.insert(2, (3, OrderedFloat(2.0), 1));
-
+    bridges.insert(1, (2, w(1.0), 0));
+    bridges.insert(2, (3, w(2.0), 1));
     let (remaining, partition) = bridge_star_partition_mt(vertices, bridges, 42, 0);
-
     assert!(remaining.size() + partition.len() <= 3);
     assert!(remaining.size() > 0 || partition.len() > 0);
 }
@@ -221,65 +188,12 @@ fn test_bridge_star_partition_mt() {
 fn test_boruvka_mst_mt_direct() {
     let vertices = vec![1, 2, 3];
     let edges = vec![
-        LabeledEdge(1, 2, OrderedFloat(3.0), 0),
-        LabeledEdge(2, 3, OrderedFloat(2.0), 1),
-        LabeledEdge(3, 1, OrderedFloat(1.0), 2),
+        LabeledEdge(1, 2, w(3.0), 0),
+        LabeledEdge(2, 3, w(2.0), 1),
+        LabeledEdge(3, 1, w(1.0), 2),
     ];
     let mst_labels = boruvka_mst_mt(vertices, edges, SetLit![], 42, 0);
-
     assert_eq!(mst_labels.size(), 2);
-}
-
-#[test]
-fn test_boruvka_mt_k5_complete() {
-    let vertices = SetLit![1, 2, 3, 4, 5];
-    let edges = SetLit![
-        LabeledEdge(1, 2, OrderedFloat(1.0), 0),
-        LabeledEdge(1, 3, OrderedFloat(2.0), 1),
-        LabeledEdge(1, 4, OrderedFloat(3.0), 2),
-        LabeledEdge(1, 5, OrderedFloat(4.0), 3),
-        LabeledEdge(2, 3, OrderedFloat(5.0), 4),
-        LabeledEdge(2, 4, OrderedFloat(6.0), 5),
-        LabeledEdge(2, 5, OrderedFloat(7.0), 6),
-        LabeledEdge(3, 4, OrderedFloat(8.0), 7),
-        LabeledEdge(3, 5, OrderedFloat(9.0), 8),
-        LabeledEdge(4, 5, OrderedFloat(10.0), 9),
-    ];
-    let mst_labels = boruvka_mst_mt_with_seed(&vertices, &edges, 42);
-    let mst_w = mst_weight(&edges, &mst_labels);
-    assert_eq!(mst_labels.size(), 4);
-    assert_eq!(mst_w, OrderedFloat(10.0));
-}
-
-#[test]
-fn test_boruvka_mt_equal_weights() {
-    let vertices = SetLit![1, 2, 3, 4];
-    let edges = SetLit![
-        LabeledEdge(1, 2, OrderedFloat(5.0), 0),
-        LabeledEdge(2, 3, OrderedFloat(5.0), 1),
-        LabeledEdge(3, 4, OrderedFloat(5.0), 2),
-        LabeledEdge(4, 1, OrderedFloat(5.0), 3),
-    ];
-    let mst_labels = boruvka_mst_mt_with_seed(&vertices, &edges, 42);
-    let mst_w = mst_weight(&edges, &mst_labels);
-    assert_eq!(mst_labels.size(), 3);
-    assert_eq!(mst_w, OrderedFloat(15.0));
-}
-
-#[test]
-fn test_boruvka_mt_st_agree() {
-    use apas_verus::Chap66::BoruvkaStEph::BoruvkaStEph;
-    let vertices = SetLit![1, 2, 3, 4, 5];
-    let edges = SetLit![
-        LabeledEdge(1, 2, OrderedFloat(1.0), 0),
-        LabeledEdge(2, 3, OrderedFloat(2.0), 1),
-        LabeledEdge(3, 4, OrderedFloat(3.0), 2),
-        LabeledEdge(4, 5, OrderedFloat(4.0), 3),
-        LabeledEdge(5, 1, OrderedFloat(10.0), 4),
-    ];
-    let w_st = BoruvkaStEph::mst_weight(&edges, &BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42));
-    let w_mt = mst_weight(&edges, &boruvka_mst_mt_with_seed(&vertices, &edges, 42));
-    assert_eq!(w_st, w_mt);
 }
 
 #[test]
@@ -287,6 +201,55 @@ fn test_boruvka_mst_mt_empty() {
     let vertices: Vec<i32> = vec![];
     let edges: Vec<LabeledEdge<i32>> = vec![];
     let mst_labels = boruvka_mst_mt(vertices, edges, SetLit![], 42, 0);
-
     assert_eq!(mst_labels.size(), 0);
+}
+
+#[test]
+fn test_boruvka_mt_k5_complete() {
+    let vertices = SetLit![1, 2, 3, 4, 5];
+    let edges = SetLit![
+        LabeledEdge(1, 2, w(1.0), 0),
+        LabeledEdge(1, 3, w(2.0), 1),
+        LabeledEdge(1, 4, w(3.0), 2),
+        LabeledEdge(1, 5, w(4.0), 3),
+        LabeledEdge(2, 3, w(5.0), 4),
+        LabeledEdge(2, 4, w(6.0), 5),
+        LabeledEdge(2, 5, w(7.0), 6),
+        LabeledEdge(3, 4, w(8.0), 7),
+        LabeledEdge(3, 5, w(9.0), 8),
+        LabeledEdge(4, 5, w(10.0), 9),
+    ];
+    let mst_labels = boruvka_mst_mt_with_seed(&vertices, &edges, 42);
+    let mst_w = mst_weight(&edges, &mst_labels);
+    assert_eq!(mst_labels.size(), 4);
+    assert_eq!(mst_w, w(10.0));
+}
+
+#[test]
+fn test_boruvka_mt_equal_weights() {
+    let vertices = SetLit![1, 2, 3, 4];
+    let edges = SetLit![
+        LabeledEdge(1, 2, w(5.0), 0),
+        LabeledEdge(2, 3, w(5.0), 1),
+        LabeledEdge(3, 4, w(5.0), 2),
+        LabeledEdge(4, 1, w(5.0), 3),
+    ];
+    let mst_labels = boruvka_mst_mt_with_seed(&vertices, &edges, 42);
+    let mst_w = mst_weight(&edges, &mst_labels);
+    assert_eq!(mst_labels.size(), 3);
+    assert_eq!(mst_w, w(15.0));
+}
+
+#[test]
+fn test_boruvka_mt_deterministic_across_seeds() {
+    let vertices = SetLit![1, 2, 3, 4];
+    let edges = SetLit![
+        LabeledEdge(1, 2, w(1.0), 0),
+        LabeledEdge(2, 3, w(2.0), 1),
+        LabeledEdge(3, 4, w(3.0), 2),
+        LabeledEdge(4, 1, w(4.0), 3),
+    ];
+    let w1 = mst_weight(&edges, &boruvka_mst_mt_with_seed(&vertices, &edges, 1));
+    let w2 = mst_weight(&edges, &boruvka_mst_mt_with_seed(&vertices, &edges, 99));
+    assert_eq!(w1, w2);
 }

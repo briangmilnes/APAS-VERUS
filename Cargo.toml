@@ -1121,25 +1121,25 @@ path = "tests/Chap57/TestDijkstraStEphU64.rs"
 name = "TestStackStEph"
 path = "tests/Chap57/TestStackStEph.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestBellmanFordStEphF64"
-# path = "tests/Chap58/TestBellmanFordStEphF64.rs"
+[[test]]
+name = "TestBellmanFordStEphF64"
+path = "tests/Chap58/TestBellmanFordStEphF64.rs"
 
 [[test]]
 name = "TestBellmanFordStEphI64"
 path = "tests/Chap58/TestBellmanFordStEphI64.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestJohnsonMtEphF64"
-# path = "tests/Chap59/TestJohnsonMtEphF64.rs"
+[[test]]
+name = "TestJohnsonMtEphF64"
+path = "tests/Chap59/TestJohnsonMtEphF64.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestJohnsonMtEphI64"
-# path = "tests/Chap59/TestJohnsonMtEphI64.rs"
+[[test]]
+name = "TestJohnsonMtEphI64"
+path = "tests/Chap59/TestJohnsonMtEphI64.rs"
 
-# [[test]]  # module commented out in lib.rs
-# name = "TestJohnsonStEphF64"
-# path = "tests/Chap59/TestJohnsonStEphF64.rs"
+[[test]]
+name = "TestJohnsonStEphF64"
+path = "tests/Chap59/TestJohnsonStEphF64.rs"
 
 [[test]]
 name = "TestJohnsonStEphI64"
@@ -1209,11 +1209,11 @@ path = "tests/Chap64/TestSpanTreeStEph.rs"
 name = "TestUnionFindStEph"
 path = "tests/Chap65/TestUnionFindStEph.rs"
 
-# [[test]]  # uses ordered_float (removed crate)
-# name = "TestBoruvkaMtEph"
-# path = "tests/Chap66/TestBoruvkaMtEph.rs"
+[[test]]
+name = "TestBoruvkaMtEph"
+path = "tests/Chap66/TestBoruvkaMtEph.rs"
 
-# [[test]]  # uses ordered_float (removed crate)
-# name = "TestBoruvkaStEph"
-# path = "tests/Chap66/TestBoruvkaStEph.rs"
+[[test]]
+name = "TestBoruvkaStEph"
+path = "tests/Chap66/TestBoruvkaStEph.rs"
 

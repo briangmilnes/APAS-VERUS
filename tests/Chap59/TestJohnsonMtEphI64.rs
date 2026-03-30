@@ -134,3 +134,37 @@ fn test_empty_graph() {
 
     assert_eq!(result.n, 0);
 }
+
+#[test]
+fn test_mt_diamond() {
+    let vertices = SetLit![0, 1, 2, 3];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 1),
+        WeightedEdge(0, 2, 4),
+        WeightedEdge(1, 3, 2),
+        WeightedEdge(2, 3, 1)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = johnson_apsp(&graph);
+    assert_eq!(result.get_distance(0, 3), 3);
+}
+
+#[test]
+fn test_mt_st_agree() {
+    use apas_verus::Chap59::JohnsonStEphI64::JohnsonStEphI64::johnson_apsp as johnson_st;
+    let vertices = SetLit![0, 1, 2];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 3),
+        WeightedEdge(1, 2, -1),
+        WeightedEdge(0, 2, 5)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let st = johnson_st(&graph);
+    let mt = johnson_apsp(&graph);
+    for u in 0..3 {
+        for v in 0..3 {
+            assert_eq!(st.get_distance(u, v), mt.get_distance(u, v),
+                "mismatch at ({u},{v})");
+        }
+    }
+}

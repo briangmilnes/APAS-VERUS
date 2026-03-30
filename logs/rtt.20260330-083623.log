@@ -1,0 +1,110 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent1)
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap65/TestUnionFindStEph.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: `apas-verus` (test "TestUnionFindStEph") generated 1 warning
+error[E0599]: no method named `length` found for struct `apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap59/TestJohnsonStEphI64.rs:147:21
+    |
+147 |     assert_eq!(path.length(), 3);
+    |                     ^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:186:12
+    |
+186 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<usize>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap19/ArraySeqStPer.rs:192:9
+    |
+192 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+193 | |             requires index < self.spec_len()
+194 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerTrait;
+    |
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap59/TestJohnsonStEphI64.rs:148:22
+    |
+148 |     assert_eq!(*path.nth(0), 0);
+    |                      ^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:192:12
+    |
+192 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<usize>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap19/ArraySeqStPer.rs:186:9
+    |
+186 | /         fn length(&self) -> (len: usize)
+187 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerTrait;
+    |
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap59/TestJohnsonStEphI64.rs:149:22
+    |
+149 |     assert_eq!(*path.nth(1), 1);
+    |                      ^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:192:12
+    |
+192 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<usize>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap19/ArraySeqStPer.rs:186:9
+    |
+186 | /         fn length(&self) -> (len: usize)
+187 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerTrait;
+    |
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap59/TestJohnsonStEphI64.rs:150:22
+    |
+150 |     assert_eq!(*path.nth(2), 2);
+    |                      ^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:192:12
+    |
+192 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<usize>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap19/ArraySeqStPer.rs:186:9
+    |
+186 | /         fn length(&self) -> (len: usize)
+187 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerTrait;
+    |
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `apas-verus` (test "TestJohnsonStEphI64") due to 4 previous errors
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 0s
