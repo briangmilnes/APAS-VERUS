@@ -1,0 +1,29 @@
+error: found a cyclic self-reference in a definition, which may result in nontermination
+   --> src/Chap06/DirGraphStEph.rs:116:9
+    |
+ 75 | /      pub trait DirGraphStEphTrait<V: StT + Hash>:
+ 76 | |           View<V = GraphView<<V as View>::V>> + Sized {
+ 77 | |
+ 78 | |          spec fn spec_dirgraphsteph_wf(&self) -> bool;
+...   |
+116 | |/         fn empty() -> (g: DirGraphStEph<V>)
+117 | ||             requires valid_key_type_Edge::<V>()
+118 | ||             ensures
+119 | ||                 g.spec_dirgraphsteph_wf(),
+120 | ||                 spec_graphview_wf(g@),
+121 | ||                 g@.V =~= Set::<<V as View>::V>::empty(),
+122 | ||                 g@.A =~= Set::<(<V as View>::V, <V as View>::V)>::empty();
+    | ||__________________________________________________________________________^ may be part of cycle (node 1 of 3 in cycle): function definition, whose body may have dependencies
+...   |
+223 | |              ensures n == self.spec_n_plus(v@).len();
+224 | |      }
+    | |______- may be part of cycle (node 3 of 3 in cycle): declaration of trait
+...
+245 |            open spec fn spec_dirgraphsteph_wf(&self) -> bool {
+    |                      --------------------------------------- may be part of cycle (node 2 of 3 in cycle): function definition, whose body may have dependencies
+
+error: aborting due to 1 previous error
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 707MB, peak z3 RSS: 0MB, min free: 25297MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

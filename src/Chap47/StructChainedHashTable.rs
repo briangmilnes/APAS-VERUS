@@ -313,7 +313,7 @@ pub mod StructChainedHashTable {
             for StructChainedHashTableStEph
         {
             /// Strengthened well-formedness: spec_hashtable_wf plus per-chain key uniqueness.
-            open spec fn spec_impl_wf(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>) -> bool {
+            open spec fn spec_parahashtablesteph_wf(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>) -> bool {
                 spec_hashtable_wf(table)
                 && forall |j: int| 0 <= j < table.table@.len()
                     ==> spec_chain_keys_unique(#[trigger] table.table@[j].head)
@@ -474,7 +474,7 @@ pub mod StructChainedHashTable {
                     invariant
                         i <= table.table@.len(),
                         table.table@.len() == table.current_size as int,
-                        Self::spec_impl_wf(table),
+                        Self::spec_parahashtablesteph_wf(table),
                         new_size > 0,
                         pairs_map =~= spec_seq_pairs_to_map::<Key, Value>(pairs@),
                         forall |k: Key| #[trigger] pairs_map.dom().contains(k) ==> (
@@ -510,7 +510,7 @@ pub mod StructChainedHashTable {
                             forall |k: Key| #[trigger] inner_collected.dom().contains(k)
                                 ==> !old_outer_pairs_map.dom().contains(k),
                             // Immutable context.
-                            Self::spec_impl_wf(table),
+                            Self::spec_parahashtablesteph_wf(table),
                             i < table.table@.len(),
                             table.table@.len() == table.current_size as int,
                             table.current_size > 0,
@@ -765,7 +765,7 @@ pub mod StructChainedHashTable {
                 };
 
                 proof {
-                    // Establish spec_impl_wf for the empty new table.
+                    // Establish spec_parahashtablesteph_wf for the empty new table.
                     assert forall |kk: Key, j: int|
                         0 <= j < new_table.table@.len()
                         && j != (new_table.spec_hash@)(kk) as int
@@ -788,7 +788,7 @@ pub mod StructChainedHashTable {
                         new_table.current_size == new_size,
                         new_table.table@.len() == new_size as int,
                         new_table.num_elements <= m,
-                        Self::spec_impl_wf(&new_table),
+                        Self::spec_parahashtablesteph_wf(&new_table),
                         new_table.spec_hash == table.spec_hash,
                         new_table@ =~= spec_seq_pairs_to_map::<Key, Value>(
                             pairs@.subrange(0, m as int)

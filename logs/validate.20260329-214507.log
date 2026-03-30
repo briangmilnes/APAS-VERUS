@@ -1,0 +1,433 @@
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:486:17
+    |
+486 |                 spec_hashtable_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/DoubleHashFlatHashTableStEph.rs:365:29
+    |
+365 | ...                   return;
+    |                       ------ at this exit
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:486:17
+    |
+486 |                 spec_hashtable_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/DoubleHashFlatHashTableStEph.rs:469:25
+    |
+469 |                         return;
+    |                         ------ at this exit
+
+note: diagnostics via expansion
+   --> src/Chap47/ParaHashTableStEph.rs:69:29
+    |
+ 69 |             ==> !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k))
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+486 |                 spec_hashtable_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+table.view() =~= old(table).view().insert(old(key), old(value)) ✔
+spec_hashtable_wf(table) ✘
+|   table.table.view().len() == table.current_size ✔
+|   table.current_size > 0 ✔
+|   forall |k, j|
+|       let tmp%% = 0 in let tmp%% = j in let tmp%% = table.table.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == table.spec_hash(k) % table.current_size) ==>
+|           !(table.table.view().index(j).spec_entry_to_map().dom().contains(k)) ✘
+|   spec_hash_fn_valid(table.spec_hash) ✔
++---
+spec_impl_wf(table) ✔
+table.spec_hash =~= old(table).spec_hash ✔
+table.current_size == old(table).current_size ✔
+table.num_elements <= old(table).num_elements + 1 ✔
+(exists |s| spec_other_slots_preserved(old(table).table.view(), table.table.view(), s)) ✔
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:519:17
+    |
+519 |                 spec_hashtable_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/DoubleHashFlatHashTableStEph.rs:758:29
+    |
+758 | ...                   return true;
+    |                       ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:519:17
+    |
+519 |                 spec_hashtable_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/DoubleHashFlatHashTableStEph.rs:775:25
+    |
+775 |                         return false;
+    |                         ------------ at this exit
+
+note: diagnostics via expansion
+   --> src/Chap47/ParaHashTableStEph.rs:69:29
+    |
+ 69 |             ==> !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k))
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+519 |                 spec_hashtable_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == old(table).view().dom().contains(old(key)) ✔
+table.view() =~= old(table).view().remove(old(key)) ✔
+spec_hashtable_wf(table) ✘
+|   table.table.view().len() == table.current_size ✔
+|   table.current_size > 0 ✔
+|   forall |k, j|
+|       let tmp%% = 0 in let tmp%% = j in let tmp%% = table.table.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == table.spec_hash(k) % table.current_size) ==>
+|           !(table.table.view().index(j).spec_entry_to_map().dom().contains(k)) ✘
+|   spec_hash_fn_valid(table.spec_hash) ✔
++---
+spec_impl_wf(table) ✔
+table.spec_hash =~= old(table).spec_hash ✔
+table.current_size == old(table).current_size ✔
+
+error: precondition not satisfied
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:947:17
+    |
+947 |                 Self::insert(&mut new_table, key, value);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:478:17
+    |
+478 |                 spec_hashtable_wf(old(table)),
+    |                 ----------------------------- failed precondition
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:565:17
+    |
+565 |                 spec_hashtable_wf(&resized),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/DoubleHashFlatHashTableStEph.rs:964:13
+    |
+964 |             new_table
+    |             --------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap47/ParaHashTableStEph.rs:69:29
+    |
+ 69 |             ==> !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k))
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+478 |                 spec_hashtable_wf(old(table)),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_hashtable_wf(new_table) ✘
+|   new_table.table.view().len() == new_table.current_size ✔
+|   new_table.current_size > 0 ✔
+|   forall |k, j|
+|       let tmp%% = 0 in let tmp%% = j in let tmp%% = new_table.table.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == new_table.spec_hash(k) % new_table.current_size) ==>
+|           !(new_table.table.view().index(j).spec_entry_to_map().dom().contains(k)) ✘
+|   spec_hash_fn_valid(new_table.spec_hash) ✔
++---
+spec_impl_wf(new_table) ✔
+new_table.num_elements < UnsignedMax.Exec(usize::BITS) ✔
+spec_has_insert_capacity(new_table) ✔
+obeys_feq_clone() ✔
+obeys_feq_clone() ✔
+
+note: recommendation not met
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:864:28
+    |
+864 |                     assert(sub_next.drop_last() =~= table.table@.subrange(0, i as int));
+    |                            ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:865:28
+    |
+865 |                     assert(sub_next.last() == table.table@[i as int]);
+    |                            ^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:154:12
+    |
+    = note: recommendation not met
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:486:17
+    |
+486 |                 spec_hashtable_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/LinProbFlatHashTableStEph.rs:321:29
+    |
+321 | ...                   return;
+    |                       ------ at this exit
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:486:17
+    |
+486 |                 spec_hashtable_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/LinProbFlatHashTableStEph.rs:447:25
+    |
+447 |                         return;
+    |                         ------ at this exit
+
+note: 
+
+table.view() =~= old(table).view().insert(old(key), old(value)) ✔
+spec_hashtable_wf(table) ✘
+|   table.table.view().len() == table.current_size ✔
+|   table.current_size > 0 ✔
+|   forall |k, j|
+|       let tmp%% = 0 in let tmp%% = j in let tmp%% = table.table.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == table.spec_hash(k) % table.current_size) ==>
+|           !(table.table.view().index(j).spec_entry_to_map().dom().contains(k)) ✘
+|   spec_hash_fn_valid(table.spec_hash) ✔
++---
+spec_impl_wf(table) ✔
+table.spec_hash =~= old(table).spec_hash ✔
+table.current_size == old(table).current_size ✔
+table.num_elements <= old(table).num_elements + 1 ✔
+(exists |s| spec_other_slots_preserved(old(table).table.view(), table.table.view(), s)) ✔
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:519:17
+    |
+519 |                 spec_hashtable_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/LinProbFlatHashTableStEph.rs:687:29
+    |
+687 | ...                   return true;
+    |                       ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:519:17
+    |
+519 |                 spec_hashtable_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/LinProbFlatHashTableStEph.rs:707:25
+    |
+707 |                         return false;
+    |                         ------------ at this exit
+
+note: 
+
+%return == old(table).view().dom().contains(old(key)) ✔
+table.view() =~= old(table).view().remove(old(key)) ✔
+spec_hashtable_wf(table) ✘
+|   table.table.view().len() == table.current_size ✔
+|   table.current_size > 0 ✔
+|   forall |k, j|
+|       let tmp%% = 0 in let tmp%% = j in let tmp%% = table.table.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == table.spec_hash(k) % table.current_size) ==>
+|           !(table.table.view().index(j).spec_entry_to_map().dom().contains(k)) ✘
+|   spec_hash_fn_valid(table.spec_hash) ✔
++---
+spec_impl_wf(table) ✔
+table.spec_hash =~= old(table).spec_hash ✔
+table.current_size == old(table).current_size ✔
+
+error: precondition not satisfied
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:861:17
+    |
+861 |                 Self::insert(&mut new_table, key, value);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:478:17
+    |
+478 |                 spec_hashtable_wf(old(table)),
+    |                 ----------------------------- failed precondition
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:565:17
+    |
+565 |                 spec_hashtable_wf(&resized),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/LinProbFlatHashTableStEph.rs:879:13
+    |
+879 |             new_table
+    |             --------- at the end of the function body
+
+note: 
+
+spec_hashtable_wf(new_table) ✘
+|   new_table.table.view().len() == new_table.current_size ✔
+|   new_table.current_size > 0 ✔
+|   forall |k, j|
+|       let tmp%% = 0 in let tmp%% = j in let tmp%% = new_table.table.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == new_table.spec_hash(k) % new_table.current_size) ==>
+|           !(new_table.table.view().index(j).spec_entry_to_map().dom().contains(k)) ✘
+|   spec_hash_fn_valid(new_table.spec_hash) ✔
++---
+spec_impl_wf(new_table) ✔
+new_table.num_elements < UnsignedMax.Exec(usize::BITS) ✔
+spec_has_insert_capacity(new_table) ✔
+obeys_feq_clone() ✔
+obeys_feq_clone() ✔
+
+note: recommendation not met
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:777:28
+    |
+777 |                     assert(sub_next.drop_last() =~= table.table@.subrange(0, i as int));
+    |                            ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:778:28
+    |
+778 |                     assert(sub_next.last() == table.table@[i as int]);
+    |                            ^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:154:12
+    |
+    = note: recommendation not met
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:486:17
+    |
+486 |                 spec_hashtable_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/QuadProbFlatHashTableStEph.rs:683:29
+    |
+683 | ...                   return;
+    |                       ------ at this exit
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:571:13
+    |
+571 |             while attempt < m
+    |             ^^^^^^^^^^^^^^^^^
+
+note: 
+
+table.view() =~= old(table).view().insert(old(key), old(value)) ✔
+spec_hashtable_wf(table) ✘
+|   table.table.view().len() == table.current_size ✔
+|   table.current_size > 0 ✔
+|   forall |k, j|
+|       let tmp%% = 0 in let tmp%% = j in let tmp%% = table.table.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == table.spec_hash(k) % table.current_size) ==>
+|           !(table.table.view().index(j).spec_entry_to_map().dom().contains(k)) ✘
+|   spec_hash_fn_valid(table.spec_hash) ✔
++---
+spec_impl_wf(table) ✔
+table.spec_hash =~= old(table).spec_hash ✔
+table.current_size == old(table).current_size ✔
+table.num_elements <= old(table).num_elements + 1 ✔
+(exists |s| spec_other_slots_preserved(old(table).table.view(), table.table.view(), s)) ✔
+
+error: postcondition not satisfied
+    --> src/Chap47/ParaHashTableStEph.rs:519:17
+     |
+ 519 |                 spec_hashtable_wf(table),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+     |
+    ::: src/Chap47/QuadProbFlatHashTableStEph.rs:1077:29
+     |
+1077 | ...                   return true;
+     |                       ----------- at this exit
+
+error: postcondition not satisfied
+    --> src/Chap47/ParaHashTableStEph.rs:519:17
+     |
+ 519 |                 spec_hashtable_wf(table),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+     |
+    ::: src/Chap47/QuadProbFlatHashTableStEph.rs:1094:25
+     |
+1094 |                         return false;
+     |                         ------------ at this exit
+
+note: 
+
+%return == old(table).view().dom().contains(old(key)) ✔
+table.view() =~= old(table).view().remove(old(key)) ✔
+spec_hashtable_wf(table) ✘
+|   table.table.view().len() == table.current_size ✔
+|   table.current_size > 0 ✔
+|   forall |k, j|
+|       let tmp%% = 0 in let tmp%% = j in let tmp%% = table.table.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == table.spec_hash(k) % table.current_size) ==>
+|           !(table.table.view().index(j).spec_entry_to_map().dom().contains(k)) ✘
+|   spec_hash_fn_valid(table.spec_hash) ✔
++---
+spec_impl_wf(table) ✔
+table.spec_hash =~= old(table).spec_hash ✔
+table.current_size == old(table).current_size ✔
+
+error: precondition not satisfied
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1260:17
+     |
+1260 |                 Self::insert(&mut new_table, key, value);
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap47/ParaHashTableStEph.rs:478:17
+     |
+ 478 |                 spec_hashtable_wf(old(table)),
+     |                 ----------------------------- failed precondition
+
+error: postcondition not satisfied
+    --> src/Chap47/ParaHashTableStEph.rs:565:17
+     |
+ 565 |                 spec_hashtable_wf(&resized),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+     |
+    ::: src/Chap47/QuadProbFlatHashTableStEph.rs:1277:13
+     |
+1277 |             new_table
+     |             --------- at the end of the function body
+
+note: 
+
+spec_hashtable_wf(new_table) ✘
+|   new_table.table.view().len() == new_table.current_size ✔
+|   new_table.current_size > 0 ✔
+|   forall |k, j|
+|       let tmp%% = 0 in let tmp%% = j in let tmp%% = new_table.table.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == new_table.spec_hash(k) % new_table.current_size) ==>
+|           !(new_table.table.view().index(j).spec_entry_to_map().dom().contains(k)) ✘
+|   spec_hash_fn_valid(new_table.spec_hash) ✔
++---
+spec_impl_wf(new_table) ✔
+new_table.num_elements < UnsignedMax.Exec(usize::BITS) ✔
+spec_has_insert_capacity(new_table) ✔
+obeys_feq_clone() ✔
+obeys_feq_clone() ✔
+
+note: recommendation not met
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1179:28
+     |
+1179 |                     assert(sub_next.drop_last() =~= table.table@.subrange(0, i as int));
+     |                            ^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq_lib.rs:492:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1180:28
+     |
+1180 |                     assert(sub_next.last() == table.table@[i as int]);
+     |                            ^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:154:12
+     |
+     = note: recommendation not met
+
+verification results:: 1139 verified, 12 errors
+error: aborting due to 18 previous errors
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 949MB, peak z3 RSS: 265MB, min free: 24674MB
+Sampled CPU Usage: rust_verify: 11s, z3 children: 13s

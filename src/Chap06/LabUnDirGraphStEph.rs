@@ -65,21 +65,23 @@ verus! {
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn empty() -> (g: LabUnDirGraphStEph<V, L>)
+        fn empty() -> (g: Self)
             requires valid_key_type_LabEdge::<V, L>()
             ensures
+                g.spec_labundirgraphsteph_wf(),
                 spec_labgraphview_wf(g@),
                 g@.V =~= Set::<<V as View>::V>::empty(),
                 g@.A =~= Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();
 
         /// - APAS: Work Θ(|V| + |E|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(|V| + |E|) — sequential
-        fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> (g: LabUnDirGraphStEph<V, L>)
+        fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> (g: Self)
             requires
                 forall |u: V::V, w: V::V, l: L::V|
                     #[trigger] labeled_edges@.contains((u, w, l)) ==>
                         vertices@.contains(u) && vertices@.contains(w),
             ensures
+                g.spec_labundirgraphsteph_wf(),
                 spec_labgraphview_wf(g@),
                 g@.V =~= vertices@,
                 g@.A =~= labeled_edges@;

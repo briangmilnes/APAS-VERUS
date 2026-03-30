@@ -565,7 +565,7 @@ pub mod LinkedListChainedHashTableStEph {
                         new_table.current_size == new_size,
                         new_table.table@.len() == new_table.current_size as int,
                         new_table.num_elements <= m,
-                        Self::spec_impl_wf(&new_table),
+                        Self::spec_parahashtablesteph_wf(&new_table),
                         new_table@ =~= spec_seq_pairs_to_map(
                             pairs@.subrange(0, m as int)),
                         new_table.spec_hash == table.spec_hash,
