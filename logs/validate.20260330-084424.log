@@ -1,0 +1,42 @@
+error[E0614]: type `T` cannot be dereferenced
+   --> src/Chap37/BSTPlainMtEph.rs:296:37
+    |
+296 |                 found.is_some() ==> *found.unwrap() == *target;
+    |                                     ^^^^^^^^^^^^^^^ can't be dereferenced
+
+error[E0614]: type `T` cannot be dereferenced
+   --> src/Chap37/BSTPlainMtEph.rs:302:55
+    |
+302 |                 min.is_some() ==> self@.tree_contains(*min.unwrap());
+    |                                                       ^^^^^^^^^^^^^ can't be dereferenced
+
+error[E0614]: type `T` cannot be dereferenced
+   --> src/Chap37/BSTPlainMtEph.rs:308:55
+    |
+308 |                 max.is_some() ==> self@.tree_contains(*max.unwrap());
+    |                                                       ^^^^^^^^^^^^^ can't be dereferenced
+
+error[E0614]: type `T` cannot be dereferenced
+   --> src/Chap37/BSTPlainMtEph.rs:404:44
+    |
+404 |                 assume(found.is_some() ==> *found.unwrap() == *target);
+    |                                            ^^^^^^^^^^^^^^^ can't be dereferenced
+
+error[E0614]: type `T` cannot be dereferenced
+   --> src/Chap37/BSTPlainMtEph.rs:417:62
+    |
+417 |                 assume(min.is_some() ==> self@.tree_contains(*min.unwrap()));
+    |                                                              ^^^^^^^^^^^^^ can't be dereferenced
+
+error[E0614]: type `T` cannot be dereferenced
+   --> src/Chap37/BSTPlainMtEph.rs:430:62
+    |
+430 |                 assume(max.is_some() ==> self@.tree_contains(*max.unwrap()));
+    |                                                              ^^^^^^^^^^^^^ can't be dereferenced
+
+error: aborting due to 6 previous errors
+
+For more information about this error, try `rustc --explain E0614`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 184MB, peak z3 RSS: 0MB, min free: 22252MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s
