@@ -590,6 +590,14 @@ pub mod UnDirGraphMtEph {
     pub trait LockedUnDirGraphMtEphTrait<V: StTInMtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
         spec fn spec_undirgraphmteph_wf(&self) -> bool;
 
+        open spec fn spec_ng(&self, v: V::V) -> Set<V::V>
+            recommends spec_graphview_wf(self@), self@.V.contains(v)
+        { Set::new(|w: V::V| self@.A.contains((v, w)) || self@.A.contains((w, v))) }
+
+        open spec fn spec_ng_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V>
+            recommends spec_graphview_wf(self@), vertices <= self@.V
+        { Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w)) }
+
         fn new(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> (s: Self)
             requires
                 valid_key_type_for_graph::<V>(),
@@ -631,6 +639,7 @@ pub mod UnDirGraphMtEph {
                 self@.V.contains(v@),
             ensures
                 neighbors.spec_setsteph_wf(),
+                neighbors@ == self.spec_ng(v@),
                 neighbors@ <= self@.V;
 
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>)
@@ -639,6 +648,7 @@ pub mod UnDirGraphMtEph {
                 u_set@ <= self@.V,
             ensures
                 neighbors.spec_setsteph_wf(),
+                neighbors@ == self.spec_ng_of_vertices(u_set@),
                 neighbors@ <= self@.V;
     }
 

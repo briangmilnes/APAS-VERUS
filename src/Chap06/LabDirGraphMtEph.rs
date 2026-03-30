@@ -749,6 +749,14 @@ pub mod LabDirGraphMtEph {
     {
         spec fn spec_labdirgraphmteph_wf(&self) -> bool;
 
+        open spec fn spec_n_plus(&self, v: V::V) -> Set<V::V>
+            recommends spec_labgraphview_wf(self@), self@.V.contains(v)
+        { Set::new(|w: V::V| exists |l: L::V| #![trigger self@.A.contains((v, w, l))] self@.A.contains((v, w, l))) }
+
+        open spec fn spec_n_minus(&self, v: V::V) -> Set<V::V>
+            recommends spec_labgraphview_wf(self@), self@.V.contains(v)
+        { Set::new(|u: V::V| exists |l: L::V| #![trigger self@.A.contains((u, v, l))] self@.A.contains((u, v, l))) }
+
         fn new(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (s: Self)
             requires
                 valid_key_type_for_lab_graph::<V, L>(),
@@ -786,6 +794,7 @@ pub mod LabDirGraphMtEph {
                 self@.V.contains(v@),
             ensures
                 n_plus.spec_setsteph_wf(),
+                n_plus@ == self.spec_n_plus(v@),
                 n_plus@ <= self@.V;
 
         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>)
@@ -794,6 +803,7 @@ pub mod LabDirGraphMtEph {
                 self@.V.contains(v@),
             ensures
                 n_minus.spec_setsteph_wf(),
+                n_minus@ == self.spec_n_minus(v@),
                 n_minus@ <= self@.V;
     }
 

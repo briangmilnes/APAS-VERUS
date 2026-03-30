@@ -712,6 +712,11 @@ pub mod LabUnDirGraphMtEph {
     {
         spec fn spec_labundirgraphmteph_wf(&self) -> bool;
 
+        open spec fn spec_ng(&self, v: V::V) -> Set<V::V>
+            recommends spec_labgraphview_wf(self@), self@.V.contains(v)
+        { Set::new(|w: V::V| exists |l: L::V|
+            self@.A.contains((v, w, l)) || self@.A.contains((w, v, l))) }
+
         fn empty() -> (g: Self)
             requires valid_key_type_for_lab_graph::<V, L>()
             ensures
@@ -740,6 +745,7 @@ pub mod LabUnDirGraphMtEph {
             requires self@.V.contains(v@)
             ensures
                 ng.spec_setsteph_wf(),
+                ng@ == self.spec_ng(v@),
                 ng@ <= self@.V;
 
         fn add_vertex(&mut self, v: V) -> (r: std::result::Result<(), ()>)
@@ -749,7 +755,11 @@ pub mod LabUnDirGraphMtEph {
                 self@.A == old(self)@.A;
 
         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L) -> (r: std::result::Result<(), ()>)
-            ensures spec_labgraphview_wf(self@);
+            ensures
+                spec_labgraphview_wf(self@),
+                self@.V == old(self)@.V.insert(v1@).insert(v2@),
+                self@.A == old(self)@.A.insert((v1@, v2@, label@)) ||
+                self@.A == old(self)@.A.insert((v2@, v1@, label@));
     }
 
     impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> LockedLabUnDirGraphMtEphTrait<V, L>

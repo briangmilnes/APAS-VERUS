@@ -833,6 +833,30 @@ pub mod DirGraphMtEph {
     pub trait LockedDirGraphMtEphTrait<V: StTInMtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
         spec fn spec_dirgraphmteph_wf(&self) -> bool;
 
+        open spec fn spec_n_plus(&self, v: V::V) -> Set<V::V>
+            recommends spec_graphview_wf(self@), self@.V.contains(v)
+        { Set::new(|w: V::V| self@.A.contains((v, w))) }
+
+        open spec fn spec_n_minus(&self, v: V::V) -> Set<V::V>
+            recommends spec_graphview_wf(self@), self@.V.contains(v)
+        { Set::new(|u: V::V| self@.A.contains((u, v))) }
+
+        open spec fn spec_ng(&self, v: V::V) -> Set<V::V>
+            recommends spec_graphview_wf(self@), self@.V.contains(v)
+        { self.spec_n_plus(v).union(self.spec_n_minus(v)) }
+
+        open spec fn spec_n_plus_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V>
+            recommends spec_graphview_wf(self@), vertices <= self@.V
+        { Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_plus(u).contains(w)) }
+
+        open spec fn spec_n_minus_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V>
+            recommends spec_graphview_wf(self@), vertices <= self@.V
+        { Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_n_minus(u).contains(w)) }
+
+        open spec fn spec_ng_of_vertices(&self, vertices: Set<V::V>) -> Set<V::V>
+            recommends spec_graphview_wf(self@), vertices <= self@.V
+        { Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w)) }
+
         fn new(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> (s: Self)
             requires
                 valid_key_type_for_graph::<V>(),
@@ -892,6 +916,7 @@ pub mod DirGraphMtEph {
                 self@.V.contains(v@),
             ensures
                 neighbors.spec_setsteph_wf(),
+                neighbors@ == self.spec_ng(v@),
                 neighbors@ <= self@.V;
 
         fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> (out_neighbors: SetStEph<V>)
@@ -900,6 +925,7 @@ pub mod DirGraphMtEph {
                 u_set@ <= self@.V,
             ensures
                 out_neighbors.spec_setsteph_wf(),
+                out_neighbors@ == self.spec_n_plus_of_vertices(u_set@),
                 out_neighbors@ <= self@.V;
 
         fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> (in_neighbors: SetStEph<V>)
@@ -908,6 +934,7 @@ pub mod DirGraphMtEph {
                 u_set@ <= self@.V,
             ensures
                 in_neighbors.spec_setsteph_wf(),
+                in_neighbors@ == self.spec_n_minus_of_vertices(u_set@),
                 in_neighbors@ <= self@.V;
 
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>)
@@ -916,6 +943,7 @@ pub mod DirGraphMtEph {
                 u_set@ <= self@.V,
             ensures
                 neighbors.spec_setsteph_wf(),
+                neighbors@ == self.spec_ng_of_vertices(u_set@),
                 neighbors@ <= self@.V;
     }
 
