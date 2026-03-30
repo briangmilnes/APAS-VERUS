@@ -169,3 +169,84 @@ fn test_connected_components_mt_complete() {
         assert_eq!(comp_map.get(&i).unwrap(), rep);
     }
 }
+
+#[test]
+fn test_count_components_mt_path() {
+    let mut vertices = SetLit![];
+    for i in 0..10 {
+        let _ = vertices.insert(i);
+    }
+    let mut edges = SetLit![];
+    for i in 0..9usize {
+        let _ = edges.insert(Edge(i, i + 1));
+    }
+    let graph = <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edges);
+    assert_eq!(count_components_mt(&graph, 42), 1);
+}
+
+#[test]
+fn test_count_components_mt_star() {
+    let mut vertices = SetLit![0];
+    for i in 1..8usize {
+        let _ = vertices.insert(i);
+    }
+    let mut edges = SetLit![];
+    for i in 1..8usize {
+        let _ = edges.insert(Edge(0, i));
+    }
+    let graph = <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edges);
+    assert_eq!(count_components_mt(&graph, 42), 1);
+}
+
+#[test]
+fn test_count_components_mt_two_triangles() {
+    let mut vertices = SetLit![];
+    for i in 0..6 {
+        let _ = vertices.insert(i);
+    }
+    let mut edges = SetLit![];
+    let _ = edges.insert(Edge(0, 1));
+    let _ = edges.insert(Edge(1, 2));
+    let _ = edges.insert(Edge(0, 2));
+    let _ = edges.insert(Edge(3, 4));
+    let _ = edges.insert(Edge(4, 5));
+    let _ = edges.insert(Edge(3, 5));
+    let graph = <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edges);
+    assert_eq!(count_components_mt(&graph, 42), 2);
+}
+
+#[test]
+fn test_connected_components_mt_two_disconnected() {
+    let vertices = SetLit![0, 1];
+    let edges: SetStEph<Edge<usize>> = SetLit![];
+    let graph = <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edges);
+    let (reps, comp_map) = connected_components_mt(&graph, 42);
+    assert_eq!(reps.size(), 2);
+    assert_ne!(comp_map.get(&0), comp_map.get(&1));
+}
+
+#[test]
+fn test_count_components_hof_mt_star() {
+    let mut vertices = SetLit![0];
+    for i in 1..6usize {
+        let _ = vertices.insert(i);
+    }
+    let mut edges = SetLit![];
+    for i in 1..6usize {
+        let _ = edges.insert(Edge(0, i));
+    }
+    let graph = <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edges);
+    assert_eq!(count_components_hof(&graph, 42), 1);
+}
+
+#[test]
+fn test_connected_components_hof_mt_isolated() {
+    let mut vertices = SetLit![];
+    for i in 0..4 {
+        let _ = vertices.insert(i);
+    }
+    let edges: SetStEph<Edge<usize>> = SetLit![];
+    let graph = <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edges);
+    let (reps, _) = connected_components_hof(&graph, 42);
+    assert_eq!(reps.size(), 4);
+}

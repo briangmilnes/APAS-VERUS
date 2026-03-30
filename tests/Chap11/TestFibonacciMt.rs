@@ -215,3 +215,36 @@ fn test_fib_divisibility_property() {
         }
     }
 }
+
+#[test]
+fn test_fib_parity_pattern() {
+    // fib(n) is even iff n % 3 == 0 (for n > 0).
+    for n in 1..=40u64 {
+        let is_even = fib(n) % 2 == 0;
+        let should_be_even = n % 3 == 0;
+        assert_eq!(is_even, should_be_even, "Parity pattern fails at n={n}");
+    }
+}
+
+#[test]
+fn test_fib_iterative_large_values() {
+    // Test some specific larger values.
+    assert_eq!(fib(60), 1548008755920);
+    assert_eq!(fib(70), 190392490709135);
+}
+
+#[test]
+fn test_fib_recursive_boundary() {
+    // fib_recursive may be slow for large n, but n=30 should be fine.
+    assert_eq!(fib_recursive(30), 832040);
+}
+
+#[test]
+fn test_fib_difference_identity() {
+    // fib(n+1)^2 - fib(n)^2 = fib(n-1)*fib(n+2) for n >= 1.
+    for n in 1..=20u64 {
+        let lhs = fib(n + 1) * fib(n + 1) - fib(n) * fib(n);
+        let rhs = fib(n - 1) * fib(n + 2);
+        assert_eq!(lhs, rhs, "Difference identity fails at n={n}");
+    }
+}

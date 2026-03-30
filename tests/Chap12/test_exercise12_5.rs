@@ -196,3 +196,70 @@ fn test_drain_preserves_all_elements() {
     let expected: Vec<i32> = (0..50).collect();
     assert_eq!(drained, expected);
 }
+
+#[test]
+fn test_push_large_count() {
+    let stack = ConcurrentStackMt::new();
+    for i in 0..5000 {
+        stack.push(i);
+    }
+    let drained = stack.drain();
+    assert_eq!(drained.len(), 5000);
+}
+
+#[test]
+fn test_concurrent_push_pop_interleaved() {
+    let stack = Arc::new(ConcurrentStackMt::<usize>::new());
+    let mut handles = Vec::new();
+
+    // Pushers.
+    for t in 0..4 {
+        let s = Arc::clone(&stack);
+        handles.push(thread::spawn(move || {
+            for i in 0..200 {
+                s.push(t * 200 + i);
+            }
+        }));
+    }
+
+    // Poppers.
+    let (tx, rx) = mpsc::channel();
+    for _ in 0..2 {
+        let s = Arc::clone(&stack);
+        let tx = tx.clone();
+        handles.push(thread::spawn(move || {
+            let mut count = 0;
+            loop {
+                match s.pop() {
+                    Some(_) => count += 1,
+                    None => {
+                        thread::yield_now();
+                        if s.is_empty() { break; }
+                    }
+                }
+            }
+            tx.send(count).unwrap();
+        }));
+    }
+    drop(tx);
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    // Remaining items in stack + popped items = 800.
+    let popped: usize = rx.iter().sum();
+    let remaining = stack.drain().len();
+    assert_eq!(popped + remaining, 800);
+}
+
+#[test]
+fn test_drain_twice() {
+    let stack = ConcurrentStackMt::new();
+    stack.push(1);
+    stack.push(2);
+    let first = stack.drain();
+    assert_eq!(first.len(), 2);
+    let second = stack.drain();
+    assert!(second.is_empty());
+}

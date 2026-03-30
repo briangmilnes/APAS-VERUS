@@ -379,3 +379,27 @@ fn test_spanning_tree_triangle() {
     assert_eq!(tree.size(), 2);
     assert!(verify_spanning_tree(&graph, &tree));
 }
+
+#[test]
+fn test_spanning_tree_barbell() {
+    // Two triangles connected by a bridge edge.
+    let mut vertices = SetLit![];
+    for i in 0..6 {
+        let _ = vertices.insert(i);
+    }
+    let mut edges = SetLit![];
+    // Triangle 1: 0-1-2.
+    let _ = edges.insert(Edge(0, 1));
+    let _ = edges.insert(Edge(1, 2));
+    let _ = edges.insert(Edge(0, 2));
+    // Bridge.
+    let _ = edges.insert(Edge(2, 3));
+    // Triangle 2: 3-4-5.
+    let _ = edges.insert(Edge(3, 4));
+    let _ = edges.insert(Edge(4, 5));
+    let _ = edges.insert(Edge(3, 5));
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let tree = spanning_tree_star_contraction(&graph);
+    assert_eq!(tree.size(), 5);
+    assert!(verify_spanning_tree(&graph, &tree));
+}

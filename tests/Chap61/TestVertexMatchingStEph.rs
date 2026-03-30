@@ -206,3 +206,51 @@ fn test_greedy_matching_complete_graph() {
     // Perfect matching: 3 edges in K6.
     assert_eq!(matching.size(), 3);
 }
+
+#[test]
+fn test_greedy_matching_isolated_vertices() {
+    let mut vertices = SetLit![];
+    for i in 0..5usize {
+        let _ = vertices.insert(i);
+    }
+    let edges: SetStEph<Edge<usize>> = SetLit![];
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let matching = greedy_matching(&graph);
+    assert_eq!(matching.size(), 0);
+}
+
+#[test]
+fn test_parallel_matching_st_large_cycle() {
+    let graph = create_cycle_graph(20);
+    let matching = parallel_matching_st(&graph, 777);
+    // Verify matching property.
+    let mut matched: SetStEph<usize> = SetLit![];
+    for edge in matching.iter() {
+        let Edge(u, v) = edge;
+        assert!(!matched.mem(u));
+        assert!(!matched.mem(v));
+        let _ = matched.insert(*u);
+        let _ = matched.insert(*v);
+    }
+}
+
+#[test]
+fn test_greedy_matching_two_edges_share_vertex() {
+    // Triangle: greedy picks 1 edge, blocking the other 2.
+    let vertices = SetLit![0, 1, 2];
+    let mut edges = SetLit![];
+    let _ = edges.insert(Edge(0, 1));
+    let _ = edges.insert(Edge(1, 2));
+    let _ = edges.insert(Edge(0, 2));
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let matching = greedy_matching(&graph);
+    assert_eq!(matching.size(), 1);
+}
+
+#[test]
+fn test_parallel_matching_st_determinism() {
+    let graph = create_cycle_graph(10);
+    let m1 = parallel_matching_st(&graph, 42);
+    let m2 = parallel_matching_st(&graph, 42);
+    assert_eq!(m1.size(), m2.size());
+}
