@@ -145,3 +145,47 @@ fn test_spawn_wait_parallel() {
         "spawn/wait not parallel! Took {:?}, expected ~50ms", elapsed
     );
 }
+
+#[test]
+fn test_join_returns_correct_types() {
+    let (a, b): (String, Vec<i32>) = join(
+        || "hello".to_string(),
+        || vec![1, 2, 3],
+    );
+    assert_eq!(a, "hello");
+    assert_eq!(b, vec![1, 2, 3]);
+}
+
+#[test]
+fn test_spawn_join_identity() {
+    let (a, b) = spawn_join(|| 0, || 0);
+    assert_eq!(a, 0);
+    assert_eq!(b, 0);
+}
+
+#[test]
+fn test_spawn_wait_string() {
+    let h = spawn(|| format!("{} {}", "hello", "world"));
+    assert_eq!(wait(h), "hello world");
+}
+
+#[test]
+fn test_join_large_result() {
+    let (a, b) = join(
+        || (0..100).collect::<Vec<i32>>(),
+        || (100..200).collect::<Vec<i32>>(),
+    );
+    assert_eq!(a.len(), 100);
+    assert_eq!(b.len(), 100);
+    assert_eq!(a[0], 0);
+    assert_eq!(b[0], 100);
+}
+
+#[test]
+fn test_spawn_wait_chained() {
+    let h1 = spawn(|| 10);
+    let v1 = wait(h1);
+    let h2 = spawn(move || v1 * 2);
+    let v2 = wait(h2);
+    assert_eq!(v2, 20);
+}

@@ -7,6 +7,7 @@ use apas_verus::Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128::*;
 use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
 use apas_verus::Chap56::SSSPResultStEphI64::SSSPResultStEphI64::*;
 use apas_verus::Chap57::DijkstraStEphU64::DijkstraStEphU64::*;
+use apas_verus::SetLit;
 use apas_verus::Types::Types::*;
 
 #[test]
@@ -168,4 +169,53 @@ fn test_larger_graph() {
     assert_eq!(result.get_distance(0), 0);
     assert_eq!(result.get_distance(5), 3); // via shortcut 0->5
     assert_eq!(result.get_distance(9), 7); // via shortcut 0->5, then 5->6->7->8->9
+}
+
+#[test]
+fn test_diamond_graph() {
+    let vertices = SetLit![0, 1, 2, 3];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 1),
+        WeightedEdge(0, 2, 4),
+        WeightedEdge(1, 3, 2),
+        WeightedEdge(2, 3, 1)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = dijkstra(&graph, 0);
+    assert_eq!(result.get_distance(3), 3); // via 0->1->3
+}
+
+#[test]
+fn test_zero_weight_edges() {
+    let vertices = SetLit![0, 1, 2];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 0),
+        WeightedEdge(1, 2, 0)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = dijkstra(&graph, 0);
+    assert_eq!(result.get_distance(1), 0);
+    assert_eq!(result.get_distance(2), 0);
+}
+
+#[test]
+fn test_two_vertices_one_edge() {
+    let vertices = SetLit![0, 1];
+    let edges = SetLit![WeightedEdge(0, 1, 7)];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = dijkstra(&graph, 0);
+    assert_eq!(result.get_distance(0), 0);
+    assert_eq!(result.get_distance(1), 7);
+}
+
+#[test]
+fn test_all_unreachable() {
+    let vertices = SetLit![0, 1, 2, 3];
+    let edges = SetLit![];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = dijkstra(&graph, 0);
+    assert_eq!(result.get_distance(0), 0);
+    assert!(!result.is_reachable(1));
+    assert!(!result.is_reachable(2));
+    assert!(!result.is_reachable(3));
 }

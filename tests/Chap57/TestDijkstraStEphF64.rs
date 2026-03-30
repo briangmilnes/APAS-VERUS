@@ -7,6 +7,7 @@ use apas_verus::Chap06::WeightedDirGraphStEphF64::WeightedDirGraphStEphF64::*;
 use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
 use apas_verus::Chap56::SSSPResultStEphF64::SSSPResultStEphF64::*;
 use apas_verus::Chap57::DijkstraStEphF64::DijkstraStEphF64::*;
+use apas_verus::SetLit;
 use apas_verus::Types::Types::*;
 use apas_verus::vstdplus::float::float::*;
 
@@ -156,4 +157,54 @@ fn test_larger_graph() {
     assert_eq!(result.get_distance(0).val, 0.0);
     assert_eq!(result.get_distance(5).val, 3.0);
     assert_eq!(result.get_distance(9).val, 7.0);
+}
+
+#[test]
+fn test_diamond_graph() {
+    let vertices = SetLit![0, 1, 2, 3];
+    let edges = SetLit![
+        WeightedEdge(0, 1, w(1.0)),
+        WeightedEdge(0, 2, w(4.0)),
+        WeightedEdge(1, 3, w(2.0)),
+        WeightedEdge(2, 3, w(1.0))
+    ];
+    let graph = <WeightedDirGraphStEphF64<usize> as WeightedDirGraphStEphF64Trait<usize>>::from_weighed_edges(vertices, edges);
+    let result = dijkstra(&graph, 0);
+    assert_eq!(result.get_distance(3).val, 3.0);
+}
+
+#[test]
+fn test_fractional_weights() {
+    let vertices = SetLit![0, 1, 2];
+    let edges = SetLit![
+        WeightedEdge(0, 1, w(0.5)),
+        WeightedEdge(1, 2, w(1.25))
+    ];
+    let graph = <WeightedDirGraphStEphF64<usize> as WeightedDirGraphStEphF64Trait<usize>>::from_weighed_edges(vertices, edges);
+    let result = dijkstra(&graph, 0);
+    assert_eq!(result.get_distance(1).val, 0.5);
+    assert_eq!(result.get_distance(2).val, 1.75);
+}
+
+#[test]
+fn test_zero_weight_edges() {
+    let vertices = SetLit![0, 1, 2];
+    let edges = SetLit![
+        WeightedEdge(0, 1, w(0.0)),
+        WeightedEdge(1, 2, w(0.0))
+    ];
+    let graph = <WeightedDirGraphStEphF64<usize> as WeightedDirGraphStEphF64Trait<usize>>::from_weighed_edges(vertices, edges);
+    let result = dijkstra(&graph, 0);
+    assert_eq!(result.get_distance(1).val, 0.0);
+    assert_eq!(result.get_distance(2).val, 0.0);
+}
+
+#[test]
+fn test_all_unreachable() {
+    let vertices = SetLit![0, 1, 2];
+    let edges = SetLit![];
+    let graph = <WeightedDirGraphStEphF64<usize> as WeightedDirGraphStEphF64Trait<usize>>::from_weighed_edges(vertices, edges);
+    let result = dijkstra(&graph, 0);
+    assert!(!result.is_reachable(1));
+    assert!(!result.is_reachable(2));
 }
