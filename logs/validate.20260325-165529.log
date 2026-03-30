@@ -1,0 +1,72 @@
+error: postcondition not satisfied
+   --> src/Chap65/UnionFindStEph.rs:266:13
+    |
+266 |             root@ == uf@.roots[v@],
+    |             ^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+307 |         current
+    |         ------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap65/UnionFindStEph.rs:268:13
+    |
+268 |             uf@.roots[root@] == root@,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+307 |         current
+    |         ------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap65/UnionFindStEph.rs:266:13
+    |
+266 |             root@ == uf@.roots[v@],
+    |             ^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+root.view() == old(uf).view().roots.index(old(v).view()) ✘
+old(uf).view().parent.dom().contains(root.view()) ✔
+old(uf).view().roots.index(root.view()) == root.view() ✔
+
+note: recommendation not met
+   --> src/Chap65/UnionFindStEph.rs:282:40
+    |
+282 |                 uf@.roots[current@] == uf@.roots[v@],
+    |                                        ^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap65/UnionFindStEph.rs:283:32
+    |
+283 |             decreases uf@.rank[uf@.roots[v@]] - uf@.rank[current@],
+    |                                ^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:177:11
+    |
+177 |       proof fn lemma_compression_preserves_wf<V: StT + Hash>(
+    |  ___________^
+178 | |         uf: UnionFindStEph<V>,
+179 | |         old_uf: UnionFindStEph<V>,
+180 | |         cv: <V as View>::V,
+181 | |         root: V,
+182 | |     )
+    | |_____^
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:333:9
+    |
+333 |         while !feq(&current, root)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 4901 verified, 3 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 194s

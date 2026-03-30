@@ -1,0 +1,182 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent1)
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTSetPlainMtEph.rs:174:20
+    |
+174 |     assert_eq!(seq.length(), 4);
+    |                    ^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<{integer}>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:133:9
+    |
+133 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+134 | |             requires index < self.spec_len()
+135 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTSetPlainMtEph.rs:175:21
+    |
+175 |     assert_eq!(*seq.nth(0), 1);
+    |                     ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:133:12
+    |
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<{integer}>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:127:9
+    |
+127 | /         fn length(&self) -> (len: usize)
+128 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTSetPlainMtEph.rs:176:21
+    |
+176 |     assert_eq!(*seq.nth(1), 3);
+    |                     ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:133:12
+    |
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<{integer}>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:127:9
+    |
+127 | /         fn length(&self) -> (len: usize)
+128 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTSetPlainMtEph.rs:177:21
+    |
+177 |     assert_eq!(*seq.nth(2), 5);
+    |                     ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:133:12
+    |
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<{integer}>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:127:9
+    |
+127 | /         fn length(&self) -> (len: usize)
+128 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTSetPlainMtEph.rs:178:21
+    |
+178 |     assert_eq!(*seq.nth(3), 7);
+    |                     ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:133:12
+    |
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<{integer}>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:127:9
+    |
+127 | /         fn length(&self) -> (len: usize)
+128 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `size` found for reference `&apas_verus::Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph<{integer}>` in the current scope
+   --> tests/Chap37/TestBSTSetPlainMtEph.rs:359:21
+    |
+359 |     assert_eq!(tree.size(), 3);
+    |                     ^^^^ method not found in `&apas_verus::Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph<{integer}>`
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `BSTPlainMtEphTrait` which provides `size` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEphTrait;
+    |
+
+error[E0599]: no method named `contains` found for reference `&apas_verus::Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph<{integer}>` in the current scope
+   --> tests/Chap37/TestBSTSetPlainMtEph.rs:360:18
+    |
+360 |     assert!(tree.contains(&5));
+    |                  ^^^^^^^^ method not found in `&apas_verus::Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph<{integer}>`
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `BSTPlainMtEphTrait` which provides `contains` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEphTrait;
+    |
+
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTSetPlainMtEph.rs:540:20
+    |
+540 |     assert_eq!(seq.length(), 3);
+    |                    ^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:133:9
+    |
+133 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+134 | |             requires index < self.spec_len()
+135 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `size` found for reference `&apas_verus::Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph<i32>` in the current scope
+   --> tests/Chap37/TestBSTSetPlainMtEph.rs:549:21
+    |
+549 |     assert_eq!(tree.size(), 1);
+    |                     ^^^^ method not found in `&apas_verus::Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph<i32>`
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `BSTPlainMtEphTrait` which provides `size` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEphTrait;
+    |
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `apas-verus` (test "TestBSTSetPlainMtEph") due to 9 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 13s

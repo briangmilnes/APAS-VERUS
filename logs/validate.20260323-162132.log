@@ -1,0 +1,12 @@
+error: Type parameter T of lib::Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEph must be declared #[verifier::reject_recursive_types] to be used in a non-positive position
+  --> src/Chap41/AVLTreeSetMtEph.rs:62:5
+   |
+62 | /     pub struct AVLTreeSetMtEph<T: StTInMtT + Ord + 'static> {
+63 | |         pub inner: Arc<RwLock<AVLTreeSetStEph<T>, AVLTreeSetMtEphInv>>,
+64 | |         pub ghost_set_view: Ghost<Set<<T as View>::V>>,
+65 | |     }
+   | |_____^
+
+error: aborting due to 1 previous error
+
+Elapsed: 23s

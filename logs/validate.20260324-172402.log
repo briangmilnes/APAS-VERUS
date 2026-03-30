@@ -1,0 +1,26 @@
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetPlainMtEph.rs:416:20
+    |
+416 |                 if predicate(seq.nth(i)) {
+    |                    ^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetPlainMtEph.rs:438:17
+    |
+438 |                 acc = op(acc, seq.nth(i).clone());
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+verification results:: 4515 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 58s

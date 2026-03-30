@@ -1,0 +1,310 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStEph.rs:43:14
+   |
+43 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStPer.rs:38:14
+   |
+38 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:203:27
+    |
+203 |             let new_adj = self.adj.insert(v, AVLTreeSetStPer::empty(), |old, _new| old.clone());
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:536:17
+    |
+536 |                 self.spec_tablestper_wf(),
+    |                 ------------------------- failed precondition
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:216:36
+    |
+216 | ...                   assert(self.adj@[v@].contains(w));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:217:36
+    |
+217 | ...                   assert(self.adj@.dom().contains(w));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:222:32
+    |
+222 |                         assert(self.adj@.dom().contains(w));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+self.adj.view().index(v.view()).contains(w) 
+    function is uninterpreted
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:108:17
+    |
+108 |                 updated.spec_adj()[u@].contains(v@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+294 |             AdjTableGraphStPer { adj: final_adj }
+    |             ------------------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:253:35
+    |
+253 |             let neighbors = match self.adj.find(&u) {
+    |                                   ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:503:22
+    |
+503 |             requires self.spec_tablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:254:29
+    |
+254 |                 Some(ns) => ns.insert(v.clone()),
+    |                             ^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:287:17
+    |
+287 |                 self.spec_avltreesetstper_wf(),
+    |                 ------------------------------ failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:257:27
+    |
+257 |             let new_adj = self.adj.insert(u, neighbors, |_old, new| new.clone());
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:536:17
+    |
+536 |                 self.spec_tablestper_wf(),
+    |                 ------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:258:32
+    |
+258 |             let final_adj = if new_adj.find(&v).is_none() {
+    |                                ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:503:49
+    |
+503 |             requires self.spec_tablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                                                 -------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:259:17
+    |
+259 |                 new_adj.insert(v, AVLTreeSetStPer::empty(), |old, _new| old.clone())
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:538:17
+    |
+538 |                 obeys_view_eq::<K>(),
+    |                 -------------------- failed precondition
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:267:29
+    |
+267 |                     implies final_adj@.dom().contains(b)
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:281:40
+    |
+281 | ...                   assert(self.adj@[u@].contains(b));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:282:40
+    |
+282 | ...                   assert(self.adj@.dom().contains(b));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:289:36
+    |
+289 | ...                   assert(self.adj@.dom().contains(b));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/vstdplus/feq.rs:41:13
+    |
+ 41 |         &&& feq_reflexive::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^
+ 42 |         &&& feq_symmetric::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^
+...
+ 68 |         &&& obeys_feq_properties::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:536:17
+    |
+536 |                 self.spec_tablestper_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+537 |                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+538 |                 obeys_view_eq::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^
+539 |                 obeys_feq_full::<Pair<K, V>>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_tablestper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+forall |v1, v2|
+    ClosureReq(tmp%%, (v1, v2)) ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+obeys_feq_full() ✘
+|   obeys_feq_properties() ✘
+|   |   feq_reflexive() ✘
+|   |   |   forall |x|
+|   |   |       x.eq_spec(x) 
+|   |   +---
+|   |   feq_symmetric() ✘
+|   |   |   forall |x, y|
+|   |   |       x.eq_spec(y) == y.eq_spec(x) 
+|   |   +---
+|   |   feq_transitive() 
+|   +---
+|   obeys_feq_view() 
+|   obeys_feq_view_injective() 
+|   obeys_feq_clone() 
+|   obeys_feq_eq() 
++---
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:113:17
+    |
+113 |                   updated.spec_adjtablegraphstper_wf(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+298 | /             match self.adj.find(u) {
+299 | |                 Some(neighbors) => {
+300 | |                     let new_neighbors = neighbors.delete(v);
+301 | |                     let new_adj = self.adj.insert(u.clone(), new_neighbors, |_old, new| new.clone());
+...   |
+325 | |                 },
+326 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:114:17
+    |
+114 | /                 !updated.spec_adj().dom().contains(u@)
+115 | |                     || !updated.spec_adj()[u@].contains(v@);
+    | |___________________________________________________________^ failed this postcondition
+...
+298 | /             match self.adj.find(u) {
+299 | |                 Some(neighbors) => {
+300 | |                     let new_neighbors = neighbors.delete(v);
+301 | |                     let new_adj = self.adj.insert(u.clone(), new_neighbors, |_old, new| new.clone());
+...   |
+325 | |                 },
+326 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:298:19
+    |
+298 |             match self.adj.find(u) {
+    |                   ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:503:22
+    |
+503 |             requires self.spec_tablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:300:41
+    |
+300 |                     let new_neighbors = neighbors.delete(v);
+    |                                         ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:278:17
+    |
+278 |                 self.spec_avltreesetstper_wf(),
+    |                 ------------------------------ failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:301:35
+    |
+301 |                     let new_adj = self.adj.insert(u.clone(), new_neighbors, |_old, new| new.clone());
+    |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:536:17
+    |
+536 |                 self.spec_tablestper_wf(),
+    |                 ------------------------- failed precondition
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:310:40
+    |
+310 | ...                   assert(self.adj@[u@].contains(b));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:311:40
+    |
+311 | ...                   assert(self.adj@.dom().contains(b));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:313:40
+    |
+313 | ...                   assert(new_adj@[a] == self.adj@[a]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:314:40
+    |
+314 | ...                   assert(self.adj@.dom().contains(b));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjTableGraphStPer.rs:113:17
+    |
+113 |                 updated.spec_adjtablegraphstper_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+114 |                 !updated.spec_adj().dom().contains(u@)
+115 |                     || !updated.spec_adj()[u@].contains(v@);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.spec_adjtablegraphstper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+%return.spec_adj().dom().contains(old(u).view()) ==>
+    !(%return.spec_adj().index(old(u).view()).contains(old(v).view())) ✘
+        function is uninterpreted
+
+note: recommendation not met
+   --> src/Chap52/AdjTableGraphStPer.rs:313:55
+    |
+313 | ...                   assert(new_adj@[a] == self.adj@[a]);
+    |                                             ^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+verification results:: 2769 verified, 3 errors
+error: aborting due to 23 previous errors; 3 warnings emitted
+
+Elapsed: 24s
+Sampled Memory Usage: peak rust_verify RSS: 3198MB, peak z3 RSS: 317MB, min free: 19021MB
+Sampled CPU Usage: rust_verify: 45s, z3 children: 41s

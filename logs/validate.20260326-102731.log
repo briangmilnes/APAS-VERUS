@@ -1,0 +1,63 @@
+error[E0308]: mismatched types
+   --> src/Chap55/SCCStPer.rs:448:72
+    |
+448 |         assert(component@.len() + spec_num_false(visited_bool@) <= old(component)@.len() + spec_num_false(old(visited_bool)@));
+    |                                                                    --- ^^^^^^^^^ expected `&mut _`, found `AVLTreeSetStPer<usize>`
+    |                                                                    |
+    |                                                                    arguments to this function are incorrect
+    |
+    = note: expected mutable reference `&mut _`
+                          found struct `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<usize>`
+note: function defined here
+   --> builtin/src/lib.rs:284:7
+help: consider mutably borrowing here
+    |
+448 |         assert(component@.len() + spec_num_false(visited_bool@) <= old(&mut component)@.len() + spec_num_false(old(visited_bool)@));
+    |                                                                        ++++
+
+error[E0282]: type annotations needed
+   --> src/Chap55/SCCStPer.rs:448:68
+    |
+448 |         assert(component@.len() + spec_num_false(visited_bool@) <= old(component)@.len() + spec_num_false(old(visited_bool)@));
+    |                                                                    ^^^ cannot infer type of the type parameter `A` declared on the function `old`
+    |
+help: consider specifying the generic argument
+    |
+448 |         assert(component@.len() + spec_num_false(visited_bool@) <= old::<A>(component)@.len() + spec_num_false(old(visited_bool)@));
+    |                                                                       +++++
+
+error[E0308]: mismatched types
+   --> src/Chap55/SCCStPer.rs:479:73
+    |
+479 |                 component@.len() + spec_num_false(visited_bool@) <= old(component)@.len() + spec_num_false(old(visited_bool)@),
+    |                                                                     --- ^^^^^^^^^ expected `&mut _`, found `AVLTreeSetStPer<usize>`
+    |                                                                     |
+    |                                                                     arguments to this function are incorrect
+    |
+    = note: expected mutable reference `&mut _`
+                          found struct `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<usize>`
+note: function defined here
+   --> builtin/src/lib.rs:284:7
+help: consider mutably borrowing here
+    |
+479 |                 component@.len() + spec_num_false(visited_bool@) <= old(&mut component)@.len() + spec_num_false(old(visited_bool)@),
+    |                                                                         ++++
+
+error[E0282]: type annotations needed
+   --> src/Chap55/SCCStPer.rs:479:69
+    |
+479 |                 component@.len() + spec_num_false(visited_bool@) <= old(component)@.len() + spec_num_false(old(visited_bool)@),
+    |                                                                     ^^^ cannot infer type of the type parameter `A` declared on the function `old`
+    |
+help: consider specifying the generic argument
+    |
+479 |                 component@.len() + spec_num_false(visited_bool@) <= old::<A>(component)@.len() + spec_num_false(old(visited_bool)@),
+    |                                                                        +++++
+
+error: aborting due to 4 previous errors
+
+Some errors have detailed explanations: E0282, E0308.
+For more information about an error, try `rustc --explain E0282`.
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 962MB, peak z3 RSS: 0MB, min free: 24266MB
+Sampled CPU Usage: rust_verify: 12s, z3 children: 0s

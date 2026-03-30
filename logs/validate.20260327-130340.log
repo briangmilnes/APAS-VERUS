@@ -1,0 +1,38 @@
+error[E0425]: cannot find function `obeys_feq_fulls` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:169:16
+    |
+169 |             && obeys_feq_fulls::<V, AVLTreeSetStEph<V>>()
+    |                ^^^^^^^^^^^^^^^
+    |
+   ::: src/Types.rs:185:5
+    |
+185 |     pub open spec fn obeys_feq_full_Edge<V: StT>() -> bool {
+    |     ------------------------------------------------------ similarly named function `obeys_feq_full_Edge` defined here
+    |
+help: a function with a similar name exists
+    |
+169 -             && obeys_feq_fulls::<V, AVLTreeSetStEph<V>>()
+169 +             && obeys_feq_full_Edge::<V, AVLTreeSetStEph<V>>()
+    |
+help: consider importing this function
+    |
+  5 +     use crate::vstdplus::feq::feq::obeys_feq_fulls;
+    |
+
+error[E0425]: cannot find function `obeys_feq_full` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:170:16
+    |
+170 |             && obeys_feq_full::<Pair<V, AVLTreeSetStEph<V>>>()
+    |                ^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+  5 +     use crate::vstdplus::feq::feq::obeys_feq_full;
+    |
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 2078MB, peak z3 RSS: 0MB, min free: 20163MB
+Sampled CPU Usage: rust_verify: 24s, z3 children: 0s

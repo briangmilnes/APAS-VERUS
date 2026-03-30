@@ -1,0 +1,23 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:740:11
+    |
+740 |       proof fn union_merge_prove_wf<V: StT + Hash>(
+    |  ___________^
+741 | |         uf: &UnionFindStEph<V>,
+742 | |         mid: UnionFindStEph<V>,
+743 | |         winner_v: V,
+...   |
+747 | |         loser_view: <V as View>::V,
+748 | |     )
+    | |_____^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:955:9
+    |
+955 |         fn union(&mut self, u: &V, v: &V) {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 666 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 163s

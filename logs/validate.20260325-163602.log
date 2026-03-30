@@ -1,0 +1,82 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:177:11
+    |
+177 |       proof fn lemma_compression_preserves_wf<V: StT + Hash>(
+    |  ___________^
+178 | |         uf: UnionFindStEph<V>,
+179 | |         old_uf: UnionFindStEph<V>,
+180 | |         cv: <V as View>::V,
+181 | |         root: V,
+182 | |     )
+    | |_____^
+
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:462:28
+    |
+462 |                     assert(p@ == self@.parent[current@]@);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:532:28
+    |
+532 |                     assert(current_clone@ == current@);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:533:28
+    |
+533 |                     assert(root_clone@ == root@);
+    |                            ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:534:28
+    |
+534 |                     assert(next@ == self@.parent[current@]@);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:501:13
+    |
+501 |             while !feq(&current, &root)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap65/UnionFindStEph.rs:446:21
+    |
+446 |                     self@.parent.contains_key(current@),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap65/UnionFindStEph.rs:447:21
+    |
+447 |                     self@.roots[current@] == self@.roots[v_view],
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:482:24
+    |
+482 |                 assert(self@.roots[current@] == current@);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:497:24
+    |
+497 |                 assert(current@ == v_view);
+    |                        ^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:437:9
+    |
+437 |         fn find(&mut self, v: &V) -> (root: V) {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+p.view() == self.view().parent.index(current.view()).view() 
+
+verification results:: 4898 verified, 4 errors
+error: aborting due to 11 previous errors
+
+Elapsed: 234s

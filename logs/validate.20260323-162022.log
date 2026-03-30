@@ -1,0 +1,20 @@
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<T>`
+   --> src/Chap41/AVLTreeSetMtEph.rs:388:65
+    |
+388 |                 vstd::seq_lib::seq_to_set_is_finite(combined_st.elements@);
+    |                                                                 ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `&Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<T>`
+   --> src/Chap41/AVLTreeSetMtEph.rs:430:63
+    |
+430 |                 vstd::seq_lib::seq_to_set_is_finite(inner_ref.elements@);
+    |                                                               ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0609`.
+Elapsed: 15s

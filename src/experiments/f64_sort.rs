@@ -64,7 +64,7 @@ proof fn axiom_f64_le_total_ordering()
 
     assert forall|a: f64, b: f64, c: f64|
         #![trigger leq(a, b), leq(b, c)]
-        leq(a, b) && leq(b, c) ==> leq(a, c)
+        leq(a, b) && leq(b, c) implies leq(a, c)
     by {}
 
     // u64 is totally ordered, so to_bits values are always comparable.

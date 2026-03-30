@@ -1,0 +1,17 @@
+warning: type `Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEphInv<T>` is more private than the item `Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEph::root`
+   --> src/Chap37/BSTBBAlphaMtEph.rs:234:9
+    |
+234 |         pub(crate) root: RwLock<BalBinTree<T>, BSTBBAlphaMtEphInv<T>>,
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ field `Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEph::root` is reachable at visibility `pub(crate)`
+    |
+note: but type `Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEphInv<T>` is only usable at visibility `pub(self)`
+   --> src/Chap37/BSTBBAlphaMtEph.rs:220:5
+    |
+220 |     struct BSTBBAlphaMtEphInv<T> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: `#[warn(private_interfaces)]` on by default
+
+verification results:: 4480 verified, 0 errors
+warning: 1 warning emitted
+
+Elapsed: 106s

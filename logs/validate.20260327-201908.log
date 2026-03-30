@@ -1,0 +1,37 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStPer.rs:47:14
+   |
+47 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStEph.rs:331:28
+    |
+331 |             proof { assert(nbrs_view.contains(v@)); }
+    |                            ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStEph.rs:345:24
+    |
+345 |                 assert(adj_at_u_after_first.contains(v@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+nbrs_view.contains(v.view()) 
+    function is uninterpreted
+
+verification results:: 2789 verified, 1 errors
+error: aborting due to 2 previous errors; 2 warnings emitted
+
+Elapsed: 25s
+Sampled Memory Usage: peak rust_verify RSS: 2527MB, peak z3 RSS: 353MB, min free: 20462MB
+Sampled CPU Usage: rust_verify: 42s, z3 children: 43s

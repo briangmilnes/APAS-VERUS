@@ -1,0 +1,22 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:353:11
+    |
+353 |       proof fn lemma_compression_preserves_wf<V: StT + Hash>(
+    |  ___________^
+354 | |         uf: UnionFindStEph<V>,
+355 | |         old_uf: UnionFindStEph<V>,
+356 | |         cv: <V as View>::V,
+357 | |         root: V,
+358 | |     )
+    | |_____^
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:469:9
+    |
+469 |         while !feq(&current, root)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 4914 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 138s

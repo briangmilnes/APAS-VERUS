@@ -1,0 +1,38 @@
+error[E0599]: no method named `len` found for struct `Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<T>` in the current scope
+   --> src/Chap55/SCCStEph.rs:201:67
+    |
+201 |                     0 <= r < m as int && 0 <= j < result_vecs@[r].len()
+    |                                                   ------------    ^^^
+    |                                                   |          |
+    |                                                   |          method `len` is available on `vstd::seq::Seq<Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<usize>>`
+    |                                                   method `len` is available on `&std::vec::Vec<Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<usize>>`
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:77:5
+    |
+ 77 |     pub struct ArraySeqStEphS<T> {
+    |     ---------------------------- method `len` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `len`, perhaps you need to implement one of them:
+            candidate #1: `standards::capacity_bounds_standard::capacity_bounds_standard::BoundedStackTrait`
+            candidate #2: `standards::finite_sets_standard::finite_sets_standard::FiniteCollectionTrait`
+            candidate #3: `standards::spec_wf_standard::spec_wf_standard::ContainerTrait`
+            candidate #4: `standards::spec_wf_standard::spec_wf_standard::VecWrapperTrait`
+            candidate #5: `vstdplus::VecQueue::VecQueue::VecQueueTrait`
+            candidate #6: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait`
+            candidate #7: `std::iter::ExactSizeIterator`
+help: one of the expressions' fields has a method of the same name
+    |
+201 |                     0 <= r < m as int && 0 <= j < result_vecs@[r].seq.len()
+    |                                                                   ++++
+help: there is a method `length` with a similar name
+    |
+201 |                     0 <= r < m as int && 0 <= j < result_vecs@[r].length()
+    |                                                                      +++
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 1206MB, peak z3 RSS: 0MB, min free: 24226MB
+Sampled CPU Usage: rust_verify: 15s, z3 children: 0s

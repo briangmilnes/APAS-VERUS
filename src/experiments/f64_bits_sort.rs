@@ -70,7 +70,7 @@ proof fn axiom_f64_le_total_ordering()
     assert forall|a: f64| #[trigger] leq(a, a) by {}
     assert forall|a: f64, b: f64, c: f64|
         #![trigger leq(a, b), leq(b, c)]
-        leq(a, b) && leq(b, c) ==> leq(a, c)
+        leq(a, b) && leq(b, c) implies leq(a, c)
     by {}
     // Strongly connected: for all u64 x, y, x <= y || y <= x. True but Verus needs help.
     assume(vstd::relations::strongly_connected::<f64>(leq));

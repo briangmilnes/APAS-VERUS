@@ -1,0 +1,52 @@
+error: postcondition not satisfied
+   --> src/Chap65/UnionFindStEph.rs:278:13
+    |
+278 |             root@ == uf@.roots[v@],
+    |             ^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+321 |         current
+    |         ------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap65/UnionFindStEph.rs:280:13
+    |
+280 |             uf@.roots[root@] == root@,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+321 |         current
+    |         ------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap65/UnionFindStEph.rs:278:13
+    |
+278 |             root@ == uf@.roots[v@],
+    |             ^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+root.view() == old(uf).view().roots.index(old(v).view()) ✘
+old(uf).view().parent.dom().contains(root.view()) ✔
+old(uf).view().roots.index(root.view()) == root.view() ✔
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:204:11
+    |
+204 |       proof fn lemma_compression_preserves_wf<V: StT + Hash>(
+    |  ___________^
+205 | |         uf: UnionFindStEph<V>,
+206 | |         old_uf: UnionFindStEph<V>,
+207 | |         cv: <V as View>::V,
+208 | |         root: V,
+209 | |     )
+    | |_____^
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:347:9
+    |
+347 |         while !feq(&current, root)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 4909 verified, 3 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 258s

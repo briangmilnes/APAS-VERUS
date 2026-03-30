@@ -1,0 +1,85 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap62/StarPartitionMtEph.rs:382:21
+    |
+382 |                     assert forall|j2: int| 0 <= j2 < nv as int implies
+    |                     ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap62/StarPartitionMtEph.rs:503:21
+    |
+503 |                     assert forall|j2: int| 0 <= j2 < q as int implies
+    |                     ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap62/StarPartitionMtEph.rs:517:21
+    |
+517 |                     assert forall|j2: int| 0 <= j2 < q as int implies
+    |                     ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: Could not automatically infer triggers for this quantifier.  Use #[trigger] annotations to manually mark trigger terms instead.
+   --> src/Chap62/StarPartitionMtEph.rs:394:21
+    |
+394 |                     assert forall|j2: int| 0 <= j2 < nv as int implies
+    |                     ^^^^^^
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap62/StarContractionMtEph.rs:126:56
+    |
+126 |         let r = star_contract_mt_fuel(&quotient_graph, seed + 1, base, expand, fuel - 1);
+    |                                                        ^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap62/StarContractionMtEph.rs:126:56
+    |
+126 |         let r = star_contract_mt_fuel(&quotient_graph, seed + 1, base, expand, fuel - 1);
+    |                                                        ^^^^^^^^
+
+note: 
+
+0 <= seed + 1 ✔
+seed + 1 < 18446744073709551616 ✘
+
+error: postcondition not satisfied
+   --> src/Chap64/SpanTreeMtEph.rs:63:17
+    |
+ 63 |         ensures result.spec_setsteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+142 |         star_contract_mt(graph, seed, &base, &expand)
+    |         --------------------------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap64/SpanTreeMtEph.rs:102:25
+    |
+102 |             let it_qt = quotient_tree.iter();
+    |                         ^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap05/SetStEph.rs:130:22
+    |
+130 |             requires self.spec_setsteph_wf()
+    |                      ----------------------- failed precondition
+
+error: invariant not satisfied before loop
+   --> src/Chap64/SpanTreeMtEph.rs:111:21
+    |
+111 |                     original_edges.spec_setsteph_wf(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+quotient_tree.spec_setsteph_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: aborting due to 5 previous errors; 3 warnings emitted
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 1752MB, peak z3 RSS: 265MB, min free: 20663MB
+Sampled CPU Usage: rust_verify: 19s, z3 children: 14s

@@ -1,0 +1,75 @@
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:280:28
+    |
+280 |             proof { assert(p@ == uf@.parent[current@]@); }
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: invariant not satisfied before loop
+   --> src/Chap65/UnionFindStEph.rs:275:17
+    |
+275 |                 uf@.parent.contains_key(current@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap65/UnionFindStEph.rs:276:17
+    |
+276 |                 uf@.roots[current@] == uf@.roots[v@],
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap65/UnionFindStEph.rs:266:13
+    |
+266 |             root@ == uf@.roots[v@],
+    |             ^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+297 |         current
+    |         ------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap65/UnionFindStEph.rs:268:13
+    |
+268 |             uf@.roots[root@] == root@,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+297 |         current
+    |         ------- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+p.view() == uf.view().parent.index(current.view()).view() 
+
+note: recommendation not met
+   --> src/Chap65/UnionFindStEph.rs:276:40
+    |
+276 |                 uf@.roots[current@] == uf@.roots[v@],
+    |                                        ^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap65/UnionFindStEph.rs:277:32
+    |
+277 |             decreases uf@.rank[uf@.roots[v@]] - uf@.rank[current@],
+    |                                ^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+
+thread '<unnamed>' (368718) panicked at air/src/smt_process.rs:93:17:
+Got too many empty lines!
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread '<unnamed>' (367515) panicked at air/src/smt_process.rs:213:34:
+internal error: Z3 reader thread failure: RecvError
+
+thread '<unnamed>' (367515) panicked at rust_verify/src/verifier.rs:2217:29:
+worker thread panicked
+error: aborting due to 5 previous errors
+
+Elapsed: 147s

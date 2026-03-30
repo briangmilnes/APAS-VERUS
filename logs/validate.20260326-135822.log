@@ -1,0 +1,126 @@
+error: assertion failed
+   --> src/Chap55/DFSStEph.rs:102:32
+    |
+102 |             implies #[trigger] spec_has_edge(graph, path_uw[k], path_uw[k + 1]) by {
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+spec_has_edge(graph, path_uw.index(k), path_uw.index(k + 1)) 
+
+error: postcondition not satisfied
+   --> src/Chap55/DFSStEph.rs:254:13
+    |
+254 |             reachable@.contains(vertex),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+276 |             return;
+    |             ------ at this exit
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/DFSStEph.rs:366:17
+    |
+366 |                 reachable@.contains(vertex),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+visited.view().len() == old(visited).view().len() ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = visited.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && old(visited).view().index(j) ==>
+        visited.view().index(j) ✔
+spec_num_false(visited.view()) <= spec_num_false(old(visited).view()) ✔
+reachable.spec_avltreesetsteph_wf() ✔
+forall |v|
+    reachable.view().contains(v) ==>
+        v < old(graph).view().len() ✔
+clip(nat, reachable.view().len() + spec_num_false(visited.view())) <= old(graph).view().len() ✔
+visited.view().index(old(vertex)) ✔
+reachable.view().contains(old(vertex)) ✔
+forall |u, j|
+    let tmp%% = 0 in let tmp%% = u in let tmp%% = old(graph).view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = old(graph).view().index(u).len() in tmp%% <= tmp%% && tmp%% < tmp%% && visited.view().index(u) && !(old(gray).contains(u)) ==>
+        visited.view().index(old(graph).view().index(u).index(j)) ✔
+forall |v|
+    let tmp%% = 0 in let tmp%% = v in let tmp%% = visited.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && visited.view().index(v) && !(old(gray).contains(v)) ==>
+        reachable.view().contains(clip(usize, v)) ✔
+forall |v|
+    reachable.view().contains(v) ==>
+        !(old(reachable).view().contains(v)) ==>
+            spec_reachable(old(graph), old(vertex), v) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+note: recommendation not met
+   --> src/Chap55/DFSStEph.rs:358:48
+    |
+358 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: assertion failed
+   --> src/Chap55/DFSStEph.rs:137:20
+    |
+137 |             assert(spec_has_edge(graph, path[0], path[1]));
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+  --> src/Chap55/TopoSortStEph.rs:58:12
+   |
+58 |         && exists|i: int| 0 <= i < graph@[u].len() && (#[trigger] graph@[u][i]) == v
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_has_edge(graph, path.index(0), path.index(1))
+|   let tmp%% = 0;
+|       let tmp%% = path.index(0);
+|           let tmp%% = graph.view().len();
+|               tmp%% <= tmp%% ✔
+|               tmp%% < tmp%% ✔
+|   (exists |i| let tmp%% = 0 in let tmp%% = i in let tmp%% = graph.view().index(path.index(0)).len() in tmp%% <= tmp%% && tmp%% < tmp%% && graph.view().index(path.index(0)).index(i) == path.index(1)) ✘
++---
+
+error: assertion failed
+   --> src/Chap55/DFSStEph.rs:456:28
+    |
+456 |                     assert(visited.seq@[j] == false);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap55/DFSStEph.rs:462:13
+    |
+230 |             graph@.len() < usize::MAX,
+    |             ------------------------- failed precondition
+...
+462 |             dfs_recursive(graph, &mut visited, &mut reachable, source, Ghost(Set::empty()));
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap55/DFSStEph.rs:456:47
+    |
+456 |                     assert(visited.seq@[j] == false);
+    |                                               ^^^^^
+
+note: 
+
+visited.seq.view().index(j) == false
+|   visited.seq.view().index(j) ==>
+|       false ✘
+|   false ==>
+|       visited.seq.view().index(j) ✔
++---
+
+verification results:: 2082 verified, 5 errors
+error: aborting due to 6 previous errors
+
+Elapsed: 22s
+Sampled Memory Usage: peak rust_verify RSS: 3340MB, peak z3 RSS: 384MB, min free: 21299MB
+Sampled CPU Usage: rust_verify: 61s, z3 children: 40s

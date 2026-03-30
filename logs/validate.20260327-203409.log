@@ -1,0 +1,48 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStPer.rs:47:14
+   |
+47 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:334:25
+    |
+334 |                         vstd::set_lib::lemma_len_subset(ns@, self.adj@.dom());
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/set_lib.rs:1120:8
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:336:21
+    |
+336 |                     ns.insert(v.clone());
+    |                     ^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:298:17
+    |
+298 |                 old(self)@.len() + 1 < usize::MAX as nat,
+    |                 ---------------------------------------- failed precondition
+
+note: diagnostics via expansion
+ --> vstd/set_lib.rs:1120:8
+
+note: 
+
+tmp%.finite() ✘
+    function is uninterpreted
+tmp%.subset_of(tmp%) ✔
+
+verification results:: 2789 verified, 1 errors
+error: aborting due to 2 previous errors; 2 warnings emitted
+
+Elapsed: 39s
+Sampled Memory Usage: peak rust_verify RSS: 12136MB, peak z3 RSS: 1997MB, min free: 7458MB
+Sampled CPU Usage: rust_verify: 309s, z3 children: 226s

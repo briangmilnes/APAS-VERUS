@@ -1,0 +1,9 @@
+error: not yet implemented: lhs of compound assignment
+   --> src/Chap37/BSTSetPlainMtEph.rs:444:17
+    |
+444 |                 self.pos += 1;
+    |                 ^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 27s

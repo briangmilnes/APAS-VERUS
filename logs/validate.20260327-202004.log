@@ -1,0 +1,50 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStPer.rs:47:14
+   |
+47 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:154:17
+    |
+154 |                   self.spec_adj()[u@].contains(v@);
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+341 |               proof {
+    |  ___________________-
+342 | |                 // Graph closure blocked by Verus ICE on quantifiers over Map<V::V, Set<V::V>>.
+343 | |                 assume(self.spec_adjtablegraphsteph_wf());
+344 | |             }
+    | |_____________- at the end of the function body
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStEph.rs:326:36
+    |
+326 |                     proof { assert(ns@.contains(v@)); }
+    |                                    ^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStEph.rs:331:36
+    |
+331 |                     proof { assert(s@.contains(v@)); }
+    |                                    ^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+s.view().contains(v.view()) 
+    function is uninterpreted
+
+verification results:: 2789 verified, 1 errors
+error: aborting due to 3 previous errors; 2 warnings emitted
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 2530MB, peak z3 RSS: 345MB, min free: 20360MB
+Sampled CPU Usage: rust_verify: 43s, z3 children: 44s

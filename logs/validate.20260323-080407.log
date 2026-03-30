@@ -1,0 +1,90 @@
+error: precondition not satisfied
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:988:28
+    |
+988 |                 let slot = Self::probe(table, key, attempt);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/FlatHashTable.rs:66:17
+    |
+ 66 |                 spec_hash_fn_valid::<Key, H>(table.spec_hash@),
+    |                 ---------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap47/FlatHashTable.rs:66:17
+    |
+ 66 |                 spec_hash_fn_valid::<Key, H>(table.spec_hash@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:117:65
+    |
+117 |         (forall|h: H, k: &Key, ts: usize| ts > 0 ==> #[trigger] h.requires((k, ts)))
+    |                                                                 ^^^^^^^^^^^^^^^^^^^
+...
+120 |                 ==> idx < ts && idx as nat == spec_hash(*k) % (ts as nat))
+    |                     ^^^^^^^^    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+table.current_size > 0 ✔
+spec_hash_fn_valid(table.spec_hash) ✘
+|   forall |h, k, ts|
+|       ts > 0 ==>
+|           ClosureReq(h, (k, ts)) ✘
+|   forall |h, k, ts, idx|
+|       ts > 0 && ClosureEns(h, (k, ts), idx) ==>
+|           idx < ts ✘
+|           idx == table.spec_hash(k) % ts ✘
++---
+
+error: precondition not satisfied
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:902:28
+    |
+902 |                 let slot = Self::probe(table, key, attempt);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/FlatHashTable.rs:66:17
+    |
+ 66 |                 spec_hash_fn_valid::<Key, H>(table.spec_hash@),
+    |                 ---------------------------------------------- failed precondition
+
+note: 
+
+table.current_size > 0 ✔
+spec_hash_fn_valid(table.spec_hash) ✘
+|   forall |h, k, ts|
+|       ts > 0 ==>
+|           ClosureReq(h, (k, ts)) ✘
+|   forall |h, k, ts, idx|
+|       ts > 0 && ClosureEns(h, (k, ts), idx) ==>
+|           idx < ts ✘
+|           idx == table.spec_hash(k) % ts ✘
++---
+
+error: precondition not satisfied
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1301:28
+     |
+1301 |                 let slot = Self::probe(table, key, attempt);
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap47/FlatHashTable.rs:66:17
+     |
+  66 |                 spec_hash_fn_valid::<Key, H>(table.spec_hash@),
+     |                 ---------------------------------------------- failed precondition
+
+note: 
+
+table.current_size > 0 ✔
+spec_hash_fn_valid(table.spec_hash) ✘
+|   forall |h, k, ts|
+|       ts > 0 ==>
+|           ClosureReq(h, (k, ts)) ✘
+|   forall |h, k, ts, idx|
+|       ts > 0 && ClosureEns(h, (k, ts), idx) ==>
+|           idx < ts ✘
+|           idx == table.spec_hash(k) % ts ✘
++---
+
+verification results:: 4502 verified, 3 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 79s

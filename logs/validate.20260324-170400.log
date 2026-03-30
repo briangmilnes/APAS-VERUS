@@ -1,0 +1,143 @@
+error: `core::iter::adapters::cloned::Cloned` is not supported (note: you may be able to add a Verus specification to this type with the `external_type_specification` attribute) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetPlainMtEph.rs:130:9
+    |
+130 |            tree.in_order().iter().cloned().collect()
+    |            -------------------------------^^^^^^^^^^
+...
+208 |                let filtered: Vec<T> = self
+    |   ____________________________________-
+    |  |____________________________________|
+209 | ||                 .tree
+210 | ||                 .in_order()
+211 | ||                 .iter()
+212 | ||                 .filter(|x| *x != target)
+213 | ||                 .cloned()
+    | ||_________________________-
+214 | |                  .collect();
+    | |___________________________-
+...
+368 |                let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+    |                                     ----------------------------------------------
+...
+466 |                let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+    |                                     ----------------------------------------------
+    |
+    = help: The following declaration may resolve this error:
+            #[verifier::reject_recursive_types(I)]
+            #[verifier::external_type_specification]
+            pub struct ExCloned<I>(std::iter::Cloned<I>);
+
+error: `lib::Chap18::ArraySeqStPer::ArraySeqStPer::impl&%10%default%cloned` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+   --> src/Chap37/BSTSetPlainMtEph.rs:130:9
+    |
+130 |         tree.in_order().iter().cloned().collect()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+368 |             let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+    |                                  ------------------------------------
+...
+466 |             let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+    |                                  ------------------------------------
+
+error: `core::iter::adapters::filter::Filter` is not supported (note: you may be able to add a Verus specification to this type with the `external_type_specification` attribute) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetPlainMtEph.rs:208:36
+    |
+208 |                  let filtered: Vec<T> = self
+    |     ____________________________________^
+    |    |____________________________________|
+    |  _||____________________________________|
+209 | | ||                 .tree
+210 | | ||                 .in_order()
+211 | | ||                 .iter()
+212 | | ||                 .filter(|x| *x != target)
+    | | ||_________________________________________-
+213 | | |                  .cloned()
+    | | |__________________________-
+214 | |                    .collect();
+    | |_____________________________^
+    |
+    = help: The following declaration may resolve this error:
+            #[verifier::reject_recursive_types(I)]
+            #[verifier::reject_recursive_types(P)]
+            #[verifier::external_type_specification]
+            pub struct ExFilter<I, P>(std::iter::Filter<I, P>);
+
+error: `core::iter::adapters::filter::impl&%3%default%cloned` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetPlainMtEph.rs:208:36
+    |
+208 |               let filtered: Vec<T> = self
+    |  ____________________________________^
+209 | |                 .tree
+210 | |                 .in_order()
+211 | |                 .iter()
+212 | |                 .filter(|x| *x != target)
+213 | |                 .cloned()
+    | |_________________________^
+
+error: `lib::Chap18::ArraySeqStPer::ArraySeqStPer::impl&%10%default%filter` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+   --> src/Chap37/BSTSetPlainMtEph.rs:208:36
+    |
+208 |               let filtered: Vec<T> = self
+    |  ____________________________________^
+209 | |                 .tree
+210 | |                 .in_order()
+211 | |                 .iter()
+212 | |                 .filter(|x| *x != target)
+    | |_________________________________________^
+
+error: `core::cmp::impls::impl&%9::ne` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetPlainMtEph.rs:212:29
+    |
+212 |                 .filter(|x| *x != target)
+    |                             ^^^^^^^^^^^^
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification<'a, 'b, A, B> [<&'b A as std::cmp::PartialEq<&B>>::ne] (_0: &&'b A, _1: &&B) -> bool
+            where
+            A: std::cmp::PartialEq<B> + ?Sized,
+            B: ?Sized,;
+
+error: `core::cmp::impls::impl&%10::lt` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetPlainMtEph.rs:313:20
+    |
+313 |                 if value < pivot {
+    |                    ^^^^^^^^^^^^^
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification<'a, 'b, A, B> [<&'b A as std::cmp::PartialOrd<&B>>::lt] (_0: &&'b A, _1: &&B) -> bool
+            where
+            A: std::cmp::PartialOrd<B> + ?Sized,
+            B: ?Sized,;
+
+error: `core::cmp::impls::impl&%10::gt` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetPlainMtEph.rs:315:27
+    |
+315 |                 } else if value > pivot {
+    |                           ^^^^^^^^^^^^^
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification<'a, 'b, A, B> [<&'b A as std::cmp::PartialOrd<&B>>::gt] (_0: &&'b A, _1: &&B) -> bool
+            where
+            A: std::cmp::PartialOrd<B> + ?Sized,
+            B: ?Sized,;
+
+error: `alloc::vec::into_iter::impl&%6%default%collect` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetPlainMtEph.rs:325:32
+    |
+325 |             let mut combined = values_vec(&left.tree).into_iter().collect::<BTreeSet<T>>();
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+333 |             let mut combined = values_vec(&left.tree).into_iter().collect::<BTreeSet<T>>();
+    |                                -----------------------------------------------------------
+
+error: `alloc::collections::btree::set::impl&%37%default%collect` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetPlainMtEph.rs:329:22
+    |
+329 |             from_vec(combined.into_iter().collect())
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+338 |             from_vec(combined.into_iter().collect())
+    |                      ------------------------------
+
+error: `alloc::collections::btree::set::IntoIter` is not supported (note: you may be able to add a Verus specification to this type with the `external_type_specification` attribute) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37

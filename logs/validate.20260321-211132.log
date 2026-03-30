@@ -1,0 +1,269 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:466:17
+    |
+466 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:471:17
+    |
+471 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: invariant not satisfied before loop
+   --> src/Chap43/OrderedSetStPer.rs:910:21
+    |
+910 |                     size as nat == self@.len(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:939:17
+    |
+939 |                 Self::insert(&mut new_table, key, value);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:465:17
+    |
+465 |                 spec_hashtable_wf(old(table)),
+    |                 ----------------------------- failed precondition
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:552:17
+    |
+552 |                 spec_hashtable_wf(&resized),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/DoubleHashFlatHashTableStEph.rs:956:13
+    |
+956 |             new_table
+    |             --------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap47/ParaHashTableStEph.rs:69:29
+    |
+ 69 |             ==> !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k)
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+465 |                 spec_hashtable_wf(old(table)),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_hashtable_wf(new_table) ✘
+|   new_table.table.view().len() == new_table.current_size ✔
+|   new_table.current_size > 0 ✔
+|   forall |k, j|
+|       let tmp%% = 0 in let tmp%% = j in let tmp%% = new_table.table.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == new_table.spec_hash(k) % new_table.current_size) ==>
+|           !(new_table.table.view().index(j).spec_entry_to_map().dom().contains(k)) ✘
++---
+spec_impl_wf(new_table) ✔
+new_table.num_elements < UnsignedMax.Exec(usize::BITS) ✔
+spec_has_insert_capacity(new_table) ✔
+
+note: recommendation not met
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:858:28
+    |
+858 |                     assert(sub_next.drop_last() =~= table.table@.subrange(0, i as int));
+    |                            ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:859:28
+    |
+859 |                     assert(sub_next.last() == table.table@[i as int]);
+    |                            ^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:154:12
+    |
+    = note: recommendation not met
+
+error: precondition not satisfied
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:853:17
+    |
+853 |                 Self::insert(&mut new_table, key, value);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:465:17
+    |
+465 |                 spec_hashtable_wf(old(table)),
+    |                 ----------------------------- failed precondition
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:552:17
+    |
+552 |                 spec_hashtable_wf(&resized),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/LinProbFlatHashTableStEph.rs:871:13
+    |
+871 |             new_table
+    |             --------- at the end of the function body
+
+note: 
+
+spec_hashtable_wf(new_table) ✘
+|   new_table.table.view().len() == new_table.current_size ✔
+|   new_table.current_size > 0 ✔
+|   forall |k, j|
+|       let tmp%% = 0 in let tmp%% = j in let tmp%% = new_table.table.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == new_table.spec_hash(k) % new_table.current_size) ==>
+|           !(new_table.table.view().index(j).spec_entry_to_map().dom().contains(k)) ✘
++---
+spec_impl_wf(new_table) ✔
+new_table.num_elements < UnsignedMax.Exec(usize::BITS) ✔
+spec_has_insert_capacity(new_table) ✔
+
+note: recommendation not met
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:771:28
+    |
+771 |                     assert(sub_next.drop_last() =~= table.table@.subrange(0, i as int));
+    |                            ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:772:28
+    |
+772 |                     assert(sub_next.last() == table.table@[i as int]);
+    |                            ^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:154:12
+    |
+    = note: recommendation not met
+
+error: precondition not satisfied
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:866:17
+    |
+866 |                 Self::insert(&mut new_table, key, value);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:465:17
+    |
+465 |                 spec_hashtable_wf(old(table)),
+    |                 ----------------------------- failed precondition
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:552:17
+    |
+552 |                 spec_hashtable_wf(&resized),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/QuadProbFlatHashTableStEph.rs:878:13
+    |
+878 |             new_table
+    |             --------- at the end of the function body
+
+note: 
+
+spec_hashtable_wf(new_table) ✘
+|   new_table.table.view().len() == new_table.current_size ✔
+|   new_table.current_size > 0 ✔
+|   forall |k, j|
+|       let tmp%% = 0 in let tmp%% = j in let tmp%% = new_table.table.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == new_table.spec_hash(k) % new_table.current_size) ==>
+|           !(new_table.table.view().index(j).spec_entry_to_map().dom().contains(k)) ✘
++---
+spec_impl_wf(new_table) ✔
+new_table.num_elements < UnsignedMax.Exec(usize::BITS) ✔
+spec_has_insert_capacity(new_table) ✔
+
+note: recommendation not met
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:802:28
+    |
+802 |                     assert(sub_next.drop_last() =~= table.table@.subrange(0, i as int));
+    |                            ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:803:28
+    |
+803 |                     assert(sub_next.last() == table.table@[i as int]);
+    |                            ^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:154:12
+    |
+    = note: recommendation not met
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarContractionStEph.rs:142:13
+    |
+142 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarContractionStEph.rs:142:37
+    |
+142 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+    |                                     ^^
+
+note: automatically chose triggers for this expression:
+  --> src/Chap62/StarContractionStEph.rs:82:13
+   |
+82 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+  --> src/Chap62/StarContractionStEph.rs:82:37
+   |
+82 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+   |                                     ^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:168:13
+    |
+168 | /             forall |d: int| 0 <= d < table.current_size as int
+169 | |                 ==> !spec_flat_has_key(
+170 | |                     table.table@[spec_tri_probe(h as int, d, table.current_size as int)],
+171 | |                     *key),
+    | |_________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:170:34
+    |
+170 |                     table.table@[spec_tri_probe(h as int, d, table.current_size as int)],
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:466:17
+    |
+466 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:468:38
+    |
+468 |                         table.table@[spec_tri_probe(h as int, d, table.current_size as int)], key) by {
+    |                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:466:17
+    |
+466 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+
+verification results:: 4478 verified, 7 errors
+error: aborting due to 7 previous errors; 2 warnings emitted
+
+Elapsed: 106s

@@ -1,0 +1,76 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap62/StarPartitionMtEph.rs:382:21
+    |
+382 |                     assert forall|j2: int| 0 <= j2 < nv as int implies
+    |                     ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap62/StarPartitionMtEph.rs:503:21
+    |
+503 |                     assert forall|j2: int| 0 <= j2 < q as int implies
+    |                     ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap62/StarPartitionMtEph.rs:517:21
+    |
+517 |                     assert forall|j2: int| 0 <= j2 < q as int implies
+    |                     ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: `core::cmp::impls::impl&%10::lt` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+  --> src/Chap64/SpanTreeMtEph.rs:97:35
+   |
+97 |                     let edge = if vertex < center {
+   |                                   ^^^^^^^^^^^^^^^
+   |
+   = help: The following declaration may resolve this error:
+           pub assume_specification<'a, 'b, A, B> [<&'b A as std::cmp::PartialOrd<&B>>::lt] (_0: &&'b A, _1: &&B) -> bool
+           where
+           A: std::cmp::PartialOrd<B> + ?Sized,
+           B: ?Sized,;
+
+error: `core::cmp::impls::impl&%9::eq` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap64/SpanTreeMtEph.rs:135:33
+    |
+135 | ...                   if (u_center == c1 && v_center == c2) || (u_center == c2 && v_center == c1) {
+    |                           ^^^^^^^^^^^^^^    --------------      --------------    --------------
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification<'a, 'b, A, B> [<&'b A as std::cmp::PartialEq<&B>>::eq] (_0: &&'b A, _1: &&B) -> bool
+            where
+            A: std::cmp::PartialEq<B> + ?Sized,
+            B: ?Sized,;
+
+error: cannot use function `lib::Types::Types::Edge::clone` which is ignored because it is either declared outside the verus! macro or it is marked as `external`.
+   --> src/Chap64/SpanTreeMtEph.rs:136:63
+    |
+136 | ...                   let _ = spanning_edges.insert(oe.clone());
+    |                                                     ^^^^^^^^^^
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification<V> [<crate::Types::Types::Edge<V> as std::clone::Clone>::crate::clone] (_0: &crate::Types::Types::Edge<V>) -> crate::Types::Types::Edge<V>
+            where
+            V: crate::Types::Types::StT,;
+
+error: `core::cmp::impls::impl&%9::ne` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+  --> src/Chap64/SpanTreeMtEph.rs:96:20
+   |
+96 |                 if vertex != center {
+   |                    ^^^^^^^^^^^^^^^^
+   |
+   = help: The following declaration may resolve this error:
+           pub assume_specification<'a, 'b, A, B> [<&'b A as std::cmp::PartialEq<&B>>::ne] (_0: &&'b A, _1: &&B) -> bool
+           where
+           A: std::cmp::PartialEq<B> + ?Sized,
+           B: ?Sized,;
+
+error: aborting due to 4 previous errors; 3 warnings emitted
+
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 962MB, peak z3 RSS: 0MB, min free: 21995MB
+Sampled CPU Usage: rust_verify: 9s, z3 children: 0s

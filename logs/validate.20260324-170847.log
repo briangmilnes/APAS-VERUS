@@ -1,0 +1,9 @@
+error: cannot call function `lib::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait::length` with mode exec
+   --> src/Chap37/BSTSetPlainMtEph.rs:135:28
+    |
+135 |             invariant i <= seq.length(),
+    |                            ^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 39s

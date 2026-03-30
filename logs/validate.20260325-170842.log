@@ -1,0 +1,43 @@
+error: postcondition not satisfied
+   --> src/Chap65/UnionFindStEph.rs:285:13
+    |
+285 |             root@ == uf@.roots[v@],
+    |             ^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+328 |         current
+    |         ------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap65/UnionFindStEph.rs:287:13
+    |
+287 |             uf@.roots[root@] == root@,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+328 |         current
+    |         ------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap65/UnionFindStEph.rs:285:13
+    |
+285 |             root@ == uf@.roots[v@],
+    |             ^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+root.view() == old(uf).view().roots.index(old(v).view()) ✘
+old(uf).view().parent.dom().contains(root.view()) ✔
+old(uf).view().roots.index(root.view()) == root.view() ✔
+
+
+thread '<unnamed>' (555230) panicked at air/src/smt_process.rs:93:17:
+Got too many empty lines!
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread '<unnamed>' (553102) panicked at air/src/smt_process.rs:213:34:
+internal error: Z3 reader thread failure: RecvError
+
+thread '<unnamed>' (553102) panicked at rust_verify/src/verifier.rs:2217:29:
+worker thread panicked
+error: aborting due to 2 previous errors
+
+Elapsed: 154s

@@ -1,0 +1,247 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent1)
+error[E0433]: failed to resolve: could not find `OrderedSetMtEph` in `Chap43`
+ --> tests/Chap43/TestOrderedTableMtPer.rs:5:25
+  |
+5 | use apas_verus::Chap43::OrderedSetMtEph::OrderedSetMtEph::OrderedSetMtEphTrait;
+  |                         ^^^^^^^^^^^^^^^ could not find `OrderedSetMtEph` in `Chap43`
+
+error[E0433]: failed to resolve: could not find `OrderedTableMtPer` in `Chap43`
+ --> tests/Chap43/TestOrderedTableMtPer.rs:6:25
+  |
+6 | use apas_verus::Chap43::OrderedTableMtPer::OrderedTableMtPer::*;
+  |                         ^^^^^^^^^^^^^^^^^ could not find `OrderedTableMtPer` in `Chap43`
+
+error[E0425]: cannot find type `OrderedTableMtPer` in this scope
+  --> tests/Chap43/TestOrderedTableMtPer.rs:11:16
+   |
+11 |     let table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+   |                ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableMtPer` in this scope
+  --> tests/Chap43/TestOrderedTableMtPer.rs:17:16
+   |
+17 |     let table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+   |                ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableMtPer` in this scope
+  --> tests/Chap43/TestOrderedTableMtPer.rs:29:16
+   |
+29 |     let table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+   |                ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableMtPer` in this scope
+  --> tests/Chap43/TestOrderedTableMtPer.rs:41:20
+   |
+41 |     let mut table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+   |                    ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableMtPer` in this scope
+  --> tests/Chap43/TestOrderedTableMtPer.rs:54:20
+   |
+54 |     let mut table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+   |                    ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableMtPer` in this scope
+  --> tests/Chap43/TestOrderedTableMtPer.rs:68:16
+   |
+68 |     let table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::singleton(42, "answer".to_string());
+   |                ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableMtPer` in this scope
+  --> tests/Chap43/TestOrderedTableMtPer.rs:75:20
+   |
+75 |     let mut table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+   |                    ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableMtPer` in this scope
+  --> tests/Chap43/TestOrderedTableMtPer.rs:87:17
+   |
+87 |     let table1: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+   |                 ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableMtPer` in this scope
+  --> tests/Chap43/TestOrderedTableMtPer.rs:98:20
+   |
+98 |     let mut table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+   |                    ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableMtPer` in this scope
+   --> tests/Chap43/TestOrderedTableMtPer.rs:112:20
+    |
+112 |     let mut table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+    |                    ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableMtPer` in this scope
+   --> tests/Chap43/TestOrderedTableMtPer.rs:127:20
+    |
+127 |     let mut table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+    |                    ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableMtPer` in this scope
+   --> tests/Chap43/TestOrderedTableMtPer.rs:146:17
+    |
+146 |     let mut t1: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+    |                 ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableMtPer` in this scope
+   --> tests/Chap43/TestOrderedTableMtPer.rs:150:17
+    |
+150 |     let mut t2: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+    |                 ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableMtPer` in this scope
+   --> tests/Chap43/TestOrderedTableMtPer.rs:162:20
+    |
+162 |     let mut table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+    |                    ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableMtPer` in this scope
+   --> tests/Chap43/TestOrderedTableMtPer.rs:177:20
+    |
+177 |     let mut table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+    |                    ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableMtPer` in this scope
+   --> tests/Chap43/TestOrderedTableMtPer.rs:195:20
+    |
+195 |     let mut table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+    |                    ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableMtPerTrait`
+  --> tests/Chap43/TestOrderedTableMtPer.rs:11:49
+   |
+11 |     let table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+   |                                                 ^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableMtPerTrait`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableMtPerTrait`
+  --> tests/Chap43/TestOrderedTableMtPer.rs:17:49
+   |
+17 |     let table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+   |                                                 ^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableMtPerTrait`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableMtPerTrait`
+  --> tests/Chap43/TestOrderedTableMtPer.rs:29:49
+   |
+29 |     let table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+   |                                                 ^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableMtPerTrait`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableMtPerTrait`
+  --> tests/Chap43/TestOrderedTableMtPer.rs:41:53
+   |
+41 |     let mut table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+   |                                                     ^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableMtPerTrait`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableMtPerTrait`
+  --> tests/Chap43/TestOrderedTableMtPer.rs:54:53
+   |
+54 |     let mut table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+   |                                                     ^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableMtPerTrait`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableMtPerTrait`
+  --> tests/Chap43/TestOrderedTableMtPer.rs:68:49
+   |
+68 |     let table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::singleton(42, "answer".to_string());
+   |                                                 ^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableMtPerTrait`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableMtPerTrait`
+  --> tests/Chap43/TestOrderedTableMtPer.rs:75:53
+   |
+75 |     let mut table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+   |                                                     ^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableMtPerTrait`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableMtPerTrait`
+  --> tests/Chap43/TestOrderedTableMtPer.rs:87:50
+   |
+87 |     let table1: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+   |                                                  ^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableMtPerTrait`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableMtPerTrait`
+  --> tests/Chap43/TestOrderedTableMtPer.rs:98:53
+   |
+98 |     let mut table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+   |                                                     ^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableMtPerTrait`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableMtPerTrait`
+   --> tests/Chap43/TestOrderedTableMtPer.rs:112:53
+    |
+112 |     let mut table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableMtPerTrait`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableMtPerTrait`
+   --> tests/Chap43/TestOrderedTableMtPer.rs:127:53
+    |
+127 |     let mut table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableMtPerTrait`
+
+error[E0282]: type annotations needed
+   --> tests/Chap43/TestOrderedTableMtPer.rs:135:16
+    |
+135 |     assert_eq!(left.size() + right.size(), 3);
+    |                ^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> tests/Chap43/TestOrderedTableMtPer.rs:135:30
+    |
+135 |     assert_eq!(left.size() + right.size(), 3);
+    |                              ^^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> tests/Chap43/TestOrderedTableMtPer.rs:141:16
+    |
+141 |     assert_eq!(left2.size() + right2.size(), 4);
+    |                ^^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> tests/Chap43/TestOrderedTableMtPer.rs:141:31
+    |
+141 |     assert_eq!(left2.size() + right2.size(), 4);
+    |                               ^^^^^^ cannot infer type
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableMtPerTrait`
+   --> tests/Chap43/TestOrderedTableMtPer.rs:146:50
+    |
+146 |     let mut t1: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+    |                                                  ^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableMtPerTrait`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableMtPerTrait`
+   --> tests/Chap43/TestOrderedTableMtPer.rs:150:50
+    |
+150 |     let mut t2: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+    |                                                  ^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableMtPerTrait`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableMtPerTrait`
+   --> tests/Chap43/TestOrderedTableMtPer.rs:162:53
+    |
+162 |     let mut table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableMtPerTrait`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableMtPerTrait`
+   --> tests/Chap43/TestOrderedTableMtPer.rs:177:53
+    |
+177 |     let mut table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableMtPerTrait`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableMtPerTrait`
+   --> tests/Chap43/TestOrderedTableMtPer.rs:195:53
+    |
+195 |     let mut table: OrderedTableMtPer<i32, String> = OrderedTableMtPerTrait::empty();
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableMtPerTrait`
+
+error[E0282]: type annotations needed
+   --> tests/Chap43/TestOrderedTableMtPer.rs:201:16
+    |
+201 |     assert_eq!(left.size(), 2);
+    |                ^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> tests/Chap43/TestOrderedTableMtPer.rs:202:16
+    |
+202 |     assert_eq!(right.size(), 3);
+    |                ^^^^^ cannot infer type
+
+Some errors have detailed explanations: E0282, E0425, E0433.
+For more information about an error, try `rustc --explain E0282`.
+error: could not compile `apas-verus` (test "TestOrderedTableMtPer") due to 40 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 10s

@@ -1,0 +1,17 @@
+error: The verifier does not yet support the following Rust feature: index for &mut not supported
+   --> src/Chap55/SCCStEph.rs:148:52
+    |
+148 |                 let mut temp = std::mem::take(&mut adj_vecs[v]);
+    |                                                    ^^^^^^^^^^^
+
+error: The verifier does not yet support the following Rust feature: index for &mut not supported
+   --> src/Chap55/SCCStPer.rs:224:52
+    |
+224 |                 let mut temp = std::mem::take(&mut adj_vecs[v]);
+    |                                                    ^^^^^^^^^^^
+
+error: aborting due to 2 previous errors
+
+Elapsed: 21s
+Sampled Memory Usage: peak rust_verify RSS: 2550MB, peak z3 RSS: 0MB, min free: 22564MB
+Sampled CPU Usage: rust_verify: 36s, z3 children: 0s

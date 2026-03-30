@@ -1,0 +1,118 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap62/StarPartitionMtEph.rs:382:21
+    |
+382 |                     assert forall|j2: int| 0 <= j2 < nv as int implies
+    |                     ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap62/StarPartitionMtEph.rs:503:21
+    |
+503 |                     assert forall|j2: int| 0 <= j2 < q as int implies
+    |                     ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap62/StarPartitionMtEph.rs:517:21
+    |
+517 |                     assert forall|j2: int| 0 <= j2 < q as int implies
+    |                     ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: Could not automatically infer triggers for this quantifier.  Use #[trigger] annotations to manually mark trigger terms instead.
+   --> src/Chap62/StarPartitionMtEph.rs:394:21
+    |
+394 |                     assert forall|j2: int| 0 <= j2 < nv as int implies
+    |                     ^^^^^^
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap62/StarContractionMtEph.rs:126:56
+    |
+126 |         let r = star_contract_mt_fuel(&quotient_graph, seed + 1, base, expand, fuel - 1);
+    |                                                        ^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap62/StarContractionMtEph.rs:126:56
+    |
+126 |         let r = star_contract_mt_fuel(&quotient_graph, seed + 1, base, expand, fuel - 1);
+    |                                                        ^^^^^^^^
+
+note: 
+
+0 <= seed + 1 ✔
+seed + 1 < 18446744073709551616 ✘
+
+error: postcondition not satisfied
+   --> src/Chap64/SpanTreeMtEph.rs:63:17
+    |
+ 63 |         ensures result.spec_setsteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+147 |         star_contract_mt(graph, seed, &base, &expand)
+    |         --------------------------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap64/SpanTreeMtEph.rs:147:9
+    |
+147 |           star_contract_mt(graph, seed, &base, &expand)
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap62/StarContractionMtEph.rs:157:9
+    |
+157 | /         forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMapWithViewPlus<V, V>, r: R|
+158 | |             #[trigger] expand.requires((v, e, c, p, r)),
+    | |_______________________________________________________- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap62/StarContractionMtEph.rs:158:24
+    |
+158 |             #[trigger] expand.requires((v, e, c, p, r)),
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_graphview_wf(graph.view()) ✔
+valid_key_type_Edge() ✔
+forall |s|
+    s.spec_setsteph_wf() ==>
+        ClosureReq(base, (s)) ✔
+forall |v, e, c, p, r|
+    ClosureReq(expand, (v, e, c, p, r)) ✘
+
+error: precondition not satisfied
+   --> src/Chap64/SpanTreeMtEph.rs:182:17
+    |
+182 |             if !graph_edges.mem(edge) {
+    |                 ^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap05/SetStEph.rs:167:22
+    |
+167 |             requires self.spec_setsteph_wf()
+    |                      ----------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap64/SpanTreeMtEph.rs:184:21
+    |
+184 |                 if !graph_edges.mem(&rev) {
+    |                     ^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap05/SetStEph.rs:167:22
+    |
+167 |             requires self.spec_setsteph_wf()
+    |                      ----------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+graph_edges.spec_setsteph_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: aborting due to 6 previous errors; 3 warnings emitted
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 1981MB, peak z3 RSS: 313MB, min free: 20544MB
+Sampled CPU Usage: rust_verify: 29s, z3 children: 17s

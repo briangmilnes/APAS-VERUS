@@ -1,0 +1,17 @@
+error: expected `,`
+   --> src/Chap55/SCCStEph.rs:162:36
+    |
+162 |             assert(u as int < graph@.len());
+    |                                    ^
+
+error: expected `,`
+   --> src/Chap55/SCCStPer.rs:102:38
+    |
+102 |                 vertex as int < graph@.len(),
+    |                                      ^
+
+error: aborting due to 2 previous errors
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 519MB, peak z3 RSS: 0MB, min free: 25192MB
+Sampled CPU Usage: rust_verify: 8s, z3 children: 0s

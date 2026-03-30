@@ -1,0 +1,84 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:644:17
+    |
+644 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:649:17
+    |
+649 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: invariant not satisfied before loop
+   --> src/Chap43/OrderedSetStPer.rs:910:21
+    |
+910 |                     size as nat == self@.len(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:174:20
+    |
+174 |             assert(a * (pn1 * c) == pn1 * (a * c)) by {
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+a * (pn1 * c) == pn1 * (a * c) 
+
+error: assertion failed
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:302:20
+    |
+302 |             assert(a + b == 2 * j + 1) by (nonlinear_arith);
+    |                    ^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarContractionStEph.rs:142:13
+    |
+142 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarContractionStEph.rs:142:37
+    |
+142 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+    |                                     ^^
+
+note: automatically chose triggers for this expression:
+  --> src/Chap62/StarContractionStEph.rs:82:13
+   |
+82 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+  --> src/Chap62/StarContractionStEph.rs:82:37
+   |
+82 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+   |                                     ^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:346:13
+    |
+346 | /             forall |d: int| 0 <= d < table.current_size as int
+347 | |                 ==> !spec_flat_has_key(
+348 | |                     table.table@[spec_tri_probe(h as int, d, table.current_size as int)],
+349 | |                     *key),
+    | |_________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:348:34
+    |
+348 |                     table.table@[spec_tri_probe(h as int, d, table.current_size as int)],
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:644:17
+    |
+644 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^

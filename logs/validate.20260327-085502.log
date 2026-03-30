@@ -1,0 +1,160 @@
+error[E0034]: multiple applicable items in scope
+  --> src/Chap65/PrimStEph.rs:85:23
+   |
+85 |                 if V::le(z.vertex, x.vertex) {
+   |                       ^^ multiple `le` found
+   |
+note: candidate #1 is defined in the trait `std::cmp::PartialOrd`
+  --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:1420:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+  --> src/vstdplus/total_order.rs:12:10
+   |
+12 |     spec fn le(self, other: Self) -> bool;
+   |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+   |
+85 -                 if V::le(z.vertex, x.vertex) {
+85 +                 if std::cmp::PartialOrd::le(z.vertex, x.vertex) {
+   |
+85 -                 if V::le(z.vertex, x.vertex) {
+85 +                 if vstdplus::total_order::total_order::TotalOrder::le(z.vertex, x.vertex) {
+   |
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap65/PrimStEph.rs:112:47
+    |
+112 |             if x.priority == y.priority && V::le(x.vertex, y.vertex) && V::le(y.vertex, x.vertex) {
+    |                                               ^^ multiple `le` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::PartialOrd`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:1420:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:12:10
+    |
+ 12 |     spec fn le(self, other: Self) -> bool;
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+112 -             if x.priority == y.priority && V::le(x.vertex, y.vertex) && V::le(y.vertex, x.vertex) {
+112 +             if x.priority == y.priority && std::cmp::PartialOrd::le(x.vertex, y.vertex) && V::le(y.vertex, x.vertex) {
+    |
+112 -             if x.priority == y.priority && V::le(x.vertex, y.vertex) && V::le(y.vertex, x.vertex) {
+112 +             if x.priority == y.priority && vstdplus::total_order::total_order::TotalOrder::le(x.vertex, y.vertex) && V::le(y.vertex, x.vertex) {
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap65/PrimStEph.rs:112:76
+    |
+112 |             if x.priority == y.priority && V::le(x.vertex, y.vertex) && V::le(y.vertex, x.vertex) {
+    |                                                                            ^^ multiple `le` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::PartialOrd`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:1420:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:12:10
+    |
+ 12 |     spec fn le(self, other: Self) -> bool;
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+112 -             if x.priority == y.priority && V::le(x.vertex, y.vertex) && V::le(y.vertex, x.vertex) {
+112 +             if x.priority == y.priority && V::le(x.vertex, y.vertex) && std::cmp::PartialOrd::le(y.vertex, x.vertex) {
+    |
+112 -             if x.priority == y.priority && V::le(x.vertex, y.vertex) && V::le(y.vertex, x.vertex) {
+112 +             if x.priority == y.priority && V::le(x.vertex, y.vertex) && vstdplus::total_order::total_order::TotalOrder::le(y.vertex, x.vertex) {
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap65/PrimStEph.rs:131:27
+    |
+131 |                     if V::le(self.vertex, other.vertex) && V::le(other.vertex, self.vertex) {
+    |                           ^^ multiple `le` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::PartialOrd`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:1420:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:12:10
+    |
+ 12 |     spec fn le(self, other: Self) -> bool;
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+131 -                     if V::le(self.vertex, other.vertex) && V::le(other.vertex, self.vertex) {
+131 +                     if std::cmp::PartialOrd::le(self.vertex, other.vertex) && V::le(other.vertex, self.vertex) {
+    |
+131 -                     if V::le(self.vertex, other.vertex) && V::le(other.vertex, self.vertex) {
+131 +                     if vstdplus::total_order::total_order::TotalOrder::le(self.vertex, other.vertex) && V::le(other.vertex, self.vertex) {
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap65/PrimStEph.rs:131:63
+    |
+131 |                     if V::le(self.vertex, other.vertex) && V::le(other.vertex, self.vertex) {
+    |                                                               ^^ multiple `le` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::PartialOrd`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:1420:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:12:10
+    |
+ 12 |     spec fn le(self, other: Self) -> bool;
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+131 -                     if V::le(self.vertex, other.vertex) && V::le(other.vertex, self.vertex) {
+131 +                     if V::le(self.vertex, other.vertex) && std::cmp::PartialOrd::le(other.vertex, self.vertex) {
+    |
+131 -                     if V::le(self.vertex, other.vertex) && V::le(other.vertex, self.vertex) {
+131 +                     if V::le(self.vertex, other.vertex) && vstdplus::total_order::total_order::TotalOrder::le(other.vertex, self.vertex) {
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap65/PrimStEph.rs:149:39
+    |
+149 | ...                   if V::le(*a, *b) && V::le(*b, *a) {
+    |                             ^^ multiple `le` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::PartialOrd`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:1420:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:12:10
+    |
+ 12 |     spec fn le(self, other: Self) -> bool;
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+149 -                                 if V::le(*a, *b) && V::le(*b, *a) {
+149 +                                 if std::cmp::PartialOrd::le(*a, *b) && V::le(*b, *a) {
+    |
+149 -                                 if V::le(*a, *b) && V::le(*b, *a) {
+149 +                                 if vstdplus::total_order::total_order::TotalOrder::le(*a, *b) && V::le(*b, *a) {
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap65/PrimStEph.rs:149:56
+    |
+149 | ...                   if V::le(*a, *b) && V::le(*b, *a) {
+    |                                              ^^ multiple `le` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::PartialOrd`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:1420:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:12:10
+    |
+ 12 |     spec fn le(self, other: Self) -> bool;
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+149 -                                 if V::le(*a, *b) && V::le(*b, *a) {
+149 +                                 if V::le(*a, *b) && std::cmp::PartialOrd::le(*b, *a) {
+    |
+149 -                                 if V::le(*a, *b) && V::le(*b, *a) {
+149 +                                 if V::le(*a, *b) && vstdplus::total_order::total_order::TotalOrder::le(*b, *a) {
+    |
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0034`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 393MB, peak z3 RSS: 0MB, min free: 23010MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

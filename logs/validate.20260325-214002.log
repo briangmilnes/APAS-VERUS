@@ -1,0 +1,191 @@
+error[E0433]: failed to resolve: could not find `Chap05` in the crate root
+  --> src/Chap65/KruskalStEph.rs:11:16
+   |
+11 |     use crate::Chap05::SetStEph::SetStEph::*;
+   |                ^^^^^^ could not find `Chap05` in the crate root
+
+error[E0433]: failed to resolve: could not find `Chap05` in the crate root
+  --> src/Chap65/KruskalStEph.rs:13:16
+   |
+13 |     use crate::Chap05::SetStEph::SetStEph::iter_invariant;
+   |                ^^^^^^ could not find `Chap05` in the crate root
+
+error[E0433]: failed to resolve: could not find `Chap06` in the crate root
+  --> src/Chap65/KruskalStEph.rs:14:16
+   |
+14 |     use crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
+   |                ^^^^^^ could not find `Chap06` in the crate root
+
+error[E0433]: failed to resolve: could not find `Chap05` in the crate root
+  --> src/Chap65/PrimStEph.rs:11:16
+   |
+11 |     use crate::Chap05::SetStEph::SetStEph::*;
+   |                ^^^^^^ could not find `Chap05` in the crate root
+
+error[E0433]: failed to resolve: could not find `Chap06` in the crate root
+  --> src/Chap65/PrimStEph.rs:12:16
+   |
+12 |     use crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::*;
+   |                ^^^^^^ could not find `Chap06` in the crate root
+
+error[E0433]: failed to resolve: could not find `Chap45` in the crate root
+  --> src/Chap65/PrimStEph.rs:21:16
+   |
+21 |     use crate::Chap45::BinaryHeapPQ::BinaryHeapPQ::*;
+   |                ^^^^^^ could not find `Chap45` in the crate root
+
+error[E0432]: unresolved import `crate::SetLit`
+  --> src/Chap65/KruskalStEph.rs:22:9
+   |
+22 |     use crate::SetLit;
+   |         ^^^^^^^^^^^^^ no `SetLit` in the root
+
+error[E0432]: unresolved import `crate::SetLit`
+  --> src/Chap65/PrimStEph.rs:22:9
+   |
+22 |     use crate::SetLit;
+   |         ^^^^^^^^^^^^^ no `SetLit` in the root
+
+error[E0425]: cannot find type `LabUnDirGraphStEph` in this scope
+  --> src/Chap65/KruskalStEph.rs:26:21
+   |
+26 |     pub type T<V> = LabUnDirGraphStEph<V, WrappedF64>;
+   |                     ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabUnDirGraphStEph` in this scope
+  --> src/Chap65/KruskalStEph.rs:41:63
+   |
+41 |         open spec fn spec_kruskalsteph_wf<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>) -> bool {
+   |                                                               ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabUnDirGraphStEph` in this scope
+  --> src/Chap65/KruskalStEph.rs:48:21
+   |
+48 |             graph: &LabUnDirGraphStEph<V, WrappedF64>,
+   |                     ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+  --> src/Chap65/KruskalStEph.rs:49:14
+   |
+49 |         ) -> SetStEph<LabEdge<V, WrappedF64>>
+   |              ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+  --> src/Chap65/KruskalStEph.rs:54:44
+   |
+54 |         fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64
+   |                                            ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabUnDirGraphStEph` in this scope
+  --> src/Chap65/KruskalStEph.rs:60:21
+   |
+60 |             graph: &LabUnDirGraphStEph<V, WrappedF64>,
+   |                     ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+  --> src/Chap65/KruskalStEph.rs:61:19
+   |
+61 |             mst: &SetStEph<LabEdge<V, WrappedF64>>,
+   |                   ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabUnDirGraphStEph` in this scope
+   --> src/Chap65/KruskalStEph.rs:180:17
+    |
+180 |         graph: &LabUnDirGraphStEph<V, WrappedF64>,
+    |                 ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap65/KruskalStEph.rs:181:22
+    |
+181 |     ) -> (mst_edges: SetStEph<LabEdge<V, WrappedF64>>)
+    |                      ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap65/KruskalStEph.rs:190:28
+    |
+190 |         let mut mst_edges: SetStEph<LabEdge<V, WrappedF64>> = SetStEph::empty();
+    |                            ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap65/KruskalStEph.rs:298:50
+    |
+298 |     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, WrappedF64>>) -> (total: WrappedF64)
+    |                                                  ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap65/KruskalStEph.rs:330:21
+    |
+330 |         mst_edges: &SetStEph<LabEdge<V, WrappedF64>>,
+    |                     ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabUnDirGraphStEph` in this scope
+  --> src/Chap65/PrimStEph.rs:84:60
+   |
+84 |         open spec fn spec_primsteph_wf<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>) -> bool {
+   |                                                            ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabUnDirGraphStEph` in this scope
+  --> src/Chap65/PrimStEph.rs:91:21
+   |
+91 |             graph: &LabUnDirGraphStEph<V, WrappedF64>,
+   |                     ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+  --> src/Chap65/PrimStEph.rs:93:23
+   |
+93 |         ) -> (result: SetStEph<LabEdge<V, WrappedF64>>)
+   |                       ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+  --> src/Chap65/PrimStEph.rs:99:44
+   |
+99 |         fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, WrappedF64>>) -> WrappedF64
+   |                                            ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabUnDirGraphStEph` in this scope
+   --> src/Chap65/PrimStEph.rs:133:17
+    |
+133 |         graph: &LabUnDirGraphStEph<V, WrappedF64>,
+    |                 ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap65/PrimStEph.rs:135:19
+    |
+135 |     ) -> (result: SetStEph<LabEdge<V, WrappedF64>>)
+    |                   ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap65/PrimStEph.rs:335:50
+    |
+335 |     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, WrappedF64>>) -> (total: WrappedF64)
+    |                                                  ^^^^^^^^ not found in this scope
+
+error[E0433]: failed to resolve: use of undeclared type `SetStEph`
+   --> src/Chap65/KruskalStEph.rs:190:63
+    |
+190 |         let mut mst_edges: SetStEph<LabEdge<V, WrappedF64>> = SetStEph::empty();
+    |                                                               ^^^^^^^^ use of undeclared type `SetStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `BinaryHeapPQ`
+   --> src/Chap65/PrimStEph.rs:165:22
+    |
+165 |         let mut pq = BinaryHeapPQ::<PQEntry<V>>::singleton(pq_entry_new(zero_dist(), start.clone(), None));
+    |                      ^^^^^^^^^^^^ use of undeclared type `BinaryHeapPQ`
+
+error[E0433]: failed to resolve: use of undeclared type `BinaryHeapPQ`
+   --> src/Chap65/PrimStEph.rs:184:17
+    |
+184 |                 BinaryHeapPQ::<PQEntry<V>>::spec_is_exec_heap(pq.spec_seq()),
+    |                 ^^^^^^^^^^^^ use of undeclared type `BinaryHeapPQ`
+
+error[E0433]: failed to resolve: use of undeclared type `BinaryHeapPQ`
+   --> src/Chap65/PrimStEph.rs:277:25
+    |
+277 |                         BinaryHeapPQ::<PQEntry<V>>::spec_is_exec_heap(pq.spec_seq()),
+    |                         ^^^^^^^^^^^^ use of undeclared type `BinaryHeapPQ`
+
+error: aborting due to 31 previous errors
+
+Some errors have detailed explanations: E0425, E0432, E0433.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 1s

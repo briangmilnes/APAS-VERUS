@@ -1,0 +1,9 @@
+error: cannot call function `lib::Chap39::BSTTreapStEph::BSTTreapStEph::BSTTreapStEphTrait::size_link` with mode exec
+    --> src/Chap39/BSTTreapStEph.rs:2813:24
+     |
+2813 |                 assume(BSTTreapStEph::<T>::size_link(&self.root) as nat == self@.len());
+     |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 25s

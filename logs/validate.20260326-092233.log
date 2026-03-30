@@ -1,0 +1,74 @@
+error: assertion failed
+  --> src/Chap55/DFSStEph.rs:93:16
+   |
+93 |         assert(reachable@.len() <= graph@.len());
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap55/DFSStEph.rs:94:9
+    |
+ 94 |         reachable.insert(vertex);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:297:17
+    |
+297 |                 old(self)@.len() + 1 < usize::MAX as nat,
+    |                 ---------------------------------------- failed precondition
+
+error: invariant not satisfied before loop
+   --> src/Chap55/DFSStEph.rs:112:17
+    |
+112 | /                 forall|j: int|
+113 | |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+114 | |                     ==> visited@[j],
+    | |___________________________________^
+
+error: invariant not satisfied before loop
+   --> src/Chap55/DFSStEph.rs:115:17
+    |
+115 |                 spec_num_false(visited@) < spec_num_false(old(visited)@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap55/DFSStEph.rs:122:13
+    |
+ 56 |             vertex < old(visited)@.len(),
+    |             ---------------------------- failed precondition
+...
+122 |             dfs_recursive(graph, visited, reachable, neighbor);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+neighbor < visited.view().len() ✔
+visited.view().len() == graph.view().len() ✔
+spec_toposortsteph_wf(graph) ✔
+reachable.spec_avltreesetsteph_wf() ✔
+forall |v|
+    reachable.view().contains(v) ==>
+        v < graph.view().len() ✔
+graph.view().len() < UnsignedMax.Exec(usize::BITS) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+note: recommendation not met
+   --> src/Chap55/DFSStEph.rs:113:48
+    |
+113 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 4685 verified, 2 errors
+error: aborting due to 5 previous errors
+
+Elapsed: 73s
+Sampled Memory Usage: peak rust_verify RSS: 13938MB, peak z3 RSS: 826MB, min free: 10764MB
+Sampled CPU Usage: rust_verify: 361s, z3 children: 313s

@@ -1,0 +1,93 @@
+error: precondition not satisfied
+   --> src/Chap55/DFSStEph.rs:83:9
+    |
+ 83 |         reachable.insert(vertex);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:297:17
+    |
+297 |                 old(self)@.len() + 1 < usize::MAX as nat,
+    |                 ---------------------------------------- failed precondition
+
+error: invariant not satisfied before loop
+  --> src/Chap55/DFSStEph.rs:96:17
+   |
+96 | /                 forall|j: int|
+97 | |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+98 | |                     ==> visited@[j],
+   | |___________________________________^
+
+error: invariant not satisfied before loop
+  --> src/Chap55/DFSStEph.rs:99:17
+   |
+99 |                 spec_num_false(visited@) < spec_num_false(old(visited)@),
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap55/DFSStEph.rs:104:29
+    |
+104 |             let neighbor = *neighbors.nth(i);
+    |                             ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:207:22
+    |
+207 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+error: assertion failed
+   --> src/Chap55/DFSStEph.rs:105:20
+    |
+105 |             assert(graph@[vertex as int][i as int] < graph@.len());
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap55/DFSStEph.rs:107:13
+    |
+ 56 |             vertex < old(visited)@.len(),
+    |             ---------------------------- failed precondition
+...
+107 |             dfs_recursive(graph, visited, reachable, neighbor);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+graph.view().index(vertex).index(i) < graph.view().len() 
+
+note: recommendation not met
+  --> src/Chap55/DFSStEph.rs:97:48
+   |
+97 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+   |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+  --> vstd/seq.rs:62:12
+   |
+   = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/DFSStEph.rs:105:20
+    |
+105 |             assert(graph@[vertex as int][i as int] < graph@.len());
+    |                    ^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+  --> src/Chap55/DFSStEph.rs:92:34
+   |
+92 |                 neighbors_len == graph@[vertex as int].len(),
+   |                                  ^^^^^^^^^^^^^^^^^^^^^
+   |
+  --> vstd/seq.rs:62:12
+   |
+   = note: recommendation not met
+
+verification results:: 4685 verified, 2 errors
+error: aborting due to 6 previous errors
+
+Elapsed: 73s
+Sampled Memory Usage: peak rust_verify RSS: 8448MB, peak z3 RSS: 415MB, min free: 16626MB
+Sampled CPU Usage: rust_verify: 180s, z3 children: 115s

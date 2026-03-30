@@ -1,0 +1,188 @@
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+   --> src/Chap39/BSTTreapStEph.rs:103:56
+    |
+102 |     pub open spec fn view_ord_consistent_st<T: StT + Ord + IsLtTransitive>() -> bool {
+    |                                             - method `cmp_spec` not found for this type parameter
+103 |         forall|a: T, b: T| a@ == b@ <==> (#[trigger] a.cmp_spec(&b)) == Equal
+    |                                                        ^^^^^^^^
+    |
+   --> vstd/std_specs/cmp.rs:121:12
+    |
+    = note: the method is available for `T` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+    |
+ 22 +     use vstd::std_specs::cmp::OrdSpec;
+    |
+help: there is a method `partial_cmp_spec` with a similar name
+    |
+103 |         forall|a: T, b: T| a@ == b@ <==> (#[trigger] a.partial_cmp_spec(&b)) == Equal
+    |                                                        ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+   --> src/Chap39/BSTTreapStEph.rs:125:70
+    |
+108 |     pub open spec fn spec_param_wf_link<T: StT + Ord + IsLtTransitive>(link: &Link<T>) -> bool
+    |                                         - method `cmp_spec` not found for this type parameter
+...
+125 |                 &&& (forall|t: T| (#[trigger] lv.contains(t@)) ==> t.cmp_spec(&node.key) == Less)
+    |                                                                      ^^^^^^^^
+    |
+   --> vstd/std_specs/cmp.rs:121:12
+    |
+    = note: the method is available for `T` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+    |
+ 22 +     use vstd::std_specs::cmp::OrdSpec;
+    |
+help: there is a method `partial_cmp_spec` with a similar name
+    |
+125 |                 &&& (forall|t: T| (#[trigger] lv.contains(t@)) ==> t.partial_cmp_spec(&node.key) == Less)
+    |                                                                      ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+   --> src/Chap39/BSTTreapStEph.rs:126:70
+    |
+108 |     pub open spec fn spec_param_wf_link<T: StT + Ord + IsLtTransitive>(link: &Link<T>) -> bool
+    |                                         - method `cmp_spec` not found for this type parameter
+...
+126 |                 &&& (forall|t: T| (#[trigger] rv.contains(t@)) ==> t.cmp_spec(&node.key) == Greater)
+    |                                                                      ^^^^^^^^
+    |
+   --> vstd/std_specs/cmp.rs:121:12
+    |
+    = note: the method is available for `T` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+    |
+ 22 +     use vstd::std_specs::cmp::OrdSpec;
+    |
+help: there is a method `partial_cmp_spec` with a similar name
+    |
+126 |                 &&& (forall|t: T| (#[trigger] rv.contains(t@)) ==> t.partial_cmp_spec(&node.key) == Greater)
+    |                                                                      ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+   --> src/Chap39/BSTTreapStEph.rs:157:15
+    |
+154 |     pub proof fn lemma_cmp_antisymmetry_st<T: StT + Ord + IsLtTransitive>(a: T, b: T)
+    |                                            - method `cmp_spec` not found for this type parameter
+...
+157 |             a.cmp_spec(&b) == Greater,
+    |               ^^^^^^^^
+    |
+   --> vstd/std_specs/cmp.rs:121:12
+    |
+    = note: the method is available for `T` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+    |
+ 22 +     use vstd::std_specs::cmp::OrdSpec;
+    |
+help: there is a method `partial_cmp_spec` with a similar name
+    |
+157 |             a.partial_cmp_spec(&b) == Greater,
+    |               ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+   --> src/Chap39/BSTTreapStEph.rs:158:19
+    |
+154 |     pub proof fn lemma_cmp_antisymmetry_st<T: StT + Ord + IsLtTransitive>(a: T, b: T)
+    |                                            - method `cmp_spec` not found for this type parameter
+...
+158 |         ensures b.cmp_spec(&a) == Less,
+    |                   ^^^^^^^^
+    |
+   --> vstd/std_specs/cmp.rs:121:12
+    |
+    = note: the method is available for `T` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+    |
+ 22 +     use vstd::std_specs::cmp::OrdSpec;
+    |
+help: there is a method `partial_cmp_spec` with a similar name
+    |
+158 |         ensures b.partial_cmp_spec(&a) == Less,
+    |                   ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+   --> src/Chap39/BSTTreapStEph.rs:168:15
+    |
+165 |     pub proof fn lemma_cmp_antisymmetry_less_st<T: StT + Ord + IsLtTransitive>(a: T, b: T)
+    |                                                 - method `cmp_spec` not found for this type parameter
+...
+168 |             a.cmp_spec(&b) == Less,
+    |               ^^^^^^^^
+    |
+   --> vstd/std_specs/cmp.rs:121:12
+    |
+    = note: the method is available for `T` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+    |
+ 22 +     use vstd::std_specs::cmp::OrdSpec;
+    |
+help: there is a method `partial_cmp_spec` with a similar name
+    |
+168 |             a.partial_cmp_spec(&b) == Less,
+    |               ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+   --> src/Chap39/BSTTreapStEph.rs:169:19
+    |
+165 |     pub proof fn lemma_cmp_antisymmetry_less_st<T: StT + Ord + IsLtTransitive>(a: T, b: T)
+    |                                                 - method `cmp_spec` not found for this type parameter
+...
+169 |         ensures b.cmp_spec(&a) == Greater,
+    |                   ^^^^^^^^
+    |
+   --> vstd/std_specs/cmp.rs:121:12
+    |
+    = note: the method is available for `T` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+    |
+ 22 +     use vstd::std_specs::cmp::OrdSpec;
+    |
+help: there is a method `partial_cmp_spec` with a similar name
+    |
+169 |         ensures b.partial_cmp_spec(&a) == Greater,
+    |                   ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+   --> src/Chap39/BSTTreapStEph.rs:179:15
+    |
+176 |     pub proof fn lemma_cmp_transitivity_st<T: StT + Ord + IsLtTransitive>(a: T, b: T, c: T)
+    |                                            - method `cmp_spec` not found for this type parameter
+...
+179 |             a.cmp_spec(&b) == Less,
+    |               ^^^^^^^^
+    |
+   --> vstd/std_specs/cmp.rs:121:12
+    |
+    = note: the method is available for `T` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+    |
+ 22 +     use vstd::std_specs::cmp::OrdSpec;
+    |
+help: there is a method `partial_cmp_spec` with a similar name
+    |
+179 |             a.partial_cmp_spec(&b) == Less,
+    |               ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+   --> src/Chap39/BSTTreapStEph.rs:180:15
+    |
+176 |     pub proof fn lemma_cmp_transitivity_st<T: StT + Ord + IsLtTransitive>(a: T, b: T, c: T)
+    |                      

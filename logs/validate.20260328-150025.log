@@ -1,0 +1,158 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStPer.rs:55:14
+   |
+55 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:50:14
+   |
+50 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap52/AdjTableGraphStEph.rs:612:25
+    |
+612 |                         assert forall|j: int| #![trigger seq@[j]] 0 <= j < (i + 1) as int implies
+    |                         ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap52/AdjTableGraphStPer.rs:570:25
+    |
+570 |                         assert forall|j: int| #![trigger seq@[j]] 0 <= j < (i + 1) as int implies
+    |                         ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap52/AdjTableGraphStPer.rs:498:21
+    |
+498 | /                     forall|j: int| #![trigger seq@[j]] 0 <= j < i ==>
+499 | |                         (result_adj@.dom().contains(seq@[j]) ==> !result_adj@[seq@[j]].contains(v@)),
+    | |____________________________________________________________________________________________________^
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:560:32
+    |
+560 |                         assert(u@ == seq@[i as int]);
+    |                                ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:561:32
+    |
+561 |                         assert(seq@.no_duplicates());
+    |                                ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+u.view() == seq.view().index(i) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap52/AdjTableGraphStEph.rs:553:21
+    |
+553 | /                     forall|j: int| #![trigger seq@[j]] 0 <= j < i ==>
+554 | |                         (self.adj@.dom().contains(seq@[j]) ==> !self.adj@[seq@[j]].contains(v@)),
+    | |________________________________________________________________________________________________^
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStEph.rs:602:32
+    |
+602 |                         assert(u@ == seq@[i as int]);
+    |                                ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStEph.rs:603:32
+    |
+603 |                         assert(seq@.no_duplicates());
+    |                                ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+u.view() == seq.view().index(i) 
+
+note: automatically chose triggers for this expression:
+   --> src/Chap52/AdjTableGraphStPer.rs:327:37
+    |
+327 |   ...                   let j = choose|j: int| 0 <= j < i
+    |  _______________________________^
+328 | | ...                       && self.adj.entries@[j].0 == v;
+    | |________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap52/AdjTableGraphStPer.rs:328:36
+    |
+328 | ...                   && self.adj.entries@[j].0 == v;
+    |                          ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap52/AdjTableGraphStPer.rs:323:33
+    |
+323 |                           implies exists|j: int| 0 <= j < i + 1
+    |  _________________________________^
+324 | |                             && self.adj.entries@[j].0 == v
+    | |__________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap52/AdjTableGraphStPer.rs:324:32
+    |
+324 | ...                   && self.adj.entries@[j].0 == v
+    |                          ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap52/AdjTableGraphStPer.rs:301:29
+    |
+301 |                           ==> exists|j: int| 0 <= j < i
+    |  _____________________________^
+302 | |                             && self.adj.entries@[j].0 == v,
+    | |__________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap52/AdjTableGraphStPer.rs:302:32
+    |
+302 | ...                   && self.adj.entries@[j].0 == v,
+    |                          ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap52/AdjTableGraphStPer.rs:344:33
+    |
+344 |                           let j = choose|j: int| 0 <= j < len as int
+    |  _________________________________^
+345 | |                             && self.adj.entries@[j].0 == v;
+    | |__________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap52/AdjTableGraphStPer.rs:345:32
+    |
+345 | ...                   && self.adj.entries@[j].0 == v;
+    |                          ^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap52/AdjTableGraphStPer.rs:344:33
+    |
+344 |                           let j = choose|j: int| 0 <= j < len as int
+    |  _________________________________^
+345 | |                             && self.adj.entries@[j].0 == v;
+    | |__________________________________________________________^
+
+verification results:: 2812 verified, 2 errors
+error: aborting due to 6 previous errors; 4 warnings emitted
+
+Elapsed: 25s
+Sampled Memory Usage: peak rust_verify RSS: 2654MB, peak z3 RSS: 352MB, min free: 18948MB
+Sampled CPU Usage: rust_verify: 42s, z3 children: 46s

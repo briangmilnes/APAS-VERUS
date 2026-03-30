@@ -1,0 +1,34 @@
+error: assertion failed
+   --> src/Chap55/CycleDetectStEph.rs:201:24
+    |
+201 |                 assert(old(visited)@.len() == graph@.len());
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap55/CycleDetectStEph.rs:202:24
+    |
+202 |                 assert(old(ancestors)@.len() == graph@.len());
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+old(visited).view().len() == graph.view().len() 
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:178:48
+    |
+178 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 4698 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 56s
+Sampled Memory Usage: peak rust_verify RSS: 7272MB, peak z3 RSS: 403MB, min free: 17559MB
+Sampled CPU Usage: rust_verify: 140s, z3 children: 101s

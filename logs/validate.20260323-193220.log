@@ -1,0 +1,256 @@
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:798:16
+    |
+295 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+...
+798 |             $( __set.insert($x); )*
+    |                ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/Example41_3.rs:73:23
+    |
+ 73 |         let set_abc = AVLTreeSetStEphLit!['a', 'b', 'c'];
+    |                       ---------------------------------- in this macro invocation
+    |
+    = note: this error originates in the macro `AVLTreeSetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: precondition not satisfied
+   --> src/Chap41/Example41_3.rs:74:18
+    |
+ 74 |         let fa = set_abc.find(&'a');
+    |                  ^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:279:17
+    |
+279 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap41/Example41_3.rs:75:18
+    |
+ 75 |         let fb = set_abc.find(&'b');
+    |                  ^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:279:17
+    |
+279 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap41/Example41_3.rs:76:18
+    |
+ 76 |         let fc = set_abc.find(&'c');
+    |                  ^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:279:17
+    |
+279 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStEph.rs:295:17
+    |
+295 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+__set.spec_avltreesetsteph_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+clip(nat, __set.view().len() + 1) < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+   --> src/Chap53/GraphSearchStEph.rs:186:31
+    |
+186 |             let visited_new = visited.union(&frontier);
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:269:17
+    |
+269 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap53/GraphSearchStEph.rs:212:33
+    |
+212 |                 new_neighbors = new_neighbors.union(&neighbors);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:269:17
+    |
+269 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap53/GraphSearchStEph.rs:216:32
+    |
+216 |             let frontier_new = new_neighbors.difference(&visited_new);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:259:17
+    |
+259 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStEph.rs:269:17
+    |
+269 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+new_neighbors.spec_avltreesetsteph_wf() ✔
+neighbors.spec_avltreesetsteph_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+clip(nat, new_neighbors.view().len() + neighbors.view().len()) < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+   --> src/Chap53/PQMinStEph.rs:254:32
+    |
+254 |             let frontier_new = frontier.difference(&AVLTreeSetStEph::singleton(entry));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:259:17
+    |
+259 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap53/PQMinStEph.rs:261:31
+    |
+261 |             let visited_new = visited.union(&AVLTreeSetStEph::singleton(v_for_visited));
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:269:17
+    |
+269 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap53/PQMinStEph.rs:317:21
+    |
+317 |                 if !visited_new.find(neighbor) {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:279:17
+    |
+279 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap53/PQMinStEph.rs:355:40
+    |
+355 |                     frontier_updated = frontier_updated.union(&AVLTreeSetStEph::singleton(neighbor_entry));
+    |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:269:17
+    |
+269 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap53/PQMinStEph.rs:430:26
+    |
+430 |             priorities = priorities.union(&AVLTreeSetStEph::singleton(vp));
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:269:17
+    |
+269 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStEph.rs:279:17
+    |
+279 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+visited_new.spec_avltreesetsteph_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+
+error: precondition not satisfied
+   --> src/Chap53/PQMinStEph.rs:518:32
+    |
+518 |             initial_frontier = initial_frontier.union(&AVLTreeSetStEph::singleton(entry));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:269:17
+    |
+269 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: 
+
+tmp%.spec_avltreesetsteph_wf() ✔
+tmp%.spec_avltreesetsteph_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+clip(nat, tmp%.view().len() + tmp%.view().len()) < UnsignedMax.Exec(usize::BITS) 
+
+verification results:: 4333 verified, 7 errors
+error: aborting due to 13 previous errors
+
+Elapsed: 65s

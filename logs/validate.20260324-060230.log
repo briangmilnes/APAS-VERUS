@@ -1,0 +1,299 @@
+error: postcondition not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:1598:13
+     |
+1598 |               parts.1 == tree@.contains(key@),
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1609 | /         match expose_to_parts_st(tree) {
+1610 | |             | None => (BSTTreapStEph { root: None }, false, BSTTreapStEph { root: None }),
+1611 | |             | Some((left, root_key, root_pri, right)) => {
+1612 | |                 proof {
+...    |
+1745 | |         }
+     | |_________- at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:1600:13
+     |
+1600 |               parts.0@.union(parts.2@) =~= tree@.remove(key@),
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1609 | /         match expose_to_parts_st(tree) {
+1610 | |             | None => (BSTTreapStEph { root: None }, false, BSTTreapStEph { root: None }),
+1611 | |             | Some((left, root_key, root_pri, right)) => {
+1612 | |                 proof {
+...    |
+1745 | |         }
+     | |_________- at the end of the function body
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1645:36
+     |
+1645 | ...                   assert(!rv.contains(key@));
+     |                              ^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1646:46
+     |
+1646 |   ...                   assert forall|x| #[trigger] (llv.union(rebuilt@)).contains(x)
+     |  ________________________________________^
+1647 | | ...                       <==> tree@.remove(key@).contains(x) by {
+     | |_____________________________________________________________^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1700:36
+     |
+1700 | ...                   assert(!lv.contains(key@));
+     |                              ^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1701:46
+     |
+1701 |   ...                   assert forall|x| #[trigger] (rebuilt@.union(rrv)).contains(x)
+     |  ________________________________________^
+1702 | | ...                       <==> tree@.remove(key@).contains(x) by {
+     | |_____________________________________________________________^ assertion failed
+
+error: precondition not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:1734:33
+     |
+ 220 |             b.cmp_spec(&c) == Equal,
+     |             ----------------------- failed precondition
+...
+1734 |                                 lemma_cmp_equal_congruent_right_st(t, kval, rk);
+     |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:1738:33
+     |
+ 220 |             b.cmp_spec(&c) == Equal,
+     |             ----------------------- failed precondition
+...
+1738 |                                 lemma_cmp_equal_congruent_right_st(t, kval, rk);
+     |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+!(rv.contains(key.view())) 
+    function is uninterpreted
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1907:40
+     |
+1907 | ...                   assert(crv.contains(t@));
+     |                              ^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1908:40
+     |
+1908 | ...                   assert(t.cmp_spec(&r_key) == Less);
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1881:40
+     |
+1881 | ...                   assert(rlv.contains(t@));
+     |                              ^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1882:40
+     |
+1882 | ...                   assert(t.cmp_spec(&t) == Less);
+     |                              ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1894:40
+     |
+1894 | ...                   assert(rrv.contains(t@));
+     |                              ^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+crv.contains(t.view()) 
+    function is uninterpreted
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap39/BSTTreapStEph.rs:1880:60
+     |
+1880 | ...                   let ghost t = choose|t: T| #[trigger] t@ == x && slv.contains(t@);
+     |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap39/BSTTreapStEph.rs:1906:60
+     |
+1906 | ...                   let ghost t = choose|t: T| #[trigger] t@ == x && clv.contains(t@);
+     |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:2920:13
+     |
+1758 |             spec_param_wf_link(&left.root), spec_param_wf_link(&right.root),
+     |                                             ------------------------------- failed precondition
+...
+2920 |             join_pair_inner_st(cloned, other)
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+    --> src/Chap39/BSTTreapStEph.rs:119:21
+     |
+ 119 |                 &&& spec_param_wf_link(&node.left)
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 120 |                 &&& spec_param_wf_link(&node.right)
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 121 |                 &&& node.size >= 1
+     |                     ^^^^^^^^^^^^^^
+ 122 |                 &&& lv.finite() && rv.finite()
+     |                     ^^^^^^^^^^^
+...
+1758 |             spec_param_wf_link(&left.root), spec_param_wf_link(&right.root),
+     |                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+obeys_cmp_spec() ✔
+view_ord_consistent_st() ✔
+cloned.view().finite() ✔
+other.view().finite() ✔
+forall |s, o|
+    cloned.view().contains(s.view()) && other.view().contains(o.view()) ==>
+        s.cmp_spec(o) == Less ✔
+clip(nat, cloned.view().len() + other.view().len()) < UnsignedMax.Exec(usize::BITS) ✔
+spec_param_wf_link(cloned.root) ✔
+spec_param_wf_link(other.root) ✘
+|   let tmp%% = other.root;
+|       tmp%% is None ==>
+|           true ✔
+|       !(tmp%% is None) ==>
+|           let node = tmp%%.0;
+|               let lv = spec_set_view_link(node.left);
+|                   let rv = spec_set_view_link(node.right);
+|                       let kv = node.key.view();
+|                           spec_param_wf_link(node.left) ✘
+|                               reached fuel limit for recursion
+|                           spec_param_wf_link(node.right) ✘
+|                               reached fuel limit for recursion
+|                           node.size >= 1 ✘
+|                           lv.finite() ✘
+|                               function is uninterpreted
+|                           rv.finite() 
+|                           lv.disjoint(rv) 
+|                           !(lv.contains(kv)) 
+|                           !(rv.contains(kv)) 
+|                           clip(nat, lv.len() + rv.len()) < UnsignedMax.Exec(usize::BITS) 
+|                           node.size == clip(nat, clip(nat, lv.len() + rv.len()) + 1) 
+|                           forall |t|
+|                               lv.contains(t.view()) ==>
+|                                   t.cmp_spec(node.key) == Less 
+|                           forall |t|
+|                               rv.contains(t.view()) ==>
+|                                   t.cmp_spec(node.key) == Greater 
++---
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2019:40
+     |
+2019 | ...                   assert(tl.cmp_spec(&tr) == Equal);
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2021:40
+     |
+2021 | ...                   assert(false);
+     |                              ^^^^^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap39/BSTTreapStEph.rs:2019:60
+     |
+2019 | ...                   assert(tl.cmp_spec(&tr) == Equal);
+     |                                                  ^^^^^
+
+note: 
+
+tl.cmp_spec(tr) == Equal
+|   !(tl.cmp_spec(tr) is Less) ✘
+|   !(tl.cmp_spec(tr) is Greater) ✘
++---
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap39/BSTTreapStEph.rs:2017:61
+     |
+2017 | ...                   let ghost tl = choose|t: T| #[trigger] t@ == x && luv.contains(t@);
+     |                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap39/BSTTreapStEph.rs:2018:61
+     |
+2018 | ...                   let ghost tr = choose|t: T| #[trigger] t@ == x && ruv.contains(t@);
+     |                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2151:48
+     |
+2151 | ...                   assert(t_x.cmp_spec(&t_br) == Equal);
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2153:48
+     |
+2153 | ...                   assert(false);
+     |                              ^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2165:48
+     |
+2165 | ...                   assert(t_x.cmp_spec(&t_bl) == Equal);
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:2166:41
+     |
+ 220 |             b.cmp_spec(&c) == Equal,
+     |             ----------------------- failed precondition
+...
+2166 |                                         lemma_cmp_equal_congruent_right_st(t_bl, t_x, ak);
+     |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2167:48
+     |
+2167 | ...                   assert(false);
+     |                              ^^^^^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap39/BSTTreapStEph.rs:2165:71
+     |
+2165 | ...                   assert(t_x.cmp_spec(&t_bl) == Equal);
+     |                                                     ^^^^^
+
+note: 
+
+t_x.cmp_spec(t_bl) == Equal
+|   !(t_x.cmp_spec(t_bl) is Less) ✘
+|   !(t_x.cmp_spec(t_bl) is Greater) ✘
++---
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap39/BSTTreapStEph.rs:2149:70
+     |
+2149 | ...                   let ghost t_x = choose|t: T| #[trigger] t@ == x && alv.contains(t@);
+     |                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap39/BSTTreapStEph.rs:2150:71
+     |
+2150 | ...                   let ghost t_br = choose|t: T| #[trigger] t@ == x && brv.contains(t@);
+     |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap39/BSTTreapStEph.rs:2163:70
+     |
+2163 | ...                   let ghost t_x = choose|t: T| #[trigger] t@ == x && arv.contains(t@);
+     |                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap39/BSTTreapStEph.rs:2164:71
+     |
+2164 | ...                   let ghost t_bl = choose|t: T| #[trigger] t@ == x && blv.contains(t@);
+     |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -1,0 +1,9 @@
+error: cannot call function `lib::Chap23::BalBinTreeStEph::BalBinTreeStEph::BalBinTreeTrait::is_leaf` with mode exec
+   --> src/Chap37/BSTPlainMtEph.rs:259:21
+    |
+259 |                     tree@.is_leaf();
+    |                     ^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 27s

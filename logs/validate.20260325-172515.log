@@ -1,0 +1,34 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:204:11
+    |
+204 |       proof fn lemma_compression_parent_conjuncts<V: StT + Hash>(
+    |  ___________^
+205 | |         uf: UnionFindStEph<V>,
+206 | |         old_uf: UnionFindStEph<V>,
+207 | |         cv: <V as View>::V,
+208 | |         root: V,
+209 | |     )
+    | |_____^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:256:11
+    |
+256 |       proof fn lemma_compression_preserves_wf<V: StT + Hash>(
+    |  ___________^
+257 | |         uf: UnionFindStEph<V>,
+258 | |         old_uf: UnionFindStEph<V>,
+259 | |         cv: <V as View>::V,
+260 | |         root: V,
+261 | |     )
+    | |_____^
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:367:9
+    |
+367 |         while !feq(&current, root)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 4910 verified, 3 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 266s

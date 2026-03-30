@@ -1,0 +1,94 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:177:11
+    |
+177 |       proof fn lemma_compression_preserves_wf<V: StT + Hash>(
+    |  ___________^
+178 | |         uf: UnionFindStEph<V>,
+179 | |         old_uf: UnionFindStEph<V>,
+180 | |         cv: <V as View>::V,
+181 | |         root: V,
+182 | |     )
+    | |_____^
+
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:462:28
+    |
+462 |                     assert(p@ == self@.parent[current@]@);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:515:28
+    |
+515 |                     assert(current_clone@ == current@);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:516:28
+    |
+516 |                     assert(root_clone@ == root@);
+    |                            ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:517:28
+    |
+517 |                     assert(next@ == self@.parent[current@]@);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:484:13
+    |
+484 |             while !feq(&current, &root)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap65/UnionFindStEph.rs:446:21
+    |
+446 |                     self@.parent.contains_key(current@),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap65/UnionFindStEph.rs:447:21
+    |
+447 |                     self@.roots[current@] == self@.roots[v_view],
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap65/UnionFindStEph.rs:487:21
+    |
+487 |                     self@.parent.contains_key(current@),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap65/UnionFindStEph.rs:489:21
+    |
+489 |                     root@ == old(self)@.roots[v_view],
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap65/UnionFindStEph.rs:490:21
+    |
+490 |                     self@.roots[current@] == root@,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap65/UnionFindStEph.rs:491:21
+    |
+491 |                     self@.roots[root@] == root@,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:437:9
+    |
+437 |         fn find(&mut self, v: &V) -> (root: V) {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+p.view() == self.view().parent.index(current.view()).view() 
+
+verification results:: 4898 verified, 4 errors
+error: aborting due to 13 previous errors
+
+Elapsed: 184s

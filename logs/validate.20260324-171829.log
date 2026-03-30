@@ -1,0 +1,241 @@
+error: postcondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:90:21
+    |
+ 90 |             ensures self.spec_bstsetplainmteph_wf();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+217 |         fn delete(&mut self, target: &T) {
+    |         -------------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:229:21
+    |
+229 |                 if *seq.nth(i) != *target {
+    |                     ^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:134:22
+    |
+134 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:230:35
+    |
+230 |                     filtered.push(seq.nth(i).clone());
+    |                                   ^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:134:22
+    |
+134 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+i < seq.spec_len() 
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:138:22
+    |
+138 |             out.push(seq.nth(i).clone());
+    |                      ^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:134:22
+    |
+134 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+note: 
+
+i < seq.spec_len() 
+
+error: postcondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:181:17
+    |
+181 |         ensures out.spec_bstsetplainmteph_wf()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+182 |     {
+183 |         from_vec(values_vec(&set.tree))
+    |         ------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTPlainStEph.rs:172:43
+    |
+172 |                 BalBinTree::Node(node) => BSTSpecFns::tree_is_bst(*node),
+    |                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/BSTPlainMtEph.rs:304:13
+    |
+304 |             self@.tree_is_bst()
+    |             ^^^^^^^^^^^^^^^^^^^
+305 |             && self@.spec_size() <= usize::MAX
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+306 |             && self@.spec_height() <= usize::MAX
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+out.spec_bstsetplainmteph_wf()
+|   out.tree.spec_bstplainmteph_wf()
+|   |   out.tree.view().tree_is_bst() ✘
+|   |   |   let tmp%% = out.tree.view();
+|   |   |       tmp%% is Leaf ==>
+|   |   |           true ✔
+|   |   |       !(tmp%% is Leaf) ==>
+|   |   |           let node = tmp%%.0;
+|   |   |               node.tree_is_bst() ✘
+|   |   |                   reached fuel limit for recursion
+|   |   +---
+|   |   out.tree.view().spec_size() <= UnsignedMax.Exec(usize::BITS) ✘
+|   |   out.tree.view().spec_height() <= UnsignedMax.Exec(usize::BITS) ✘
+|   +---
++---
+
+error: postcondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:102:21
+    |
+102 |             ensures parts.0.spec_bstsetplainmteph_wf(), parts.2.spec_bstsetplainmteph_wf();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+349 |             (from_vec(left), found, from_vec(right))
+    |             ---------------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:102:57
+    |
+102 |             ensures parts.0.spec_bstsetplainmteph_wf(), parts.2.spec_bstsetplainmteph_wf();
+    |                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+349 |             (from_vec(left), found, from_vec(right))
+    |             ---------------------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:341:29
+    |
+341 |                 let value = seq.nth(i);
+    |                             ^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:134:22
+    |
+134 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+note: 
+
+i < seq.spec_len() 
+
+error: postcondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:108:21
+    |
+108 |             ensures joined.spec_bstsetplainmteph_wf();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+378 |             from_vec(combined)
+    |             ------------------ at the end of the function body
+
+note: 
+
+%return.spec_bstsetplainmteph_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:105:21
+    |
+105 |             ensures joined.spec_bstsetplainmteph_wf();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+363 |             from_vec(combined)
+    |             ------------------ at the end of the function body
+
+note: 
+
+%return.spec_bstsetplainmteph_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:248:17
+    |
+248 |                 self.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:250:17
+    |
+250 |                 other.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:263:17
+    |
+107 |             requires left.spec_bstsetplainmteph_wf(), right.spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+    |                      ------------------------------- failed precondition
+...
+263 |                 Self::join_m(left_union, pivot, right_union)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:265:17
+    |
+104 |             requires left.spec_bstsetplainmteph_wf(), right.spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+    |                      ------------------------------- failed precondition
+...
+265 |                 Self::join_pair(left_union, right_union)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp% is Some 
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:277:17
+    |
+277 |                 self.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:279:17
+    |
+279 |                 other.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:292:17
+    |
+107 |             requires left.spec_bstsetplainmteph_wf(), right.spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+    |                      ------------------------------- failed precondition
+...
+292 |                 Self::join_m(left_inter, pivot, right_inter)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:294:17
+    |
+104 |             requires left.spec_bstsetplainmteph_wf(), right.spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+    |                      ------------------------------- failed precondition
+...
+294 |                 Self::join_pair(left_inter, right_inter)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp% is Some 
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.

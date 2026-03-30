@@ -1,0 +1,34 @@
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1125:13
+     |
+1125 |             reveal(spec_uf_wf);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1326:21
+     |
+1326 |                     reveal(spec_uf_wf);
+     |                     ^^^^^^
+
+error: `core::cmp::impls::impl&%9::eq` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap61/VertexMatchingStEph.rs:138:25
+    |
+138 |                     if !(adj_edge == edge) {
+    |                         ^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap61/VertexMatchingMtEph.rs:223:17
+    |
+223 |             if !(adj_edge == edge) {
+    |                 ------------------
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification<'a, 'b, A, B> [<&'b A as std::cmp::PartialEq<&B>>::eq] (_0: &&'b A, _1: &&B) -> bool
+            where
+            A: std::cmp::PartialEq<B> + ?Sized,
+            B: ?Sized,;
+
+error: aborting due to 1 previous error; 2 warnings emitted
+
+Elapsed: 34s
+Sampled Memory Usage: peak rust_verify RSS: 3492MB, peak z3 RSS: 389MB, min free: 19441MB
+Sampled CPU Usage: rust_verify: 70s, z3 children: 62s

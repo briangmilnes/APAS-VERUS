@@ -1,0 +1,27 @@
+error: found a cyclic self-reference in a definition, which may result in nontermination
+    --> src/Chap39/BSTTreapStEph.rs:2579:9
+     |
+2563 | /      pub trait ParamBSTTreapStEphTrait<T: StT + Ord + IsLtTransitive>:
+2564 | |          Sized + View<V = Set<<T as View>::V>>
+2565 | |      {
+2566 | |          spec fn spec_parambsttreapsteph_wf(&self) -> bool;
+...    |
+2579 | |/         fn expose(&self) -> (exposed: ExposedTreap<T>)
+2580 | ||             requires
+2581 | ||                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+2582 | ||                 view_ord_consistent_st::<T>(),
+...    ||
+2597 | ||                     && r.spec_parambsttreapsteph_wf()
+2598 | ||                 );
+     | ||__________________^ may be part of cycle (node 1 of 3 in cycle): function definition, whose body may have dependencies
+...    |
+2765 | |              ensures self@.finite(), ordered.spec_len() == self@.len();
+2766 | |      }
+     | |______- may be part of cycle (node 3 of 3 in cycle): declaration of trait
+...
+2771 |            closed spec fn spec_parambsttreapsteph_wf(&self) -> bool {
+     |                        -------------------------------------------- may be part of cycle (node 2 of 3 in cycle): function definition, whose body may have dependencies
+
+error: aborting due to 1 previous error
+
+Elapsed: 34s

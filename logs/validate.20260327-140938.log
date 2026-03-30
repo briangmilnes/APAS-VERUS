@@ -1,0 +1,72 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStEph.rs:43:14
+   |
+43 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStPer.rs:38:14
+   |
+38 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStEph.rs:285:21
+    |
+285 |                     self.adj.spec_stored_value(k).spec_avltreesetsteph_wf()
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStEph.rs:311:29
+    |
+311 |                     implies self.spec_adj().dom().contains(w)
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStEph.rs:319:36
+    |
+319 | ...                   assert(self.adj@[v@] == old_adj_map[v@]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStEph.rs:324:32
+    |
+324 |                         assert(old_adj_map.dom().contains(w));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap38/BSTParaStEph.rs:452:13
+    |
+452 |             self@.finite()
+    |             ^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:473:13
+    |
+473 |             self.tree.spec_bstparasteph_wf()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+474 |             && self@.len() < usize::MAX as nat
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.adj.spec_stored_value(k).spec_avltreesetsteph_wf()
+|   self.adj.spec_stored_value(k).tree.spec_bstparasteph_wf() ✘
+|   |   self.adj.spec_stored_value(k).tree.view().finite() ✘
+|   |       function is uninterpreted
+|   |   obeys_feq_full() ✔
+|   +---
+|   self.adj.spec_stored_value(k).view().len() < UnsignedMax.Exec(usize::BITS) ✘
++---
+
+verification results:: 2767 verified, 1 errors
+error: aborting due to 4 previous errors; 3 warnings emitted
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 2527MB, peak z3 RSS: 319MB, min free: 19460MB
+Sampled CPU Usage: rust_verify: 43s, z3 children: 47s

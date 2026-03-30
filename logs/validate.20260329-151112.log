@@ -1,0 +1,13 @@
+
+thread '<unnamed>' (3685738) panicked at air/src/smt_process.rs:93:17:
+Got too many empty lines!
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread '<unnamed>' (3684153) panicked at air/src/smt_process.rs:213:34:
+internal error: Z3 reader thread failure: RecvError
+
+thread '<unnamed>' (3684153) panicked at rust_verify/src/verifier.rs:2217:29:
+worker thread panicked
+Elapsed: 139s
+Sampled Memory Usage: peak rust_verify RSS: 2770MB, peak z3 RSS: 17722MB, min free: 890MB
+Sampled CPU Usage: rust_verify: 47s, z3 children: 47s

@@ -1,0 +1,15 @@
+error: unexpected closing delimiter: `}`
+   --> src/Chap65/UnionFindStEph.rs:453:5
+    |
+162 |     impl<V: StT + Hash + ClonePreservesView> UnionFindStEphTrait<V> for UnionFindStEph<V> {
+    |                                                                                           - this delimiter might not be properly closed...
+...
+380 |             }
+    |             - ...as it matches this but it has different indentation
+...
+453 |     } // verus!
+    |     ^ unexpected closing delimiter
+
+error: aborting due to 1 previous error
+
+Elapsed: 0s

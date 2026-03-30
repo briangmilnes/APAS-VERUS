@@ -1,0 +1,227 @@
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:485:17
+    |
+485 |                 Self::spec_impl_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/DoubleHashFlatHashTableStEph.rs:363:29
+    |
+363 | ...                   return;
+    |                       ------ at this exit
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:485:17
+    |
+485 |                 Self::spec_impl_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/DoubleHashFlatHashTableStEph.rs:467:25
+    |
+467 |                         return;
+    |                         ------ at this exit
+
+note: diagnostics via expansion
+   --> src/Chap47/ParaHashTableStEph.rs:485:17
+    |
+485 |                 Self::spec_impl_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+table.view() =~= old(table).view().insert(old(key), old(value)) ✔
+spec_impl_wf(table) ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+table.spec_hash =~= old(table).spec_hash ✔
+table.current_size == old(table).current_size ✔
+table.num_elements <= old(table).num_elements + 1 ✔
+(exists |s| spec_other_slots_preserved(old(table).table.view(), table.table.view(), s)) ✔
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:515:17
+    |
+515 |                 Self::spec_impl_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/DoubleHashFlatHashTableStEph.rs:753:29
+    |
+753 | ...                   return true;
+    |                       ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:515:17
+    |
+515 |                 Self::spec_impl_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/DoubleHashFlatHashTableStEph.rs:770:25
+    |
+770 |                         return false;
+    |                         ------------ at this exit
+
+note: diagnostics via expansion
+   --> src/Chap47/ParaHashTableStEph.rs:515:17
+    |
+515 |                 Self::spec_impl_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == old(table).view().dom().contains(old(key)) ✔
+table.view() =~= old(table).view().remove(old(key)) ✔
+spec_impl_wf(table) ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+table.spec_hash =~= old(table).spec_hash ✔
+table.current_size == old(table).current_size ✔
+
+error: precondition not satisfied
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:970:25
+    |
+970 |             let hash1 = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:356:13
+    |
+356 |             spec_hash_fn_valid::<Key, H>(spec_hash@),
+    |             ---------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap47/ParaHashTableStEph.rs:117:65
+    |
+117 |         (forall|h: H, k: &Key, ts: usize| ts > 0 ==> #[trigger] h.requires((k, ts)))
+    |                                                                 ^^^^^^^^^^^^^^^^^^^
+...
+120 |                 ==> idx < ts && idx as nat == spec_hash(*k) % (ts as nat))
+    |                     ^^^^^^^^    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+356 |             spec_hash_fn_valid::<Key, H>(spec_hash@),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp% > 0 ✔
+spec_hash_fn_valid(tmp%) ✘
+|   forall |h, k, ts|
+|       ts > 0 ==>
+|           ClosureReq(h, (k, ts)) ✘
+|   forall |h, k, ts, idx|
+|       ts > 0 && ClosureEns(h, (k, ts), idx) ==>
+|           idx < ts ✘
+|           idx == tmp%(k) % ts ✘
++---
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:485:17
+    |
+485 |                 Self::spec_impl_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/LinProbFlatHashTableStEph.rs:319:29
+    |
+319 | ...                   return;
+    |                       ------ at this exit
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:485:17
+    |
+485 |                 Self::spec_impl_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/LinProbFlatHashTableStEph.rs:445:25
+    |
+445 |                         return;
+    |                         ------ at this exit
+
+note: 
+
+table.view() =~= old(table).view().insert(old(key), old(value)) ✔
+spec_impl_wf(table) ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+table.spec_hash =~= old(table).spec_hash ✔
+table.current_size == old(table).current_size ✔
+table.num_elements <= old(table).num_elements + 1 ✔
+(exists |s| spec_other_slots_preserved(old(table).table.view(), table.table.view(), s)) ✔
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:515:17
+    |
+515 |                 Self::spec_impl_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/LinProbFlatHashTableStEph.rs:682:29
+    |
+682 | ...                   return true;
+    |                       ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:515:17
+    |
+515 |                 Self::spec_impl_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/LinProbFlatHashTableStEph.rs:702:25
+    |
+702 |                         return false;
+    |                         ------------ at this exit
+
+note: 
+
+%return == old(table).view().dom().contains(old(key)) ✔
+table.view() =~= old(table).view().remove(old(key)) ✔
+spec_impl_wf(table) ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+table.spec_hash =~= old(table).spec_hash ✔
+table.current_size == old(table).current_size ✔
+
+error: precondition not satisfied
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:885:28
+    |
+885 |             let hash_val = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:356:13
+    |
+356 |             spec_hash_fn_valid::<Key, H>(spec_hash@),
+    |             ---------------------------------------- failed precondition
+
+note: 
+
+tmp% > 0 ✔
+spec_hash_fn_valid(tmp%) ✘
+|   forall |h, k, ts|
+|       ts > 0 ==>
+|           ClosureReq(h, (k, ts)) ✘
+|   forall |h, k, ts, idx|
+|       ts > 0 && ClosureEns(h, (k, ts), idx) ==>
+|           idx < ts ✘
+|           idx == tmp%(k) % ts ✘
++---
+
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:485:17
+    |
+485 |                 Self::spec_impl_wf(table),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap47/QuadProbFlatHashTableStEph.rs:681:29
+    |
+681 | ...                   return;
+    |                       ------ at this exit
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:571:13
+    |
+571 |             while attempt < m
+    |             ^^^^^^^^^^^^^^^^^
+
+note: 
+
+table.view() =~= old(table).view().insert(old(key), old(value)) ✔
+spec_impl_wf(table) ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+table.spec_hash =~= old(table).spec_hash ✔
+table.current_size == old(table).current_size ✔
+table.num_elements <= old(table).num_elements + 1 ✔
+(exists |s| spec_other_slots_preserved(old(table).table.view(), table.table.view(), s)) ✔
+
+error: postcondition not satisfied
+    --> src/Chap47/ParaHashTableS

@@ -1,0 +1,29 @@
+error[E0034]: multiple applicable items in scope
+   --> src/Chap65/PrimStEph.rs:374:65
+    |
+374 |         fn cmp(&self, other: &Self) -> Ordering { self.priority.cmp(&other.priority) }
+    |                                                                 ^^^ multiple `cmp` found
+    |
+note: candidate #1 is defined in an impl of the trait `vstdplus::total_order::total_order::TotalOrder` for the type `u64`
+   --> src/vstdplus/total_order.rs:174:5
+    |
+174 |     fn cmp(&self, other: &Self) -> (c: Ordering) {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: candidate #2 is defined in an impl of the trait `std::cmp::Ord` for the type `u64`
+help: disambiguate the method for candidate #1
+    |
+374 -         fn cmp(&self, other: &Self) -> Ordering { self.priority.cmp(&other.priority) }
+374 +         fn cmp(&self, other: &Self) -> Ordering { vstdplus::total_order::total_order::TotalOrder::cmp(&self.priority, &other.priority) }
+    |
+help: disambiguate the method for candidate #2
+    |
+374 -         fn cmp(&self, other: &Self) -> Ordering { self.priority.cmp(&other.priority) }
+374 +         fn cmp(&self, other: &Self) -> Ordering { std::cmp::Ord::cmp(&self.priority, &other.priority) }
+    |
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0034`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 2133MB, peak z3 RSS: 340MB, min free: 21070MB
+Sampled CPU Usage: rust_verify: 19s, z3 children: 5s

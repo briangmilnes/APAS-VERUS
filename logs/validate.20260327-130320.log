@@ -1,0 +1,18 @@
+error: expected `::`
+   --> src/Chap52/AdjTableGraphStEph.rs:167:85
+    |
+167 |             && spec_keys_no_dups::<<V as View>::V, <<AVLTreeSetStEph<V> as View>::V>>(self.adj.entries@)
+    |                                                                                     ^
+
+error[E0432]: unresolved import `crate::Chap52::AdjTableGraphStEph::AdjTableGraphStEph::spec_sum_adj_sizes`
+  --> src/Chap52/AdjTableGraphStPer.rs:14:9
+   |
+14 |     use crate::Chap52::AdjTableGraphStEph::AdjTableGraphStEph::spec_sum_adj_sizes;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `spec_sum_adj_sizes` in `Chap52::AdjTableGraphStEph::AdjTableGraphStEph`
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0432`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 295MB, peak z3 RSS: 0MB, min free: 21770MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

@@ -1,0 +1,35 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap62/StarPartitionMtEph.rs:382:21
+    |
+382 |                     assert forall|j2: int| 0 <= j2 < nv as int implies
+    |                     ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap62/StarPartitionMtEph.rs:503:21
+    |
+503 |                     assert forall|j2: int| 0 <= j2 < q as int implies
+    |                     ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap62/StarPartitionMtEph.rs:517:21
+    |
+517 |                     assert forall|j2: int| 0 <= j2 < q as int implies
+    |                     ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: cannot call function `lib::vstdplus::clone_view::clone_view::ClonePreservesView::clone_view` with mode exec
+   --> src/Chap62/StarPartitionMtEph.rs:375:61
+    |
+375 |                          p_vec@.update(idx as usize as int, (*vertex).clone_view())[j2]@ == vertices_vec@[j2]@) by {
+    |                                                             ^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error; 3 warnings emitted
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 3688MB, peak z3 RSS: 378MB, min free: 18760MB
+Sampled CPU Usage: rust_verify: 45s, z3 children: 33s

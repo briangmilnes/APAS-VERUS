@@ -1,0 +1,60 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStEph.rs:43:14
+   |
+43 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStPer.rs:38:14
+   |
+38 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:204:27
+    |
+204 |             let new_adj = self.adj.insert(v, AVLTreeSetStPer::empty(), |old, _new| old.clone());
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:536:17
+    |
+536 |                 self.spec_tablestper_wf(),
+    |                 ------------------------- failed precondition
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:222:32
+    |
+222 |                         assert(old_map.dom().contains(w));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:234:32
+    |
+234 |                         assert(old_map[v@].contains(w));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStPer.rs:235:32
+    |
+235 |                         assert(old_map.dom().contains(w));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+old_map.dom().contains(w) 
+    function is uninterpreted
+
+verification results:: 2769 verified, 1 errors
+error: aborting due to 4 previous errors; 3 warnings emitted
+
+Elapsed: 25s
+Sampled Memory Usage: peak rust_verify RSS: 2994MB, peak z3 RSS: 257MB, min free: 19054MB
+Sampled CPU Usage: rust_verify: 53s, z3 children: 45s

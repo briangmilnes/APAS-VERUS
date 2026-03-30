@@ -1,0 +1,18 @@
+error: assertion failed
+   --> src/Chap59/JohnsonStEphF64.rs:323:20
+    |
+323 |             assert(result@.A.len() <= graph@.A.len());
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+result.view().A.len() <= graph.view().A.len() 
+
+verification results:: 2556 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 29s
+Sampled Memory Usage: peak rust_verify RSS: 3270MB, peak z3 RSS: 344MB, min free: 18160MB
+Sampled CPU Usage: rust_verify: 60s, z3 children: 52s

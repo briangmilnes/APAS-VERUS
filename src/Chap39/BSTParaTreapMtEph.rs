@@ -848,7 +848,7 @@ pub mod BSTParaTreapMtEph {
                     assert(!left@.contains(rkv));
                     // Cross-ordering: all left@ < all rlv (since rlv ⊆ right@ and all left@ < right@).
                     assert forall|s: T, o: T| #![trigger left@.contains(s@), rlv.contains(o@)]
-                        left@.contains(s@) && rlv.contains(o@) ==> s.cmp_spec(&o) == Less by {
+                        left@.contains(s@) && rlv.contains(o@) implies s.cmp_spec(&o) == Less by {
                         assert(rlv.subset_of(right@));
                         // rlv.contains(o@) ==> right@.contains(o@)
                     };
@@ -884,14 +884,14 @@ pub mod BSTParaTreapMtEph {
                     // Cross-ordering for join_pair_inner(split_left, r_left): slv < rlv.
                     // slv ⊆ left@, rlv ⊆ right@, all left@ < right@ (requires).
                     assert forall|s: T, o: T| #![trigger slv.contains(s@), rlv.contains(o@)]
-                        slv.contains(s@) && rlv.contains(o@) ==> s.cmp_spec(&o) == Less by {
+                        slv.contains(s@) && rlv.contains(o@) implies s.cmp_spec(&o) == Less by {
                         assert(slv.subset_of(left@));
                         assert(rlv.subset_of(right@));
                         // s ∈ slv ⊆ left@, o ∈ rlv ⊆ right@ → left@.contains(s@) && right@.contains(o@).
                     };
                     // Cross-ordering for join_pair_inner(split_right, r_right): srv < rrv.
                     assert forall|s: T, o: T| #![trigger srv.contains(s@), rrv.contains(o@)]
-                        srv.contains(s@) && rrv.contains(o@) ==> s.cmp_spec(&o) == Less by {
+                        srv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {
                         assert(srv.subset_of(left@));
                         assert(rrv.subset_of(right@));
                     };
@@ -951,7 +951,7 @@ pub mod BSTParaTreapMtEph {
                     // Cross-ordering: clv ⊆ slv.union(rlv) < r_key, crv ⊆ srv.union(rrv) > r_key.
                     // Re-assert subset facts so trigger matching derives ordering in nested scope.
                     assert forall|s: T, o: T| #![trigger clv.contains(s@), crv.contains(o@)]
-                        clv.contains(s@) && crv.contains(o@) ==> s.cmp_spec(&o) == Less by {
+                        clv.contains(s@) && crv.contains(o@) implies s.cmp_spec(&o) == Less by {
                         // Reveal and explicit if-case to force unit facts from the conjunction.
                         reveal(ParamTreap::spec_ghost_locked_root);
                         if clv.contains(s@) && crv.contains(o@) {
@@ -1365,7 +1365,7 @@ pub mod BSTParaTreapMtEph {
                     // Cross-ordering for join_pair_inner: lrv < ak < rrv.
                     // lrv ⊆ alv < ak, rrv ⊆ arv > ak.
                     assert forall|s: T, o: T| #![trigger lrv.contains(s@), rrv.contains(o@)]
-                        lrv.contains(s@) && rrv.contains(o@) ==> s.cmp_spec(&o) == Less by {
+                        lrv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {
                         // Reveal and explicit if-case to force unit facts from the conjunction.
                         reveal(ParamTreap::spec_ghost_locked_root);
                         if lrv.contains(s@) && rrv.contains(o@) {
@@ -1540,7 +1540,7 @@ pub mod BSTParaTreapMtEph {
                     assert(lrv.disjoint(rrv));
                     // lrv ⊆ alv < ak, rrv ⊆ arv > ak.
                     assert forall|s: T, o: T| #![trigger lrv.contains(s@), rrv.contains(o@)]
-                        lrv.contains(s@) && rrv.contains(o@) ==> s.cmp_spec(&o) == Less by {
+                        lrv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {
                         // Reveal and explicit if-case to force unit facts from the conjunction.
                         reveal(ParamTreap::spec_ghost_locked_root);
                         if lrv.contains(s@) && rrv.contains(o@) {
@@ -1635,7 +1635,7 @@ pub mod BSTParaTreapMtEph {
                     assert(left_filtered@.disjoint(right_filtered@));
                     // BST ordering across the two filtered partitions.
                     assert forall|s: T, o: T| #![trigger left_filtered@.contains(s@), right_filtered@.contains(o@)]
-                        left_filtered@.contains(s@) && right_filtered@.contains(o@) ==> s.cmp_spec(&o) == Less by {
+                        left_filtered@.contains(s@) && right_filtered@.contains(o@) implies s.cmp_spec(&o) == Less by {
                         reveal(ParamTreap::spec_ghost_locked_root);
                         if left_filtered@.contains(s@) && right_filtered@.contains(o@) {
                             assert(s.cmp_spec(&key) == Less);

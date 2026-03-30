@@ -1,0 +1,7 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:533:9
+    |
+533 |         fn equals(&mut self, u: &V, v: &V) -> (same: B) {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Elapsed: 300s

@@ -1,0 +1,15 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStPer.rs:55:14
+   |
+55 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+Elapsed: 301s
+Sampled Memory Usage: peak rust_verify RSS: 22478MB, peak z3 RSS: 3496MB, min free: 78MB
+Sampled CPU Usage: rust_verify: 570s, z3 children: 413s

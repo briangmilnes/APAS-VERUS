@@ -1,0 +1,122 @@
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:252:17
+    |
+252 |                 self.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:254:17
+    |
+254 |                 other.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:267:17
+    |
+107 |             requires left.spec_bstsetplainmteph_wf(), right.spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+    |                      ------------------------------- failed precondition
+...
+267 |                 Self::join_m(left_union, pivot, right_union)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:269:17
+    |
+104 |             requires left.spec_bstsetplainmteph_wf(), right.spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+    |                      ------------------------------- failed precondition
+...
+269 |                 Self::join_pair(left_union, right_union)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+tmp% is Some 
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:281:17
+    |
+281 |                 self.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:283:17
+    |
+283 |                 other.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:296:17
+    |
+107 |             requires left.spec_bstsetplainmteph_wf(), right.spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+    |                      ------------------------------- failed precondition
+...
+296 |                 Self::join_m(left_inter, pivot, right_inter)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:298:17
+    |
+104 |             requires left.spec_bstsetplainmteph_wf(), right.spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+    |                      ------------------------------- failed precondition
+...
+298 |                 Self::join_pair(left_inter, right_inter)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp% is Some 
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:313:17
+    |
+313 |                 self.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:315:17
+    |
+315 |                 other.tree.minimum().unwrap()
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/option.rs:161:8
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:328:17
+    |
+104 |             requires left.spec_bstsetplainmteph_wf(), right.spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+    |                      ------------------------------- failed precondition
+...
+328 |                 Self::join_pair(left_diff, right_diff)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:330:17
+    |
+107 |             requires left.spec_bstsetplainmteph_wf(), right.spec_bstsetplainmteph_wf(), obeys_feq_clone::<T>(),
+    |                      ------------------------------- failed precondition
+...
+330 |                 Self::

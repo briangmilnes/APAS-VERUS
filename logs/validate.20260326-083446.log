@@ -1,0 +1,1355 @@
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStPer.rs:66:13
+    |
+ 66 |             visited@.len() == old(visited)@.len(),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+110 |                 return true;
+    |                 ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStPer.rs:67:13
+    |
+ 67 |             ancestors@.len() == old(ancestors)@.len(),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+110 |                 return true;
+    |                 ----------- at this exit
+
+error: precondition not satisfied
+   --> src/Chap55/CycleDetectStPer.rs:108:16
+    |
+ 61 |             vertex < old(visited)@.len(),
+    |             ---------------------------- failed precondition
+...
+108 |             if dfs_check_cycle(graph, visited, ancestors, neighbor) {
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+neighbor < visited.view().len() ✔
+visited.view().len() == graph.view().len() ✔
+ancestors.view().len() == graph.view().len() ✔
+spec_cycledetectstper_wf(graph) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+note: recommendation not met
+   --> src/Chap55/CycleDetectStPer.rs:101:48
+    |
+101 |                     0 <= j < visited@.len() && old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+  --> src/Chap55/CycleDetectStPer.rs:69:44
+   |
+69 |                 0 <= j < visited@.len() && old(visited)@[j]
+   |                                            ^^^^^^^^^^^^^^^^
+   |
+  --> vstd/seq.rs:62:12
+   |
+   = note: recommendation not met
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStPer.rs:46:17
+    |
+ 46 |                 has_cycle == !spec_is_dag_per(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+152 |                         return true;
+    |                         ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStPer.rs:46:17
+    |
+ 46 |                 has_cycle == !spec_is_dag_per(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+157 |             false
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+  --> src/Chap55/CycleDetectStPer.rs:46:31
+   |
+46 |                 has_cycle == !spec_is_dag_per(graph),
+   |                               ^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == !(spec_is_dag_per(old(graph)))
+|   %return ==>
+|       !(spec_is_dag_per(old(graph))) ✘
+|       |   (exists |path| spec_is_path_per(old(graph), path) && path.len() >= 2 && path.index(0) == path.last()) 
+|       +---
+|   !(spec_is_dag_per(old(graph))) ==>
+|       %return ✔
++---
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:57:13
+    |
+ 57 |             visited@.len() == old(visited)@.len(),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+104 |                 return true;
+    |                 ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:58:13
+    |
+ 58 |             ancestors@.len() == old(ancestors)@.len(),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+104 |                 return true;
+    |                 ----------- at this exit
+
+error: invariant not satisfied before loop
+  --> src/Chap55/CycleDetectStEph.rs:93:17
+   |
+93 | /                 forall|j: int|
+94 | |                     0 <= j < visited@.len() && old(visited)@[j]
+95 | |                     ==> #[trigger] visited@[j],
+   | |______________________________________________^
+
+error: invariant not satisfied before loop
+  --> src/Chap55/CycleDetectStEph.rs:96:17
+   |
+96 |                 spec_num_false(visited@) < spec_num_false(old(visited)@),
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:101:16
+    |
+ 52 |             vertex < old(visited)@.len(),
+    |             ---------------------------- failed precondition
+...
+101 |             if dfs_check_cycle(graph, visited, ancestors, neighbor) {
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+neighbor < visited.view().len() ✔
+visited.view().len() == graph.view().len() ✔
+ancestors.view().len() == graph.view().len() ✔
+spec_toposortsteph_wf(graph) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+note: recommendation not met
+  --> src/Chap55/CycleDetectStEph.rs:94:48
+   |
+94 |                     0 <= j < visited@.len() && old(visited)@[j]
+   |                                                ^^^^^^^^^^^^^^^^
+   |
+  --> vstd/seq.rs:62:12
+   |
+   = note: recommendation not met
+
+note: recommendation not met
+  --> src/Chap55/CycleDetectStEph.rs:60:44
+   |
+60 |                 0 <= j < visited@.len() && old(visited)@[j]
+   |                                            ^^^^^^^^^^^^^^^^
+   |
+  --> vstd/seq.rs:62:12
+   |
+   = note: recommendation not met
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:37:17
+    |
+ 37 |                 has_cycle == !spec_is_dag(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+135 |                         return true;
+    |                         ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:37:17
+    |
+ 37 |                 has_cycle == !spec_is_dag(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+140 |             false
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+  --> src/Chap55/CycleDetectStEph.rs:37:31
+   |
+37 |                 has_cycle == !spec_is_dag(graph),
+   |                               ^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == !(spec_is_dag(old(graph)))
+|   %return ==>
+|       !(spec_is_dag(old(graph))) ✘
+|       |   (exists |path| spec_is_path(old(graph), path) && path.len() >= 2 && path.index(0) == path.last()) 
+|       +---
+|   !(spec_is_dag(old(graph))) ==>
+|       %return ✔
++---
+
+error: precondition not satisfied
+   --> src/Chap55/DFSStPer.rs:78:25
+    |
+ 78 |         let reachable = reachable.insert(vertex);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:290:17
+    |
+290 |                 self@.len() + 1 < usize::MAX as nat,
+    |                 ----------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap55/DFSStPer.rs:101:13
+    |
+ 57 |             vertex < old(visited_bool)@.len(),
+    |             --------------------------------- failed precondition
+...
+101 |             reachable = dfs_recursive(graph, visited_bool, reachable, neighbor);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+neighbor < visited_bool.view().len() ✔
+visited_bool.view().len() == graph.view().len() ✔
+spec_toposortstper_wf(graph) ✔
+reachable.spec_avltreesetstper_wf() ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+note: recommendation not met
+  --> src/Chap55/DFSStPer.rs:94:53
+   |
+94 |                     0 <= j < visited_bool@.len() && old(visited_bool)@[j]
+   |                                                     ^^^^^^^^^^^^^^^^^^^^^
+   |
+  --> vstd/seq.rs:62:12
+   |
+   = note: recommendation not met
+
+error: postcondition not satisfied
+   --> src/Chap55/DFSStPer.rs:39:17
+    |
+ 39 |                 reachable@.contains(source),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+123 |             dfs_recursive(graph, &mut visited_bool, reachable, source)
+    |             ---------------------------------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap55/DFSStPer.rs:40:17
+    |
+ 40 |                 forall|v: usize| reachable@.contains(v) ==> (v as int) < graph@.len(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+123 |             dfs_recursive(graph, &mut visited_bool, reachable, source)
+    |             ---------------------------------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap55/DFSStPer.rs:41:17
+    |
+ 41 | /                 forall|v: int| 0 <= v < graph@.len()
+ 42 | |                     ==> (reachable@.contains(v as usize) <==> #[trigger] spec_reachable_per(graph, source as int, v)),
+    | |_____________________________________________________________________________________________________________________^ failed this postcondition
+...
+123 |               dfs_recursive(graph, &mut visited_bool, reachable, source)
+    |               ---------------------------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+  --> src/Chap55/DFSStPer.rs:39:17
+   |
+39 |                 reachable@.contains(source),
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+40 |                 forall|v: usize| reachable@.contains(v) ==> (v as int) < graph@.len(),
+   |                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^
+41 |                 forall|v: int| 0 <= v < graph@.len()
+42 |                     ==> (reachable@.contains(v as usize) <==> #[trigger] spec_reachable_per(graph, source as int, v)),
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view().contains(old(source)) ✘
+    function is uninterpreted
+forall |v|
+    %return.view().contains(v) ==>
+        v < old(graph).view().len() ✘
+forall |v|
+    let tmp%% = 0 in let tmp%% = v in let tmp%% = old(graph).view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        %return.view().contains(clip(usize, v)) == spec_reachable_per(old(graph), old(source), v) ✘
+        |   %return.view().contains(clip(usize, v)) ==>
+        |       spec_reachable_per(old(graph), old(source), v) ✘
+        |   spec_reachable_per(old(graph), old(source), v) ==>
+        |       %return.view().contains(clip(usize, v)) ✘
+        |           function is uninterpreted
+        +---
+
+error: precondition not satisfied
+   --> src/Chap55/DFSStEph.rs:77:9
+    |
+ 77 |         reachable.insert(vertex);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:297:17
+    |
+297 |                 old(self)@.len() + 1 < usize::MAX as nat,
+    |                 ---------------------------------------- failed precondition
+
+error: invariant not satisfied before loop
+  --> src/Chap55/DFSStEph.rs:91:17
+   |
+91 | /                 forall|j: int|
+92 | |                     0 <= j < visited@.len() && old(visited)@[j]
+93 | |                     ==> #[trigger] visited@[j],
+   | |______________________________________________^
+
+error: invariant not satisfied before loop
+  --> src/Chap55/DFSStEph.rs:94:17
+   |
+94 |                 spec_num_false(visited@) < spec_num_false(old(visited)@),
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+  --> src/Chap55/DFSStEph.rs:99:13
+   |
+56 |             vertex < old(visited)@.len(),
+   |             ---------------------------- failed precondition
+...
+99 |             dfs_recursive(graph, visited, reachable, neighbor);
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+neighbor < visited.view().len() ✔
+visited.view().len() == graph.view().len() ✔
+spec_toposortsteph_wf(graph) ✔
+reachable.spec_avltreesetsteph_wf() ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+note: recommendation not met
+  --> src/Chap55/DFSStEph.rs:92:48
+   |
+92 |                     0 <= j < visited@.len() && old(visited)@[j]
+   |                                                ^^^^^^^^^^^^^^^^
+   |
+  --> vstd/seq.rs:62:12
+   |
+   = note: recommendation not met
+
+error: postcondition not satisfied
+   --> src/Chap55/DFSStEph.rs:39:17
+    |
+ 39 |                 reachable@.contains(source),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+113 |             reachable
+    |             --------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap55/DFSStEph.rs:40:17
+    |
+ 40 |                 forall|v: usize| reachable@.contains(v) ==> (v as int) < graph@.len(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+113 |             reachable
+    |             --------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap55/DFSStEph.rs:41:17
+    |
+ 41 | /                 forall|v: int| 0 <= v < graph@.len()
+ 42 | |                     ==> (reachable@.contains(v as usize) <==> #[trigger] spec_reachable(graph, source as int, v)),
+    | |_________________________________________________________________________________________________________________^ failed this postcondition
+...
+113 |               reachable
+    |               --------- at the end of the function body
+
+note: diagnostics via expansion
+  --> src/Chap55/DFSStEph.rs:39:17
+   |
+39 |                 reachable@.contains(source),
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+40 |                 forall|v: usize| reachable@.contains(v) ==> (v as int) < graph@.len(),
+   |                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^
+41 |                 forall|v: int| 0 <= v < graph@.len()
+42 |                     ==> (reachable@.contains(v as usize) <==> #[trigger] spec_reachable(graph, source as int, v)),
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view().contains(old(source)) ✘
+    function is uninterpreted
+forall |v|
+    %return.view().contains(v) ==>
+        v < old(graph).view().len() ✘
+forall |v|
+    let tmp%% = 0 in let tmp%% = v in let tmp%% = old(graph).view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        %return.view().contains(clip(usize, v)) == spec_reachable(old(graph), old(source), v) ✘
+        |   %return.view().contains(clip(usize, v)) ==>
+        |       spec_reachable(old(graph), old(source), v) ✘
+        |   spec_reachable(old(graph), old(source), v) ==>
+        |       %return.view().contains(clip(usize, v)) ✘
+        |           function is uninterpreted
+        +---
+
+error: assertion failed
+  --> src/Chap55/SCCStEph.rs:68:20
+   |
+68 |             assert(forall|j: int| #![trigger visited@[j]] 0 <= j < visited@.len() ==> !visited@[j]);
+   |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap55/SCCStEph.rs:115:16
+    |
+115 |         assert(reversed@.len() < usize::MAX);
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = visited.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        !(visited.view().index(j)) 
+            function is uninterpreted
+
+error: assertion failed
+   --> src/Chap55/SCCStEph.rs:177:24
+    |
+177 |                 assert(v < n);
+    |                        ^^^^^ assertion failed
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/SCCStEph.rs:200:17
+    |
+200 | /                 forall|r: int, j: int|
+201 | |                     0 <= r < m as int && 0 <= j < result_vecs@[r]@.len()
+202 | |                     ==> (#[trigger] result_vecs@[r]@[j]) < graph@.len(),
+    | |_______________________________________________________________________^
+
+error: assertion failed
+   --> src/Chap55/SCCStEph.rs:210:20
+    |
+210 |               assert(forall|v: int, i: int|
+    |  ____________________^
+211 | |                 0 <= v < transposed@.len() && 0 <= i < transposed@[v].len()
+212 | |                 ==> (#[trigger] transposed@[v][i]) < transposed@.len());
+    | |______________________________________________________________________^ assertion failed
+
+note: 
+
+v < n 
+
+error: postcondition not satisfied
+   --> src/Chap55/SCCStEph.rs:351:13
+    |
+351 |             !old(visited)@[vertex as int] ==> component@.contains(vertex as usize),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+374 |         while i < neighbors_len
+    |         ----------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap55/SCCStEph.rs:367:9
+    |
+367 |         component.insert(vertex);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:297:17
+    |
+297 |                 old(self)@.len() + 1 < usize::MAX as nat,
+    |                 ---------------------------------------- failed precondition
+
+error: invariant not satisfied before loop
+   --> src/Chap55/SCCStEph.rs:384:17
+    |
+384 | /                 forall|j: int|
+385 | |                     0 <= j < visited@.len() && old(visited)@[j]
+386 | |                     ==> #[trigger] visited@[j],
+    | |______________________________________________^
+
+error: invariant not satisfied before loop
+   --> src/Chap55/SCCStEph.rs:387:17
+    |
+387 |                 spec_num_false(visited@) < spec_num_false(old(visited)@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap55/SCCStEph.rs:392:13
+    |
+340 |             vertex < old(visited)@.len(),
+    |             ---------------------------- failed precondition
+...
+392 |             dfs_reach(graph, visited, component, neighbor);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+neighbor < visited.view().len() ✔
+visited.view().len() == graph.view().len() ✔
+spec_toposortsteph_wf(graph) ✔
+component.spec_avltreesetsteph_wf() ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+note: recommendation not met
+   --> src/Chap55/SCCStEph.rs:385:48
+    |
+385 |                     0 <= j < visited@.len() && old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: assertion failed
+   --> src/Chap55/SCCStEph.rs:276:24
+    |
+276 |                 assert(forall|j: int| #![trigger visited@[j]] 0 <= j < visited@.len() ==> !visited@[j]);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/SCCStEph.rs:295:21
+    |
+295 |                     n == 0 || i == 0 || components_vec@.len() >= 1,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap55/SCCStEph.rs:328:20
+    |
+328 |             assert(components_vec@.len() < usize::MAX);
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap55/SCCStEph.rs:329:13
+    |
+329 |             AVLTreeSeqStEphS::from_vec(components_vec)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:319:17
+    |
+319 |                 obeys_feq_full::<T>(),
+    |                 --------------------- failed precondition
+
+note: 
+
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = visited.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        !(visited.view().index(j)) 
+            function is uninterpreted
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/SCCStEph.rs:247:21
+    |
+247 | /                     forall|j: int|
+248 | |                         0 <= j < i as int
+249 | |                         ==> (#[trigger] graph@[u as int][j]) < graph@.len(),
+    | |___________________________________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/SCCStPer.rs:102:17
+    |
+102 |                 visited@[vertex as int],
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap55/SCCStPer.rs:107:29
+    |
+107 |             let neighbor = *neighbors.nth(i);
+    |                             ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:193:22
+    |
+193 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+error: assertion failed
+   --> src/Chap55/SCCStPer.rs:108:20
+    |
+108 |             assert(graph@[vertex as int][i as int] < graph@.len());
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap55/SCCStPer.rs:109:13
+    |
+ 57 |             vertex < old(visited)@.len(),
+    |             ---------------------------- failed precondition
+...
+109 |             dfs_finish_order(graph, visited, finish_order, neighbor);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+graph.view().index(vertex).index(i) < graph.view().len() 
+
+note: recommendation not met
+  --> src/Chap55/SCCStPer.rs:96:48
+   |
+96 |                     0 <= j < visited@.len() && old(visited)@[j]
+   |                                                ^^^^^^^^^^^^^^^^
+   |
+  --> vstd/seq.rs:62:12
+   |
+   = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/SCCStPer.rs:102:17
+    |
+102 |                 visited@[vertex as int],
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/SCCStPer.rs:108:20
+    |
+108 |             assert(graph@[vertex as int][i as int] < graph@.len());
+    |                    ^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+  --> src/Chap55/SCCStPer.rs:92:34
+   |
+92 |                 neighbors_len == graph@[vertex as int].len(),
+   |                                  ^^^^^^^^^^^^^^^^^^^^^
+   |
+  --> vstd/seq.rs:62:12
+   |
+   = note: recommendation not met
+
+error: precondition not satisfied
+   --> src/Chap55/SCCStPer.rs:182:9
+    |
+182 |         AVLTreeSeqStPerS::from_vec(reversed)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStPer.rs:273:22
+    |
+273 |             requires values@.len() < usize::MAX,
+    |                      -------------------------- failed precondition
+
+note: 
+
+reversed.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/SCCStPer.rs:217:21
+    |
+217 |                     adj_vecs@.len() == n,
+    |                     ^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap55/SCCStPer.rs:222:26
+    |
+222 |                 let v = *neighbors.nth(i);
+    |                          ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:193:22
+    |
+193 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+error: assertion failed
+   --> src/Chap55/SCCStPer.rs:223:24
+    |
+223 |                 assert(graph@[u as int][i as int] < graph@.len());
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap55/SCCStPer.rs:224:32
+    |
+224 |                 let mut temp = adj_vecs.remove(v);
+    |                                ^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/vec.rs:223:8
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/Chap55/SCCStPer.rs:226:17
+    |
+226 |                 adj_vecs.insert(v, temp);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/vec.rs:207:8
+    |
+    = note: failed precondition
+
+note: 
+
+graph.view().index(u).index(i) < graph.view().len() 
+
+note: recommendation not met
+   --> src/Chap55/SCCStPer.rs:223:24
+    |
+223 |                 assert(graph@[u as int][i as int] < graph@.len());
+    |                        ^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/SCCStPer.rs:216:38
+    |
+216 |                     neighbors_len == graph@[u as int].len(),
+    |                                      ^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/SCCStPer.rs:275:21
+    |
+275 | /                     forall|j: int|
+276 | |                         0 <= j < i as int
+277 | |                         ==> (#[trigger] graph@[u as int][j]) < graph@.len(),
+    | |___________________________________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap55/SCCStPer.rs:280:33
+    |
+280 |                 let neighbor = *neighbors.nth(i);
+    |                                 ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:193:22
+    |
+193 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+note: 
+
+i < neighbors.spec_len() 
+
+error: precondition not satisfied
+   --> src/Chap55/SCCStPer.rs:319:29
+    |
+319 |         let mut component = component.insert(vertex);
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:287:17
+    |
+287 |                 self.spec_avltreesetstper_wf(),
+    |                 ------------------------------ failed precondition
+
+error: precondition not satisfied
+   --> src/Chap55/SCCStPer.rs:336:29
+    |
+336 |             let neighbor = *neighbors.nth(i);
+    |                             ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:193:22
+    |
+193 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+error: assertion failed
+   --> src/Chap55/SCCStPer.rs:337:20
+    |
+337 |             assert(graph@[vertex as int][i as int] < graph@.len());
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap55/SCCStPer.rs:338:13
+    |
+300 |             vertex < old(visited_bool)@.len(),
+    |             --------------------------------- failed precondition
+...
+338 |             component = dfs_reach(graph, visited_bool, component, neighbor);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+graph.view().index(vertex).index(i) < graph.view().len() 
+
+note: recommendation not met
+   --> src/Chap55/SCCStPer.rs:331:53
+    |
+331 |                     0 <= j < visited_bool@.len() && old(visited_bool)@[j]
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/SCCStPer.rs:337:20
+    |
+337 |             assert(graph@[vertex as int][i as int] < graph@.len());
+    |                    ^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/SCCStPer.rs:327:34
+    |
+327 |                 neighbors_len == graph@[vertex as int].len(),
+    |                                  ^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: postcondition not satisfied
+   --> src/Chap55/SCCStPer.rs:43:17
+    |
+ 43 |                 components@.len() >= 1 || graph@.len() == 0,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+352 |                 return AVLTreeSeqStPerS::empty();
+    |                 -------------------------------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/SCCStPer.rs:43:17
+    |
+ 43 |                 components@.len() >= 1 || graph@.len() == 0,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+387 |             AVLTreeSeqStPerS::from_vec(components_vec)
+    |             ------------------------------------------ at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap55/SCCStPer.rs:377:31
+    |
+377 |                 let vertex = *finish_order.nth(i);
+    |                               ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStPer.rs:247:22
+    |
+247 |             requires self.spec_avltreeseqstper_wf(), (index as int) < self.spec_seq().len(),
+    |                      ------------------------------ failed precondition
+
+error: precondition not satisfied
+   --> src/Chap55/SCCStPer.rs:381:24
+    |
+381 |                     if component.size() > 0 {
+    |                        ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:186:22
+    |
+186 |             requires self.spec_avltreesetstper_wf(),
+    |                      ------------------------------ failed precondition
+
+error: precondition not satisfied
+   --> src/Chap55/SCCStPer.rs:387:13
+    |
+387 |             AVLTreeSeqStPerS::from_vec(components_vec)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStPer.rs:273:22
+    |
+273 |             requires values@.len() < usize::MAX,
+    |                      -------------------------- failed precondition
+
+note: 
+
+component.spec_avltreesetstper_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: invariant not satisfied before loop
+   --> src/Chap55/TopoSortStEph.rs:268:17
+    |
+268 | /                 forall|j: int|
+269 | |                     0 <= j < visited@.len() && old(visited)@[j]
+270 | |                     ==> #[trigger] visited@[j],
+    | |______________________________________________^
+
+error: invariant not satisfied before loop
+   --> src/Chap55/TopoSortStEph.rs:271:17
+    |
+271 |                 spec_num_false(visited@) < spec_num_false(old(visited)@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap55/TopoSortStEph.rs:276:17
+    |
+276 | /                 finish_order@.len() + spec_num_false(visited@) + 1
+277 | |                     == old(finish_order)@.len() + spec_num_false(old(visited)@),
+    | |_______________________________________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap55/TopoSortStEph.rs:282:13
+    |
+222 |             vertex < old(visited)@.len(),
+    |             ---------------------------- failed precondition
+...
+282 |             dfs_finish_order(graph, visited, finish_order, neighbor);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+neighbor < visited.view().len() ✔
+visited.view().len() == graph.view().len() ✔
+spec_toposortsteph_wf(graph) ✔
+forall |k|
+    let tmp%% = 0 in let tmp%% = k in let tmp%% = finish_order.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        finish_order.view().index(k) < graph.view().len() ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:269:48
+    |
+269 |                     0 <= j < visited@.len() && old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStEph.rs:207:17
+    |
+207 |                 spec_is_dag(graph) ==> spec_is_topo_order(graph, order@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+470 |             AVLTreeSeqStEphS::from_vec(reversed)
+    |             ------------------------------------ at the end of the function body
+
+error: assertion failed
+   --> src/Chap55/TopoSortStEph.rs:426:71
+    |
+426 |                 assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {
+    |                                                                       ^^^^^^^^^^^^ assertion failed
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/TopoSortStEph.rs:463:21
+    |
+463 |                     reversed@.len() < usize::MAX,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+!(visited.view().index(j)) 
+    function is uninterpreted
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStEph.rs:303:13
+    |
+303 |             visited@.len() == old(visited)@.len(),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+355 |                 return false;
+    |                 ------------ at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStEph.rs:304:13
+    |
+304 |             rec_stack@.len() == old(rec_stack)@.len(),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+355 |                 return false;
+    |                 ------------ at this exit
+
+error: invariant not satisfied before loop
+   --> src/Chap55/TopoSortStEph.rs:346:17
+    |
+346 | /                 forall|j: int|
+347 | |                     0 <= j < visited@.len() && old(visited)@[j]
+348 | |                     ==> #[trigger] visited@[j],
+    | |______________________________________________^
+
+error: invariant not satisfied before loop
+   --> src/Chap55/TopoSortStEph.rs:349:17
+    |
+349 |                 spec_num_false(visited@) < spec_num_false(old(visited)@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap55/TopoSortStEph.rs:354:17
+    |
+298 |             vertex < old(visited)@.len(),
+    |             ---------------------------- failed precondition
+...
+354 |             if !dfs_finish_order_cycle_detect(graph, visited, rec_stack, finish_order, neighbor) {
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+neighbor < visited.view().len() ✔
+visited.view().len() == graph.view().len() ✔
+rec_stack.view().len() == graph.view().len() ✔
+spec_toposortsteph_wf(graph) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:347:48
+    |
+347 |                     0 <= j < visited@.len() && old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:306:44
+    |
+306 |                 0 <= j < visited@.len() && old(visited)@[j]
+    |                                            ^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStEph.rs:371:13
+    |
+371 |             topo_order.is_some() <==> spec_is_dag(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+394 |                     return None;
+    |                     ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStEph.rs:371:13
+    |
+371 |             topo_order.is_some() <==> spec_is_dag(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+414 |         Some(AVLTreeSeqStEphS::from_vec(reversed))
+    |         ------------------------------------------ at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStEph.rs:372:13
+    |
+372 |             topo_order.is_some() ==> spec_is_topo_order(graph, topo_order.unwrap()@),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+414 |         Some(AVLTreeSeqStEphS::from_vec(reversed))
+    |         ------------------------------------------ at the end of the function body
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/TopoSortStEph.rs:407:17
+    |
+407 |                 reversed@.len() < usize::MAX,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap55/TopoSortStEph.rs:371:13
+    |
+371 |             topo_order.is_some() <==> spec_is_dag(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^
+
+note: 
+
+topo_order is Some == spec_is_dag(old(graph)) ✘
+|   topo_order is Some ==>
+|       spec_is_dag(old(graph)) ✘
+|       |   forall |path|
+|       |       spec_is_path(old(graph), path) && path.len() >= 2 ==>
+|       |           !(path.index(0) == path.last()) 
+|       +---
+|   spec_is_dag(old(graph)) ==>
+|       topo_order is Some ✘
++---
+topo_order is Some ==>
+    spec_is_topo_order(old(graph), topo_order.0.view()) ✔
+
+error: precondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:171:13
+    |
+128 |             vertex < old(visited)@.len(),
+    |             ---------------------------- failed precondition
+...
+171 |             dfs_finish_order(graph, visited, finish_order, neighbor);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+neighbor < visited.view().len() ✔
+visited.view().len() == graph.view().len() ✔
+spec_toposortstper_wf(graph) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+note: recommendation not met
+   --> src/Chap55/TopoSortStPer.rs:164:48
+    |
+164 |                     0 <= j < visited@.len() && old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:113:17
+    |
+113 |                 order@.len() == graph@.len(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+356 |             AVLTreeSeqStPerS::from_vec(reversed)
+    |             ------------------------------------ at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:114:17
+    |
+114 |                 spec_is_dag_per(graph) ==> spec_is_topo_order_per(graph, order@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+356 |             AVLTreeSeqStPerS::from_vec(reversed)
+    |             ------------------------------------ at the end of the function body
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/TopoSortStPer.rs:349:21
+    |
+349 |                     reversed@.len() < usize::MAX,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap55/TopoSortStPer.rs:64:12
+    |
+ 64 |         && order.no_duplicates()
+    |            ^^^^^^^^^^^^^^^^^^^^^
+ 65 |         && (forall|k: int| 0 <= k < order.len() ==> (#[trigger] order[k] as int) < graph@.len())
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+ 69 |             ==> i < j)
+    |                 ^^^^^
+...
+113 |                 order@.len() == graph@.len(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+114 |                 spec_is_dag_per(graph) ==> spec_is_topo_order_per(graph, order@),
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view().len() == old(graph).view().len() ✘
+spec_is_dag_per(old(graph)) ==>
+    spec_is_topo_order_per(old(graph), %return.view()) ✘
+    |   %return.view().len() == old(graph).view().len() ✔
+    |   %return.view().no_duplicates() ✘
+    |   |   forall |i, j|
+    |   |       let tmp%% = 0 in let tmp%% = i in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+    |   |           !(%return.view().index(i) == %return.view().index(j)) 
+    |   +---
+    |   forall |k|
+    |       let tmp%% = 0 in let tmp%% = k in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+    |           %return.view().index(k) < old(graph).view().len() ✘
+    |   forall |i, j|
+    |       let tmp%% = 0 in let tmp%% = i in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && spec_has_edge_per(old(graph), %return.view().index(i), %return.view().index(j)) ==>
+    |           i < j ✘
+    +---
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:192:13
+    |
+192 |             visited@.len() == old(visited)@.len(),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+240 |                 return false;
+    |                 ------------ at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:193:13
+    |
+193 |             rec_stack@.len() == old(rec_stack)@.len(),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+240 |                 return false;
+    |                 ------------ at this exit
+
+error: precondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:239:17
+    |
+187 |             vertex < old(visited)@.len(),
+    |             ---------------------------- failed precondition
+...
+239 |             if !dfs_finish_order_cycle_detect(graph, visited, rec_stack, finish_order, neighbor) {
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+neighbor < visited.view().len() ✔
+visited.view().len() == graph.view().len() ✔
+rec_stack.view().len() == graph.view().len() ✔
+spec_toposortstper_wf(graph) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+note: recommendation not met
+   --> src/Chap55/TopoSortStPer.rs:232:48
+    |
+232 |                     0 <= j < visited@.len() && old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStPer.rs:195:44
+    |
+195 |                 0 <= j < visited@.len() && old(visited)@[j]
+    |                                            ^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:254:13
+    |
+254 |             topo_order.is_some() <==> spec_is_dag_per(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+286 |                     return None;
+    |                     ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:254:13
+    |
+254 |             topo_order.is_some() <==> spec_is_dag_per(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+306 |         Some(AVLTreeSeqStPerS::from_vec(reversed))
+    |         ------------------------------------------ at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:255:13
+    |
+255 |             topo_order.is_some() ==> spec_is_topo_order_per(graph, topo_order.unwrap()@),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+306 |         Some(AVLTreeSeqStPerS::from_vec(reversed))
+    |         ------------------------------------------ at the end of the function body
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/TopoSortStPer.rs:299:17
+    |
+299 |                 reversed@.len() < usize::MAX,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap55/TopoSortStPer.rs:254:13
+    |
+254 |             topo_order.is_some() <==> spec_is_dag_per(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+topo_order is Some == spec_is_dag_per(old(graph)) ✘
+|   topo_order is Some ==>
+|       spec_is_dag_per(old(graph)) ✘
+|       |   forall |path|
+|       |       spec_is_path_per(old(graph), path) && path.len() >= 2 ==>
+|       |           !(path.index(0) == path.last()) 
+|       +---
+|   spec_is_dag_per(old(graph)) ==>
+|       topo_order is Some ✘
++---
+topo_order is Some ==>
+    spec_is_topo_order_per(old(graph), topo_order.0.view()) ✔
+
+note: automatically chose triggers for this expression:
+  --> src/Chap55/TopoSortStPer.rs:58:10
+   |
+58 |         !exists|path: Seq<int>| spec_is_path_per(graph, path) && path.len() >= 2 && path[0] == path.last()
+   |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+  --> src/Chap55/TopoSortStPer.rs:58:96
+   |
+58 |         !exists|path: Seq<int>| spec_is_path_per(graph, path) && path.len() >= 2 && path[0] == path.last()
+   |                                                                                                ^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+  --> src/Chap55/TopoSortStPer.rs:53:9
+   |
+53 |         exists|path: Seq<int>| spec_is_path_per(graph, path) && path[0] == u && path.last() == v
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+  --> src/Chap55/TopoSortStPer.rs:53:81
+   |
+53 |         exists|path: Seq<int>| spec_is_path_per(graph, path) && path[0] == u && path.last() == v
+   |                                                                                 ^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+  --> src/Chap55/TopoSortStEph.rs:75:10
+   |
+75 |         !exists|path: Seq<int>| spec_is_path(graph, path) && path.len() >= 2 && path[0] == path.last()
+   |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+  --> src/Chap55/TopoSortStEph.rs:75:92
+   |
+75 |         !exists|path: Seq<int>| spec_is_path(graph, path) && path.len() >= 2 && path[0] == path.last()
+   |                                                                                            ^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+  --> src/Chap55/TopoSortStEph.rs:70:9
+   |
+70 |         exists|path: Seq<int>| spec_is_path(graph, path) && path[0] == u && path.last() == v
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+  --> src/Chap55/TopoSortStEph.rs:70:77
+   |
+70 |         exists|path: Seq<int>| spec_is_path(graph, path) && path[0] == u && path.last() == v
+   |                                                                             ^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+  --> src/Chap55/TopoSortStEph.rs:70:9
+   |
+70 |         exists|path: Seq<int>| spec_is_path(graph, path) && path[0] == u && path.last() == v
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 4711 verified, 46 errors
+error: aborting due to 87 previous errors
+

@@ -1,0 +1,781 @@
+error: precondition not satisfied
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:61:25
+    |
+ 61 |                 let k = clone_elem(&entry.seq[i].0);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:62:25
+    |
+ 62 |                 let v = clone_elem(&entry.seq[i].1);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/feq.rs:51:61
+   |
+51 |         &&& forall|x: T, y: T|  #[trigger] cloned(x, y) ==> x.eq_spec(&y)
+   |                                                             ^^^^^^^^^^^^^
+52 |         &&& forall|x: &T, y: T| #[trigger] cloned(*x, y) ==> x.eq_spec(&y)
+53 |         &&& forall|x: T, y: T|  #[trigger] strictly_cloned(x, y) ==> x.eq_spec(&y)
+   |                                                                      ^^^^^^^^^^^^^
+
+note: 
+
+obeys_feq_clone()
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✔
++---
+
+error: precondition not satisfied
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:296:33
+    |
+296 |                         let v = clone_elem(&table.table[index].seq[i].1);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+note: 
+
+obeys_feq_clone()
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✔
++---
+
+note: recommendation not met
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:269:51
+    |
+269 |                 let ghost bv: Seq<(Key, Value)> = table.table@[index as int].seq@;
+    |                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: precondition not satisfied
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:365:33
+    |
+365 |                         let v = clone_elem(&bucket_seq[i].1);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+note: 
+
+obeys_feq_clone()
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✔
++---
+
+error: precondition not satisfied
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:472:33
+    |
+472 |                         let k = clone_elem(&table.table[i].seq[j].0);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:473:33
+    |
+473 |                         let v = clone_elem(&table.table[i].seq[j].1);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:565:31
+    |
+565 |                     let key = clone_elem(&pairs[m].0);
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:566:33
+    |
+566 |                     let value = clone_elem(&pairs[m].1);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:567:21
+    |
+567 |                     Self::insert(&mut new_table, key, value);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:467:17
+    |
+467 |                 obeys_feq_clone::<Key>(),
+    |                 ------------------------ failed precondition
+
+note: 
+
+obeys_feq_clone()
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✔
++---
+
+note: recommendation not met
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:481:36
+    |
+481 | ...                   assert(chain_sub_next.drop_last() =~= chain_sub);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:482:36
+    |
+482 | ...                   assert(chain_sub_next.last() == chain[j as int]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:154:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:494:32
+    |
+494 |                         assert(sub_next.drop_last()
+    |                                ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:496:32
+    |
+496 |                         assert(sub_next.last() == table.table@[i as int]);
+    |                                ^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:154:12
+    |
+    = note: recommendation not met
+
+error: precondition not satisfied
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:927:27
+    |
+927 |                 let key = clone_elem(&pairs[j].0);
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:928:29
+    |
+928 |                 let value = clone_elem(&pairs[j].1);
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:939:17
+    |
+939 |                 Self::insert(&mut new_table, key, value);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:467:17
+    |
+467 |                 obeys_feq_clone::<Key>(),
+    |                 ------------------------ failed precondition
+
+note: 
+
+obeys_feq_clone()
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✔
++---
+
+note: recommendation not met
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:858:28
+    |
+858 |                     assert(sub_next.drop_last() =~= table.table@.subrange(0, i as int));
+    |                            ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:859:28
+    |
+859 |                     assert(sub_next.last() == table.table@[i as int]);
+    |                            ^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:154:12
+    |
+    = note: recommendation not met
+
+error: precondition not satisfied
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:840:27
+    |
+840 |                 let key = clone_elem(&pairs[j].0);
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:841:29
+    |
+841 |                 let value = clone_elem(&pairs[j].1);
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:853:17
+    |
+853 |                 Self::insert(&mut new_table, key, value);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:467:17
+    |
+467 |                 obeys_feq_clone::<Key>(),
+    |                 ------------------------ failed precondition
+
+note: 
+
+obeys_feq_clone()
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✔
++---
+
+note: recommendation not met
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:771:28
+    |
+771 |                     assert(sub_next.drop_last() =~= table.table@.subrange(0, i as int));
+    |                            ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:772:28
+    |
+772 |                     assert(sub_next.last() == table.table@[i as int]);
+    |                            ^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:154:12
+    |
+    = note: recommendation not met
+
+error: precondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:287:17
+    |
+183 |                 obeys_feq_clone::<Value>(),
+    |                 -------------------------- failed precondition
+...
+287 |                 chain_lookup(&self.head, key)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+obeys_feq_clone()
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✔
++---
+
+error: precondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:531:34
+    |
+531 |                         let ck = clone_elem(&nk);
+    |                                  ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:532:34
+    |
+532 |                         let cv = clone_elem(&nv);
+    |                                  ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:792:31
+    |
+792 |                     let key = clone_elem(&pairs[m].0);
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:793:33
+    |
+793 |                     let value = clone_elem(&pairs[m].1);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:794:21
+    |
+794 |                     Self::insert(&mut new_table, key, value);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:467:17
+    |
+467 |                 obeys_feq_clone::<Key>(),
+    |                 ------------------------ failed precondition
+
+note: 
+
+obeys_feq_clone()
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✔
++---
+
+error: precondition not satisfied
+   --> src/Chap47/VecChainedHashTableStEph.rs:59:25
+    |
+ 59 |                 let k = clone_elem(&pairs[i].0);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap47/VecChainedHashTableStEph.rs:60:25
+    |
+ 60 |                 let v = clone_elem(&pairs[i].1);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+note: 
+
+obeys_feq_clone()
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✔
++---
+
+error: precondition not satisfied
+   --> src/Chap47/VecChainedHashTableStEph.rs:298:33
+    |
+298 |                         let v = clone_elem(&table.table[index][i].1);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+note: 
+
+obeys_feq_clone()
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✔
++---
+
+note: recommendation not met
+   --> src/Chap47/VecChainedHashTableStEph.rs:269:51
+    |
+269 |                 let ghost bv: Seq<(Key, Value)> = table.table@[index as int]@;
+    |                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: precondition not satisfied
+   --> src/Chap47/VecChainedHashTableStEph.rs:366:33
+    |
+366 |                         let v = clone_elem(&bucket[i].1);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+note: 
+
+obeys_feq_clone()
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✔
++---
+
+error: precondition not satisfied
+   --> src/Chap47/VecChainedHashTableStEph.rs:475:33
+    |
+475 |                         let k = clone_elem(&table.table[i][j].0);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap47/VecChainedHashTableStEph.rs:476:33
+    |
+476 |                         let v = clone_elem(&table.table[i][j].1);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap47/VecChainedHashTableStEph.rs:567:31
+    |
+567 |                     let key = clone_elem(&pairs[m].0);
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap47/VecChainedHashTableStEph.rs:568:33
+    |
+568 |                     let value = clone_elem(&pairs[m].1);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:115:18
+    |
+115 |         requires obeys_feq_clone::<T>(),
+    |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap47/VecChainedHashTableStEph.rs:569:21
+    |
+569 |                     Self::insert(&mut new_table, key, value);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:467:17
+    |
+467 |                 obeys_feq_clone::<Key>(),
+    |                 ------------------------ failed precondition
+
+note: 
+
+obeys_feq_clone()
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✔
++---
+
+note: recommendation not met
+   --> src/Chap47/VecChainedHashTableStEph.rs:484:36
+    |
+484 | ...                   assert(chain_sub_next.drop_last() =~= chain_sub);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/VecChainedHashTableStEph.rs:485:36
+    |
+485 | ...                   assert(chain_sub_next.last() == chain[j as int]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:154:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/VecChainedHashTableStEph.rs:497:32
+    |
+497 |                         assert(sub_next.drop_last()
+    |                                ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/VecChainedHashTableStEph.rs:499:32
+    |
+499 |                         assert(sub_next.last() == table.table@[i as int]);
+    |                                ^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:154:12
+    |
+    = note: recommendation not met
+
+error: precondition not satisfied
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1239:27
+     |
+1239 |                 let key = clone_elem(&pairs[j].0);
+     |                           ^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap47/ParaHashTableStEph.rs:115:18
+     |
+ 115 |         requires obeys_feq_clone::<T>(),
+     |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1240:29
+     |
+1240 |                 let value = clone_elem(&pairs[j].1);
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap47/ParaHashTableStEph.rs:115:18
+     |
+ 115 |         requires obeys_feq_clone::<T>(),
+     |                  ---------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1252:17
+     |
+1252 |                 Self::insert(&mut new_table, key, value);
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap47/ParaHashTableStEph.rs:467:17
+     |
+ 467 |                 obeys_feq_clone::<Key>(),
+     |                 ------------------------ failed precondition
+
+note: 
+
+obeys_feq_clone()
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✔
++---
+
+note: recommendation not met
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1173:28
+     |
+1173 |                     assert(sub_next.drop_last() =~= table.table@.subrange(0, i as int));
+     |                            ^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq_lib.rs:492:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1174:28
+     |
+1174 |                     assert(sub_next.last() == table.table@[i as int]);
+     |                            ^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:154:12
+     |
+     = note: recommendation not met
+
+verification results:: 4480 verified, 16 errors
+error: aborting due to 33 previous errors
+
+Elapsed: 61s

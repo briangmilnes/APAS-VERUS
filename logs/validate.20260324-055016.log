@@ -1,0 +1,34 @@
+error[E0382]: use of partially moved value: `result`
+    --> src/Chap39/BSTTreapStEph.rs:2910:29
+     |
+2885 | ...                           Some(v) => {
+     |                                    - value partially moved here
+...
+2910 | ...                   result
+     |                       ^^^^^^ value used here after partial move
+     |
+     = note: partial move occurs because value has type `T`, which does not implement the `Copy` trait
+help: borrow this binding in the pattern to avoid moving the value
+     |
+2885 |                                     Some(ref v) => {
+     |                                          +++
+
+error[E0382]: use of partially moved value: `result`
+    --> src/Chap39/BSTTreapStEph.rs:2935:29
+     |
+2916 | ...                           Some(v) => {
+     |                                    - value partially moved here
+...
+2935 | ...                   result
+     |                       ^^^^^^ value used here after partial move
+     |
+     = note: partial move occurs because value has type `T`, which does not implement the `Copy` trait
+help: borrow this binding in the pattern to avoid moving the value
+     |
+2916 |                                     Some(ref v) => {
+     |                                          +++
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0382`.
+Elapsed: 24s

@@ -1,0 +1,61 @@
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:90:13
+    |
+ 90 |             visited@.len() == old(visited)@.len(),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+200 |                 return true;
+    |                 ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:91:13
+    |
+ 91 |             ancestors@.len() == old(ancestors)@.len(),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+200 |                 return true;
+    |                 ----------- at this exit
+
+note: diagnostics via expansion
+  --> src/Chap55/CycleDetectStEph.rs:90:13
+   |
+90 |             visited@.len() == old(visited)@.len(),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+91 |             ancestors@.len() == old(ancestors)@.len(),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+visited.view().len() == old(visited).view().len() ✘
+ancestors.view().len() == old(ancestors).view().len() ✘
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = visited.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && old(visited).view().index(j) ==>
+        visited.view().index(j) ✔
+spec_num_false(visited.view()) <= spec_num_false(old(visited).view()) ✔
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:178:48
+    |
+178 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+  --> src/Chap55/CycleDetectStEph.rs:93:44
+   |
+93 |                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+   |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+  --> vstd/seq.rs:62:12
+   |
+   = note: recommendation not met
+
+verification results:: 4698 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 59s
+Sampled Memory Usage: peak rust_verify RSS: 7112MB, peak z3 RSS: 442MB, min free: 17762MB
+Sampled CPU Usage: rust_verify: 144s, z3 children: 107s

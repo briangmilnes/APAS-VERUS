@@ -1,0 +1,22 @@
+error[E0609]: no field `base_set` on type `&Self`
+   --> src/Chap43/OrderedTableStPer.rs:517:22
+    |
+397 |     pub trait OrderedTableStPerTrait<K: StT + Ord, V: StT + Ord>: Sized + View<V = Map<K::V, V::V>> {
+    |     ----------------------------------------------------------------------------------------------- type parameter 'Self' declared here
+...
+517 |                 self.base_set.elements@.len() + other.base_set.elements@.len() < usize::MAX,
+    |                      ^^^^^^^^ unknown field
+
+error[E0609]: no field `base_set` on type `&Self`
+   --> src/Chap43/OrderedTableStPer.rs:517:55
+    |
+397 |     pub trait OrderedTableStPerTrait<K: StT + Ord, V: StT + Ord>: Sized + View<V = Map<K::V, V::V>> {
+    |     ----------------------------------------------------------------------------------------------- type parameter 'Self' declared here
+...
+517 |                 self.base_set.elements@.len() + other.base_set.elements@.len() < usize::MAX,
+    |                                                       ^^^^^^^^ unknown field
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0609`.
+Elapsed: 35s

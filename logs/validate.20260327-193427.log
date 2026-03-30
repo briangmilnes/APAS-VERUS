@@ -1,0 +1,17 @@
+error[E0782]: expected a type, found a trait
+   --> src/Chap59/JohnsonStEphF64.rs:439:32
+    |
+439 |                     if pred != SSSPResultStEphF64Trait::NO_PREDECESSOR {
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+help: you can add the `dyn` keyword if you want a trait object
+    |
+439 |                     if pred != <dyn SSSPResultStEphF64Trait>::NO_PREDECESSOR {
+    |                                ++++                        +
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0782`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 554MB, peak z3 RSS: 0MB, min free: 22019MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 0s

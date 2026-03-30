@@ -1942,11 +1942,11 @@ pub mod BSTTreapStEph {
                     };
                     assert(!lv.contains(rkv));
                     assert forall|s: T, o: T| #![trigger lv.contains(s@), rlv.contains(o@)]
-                        lv.contains(s@) && rlv.contains(o@) ==> s.cmp_spec(&o) == Less by {
+                        lv.contains(s@) && rlv.contains(o@) implies s.cmp_spec(&o) == Less by {
                         assert(rlv.subset_of(rv));
                     };
                     assert forall|s: T, o: T| #![trigger lv.contains(s@), rrv.contains(o@)]
-                        lv.contains(s@) && rrv.contains(o@) ==> s.cmp_spec(&o) == Less by {
+                        lv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {
                         assert(rrv.subset_of(rv));
                     };
                     vstd::set_lib::lemma_len_subset(rlv, rv);
@@ -1984,12 +1984,12 @@ pub mod BSTTreapStEph {
                     assert(slv.len() + rlv.len() < usize::MAX as nat);
                     assert(srv.len() + rrv.len() < usize::MAX as nat);
                     assert forall|s: T, o: T| #![trigger slv.contains(s@), rlv.contains(o@)]
-                        slv.contains(s@) && rlv.contains(o@) ==> s.cmp_spec(&o) == Less by {
+                        slv.contains(s@) && rlv.contains(o@) implies s.cmp_spec(&o) == Less by {
                         assert(slv.subset_of(lv));
                         assert(rlv.subset_of(rv));
                     };
                     assert forall|s: T, o: T| #![trigger srv.contains(s@), rrv.contains(o@)]
-                        srv.contains(s@) && rrv.contains(o@) ==> s.cmp_spec(&o) == Less by {
+                        srv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {
                         assert(srv.subset_of(lv));
                         assert(rrv.subset_of(rv));
                     };
@@ -2355,7 +2355,7 @@ pub mod BSTTreapStEph {
                     assert(!rrv.contains(akv));
                     assert(lrv.disjoint(rrv));
                     assert forall|s: T, o: T| #![trigger lrv.contains(s@), rrv.contains(o@)]
-                        lrv.contains(s@) && rrv.contains(o@) ==> s.cmp_spec(&o) == Less by {
+                        lrv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {
                         if lrv.contains(s@) && rrv.contains(o@) {
                             assert(s.cmp_spec(&ak) == Less);
                             assert(o.cmp_spec(&ak) == Greater);
@@ -2518,7 +2518,7 @@ pub mod BSTTreapStEph {
                     assert(!rrv.contains(akv));
                     assert(lrv.disjoint(rrv));
                     assert forall|s: T, o: T| #![trigger lrv.contains(s@), rrv.contains(o@)]
-                        lrv.contains(s@) && rrv.contains(o@) ==> s.cmp_spec(&o) == Less by {
+                        lrv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {
                         if lrv.contains(s@) && rrv.contains(o@) {
                             assert(s.cmp_spec(&ak) == Less);
                             assert(o.cmp_spec(&ak) == Greater);
@@ -2599,7 +2599,7 @@ pub mod BSTTreapStEph {
                     assert(lv.disjoint(rv));
                     assert(left_filtered@.disjoint(right_filtered@));
                     assert forall|s: T, o: T| #![trigger left_filtered@.contains(s@), right_filtered@.contains(o@)]
-                        left_filtered@.contains(s@) && right_filtered@.contains(o@) ==> s.cmp_spec(&o) == Less by {
+                        left_filtered@.contains(s@) && right_filtered@.contains(o@) implies s.cmp_spec(&o) == Less by {
                         if left_filtered@.contains(s@) && right_filtered@.contains(o@) {
                             assert(s.cmp_spec(&key) == Less);
                             assert(o.cmp_spec(&key) == Greater);

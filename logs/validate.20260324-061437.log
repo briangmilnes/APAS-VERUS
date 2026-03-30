@@ -1,0 +1,224 @@
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1898:48
+     |
+1898 |                         assert forall|x: T::V| !(slv.contains(x) && rlv.contains(x)) by {
+     |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1906:48
+     |
+1906 |                         assert forall|x: T::V| !(srv.contains(x) && rrv.contains(x)) by {
+     |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1918:40
+     |
+1918 | ...                   assert(tl.cmp_spec(&r_key) == Less);
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1919:40
+     |
+1919 | ...                   assert(crv.contains(tl@));
+     |                              ^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+slv.contains(x) ==>
+    !(rlv.contains(x)) 
+        function is uninterpreted
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap39/BSTTreapStEph.rs:1917:61
+     |
+1917 | ...                   let ghost tl = choose|t: T| #[trigger] t@ == x && clv.contains(t@);
+     |                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2031:40
+     |
+2031 | ...                   assert(tl.cmp_spec(&tr) == Equal);
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2033:40
+     |
+2033 | ...                   assert(false);
+     |                              ^^^^^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap39/BSTTreapStEph.rs:2031:60
+     |
+2031 | ...                   assert(tl.cmp_spec(&tr) == Equal);
+     |                                                  ^^^^^
+
+note: 
+
+tl.cmp_spec(tr) == Equal
+|   !(tl.cmp_spec(tr) is Less) ✘
+|   !(tl.cmp_spec(tr) is Greater) ✘
++---
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap39/BSTTreapStEph.rs:2028:61
+     |
+2028 | ...                   let ghost tl = choose|t: T| #[trigger] t@ == x && luv.contains(t@);
+     |                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap39/BSTTreapStEph.rs:2029:61
+     |
+2029 | ...                   let ghost tr = choose|t: T| #[trigger] t@ == x && ruv.contains(t@);
+     |                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2183:48
+     |
+2183 | ...                   assert(t_x.cmp_spec(&t_bl) == Equal);
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2166:48
+     |
+2166 | ...                   assert(t_x.cmp_spec(&t_br) == Equal);
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:2184:41
+     |
+ 220 |             b.cmp_spec(&c) == Equal,
+     |             ----------------------- failed precondition
+...
+2184 |                                         lemma_cmp_equal_congruent_right_st(t_bl, t_x, ak);
+     |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2185:48
+     |
+2185 | ...                   assert(false);
+     |                              ^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2168:48
+     |
+2168 | ...                   assert(false);
+     |                              ^^^^^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap39/BSTTreapStEph.rs:2183:71
+     |
+2183 | ...                   assert(t_x.cmp_spec(&t_bl) == Equal);
+     |                                                     ^^^^^
+
+note: 
+
+t_x.cmp_spec(t_bl) == Equal
+|   !(t_x.cmp_spec(t_bl) is Less) ✘
+|   !(t_x.cmp_spec(t_bl) is Greater) ✘
++---
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap39/BSTTreapStEph.rs:2163:70
+     |
+2163 | ...                   let ghost t_x = choose|t: T| #[trigger] t@ == x && alv.contains(t@);
+     |                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap39/BSTTreapStEph.rs:2164:71
+     |
+2164 | ...                   let ghost t_br = choose|t: T| #[trigger] t@ == x && brv.contains(t@);
+     |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap39/BSTTreapStEph.rs:2180:70
+     |
+2180 | ...                   let ghost t_x = choose|t: T| #[trigger] t@ == x && arv.contains(t@);
+     |                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap39/BSTTreapStEph.rs:2181:71
+     |
+2181 | ...                   let ghost t_bl = choose|t: T| #[trigger] t@ == x && blv.contains(t@);
+     |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2344:48
+     |
+2344 | ...                   assert(t_ar.cmp_spec(&t_bl) == Equal);
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2327:48
+     |
+2327 | ...                   assert(t_al.cmp_spec(&t_br) == Equal);
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap39/BSTTreapStEph.rs:2239:5
+     |
+2239 | /     fn difference_inner_st<T: StT + Ord + IsLtTransitive>(
+2240 | |         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
+2241 | |     ) -> (remaining: BSTTreapStEph<T>)
+     | |_____________________________________^
+
+note: diagnostics via expansion
+    --> src/Chap39/BSTTreapStEph.rs:2344:72
+     |
+2344 | ...                   assert(t_ar.cmp_spec(&t_bl) == Equal);
+     |                                                      ^^^^^
+
+note: 
+
+t_ar.cmp_spec(t_bl) == Equal
+|   !(t_ar.cmp_spec(t_bl) is Less) ✘
+|   !(t_ar.cmp_spec(t_bl) is Greater) ✘
++---
+
+note: automatically chose triggers for this expression:
+    --> src/Chap39/BSTTreapStEph.rs:2888:60
+     |
+2888 | ...                   let ghost tk = choose|t: T| t@ == key@ && right@.contains(t@);
+     |                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap39/BSTTreapStEph.rs:2888:73
+     |
+2888 | ...                   let ghost tk = choose|t: T| t@ == key@ && right@.contains(t@);
+     |                                                   ^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap39/BSTTreapStEph.rs:2913:60
+     |
+2913 | ...                   let ghost tk = choose|t: T| t@ == key@ && left@.contains(t@);
+     |                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap39/BSTTreapStEph.rs:2913:73
+     |
+2913 | ...                   let ghost tk = choose|t: T| t@ == key@ && left@.contains(t@);
+     |                                                   ^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+    --> src/Chap39/BSTTreapStEph.rs:2913:60
+     |
+2913 | ...                   let ghost tk = choose|t: T| t@ == key@ && left@.contains(t@);
+     |                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 4389 verified, 4 errors
+error: aborting due to 14 previous errors
+
+Elapsed: 132s

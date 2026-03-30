@@ -1,0 +1,20 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:654:5
+    |
+654 | /     fn union_merge<V: StT + Hash>(
+655 | |         uf: &mut UnionFindStEph<V>,
+656 | |         root_u: V,
+657 | |         root_v: V,
+658 | |     )
+    | |_____^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:940:9
+    |
+940 |         fn union(&mut self, u: &V, v: &V) {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 665 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 195s

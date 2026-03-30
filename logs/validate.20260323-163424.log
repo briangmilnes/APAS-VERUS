@@ -1,0 +1,46 @@
+error: postcondition not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:208:17
+    |
+208 |                 empty.spec_avltreesetsteph_wf();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+462 |             AVLTreeSetStEph { tree: ParamBST::new() }
+    |             ----------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStEph.rs:208:17
+    |
+208 |                 empty.spec_avltreesetsteph_wf();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view() =~= empty() ✔
+%return.spec_avltreesetsteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:214:17
+    |
+214 |                 tree.spec_avltreesetsteph_wf();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+468 |             AVLTreeSetStEph { tree: ParamBST::singleton(x) }
+    |             ------------------------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStEph.rs:214:17
+    |
+214 |                 tree.spec_avltreesetsteph_wf();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view() =~= empty().insert(old(x).view()) ✔
+%return.spec_avltreesetsteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 4338 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 50s

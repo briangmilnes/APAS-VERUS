@@ -1,0 +1,62 @@
+error[E0599]: no method named `view` found for associated type `<V as vstd::string::View>::V` in the current scope
+   --> src/Chap52/AdjTableGraphStEph.rs:553:93
+    |
+553 |                     forall|j: int| 0 <= j < i && #[trigger] self.adj@.dom().contains(seq@[j]@) ==>
+    |                                                                                      ---    ^ method not found in `<V as vstd::string::View>::V`
+    |                                                                                      |
+    |                                                                                      method `view` is available on `&Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<V>`
+
+error[E0599]: no method named `view` found for associated type `<V as vstd::string::View>::V` in the current scope
+   --> src/Chap52/AdjTableGraphStEph.rs:554:43
+    |
+554 |                         !self.adj@[seq@[j]@].contains(v@),
+    |                                    ---    ^ method not found in `<V as vstd::string::View>::V`
+    |                                    |
+    |                                    method `view` is available on `&Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<V>`
+
+error[E0599]: no method named `view` found for associated type `<V as vstd::string::View>::V` in the current scope
+   --> src/Chap52/AdjTableGraphStEph.rs:602:75
+    |
+602 | ...                   && #[trigger] self.adj@.dom().contains(seq@[j]@)
+    |                                                              ---    ^ method not found in `<V as vstd::string::View>::V`
+    |                                                              |
+    |                                                              method `view` is available on `&Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<V>`
+
+error[E0599]: no method named `view` found for associated type `<V as vstd::string::View>::V` in the current scope
+   --> src/Chap52/AdjTableGraphStEph.rs:603:55
+    |
+603 | ...                   implies !self.adj@[seq@[j]@].contains(v@)
+    |                                          ---    ^ method not found in `<V as vstd::string::View>::V`
+    |                                          |
+    |                                          method `view` is available on `&Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<V>`
+
+error[E0599]: no method named `view` found for associated type `<V as vstd::string::View>::V` in the current scope
+   --> src/Chap52/AdjTableGraphStEph.rs:607:43
+    |
+607 | ...                   if seq@[j]@ == u@ {
+    |                          ---    ^ method not found in `<V as vstd::string::View>::V`
+    |                          |
+    |                          method `view` is available on `&Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<V>`
+
+error[E0599]: no method named `view` found for associated type `<V as vstd::string::View>::V` in the current scope
+   --> src/Chap52/AdjTableGraphStEph.rs:611:61
+    |
+611 | ...                   assert(self.adj@[seq@[j]@] == pre_insert[seq@[j]@]);
+    |                                        ---    ^ method not found in `<V as vstd::string::View>::V`
+    |                                        |
+    |                                        method `view` is available on `&Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<V>`
+
+error[E0599]: no method named `view` found for associated type `<V as vstd::string::View>::V` in the current scope
+   --> src/Chap52/AdjTableGraphStEph.rs:611:85
+    |
+611 | ...                   assert(self.adj@[seq@[j]@] == pre_insert[seq@[j]@]);
+    |                                                                ---    ^ method not found in `<V as vstd::string::View>::V`
+    |                                                                |
+    |                                                                method `view` is available on `&Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<V>`
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 658MB, peak z3 RSS: 0MB, min free: 21465MB
+Sampled CPU Usage: rust_verify: 10s, z3 children: 0s

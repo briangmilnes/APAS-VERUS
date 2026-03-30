@@ -1,0 +1,69 @@
+error: postcondition not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:200:17
+    |
+200 |                 seq@.to_set() =~= self@,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+432 |             AVLTreeSeqStEphS::from_vec(v)
+    |             ----------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStEph.rs:200:17
+    |
+200 |                 seq@.to_set() =~= self@,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.spec_avltreeseqsteph_wf() ✔
+%return.view().to_set() =~= old(self).view() ✘
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        old(self).view().contains(%return.view().index(i)) ✔
+
+error: postcondition not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:207:17
+    |
+207 |                 empty.spec_avltreesetsteph_wf();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+438 |             AVLTreeSetStEph { tree: ParamBST::new() }
+    |             ----------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStEph.rs:207:17
+    |
+207 |                 empty.spec_avltreesetsteph_wf();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view() =~= empty() ✔
+%return.spec_avltreesetsteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:213:17
+    |
+213 |                 tree.spec_avltreesetsteph_wf();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+444 |             AVLTreeSetStEph { tree: ParamBST::singleton(x) }
+    |             ------------------------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStEph.rs:213:17
+    |
+213 |                 tree.spec_avltreesetsteph_wf();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view() =~= empty().insert(old(x).view()) ✔
+%return.spec_avltreesetsteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 4337 verified, 3 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 60s

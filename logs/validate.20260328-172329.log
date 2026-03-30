@@ -1,0 +1,150 @@
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:316:25
+    |
+316 |             let found = inner.find(k);
+    |                         ^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:468:62
+    |
+468 |             requires self.spec_orderedtablestper_find_pre(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                                                              -------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:468:62
+    |
+468 |             requires self.spec_orderedtablestper_find_pre(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                                                              ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+inner.spec_orderedtablestper_find_pre() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+obeys_feq_full() ✔
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:327:26
+    |
+327 |             let result = inner.insert(k, v);
+    |                          ^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:478:17
+    |
+478 |                 obeys_view_eq::<K>(),
+    |                 -------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:478:17
+    |
+478 |                 obeys_view_eq::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+inner.spec_orderedtablestper_wf() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+clip(nat, inner.view().dom().len() + 1) < UnsignedMax.Exec(usize::BITS) ✔
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:337:26
+    |
+337 |             let result = inner.insert_wf(k, v);
+    |                          ^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:489:17
+    |
+489 |                 obeys_view_eq::<K>(),
+    |                 -------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:489:17
+    |
+489 |                 obeys_view_eq::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+inner.spec_orderedtablestper_wf() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+clip(nat, inner.view().dom().len() + 1) < UnsignedMax.Exec(usize::BITS) ✔
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:347:26
+    |
+347 |             let result = inner.delete(k);
+    |                          ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:501:17
+    |
+501 |                 obeys_view_eq::<K>(),
+    |                 -------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:501:17
+    |
+501 |                 obeys_view_eq::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+inner.spec_orderedtablestper_wf() ✔
+obeys_feq_clone() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:357:26
+    |
+357 |             let result = inner.delete_wf(k);
+    |                          ^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:508:17
+    |
+508 |                 obeys_view_eq::<K>(),
+    |                 -------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:508:17
+    |
+508 |                 obeys_view_eq::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+inner.spec_orderedtablestper_wf() ✔
+obeys_feq_clone() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap43/OrderedTableMtPer.rs:419:21
+    |
+419 |                     result@.dom().subset_of(self@.dom()),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:428:26
+    |
+428 |                 result = result.insert(pair.0.clone(), new_v);
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:478:17
+    |
+478 |                 obeys_view_eq::<K>(),
+    |                 -------------------- failed precondition
+
+note: 
+
+tmp%.spec_orderedtablestper_wf() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+clip(nat, tmp%.view().dom().len() + 1) < UnsignedMax.Exec(usize::BITS) ✔
+
+verification results:: 2577 verified, 6 errors
+error: aborting due to 7 previous errors
+
+Elapsed: 26s
+Sampled Memory Usage: peak rust_verify RSS: 2408MB, peak z3 RSS: 357MB, min free: 19261MB
+Sampled CPU Usage: rust_verify: 40s, z3 children: 45s

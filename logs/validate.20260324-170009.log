@@ -1,0 +1,45 @@
+error[E0277]: the trait bound `<I as std::iter::IntoIterator>::IntoIter: vstd::pervasive::ForLoopGhostIteratorNew` is not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:149:9
+    |
+149 | /         for value in values {
+150 | |             let _ = tree.insert(value);
+151 | |         }
+    | |_________^ the trait `vstd::pervasive::ForLoopGhostIteratorNew` is not implemented for `<I as std::iter::IntoIterator>::IntoIter`
+    |
+help: consider further restricting the associated type
+    |
+145 |         I: IntoIterator<Item = T>, <I as std::iter::IntoIterator>::IntoIter: vstd::pervasive::ForLoopGhostIteratorNew
+    |                                    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `<I as std::iter::IntoIterator>::IntoIter: vstd::pervasive::ForLoopGhostIteratorNew` is not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:149:22
+    |
+149 |         for value in values {
+    |                      ^^^^^^ the trait `vstd::pervasive::ForLoopGhostIteratorNew` is not implemented for `<I as std::iter::IntoIterator>::IntoIter`
+    |
+help: consider further restricting the associated type
+    |
+145 |         I: IntoIterator<Item = T>, <I as std::iter::IntoIterator>::IntoIter: vstd::pervasive::ForLoopGhostIteratorNew
+    |                                    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: can't compare `&T` with `T`
+   --> src/Chap37/BSTSetPlainMtEph.rs:201:31
+    |
+201 |                 .filter(|x| x != target)
+    |                               ^^ no implementation for `&T == T`
+    |
+    = help: the trait `std::cmp::PartialEq<T>` is not implemented for `&T`
+    = note: required for `&&T` to implement `std::cmp::PartialEq<&T>`
+help: consider dereferencing here
+    |
+201 |                 .filter(|x| *x != target)
+    |                             +
+help: consider introducing a `where` clause, but there might be an alternative better way to express this requirement
+    |
+162 |     impl<T: StTInMtT + Ord + TotalOrder> BSTSetPlainMtEphTrait<T> for BSTSetPlainMtEph<T> where &T: std::cmp::PartialEq<T> {
+    |                                                                                           ++++++++++++++++++++++++++++++++
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0277`.
+Elapsed: 13s

@@ -1,0 +1,344 @@
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:131:17
+    |
+131 |                 assert forall|j: int| 0 <= j < i as int + 1 implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:132:51
+    |
+132 |                     vertex_to_index@.contains_key(vertices_vec@[j]@) &&
+    |                                                   ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:150:21
+    |
+150 |                     exists|j: int| 0 <= j < i as int + 1 && vertices_vec@[j]@ == v_view by {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:150:61
+    |
+150 |                     exists|j: int| 0 <= j < i as int + 1 && vertices_vec@[j]@ == v_view by {
+    |                                                             ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:124:21
+    |
+124 |                     exists|j: int| 0 <= j < i as int && vertices_vec@[j]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:124:57
+    |
+124 |                     exists|j: int| 0 <= j < i as int && vertices_vec@[j]@ == v_view,
+    |                                                         ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:192:17
+    |
+192 |                 assert forall|jj: int| 0 <= jj < j as int + 1 implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:193:46
+    |
+193 |                     coin_flips@.contains_key(vertices_vec@[jj]@) by {
+    |                                              ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:287:29
+    |
+287 | ...                   assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:288:34
+    |
+288 | ...                   (th_edges@[s].0 as usize) < nv &&
+    |                        ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:329:29
+    |
+329 | ...                   assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:330:34
+    |
+330 | ...                   (th_edges@[s].0 as usize) < nv &&
+    |                        ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:358:17
+    |
+358 |                 assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:359:22
+    |
+359 |                     (th_edges@[s].0 as usize) < nv &&
+    |                      ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:231:21
+    |
+231 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:231:60
+    |
+231 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                                                            ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:378:13
+    |
+378 |             assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |             ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:379:18
+    |
+379 |                 (th_edges@[s].0 as usize) < nv &&
+    |                  ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:400:17
+    |
+400 |                 forall|j2: int| 0 <= j2 < m as int ==> p_vec@[j2]@ == vertices_vec@[j2]@,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:400:56
+    |
+400 |                 forall|j2: int| 0 <= j2 < m as int ==> p_vec@[j2]@ == vertices_vec@[j2]@,
+    |                                                        ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:400:71
+    |
+400 |                 forall|j2: int| 0 <= j2 < m as int ==> p_vec@[j2]@ == vertices_vec@[j2]@,
+    |                                                                       ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:406:21
+    |
+406 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:406:60
+    |
+406 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                                                            ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:503:21
+    |
+503 |                     assert forall|j2: int| 0 <= j2 < nv as int implies
+    |                     ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:504:50
+    |
+504 |                         coin_flips@.contains_key(vertices_vec@[j2]@) &&
+    |                                                  ^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:506:26
+    |
+506 |                          p_vec@[j2]@ == vertices_vec@[j2]@) by {
+    |                          ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:513:21
+    |
+513 |                     assert forall|j2: int|
+    |                     ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:514:49
+    |
+514 |                         (0 <= j2 < nv as int && p_vec@[j2]@ != vertices_vec@[j2]@) implies
+    |                                                 ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:514:64
+    |
+514 |                         (0 <= j2 < nv as int && p_vec@[j2]@ != vertices_vec@[j2]@) implies
+    |                                                                ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:540:17
+    |
+540 |                 assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:541:22
+    |
+541 |                     (th_edges@[s].0 as usize) < nv &&
+    |                      ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:464:17
+    |
+464 | /                 forall|j2: int| 0 <= j2 < nv as int ==>
+465 | |                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+466 | |                     vertex_to_index@[vertices_vec@[j2]@] as usize == j2,
+    | |_______________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:465:51
+    |
+465 |                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+    |                                                   ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:468:21
+    |
+468 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:468:60
+    |
+468 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                                                            ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:615:17
+    |
+615 |                 assert forall|j2: int| 0 <= j2 < q as int implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:617:60
+    |
+617 |                     partition_map@[vertices_vec@[j2]@]@ == p_vec@[j2]@ by {
+    |                                                            ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:632:21
+    |
+632 |                     exists|j2: int| 0 <= j2 < q as int + 1 && vertices_vec@[j2]@ == v_view by {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:632:63
+    |
+632 |                     exists|j2: int| 0 <= j2 < q as int + 1 && vertices_vec@[j2]@ == v_view by {
+    |                                                               ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:653:21
+    |
+653 |                     assert forall|j2: int|
+    |                     ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:654:48
+    |
+654 |                         (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+    |                                                ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:654:63
+    |
+654 |                         (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+    |                                                               ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:667:21
+    |
+667 |                     assert forall|j2: int|
+    |                     ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:668:48
+    |
+668 |                         (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+    |                                                ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:668:63
+    |
+668 |                         (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+    |                                                               ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:583:17
+    |
+583 | /                 forall|j2: int| 0 <= j2 < nv as int ==>
+584 | |                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+585 | |                     vertex_to_index@[vertices_vec@[j2]@] as usize == j2,
+    | |_______________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:584:51
+    |
+584 |                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+    |                                                   ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:587:21
+    |
+587 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:587:60
+    |
+587 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                                                            ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:598:21
+    |
+598 |                     exists|j2: int| 0 <= j2 < q as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:598:59
+    |
+598 |                     exists|j2: int| 0 <= j2 < q as int && vertices_vec@[j2]@ == v_view,
+    |                                                           ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:695:25
+    |
+695 |                 let j = choose|j: int| 0 <= j < nv as int && vertices_vec@[j]@ == v_view;
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:695:62
+    |
+695 |                 let j = choose|j: int| 0 <= j < nv as int && vertices_vec@[j]@ == v_view;
+    |                                                              ^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap62/StarPartitionMtEph.rs:695:25
+    |
+695 |                 let j = choose|j: int| 0 <= j < nv as int && vertices_vec@[j]@ == v_view;
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 5426 verified, 0 errors
+Elapsed: 133s
+Sampled Memory Usage: peak rust_verify RSS: 9967MB, peak z3 RSS: 2769MB, min free: 10021MB
+Sampled CPU Usage: rust_verify: 225s, z3 children: 189s

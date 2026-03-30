@@ -1,0 +1,28 @@
+error: invariant not satisfied before loop
+   --> src/Chap65/KruskalStEph.rs:334:17
+    |
+334 |                 uf.spec_unionfindsteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:982:5
+    |
+982 | /     fn union_merge<V: StT + Hash>(
+983 | |         uf: &mut UnionFindStEph<V>,
+984 | |         root_u: V,
+985 | |         root_v: V,
+986 | |     )
+    | |_____^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap65/UnionFindStEph.rs:1226:9
+     |
+1226 |         fn union(&mut self, u: &V, v: &V) {
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 2403 verified, 3 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 143s
+Sampled Memory Usage: peak rust_verify RSS: 7093MB, peak z3 RSS: 9092MB, min free: 11262MB
+Sampled CPU Usage: rust_verify: 123s, z3 children: 190s

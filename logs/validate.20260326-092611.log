@@ -1,0 +1,56 @@
+error: assertion failed
+   --> src/Chap55/DFSStEph.rs:126:16
+    |
+126 |         assert(spec_num_false(visited@) < spec_num_false(old(visited)@));
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap55/DFSStEph.rs:130:16
+    |
+130 |         assert(spec_num_false(visited@) == spec_num_false(old(visited)@) - 1);
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap55/DFSStEph.rs:170:13
+    |
+ 71 |             vertex < old(visited)@.len(),
+    |             ---------------------------- failed precondition
+...
+170 |             dfs_recursive(graph, visited, reachable, neighbor);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+neighbor < visited.view().len() ✔
+visited.view().len() == graph.view().len() ✔
+spec_toposortsteph_wf(graph) ✔
+reachable.spec_avltreesetsteph_wf() ✔
+forall |v|
+    reachable.view().contains(v) ==>
+        v < graph.view().len() ✔
+graph.view().len() < UnsignedMax.Exec(usize::BITS) ✔
+clip(nat, reachable.view().len() + spec_num_false(visited.view())) <= graph.view().len() ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+note: recommendation not met
+   --> src/Chap55/DFSStEph.rs:160:48
+    |
+160 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 4686 verified, 2 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 61s
+Sampled Memory Usage: peak rust_verify RSS: 6993MB, peak z3 RSS: 485MB, min free: 17498MB
+Sampled CPU Usage: rust_verify: 148s, z3 children: 110s

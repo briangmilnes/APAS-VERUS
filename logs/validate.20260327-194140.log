@@ -1,0 +1,23 @@
+error: precondition not satisfied
+   --> src/Chap59/JohnsonMtEphF64.rs:127:57
+    |
+127 |         let get_dist = |i: usize| -> (d: WrappedF64) { *bellman_ford_result.distances.nth(i) };
+    |                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:207:22
+    |
+207 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+i < tmp%.spec_len() 
+
+verification results:: 2558 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 33s
+Sampled Memory Usage: peak rust_verify RSS: 5780MB, peak z3 RSS: 489MB, min free: 15248MB
+Sampled CPU Usage: rust_verify: 91s, z3 children: 77s

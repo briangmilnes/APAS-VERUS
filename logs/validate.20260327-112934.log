@@ -1,0 +1,51 @@
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1125:13
+     |
+1125 |             reveal(spec_uf_wf);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1326:21
+     |
+1326 |                     reveal(spec_uf_wf);
+     |                     ^^^^^^
+
+error: `core::cmp::impls::impl&%9::ne` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap61/VertexMatchingStEph.rs:138:24
+    |
+138 |                     if adj_edge != edge {
+    |                        ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap61/VertexMatchingMtEph.rs:223:16
+    |
+223 |             if adj_edge != edge {
+    |                ----------------
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification<'a, 'b, A, B> [<&'b A as std::cmp::PartialEq<&B>>::ne] (_0: &&'b A, _1: &&B) -> bool
+            where
+            A: std::cmp::PartialEq<B> + ?Sized,
+            B: ?Sized,;
+
+error: cannot use function `lib::Types::Types::Edge::clone` which is ignored because it is either declared outside the verus! macro or it is marked as `external`.
+   --> src/Chap61/VertexMatchingStEph.rs:69:41
+    |
+ 69 |                 let _ = matching.insert(edge.clone());
+    |                                         ^^^^^^^^^^^^
+...
+104 |             edge_coins.insert(edge.clone(), random_bool_seeded(&mut rng));
+    |                               ------------
+...
+153 |                     let _ = matching.insert(edge.clone());
+    |                                             ------------
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification<V> [<crate::Types::Types::Edge<V> as std::clone::Clone>::crate::clone] (_0: &crate::Types::Types::Edge<V>) -> crate::Types::Types::Edge<V>
+            where
+            V: crate::Types::Types::StT,;
+
+error: aborting due to 2 previous errors; 2 warnings emitted
+
+Elapsed: 24s
+Sampled Memory Usage: peak rust_verify RSS: 2234MB, peak z3 RSS: 0MB, min free: 21105MB
+Sampled CPU Usage: rust_verify: 22s, z3 children: 0s

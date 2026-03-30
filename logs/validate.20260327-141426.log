@@ -1,0 +1,29 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStEph.rs:43:14
+   |
+43 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStPer.rs:38:14
+   |
+38 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: cannot call function `lib::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPerTrait::empty` with mode exec
+   --> src/Chap52/AdjTableGraphStPer.rs:213:52
+    |
+213 | ...                   assert(new_adj@[v@] == AVLTreeSetStPer::<V>::empty()@);
+    |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error; 3 warnings emitted
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 1431MB, peak z3 RSS: 0MB, min free: 21203MB
+Sampled CPU Usage: rust_verify: 10s, z3 children: 0s

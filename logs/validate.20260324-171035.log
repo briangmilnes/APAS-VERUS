@@ -1,0 +1,79 @@
+error[E0310]: the parameter type `T` may not live long enough
+   --> src/ParaPairs.rs:105:9
+    |
+105 |           $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |           |
+    |           the parameter type `T` must be valid for the static lifetime...
+    |           ...so that the type `T` will meet its required lifetime bounds
+    |
+   ::: src/Chap37/BSTSetPlainMtEph.rs:253:49
+    |
+253 |               let Pair(left_union, right_union) = crate::ParaPair!(
+    |  _________________________________________________-
+254 | |                 move || self_left.union(&other_left),
+255 | |                 move || self_right.union(&other_right)
+256 | |             );
+    | |_____________- in this macro invocation
+    |
+    = note: this error originates in the macro `crate::ParaPair` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider adding an explicit lifetime bound
+   --> src/Chap37/BSTSetPlainMtEph.rs:184:40
+    |
+184 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> BSTSetPlainMtEphTrait<T> for BSTSetPlainMtEph<T> {
+    |                                         +++++++++
+
+error[E0310]: the parameter type `T` may not live long enough
+   --> src/ParaPairs.rs:105:9
+    |
+105 |           $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |           |
+    |           the parameter type `T` must be valid for the static lifetime...
+    |           ...so that the type `T` will meet its required lifetime bounds
+    |
+   ::: src/Chap37/BSTSetPlainMtEph.rs:281:49
+    |
+281 |               let Pair(left_inter, right_inter) = crate::ParaPair!(
+    |  _________________________________________________-
+282 | |                 move || self_left.intersection(&other_left),
+283 | |                 move || self_right.intersection(&other_right)
+284 | |             );
+    | |_____________- in this macro invocation
+    |
+    = note: this error originates in the macro `crate::ParaPair` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider adding an explicit lifetime bound
+   --> src/Chap37/BSTSetPlainMtEph.rs:184:40
+    |
+184 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> BSTSetPlainMtEphTrait<T> for BSTSetPlainMtEph<T> {
+    |                                         +++++++++
+
+error[E0310]: the parameter type `T` may not live long enough
+   --> src/ParaPairs.rs:105:9
+    |
+105 |           $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |           |
+    |           the parameter type `T` must be valid for the static lifetime...
+    |           ...so that the type `T` will meet its required lifetime bounds
+    |
+   ::: src/Chap37/BSTSetPlainMtEph.rs:312:47
+    |
+312 |               let Pair(left_diff, right_diff) = crate::ParaPair!(
+    |  _______________________________________________-
+313 | |                 move || self_left.difference(&other_left),
+314 | |                 move || self_right.difference(&other_right)
+315 | |             );
+    | |_____________- in this macro invocation
+    |
+    = note: this error originates in the macro `crate::ParaPair` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider adding an explicit lifetime bound
+   --> src/Chap37/BSTSetPlainMtEph.rs:184:40
+    |
+184 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> BSTSetPlainMtEphTrait<T> for BSTSetPlainMtEph<T> {
+    |                                         +++++++++
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0310`.
+Elapsed: 25s

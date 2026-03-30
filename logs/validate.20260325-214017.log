@@ -1,0 +1,53 @@
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:604:13
+    |
+604 |             uf.rank@[w] < uf.elements@.len()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+uf.rank.view().index(w) < uf.elements.view().len() 
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap65/UnionFindStEph.rs:788:33
+    |
+788 |             uf.rank.insert(ru2, rank_u + 1);
+    |                                 ^^^^^^^^^^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:716:5
+    |
+716 | /     fn union_merge<V: StT + Hash>(
+717 | |         uf: &mut UnionFindStEph<V>,
+718 | |         root_u: V,
+719 | |         root_v: V,
+720 | |     )
+    | |_____^
+
+note: diagnostics via expansion
+   --> src/Chap65/UnionFindStEph.rs:788:33
+    |
+788 |             uf.rank.insert(ru2, rank_u + 1);
+    |                                 ^^^^^^^^^^
+
+note: 
+
+usize::BITS == 32 ==>
+    0 <= rank_u + 1 ✔
+    rank_u + 1 < 4294967296 ✘
+usize::BITS == 64 ==>
+    0 <= rank_u + 1 ✔
+    rank_u + 1 < 18446744073709551616 ✘
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap65/UnionFindStEph.rs:1008:9
+     |
+1008 |         fn union(&mut self, u: &V, v: &V) {
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 664 verified, 3 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 148s

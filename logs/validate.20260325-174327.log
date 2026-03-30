@@ -1,0 +1,87 @@
+error: function is marked `open` but not marked `pub`; for the body of a function to be visible, the function symbol must also be visible
+  --> src/Chap65/UnionFindStEph.rs:71:15
+   |
+71 |     open spec fn spec_key_model<V: StT + Hash>() -> bool {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function is marked `open` but not marked `pub`; for the body of a function to be visible, the function symbol must also be visible
+  --> src/Chap65/UnionFindStEph.rs:75:15
+   |
+75 |     open spec fn spec_feq_full<V: StT + Hash>() -> bool {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function is marked `open` but not marked `pub`; for the body of a function to be visible, the function symbol must also be visible
+  --> src/Chap65/UnionFindStEph.rs:79:15
+   |
+79 |     open spec fn spec_parent_rank_same_dom<V: StT + Hash>(uf: &UnionFindStEph<V>) -> bool {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function is marked `open` but not marked `pub`; for the body of a function to be visible, the function symbol must also be visible
+  --> src/Chap65/UnionFindStEph.rs:83:15
+   |
+83 |     open spec fn spec_roots_parent_same_dom<V: StT + Hash>(uf: &UnionFindStEph<V>) -> bool {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function is marked `open` but not marked `pub`; for the body of a function to be visible, the function symbol must also be visible
+  --> src/Chap65/UnionFindStEph.rs:87:15
+   |
+87 |     open spec fn spec_roots_idempotent<V: StT + Hash>(uf: &UnionFindStEph<V>) -> bool {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function is marked `open` but not marked `pub`; for the body of a function to be visible, the function symbol must also be visible
+  --> src/Chap65/UnionFindStEph.rs:94:15
+   |
+94 |     open spec fn spec_parent_closed<V: StT + Hash>(uf: &UnionFindStEph<V>) -> bool {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function is marked `open` but not marked `pub`; for the body of a function to be visible, the function symbol must also be visible
+  --> src/Chap65/UnionFindStEph.rs:99:15
+   |
+99 |     open spec fn spec_roots_in_dom<V: StT + Hash>(uf: &UnionFindStEph<V>) -> bool {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function is marked `open` but not marked `pub`; for the body of a function to be visible, the function symbol must also be visible
+   --> src/Chap65/UnionFindStEph.rs:104:15
+    |
+104 |     open spec fn spec_elements_forward<V: StT + Hash>(uf: &UnionFindStEph<V>) -> bool {
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function is marked `open` but not marked `pub`; for the body of a function to be visible, the function symbol must also be visible
+   --> src/Chap65/UnionFindStEph.rs:109:15
+    |
+109 |     open spec fn spec_elements_backward<V: StT + Hash>(uf: &UnionFindStEph<V>) -> bool {
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function is marked `open` but not marked `pub`; for the body of a function to be visible, the function symbol must also be visible
+   --> src/Chap65/UnionFindStEph.rs:114:15
+    |
+114 |     open spec fn spec_elements_distinct<V: StT + Hash>(uf: &UnionFindStEph<V>) -> bool {
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function is marked `open` but not marked `pub`; for the body of a function to be visible, the function symbol must also be visible
+   --> src/Chap65/UnionFindStEph.rs:122:15
+    |
+122 |     open spec fn spec_self_parent_is_root<V: StT + Hash>(uf: &UnionFindStEph<V>) -> bool {
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function is marked `open` but not marked `pub`; for the body of a function to be visible, the function symbol must also be visible
+   --> src/Chap65/UnionFindStEph.rs:127:15
+    |
+127 |     open spec fn spec_parent_preserves_root<V: StT + Hash>(uf: &UnionFindStEph<V>) -> bool {
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function is marked `open` but not marked `pub`; for the body of a function to be visible, the function symbol must also be visible
+   --> src/Chap65/UnionFindStEph.rs:132:15
+    |
+132 |     open spec fn spec_rank_increases<V: StT + Hash>(uf: &UnionFindStEph<V>) -> bool {
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function is marked `open` but not marked `pub`; for the body of a function to be visible, the function symbol must also be visible
+   --> src/Chap65/UnionFindStEph.rs:138:15
+    |
+138 |     open spec fn spec_rank_bounded<V: StT + Hash>(uf: &UnionFindStEph<V>) -> bool {
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 14 previous errors
+
+Elapsed: 24s

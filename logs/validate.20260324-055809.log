@@ -1,0 +1,204 @@
+error: precondition not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:2768:21
+     |
+1511 |             spec_param_wf_link(&left.root), spec_param_wf_link(&right.root),
+     |             ------------------------------ failed precondition
+...
+2768 |                     join_with_priority_st(left, key, priority, right)
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+    --> src/Chap39/BSTTreapStEph.rs:119:21
+     |
+ 119 |                 &&& spec_param_wf_link(&node.left)
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 120 |                 &&& spec_param_wf_link(&node.right)
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 121 |                 &&& node.size >= 1
+     |                     ^^^^^^^^^^^^^^
+ 122 |                 &&& lv.finite() && rv.finite()
+     |                     ^^^^^^^^^^^
+...
+1511 |             spec_param_wf_link(&left.root), spec_param_wf_link(&right.root),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+obeys_cmp_spec() ✔
+view_ord_consistent_st() ✔
+left.view().finite() ✔
+right.view().finite() ✔
+left.view().disjoint(right.view()) ✔
+!(left.view().contains(key.view())) ✔
+!(right.view().contains(key.view())) ✔
+clip(nat, left.view().len() + right.view().len()) < UnsignedMax.Exec(usize::BITS) ✔
+forall |t|
+    left.view().contains(t.view()) ==>
+        t.cmp_spec(key) == Less ✔
+forall |t|
+    right.view().contains(t.view()) ==>
+        t.cmp_spec(key) == Greater ✔
+spec_param_wf_link(left.root) ✘
+|   let tmp%% = left.root;
+|       tmp%% is None ==>
+|           true ✔
+|       !(tmp%% is None) ==>
+|           let node = tmp%%.0;
+|               let lv = spec_set_view_link(node.left);
+|                   let rv = spec_set_view_link(node.right);
+|                       let kv = node.key.view();
+|                           spec_param_wf_link(node.left) ✘
+|                               reached fuel limit for recursion
+|                           spec_param_wf_link(node.right) ✘
+|                               reached fuel limit for recursion
+|                           node.size >= 1 ✘
+|                           lv.finite() ✘
+|                               function is uninterpreted
+|                           rv.finite() 
+|                           lv.disjoint(rv) 
+|                           !(lv.contains(kv)) 
+|                           !(rv.contains(kv)) 
+|                           clip(nat, lv.len() + rv.len()) < UnsignedMax.Exec(usize::BITS) 
+|                           node.size == clip(nat, clip(nat, lv.len() + rv.len()) + 1) 
+|                           forall |t|
+|                               lv.contains(t.view()) ==>
+|                                   t.cmp_spec(node.key) == Less 
+|                           forall |t|
+|                               rv.contains(t.view()) ==>
+|                                   t.cmp_spec(node.key) == Greater 
++---
+spec_param_wf_link(right.root) 
+
+error: postcondition not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:1598:13
+     |
+1598 |               parts.1 == tree@.contains(key@),
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1609 | /         match expose_to_parts_st(tree) {
+1610 | |             | None => (BSTTreapStEph { root: None }, false, BSTTreapStEph { root: None }),
+1611 | |             | Some((left, root_key, root_pri, right)) => {
+1612 | |                 proof {
+...    |
+1745 | |         }
+     | |_________- at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:1600:13
+     |
+1600 |               parts.0@.union(parts.2@) =~= tree@.remove(key@),
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1609 | /         match expose_to_parts_st(tree) {
+1610 | |             | None => (BSTTreapStEph { root: None }, false, BSTTreapStEph { root: None }),
+1611 | |             | Some((left, root_key, root_pri, right)) => {
+1612 | |                 proof {
+...    |
+1745 | |         }
+     | |_________- at the end of the function body
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1645:36
+     |
+1645 | ...                   assert(!rv.contains(key@));
+     |                              ^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1646:46
+     |
+1646 |   ...                   assert forall|x| #[trigger] (llv.union(rebuilt@)).contains(x)
+     |  ________________________________________^
+1647 | | ...                       <==> tree@.remove(key@).contains(x) by {
+     | |_____________________________________________________________^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1700:36
+     |
+1700 | ...                   assert(!lv.contains(key@));
+     |                              ^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1701:46
+     |
+1701 |   ...                   assert forall|x| #[trigger] (rebuilt@.union(rrv)).contains(x)
+     |  ________________________________________^
+1702 | | ...                       <==> tree@.remove(key@).contains(x) by {
+     | |_____________________________________________________________^ assertion failed
+
+error: precondition not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:1734:33
+     |
+ 220 |             b.cmp_spec(&c) == Equal,
+     |             ----------------------- failed precondition
+...
+1734 |                                 lemma_cmp_equal_congruent_right_st(t, kval, rk);
+     |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:1738:33
+     |
+ 220 |             b.cmp_spec(&c) == Equal,
+     |             ----------------------- failed precondition
+...
+1738 |                                 lemma_cmp_equal_congruent_right_st(t, kval, rk);
+     |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+!(rv.contains(key.view())) 
+    function is uninterpreted
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1907:40
+     |
+1907 | ...                   assert(crv.contains(t@));
+     |                              ^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1908:40
+     |
+1908 | ...                   assert(t.cmp_spec(&r_key) == Less);
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1881:40
+     |
+1881 | ...                   assert(rlv.contains(t@));
+     |                              ^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:1882:40
+     |
+1882 | ...                   assert(t.cmp_spec(&t) == Less);
+     |                              ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+crv.contains(t.view()) 
+    function is uninterpreted
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap39/BSTTreapStEph.rs:1880:60
+     |
+1880 | ...                   let ghost t = choose|t: T| #[trigger] t@ == x && slv.contains(t@);
+     |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap39/BSTTreapStEph.rs:1906:60
+     |
+1906 | ...                   let ghost t = choose|t: T| #[trigger] t@ == x && clv.contains(t@);
+     |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:2917:13
+     |
+1758 |             spec_param_wf_link(&left.root), spec_param_wf_link(&right.root),
+     |                                             ------------------------------- failed precondition
+...
+2917 |             join_pair_inner_st(cloned, other)
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+  

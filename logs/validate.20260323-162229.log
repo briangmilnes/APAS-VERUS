@@ -1,0 +1,13 @@
+error: Type parameter V of lib::Chap53::PQMinStEph::PQMinStEph::PQMinResult must be declared #[verifier::reject_recursive_types] to be used in a non-positive position
+  --> src/Chap53/PQMinStEph.rs:21:5
+   |
+21 | /     pub struct PQMinResult<V: StT + Ord, P: StT + Ord> {
+22 | |         pub visited: AVLTreeSetStEph<V>,
+23 | |         pub priorities: AVLTreeSetStEph<Pair<V, P>>,
+24 | |         pub parent: Option<AVLTreeSetStEph<Pair<V, V>>>,
+25 | |     }
+   | |_____^
+
+error: aborting due to 1 previous error
+
+Elapsed: 23s

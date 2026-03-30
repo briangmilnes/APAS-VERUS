@@ -1,0 +1,533 @@
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:435:37
+    |
+420 |     proof fn lemma_union_wf_parent<V: StT + Hash>(
+    |                                    - type parameter from outer item
+...
+435 |         reveal(spec_parent_closed::<V>);
+    |         ------                      ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+435 |         reveal<V>(spec_parent_closed::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:436:43
+    |
+420 |     proof fn lemma_union_wf_parent<V: StT + Hash>(
+    |                                    - type parameter from outer item
+...
+436 |         reveal(spec_self_parent_is_root::<V>);
+    |         ------                            ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+436 |         reveal<V>(spec_self_parent_is_root::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:437:45
+    |
+420 |     proof fn lemma_union_wf_parent<V: StT + Hash>(
+    |                                    - type parameter from outer item
+...
+437 |         reveal(spec_parent_preserves_root::<V>);
+    |         ------                              ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+437 |         reveal<V>(spec_parent_preserves_root::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:512:38
+    |
+498 |     proof fn lemma_union_wf_ordering<V: StT + Hash>(
+    |                                      - type parameter from outer item
+...
+512 |         reveal(spec_rank_increases::<V>);
+    |         ------                       ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+512 |         reveal<V>(spec_rank_increases::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:513:36
+    |
+498 |     proof fn lemma_union_wf_ordering<V: StT + Hash>(
+    |                                      - type parameter from outer item
+...
+513 |         reveal(spec_rank_bounded::<V>);
+    |         ------                     ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+513 |         reveal<V>(spec_rank_bounded::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:514:40
+    |
+498 |     proof fn lemma_union_wf_ordering<V: StT + Hash>(
+    |                                      - type parameter from outer item
+...
+514 |         reveal(spec_roots_idempotent::<V>);
+    |         ------                         ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+514 |         reveal<V>(spec_roots_idempotent::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:633:40
+    |
+615 |     proof fn lemma_decompose_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |                                 - type parameter from outer item
+...
+633 |         reveal(spec_roots_idempotent::<V>);
+    |         ------                         ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+633 |         reveal<V>(spec_roots_idempotent::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:634:37
+    |
+615 |     proof fn lemma_decompose_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |                                 - type parameter from outer item
+...
+634 |         reveal(spec_parent_closed::<V>);
+    |         ------                      ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+634 |         reveal<V>(spec_parent_closed::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:635:36
+    |
+615 |     proof fn lemma_decompose_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |                                 - type parameter from outer item
+...
+635 |         reveal(spec_roots_in_dom::<V>);
+    |         ------                     ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+635 |         reveal<V>(spec_roots_in_dom::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:636:40
+    |
+615 |     proof fn lemma_decompose_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |                                 - type parameter from outer item
+...
+636 |         reveal(spec_elements_forward::<V>);
+    |         ------                         ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+636 |         reveal<V>(spec_elements_forward::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:637:41
+    |
+615 |     proof fn lemma_decompose_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |                                 - type parameter from outer item
+...
+637 |         reveal(spec_elements_backward::<V>);
+    |         ------                          ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+637 |         reveal<V>(spec_elements_backward::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:638:41
+    |
+615 |     proof fn lemma_decompose_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |                                 - type parameter from outer item
+...
+638 |         reveal(spec_elements_distinct::<V>);
+    |         ------                          ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+638 |         reveal<V>(spec_elements_distinct::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:639:43
+    |
+615 |     proof fn lemma_decompose_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |                                 - type parameter from outer item
+...
+639 |         reveal(spec_self_parent_is_root::<V>);
+    |         ------                            ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+639 |         reveal<V>(spec_self_parent_is_root::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:640:45
+    |
+615 |     proof fn lemma_decompose_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |                                 - type parameter from outer item
+...
+640 |         reveal(spec_parent_preserves_root::<V>);
+    |         ------                              ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+640 |         reveal<V>(spec_parent_preserves_root::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:641:38
+    |
+615 |     proof fn lemma_decompose_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |                                 - type parameter from outer item
+...
+641 |         reveal(spec_rank_increases::<V>);
+    |         ------                       ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+641 |         reveal<V>(spec_rank_increases::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:642:36
+    |
+615 |     proof fn lemma_decompose_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |                                 - type parameter from outer item
+...
+642 |         reveal(spec_rank_bounded::<V>);
+    |         ------                     ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+642 |         reveal<V>(spec_rank_bounded::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:665:40
+    |
+646 |     proof fn lemma_assemble_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |                                - type parameter from outer item
+...
+665 |         reveal(spec_roots_idempotent::<V>);
+    |         ------                         ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+665 |         reveal<V>(spec_roots_idempotent::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:666:37
+    |
+646 |     proof fn lemma_assemble_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |                                - type parameter from outer item
+...
+666 |         reveal(spec_parent_closed::<V>);
+    |         ------                      ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+666 |         reveal<V>(spec_parent_closed::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:667:36
+    |
+646 |     proof fn lemma_assemble_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |                                - type parameter from outer item
+...
+667 |         reveal(spec_roots_in_dom::<V>);
+    |         ------                     ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+667 |         reveal<V>(spec_roots_in_dom::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:668:40
+    |
+646 |     proof fn lemma_assemble_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |                                - type parameter from outer item
+...
+668 |         reveal(spec_elements_forward::<V>);
+    |         ------                         ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+668 |         reveal<V>(spec_elements_forward::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:669:41
+    |
+646 |     proof fn lemma_assemble_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |                                - type parameter from outer item
+...
+669 |         reveal(spec_elements_backward::<V>);
+    |         ------                          ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+669 |         reveal<V>(spec_elements_backward::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:670:41
+    |
+646 |     proof fn lemma_assemble_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |                                - type parameter from outer item
+...
+670 |         reveal(spec_elements_distinct::<V>);
+    |         ------                          ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+670 |         reveal<V>(spec_elements_distinct::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:671:43
+    |
+646 |     proof fn lemma_assemble_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |                                - type parameter from outer item
+...
+671 |         reveal(spec_self_parent_is_root::<V>);
+    |         ------                            ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+671 |         reveal<V>(spec_self_parent_is_root::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:672:45
+    |
+646 |     proof fn lemma_assemble_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |                                - type parameter from outer item
+...
+672 |         reveal(spec_parent_preserves_root::<V>);
+    |         ------                              ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+672 |         reveal<V>(spec_parent_preserves_root::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:673:38
+    |
+646 |     proof fn lemma_assemble_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |                                - type parameter from outer item
+...
+673 |         reveal(spec_rank_increases::<V>);
+    |         ------                       ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+673 |         reveal<V>(spec_rank_increases::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:674:36
+    |
+646 |     proof fn lemma_assemble_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |                                - type parameter from outer item
+...
+674 |         reveal(spec_rank_bounded::<V>);
+    |         ------                     ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+674 |         reveal<V>(spec_rank_bounded::<V>);
+    |               +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:850:44
+    |
+746 |     fn union_merge<V: StT + Hash>(
+    |                    - type parameter from outer item
+...
+850 |             reveal(spec_roots_idempotent::<V>);
+    |             ------                         ^ use of generic parameter from outer item
+    |             |
+    |             generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+850 |             reveal<V>(spec_roots_idempotent::<V>);
+    |                   +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:851:40
+    |
+746 |     fn union_merge<V: StT + Hash>(
+    |                    - type parameter from outer item
+...
+851 |             reveal(spec_roots_in_dom::<V>);
+    |             ------                     ^ use of generic parameter from outer item
+    |             |
+    |             generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+851 |             reveal<V>(spec_roots_in_dom::<V>);
+    |                   +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:852:44
+    |
+746 |     fn union_merge<V: StT + Hash>(
+    |                    - type parameter from outer item
+...
+852 |             reveal(spec_elements_forward::<V>);
+    |             ------                         ^ use of generic parameter from outer item
+    |             |
+    |             generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+852 |             reveal<V>(spec_elements_forward::<V>);
+    |                   +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:853:45
+    |
+746 |     fn union_merge<V: StT + Hash>(
+    |                    - type parameter from outer item
+...
+853 |             reveal(spec_elements_backward::<V>);
+    |             ------                          ^ use of generic parameter from outer item
+    |             |
+    |             generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+853 |             reveal<V>(spec_elements_backward::<V>);
+    |                   +++
+
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap65/UnionFindStEph.rs:854:45
+    |
+746 |     fn union_merge<V: StT + Hash>(
+    |                    - type parameter from outer item
+...
+854 |             reveal(spec_elements_distinct::<V>);
+    |             ------                          ^ use of generic parameter from outer item
+    |             |
+    |             generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+854 |             reveal<V>(spec_elements_distinct::<V>);
+    |                   +++
+
+error: aborting due to 31 previous errors
+
+For more information about this error, try `rustc --explain E0401`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 3013MB, peak z3 RSS: 4779MB, min free: 15604MB
+Sampled CPU Usage: rust_verify: 48s, z3 children: 45s

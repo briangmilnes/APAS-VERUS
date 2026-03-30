@@ -1,0 +1,54 @@
+error[E0599]: no method named `view` found for struct `vstd::seq::Seq<A>` in the current scope
+  --> src/Chap55/DFSStEph.rs:83:55
+   |
+83 |                 neighbors_len == graph@[vertex as int]@.len(),
+   |                                  -----                ^ method not found in `vstd::seq::Seq<usize>`
+   |                                  |
+   |                                  method `view` is available on `&Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<usize>>`
+
+error[E0599]: no method named `view` found for struct `vstd::seq::Seq<A>` in the current scope
+  --> src/Chap55/DFSStEph.rs:93:41
+   |
+93 |             assert(graph@[vertex as int]@[i as int] < graph@.len());
+   |                    -----                ^ method not found in `vstd::seq::Seq<usize>`
+   |                    |
+   |                    method `view` is available on `&Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<usize>>`
+
+error[E0599]: no method named `view` found for struct `vstd::seq::Seq<A>` in the current scope
+  --> src/Chap55/DFSStPer.rs:85:55
+   |
+85 |                 neighbors_len == graph@[vertex as int]@.len(),
+   |                                  -----                ^ method not found in `vstd::seq::Seq<usize>`
+   |                                  |
+   |                                  method `view` is available on `&Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<usize>>`
+
+error[E0599]: no method named `view` found for struct `vstd::seq::Seq<A>` in the current scope
+  --> src/Chap55/DFSStPer.rs:95:41
+   |
+95 |             assert(graph@[vertex as int]@[i as int] < graph@.len());
+   |                    -----                ^ method not found in `vstd::seq::Seq<usize>`
+   |                    |
+   |                    method `view` is available on `&Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<usize>>`
+
+error[E0599]: no method named `view` found for struct `vstd::seq::Seq<A>` in the current scope
+  --> src/Chap55/CycleDetectStEph.rs:87:55
+   |
+87 |                 neighbors_len == graph@[vertex as int]@.len(),
+   |                                  -----                ^ method not found in `vstd::seq::Seq<usize>`
+   |                                  |
+   |                                  method `view` is available on `&Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<usize>>`
+
+error[E0599]: no method named `view` found for struct `vstd::seq::Seq<A>` in the current scope
+  --> src/Chap55/CycleDetectStEph.rs:98:41
+   |
+98 |             assert(graph@[vertex as int]@[i as int] < graph@.len());
+   |                    -----                ^ method not found in `vstd::seq::Seq<usize>`
+   |                    |
+   |                    method `view` is available on `&Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<usize>>`
+
+error: aborting due to 6 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 1278MB, peak z3 RSS: 0MB, min free: 24501MB
+Sampled CPU Usage: rust_verify: 16s, z3 children: 0s

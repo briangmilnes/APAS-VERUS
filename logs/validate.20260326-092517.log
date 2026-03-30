@@ -1,0 +1,11 @@
+error: proof blocks inside spec code is currently supported only for spec functions with decreases
+   --> src/Chap55/DFSStEph.rs:116:19
+    |
+116 |             proof { lemma_bool_view_eq_spec_index(visited); }
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 24s
+Sampled Memory Usage: peak rust_verify RSS: 2015MB, peak z3 RSS: 0MB, min free: 23360MB
+Sampled CPU Usage: rust_verify: 22s, z3 children: 0s

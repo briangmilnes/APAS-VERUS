@@ -1,0 +1,53 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStEph.rs:41:14
+   |
+41 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStPer.rs:38:14
+   |
+38 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+verification results:: 2758 verified, 0 errors
+warning: 3 warnings emitted
+
+error[E0373]: closure may outlive the current function, but it borrows `v_clone`, which is owned by the current function
+   --> src/Chap52/EdgeSetGraphMtPer.rs:217:17
+    |
+217 |                 |edge: &Pair<V, V>| {
+    |                 ^^^^^^^^^^^^^^^^^^^ may outlive borrowed value `v_clone`
+218 |                     let Pair(u, w) = edge;
+219 |                     *u != v_clone && *w != v_clone
+    |                           ------- `v_clone` is borrowed here
+    |
+note: function requires argument type to outlive `'static`
+   --> src/Chap52/EdgeSetGraphMtPer.rs:216:29
+    |
+216 |               let new_edges = self.edges.filter(
+    |  _____________________________^
+217 | |                 |edge: &Pair<V, V>| {
+218 | |                     let Pair(u, w) = edge;
+219 | |                     *u != v_clone && *w != v_clone
+220 | |                 },
+221 | |                 Ghost(|p: (V::V, V::V)| p.0 != v@ && p.1 != v@),
+222 | |             );
+    | |_____________^
+help: to force the closure to take ownership of `v_clone` (and any other referenced variables), use the `move` keyword
+    |
+217 |                 move |edge: &Pair<V, V>| {
+    |                 ++++
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0373`.
+Elapsed: 49s
+Sampled Memory Usage: peak rust_verify RSS: 9181MB, peak z3 RSS: 735MB, min free: 11769MB
+Sampled CPU Usage: rust_verify: 247s, z3 children: 252s

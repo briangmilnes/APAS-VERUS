@@ -1,0 +1,65 @@
+error[E0277]: the trait bound `&T: vstdplus::total_order::total_order::IsLtTransitive` is not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:2926:45
+     |
+2926 | ...                   lemma_cmp_equal_congruent_st(key, tk, root_key);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::IsLtTransitive` is not implemented for `&T`
+     |
+note: required by a bound in `Chap39::BSTTreapStEph::BSTTreapStEph::lemma_cmp_equal_congruent_st`
+    --> src/Chap39/BSTTreapStEph.rs:203:62
+     |
+ 203 |     pub proof fn lemma_cmp_equal_congruent_st<T: StT + Ord + IsLtTransitive>(a: T, b: T, c: T)
+     |                                                              ^^^^^^^^^^^^^^ required by this bound in `lemma_cmp_equal_congruent_st`
+help: consider borrowing here
+     |
+2926 |                                             &lemma_cmp_equal_congruent_st(key, tk, root_key);
+     |                                             +
+
+error[E0308]: arguments to this function are incorrect
+    --> src/Chap39/BSTTreapStEph.rs:2926:45
+     |
+2770 |     impl<T: StT + Ord + IsLtTransitive> ParamBSTTreapStEphTrait<T> for BSTTreapStEph<T> {
+     |          -
+     |          |
+     |          found this type parameter
+     |          found this type parameter
+...
+2926 |                                             lemma_cmp_equal_congruent_st(key, tk, root_key);
+     |                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ --- expected all arguments to be this `&T` type because they need to match the type of this parameter
+     |
+note: expected `&T`, found type parameter `T`
+    --> src/Chap39/BSTTreapStEph.rs:2926:79
+     |
+2926 | ...                   lemma_cmp_equal_congruent_st(key, tk, root_key);
+     |                                                         ^^
+     = note:   expected reference `&_`
+             found type parameter `_`
+note: expected `&T`, found type parameter `T`
+    --> src/Chap39/BSTTreapStEph.rs:2926:83
+     |
+2926 | ...                   lemma_cmp_equal_congruent_st(key, tk, root_key);
+     |                                                             ^^^^^^^^
+     = note:   expected reference `&_`
+             found type parameter `_`
+note: function defined here
+    --> src/Chap39/BSTTreapStEph.rs:203:18
+     |
+ 203 |     pub proof fn lemma_cmp_equal_congruent_st<T: StT + Ord + IsLtTransitive>(a: T, b: T, c: T)
+     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -                              ----  ----  ---- this parameter needs to match the `&T` type of `a`
+     |                                               |                              |     |
+     |                                               |                              |     this parameter needs to match the `&T` type of `a`
+     |                                               |                              `b` and `c` need to match the `&T` type of this parameter
+     |                                               `a`, `b` and `c` all reference this parameter `T`
+help: consider borrowing here
+     |
+2926 |                                             lemma_cmp_equal_congruent_st(key, &tk, root_key);
+     |                                                                               +
+help: consider borrowing here
+     |
+2926 |                                             lemma_cmp_equal_congruent_st(key, tk, &root_key);
+     |                                                                                   +
+
+error: aborting due to 2 previous errors
+
+Some errors have detailed explanations: E0277, E0308.
+For more information about an error, try `rustc --explain E0277`.
+Elapsed: 16s

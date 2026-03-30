@@ -1,0 +1,153 @@
+error[E0599]: no method named `len` found for struct `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap37/BSTSetPlainMtEph.rs:133:23
+    |
+133 |         while i < seq.len()
+    |                       ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:62:5
+    |
+ 62 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `len` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `len`, perhaps you need to implement one of them:
+            candidate #1: `standards::capacity_bounds_standard::capacity_bounds_standard::BoundedStackTrait`
+            candidate #2: `standards::finite_sets_standard::finite_sets_standard::FiniteCollectionTrait`
+            candidate #3: `standards::spec_wf_standard::spec_wf_standard::ContainerTrait`
+            candidate #4: `standards::spec_wf_standard::spec_wf_standard::VecWrapperTrait`
+            candidate #5: `vstdplus::VecQueue::VecQueue::VecQueueTrait`
+            candidate #6: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait`
+            candidate #7: `std::iter::ExactSizeIterator`
+help: one of the expressions' fields has a method of the same name
+    |
+133 |         while i < seq.seq.len()
+    |                       ++++
+help: there is a method `length` with a similar name
+    |
+133 |         while i < seq.length()
+    |                          +++
+
+error[E0599]: no method named `len` found for struct `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap37/BSTSetPlainMtEph.rs:134:32
+    |
+134 |             invariant i <= seq.len(),
+    |                                ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:62:5
+    |
+ 62 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `len` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `len`, perhaps you need to implement one of them:
+            candidate #1: `standards::capacity_bounds_standard::capacity_bounds_standard::BoundedStackTrait`
+            candidate #2: `standards::finite_sets_standard::finite_sets_standard::FiniteCollectionTrait`
+            candidate #3: `standards::spec_wf_standard::spec_wf_standard::ContainerTrait`
+            candidate #4: `standards::spec_wf_standard::spec_wf_standard::VecWrapperTrait`
+            candidate #5: `vstdplus::VecQueue::VecQueue::VecQueueTrait`
+            candidate #6: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait`
+            candidate #7: `std::iter::ExactSizeIterator`
+help: one of the expressions' fields has a method of the same name
+    |
+134 |             invariant i <= seq.seq.len(),
+    |                                ++++
+help: there is a method `length` with a similar name
+    |
+134 |             invariant i <= seq.length(),
+    |                                   +++
+
+error[E0608]: cannot index into a value of type `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>`
+   --> src/Chap37/BSTSetPlainMtEph.rs:136:25
+    |
+136 |             out.push(seq[i].clone());
+    |                         ^^^
+
+error[E0599]: no method named `len` found for struct `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap37/BSTSetPlainMtEph.rs:220:27
+    |
+220 |             while i < seq.len()
+    |                           ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:62:5
+    |
+ 62 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `len` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `len`, perhaps you need to implement one of them:
+            candidate #1: `standards::capacity_bounds_standard::capacity_bounds_standard::BoundedStackTrait`
+            candidate #2: `standards::finite_sets_standard::finite_sets_standard::FiniteCollectionTrait`
+            candidate #3: `standards::spec_wf_standard::spec_wf_standard::ContainerTrait`
+            candidate #4: `standards::spec_wf_standard::spec_wf_standard::VecWrapperTrait`
+            candidate #5: `vstdplus::VecQueue::VecQueue::VecQueueTrait`
+            candidate #6: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait`
+            candidate #7: `std::iter::ExactSizeIterator`
+help: one of the expressions' fields has a method of the same name
+    |
+220 |             while i < seq.seq.len()
+    |                           ++++
+help: there is a method `length` with a similar name
+    |
+220 |             while i < seq.length()
+    |                              +++
+
+error[E0599]: no method named `len` found for struct `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap37/BSTSetPlainMtEph.rs:221:36
+    |
+221 |                 invariant i <= seq.len(),
+    |                                    ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:62:5
+    |
+ 62 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `len` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `len`, perhaps you need to implement one of them:
+            candidate #1: `standards::capacity_bounds_standard::capacity_bounds_standard::BoundedStackTrait`
+            candidate #2: `standards::finite_sets_standard::finite_sets_standard::FiniteCollectionTrait`
+            candidate #3: `standards::spec_wf_standard::spec_wf_standard::ContainerTrait`
+            candidate #4: `standards::spec_wf_standard::spec_wf_standard::VecWrapperTrait`
+            candidate #5: `vstdplus::VecQueue::VecQueue::VecQueueTrait`
+            candidate #6: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait`
+            candidate #7: `std::iter::ExactSizeIterator`
+help: one of the expressions' fields has a method of the same name
+    |
+221 |                 invariant i <= seq.seq.len(),
+    |                                    ++++
+help: there is a method `length` with a similar name
+    |
+221 |                 invariant i <= seq.length(),
+    |                                       +++
+
+error[E0608]: cannot index into a value of type `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>`
+   --> src/Chap37/BSTSetPlainMtEph.rs:223:23
+    |
+223 |                 if seq[i] != *target {
+    |                       ^^^
+
+error[E0608]: cannot index into a value of type `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>`
+   --> src/Chap37/BSTSetPlainMtEph.rs:224:38
+    |
+224 |                     filtered.push(seq[i].clone());
+    |                                      ^^^
+
+error[E0599]: no method named `len` found for struct `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap37/BSTSetPlainMtEph.rs:327:27
+    |
+327 |             while i < seq.len()
+    |                           ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:62:5
+    |
+ 62 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `len` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `len`, perhaps you need to implement one of them:
+            candidate #1: `standards::capacity_bounds_standard::capacity_bounds_standard::BoundedStackTrait`
+            candidate #2: `standards::finite_sets_standard::finite_sets_standard::FiniteCollectionTrait`
+            candidate #3: `standards::spec_wf_standard::spec_wf_standard::ContainerTrait`
+            candidate #4: `standards::spec_wf_standard::spec_wf_standard::VecWrapperTrait`
+            candidate #5: `vstdplus::VecQueue::VecQueue::VecQueueTrait`
+            candidate #6: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrai

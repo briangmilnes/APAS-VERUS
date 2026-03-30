@@ -1,0 +1,26 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:318:11
+    |
+318 |       proof fn lemma_union_wf_roots<V: StT + Hash>(
+    |  ___________^
+319 | |         uf: UnionFindStEph<V>,
+320 | |         mid: UnionFindStEph<V>,
+321 | |         winner_val: V,
+...   |
+325 | |         loser_view: <V as View>::V,
+326 | |     )
+    | |_____^
+
+
+thread '<unnamed>' (231237) panicked at air/src/smt_process.rs:93:17:
+Got too many empty lines!
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread '<unnamed>' (230440) panicked at air/src/smt_process.rs:213:34:
+internal error: Z3 reader thread failure: RecvError
+
+thread '<unnamed>' (230440) panicked at rust_verify/src/verifier.rs:2217:29:
+worker thread panicked
+error: aborting due to 1 previous error
+
+Elapsed: 200s

@@ -1,0 +1,84 @@
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:3878:13
+     |
+3878 |             result.spec_orderedtablesteph_wf(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+3909 |         result
+     |         ------ at the end of the function body
+
+note: diagnostics via expansion
+    --> src/vstdplus/feq.rs:41:13
+     |
+  41 |         &&& feq_reflexive::<T>()
+     |             ^^^^^^^^^^^^^^^^^^^^
+  42 |         &&& feq_symmetric::<T>()
+     |             ^^^^^^^^^^^^^^^^^^^^
+  43 |         &&& feq_transitive::<T>()
+     |             ^^^^^^^^^^^^^^^^^^^^^
+...
+  68 |         &&& obeys_feq_properties::<T>()
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+  80 |         obeys_feq_full::<T>() && obeys_feq_full::<U>()
+     |         ^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:1061:16
+     |
+1061 |             && spec_key_unique_pairs_set(self.tree@)
+     |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1062 |             && self.tree@.len() < usize::MAX as nat
+1063 |             && obeys_feq_fulls::<K, V>()
+     |                ^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+3878 |             result.spec_orderedtablesteph_wf(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+result.view().dom().finite() ✔
+result.spec_orderedtablesteph_wf() ✘
+|   result.tree.spec_bstparasteph_wf() ✔
+|   spec_key_unique_pairs_set(result.tree.view()) ✘
+|   |   forall |k, v1, v2|
+|   |       result.tree.view().contains((k, v1)) && result.tree.view().contains((k, v2)) ==>
+|   |           v1 == v2 
+|   +---
+|   result.tree.view().len() < UnsignedMax.Exec(usize::BITS) ✔
+|   obeys_feq_fulls() ✘
+|   |   obeys_feq_full() ✘
+|   |   |   obeys_feq_properties() ✘
+|   |   |   |   feq_reflexive() ✘
+|   |   |   |   |   forall |x|
+|   |   |   |   |       x.eq_spec(x) 
+|   |   |   |   +---
+|   |   |   |   feq_symmetric() ✘
+|   |   |   |   |   forall |x, y|
+|   |   |   |   |       x.eq_spec(y) == y.eq_spec(x) 
+|   |   |   |   +---
+|   |   |   |   feq_transitive() ✘
+|   |   |   |   |   forall |x, y, z|
+|   |   |   |   |       x.eq_spec(y) && y.eq_spec(z) ==>
+|   |   |   |   |           x.eq_spec(z) 
+|   |   |   |   |               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   |   |   +---
+|   |   |   +---
+|   |   |   obeys_feq_view() 
+|   |   |   obeys_feq_view_injective() 
+|   |   |   obeys_feq_clone() 
+|   |   |   obeys_feq_eq() 
+|   |   +---
+|   |   obeys_feq_full() 
+|   +---
+|   obeys_feq_full() 
+|   obeys_cmp_spec() 
+|   view_ord_consistent() 
+|   spec_pair_key_determines_order() 
+|   obeys_cmp_spec() 
+|   view_ord_consistent() 
++---
+
+verification results:: 4436 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 62s

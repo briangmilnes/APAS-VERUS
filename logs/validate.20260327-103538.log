@@ -1,0 +1,46 @@
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarContractionMtEph.rs:101:13
+    |
+101 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarContractionMtEph.rs:101:37
+    |
+101 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+    |                                     ^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarContractionMtEph.rs:161:13
+    |
+161 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarContractionMtEph.rs:161:37
+    |
+161 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+    |                                     ^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap62/StarContractionMtEph.rs:161:13
+    |
+161 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1241 verified, 0 errors
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 1723MB, peak z3 RSS: 218MB, min free: 20514MB
+Sampled CPU Usage: rust_verify: 23s, z3 children: 16s

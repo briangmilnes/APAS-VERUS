@@ -1,0 +1,44 @@
+error[E0308]: mismatched types
+   --> src/Chap47/ParaHashTableStEph.rs:420:35
+    |
+420 |                 spec_hashtable_wf(table),
+    |                 ----------------- ^^^^^ expected `&HashTable<_, _, _, _, _>`, found `HashTable<Key, Value, Entry, Metrics, H>`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected reference `&Chap47::ParaHashTableStEph::ParaHashTableStEph::HashTable<_, _, _, _, _>`
+                  found struct `Chap47::ParaHashTableStEph::ParaHashTableStEph::HashTable<Key, Value, Entry, Metrics, H>`
+note: function defined here
+   --> src/Chap47/ParaHashTableStEph.rs:64:22
+    |
+ 64 | ...fn spec_hashtable_wf<Key, Value, Entry: EntryTrait<Key, Value>, Metrics, H>(table: &HashTable<Key, Value, Entry, Metrics, H>) ->...
+    |       ^^^^^^^^^^^^^^^^^                                                        ------------------------------------------------
+help: consider borrowing here
+    |
+420 |                 spec_hashtable_wf(&table),
+    |                                   +
+
+error[E0308]: mismatched types
+   --> src/Chap47/ParaHashTableStEph.rs:552:35
+    |
+552 |                 spec_hashtable_wf(resized),
+    |                 ----------------- ^^^^^^^ expected `&HashTable<_, _, _, _, _>`, found `HashTable<Key, Value, Entry, Metrics, H>`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected reference `&Chap47::ParaHashTableStEph::ParaHashTableStEph::HashTable<_, _, _, _, _>`
+                  found struct `Chap47::ParaHashTableStEph::ParaHashTableStEph::HashTable<Key, Value, Entry, Metrics, H>`
+note: function defined here
+   --> src/Chap47/ParaHashTableStEph.rs:64:22
+    |
+ 64 | ...fn spec_hashtable_wf<Key, Value, Entry: EntryTrait<Key, Value>, Metrics, H>(table: &HashTable<Key, Value, Entry, Metrics, H>) ->...
+    |       ^^^^^^^^^^^^^^^^^                                                        ------------------------------------------------
+help: consider borrowing here
+    |
+552 |                 spec_hashtable_wf(&resized),
+    |                                   +
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0308`.
+Elapsed: 24s

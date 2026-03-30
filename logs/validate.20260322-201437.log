@@ -1,0 +1,120 @@
+error: invariant not satisfied before loop
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:472:29
+    |
+472 | ...                   obeys_feq_clone::<Key>(),
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:473:29
+    |
+473 | ...                   obeys_feq_clone::<Value>(),
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:488:36
+    |
+488 | ...                   assert(chain_sub_next.drop_last() =~= chain_sub);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:489:36
+    |
+489 | ...                   assert(chain_sub_next.last() == chain[j as int]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:154:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:501:32
+    |
+501 |                         assert(sub_next.drop_last()
+    |                                ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:503:32
+    |
+503 |                         assert(sub_next.last() == table.table@[i as int]);
+    |                                ^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:154:12
+    |
+    = note: recommendation not met
+
+error: invariant not satisfied before loop
+   --> src/Chap47/StructChainedHashTable.rs:527:29
+    |
+527 | ...                   obeys_feq_clone::<Key>(),
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap47/StructChainedHashTable.rs:528:29
+    |
+528 | ...                   obeys_feq_clone::<Value>(),
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap47/VecChainedHashTableStEph.rs:475:29
+    |
+475 | ...                   obeys_feq_clone::<Key>(),
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap47/VecChainedHashTableStEph.rs:476:29
+    |
+476 | ...                   obeys_feq_clone::<Value>(),
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap47/VecChainedHashTableStEph.rs:491:36
+    |
+491 | ...                   assert(chain_sub_next.drop_last() =~= chain_sub);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/VecChainedHashTableStEph.rs:492:36
+    |
+492 | ...                   assert(chain_sub_next.last() == chain[j as int]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:154:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/VecChainedHashTableStEph.rs:504:32
+    |
+504 |                         assert(sub_next.drop_last()
+    |                                ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/VecChainedHashTableStEph.rs:506:32
+    |
+506 |                         assert(sub_next.last() == table.table@[i as int]);
+    |                                ^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:154:12
+    |
+    = note: recommendation not met
+
+verification results:: 4493 verified, 3 errors
+error: aborting due to 6 previous errors
+
+Elapsed: 53s

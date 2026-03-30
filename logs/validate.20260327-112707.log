@@ -1,0 +1,87 @@
+error[E0277]: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlus<V, V>` doesn't implement `std::fmt::Debug`
+   --> src/Chap61/EdgeContractionMtEph.rs:100:64
+    |
+100 |         let vertex_to_block = Arc::try_unwrap(vertex_to_block).unwrap().into_inner().unwrap();
+    |                                                                ^^^^^^ the trait `std::fmt::Debug` is not implemented for `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlus<V, V>`
+    |
+    = note: add `#[derive(Debug)]` to `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlus<V, V>` or manually `impl std::fmt::Debug for vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlus<V, V>`
+help: the trait `std::fmt::Debug` is implemented for `std::sync::Arc<T, A>`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/alloc/src/sync.rs:3700:0
+    = note: required for `Mutex<HashMapWithViewPlus<V, V>>` to implement `std::fmt::Debug`
+    = note: 1 redundant requirement hidden
+    = note: required for `Arc<Mutex<HashMapWithViewPlus<V, V>>>` to implement `std::fmt::Debug`
+note: required by a bound in `std::result::Result::<T, E>::unwrap`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/result.rs:1227:4
+    = note: the full name for the type has been written to 'lib.long-type-17584525073094308079.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlus<V, V>` with `#[derive(Debug)]`
+   --> src/vstdplus/hash_map_with_view_plus.rs:41:1
+    |
+ 41 + #[derive(Debug)]
+ 42 | pub struct HashMapWithViewPlus<Key: View + Eq + Hash, Value> {
+    |
+
+error[E0277]: the trait bound `V: std::hash::Hash` is not satisfied
+   --> src/Chap61/VertexMatchingMtEph.rs:92:40
+    |
+ 92 |         requires valid_key_type_Edge::<V>(),
+    |                                        ^ the trait `std::hash::Hash` is not implemented for `V`
+    |
+note: required by a bound in `Types::Types::valid_key_type_Edge`
+   --> src/Types.rs:180:51
+    |
+180 |     pub open spec fn valid_key_type_Edge<V: StT + Hash>() -> bool {
+    |                                                   ^^^^ required by this bound in `valid_key_type_Edge`
+help: consider further restricting type parameter `V` with trait `Hash`
+    |
+ 88 |     fn flip_coins_parallel<V: StT + MtT + 'static + std::hash::Hash>(
+    |                                                   +++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::clone_view::clone_view::ClonePreservesView` is not satisfied
+   --> src/Chap63/ConnectivityMtEph.rs:168:26
+    |
+168 |         star_contract_mt(graph, seed, &base, &expand)
+    |         ---------------- ^^^^^ the trait `vstdplus::clone_view::clone_view::ClonePreservesView` is not implemented for `V`
+    |         |
+    |         required by a bound introduced by this call
+    |
+note: required by a bound in `Chap62::StarContractionMtEph::StarContractionMtEph::star_contract_mt`
+   --> src/Chap62/StarContractionMtEph.rs:150:37
+    |
+148 |     pub fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G) -> (result: R)
+    |            ---------------- required by a bound in this function
+149 |     where
+150 |         V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,
+    |                                     ^^^^^^^^^^^^^^^^^^ required by this bound in `star_contract_mt`
+help: consider further restricting type parameter `V` with trait `ClonePreservesView`
+    |
+155 |     pub fn count_components_hof<V: StT + MtT + Hash + Ord + 'static + vstdplus::clone_view::clone_view::ClonePreservesView>(graph: &UnDirGraphMtEph<V>, seed: u64) -> (count: usize)
+    |                                                                     ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::clone_view::clone_view::ClonePreservesView` is not satisfied
+   --> src/Chap63/ConnectivityMtEph.rs:230:26
+    |
+230 |         star_contract_mt(graph, seed, &base, &expand)
+    |         ---------------- ^^^^^ the trait `vstdplus::clone_view::clone_view::ClonePreservesView` is not implemented for `V`
+    |         |
+    |         required by a bound introduced by this call
+    |
+note: required by a bound in `Chap62::StarContractionMtEph::StarContractionMtEph::star_contract_mt`
+   --> src/Chap62/StarContractionMtEph.rs:150:37
+    |
+148 |     pub fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G) -> (result: R)
+    |            ---------------- required by a bound in this function
+149 |     where
+150 |         V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,
+    |                                     ^^^^^^^^^^^^^^^^^^ required by this bound in `star_contract_mt`
+help: consider further restricting type parameter `V` with trait `ClonePreservesView`
+    |
+175 |     pub fn connected_components_hof<V: StT + MtT + Hash + Ord + 'static + vstdplus::clone_view::clone_view::ClonePreservesView>(
+    |                                                                         ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 4 previous errors
+
+For more information about this error, try `rustc --explain E0277`.
+Elapsed: 16s
+Sampled Memory Usage: peak rust_verify RSS: 1011MB, peak z3 RSS: 0MB, min free: 22303MB
+Sampled CPU Usage: rust_verify: 14s, z3 children: 0s

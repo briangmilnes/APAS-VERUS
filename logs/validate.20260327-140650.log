@@ -1,0 +1,51 @@
+error: postcondition not satisfied
+    --> src/Chap42/TableStEph.rs:441:17
+     |
+ 441 | /                 old(self)@.contains_key(key@) ==> (exists|old_v: V, r: V|
+ 442 | |                     old_v@ == old(self)@[key@] && combine.ensures((&old_v, &value), r)
+ 443 | |                     && self@[key@] == r@
+ 444 | |                     && old_v == old(self).spec_stored_value(key@)
+ 445 | |                     && self.spec_stored_value(key@) == r);
+     | |_________________________________________________________^ failed this postcondition
+...
+1855 |               proof {
+     |  ___________________-
+1856 | |                 let last = (self.entries@.len() - 1) as int;
+1857 | |                 assert(self.entries.spec_index(last) == all@[last]);
+1858 | |                 self.entries.lemma_view_index(last);
+...    |
+1946 | |                 assert(self.spec_stored_value(key_view) == self.entries.seq@[last].1);
+1947 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap42/TableStEph.rs:441:51
+    |
+441 |                   old(self)@.contains_key(key@) ==> (exists|old_v: V, r: V|
+    |  ___________________________________________________^
+442 | |                     old_v@ == old(self)@[key@] && combine.ensures((&old_v, &value), r)
+443 | |                     && self@[key@] == r@
+444 | |                     && old_v == old(self).spec_stored_value(key@)
+445 | |                     && self.spec_stored_value(key@) == r);
+    | |_________________________________________________________^
+
+note: 
+
+self.spec_tablesteph_wf() ✔
+self.view().dom().contains(old(key).view()) ✔
+self.view().dom() =~= old(self).view().dom().insert(old(key).view()) ✔
+forall |k|
+    !(k == old(key).view()) && old(self).view().dom().contains(k) ==>
+        self.view().index(k) == old(self).view().index(k) ✔
+!(old(self).view().dom().contains(old(key).view())) ==>
+    self.view().index(old(key).view()) == old(value).view() ✔
+    self.spec_stored_value(old(key).view()) == old(value) ✔
+old(self).view().dom().contains(old(key).view()) ==>
+    (exists |old_v, r| old_v.view() == old(self).view().index(old(key).view()) && ClosureEns(old(combine), (old_v, old(value)), r) && self.view().index(old(key).view()) == r.view() && old_v == old(self).spec_stored_value(old(key).view()) && self.spec_stored_value(old(key).view()) == r) ✘
+
+verification results:: 2155 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 1972MB, peak z3 RSS: 387MB, min free: 20089MB
+Sampled CPU Usage: rust_verify: 30s, z3 children: 34s

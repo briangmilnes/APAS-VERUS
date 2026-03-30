@@ -1,0 +1,78 @@
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1116:13
+     |
+1116 |             reveal(spec_uf_wf);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1317:21
+     |
+1317 |                     reveal(spec_uf_wf);
+     |                     ^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap65/KruskalStEph.rs:430:17
+    |
+430 | /                 forall|j: int| 0 <= j < le_seq.len() ==>
+431 | |                     #[trigger] le_seq[j]@.2 as int <= bound,
+    | |___________________________________________________________^
+
+error: invariant not satisfied before loop
+   --> src/Chap65/KruskalStEph.rs:432:17
+    |
+432 |                 (le_seq.len() as int) * bound <= u64::MAX as int,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:441:32
+    |
+441 |                         assert(total as int + edge.2 as int <= (it@.0 as int) * bound);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:442:32
+    |
+442 |                         assert((it@.0 as int) * bound <= le_seq.len() as int * bound);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+total + edge.2 <= it.view().0 * bound 
+
+error: invariant not satisfied before loop
+   --> src/Chap65/PrimStEph.rs:447:17
+    |
+447 | /                 forall|j: int| 0 <= j < le_seq.len() ==>
+448 | |                     #[trigger] le_seq[j]@.2 as int <= bound,
+    | |___________________________________________________________^
+
+error: invariant not satisfied before loop
+   --> src/Chap65/PrimStEph.rs:449:17
+    |
+449 |                 (le_seq.len() as int) * bound <= u64::MAX as int,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap65/PrimStEph.rs:458:32
+    |
+458 |                         assert(total as int + edge.2 as int <= (it@.0 as int) * bound);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap65/PrimStEph.rs:459:32
+    |
+459 |                         assert((it@.0 as int) * bound <= le_seq.len() as int * bound);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+total + edge.2 <= it.view().0 * bound 
+
+verification results:: 2404 verified, 4 errors
+error: aborting due to 8 previous errors; 2 warnings emitted
+
+Elapsed: 69s
+Sampled Memory Usage: peak rust_verify RSS: 2768MB, peak z3 RSS: 3241MB, min free: 17389MB
+Sampled CPU Usage: rust_verify: 42s, z3 children: 42s

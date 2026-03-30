@@ -1,0 +1,47 @@
+error[E0277]: `<V as vstd::string::View>::V` cannot be sent between threads safely
+   --> src/Chap62/StarContractionMtEph.rs:405:55
+    |
+369 |         let f1 = move || -> (r: SetStEph<Edge<V>>)
+    |                  -------------------------------- within this `{closure@src/Chap62/StarContractionMtEph.rs:369:18: 369:50}`
+...
+405 |         let Pair(left_edges, right_edges) = ParaPair!(f1, f2);
+    |                                                       ^^ `<V as vstd::string::View>::V` cannot be sent between threads safely
+    |
+   ::: src/ParaPairs.rs:105:9
+    |
+105 |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+    |         --------------------------------------- required by a bound introduced by this call
+    |
+    = help: within `{closure@src/Chap62/StarContractionMtEph.rs:369:18: 369:50}`, the trait `std::marker::Send` is not implemented for `<V as vstd::string::View>::V`
+    = note: required because it appears within the type `(<V as vstd::string::View>::V,)`
+    = note: required because it appears within the type `((<V as vstd::string::View>::V,), bool)`
+note: required because it appears within the type `std::marker::PhantomData<((<V as vstd::string::View>::V,), bool)>`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/marker.rs:819:11
+note: required because it appears within the type `vstd::prelude::FnSpec<(<V as vstd::string::View>::V,), bool>`
+   --> builtin/src/lib.rs:1874:11
+note: required because it appears within the type `vstd::set::Set<<V as vstd::string::View>::V>`
+   --> vstd/set.rs:31:11
+note: required because it's used within this closure
+   --> src/Chap62/StarContractionMtEph.rs:369:18
+    |
+369 |         let f1 = move || -> (r: SetStEph<Edge<V>>)
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `ParaPairs::ParaPairs::para_pair`
+   --> src/ParaPairs.rs:61:33
+    |
+ 59 |     pub fn para_pair<A, B, F1, F2>(f1: F1, f2: F2) -> (pair: Pair<A, B>)
+    |            --------- required by a bound in this function
+ 60 |         where
+ 61 |             F1: FnOnce() -> A + Send + 'static,
+    |                                 ^^^^ required by this bound in `para_pair`
+help: consider further restricting the associated type
+    |
+257 |     ) -> (result: SetStEph<Edge<V>> where <V as vstd::string::View>::V: std::marker::Send)
+    |                                     +++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0277`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 803MB, peak z3 RSS: 0MB, min free: 22147MB
+Sampled CPU Usage: rust_verify: 9s, z3 children: 0s

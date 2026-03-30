@@ -1,0 +1,16 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap65/UnionFindStEph.rs:1078:5
+     |
+1078 | /     fn union_merge<V: StT + Hash>(
+1079 | |         uf: &mut UnionFindStEph<V>,
+1080 | |         root_u: V,
+1081 | |         root_v: V,
+1082 | |     )
+     | |_____^
+
+verification results:: 2405 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 110s
+Sampled Memory Usage: peak rust_verify RSS: 5505MB, peak z3 RSS: 11345MB, min free: 5832MB
+Sampled CPU Usage: rust_verify: 90s, z3 children: 175s

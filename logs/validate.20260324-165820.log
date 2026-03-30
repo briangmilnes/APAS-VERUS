@@ -1,0 +1,212 @@
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:18:15
+    |
+ 18 |         tree: BSTPlainMtEph<T>,
+    |               ^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph`
+   --> src/Chap37/BSTPlainMtEph.rs:232:33
+    |
+232 |     pub struct BSTPlainMtEph<T: TotalOrder> {
+    |                                 ^^^^^^^^^^ required by this bound in `BSTPlainMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 17 |     pub struct BSTSetPlainMtEph<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder> {
+    |                                                   ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:123:45
+    |
+123 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTPlainMtEph<T>) -> (values: Vec<T>)
+    |                                             ^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph`
+   --> src/Chap37/BSTPlainMtEph.rs:232:33
+    |
+232 |     pub struct BSTPlainMtEph<T: TotalOrder> {
+    |                                 ^^^^^^^^^^ required by this bound in `BSTPlainMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+123 |     fn values_vec<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder>(tree: &BSTPlainMtEph<T>) -> (values: Vec<T>)
+    |                                     ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:130:70
+    |
+130 |     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTPlainMtEph<T>)
+    |                                                                      ^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph`
+   --> src/Chap37/BSTPlainMtEph.rs:232:33
+    |
+232 |     pub struct BSTPlainMtEph<T: TotalOrder> {
+    |                                 ^^^^^^^^^^ required by this bound in `BSTPlainMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+130 |     fn rebuild_from_vec<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder>(values: Vec<T>) -> (tree: BSTPlainMtEph<T>)
+    |                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:352:9
+    |
+352 |         fn as_tree(&self) -> &BSTPlainMtEph<T> { &self.tree }
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph`
+   --> src/Chap37/BSTPlainMtEph.rs:232:33
+    |
+232 |     pub struct BSTPlainMtEph<T: TotalOrder> {
+    |                                 ^^^^^^^^^^ required by this bound in `BSTPlainMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+160 |     impl<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder> BSTSetPlainMtEphTrait<T> for BSTSetPlainMtEph<T> {
+    |                            ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:352:31
+    |
+352 |         fn as_tree(&self) -> &BSTPlainMtEph<T> { &self.tree }
+    |                               ^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph`
+   --> src/Chap37/BSTPlainMtEph.rs:232:33
+    |
+232 |     pub struct BSTPlainMtEph<T: TotalOrder> {
+    |                                 ^^^^^^^^^^ required by this bound in `BSTPlainMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+160 |     impl<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder> BSTSetPlainMtEphTrait<T> for BSTSetPlainMtEph<T> {
+    |                            ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:115:38
+    |
+115 |         fn as_tree(&self) -> (tree: &BSTPlainMtEph<T>)
+    |                                      ^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph`
+   --> src/Chap37/BSTPlainMtEph.rs:232:33
+    |
+232 |     pub struct BSTPlainMtEph<T: TotalOrder> {
+    |                                 ^^^^^^^^^^ required by this bound in `BSTPlainMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 57 |     pub trait BSTSetPlainMtEphTrait<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder>: Sized {
+    |                                                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:115:12
+    |
+115 |         fn as_tree(&self) -> (tree: &BSTPlainMtEph<T>)
+    |            ^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph`
+   --> src/Chap37/BSTPlainMtEph.rs:232:33
+    |
+232 |     pub struct BSTPlainMtEph<T: TotalOrder> {
+    |                                 ^^^^^^^^^^ required by this bound in `BSTPlainMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 57 |     pub trait BSTSetPlainMtEphTrait<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder>: Sized {
+    |                                                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:117:13
+    |
+117 |             ensures true;
+    |             ^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph`
+   --> src/Chap37/BSTPlainMtEph.rs:232:33
+    |
+232 |     pub struct BSTPlainMtEph<T: TotalOrder> {
+    |                                 ^^^^^^^^^^ required by this bound in `BSTPlainMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 57 |     pub trait BSTSetPlainMtEphTrait<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder>: Sized {
+    |                                                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:115:31
+    |
+115 |         fn as_tree(&self) -> (tree: &BSTPlainMtEph<T>)
+    |                               ^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph`
+   --> src/Chap37/BSTPlainMtEph.rs:232:33
+    |
+232 |     pub struct BSTPlainMtEph<T: TotalOrder> {
+    |                                 ^^^^^^^^^^ required by this bound in `BSTPlainMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 57 |     pub trait BSTSetPlainMtEphTrait<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder>: Sized {
+    |                                                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_bstplainmteph_wf` exists for reference `&Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:124:23
+    |
+124 |         requires tree.spec_bstplainmteph_wf(),
+    |                       ^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap37/BSTPlainMtEph.rs:232:5
+    |
+232 |     pub struct BSTPlainMtEph<T: TotalOrder> {
+    |     --------------------------------------- doesn't satisfy `_: BSTPlainMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTPlainMtEph.rs:302:13
+    |
+302 |     impl<T: TotalOrder> BSTPlainMtEphTrait<T> for BSTPlainMtEph<T> {
+    |             ^^^^^^^^^^  ---------------------     ----------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+123 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTPlainMtEph<T>) -> (values: Vec<T> where T: vstdplus::total_order::total_order::TotalOrder)
+    |                                                                                  +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:123:38
+    |
+123 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTPlainMtEph<T>) -> (values: Vec<T>)
+    |                                      ^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph`
+   --> src/Chap37/BSTPlainMtEph.rs:232:33
+    |
+232 |     pub struct BSTPlainMtEph<T: TotalOrder> {
+    |                                 ^^^^^^^^^^ required by this bound in `BSTPlainMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+123 |     fn values_vec<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder>(tree: &BSTPlainMtEph<T>) -> (values: Vec<T>)
+    |                                     ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `in_order` exists for reference `&Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:127:14
+    |
+127 |         tree.in_order().iter().cloned().collect()
+    |              ^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap37/BSTPlainMtEph.rs:232:5
+    |
+232 |     pub struct BSTPlainMtEph<T: TotalOrder> {
+    |     --------------------------------------- doesn't satisfy `_: BSTPlainMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTPlainMtEph.rs:302:13
+    |
+302 |     impl<T: TotalOrder> BSTPlainMtEphTrait<T> for BSTPlainMtEph<T> {
+    |             ^^^^^^^^^^  ---------------------     ----------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+123 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTPlainMtEph<T>) -> (values: Vec<T> where T: vstdplus::total_order::total_order::TotalOrder)
+    |                                                                                  +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetPlainMtEph.rs:130:8
+    |
+130 |       fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTPlainMtEph<T>)
+    |  ________^
+131 | |        

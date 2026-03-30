@@ -1,0 +1,53 @@
+error: The verifier does not yet support the following Rust feature: only variables are supported here, not general patterns
+   --> src/Chap55/DFSStEph.rs:105:58
+    |
+105 |             let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
+    |                                                          ^
+
+error: The verifier does not yet support the following Rust feature: only variables are supported here, not general patterns
+   --> src/Chap55/TopoSortStEph.rs:338:54
+    |
+338 |         let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
+    |                                                      ^
+
+error: The verifier does not yet support the following Rust feature: only variables are supported here, not general patterns
+   --> src/Chap55/TopoSortStEph.rs:379:58
+    |
+379 |             let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
+    |                                                          ^
+
+error: The verifier does not yet support the following Rust feature: only variables are supported here, not general patterns
+   --> src/Chap55/CycleDetectStEph.rs:118:58
+    |
+118 |             let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
+    |                                                          ^
+
+error: The verifier does not yet support the following Rust feature: only variables are supported here, not general patterns
+  --> src/Chap55/SCCStEph.rs:58:54
+   |
+58 |         let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
+   |                                                      ^
+
+error: The verifier does not yet support the following Rust feature: index for &mut not supported
+   --> src/Chap55/SCCStEph.rs:148:17
+    |
+148 |                 adj_vecs[v].push(u);
+    |                 ^^^^^^^^^^^
+
+error: The verifier does not yet support the following Rust feature: only variables are supported here, not general patterns
+   --> src/Chap55/SCCStEph.rs:225:58
+    |
+225 |             let mut visited = ArraySeqStEphS::tabulate(&|_| false, n);
+    |                                                          ^
+
+error: The verifier does not yet support the following Rust feature: index for &mut not supported
+   --> src/Chap55/SCCStPer.rs:224:17
+    |
+224 |                 adj_vecs[v].push(u);
+    |                 ^^^^^^^^^^^
+
+error: aborting due to 8 previous errors
+
+Elapsed: 18s
+Sampled Memory Usage: peak rust_verify RSS: 1512MB, peak z3 RSS: 0MB, min free: 23603MB
+Sampled CPU Usage: rust_verify: 16s, z3 children: 0s

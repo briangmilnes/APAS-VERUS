@@ -1,0 +1,44 @@
+error: precondition not satisfied
+   --> src/Chap55/DFSStEph.rs:175:13
+    |
+ 71 |             vertex < old(visited)@.len(),
+    |             ---------------------------- failed precondition
+...
+175 |             dfs_recursive(graph, visited, reachable, neighbor);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+neighbor < visited.view().len() ✔
+visited.view().len() == graph.view().len() ✔
+spec_toposortsteph_wf(graph) ✔
+reachable.spec_avltreesetsteph_wf() ✔
+forall |v|
+    reachable.view().contains(v) ==>
+        v < graph.view().len() ✔
+graph.view().len() < UnsignedMax.Exec(usize::BITS) ✔
+clip(nat, reachable.view().len() + spec_num_false(visited.view())) <= graph.view().len() ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+note: recommendation not met
+   --> src/Chap55/DFSStEph.rs:165:48
+    |
+165 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 4687 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 73s
+Sampled Memory Usage: peak rust_verify RSS: 13934MB, peak z3 RSS: 849MB, min free: 10932MB
+Sampled CPU Usage: rust_verify: 344s, z3 children: 297s

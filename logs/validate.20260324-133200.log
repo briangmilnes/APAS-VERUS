@@ -1,0 +1,59 @@
+error[E0277]: the trait bound `V: std::cmp::Ord` is not satisfied
+   --> src/Chap43/OrderedTableStEph.rs:611:50
+    |
+611 |                 vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+    |                                                  ^^^^^^^^^^ the trait `std::cmp::Ord` is not implemented for `V`
+    |
+note: required for `Types::Types::Pair<K, V>` to implement `std::cmp::Ord`
+   --> src/Types.rs:102:54
+    |
+102 |     #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+    |                                                      ^^^ unsatisfied trait bound introduced in this `derive` macro
+note: required by a bound in `vstd::laws_cmp::obeys_cmp_spec`
+   --> vstd/laws_cmp.rs:47:0
+help: consider further restricting type parameter `V` with trait `Ord`
+    |
+533 |     pub trait OrderedTableStEphTrait<K: StT + Ord, V: StT + std::cmp::Ord>: Sized + View<V = Map<K::V, V::V>> {
+    |                                                           +++++++++++++++
+
+error[E0277]: the trait bound `V: std::cmp::Ord` is not satisfied
+   --> src/Chap43/OrderedTableStEph.rs:612:39
+    |
+612 |                 view_ord_consistent::<Pair<K, V>>(),
+    |                                       ^^^^^^^^^^ the trait `std::cmp::Ord` is not implemented for `V`
+    |
+note: required for `Types::Types::Pair<K, V>` to implement `std::cmp::Ord`
+   --> src/Types.rs:102:54
+    |
+102 |     #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+    |                                                      ^^^ unsatisfied trait bound introduced in this `derive` macro
+note: required by a bound in `Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent`
+   --> src/Chap38/BSTParaStEph.rs:149:51
+    |
+149 |     pub open spec fn view_ord_consistent<T: StT + Ord>() -> bool {
+    |                                                   ^^^ required by this bound in `view_ord_consistent`
+help: consider further restricting type parameter `V` with trait `Ord`
+    |
+533 |     pub trait OrderedTableStEphTrait<K: StT + Ord, V: StT + std::cmp::Ord>: Sized + View<V = Map<K::V, V::V>> {
+    |                                                           +++++++++++++++
+
+error[E0277]: the trait bound `V: std::cmp::Ord` is not satisfied
+   --> src/Chap43/OrderedTableStEph.rs:613:53
+    |
+613 |                 spec_pair_key_determines_order::<K, V>(),
+    |                                                     ^ the trait `std::cmp::Ord` is not implemented for `V`
+    |
+note: required by a bound in `Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order`
+   --> src/Chap43/OrderedTableStEph.rs:85:76
+    |
+ 85 |     pub open spec fn spec_pair_key_determines_order<K: StT + Ord, V: StT + Ord>() -> bool {
+    |                                                                            ^^^ required by this bound in `spec_pair_key_determines_order`
+help: consider further restricting type parameter `V` with trait `Ord`
+    |
+533 |     pub trait OrderedTableStEphTrait<K: StT + Ord, V: StT + std::cmp::Ord>: Sized + View<V = Map<K::V, V::V>> {
+    |                                                           +++++++++++++++
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0277`.
+Elapsed: 14s

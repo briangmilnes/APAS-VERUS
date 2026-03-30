@@ -1,0 +1,49 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:177:11
+    |
+177 |       proof fn lemma_compression_preserves_wf<V: StT + Hash>(
+    |  ___________^
+178 | |         uf: UnionFindStEph<V>,
+179 | |         old_uf: UnionFindStEph<V>,
+180 | |         cv: <V as View>::V,
+181 | |         root: V,
+182 | |     )
+    | |_____^
+
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:457:28
+    |
+457 |                     assert(p@ == self@.parent[current@]@);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:538:28
+    |
+538 |                     assert(current_clone@ == current@);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:539:28
+    |
+539 |                     assert(root_clone@ == root@);
+    |                            ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:540:28
+    |
+540 |                     assert(next@ == self@.parent[current@]@);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+
+thread '<unnamed>' (344553) panicked at air/src/smt_process.rs:93:17:
+Got too many empty lines!
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread '<unnamed>' (343706) panicked at air/src/smt_process.rs:213:34:
+internal error: Z3 reader thread failure: RecvError
+
+thread '<unnamed>' (343706) panicked at rust_verify/src/verifier.rs:2217:29:
+worker thread panicked
+error: aborting due to 5 previous errors
+
+Elapsed: 209s

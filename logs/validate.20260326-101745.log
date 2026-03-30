@@ -1,0 +1,90 @@
+error: assertion failed
+  --> src/Chap55/SCCStEph.rs:98:67
+   |
+98 |             assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {
+   |                                                                   ^^^^^^^^^^^^ assertion failed
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/SCCStEph.rs:114:17
+    |
+114 |                 forall|j: int| 0 <= j < start as int ==> #[trigger] visited@[j],
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap55/SCCStEph.rs:150:16
+    |
+150 |         assert(reversed@.len() < usize::MAX) by {
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(visited.view().index(j)) 
+    function is uninterpreted
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/SCCStEph.rs:247:17
+    |
+247 | /                 forall|r: int, j: int|
+248 | |                     0 <= r < m as int && 0 <= j < result_vecs@[r]@.len()
+249 | |                     ==> (#[trigger] result_vecs@[r]@[j]) < graph@.len(),
+    | |_______________________________________________________________________^
+
+error: assertion failed
+   --> src/Chap55/SCCStEph.rs:261:24
+    |
+261 |                 assert(transposed@[v][i] < graph@.len());
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+transposed.view().index(v).index(i) < graph.view().len() 
+
+error: postcondition not satisfied
+   --> src/Chap55/SCCStEph.rs:341:13
+    |
+341 |             component@.len() <= old(component)@.len() + spec_num_false(old(visited)@),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+393 |         while i < neighbors_len
+    |         ----------------------- at the end of the function body
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/SCCStEph.rs:405:17
+    |
+405 |                 component@.len() + spec_num_false(visited@) < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap55/SCCStEph.rs:341:13
+    |
+341 |             component@.len() <= old(component)@.len() + spec_num_false(old(visited)@),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+visited.view().len() == old(graph).view().len() ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = visited.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && old(visited).view().index(j) ==>
+        visited.view().index(j) ✔
+spec_num_false(visited.view()) <= spec_num_false(old(visited).view()) ✔
+component.spec_avltreesetsteph_wf() ✔
+component.view().len() <= clip(nat, old(component).view().len() + spec_num_false(old(visited).view())) ✘
+
+note: recommendation not met
+   --> src/Chap55/SCCStEph.rs:407:48
+    |
+407 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 4726 verified, 6 errors
+error: aborting due to 7 previous errors
+
+Elapsed: 56s
+Sampled Memory Usage: peak rust_verify RSS: 7052MB, peak z3 RSS: 459MB, min free: 17492MB
+Sampled CPU Usage: rust_verify: 135s, z3 children: 97s

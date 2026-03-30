@@ -1,0 +1,11 @@
+error: Type parameter T of lib::Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEph must be declared #[verifier::reject_recursive_types] to be used in a non-positive position
+  --> src/Chap37/BSTSetPlainMtEph.rs:20:5
+   |
+20 | /     pub struct BSTSetPlainMtEph<T: StTInMtT + Ord + TotalOrder> {
+21 | |         pub(crate) tree: BSTPlainMtEph<T>,
+22 | |     }
+   | |_____^
+
+error: aborting due to 1 previous error
+
+Elapsed: 24s

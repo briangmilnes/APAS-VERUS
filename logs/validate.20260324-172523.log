@@ -1,0 +1,19 @@
+verification results:: 4517 verified, 0 errors
+error[E0310]: the parameter type `T` may not live long enough
+   --> src/Chap37/BSTSetPlainMtEph.rs:562:52
+    |
+562 |             write!(f, "BSTSetPlainMtEph(size={})", self.size())
+    |                                                    ^^^^^^^^^^^
+    |                                                    |
+    |                                                    the parameter type `T` must be valid for the static lifetime...
+    |                                                    ...so that the type `T` will meet its required lifetime bounds
+    |
+help: consider adding an explicit lifetime bound
+    |
+560 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> std::fmt::Display for BSTSetPlainMtEph<T> {
+    |                                         +++++++++
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0310`.
+Elapsed: 66s

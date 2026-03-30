@@ -1,0 +1,68 @@
+error[E0277]: `<V as vstd::string::View>::V` cannot be sent between threads safely
+   --> src/Chap62/StarContractionMtEph.rs:404:55
+    |
+368 |         let f1 = move || -> (r: SetStEph<Edge<V>>)
+    |                  -------------------------------- within this `{closure@src/Chap62/StarContractionMtEph.rs:368:18: 368:50}`
+...
+404 |         let Pair(left_edges, right_edges) = ParaPair!(f1, f2);
+    |                                                       ^^ `<V as vstd::string::View>::V` cannot be sent between threads safely
+    |
+   ::: src/ParaPairs.rs:105:9
+    |
+105 |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+    |         --------------------------------------- required by a bound introduced by this call
+    |
+    = help: within `{closure@src/Chap62/StarContractionMtEph.rs:368:18: 368:50}`, the trait `std::marker::Send` is not implemented for `<V as vstd::string::View>::V`
+    = note: required because it appears within the type `(<V as vstd::string::View>::V,)`
+    = note: required because it appears within the type `((<V as vstd::string::View>::V,), bool)`
+note: required because it appears within the type `std::marker::PhantomData<((<V as vstd::string::View>::V,), bool)>`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/marker.rs:819:11
+note: required because it appears within the type `vstd::prelude::FnSpec<(<V as vstd::string::View>::V,), bool>`
+   --> builtin/src/lib.rs:1874:11
+note: required because it appears within the type `vstd::set::Set<<V as vstd::string::View>::V>`
+   --> vstd/set.rs:31:11
+note: required because it's used within this closure
+   --> src/Chap62/StarContractionMtEph.rs:368:18
+    |
+368 |         let f1 = move || -> (r: SetStEph<Edge<V>>)
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `ParaPairs::ParaPairs::para_pair`
+   --> src/ParaPairs.rs:61:33
+    |
+ 59 |     pub fn para_pair<A, B, F1, F2>(f1: F1, f2: F2) -> (pair: Pair<A, B>)
+    |            --------- required by a bound in this function
+ 60 |         where
+ 61 |             F1: FnOnce() -> A + Send + 'static,
+    |                                 ^^^^ required by this bound in `para_pair`
+help: consider further restricting the associated type
+    |
+256 |     ) -> (result: SetStEph<Edge<V>> where <V as vstd::string::View>::V: std::marker::Send)
+    |                                     +++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::clone_view::clone_view::ClonePreservesView` is not satisfied
+   --> src/Chap64/SpanTreeMtEph.rs:146:26
+    |
+146 |         star_contract_mt(graph, seed, &base, &expand)
+    |         ---------------- ^^^^^ the trait `vstdplus::clone_view::clone_view::ClonePreservesView` is not implemented for `V`
+    |         |
+    |         required by a bound introduced by this call
+    |
+note: required by a bound in `Chap62::StarContractionMtEph::StarContractionMtEph::star_contract_mt`
+   --> src/Chap62/StarContractionMtEph.rs:150:37
+    |
+148 |     pub fn star_contract_mt<V, R, F, G>(graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G) -> (result: R)
+    |            ---------------- required by a bound in this function
+149 |     where
+150 |         V: StT + MtT + Hash + Ord + ClonePreservesView + 'static,
+    |                                     ^^^^^^^^^^^^^^^^^^ required by this bound in `star_contract_mt`
+help: consider further restricting type parameter `V` with trait `ClonePreservesView`
+    |
+ 55 |     pub fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + 'static + vstdplus::clone_view::clone_view::ClonePreservesView>(
+    |                                                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0277`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 1110MB, peak z3 RSS: 0MB, min free: 21863MB
+Sampled CPU Usage: rust_verify: 13s, z3 children: 0s

@@ -1,0 +1,114 @@
+error: precondition not satisfied
+   --> src/Chap37/BSTPlainMtEph.rs:407:23
+    |
+407 |             let out = tree_ref.in_order();
+    |                       ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap23/BalBinTreeStEph.rs:239:22
+    |
+239 |                      obeys_feq_clone::<T>(),
+    |                      ---------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/vstdplus/feq.rs:51:61
+    |
+ 51 |         &&& forall|x: T, y: T|  #[trigger] cloned(x, y) ==> x.eq_spec(&y)
+    |                                                             ^^^^^^^^^^^^^
+ 52 |         &&& forall|x: &T, y: T| #[trigger] cloned(*x, y) ==> x.eq_spec(&y)
+ 53 |         &&& forall|x: T, y: T|  #[trigger] strictly_cloned(x, y) ==> x.eq_spec(&y)
+    |                                                                      ^^^^^^^^^^^^^
+    |
+   ::: src/Chap23/BalBinTreeStEph.rs:239:22
+    |
+239 |                      obeys_feq_clone::<T>(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tree_ref.spec_balbintreesteph_wf() ✔
+tree_ref.spec_size() <= UnsignedMax.Exec(usize::BITS) ✔
+obeys_feq_clone() ✘
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✔
++---
+
+error: precondition not satisfied
+   --> src/Chap37/BSTPlainMtEph.rs:415:23
+    |
+415 |             let out = tree_ref.pre_order();
+    |                       ^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap23/BalBinTreeStEph.rs:249:22
+    |
+249 |                      obeys_feq_clone::<T>(),
+    |                      ---------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/vstdplus/feq.rs:51:61
+    |
+ 51 |         &&& forall|x: T, y: T|  #[trigger] cloned(x, y) ==> x.eq_spec(&y)
+    |                                                             ^^^^^^^^^^^^^
+ 52 |         &&& forall|x: &T, y: T| #[trigger] cloned(*x, y) ==> x.eq_spec(&y)
+ 53 |         &&& forall|x: T, y: T|  #[trigger] strictly_cloned(x, y) ==> x.eq_spec(&y)
+    |                                                                      ^^^^^^^^^^^^^
+    |
+   ::: src/Chap23/BalBinTreeStEph.rs:249:22
+    |
+249 |                      obeys_feq_clone::<T>(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tree_ref.spec_balbintreesteph_wf() ✔
+tree_ref.spec_size() <= UnsignedMax.Exec(usize::BITS) ✔
+obeys_feq_clone() ✘
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✔
++---
+
+note: automatically chose triggers for this expression:
+  --> src/Chap37/BSTPlainMtEph.rs:69:29
+   |
+69 | ...                   assert forall|x: T| new_left.tree_contains(x) implies
+   |                       ^^^^^^
+
+note:   trigger 1 of 1:
+  --> src/Chap37/BSTPlainMtEph.rs:70:33
+   |
+70 | ...                   T::le(x, node_val) && x != node_val
+   |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+  --> src/Chap37/BSTPlainMtEph.rs:72:29
+   |
+72 | ...                   assert forall|x: T| old_right.tree_contains(x) implies
+   |                       ^^^^^^
+
+note:   trigger 1 of 1:
+  --> src/Chap37/BSTPlainMtEph.rs:73:33
+   |
+73 | ...       
