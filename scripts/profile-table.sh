@@ -63,7 +63,15 @@ for f in "${FILES[@]}"; do
         | grep -E "^\s+[0-9]" \
         | grep -v "prelude_\|constructor_\|internal_"
 done \
-    | awk '{counts[$2] += $1} END {for (n in counts) printf "%10d  %s\n", counts[n], n}' \
+    | awk '{
+        # Strip trailing _NN numeric ID to group by short name.
+        name = $2
+        gsub(/_[0-9]+$/, "", name)
+        counts[name] += $1
+    }
+    END {
+        for (n in counts) printf "%10d  %s\n", counts[n], n
+    }' \
     | sort -rn \
-    | head -40 \
+    | head -30 \
     | awk 'BEGIN{n=0} {n++; printf "| %d | %s | %s |\n", n, $1, $2}'
