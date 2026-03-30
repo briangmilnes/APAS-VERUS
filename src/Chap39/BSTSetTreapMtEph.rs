@@ -178,7 +178,13 @@ pub mod BSTSetTreapMtEph {
                 forall|x: T, keep: bool|
                     predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
                 self@.len() < usize::MAX as nat,
-            ensures filtered@.finite();
+            ensures
+                filtered@.finite(),
+                filtered@.subset_of(self@),
+                forall|v: T::V| #[trigger] filtered@.contains(v)
+                    ==> self@.contains(v) && spec_pred(v),
+                forall|v: T::V| self@.contains(v) && spec_pred(v)
+                    ==> #[trigger] filtered@.contains(v);
         /// - APAS: Work Θ(n), Span O(lg n)
         fn reduce<F>(&self, op: F, base: T) -> (reduced: T)
         where

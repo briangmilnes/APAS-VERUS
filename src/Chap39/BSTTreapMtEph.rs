@@ -260,11 +260,11 @@ pub mod BSTTreapMtEph {
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         fn insert(&mut self, value: T, priority: u64)
             requires T::obeys_partial_cmp_spec(),
-            ensures self@.contains(value@), self.spec_bsttreapmteph_wf();
+            ensures self@ =~= old(self)@.insert(value@), self.spec_bsttreapmteph_wf();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         fn delete(&mut self, target: &T)
             requires T::obeys_partial_cmp_spec(),
-            ensures !self@.contains(target@), self.spec_bsttreapmteph_wf();
+            ensures self@ =~= old(self)@.remove(target@), self.spec_bsttreapmteph_wf();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         fn find(&self, target: &T) -> (found: Option<T>)
             requires T::obeys_partial_cmp_spec(),
@@ -1034,7 +1034,7 @@ pub mod BSTTreapMtEph {
         }
 
         fn insert(&mut self, value: T, priority: u64)
-            ensures self@.contains(value@), self.spec_bsttreapmteph_wf()
+            ensures self@ =~= old(self)@.insert(value@), self.spec_bsttreapmteph_wf()
         {
             proof { use_type_invariant(&*self); }
             let ghost value_view = value@;
@@ -1049,7 +1049,7 @@ pub mod BSTTreapMtEph {
         }
 
         fn delete(&mut self, target: &T)
-            ensures !self@.contains(target@), self.spec_bsttreapmteph_wf()
+            ensures self@ =~= old(self)@.remove(target@), self.spec_bsttreapmteph_wf()
         {
             proof { use_type_invariant(&*self); }
             let ghost target_view = target@;

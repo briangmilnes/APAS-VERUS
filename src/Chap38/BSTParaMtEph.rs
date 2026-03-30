@@ -251,11 +251,25 @@ pub mod BSTParaMtEph {
         fn singleton(key: T) -> (tree: Self)
             ensures
                 tree@ == Set::<<T as View>::V>::empty().insert(key@),
-                tree@.finite();
+                tree@.finite(),
+                tree.spec_bstparamteph_wf();
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
         fn expose(&self) -> (exposed: Exposed<T>)
-            ensures self@.len() == 0 ==> exposed is Leaf;
+            ensures
+                self@.len() == 0 ==> exposed is Leaf,
+                exposed is Leaf ==> self@ =~= Set::<<T as View>::V>::empty(),
+                exposed matches Exposed::Node(l, k, r) ==> {
+                    self@ =~= l@.union(r@).insert(k@)
+                    && self@.finite()
+                    && l@.finite() && r@.finite()
+                    && l@.disjoint(r@)
+                    && !l@.contains(k@)
+                    && !r@.contains(k@)
+                    && l@.len() + r@.len() < usize::MAX as nat
+                    && (forall|t: T| (#[trigger] l@.contains(t@)) ==> t.cmp_spec(&k) == Less)
+                    && (forall|t: T| (#[trigger] r@.contains(t@)) ==> t.cmp_spec(&k) == Greater)
+                };
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
         fn join_mid(exposed: Exposed<T>) -> (joined: Self)
@@ -309,7 +323,13 @@ pub mod BSTParaMtEph {
             ensures
                 parts.1 == self@.contains(key@),
                 parts.0@.finite(),
-                parts.2@.finite();
+                parts.2@.finite(),
+                parts.0@.union(parts.2@) =~= self@.remove(key@),
+                parts.0@.disjoint(parts.2@),
+                !parts.0@.contains(key@),
+                !parts.2@.contains(key@),
+                forall|t: T| (#[trigger] parts.0@.contains(t@)) ==> t.cmp_spec(&key) == Less,
+                forall|t: T| (#[trigger] parts.2@.contains(t@)) ==> t.cmp_spec(&key) == Greater;
         /// - APAS: Work O(lg(|t1| + |t2|)), Span O(lg(|t1| + |t2|))
         /// - Claude-Opus-4.6: Work O(lg(|t1| + |t2|)), Span O(lg(|t1| + |t2|)) -- agrees with APAS.
         fn join_pair(&self, other: Self) -> (joined: Self)
@@ -317,7 +337,7 @@ pub mod BSTParaMtEph {
                 self@.len() + other@.len() <= usize::MAX as nat,
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
-            ensures joined@.finite();
+            ensures joined@ == self@.union(other@), joined@.finite();
         /// Joins two disjoint BSTs where all elements of self are less than all elements of right.
         fn join_pair_inner(&self, right: &Self) -> (joined: Self)
             requires
@@ -396,8 +416,10 @@ pub mod BSTParaMtEph {
         fn singleton(key: T) -> (tree: Self)
             ensures
                 tree@ == Set::<<T as View>::V>::empty().insert(key@),
-                tree@.finite()
+                tree@.finite(),
+                tree.spec_bstparamteph_wf()
         {
+            assert(obeys_feq_full_trigger::<T>());
             let left = Self::new();
             let right = Self::new();
             let ghost kv = key@;
@@ -408,7 +430,20 @@ pub mod BSTParaMtEph {
         }
 
         fn expose(&self) -> (exposed: Exposed<T>)
-            ensures self@.len() == 0 ==> exposed is Leaf
+            ensures
+                self@.len() == 0 ==> exposed is Leaf,
+                exposed is Leaf ==> self@ =~= Set::<<T as View>::V>::empty(),
+                exposed matches Exposed::Node(l, k, r) ==> {
+                    self@ =~= l@.union(r@).insert(k@)
+                    && self@.finite()
+                    && l@.finite() && r@.finite()
+                    && l@.disjoint(r@)
+                    && !l@.contains(k@)
+                    && !r@.contains(k@)
+                    && l@.len() + r@.len() < usize::MAX as nat
+                    && (forall|t: T| (#[trigger] l@.contains(t@)) ==> t.cmp_spec(&k) == Less)
+                    && (forall|t: T| (#[trigger] r@.contains(t@)) ==> t.cmp_spec(&k) == Greater)
+                }
         {
             proof { use_type_invariant(self); }
             expose_internal(self)
@@ -513,14 +548,36 @@ pub mod BSTParaMtEph {
             ensures
                 parts.1 == self@.contains(key@),
                 parts.0@.finite(),
-                parts.2@.finite()
+                parts.2@.finite(),
+                parts.0@.union(parts.2@) =~= self@.remove(key@),
+                parts.0@.disjoint(parts.2@),
+                !parts.0@.contains(key@),
+                !parts.2@.contains(key@),
+                forall|t: T| (#[trigger] parts.0@.contains(t@)) ==> t.cmp_spec(&key) == Less,
+                forall|t: T| (#[trigger] parts.2@.contains(t@)) ==> t.cmp_spec(&key) == Greater
         {
             proof { use_type_invariant(self); }
-            split_inner(self, key)
+            let r = split_inner(self, key);
+            proof {
+                // split_inner ensures: tree@ =~= parts.0@.union(parts.2@).union(if found { {key@} } else { {} })
+                // So self@.remove(key@) =~= parts.0@.union(parts.2@).
+                let (ref left, found, ref right) = r;
+                let lv = left@;
+                let rv = right@;
+                let kv = key@;
+                if found {
+                    assert(self@ =~= lv.union(rv).union(Set::<<T as View>::V>::empty().insert(kv)));
+                    assert(self@.remove(kv) =~= lv.union(rv));
+                } else {
+                    assert(self@ =~= lv.union(rv).union(Set::<<T as View>::V>::empty()));
+                    assert(self@.remove(kv) =~= lv.union(rv));
+                }
+            }
+            r
         }
 
         fn join_pair(&self, other: Self) -> (joined: Self)
-            ensures joined@.finite()
+            ensures joined@ == self@.union(other@), joined@.finite()
         {
             proof { use_type_invariant(self); use_type_invariant(&other); }
             union_inner(self, &other)
