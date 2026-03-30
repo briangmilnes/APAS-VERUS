@@ -4,9 +4,9 @@
 //! Implements Union-Find (Disjoint Set Union) with union by rank.
 //! Used in Kruskal's MST algorithm for efficient cycle detection.
 //!
-//! Final four proof holes (2 of 4):
-//! - union_merge (line 1167): external_body — Z3 matching loop on 13-quantifier wf.
-//! - union (line 1404): external_body — depends on union_merge proof.
+//! Tricky three proof holes (1 of 3):
+//! - union_merge: PROVED (R106, agent1 — opaque roots predicate eliminates matching loop).
+//! - union (trait impl): external_body — needs to bridge union_merge ensures to trait ensures.
 //!
 //! NOTE: find currently uses root-chasing without path compression (O(log n) per call).
 //! Path compression lemmas are written and commented out — the assembly lemma needs

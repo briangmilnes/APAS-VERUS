@@ -658,8 +658,8 @@ pub mod Chap64 {
     pub mod TSPApproxStEph;
 }
 
-// Chap65: commented out — final four proof holes (Z3 matching loop on union wf).
-// Agent 1 has partial progress on agent1/ready branch.
+// Chap65: commented out — tricky three proof holes (union, uf_wf_opaque, kruskal).
+// union_merge proved (R106). union trait impl + Kruskal remain.
 // #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap65")))]
 // pub mod Chap65 {
 //     pub mod UnionFindStEph;
