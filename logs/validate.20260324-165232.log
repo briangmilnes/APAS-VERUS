@@ -1,0 +1,47 @@
+error: The verifier does not yet support the following Rust feature: &mut types, except in special cases
+   --> src/Chap37/BSTRBMtEph.rs:212:37
+    |
+212 |                 if let Some(left) = x.left.as_mut() {
+    |                                     ^^^^^^^^^^^^^^^
+
+error: The verifier does not yet support the following Rust feature: &mut types, except in special cases
+   --> src/Chap37/BSTRBMtEph.rs:295:38
+    |
+295 |                 if let Some(right) = x.right.as_mut() {
+    |                                      ^^^^^^^^^^^^^^^^
+
+error: The verifier does not yet support the following Rust feature: &mut types, except in special cases
+   --> src/Chap37/BSTRBMtEph.rs:342:29
+    |
+342 |         if let Some(node) = link.as_mut() {
+    |                             ^^^^^^^^^^^^^
+
+error: The verifier does not yet support the following Rust feature: &mut types, except in special cases
+   --> src/Chap37/BSTRBMtEph.rs:368:40
+    |
+368 |         let rotate_left_needed = match link {
+    |                                        ^^^^
+
+error: in exec code, the index operator is only supported for usize index
+   --> src/Chap37/BSTRBMtEph.rs:733:27
+    |
+733 |         let left_slice = &values[..mid];
+    |                           ^^^^^^^-----^
+    |                                  |
+    |                                  expected usize, found core::ops::range::RangeTo<usize>
+
+error: The verifier does not yet support the following Rust feature: &mut types, except in special cases
+   --> src/Chap37/BSTRBMtEph.rs:953:37
+    |
+953 |                 if let Some(node) = current.as_mut() {
+    |                                     ^^^^^^^^^^^^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap37/BSTRBMtEph.rs:46:14
+   |
+46 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: aborting due to 6 previous errors; 1 warning emitted
+
+Elapsed: 26s

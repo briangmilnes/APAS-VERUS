@@ -1,0 +1,28 @@
+error[E0308]: mismatched types
+   --> src/Chap53/PQMinStPer.rs:283:77
+    |
+283 |                 vstd::set_lib::lemma_len_union(old_pri, Set::empty().insert(Pair(vref@, p@)));
+    |                                                                      ------ ^^^^^^^^^^^^^^^ expected `(<V as View>::V, <P as View>::V)`, found `Pair<<V as View>::V, <P as View>::V>`
+    |                                                                      |
+    |                                                                      arguments to this method are incorrect
+    |
+    = note: expected tuple `(<V as vstd::string::View>::V, <P as vstd::string::View>::V)`
+              found struct `Types::Types::Pair<<V as vstd::string::View>::V, <P as vstd::string::View>::V>`
+help: the return type of this call is `Types::Types::Pair<<V as vstd::string::View>::V, <P as vstd::string::View>::V>` due to the type of the argument passed
+   --> src/Chap53/PQMinStPer.rs:283:57
+    |
+283 |                 vstd::set_lib::lemma_len_union(old_pri, Set::empty().insert(Pair(vref@, p@)));
+    |                                                         ^^^^^^^^^^^^^^^^^^^^---------------^
+    |                                                                             |
+    |                                                                             this argument influences the return type of `insert`
+note: method defined here
+   --> vstd/set.rs:108:23
+help: call `Into::into` on this expression to convert `Types::Types::Pair<<V as vstd::string::View>::V, <P as vstd::string::View>::V>` into `(<V as vstd::string::View>::V, <P as vstd::string::View>::V)`
+    |
+283 |                 vstd::set_lib::lemma_len_union(old_pri, Set::empty().insert(Pair(vref@, p@).into()));
+    |                                                                                            +++++++
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0308`.
+Elapsed: 25s

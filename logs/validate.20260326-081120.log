@@ -1,0 +1,15 @@
+error: #[verifier::external_body] doesn't make sense for this item type -- it is only applicable to functions and datatype declarations
+   --> src/Chap44/DocumentIndex.rs:104:9
+    |
+104 | /         impl core::cmp::PartialEq for DocumentIndex {
+105 | |             fn eq(&self, other: &Self) -> bool {
+106 | |                 self.word_to_docs == other.word_to_docs
+107 | |             }
+108 | |         }
+    | |_________^
+
+error: aborting due to 1 previous error
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 7183MB, peak z3 RSS: 50MB, min free: 17553MB
+Sampled CPU Usage: rust_verify: 159s, z3 children: 120s

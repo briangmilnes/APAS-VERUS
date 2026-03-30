@@ -1,0 +1,190 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:467:17
+    |
+467 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:472:17
+    |
+472 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: invariant not satisfied before loop
+   --> src/Chap43/OrderedSetStPer.rs:910:21
+    |
+910 |                     size as nat == self@.len(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap53/PQMinStPer.rs:193:24
+    |
+193 |                 assert(vertex_universe.contains(v@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap53/PQMinStPer.rs:230:37
+    |
+230 | ...                   implies vertex_universe.contains(e.1) by {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap53/PQMinStPer.rs:233:33
+    |
+233 | ...                   neighbors.elements@.unique_seq_to_set();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:1037:12
+    |
+    = note: failed precondition
+
+error: assertion failed
+   --> src/Chap53/PQMinStPer.rs:245:44
+    |
+245 |                         implies #[trigger] vertex_universe.contains(a) by {}
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap53/PQMinStPer.rs:270:17
+    |
+270 |                 priorities@.len() <= j as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap53/PQMinStPer.rs:330:17
+    |
+330 |                 initial_frontier@.len() <= i as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap53/PQMinStPer.rs:347:29
+    |
+347 |                     implies vertex_universe.contains(e.1) by {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+vertex_universe.contains(e.1) 
+    function is uninterpreted
+
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:205:24
+    |
+205 |                 assert(vertex_universe.contains(v@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:244:125
+    |
+244 | ...r] frontier_updated@.contains(e) implies vertex_universe.contains(e.1) by {
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:261:44
+    |
+261 |                         implies #[trigger] vertex_universe.contains(a) by {}
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+vertex_universe.contains(e.1) 
+    function is uninterpreted
+
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:346:29
+    |
+346 |                     implies vertex_universe.contains(e.1) by {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+vertex_universe.contains(e.1) 
+    function is uninterpreted
+
+note: automatically chose triggers for this expression:
+  --> src/Chap62/StarContractionStEph.rs:82:13
+   |
+82 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+  --> src/Chap62/StarContractionStEph.rs:82:37
+   |
+82 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+   |                                     ^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarContractionStEph.rs:142:13
+    |
+142 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarContractionStEph.rs:142:37
+    |
+142 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+    |                                     ^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:169:13
+    |
+169 | /             forall |d: int| 0 <= d < table.current_size as int
+170 | |                 ==> !spec_flat_has_key(
+171 | |                     table.table@[spec_tri_probe(h as int, d, table.current_size as int)],
+172 | |                     *key),
+    | |_________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:171:34
+    |
+171 |                     table.table@[spec_tri_probe(h as int, d, table.current_size as int)],
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:467:17
+    |
+467 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:469:38
+    |
+469 |                         table.table@[spec_tri_probe(h as int, d, table.current_size as int)], key) by {
+    |                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:467:17
+    |
+467 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+
+verification results:: 4477 verified, 8 errors
+error: aborting due to 12 previous errors; 2 warnings emitted
+
+Elapsed: 69s

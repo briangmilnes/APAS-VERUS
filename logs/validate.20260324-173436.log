@@ -1,0 +1,21 @@
+error[E0277]: can't compare `&T` with `T`
+   --> src/Chap37/BSTSetRBMtEph.rs:194:31
+    |
+194 |                 .filter(|x| x != target)
+    |                               ^^ no implementation for `&T == T`
+    |
+    = help: the trait `std::cmp::PartialEq<T>` is not implemented for `&T`
+    = note: required for `&&T` to implement `std::cmp::PartialEq<&T>`
+help: consider dereferencing here
+    |
+194 |                 .filter(|x| *x != target)
+    |                             +
+help: consider introducing a `where` clause, but there might be an alternative better way to express this requirement
+    |
+154 |     impl<T: StTInMtT + Ord + TotalOrder> BSTSetRBMtEphTrait<T> for BSTSetRBMtEph<T> where &T: std::cmp::PartialEq<T> {
+    |                                                                                     ++++++++++++++++++++++++++++++++
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0277`.
+Elapsed: 14s

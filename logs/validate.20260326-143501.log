@@ -1,0 +1,29 @@
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:126:17
+    |
+126 |                 has_cycle == !spec_is_dag(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+433 |             false
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap55/CycleDetectStEph.rs:126:17
+    |
+126 |                 has_cycle == !spec_is_dag(graph),
+    |                 ^^^^^^^^^     ^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == !(spec_is_dag(old(graph)))
+|   %return ==>
+|       !(spec_is_dag(old(graph))) ✘
+|       |   (exists |path| spec_is_path(old(graph), path) && path.len() >= 2 && path.index(0) == path.last()) 
+|       +---
+|   !(spec_is_dag(old(graph))) ==>
+|       %return ✘
++---
+
+verification results:: 2084 verified, 1 errors
+error: aborting due to 1 previous error
+

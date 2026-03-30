@@ -1,0 +1,504 @@
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:182:17
+    |
+182 |                 reveal_with_fuel(spec_is_bst_link, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:183:17
+    |
+183 |                 reveal_with_fuel(link_contains, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:194:21
+    |
+194 |                     reveal_with_fuel(spec_is_bst_link, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:195:21
+    |
+195 |                     reveal_with_fuel(link_contains, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:218:21
+    |
+218 |                     reveal_with_fuel(spec_is_bst_link, 3);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:219:21
+    |
+219 |                     reveal_with_fuel(link_contains, 4);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:228:25
+    |
+228 |                         reveal_with_fuel(link_contains, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:238:25
+    |
+238 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:241:25
+    |
+241 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:244:25
+    |
+244 |                         reveal_with_fuel(link_contains, 4);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:266:17
+    |
+266 |                 reveal_with_fuel(spec_is_bst_link, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:267:17
+    |
+267 |                 reveal_with_fuel(link_contains, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:278:21
+    |
+278 |                     reveal_with_fuel(spec_is_bst_link, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:279:21
+    |
+279 |                     reveal_with_fuel(link_contains, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:302:21
+    |
+302 |                     reveal_with_fuel(spec_is_bst_link, 3);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:303:21
+    |
+303 |                     reveal_with_fuel(link_contains, 4);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:312:25
+    |
+312 |                         reveal_with_fuel(link_contains, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:322:25
+    |
+322 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:325:25
+    |
+325 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:328:25
+    |
+328 |                         reveal_with_fuel(link_contains, 4);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:421:21
+    |
+421 |                     reveal_with_fuel(spec_is_bst_link, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:422:21
+    |
+422 |                     reveal_with_fuel(link_contains, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:436:29
+    |
+436 | ...                   reveal_with_fuel(spec_is_bst_link, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:437:29
+    |
+437 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:449:33
+    |
+449 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:454:33
+    |
+454 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:463:33
+    |
+463 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:478:29
+    |
+478 | ...                   reveal_with_fuel(spec_is_bst_link, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:479:29
+    |
+479 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:491:33
+    |
+491 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:496:33
+    |
+496 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:505:33
+    |
+505 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:518:29
+    |
+518 | ...                   reveal_with_fuel(spec_is_bst_link, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:519:29
+    |
+519 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap23/BalBinTreeStEph.rs:223:21
+    |
+223 |               ensures count == self.spec_size();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+361 | /             match self {
+362 | |                 BalBinTree::Leaf => 0,
+363 | |                 BalBinTree::Node(node) => {
+364 | |                     let left_sz = node.left.size();
+...   |
+368 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap23/BalBinTreeStEph.rs:364:35
+    |
+221 |             requires self.spec_balbintreesteph_wf(),
+    |                      ------------------------------ failed precondition
+...
+364 |                     let left_sz = node.left.size();
+    |                                   ^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap23/BalBinTreeStEph.rs:365:36
+    |
+221 |             requires self.spec_balbintreesteph_wf(),
+    |                      ------------------------------ failed precondition
+...
+365 |                     let right_sz = node.right.size();
+    |                                    ^^^^^^^^^^^^^^^^^
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap23/BalBinTreeStEph.rs:366:21
+    |
+366 |                     1 + left_sz + right_sz
+    |                     ^^^^^^^^^^^
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap23/BalBinTreeStEph.rs:366:21
+    |
+366 |                     1 + left_sz + right_sz
+    |                     ^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap23/BalBinTreeStEph.rs:221:22
+    |
+221 |             requires self.spec_balbintreesteph_wf(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+222 |                      self.spec_size() <= usize::MAX,
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_balbintreesteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+tmp%.spec_size() <= UnsignedMax.Exec(usize::BITS) ✘
+
+error: postcondition not satisfied
+   --> src/Chap23/BalBinTreeStEph.rs:230:21
+    |
+230 |               ensures h == self.spec_height();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+374 | /             match self {
+375 | |                 BalBinTree::Leaf => 0,
+376 | |                 BalBinTree::Node(node) => {
+377 | |                     let left_h = node.left.height();
+...   |
+381 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap23/BalBinTreeStEph.rs:377:34
+    |
+228 |             requires self.spec_balbintreesteph_wf(),
+    |                      ------------------------------ failed precondition
+...
+377 |                     let left_h = node.left.height();
+    |                                  ^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap23/BalBinTreeStEph.rs:378:35
+    |
+228 |             requires self.spec_balbintreesteph_wf(),
+    |                      ------------------------------ failed precondition
+...
+378 |                     let right_h = node.right.height();
+    |                                   ^^^^^^^^^^^^^^^^^^^
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap23/BalBinTreeStEph.rs:379:21
+    |
+379 |                     1 + if left_h >= right_h { left_h } else { right_h }
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap23/BalBinTreeStEph.rs:228:22
+    |
+228 |             requires self.spec_balbintreesteph_wf(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+229 |                      self.spec_height() <= usize::MAX,
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_balbintreesteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+tmp%.spec_height() <= UnsignedMax.Exec(usize::BITS) ✘
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:571:31
+    |
+571 |             min.is_some() ==> forall|x: T| link_contains(*link, x) ==> TotalOrder::le(*min.unwrap(), x),
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:571:44
+    |
+571 |             min.is_some() ==> forall|x: T| link_contains(*link, x) ==> TotalOrder::le(*min.unwrap(), x),
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:579:25
+    |
+579 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(node.key, x) by {
+    |                         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:579:45
+    |
+579 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(node.key, x) by {
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:597:25
+    |
+597 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(*min.unwrap(), x) by {
+    |                         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:597:45
+    |
+597 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(*min.unwrap(), x) by {
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:619:31
+    |
+619 |             max.is_some() ==> forall|x: T| link_contains(*link, x) ==> TotalOrder::le(x, *max.unwrap()),
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:619:44
+    |
+619 |             max.is_some() ==> forall|x: T| link_contains(*link, x) ==> TotalOrder::le(x, *max.unwrap()),
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:627:25
+    |
+627 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, node.key) by {
+    |                         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:627:45
+    |
+627 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, node.key) by {
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:645:25
+    |
+645 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, *max.unwrap()) by {
+    |                         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:645:45
+    |
+645 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, *max.unwrap()) by {
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:256:29
+    |
+256 | ...                   assert forall|x: T| new_left.tree_contains(x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:257:33
+    |
+257 | ...                   T::le(x, node_val) && x != node_val
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:259:29
+    |
+259 | ...                   assert forall|x: T| old_right.tree_contains(x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:260:33
+    |
+260 | ...                   T::le(node_val, x) && x != node_val by {};
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:280:29
+    |
+280 | ...                   assert forall|x: T| old_left.tree_contains(x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:281:33
+    |
+281 | ...                   T::le(x, node_val) && x != node_val by {};
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:282:29
+    |
+282 | ...                   assert forall|x: T| new_right.tree_contains(x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:283:33
+    |
+283 | ...                   T::le(node_val, x) && x != node_val
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:118:29
+    |
+118 | ...                   assert forall|z: T| old_lr.tree_contains(z) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:119:33
+    |
+119 | ...                   T::le(z, y_val) && z != y_val
+    |                       ^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:124:29
+    |
+124 | ...                   assert forall|z: T| right_sub.tree_contains(z) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:125:33
+    |
+125 | ...                   T::le(x_val, z) && z != x_val
+    |                       ^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:184:29
+    |
+184 | ...                   assert forall|z: T| old_rl.tree_contains(z) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:185:33
+    |
+185 | ...                   T::le(x_val, z) && z != x_val
+    |                       ^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:190:29
+    |
+190 | ...                   assert forall|z: T| left_sub.tree_contains(z) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:191:33
+    |
+191 | ...                   T::le(z, y_val) && z != y_val
+    |                       ^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap37/BSTAVLMtEph.rs:190:29
+    |
+190 | ...                   assert forall|z: T| left_sub.tree_contains(z) implies
+    |                       ^^^^^^
+
+verification results:: 4507 verified, 2 errors
+error: aborting due to 9 previous errors; 34 warnings emitted
+
+Elapsed: 60s

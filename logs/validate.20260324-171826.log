@@ -1,0 +1,112 @@
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:496:9
+    |
+496 |         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTSetAVLMtEph::BSTSetAVLMtEph::BSTSetAVLMtEph`
+   --> src/Chap37/BSTSetAVLMtEph.rs:34:51
+    |
+ 34 |     pub struct BSTSetAVLMtEph<T: StTInMtT + Ord + TotalOrder> {
+    |                                                   ^^^^^^^^^^ required by this bound in `BSTSetAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+495 |     impl<T: StTInMtT + Ord + fmt::Debug + vstdplus::total_order::total_order::TotalOrder> fmt::Debug for BSTSetAVLMtEph<T> {
+    |                                         ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:495:57
+    |
+495 |     impl<T: StTInMtT + Ord + fmt::Debug> fmt::Debug for BSTSetAVLMtEph<T> {
+    |                                                         ^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTSetAVLMtEph::BSTSetAVLMtEph::BSTSetAVLMtEph`
+   --> src/Chap37/BSTSetAVLMtEph.rs:34:51
+    |
+ 34 |     pub struct BSTSetAVLMtEph<T: StTInMtT + Ord + TotalOrder> {
+    |                                                   ^^^^^^^^^^ required by this bound in `BSTSetAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+495 |     impl<T: StTInMtT + Ord + fmt::Debug + vstdplus::total_order::total_order::TotalOrder> fmt::Debug for BSTSetAVLMtEph<T> {
+    |                                         ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:496:17
+    |
+496 |         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    |                 ^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTSetAVLMtEph::BSTSetAVLMtEph::BSTSetAVLMtEph`
+   --> src/Chap37/BSTSetAVLMtEph.rs:34:51
+    |
+ 34 |     pub struct BSTSetAVLMtEph<T: StTInMtT + Ord + TotalOrder> {
+    |                                                   ^^^^^^^^^^ required by this bound in `BSTSetAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+495 |     impl<T: StTInMtT + Ord + fmt::Debug + vstdplus::total_order::total_order::TotalOrder> fmt::Debug for BSTSetAVLMtEph<T> {
+    |                                         ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `<I as std::iter::IntoIterator>::IntoIter: vstd::pervasive::ForLoopGhostIteratorNew` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:167:9
+    |
+167 | /         for value in values {
+168 | |             let _ = tree.insert(value);
+169 | |         }
+    | |_________^ the trait `vstd::pervasive::ForLoopGhostIteratorNew` is not implemented for `<I as std::iter::IntoIterator>::IntoIter`
+    |
+help: consider further restricting the associated type
+    |
+163 |         I: IntoIterator<Item = T>, <I as std::iter::IntoIterator>::IntoIter: vstd::pervasive::ForLoopGhostIteratorNew
+    |                                    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `<I as std::iter::IntoIterator>::IntoIter: vstd::pervasive::ForLoopGhostIteratorNew` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:167:22
+    |
+167 |         for value in values {
+    |                      ^^^^^^ the trait `vstd::pervasive::ForLoopGhostIteratorNew` is not implemented for `<I as std::iter::IntoIterator>::IntoIter`
+    |
+help: consider further restricting the associated type
+    |
+163 |         I: IntoIterator<Item = T>, <I as std::iter::IntoIterator>::IntoIter: vstd::pervasive::ForLoopGhostIteratorNew
+    |                                    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: can't compare `&T` with `T`
+   --> src/Chap37/BSTSetAVLMtEph.rs:219:31
+    |
+219 |                 .filter(|x| x != target)
+    |                               ^^ no implementation for `&T == T`
+    |
+    = help: the trait `std::cmp::PartialEq<T>` is not implemented for `&T`
+    = note: required for `&&T` to implement `std::cmp::PartialEq<&T>`
+help: consider dereferencing here
+    |
+219 |                 .filter(|x| *x != target)
+    |                             +
+help: consider introducing a `where` clause, but there might be an alternative better way to express this requirement
+    |
+180 |     impl<T: StTInMtT + Ord + TotalOrder> BSTSetAVLMtEphTrait<T> for BSTSetAVLMtEph<T> where &T: std::cmp::PartialEq<T> {
+    |                                                                                       ++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:497:60
+    |
+497 |             f.debug_struct("BSTSetAVLMtEph").field("tree", &self.tree).finish()
+    |                                                            ^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` to implement `std::fmt::Debug`
+   --> src/Chap37/BSTAVLMtEph.rs:626:25
+    |
+626 |     impl<T: TotalOrder> std::fmt::Debug for BSTAVLMtEph<T> {
+    |             ----------  ^^^^^^^^^^^^^^^     ^^^^^^^^^^^^^^
+    |             |
+    |             unsatisfied trait bound introduced here
+    = note: required for the cast from `&Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` to `&dyn std::fmt::Debug`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+495 |     impl<T: StTInMtT + Ord + fmt::Debug + vstdplus::total_order::total_order::TotalOrder> fmt::Debug for BSTSetAVLMtEph<T> {
+    |                                         ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0277`.
+Elapsed: 13s

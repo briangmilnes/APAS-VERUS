@@ -1,0 +1,27 @@
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:368:31
+    |
+368 |             let combined_st = self_handle.borrow().union(other_handle.borrow());
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:275:17
+    |
+275 |                 self@.len() + other@.len() < usize::MAX as nat,
+    |                 ---------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStEph.rs:275:17
+    |
+275 |                 self@.len() + other@.len() < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_avltreesetsteph_wf() ✔
+tmp%.spec_avltreesetsteph_wf() ✔
+clip(nat, tmp%.view().len() + tmp%.view().len()) < UnsignedMax.Exec(usize::BITS) ✘
+
+verification results:: 2192 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 34s

@@ -1,0 +1,16 @@
+error: assertion failed
+   --> src/Chap41/AVLTreeSetStEph.rs:142:20
+    |
+142 |             assert(set.elements@ =~= Seq::<<T as View>::V>::empty());
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+set.elements.view() =~= empty() 
+
+verification results:: 4486 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 102s

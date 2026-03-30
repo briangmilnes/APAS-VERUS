@@ -1,0 +1,21 @@
+error: expected `,`
+   --> src/Chap55/CycleDetectStEph.rs:576:59
+    |
+576 |                 assert(0 <= neighbor as int < callsite_anc.len());
+    |                                                           ^
+
+error[E0432]: unresolved import `crate::Chap55::CycleDetectStEph::CycleDetectStEph::spec_in_path`
+  --> src/Chap55/CycleDetectStPer.rs:12:9
+   |
+12 |     use crate::Chap55::CycleDetectStEph::CycleDetectStEph::spec_in_path;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^------------
+   |         |                                                  |
+   |         |                                                  help: a similar name exists in the module: `spec_is_path`
+   |         no `spec_in_path` in `Chap55::CycleDetectStEph::CycleDetectStEph`
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0432`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 7786MB, peak z3 RSS: 196MB, min free: 12305MB
+Sampled CPU Usage: rust_verify: 86s, z3 children: 28s

@@ -1,0 +1,412 @@
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:182:17
+    |
+182 |                 reveal_with_fuel(spec_is_bst_link, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:183:17
+    |
+183 |                 reveal_with_fuel(link_contains, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:194:21
+    |
+194 |                     reveal_with_fuel(spec_is_bst_link, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:195:21
+    |
+195 |                     reveal_with_fuel(link_contains, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:218:21
+    |
+218 |                     reveal_with_fuel(spec_is_bst_link, 3);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:219:21
+    |
+219 |                     reveal_with_fuel(link_contains, 4);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:228:25
+    |
+228 |                         reveal_with_fuel(link_contains, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:238:25
+    |
+238 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:241:25
+    |
+241 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:244:25
+    |
+244 |                         reveal_with_fuel(link_contains, 4);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:266:17
+    |
+266 |                 reveal_with_fuel(spec_is_bst_link, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:267:17
+    |
+267 |                 reveal_with_fuel(link_contains, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:278:21
+    |
+278 |                     reveal_with_fuel(spec_is_bst_link, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:279:21
+    |
+279 |                     reveal_with_fuel(link_contains, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:302:21
+    |
+302 |                     reveal_with_fuel(spec_is_bst_link, 3);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:303:21
+    |
+303 |                     reveal_with_fuel(link_contains, 4);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:312:25
+    |
+312 |                         reveal_with_fuel(link_contains, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:322:25
+    |
+322 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:325:25
+    |
+325 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:328:25
+    |
+328 |                         reveal_with_fuel(link_contains, 4);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:421:21
+    |
+421 |                     reveal_with_fuel(spec_is_bst_link, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:422:21
+    |
+422 |                     reveal_with_fuel(link_contains, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:436:29
+    |
+436 | ...                   reveal_with_fuel(spec_is_bst_link, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:437:29
+    |
+437 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:449:33
+    |
+449 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:454:33
+    |
+454 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:463:33
+    |
+463 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:478:29
+    |
+478 | ...                   reveal_with_fuel(spec_is_bst_link, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:479:29
+    |
+479 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:491:33
+    |
+491 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:496:33
+    |
+496 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:505:33
+    |
+505 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:518:29
+    |
+518 | ...                   reveal_with_fuel(spec_is_bst_link, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:519:29
+    |
+519 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+error: `core::iter::adapters::cloned::Cloned` is not supported (note: you may be able to add a Verus specification to this type with the `external_type_specification` attribute) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetAVLMtEph.rs:146:9
+    |
+146 |            tree.in_order().iter().cloned().collect()
+    |            -------------------------------^^^^^^^^^^
+...
+216 |                let filtered: Vec<T> = self
+    |   ____________________________________-
+    |  |____________________________________|
+217 | ||                 .tree
+218 | ||                 .in_order()
+219 | ||                 .iter()
+220 | ||                 .filter(|x| *x != target)
+221 | ||                 .cloned()
+    | ||_________________________-
+222 | |                  .collect();
+    | |___________________________-
+...
+375 |                let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+    |                                     ----------------------------------------------
+...
+473 |                let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+    |                                     ----------------------------------------------
+    |
+    = help: The following declaration may resolve this error:
+            #[verifier::reject_recursive_types(I)]
+            #[verifier::external_type_specification]
+            pub struct ExCloned<I>(std::iter::Cloned<I>);
+
+error: `lib::Chap18::ArraySeqStPer::ArraySeqStPer::impl&%10%default%cloned` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+   --> src/Chap37/BSTSetAVLMtEph.rs:146:9
+    |
+146 |         tree.in_order().iter().cloned().collect()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+375 |             let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+    |                                  ------------------------------------
+...
+473 |             let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+    |                                  ------------------------------------
+
+error: `core::iter::adapters::filter::Filter` is not supported (note: you may be able to add a Verus specification to this type with the `external_type_specification` attribute) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetAVLMtEph.rs:216:36
+    |
+216 |                  let filtered: Vec<T> = self
+    |     ____________________________________^
+    |    |____________________________________|
+    |  _||____________________________________|
+217 | | ||                 .tree
+218 | | ||                 .in_order()
+219 | | ||                 .iter()
+220 | | ||                 .filter(|x| *x != target)
+    | | ||_________________________________________-
+221 | | |                  .cloned()
+    | | |__________________________-
+222 | |                    .collect();
+    | |_____________________________^
+    |
+    = help: The following declaration may resolve this error:
+            #[verifier::reject_recursive_types(I)]
+            #[verifier::reject_recursive_types(P)]
+            #[verifier::external_type_specification]
+            pub struct ExFilter<I, P>(std::iter::Filter<I, P>);
+
+error: `core::iter::adapters::filter::impl&%3%default%cloned` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetAVLMtEph.rs:216:36
+    |
+216 |               let filtered: Vec<T> = self
+    |  ____________________________________^
+217 | |                 .tree
+218 | |                 .in_order()
+219 | |                 .iter()
+220 | |                 .filter(|x| *x != target)
+221 | |                 .cloned()
+    | |_________________________^
+
+error: `lib::Chap18::ArraySeqStPer::ArraySeqStPer::impl&%10%default%filter` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+   --> src/Chap37/BSTSetAVLMtEph.rs:216:36
+    |
+216 |               let filtered: Vec<T> = self
+    |  ____________________________________^
+217 | |                 .tree
+218 | |                 .in_order()
+219 | |                 .iter()
+220 | |                 .filter(|x| *x != target)
+    | |_________________________________________^
+
+error: `core::cmp::impls::impl&%9::ne` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetAVLMtEph.rs:220:29
+    |
+220 |                 .filter(|x| *x != target)
+    |                             ^^^^^^^^^^^^
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification<'a, 'b, A, B> [<&'b A as std::cmp::PartialEq<&B>>::ne] (_0: &&'b A, _1: &&B) -> bool
+            where
+            A: std::cmp::PartialEq<B> + ?Sized,
+            B: ?Sized,;
+
+error: `core::cmp::impls::impl&%10::lt` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetAVLMtEph.rs:314:20
+    |
+314 |                 if value < pivot {
+    |                    ^^^^^^^^^^^^^
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification<'a, 'b, A, B> [<&'b A as std::cmp::PartialOrd<&B>>::lt] (_0: &&'b A, _1: &&B) -> bool
+            where
+            A: std::cmp::PartialOrd<B> + ?Sized,
+            B: ?Sized,;
+
+error: `core::cmp::impls::impl&%10::gt` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetAVLMtEph.rs:316:27
+    |
+316 |                 } else if value > pivot {
+    |                           ^^^^^^^^^^^^^
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification<'a, 'b, A, B> [<&'b A as std::cmp::PartialOrd<&B>>::gt] (_0: &&'b A, _1: &&B) -> bool
+            where
+            A: std::cmp::PartialOrd<B> + ?Sized,
+            B: ?Sized,;
+
+error: `alloc::vec::into_iter::impl&%6%default%collect` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetAVLMtEph.rs:332:32
+    |
+332 |             let mut combined = left_values.into_iter().collect::<BTreeSet<T>>();
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+346 |             let mut combined = left_values.into_iter().collect::<BTreeSet<T>>();
+    |                                ------------------------------------------------
+
+error: `core::iter::adapters::filter_map::impl&%2%default%collect` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetAVLMtEph.rs:355:28
+    |
+355 |               let filtered = self
+    |  ____________________________^
+356 | |                 .tree
+357 | |                 .in_order()
+358 | |                 .iter()
+359 | |                 .filter_map(|v| if predicate(v) { Some(v.clone()) } else { None }).collect::<Vec<T>>();
+    | |______________________________________________________________________________________________________^
+
+error: `core::iter::adapters::filter_map::FilterMap` is not supported (note: you may be able to add a Verus specification to this type with the `external_type_specification` attribute) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetAVLMtEph.rs:355:28
+    |
+355 |                let filtered = self
+    |   ____________________________^
+    |  |____________________________|
+356 | ||                 .tree
+357 | ||                 .in_order()
+358 | ||                 .iter()
+359 | ||                 .filter_map(|v| if predicate(v) { Some(v.clone()) } else { None }).collect::<Vec<T>>();
+    | ||__________________________________________________________________________________-___________________^
+    | |___________________________________________________________________________________|
+    |
+    |
+    = help: The following declaration may resolve this error:
+            #[verifier::reject_recursive_types(F)]
+            #[verifier::reject_recursive_types(I)]
+            #[verifier::external_type_specification]
+            pub struct ExFilterMap<I, F>(std::iter::FilterMap<I, F>);
+
+error: `lib::Chap18::ArraySeqStPer::ArraySeqStPer::impl&%10%default%filter_map` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+   --> src/Chap37/BSTSetAVLMtEph.rs:355:28
+    |
+355 |               let filtered = self
+    |  ____________________________^
+356 | |                 .tree
+357 | |                 .in_order()
+358 | |                 .iter()
+359 | |                 .filter_map(|v| if predicate(v) { Some(v.clone()) } else { None }).collect::<Vec<T>>();
+    | |__________________________________________________________________________________^
+
+error: `lib::Chap18::ArraySeqStPer::ArraySeqStPer::impl&%10%default%fold` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+   --> src/Chap37/BSTSetAVLMtEph.rs:364:13
+    |
+364 | /             self.tree
+365 | |                 .in_order()
+366 | |                 .iter()
+367 | |                 .fold(base, |acc, value| op(acc, value.clone()))
+    | |________________________________________________________________^
+
+error: `core::iter::adapters::cloned::impl&%1%default%collect` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetAVLMtEph.rs:146:9
+    |
+146 |           tree.in_order().iter().cloned().collect()
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+216 |               let filtered: Vec<T> = self
+    |  ____________________________________-
+217 | |                 .tree
+218 | |                 .in_order()
+219 | |                 .iter()
+220 | |                 .filter(|x| *x != target)
+221 | |                 .cloned()
+222 | |                 .collect();
+    | |__________________________-
+...
+375 |               let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+    |                                    ----------------------------------------------
+...
+473 |               let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+    |                                    ----------------------------------------------
+
+error: aborting due to 14 previous errors; 34 warnings emitted
+
+Elapsed: 22s

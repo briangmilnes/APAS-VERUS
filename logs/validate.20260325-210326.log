@@ -1,0 +1,30 @@
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:246:9
+    |
+246 |         while i < edges_vec.len()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:339:24
+    |
+339 |         proof { assert(pre_sort.len() == eseq.len()); }
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:283:5
+    |
+283 | /     pub fn kruskal_mst<V: HashOrd>(
+284 | |         graph: &LabUnDirGraphStEph<V, WrappedF64>,
+285 | |     ) -> (mst_edges: SetStEph<LabEdge<V, WrappedF64>>)
+    | |_____________________________________________________^
+
+note: diagnostics via expansion
+
+note: 
+
+pre_sort.len() == eseq.len() 
+
+verification results:: 4919 verified, 2 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 153s

@@ -1,0 +1,118 @@
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:70:17
+    |
+ 70 |                 has_cycle == !spec_is_dag(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+232 |                         return true;
+    |                         ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:70:17
+    |
+ 70 |                 has_cycle == !spec_is_dag(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+237 |             false
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+  --> src/Chap55/CycleDetectStEph.rs:70:31
+   |
+70 |                 has_cycle == !spec_is_dag(graph),
+   |                               ^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == !(spec_is_dag(old(graph)))
+|   %return ==>
+|       !(spec_is_dag(old(graph))) ✘
+|       |   (exists |path| spec_is_path(old(graph), path) && path.len() >= 2 && path.index(0) == path.last()) 
+|       +---
+|   !(spec_is_dag(old(graph))) ==>
+|       %return ✔
++---
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStPer.rs:69:17
+    |
+ 69 |                 has_cycle == !spec_is_dag_per(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+200 |                         return true;
+    |                         ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStPer.rs:69:17
+    |
+ 69 |                 has_cycle == !spec_is_dag_per(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+205 |             false
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+  --> src/Chap55/CycleDetectStPer.rs:69:31
+   |
+69 |                 has_cycle == !spec_is_dag_per(graph),
+   |                               ^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == !(spec_is_dag_per(old(graph)))
+|   %return ==>
+|       !(spec_is_dag_per(old(graph))) ✘
+|       |   (exists |path| spec_is_path_per(old(graph), path) && path.len() >= 2 && path.index(0) == path.last()) 
+|       +---
+|   !(spec_is_dag_per(old(graph))) ==>
+|       %return ✔
++---
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:135:17
+    |
+135 |                 order@.len() == graph@.len(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+450 |             AVLTreeSeqStPerS::from_vec(reversed)
+    |             ------------------------------------ at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:136:17
+    |
+136 |                 spec_is_dag_per(graph) ==> spec_is_topo_order_per(graph, order@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+450 |             AVLTreeSeqStPerS::from_vec(reversed)
+    |             ------------------------------------ at the end of the function body
+
+error: assertion failed
+   --> src/Chap55/TopoSortStPer.rs:412:71
+    |
+412 |                 assert forall|j: int| 0 <= j < visited@.len() implies !visited@[j] by {}
+    |                                                                       ^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(visited.view().index(j)) 
+    function is uninterpreted
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:328:13
+    |
+328 |             topo_order.is_some() <==> spec_is_dag_per(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+367 |                     return None;
+    |                     ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:328:13
+    |
+328 |             topo_order.is_some() <==> spec_is_dag_per(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+390 |         Some(AVLTreeSeqStPerS::from_vec(reversed))
+    |         ------------------

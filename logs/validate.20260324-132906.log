@@ -1,0 +1,9 @@
+error: trait method implementation cannot declare requires clauses; these can only be inherited from the trait declaration
+    --> src/Chap43/OrderedTableStPer.rs:3266:9
+     |
+3266 |         fn next(&mut self) -> (next: Option<Pair<K, V>>)
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 23s

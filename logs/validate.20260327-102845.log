@@ -1,0 +1,631 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphMtPer.rs:34:14
+   |
+34 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: postcondition not satisfied
+   --> vstd/std_specs/cmp.rs:21:12
+    |
+    = note: failed this postcondition
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:667:13
+    |
+667 |             equal
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+ --> vstd/std_specs/cmp.rs:21:38
+
+note: 
+
+obeys_eq_spec() ==>
+    equal == old(self).eq_spec(old(other)) ✘
+equal == (old(self).view() == old(other).view()) ✔
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:145:52
+    |
+145 |         fn has_edge(&self, u: &V, v: &V) -> bool { self.edges.find(&Pair(u.clone(), v.clone())) }
+    |                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:158:17
+    |
+158 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetMtPer.rs:158:17
+    |
+158 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+tmp%.spec_avltreesetmtper_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:177:48
+    |
+177 |         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:98:22
+    |
+ 98 |             requires self.spec_avltreesetmtper_wf(),
+    |                      ------------------------------ failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+tmp%.spec_avltreesetmtper_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:100:21
+    |
+100 |               ensures updated.spec_edgesetgraphmtper_wf();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+209 | /             EdgeSetGraphMtPer {
+210 | |                 vertices: new_vertices,
+211 | |                 edges: new_edges,
+212 | |             }
+    | |_____________- at the end of the function body
+
+note: 
+
+%return.spec_edgesetgraphmtper_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: could not prove termination
+  --> src/Chap52/AdjTableGraphMtPer.rs:72:26
+   |
+72 |             m[k].len() + spec_sum_adj_sizes(m.remove(k))
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:98:21
+    |
+ 98 |             ensures m as nat == self.spec_num_edges();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+179 |             count
+    |             ----- at the end of the function body
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap52/AdjTableGraphMtPer.rs:175:21
+    |
+175 |                     count += neighbors.size();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:175:30
+    |
+175 |                     count += neighbors.size();
+    |                              ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:98:22
+    |
+ 98 |             requires self.spec_avltreesetmtper_wf(),
+    |                      ------------------------------ failed precondition
+
+note: 
+
+neighbors.spec_avltreesetmtper_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:102:21
+    |
+102 |               ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@));
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+185 | /             match self.adj.find(u) {
+186 | |                 Some(neighbors) => neighbors.find(v),
+187 | |                 None => false,
+188 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:183:21
+    |
+183 |               ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@))
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+184 |           {
+185 | /             match self.adj.find(u) {
+186 | |                 Some(neighbors) => neighbors.find(v),
+187 | |                 None => false,
+188 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:186:36
+    |
+186 |                 Some(neighbors) => neighbors.find(v),
+    |                                    ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:157:17
+    |
+157 |                 self.spec_avltreesetmtper_wf(),
+    |                 ------------------------------ failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjTableGraphMtPer.rs:102:21
+    |
+102 |             ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@));
+    |                     ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+found == (old(self).spec_adj().dom().contains(old(u).view()) && old(self).spec_adj().index(old(u).view()).contains(old(v).view())) ✘
+|   found ==>
+|       old(self).spec_adj().dom().contains(old(u).view()) ✘
+|           function is uninterpreted
+|       old(self).spec_adj().index(old(u).view()).contains(old(v).view()) ✘
+|           function is uninterpreted
+|   old(self).spec_adj().dom().contains(old(u).view()) && old(self).spec_adj().index(old(u).view()).contains(old(v).view()) ==>
+|       found ✘
++---
+found == (old(self).spec_adj().dom().contains(old(u).view()) && old(self).spec_adj().index(old(u).view()).contains(old(v).view())) ✔
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:107:17
+    |
+107 |                   self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+196 | /             match self.adj.find(u) {
+197 | |                 Some(neighbors) => neighbors.clone(),
+198 | |                 None => AVLTreeSetMtPer::empty(),
+199 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:108:17
+    |
+108 |                   !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty();
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+196 | /             match self.adj.find(u) {
+197 | |                 Some(neighbors) => neighbors.clone(),
+198 | |                 None => AVLTreeSetMtPer::empty(),
+199 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:193:17
+    |
+193 |                   self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+196 | /             match self.adj.find(u) {
+197 | |                 Some(neighbors) => neighbors.clone(),
+198 | |                 None => AVLTreeSetMtPer::empty(),
+199 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:194:17
+    |
+194 |                   !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+195 |           {
+196 | /             match self.adj.find(u) {
+197 | |                 Some(neighbors) => neighbors.clone(),
+198 | |                 None => AVLTreeSetMtPer::empty(),
+199 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjTableGraphMtPer.rs:107:56
+    |
+107 |                 self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+108 |                 !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty();
+    |                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).spec_adj().dom().contains(old(u).view()) ==>
+    neighbors.view() =~= old(self).spec_adj().index(old(u).view()) ✘
+!(old(self).spec_adj().dom().contains(old(u).view())) ==>
+    neighbors.view() =~= empty() ✘
+old(self).spec_adj().dom().contains(old(u).view()) ==>
+    neighbors.view() =~= old(self).spec_adj().index(old(u).view()) ✔
+!(old(self).spec_adj().dom().contains(old(u).view())) ==>
+    neighbors.view() =~= empty() ✔
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:202:48
+    |
+202 |         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:98:22
+    |
+ 98 |             requires self.spec_avltreesetmtper_wf(),
+    |                      ------------------------------ failed precondition
+
+note: 
+
+tmp%.spec_avltreesetmtper_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:115:21
+    |
+115 |               ensures updated.spec_adjtablegraphmtper_wf(), updated.spec_adj().dom().contains(v@);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+207 | /             if self.adj.find(&v).is_some() {
+208 | |                 self.clone()
+209 | |             } else {
+210 | |                 AdjTableGraphMtPer {
+...   |
+213 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:115:59
+    |
+115 |               ensures updated.spec_adjtablegraphmtper_wf(), updated.spec_adj().dom().contains(v@);
+    |                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+207 | /             if self.adj.find(&v).is_some() {
+208 | |                 self.clone()
+209 | |             } else {
+210 | |                 AdjTableGraphMtPer {
+...   |
+213 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:205:21
+    |
+205 |               ensures updated.spec_adj().dom().contains(v@)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+206 |           {
+207 | /             if self.adj.find(&v).is_some() {
+208 | |                 self.clone()
+209 | |             } else {
+210 | |                 AdjTableGraphMtPer {
+...   |
+213 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:211:26
+    |
+211 |                     adj: self.adj.insert(v, AVLTreeSetMtPer::empty()),
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:139:22
+    |
+139 |             requires self@.dom().len() + 1 < usize::MAX as nat,
+    |                      ----------------------------------------- failed precondition
+
+note: 
+
+clip(nat, tmp%.view().dom().len() + 1) < UnsignedMax.Exec(usize::BITS) 
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:119:21
+    |
+119 |             ensures updated.spec_adjtablegraphmtper_wf(), !updated.spec_adj().dom().contains(v@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+226 |             AdjTableGraphMtPer { adj: cleaned }
+    |             ----------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:119:59
+    |
+119 |             ensures updated.spec_adjtablegraphmtper_wf(), !updated.spec_adj().dom().contains(v@);
+    |                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+226 |             AdjTableGraphMtPer { adj: cleaned }
+    |             ----------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:219:21
+    |
+219 |             ensures !updated.spec_adj().dom().contains(v@)
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+226 |             AdjTableGraphMtPer { adj: cleaned }
+    |             ----------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjTableGraphMtPer.rs:119:21
+    |
+119 |             ensures updated.spec_adjtablegraphmtper_wf(), !updated.spec_adj().dom().contains(v@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+updated.spec_adjtablegraphmtper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+!(updated.spec_adj().dom().contains(old(v).view())) ✘
+    function is uninterpreted
+!(updated.spec_adj().dom().contains(old(v).view())) ✔
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:124:17
+    |
+124 |                   updated.spec_adjtablegraphmtper_wf(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+247 | /             AdjTableGraphMtPer {
+248 | |                 adj: new_adj.insert(u, new_u_neighbors),
+249 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:125:17
+    |
+125 |                   updated.spec_adj().dom().contains(u@),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+247 | /             AdjTableGraphMtPer {
+248 | |                 adj: new_adj.insert(u, new_u_neighbors),
+249 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:126:17
+    |
+126 |                   updated.spec_adj().dom().contains(v@),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+247 | /             AdjTableGraphMtPer {
+248 | |                 adj: new_adj.insert(u, new_u_neighbors),
+249 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:127:17
+    |
+127 |                   updated.spec_adj()[u@].contains(v@);
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+247 | /             AdjTableGraphMtPer {
+248 | |                 adj: new_adj.insert(u, new_u_neighbors),
+249 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:231:17
+    |
+231 |                   updated.spec_adj().dom().contains(u@),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+247 | /             AdjTableGraphMtPer {
+248 | |                 adj: new_adj.insert(u, new_u_neighbors),
+249 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:232:17
+    |
+232 |                   updated.spec_adj().dom().contains(v@),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+247 | /             AdjTableGraphMtPer {
+248 | |                 adj: new_adj.insert(u, new_u_neighbors),
+249 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:233:17
+    |
+233 |                   updated.spec_adj()[u@].contains(v@),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+247 | /             AdjTableGraphMtPer {
+248 | |                 adj: new_adj.insert(u, new_u_neighbors),
+249 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:237:27
+    |
+237 |                 new_adj = new_adj.insert(u.clone(), AVLTreeSetMtPer::empty());
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:139:22
+    |
+139 |             requires self@.dom().len() + 1 < usize::MAX as nat,
+    |                      ----------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:240:27
+    |
+240 |                 new_adj = new_adj.insert(v.clone(), AVLTreeSetMtPer::empty());
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:139:22
+    |
+139 |             requires self@.dom().len() + 1 < usize::MAX as nat,
+    |                      ----------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:248:22
+    |
+248 |                 adj: new_adj.insert(u, new_u_neighbors),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:139:22
+    |
+139 |             requires self@.dom().len() + 1 < usize::MAX as nat,
+    |                      ----------------------------------------- failed precondition
+
+note: 
+
+clip(nat, tmp%.view().dom().len() + 1) < UnsignedMax.Exec(usize::BITS) 
+
+note: recommendation not met
+   --> src/Chap52/AdjTableGraphMtPer.rs:127:17
+    |
+127 |                 updated.spec_adj()[u@].contains(v@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjTableGraphMtPer.rs:233:17
+    |
+233 |                 updated.spec_adj()[u@].contains(v@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:132:17
+    |
+132 |                   updated.spec_adjtablegraphmtper_wf(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+257 | /             match self.adj.find(u) {
+258 | |                 Some(u_neighbors) => {
+259 | |                     let new_u_neighbors = u_neighbors.delete(v);
+260 | |                     AdjTableGraphMtPer {
+...   |
+264 | |                 None => self.clone(),
+265 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:133:17
+    |
+133 | /                 !updated.spec_adj().dom().contains(u@)
+134 | |                     || !updated.spec_adj()[u@].contains(v@);
+    | |___________________________________________________________^ failed this postcondition
+...
+257 | /             match self.adj.find(u) {
+258 | |                 Some(u_neighbors) => {
+259 | |                     let new_u_neighbors = u_neighbors.delete(v);
+260 | |                     AdjTableGraphMtPer {
+...   |
+264 | |                 None => self.clone(),
+265 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:254:17
+    |
+254 | /                 !updated.spec_adj().dom().contains(u@)
+255 | |                     || !updated.spec_adj()[u@].contains(v@),
+    | |___________________________________________________________^ failed this postcondition
+256 |           {
+257 | /             match self.adj.find(u) {
+258 | |                 Some(u_neighbors) => {
+259 | |                     let new_u_neighbors = u_neighbors.delete(v);
+260 | |                     AdjTableGraphMtPer {
+...   |
+264 | |                 None => self.clone(),
+265 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:261:30
+    |
+261 |                         adj: self.adj.insert(u.clone(), new_u_neighbors),
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:139:22
+    |
+139 |             requires self@.dom().len() + 1 < usize::MAX as nat,
+    |                      ----------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjTableGraphMtPer.rs:132:17
+    |
+132 |                 updated.spec_adjtablegraphmtper_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+133 |                 !updated.spec_adj().dom().contains(u@)
+134 |                     || !updated.spec_adj()[u@].contains(v@);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+updated.spec_adjtablegraphmtper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+updated.spec_adj().dom().contains(old(u).view()) ==>
+    !(updated.spec_adj().index(old(u).view()).contains(old(v).view())) ✘
+        function is uninterpreted
+updated.spec_adj().dom().contains(old(u).view()) ==>
+    !(updated.spec_adj().index(old(u).view()).contains(old(v).view())) ✔
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:272:32
+    |
+ 86 |                 vstd::laws_cmp::obeys_cmp_spec::<Pair<V, AVLTreeSetMtPer<V>>>(),
+    |                 --------------------------------------------------------------- failed precondition
+...
+272 |         fn default() -> Self { Self::empty() }
+    |                                ^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+  --> src/Chap52/AdjTableGraphMtPer.rs:86:17
+   |
+86 |                 vstd::laws_cmp::obeys_cmp_spec::<Pair<V, AVLTreeSetMtPer<V>>>(),
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+  --> vstd/laws_eq.rs:18:8
+  --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+spec_pair_key_determines_order() 
+obeys_cmp_spec() 
+view_ord_consistent() 
+
+verification results:: 2748 verified, 15 errors
+error: aborting due to 38 previous errors; 2 warnings emitted
+
+Elapsed: 32s
+Sampled Memory Usage: peak rust_verify RSS: 5280MB, peak z3 RSS: 359MB, min free: 16987MB
+Sampled CPU Usage: rust_verify: 89s, z3 children: 60s

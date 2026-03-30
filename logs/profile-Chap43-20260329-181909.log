@@ -1,0 +1,88 @@
+Z3 4.12.5
+note: Analyzing prover log for module Chap02::FibonacciHFScheduler::FibonacciHFScheduler ...
+
+note: Log analysis complete for module Chap02::FibonacciHFScheduler::FibonacciHFScheduler
+
+note: Analyzing prover log for module Chap18::LinkedListStEph::LinkedListStEph ...
+
+Z3 4.12.5
+Z3 4.12.5
+note: Analyzing prover log for module Chap18::ArraySeqStEph::ArraySeqStEph ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap18::LinkedListStPer::LinkedListStPer ...
+
+Error parsing line 399046 (SubpatNoBlame([t6967])): "[new-match] 0x5a080724ac88 #8199 #5396 #3700 #14251 #18979 #3657 #3365 ; #18107 (#12586 #12586) (#2835 #13743) (#3365 #3365) (#3365 #3365) (#3657 #3657) (#3657 #3657) (#14928 #18107) (#18107 #18107) (#14928 #19700) (#3365 #3365) (#3365 #3365) (#3657 #3657) (#3657 #3657)"
+Error parsing line 399359 (UnknownFingerprint(Fingerprint(98990526082184))): "[instance] 0x5a080724ac88 ; 5"
+Error parsing line 399365 (UnmatchedEndOfInstance): "[end-of-instance]"
+Z3 4.12.5
+note: Analyzing prover log for module Chap18::ArraySeqStPer::ArraySeqStPer ...
+
+Error parsing line 411391 (SubpatNoBlame([t6968])): "[new-match] 0x6234ebd01c78 #7917 #5397 #3701 #14461 #20150 #3485 #6635 ; #15020 (#13029 #13029) (#8718 #13875) (#6635 #6635) (#6635 #6635) (#3485 #3485) (#3485 #3485) (#11041 #15020) (#15020 #15020) (#11041 #21515) (#6635 #6635) (#6635 #6635) (#3485 #3485) (#3485 #3485)"
+Error parsing line 411724 (UnknownFingerprint(Fingerprint(107979434105976))): "[instance] 0x6234ebd01c78 ; 3"
+Error parsing line 411730 (UnmatchedEndOfInstance): "[end-of-instance]"
+Error parsing line 416138 (SubpatNoBlame([t6968])): "[new-match] 0x6234ebbaaef0 #7917 #5397 #3701 #14461 #20150 #3485 #6635 ; #15020 (#13029 #13029) (#8718 #13875) (#6635 #6635) (#6635 #6635) (#3485 #3485) (#3485 #3485) (#11041 #15020) (#15020 #15020) (#11041 #21515) (#6635 #6635) (#6635 #6635) (#3485 #3485) (#3485 #3485)"
+Error parsing line 416380 (UnknownFingerprint(Fingerprint(107979432701680))): "[instance] 0x6234ebbaaef0 ; 3"
+Error parsing line 416386 (UnmatchedEndOfInstance): "[end-of-instance]"
+Error parsing line 420912 (SubpatNoBlame([t6968])): "[new-match] 0x6234ebda9468 #7917 #5397 #3701 #14461 #20150 #3485 #6635 ; #15020 (#13029 #13029) (#8718 #13875) (#6635 #6635) (#6635 #6635) (#3485 #3485) (#3485 #3485) (#11041 #15020) (#15020 #15020) (#11041 #21515) (#6635 #6635) (#6635 #6635) (#3485 #3485) (#3485 #3485)"
+Error parsing line 421110 (UnknownFingerprint(Fingerprint(107979434792040))): "[instance] 0x6234ebda9468 ; 3"
+Error parsing line 421116 (UnmatchedEndOfInstance): "[end-of-instance]"
+note: Log analysis complete for module Chap18::LinkedListStEph::LinkedListStEph
+
+Error parsing line 419928 (SubpatNoBlame([t6406])): "[new-match] 0x5bd611f86450 #7606 #5007 #3438 #13372 #19253 #3379 #3394 ; #16097 (#12161 #12161) (#2321 #15999) (#3394 #3394) (#3394 #3394) (#3379 #3379) (#3379 #3379) (#12315 #16097) (#16097 #16097) (#12315 #19832) (#3394 #3394) (#3394 #3394) (#3379 #3379) (#3379 #3379)"
+Error parsing line 420241 (UnknownFingerprint(Fingerprint(100974982620240))): "[instance] 0x5bd611f86450 ; 5"
+Error parsing line 420247 (UnmatchedEndOfInstance): "[end-of-instance]"
+Error parsing line 423575 (SubpatNoBlame([t6406])): "[new-match] 0x5bd61213d5d8 #7606 #5007 #3438 #13372 #19253 #3379 #3394 ; #16097 (#12161 #12161) (#2321 #15999) (#3394 #3394) (#3394 #3394) (#3379 #3379) (#3379 #3379) (#12315 #16097) (#16097 #16097) (#12315 #19832) (#3394 #3394) (#3394 #3394) (#3379 #3379) (#3379 #3379)"
+Error parsing line 423783 (UnknownFingerprint(Fingerprint(100974984418776))): "[instance] 0x5bd61213d5d8 ; 5"
+Error parsing line 423789 (UnmatchedEndOfInstance): "[end-of-instance]"
+Error parsing line 369732 (SubpatNoBlame([t6519])): "[new-match] 0x609f72506018 #7201 #5028 #3369 #15658 #8853 #5968 #5958 ; #15606 (#8534 #8534) (#7982 #14950) (#5958 #5958) (#5958 #5958) (#5968 #5968) (#5968 #5968) (#8274 #15606) (#15606 #15606) (#8274 #15415) (#5958 #5958) (#5958 #5958) (#5968 #5968) (#5968 #5968)"
+Error parsing line 369952 (UnknownFingerprint(Fingerprint(106237933936664))): "[instance] 0x609f72506018 ; 2"
+Error parsing line 369958 (UnmatchedEndOfInstance): "[end-of-instance]"
+Error parsing line 372587 (SubpatNoBlame([t6519])): "[new-match] 0x609f7276c248 #7201 #5028 #3369 #15658 #8853 #5968 #5958 ; #15606 (#8534 #8534) (#7982 #14950) (#5958 #5958) (#5958 #5958) (#5968 #5968) (#5968 #5968) (#8274 #15606) (#15606 #15606) (#8274 #15415) (#5958 #5958) (#5958 #5958) (#5968 #5968) (#5968 #5968)"
+Error parsing line 372752 (UnknownFingerprint(Fingerprint(106237936452168))): "[instance] 0x609f7276c248 ; 2"
+Error parsing line 372758 (UnmatchedEndOfInstance): "[end-of-instance]"
+Error parsing line 430109 (SubpatNoBlame([t6406])): "[new-match] 0x5bd6122a9088 #7606 #5007 #3438 #13372 #19253 #3379 #3394 ; #16097 (#12161 #12161) (#2321 #15999) (#3394 #3394) (#3394 #3394) (#3379 #3379) (#3379 #3379) (#12315 #16097) (#16097 #16097) (#12315 #19832) (#3394 #3394) (#3394 #3394) (#3379 #3379) (#3379 #3379)"
+Error parsing line 375467 (SubpatNoBlame([t6519])): "[new-match] 0x609f72776958 #7201 #5028 #3369 #15658 #8853 #5968 #5958 ; #15606 (#8534 #8534) (#7982 #14950) (#5958 #5958) (#5958 #5958) (#5968 #5968) (#5968 #5968) (#8274 #15606) (#15606 #15606) (#8274 #15415) (#5958 #5958) (#5958 #5958) (#5968 #5968) (#5968 #5968)"
+note: Analyzing prover log for module Chap18::ArraySeqMtPer::ArraySeqMtPer ...
+
+Z3 4.12.5
+note: Log analysis complete for module Chap18::ArraySeqStEph::ArraySeqStEph
+
+note: Log analysis complete for module Chap18::LinkedListStPer::LinkedListStPer
+
+Error parsing line 353298 (SubpatNoBlame([t6968])): "[new-match] 0x61374ecd0a68 #7970 #5453 #3676 #21161 #21068 #3601 #3597 ; #20979 (#11872 #11872) (#2542 #14400) (#3597 #3597) (#3597 #3597) (#3601 #3601) (#3601 #3601) (#22268 #20979) (#20979 #20979) (#22268 #21088) (#3597 #3597) (#3597 #3597) (#3601 #3601) (#3601 #3601)"
+Error parsing line 353539 (UnknownFingerprint(Fingerprint(106890173155944))): "[instance] 0x61374ecd0a68 ; 2"
+Error parsing line 353545 (UnmatchedEndOfInstance): "[end-of-instance]"
+note: Log analysis complete for module Chap18::ArraySeqStPer::ArraySeqStPer
+
+Error parsing line 553525 (SubpatNoBlame([t148859])): "[new-match] 0x61374eba2100 #26981 #27029 #17130 #17161 #24578 ; #24834 (#24607 #27299) (#24837 #24837) (#24607 #27299) #25286 (#27299 #27550) (#26663 #11852) (#24877 #23717) #24372 (#24607 #27550) (#24578 #24578) (#23824 #23824)"
+note: Analyzing prover log for module Chap18::ArraySeqMtEph::ArraySeqMtEph ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap19::ArraySeqMtEph::ArraySeqMtEph ...
+
+Z3 4.12.5
+note: Log analysis complete for module Chap18::ArraySeqMtPer::ArraySeqMtPer
+
+Error parsing line 643867 (SubpatNoBlame([t170825])): "[new-match] 0x5561e2703c20 #29191 #29208 #23995 #23065 #23915 ; #19777 (#22665 #25790) (#24646 #24646) (#22665 #25790) #26442 (#25790 #29641) (#22021 #17856) (#25863 #24405) #22964 (#22665 #29641) (#23915 #23915) (#18665 #18665)"
+Error parsing line 620555 (SubpatNoBlame([t162421])): "[new-match] 0x576a72ddf7d0 #29192 #29200 #21390 #24585 #14786 ; #25467 (#24666 #29314) (#24336 #24336) (#24666 #29314) #18593 (#29314 #29605) (#16101 #14482) (#21012 #21484) #24275 (#24666 #29605) (#14786 #14786) (#23219 #23219)"
+Error parsing line 620584 (UnknownFingerprint(Fingerprint(96114705299408))): "[instance] 0x576a72ddf7d0 ; 4"
+Error parsing line 620591 (UnmatchedEndOfInstance): "[end-of-instance]"
+note: Analyzing prover log for module Chap18::ArraySeq::ArraySeq ...
+
+Z3 4.12.5
+note: Log analysis complete for module Chap19::ArraySeqMtEph::ArraySeqMtEph
+
+note: Log analysis complete for module Chap18::ArraySeqMtEph::ArraySeqMtEph
+
+note: Log analysis complete for module Chap18::ArraySeq::ArraySeq
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice ...
+
+note: Log analysis complete for module Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice
+
+note: Analyzing prover log for module Chap23::BalBinTreeStEph::BalBinTreeStEph ...
+
+Z3 4.12.5
+Error parsing line 197652 (SubpatNoBlame([t1922])): "[new-match] 0x641d04358f78 #1547 #1544 #411 #459 #464 ; #12265 (#5909 #5909) #12825 (#411 #411) #1

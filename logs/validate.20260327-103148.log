@@ -1,0 +1,59 @@
+error[E0599]: no method named `length` found for struct `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:171:34
+    |
+171 |             let len = domain_seq.length();
+    |                                  ^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:62:5
+    |
+ 62 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `length` not found for this struct
+...
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<V>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:133:9
+    |
+133 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+134 | |             requires index < self.spec_len()
+135 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  8 +     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `nth` found for struct `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:175:36
+    |
+175 |                 let v = domain_seq.nth(i).clone();
+    |                                    ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:62:5
+    |
+ 62 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `nth` not found for this struct
+...
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<V>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:127:9
+    |
+127 | /         fn length(&self) -> (len: usize)
+128 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  8 +     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 572MB, peak z3 RSS: 0MB, min free: 22202MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 0s

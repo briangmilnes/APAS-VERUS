@@ -1,0 +1,103 @@
+warning: type `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphInv<T>` is more private than the item `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph::root`
+   --> src/Chap37/BSTAVLMtEph.rs:418:9
+    |
+418 |         pub(crate) root: RwLock<BalBinTree<T>, BSTAVLMtEphInv<T>>,
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ field `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph::root` is reachable at visibility `pub(crate)`
+    |
+note: but type `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphInv<T>` is only usable at visibility `pub(self)`
+   --> src/Chap37/BSTAVLMtEph.rs:404:5
+    |
+404 |     struct BSTAVLMtEphInv<T> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: `#[warn(private_interfaces)]` on by default
+
+error: precondition not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:593:23
+    |
+593 |             let out = tree_ref.in_order();
+    |                       ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap23/BalBinTreeStEph.rs:239:22
+    |
+239 |                      obeys_feq_clone::<T>(),
+    |                      ---------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/vstdplus/feq.rs:51:61
+    |
+ 51 |         &&& forall|x: T, y: T|  #[trigger] cloned(x, y) ==> x.eq_spec(&y)
+    |                                                             ^^^^^^^^^^^^^
+ 52 |         &&& forall|x: &T, y: T| #[trigger] cloned(*x, y) ==> x.eq_spec(&y)
+ 53 |         &&& forall|x: T, y: T|  #[trigger] strictly_cloned(x, y) ==> x.eq_spec(&y)
+    |                                                                      ^^^^^^^^^^^^^
+    |
+   ::: src/Chap23/BalBinTreeStEph.rs:239:22
+    |
+239 |                      obeys_feq_clone::<T>(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tree_ref.spec_balbintreesteph_wf() ✔
+tree_ref.spec_size() <= UnsignedMax.Exec(usize::BITS) ✔
+obeys_feq_clone() ✘
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✔
++---
+
+error: precondition not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:601:23
+    |
+601 |             let out = tree_ref.pre_order();
+    |                       ^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap23/BalBinTreeStEph.rs:249:22
+    |
+249 |                      obeys_feq_clone::<T>(),
+    |                      ---------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/vstdplus/feq.rs:51:61
+    |
+ 51 |         &&& forall|x: T, y: T|  #[trigger] cloned(x, y) ==> x.eq_spec(&y)
+    |                                                             ^^^^^^^^^^^^^
+ 52 |         &&& forall|x: &T, y: T| #[trigger] cloned(*x, y) ==> x.eq_spec(&y)
+ 53 |         &&& forall|x: T, y: T|  #[trigger] strictly_cloned(x, y) ==> x.eq_spec(&y)
+    |                                                                      ^^^^^^^^^^^^^
+    |
+   ::: src/Chap23/BalBinTreeStEph.rs:249:22
+    |
+249 |                      obeys_feq_clone::<T>(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tree_ref.spec_balbintreesteph_wf() ✔
+tree_ref.spec_size() <= UnsignedMax.Exec(usize::BITS) ✔
+obeys_feq_clone() ✘
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|    

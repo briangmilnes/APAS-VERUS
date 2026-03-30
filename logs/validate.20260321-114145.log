@@ -1,0 +1,16 @@
+error[E0407]: method `spec_orderedtablestper_find_wf` is not a member of trait `OrderedTableStPerTrait`
+   --> src/Chap43/OrderedTableStPer.rs:691:19
+    |
+691 |           open spec fn spec_orderedtablestper_find_wf(&self) -> bool {
+    |                     ^  ------------------------------ help: there is an associated function with a similar name: `spec_orderedtablestper_wf`
+    |  ___________________|
+    | |
+692 | |             self.base_set.elements.spec_avltreeseqstper_wf()
+693 | |             && spec_keys_no_dups(self.base_set.elements@)
+694 | |         }
+    | |_________^ not a member of trait `OrderedTableStPerTrait`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0407`.
+Elapsed: 14s

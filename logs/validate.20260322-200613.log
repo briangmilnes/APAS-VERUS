@@ -1,0 +1,52 @@
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:214:24
+    |
+214 |                 assert(vertex_universe.contains(v@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:254:32
+    |
+254 |                         assert(neighbors@.contains(neighbor@));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:263:40
+    |
+263 | ...                   assert(e.1 == neighbor@);
+    |                              ^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:274:40
+    |
+274 |                     implies #[trigger] vertex_universe.contains(a) by {
+    |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+neighbors.view().contains(neighbor.view()) 
+    function is uninterpreted
+
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:366:24
+    |
+366 |                 assert(sources@.contains(v@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:381:32
+    |
+381 |                         assert(e.1 == v@);
+    |                                ^^^^^^^^^ assertion failed
+
+note: 
+
+sources.view().contains(v.view()) 
+    function is uninterpreted
+
+verification results:: 4495 verified, 3 errors
+error: aborting due to 6 previous errors
+
+Elapsed: 71s

@@ -1,0 +1,35 @@
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:2733:21
+     |
+2733 |                     forall|p: (K::V, V::V)| #[trigger] left_tree@.contains(p) ==> p.0 != k@,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:2734:21
+     |
+2734 |                     forall|p: (K::V, V::V)| #[trigger] right_tree@.contains(p) ==> p.0 != k@,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:2736:21
+     |
+2736 | /                     forall|j: int| 0 <= j < i as int && sorted@[j].0 != k@
+2737 | |                         ==> (#[trigger] left_tree@.contains(sorted@[j]) || right_tree@.contains(sorted@[j])),
+     | |____________________________________________________________________________________________________________^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2873:36
+     |
+2873 | ...                   assert(false);  // TODO: need cleaner disjointness proof
+     |                              ^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+false 
+
+verification results:: 4368 verified, 2 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 102s

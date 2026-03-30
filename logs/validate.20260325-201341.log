@@ -1,0 +1,62 @@
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:199:9
+    |
+199 |         loop
+    |         ^^^^
+
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:299:24
+    |
+299 |                 assert(mapped_e[j] == eseq[j]@);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:300:24
+    |
+300 |                 assert(mapped_e.contains(eseq[j]@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:302:24
+    |
+302 |                 assert(graph@.A.contains(eseq[j]@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:271:9
+    |
+271 |         while i < edges_vec.len()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:225:24
+    |
+225 |                 assert(uf@.parent.contains_key(vseq[j]@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:179:5
+    |
+179 | /     pub fn kruskal_mst<V: HashOrd>(
+180 | |         graph: &LabUnDirGraphStEph<V, WrappedF64>,
+181 | |     ) -> (mst_edges: SetStEph<LabEdge<V, WrappedF64>>)
+    | |_____________________________________________________^
+
+note: diagnostics via expansion
+   --> src/Chap65/KruskalStEph.rs:299:24
+    |
+299 |                 assert(mapped_e[j] == eseq[j]@);
+    |                        ^^^^^^^^^^^
+
+note: 
+
+mapped_e.index(j) =~= eseq.index(j).view()
+|   mapped_e.index(j).0 =~= eseq.index(j).view().0 ✘
+|   mapped_e.index(j).1 =~= eseq.index(j).view().1 ✘
+|   mapped_e.index(j).2 =~= eseq.index(j).view().2 ✘
++---
+
+verification results:: 4916 verified, 3 errors
+error: aborting due to 7 previous errors
+
+Elapsed: 87s

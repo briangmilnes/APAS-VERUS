@@ -1,0 +1,63 @@
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:197:9
+    |
+197 |         loop
+    |         ^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap65/KruskalStEph.rs:228:17
+    |
+228 | /                 forall|j: int| 0 <= j < edges_vec@.len() ==>
+229 | |                     edges_vec@[j] == #[trigger] eseq[j],
+    | |_______________________________________________________^
+
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:274:24
+    |
+274 |                 assert(eseq.map(|idx: int, e: LabEdge<V, WrappedF64>| e@).to_set().contains(eseq[j]@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:245:9
+    |
+245 |         while i < edges_vec.len()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap65/KruskalStEph.rs:241:9
+    |
+ 68 |         requires forall|i: int| 0 <= i < old(edges)@.len() ==> #[trigger] old(edges)@[i].2.spec_is_finite(),
+    |                  ------------------------------------------------------------------------------------------ failed precondition
+...
+241 |         sort_edges_by_weight(&mut edges_vec);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap65/KruskalStEph.rs:250:17
+    |
+250 | /                 forall|v: <V as View>::V| #[trigger] graph@.V.contains(v) ==>
+251 | |                     uf@.parent.contains_key(v),
+    | |______________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap65/KruskalStEph.rs:189:63
+    |
+189 |         let mut mst_edges: SetStEph<LabEdge<V, WrappedF64>> = SetStEph::empty();
+    |                                                               ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap05/SetStEph.rs:149:22
+    |
+149 |             requires Self::spec_valid_key_type()
+    |                      --------------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+eseq.map((|idx, e| e.view())).to_set().contains(eseq.index(j).view()) 
+    function is uninterpreted
+
+verification results:: 4915 verified, 4 errors
+error: aborting due to 7 previous errors
+
+Elapsed: 88s

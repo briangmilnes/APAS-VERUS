@@ -1,0 +1,153 @@
+error[E0308]: mismatched types
+   --> src/Chap53/PQMinStEph.rs:156:42
+    |
+156 |             #[trigger] frontier.contains(Pair(pv, v)) ==> universe.contains(v)
+    |                                 -------- ^^^^^^^^^^^ expected `((<P as View>::V, <V as View>::V), ...)`, found `Pair<(<P as View>::V, ...), ...>`
+    |                                 |
+    |                                 arguments to this method are incorrect
+    |
+    = note: expected tuple `((<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V)`
+              found struct `Types::Types::Pair<(<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V>`
+note: method defined here
+   --> vstd/set.rs:84:23
+help: call `Into::into` on this expression to convert `Types::Types::Pair<(<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V>` into `((<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V)`
+    |
+156 |             #[trigger] frontier.contains(Pair(pv, v).into()) ==> universe.contains(v)
+    |                                                     +++++++
+
+error[E0308]: mismatched types
+   --> src/Chap53/PQMinStEph.rs:213:43
+    |
+213 |                 assert(frontier@.contains(Pair(pv_part, v_part)));
+    |                                  -------- ^^^^^^^^^^^^^^^^^^^^^ expected `((<P as View>::V, <V as View>::V), ...)`, found `Pair<(<P as View>::V, ...), ...>`
+    |                                  |
+    |                                  arguments to this method are incorrect
+    |
+    = note: expected tuple `((<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V)`
+              found struct `Types::Types::Pair<(<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V>`
+note: method defined here
+   --> vstd/set.rs:84:23
+help: call `Into::into` on this expression to convert `Types::Types::Pair<(<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V>` into `((<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V)`
+    |
+213 |                 assert(frontier@.contains(Pair(pv_part, v_part).into()));
+    |                                                                +++++++
+
+error[E0308]: mismatched types
+   --> src/Chap53/PQMinStEph.rs:261:67
+    |
+261 |                         let ghost ne_pv: <Pair<P,V> as View>::V = Pair(neighbor_p@, neighbor@);
+    |                                          ----------------------   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `(<P as View>::V, <V as View>::V)`, found `Pair<<P as View>::V, <V as View>::V>`
+    |                                          |
+    |                                          expected due to this
+    |
+    = note: expected tuple `(<P as vstd::string::View>::V, <V as vstd::string::View>::V)`
+              found struct `Types::Types::Pair<<P as vstd::string::View>::V, <V as vstd::string::View>::V>`
+help: call `Into::into` on this expression to convert `Types::Types::Pair<<P as vstd::string::View>::V, <V as vstd::string::View>::V>` into `(<P as vstd::string::View>::V, <V as vstd::string::View>::V)`
+    |
+261 |                         let ghost ne_pv: <Pair<P,V> as View>::V = Pair(neighbor_p@, neighbor@).into();
+    |                                                                                               +++++++
+
+error[E0308]: mismatched types
+   --> src/Chap53/PQMinStEph.rs:267:67
+    |
+267 | ...                   #[trigger] frontier_updated@.contains(Pair(pv, v))
+    |                                                    -------- ^^^^^^^^^^^ expected `((<P as View>::V, <V as View>::V), ...)`, found `Pair<(<P as View>::V, ...), ...>`
+    |                                                    |
+    |                                                    arguments to this method are incorrect
+    |
+    = note: expected tuple `((<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V)`
+              found struct `Types::Types::Pair<(<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V>`
+note: method defined here
+   --> vstd/set.rs:84:23
+help: call `Into::into` on this expression to convert `Types::Types::Pair<(<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V>` into `((<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V)`
+    |
+267 |                             #[trigger] frontier_updated@.contains(Pair(pv, v).into())
+    |                                                                              +++++++
+
+error[E0308]: mismatched types
+   --> src/Chap53/PQMinStEph.rs:269:48
+    |
+269 | ...                   if old_fu.contains(Pair(pv, v)) {
+    |                                 -------- ^^^^^^^^^^^ expected `((<P as View>::V, <V as View>::V), ...)`, found `Pair<(<P as View>::V, ...), ...>`
+    |                                 |
+    |                                 arguments to this method are incorrect
+    |
+    = note: expected tuple `((<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V)`
+              found struct `Types::Types::Pair<(<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V>`
+note: method defined here
+   --> vstd/set.rs:84:23
+help: call `Into::into` on this expression to convert `Types::Types::Pair<(<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V>` into `((<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V)`
+    |
+269 |                             if old_fu.contains(Pair(pv, v).into()) {
+    |                                                           +++++++
+
+error[E0308]: mismatched types
+   --> src/Chap53/PQMinStEph.rs:286:43
+    |
+286 |                 assert(frontier@.contains(Pair(pv_part, v_part)));
+    |                                  -------- ^^^^^^^^^^^^^^^^^^^^^ expected `((<P as View>::V, <V as View>::V), ...)`, found `Pair<(<P as View>::V, ...), ...>`
+    |                                  |
+    |                                  arguments to this method are incorrect
+    |
+    = note: expected tuple `((<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V)`
+              found struct `Types::Types::Pair<(<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V>`
+note: method defined here
+   --> vstd/set.rs:84:23
+help: call `Into::into` on this expression to convert `Types::Types::Pair<(<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V>` into `((<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V)`
+    |
+286 |                 assert(frontier@.contains(Pair(pv_part, v_part).into()));
+    |                                                                +++++++
+
+error[E0308]: mismatched types
+   --> src/Chap53/PQMinStEph.rs:389:58
+    |
+389 |                 let ghost e_pv: <Pair<P,V> as View>::V = Pair(p@, v@);
+    |                                 ----------------------   ^^^^^^^^^^^^ expected `(<P as View>::V, <V as View>::V)`, found `Pair<<P as View>::V, <V as View>::V>`
+    |                                 |
+    |                                 expected due to this
+    |
+    = note: expected tuple `(<P as vstd::string::View>::V, <V as vstd::string::View>::V)`
+              found struct `Types::Types::Pair<<P as vstd::string::View>::V, <V as vstd::string::View>::V>`
+help: call `Into::into` on this expression to convert `Types::Types::Pair<<P as vstd::string::View>::V, <V as vstd::string::View>::V>` into `(<P as vstd::string::View>::V, <V as vstd::string::View>::V)`
+    |
+389 |                 let ghost e_pv: <Pair<P,V> as View>::V = Pair(p@, v@).into();
+    |                                                                      +++++++
+
+error[E0308]: mismatched types
+   --> src/Chap53/PQMinStEph.rs:395:59
+    |
+395 |                     #[trigger] initial_frontier@.contains(Pair(pv, vv))
+    |                                                  -------- ^^^^^^^^^^^^ expected `((<P as View>::V, <V as View>::V), ...)`, found `Pair<(<P as View>::V, ...), ...>`
+    |                                                  |
+    |                                                  arguments to this method are incorrect
+    |
+    = note: expected tuple `((<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V)`
+              found struct `Types::Types::Pair<(<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V>`
+note: method defined here
+   --> vstd/set.rs:84:23
+help: call `Into::into` on this expression to convert `Types::Types::Pair<(<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V>` into `((<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V)`
+    |
+395 |                     #[trigger] initial_frontier@.contains(Pair(pv, vv).into())
+    |                                                                       +++++++
+
+error[E0308]: mismatched types
+   --> src/Chap53/PQMinStEph.rs:397:40
+    |
+397 |                     if old_if.contains(Pair(pv, vv)) {
+    |                               -------- ^^^^^^^^^^^^ expected `((<P as View>::V, <V as View>::V), ...)`, found `Pair<(<P as View>::V, ...), ...>`
+    |                               |
+    |                               arguments to this method are incorrect
+    |
+    = note: expected tuple `((<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V)`
+              found struct `Types::Types::Pair<(<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V>`
+note: method defined here
+   --> vstd/set.rs:84:23
+help: call `Into::into` on this expression to convert `Types::Types::Pair<(<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V>` into `((<P as vstd::string::View>::V, <V as vstd::string::View>::V), <V as vstd::string::View>::V)`
+    |
+397 |                     if old_if.contains(Pair(pv, vv).into()) {
+    |                                                    +++++++
+
+error: aborting due to 9 previous errors
+
+For more information about this error, try `rustc --explain E0308`.
+Elapsed: 13s

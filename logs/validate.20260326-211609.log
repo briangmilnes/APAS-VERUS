@@ -1,0 +1,44 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:114:5
+    |
+114 | /     fn equals_check<V: HashOrd>(
+115 | |         uf: &mut UnionFindStEph<V>,
+116 | |         u: &V,
+117 | |         v: &V,
+118 | |     ) -> (same: bool)
+    | |____________________^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:135:5
+    |
+135 | /     fn union_check<V: HashOrd>(
+136 | |         uf: &mut UnionFindStEph<V>,
+137 | |         u: &V,
+138 | |         v: &V,
+139 | |     )
+    | |_____^
+
+error: precondition not satisfied
+   --> src/Chap65/KruskalStEph.rs:406:63
+    |
+406 |         let mut mst_edges: SetStEph<LabEdge<V, WrappedF64>> = SetStEph::empty();
+    |                                                               ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap05/SetStEph.rs:149:22
+    |
+149 |             requires Self::spec_valid_key_type()
+    |                      --------------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+spec_valid_key_type() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 2408 verified, 3 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 72s
+Sampled Memory Usage: peak rust_verify RSS: 2755MB, peak z3 RSS: 4345MB, min free: 16153MB
+Sampled CPU Usage: rust_verify: 40s, z3 children: 80s

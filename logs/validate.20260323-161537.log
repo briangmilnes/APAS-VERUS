@@ -1,0 +1,100 @@
+error[E0425]: cannot find function `lemma_pair_set_to_map_dom_finite` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:483:17
+    |
+483 |                   lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStEph.rs:274:5
+    |
+274 | /     pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)
+275 | |         ensures spec_entries_to_map(entries).dom().finite()
+276 | |         decreases entries.len()
+...   |
+281 | |     }
+    | |_____- similarly named function `lemma_entries_to_map_finite` defined here
+    |
+note: function `crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_pair_set_to_map_dom_finite` exists but is inaccessible
+   --> src/Chap43/OrderedTableStEph.rs:97:11
+    |
+ 97 |       proof fn lemma_pair_set_to_map_dom_finite<KV, VV>(s: Set<(KV, VV)>)
+    |  ___________^
+ 98 | |         requires s.finite()
+ 99 | |         ensures spec_pair_set_to_map(s).dom().finite()
+...   |
+113 | |         vstd::set_lib::lemma_len_subset(dom_set, proj_set);
+114 | |     }
+    | |_____^ not accessible
+help: a function with a similar name exists
+    |
+483 -                 lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
+483 +                 lemma_entries_to_map_finite(self.base_table.tree@);
+    |
+
+error[E0425]: cannot find function `lemma_pair_set_to_map_dom_finite` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:795:17
+    |
+795 |                   lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStEph.rs:274:5
+    |
+274 | /     pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)
+275 | |         ensures spec_entries_to_map(entries).dom().finite()
+276 | |         decreases entries.len()
+...   |
+281 | |     }
+    | |_____- similarly named function `lemma_entries_to_map_finite` defined here
+    |
+note: function `crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_pair_set_to_map_dom_finite` exists but is inaccessible
+   --> src/Chap43/OrderedTableStEph.rs:97:11
+    |
+ 97 |       proof fn lemma_pair_set_to_map_dom_finite<KV, VV>(s: Set<(KV, VV)>)
+    |  ___________^
+ 98 | |         requires s.finite()
+ 99 | |         ensures spec_pair_set_to_map(s).dom().finite()
+...   |
+113 | |         vstd::set_lib::lemma_len_subset(dom_set, proj_set);
+114 | |     }
+    | |_____^ not accessible
+help: a function with a similar name exists
+    |
+795 -                 lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
+795 +                 lemma_entries_to_map_finite(self.base_table.tree@);
+    |
+
+error[E0425]: cannot find function `lemma_pair_set_to_map_dom_finite` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:805:17
+    |
+805 |                   lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStEph.rs:274:5
+    |
+274 | /     pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)
+275 | |         ensures spec_entries_to_map(entries).dom().finite()
+276 | |         decreases entries.len()
+...   |
+281 | |     }
+    | |_____- similarly named function `lemma_entries_to_map_finite` defined here
+    |
+note: function `crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_pair_set_to_map_dom_finite` exists but is inaccessible
+   --> src/Chap43/OrderedTableStEph.rs:97:11
+    |
+ 97 |       proof fn lemma_pair_set_to_map_dom_finite<KV, VV>(s: Set<(KV, VV)>)
+    |  ___________^
+ 98 | |         requires s.finite()
+ 99 | |         ensures spec_pair_set_to_map(s).dom().finite()
+...   |
+113 | |         vstd::set_lib::lemma_len_subset(dom_set, proj_set);
+114 | |     }
+    | |_____^ not accessible
+help: a function with a similar name exists
+    |
+805 -                 lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
+805 +                 lemma_entries_to_map_finite(self.base_table.tree@);
+    |
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 8s

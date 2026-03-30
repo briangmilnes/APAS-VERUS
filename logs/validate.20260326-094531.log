@@ -1,0 +1,22 @@
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:535:13
+    |
+ 77 |         requires inner@.dom().finite()
+    |                  --------------------- failed precondition
+...
+535 |             from_st_table(range)
+    |             ^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+range.view().dom().finite() 
+    function is uninterpreted
+
+verification results:: 2564 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 47s
+Sampled Memory Usage: peak rust_verify RSS: 16078MB, peak z3 RSS: 739MB, min free: 9261MB
+Sampled CPU Usage: rust_verify: 429s, z3 children: 331s

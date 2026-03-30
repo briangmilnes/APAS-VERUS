@@ -1,0 +1,475 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+error[E0433]: failed to resolve: could not find `Chap56` in `apas_verus`
+ --> tests/Chap56/TestPathWeightUtilsStEph.rs:7:17
+  |
+7 | use apas_verus::Chap56::PathWeightUtilsStEph::PathWeightUtilsStEph::*;
+  |                 ^^^^^^ could not find `Chap56` in `apas_verus`
+
+error[E0433]: failed to resolve: could not find `Chap65` in `apas_verus`
+ --> tests/Chap65/TestUnionFindStEph.rs:6:17
+  |
+6 | use apas_verus::Chap65::UnionFindStEph::UnionFindStEph::*;
+  |                 ^^^^^^ could not find `Chap65` in `apas_verus`
+
+error[E0433]: failed to resolve: could not find `Chap56` in `apas_verus`
+ --> tests/Chap57/TestDijkstraStEphU64.rs:8:17
+  |
+8 | use apas_verus::Chap56::SSSPResultStEphI64::SSSPResultStEphI64::*;
+  |                 ^^^^^^ could not find `Chap56` in `apas_verus`
+
+error[E0433]: failed to resolve: could not find `Chap57` in `apas_verus`
+ --> tests/Chap57/TestDijkstraStEphU64.rs:9:17
+  |
+9 | use apas_verus::Chap57::DijkstraStEphU64::DijkstraStEphU64::*;
+  |                 ^^^^^^ could not find `Chap57` in `apas_verus`
+
+error[E0433]: failed to resolve: could not find `Chap64` in `apas_verus`
+ --> tests/Chap64/TestSpanTreeStEph.rs:6:17
+  |
+6 | use apas_verus::Chap64::SpanTreeStEph::SpanTreeStEph::*;
+  |                 ^^^^^^ could not find `Chap64` in `apas_verus`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStEphS`
+  --> tests/Chap56/TestPathWeightUtilsStEph.rs:22:16
+   |
+22 |     assert_eq!(PathWeightUtilsStEphS::path_weight_int(&path, &weights), Some(3));
+   |                ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStEphS`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStEphS`
+  --> tests/Chap56/TestPathWeightUtilsStEph.rs:33:16
+   |
+33 |     assert_eq!(PathWeightUtilsStEphS::path_weight_int(&path, &weights), Some(2));
+   |                ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStEphS`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStEphS`
+  --> tests/Chap56/TestPathWeightUtilsStEph.rs:44:16
+   |
+44 |     assert_eq!(PathWeightUtilsStEphS::path_weight_float(&path, &weights), Some(dist(4.0)));
+   |                ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStEphS`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStEphS`
+  --> tests/Chap56/TestPathWeightUtilsStEph.rs:56:13
+   |
+56 |     assert!(PathWeightUtilsStEphS::validate_subpath_property_int(&path, &distances, &weights));
+   |             ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStEphS`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStEphS`
+  --> tests/Chap56/TestPathWeightUtilsStEph.rs:68:13
+   |
+68 |     assert!(PathWeightUtilsStEphS::validate_subpath_property_float(&path, &distances, &weights));
+   |             ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStEphS`
+
+For more information about this error, try `rustc --explain E0433`.
+error: could not compile `apas-verus` (test "TestPathWeightUtilsStEph") due to 6 previous errors
+warning: build failed, waiting for other jobs to finish...
+error[E0425]: cannot find function `spanning_tree_star_contraction` in this scope
+  --> tests/Chap64/TestSpanTreeStEph.rs:41:16
+   |
+41 |     let tree = spanning_tree_star_contraction(&graph);
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `dijkstra` in this scope
+  --> tests/Chap57/TestDijkstraStEphU64.rs:30:18
+   |
+30 |     let result = dijkstra(&graph, 0);
+   |                  ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `verify_spanning_tree` in this scope
+  --> tests/Chap64/TestSpanTreeStEph.rs:44:13
+   |
+44 |     assert!(verify_spanning_tree(&graph, &tree));
+   |             ^^^^^^^^^^^^^^^^^^^^
+...
+78 | fn test_verify_spanning_tree() {
+   | ------------------------------ similarly named constant `test_verify_spanning_tree` defined here
+   |
+help: a constant with a similar name exists
+   |
+44 |     assert!(test_verify_spanning_tree(&graph, &tree));
+   |             +++++
+
+error[E0425]: cannot find function `spanning_tree_star_contraction` in this scope
+  --> tests/Chap64/TestSpanTreeStEph.rs:50:16
+   |
+50 |     let tree = spanning_tree_star_contraction(&graph);
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `dijkstra` in this scope
+  --> tests/Chap57/TestDijkstraStEphU64.rs:63:18
+   |
+63 |     let result = dijkstra(&graph, 0);
+   |                  ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `verify_spanning_tree` in this scope
+  --> tests/Chap64/TestSpanTreeStEph.rs:53:13
+   |
+53 |     assert!(verify_spanning_tree(&graph, &tree));
+   |             ^^^^^^^^^^^^^^^^^^^^
+...
+78 | fn test_verify_spanning_tree() {
+   | ------------------------------ similarly named constant `test_verify_spanning_tree` defined here
+   |
+help: a constant with a similar name exists
+   |
+53 |     assert!(test_verify_spanning_tree(&graph, &tree));
+   |             +++++
+
+error[E0425]: cannot find function `dijkstra` in this scope
+  --> tests/Chap57/TestDijkstraStEphU64.rs:80:18
+   |
+80 |     let result = dijkstra(&graph, 0);
+   |                  ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spanning_tree_star_contraction` in this scope
+  --> tests/Chap64/TestSpanTreeStEph.rs:61:16
+   |
+61 |     let tree = spanning_tree_star_contraction(&graph);
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `dijkstra` in this scope
+  --> tests/Chap57/TestDijkstraStEphU64.rs:97:18
+   |
+97 |     let result = dijkstra(&graph, 0);
+   |                  ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spanning_tree_star_contraction` in this scope
+  --> tests/Chap64/TestSpanTreeStEph.rs:71:16
+   |
+71 |     let tree = spanning_tree_star_contraction(&graph);
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `dijkstra` in this scope
+   --> tests/Chap57/TestDijkstraStEphU64.rs:118:18
+    |
+118 |     let result = dijkstra(&graph, 0);
+    |                  ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `verify_spanning_tree` in this scope
+  --> tests/Chap64/TestSpanTreeStEph.rs:74:13
+   |
+74 |     assert!(verify_spanning_tree(&graph, &tree));
+   |             ^^^^^^^^^^^^^^^^^^^^
+...
+78 | fn test_verify_spanning_tree() {
+   | ------------------------------ similarly named constant `test_verify_spanning_tree` defined here
+   |
+help: a constant with a similar name exists
+   |
+74 |     assert!(test_verify_spanning_tree(&graph, &tree));
+   |             +++++
+
+error[E0425]: cannot find function `dijkstra` in this scope
+   --> tests/Chap57/TestDijkstraStEphU64.rs:143:18
+    |
+143 |     let result = dijkstra(&graph, 0);
+    |                  ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spanning_tree_star_contraction` in this scope
+  --> tests/Chap64/TestSpanTreeStEph.rs:80:16
+   |
+80 |     let tree = spanning_tree_star_contraction(&graph);
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `dijkstra` in this scope
+   --> tests/Chap57/TestDijkstraStEphU64.rs:166:18
+    |
+166 |     let result = dijkstra(&graph, 0);
+    |                  ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `verify_spanning_tree` in this scope
+  --> tests/Chap64/TestSpanTreeStEph.rs:82:13
+   |
+82 |     assert!(verify_spanning_tree(&graph, &tree));
+   |             ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `verify_spanning_tree` in this scope
+  --> tests/Chap64/TestSpanTreeStEph.rs:86:14
+   |
+86 |     assert!(!verify_spanning_tree(&graph, &bad_tree));
+   |              ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+error: could not compile `apas-verus` (test "TestDijkstraStEphU64") due to 9 previous errors
+error: could not compile `apas-verus` (test "TestSpanTreeStEph") due to 11 previous errors
+error[E0405]: cannot find trait `UnionFindStEphTrait` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:301:42
+    |
+301 |     let mut uf = <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::new();
+    |                                          ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnionFindStEph` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:301:19
+    |
+301 |     let mut uf = <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::new();
+    |                   ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `UnionFindStEphTrait` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:307:42
+    |
+307 |     let mut uf = <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::new();
+    |                                          ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnionFindStEph` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:307:19
+    |
+307 |     let mut uf = <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::new();
+    |                   ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `UnionFindStEphTrait` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:308:29
+    |
+308 |     <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::insert(&mut uf, 1);
+    |                             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnionFindStEph` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:308:6
+    |
+308 |     <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::insert(&mut uf, 1);
+    |      ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `UnionFindStEphTrait` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:309:29
+    |
+309 |     <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::insert(&mut uf, 2);
+    |                             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnionFindStEph` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:309:6
+    |
+309 |     <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::insert(&mut uf, 2);
+    |      ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `UnionFindStEphTrait` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:315:42
+    |
+315 |     let mut uf = <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::new();
+    |                                          ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnionFindStEph` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:315:19
+    |
+315 |     let mut uf = <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::new();
+    |                   ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `UnionFindStEphTrait` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:320:41
+    |
+320 |     let root1 = <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::find(&mut uf, &1);
+    |                                         ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnionFindStEph` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:320:18
+    |
+320 |     let root1 = <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::find(&mut uf, &1);
+    |                  ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `UnionFindStEphTrait` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:321:41
+    |
+321 |     let root2 = <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::find(&mut uf, &2);
+    |                                         ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnionFindStEph` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:321:18
+    |
+321 |     let root2 = <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::find(&mut uf, &2);
+    |                  ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `UnionFindStEphTrait` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:327:42
+    |
+327 |     let mut uf = <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::new();
+    |                                          ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnionFindStEph` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:327:19
+    |
+327 |     let mut uf = <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::new();
+    |                   ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `UnionFindStEphTrait` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:330:29
+    |
+330 |     <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::union(&mut uf, &1, &2);
+    |                             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnionFindStEph` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:330:6
+    |
+330 |     <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::union(&mut uf, &1, &2);
+    |      ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `UnionFindStEphTrait` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:336:42
+    |
+336 |     let mut uf = <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::new();
+    |                                          ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnionFindStEph` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:336:19
+    |
+336 |     let mut uf = <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::new();
+    |                   ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `UnionFindStEphTrait` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:340:37
+    |
+340 |     assert!(<UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::equals(
+    |                                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnionFindStEph` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:340:14
+    |
+340 |     assert!(<UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::equals(
+    |              ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `UnionFindStEphTrait` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:347:42
+    |
+347 |     let mut uf = <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::new();
+    |                                          ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnionFindStEph` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:347:19
+    |
+347 |     let mut uf = <UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::new();
+    |                   ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `UnionFindStEphTrait` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:351:40
+    |
+351 |     assert_eq!(<UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::num_sets(&mut uf), 3);
+    |                                        ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnionFindStEph` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:351:17
+    |
+351 |     assert_eq!(<UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::num_sets(&mut uf), 3);
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `UnionFindStEphTrait` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:353:40
+    |
+353 |     assert_eq!(<UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::num_sets(&mut uf), 2);
+    |                                        ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnionFindStEph` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:353:17
+    |
+353 |     assert_eq!(<UnionFindStEph<i32> as UnionFindStEphTrait<i32>>::num_sets(&mut uf), 2);
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `UnionFindStEphTrait` in this scope
+   --> tests/Chap65/TestUnionFindStEph.rs:356:46
+    |
+356 | fn generic_union_find_ops<V: StT + Hash, UF: UnionFindStEphTrait<V>>(uf: &mut UF, a: V, b: V) {
+    |                                              ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0433]: failed to resolve: use of undeclared type `UnionFindStEph`
+  --> tests/Chap65/TestUnionFindStEph.rs:11:18
+   |
+11 |     let mut uf = UnionFindStEph::<N>::new();
+   |                  ^^^^^^^^^^^^^^ use of undeclared type `UnionFindStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `UnionFindStEph`
+  --> tests/Chap65/TestUnionFindStEph.rs:50:18
+   |
+50 |     let mut uf = UnionFindStEph::<N>::new();
+   |                  ^^^^^^^^^^^^^^ use of undeclared type `UnionFindStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `UnionFindStEph`
+  --> tests/Chap65/TestUnionFindStEph.rs:73:18
+   |
+73 |     let mut uf = UnionFindStEph::<N>::new();
+   |                  ^^^^^^^^^^^^^^ use of undeclared type `UnionFindStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `UnionFindStEph`
+  --> tests/Chap65/TestUnionFindStEph.rs:79:18
+   |
+79 |     let mut uf = UnionFindStEph::<N>::new();
+   |                  ^^^^^^^^^^^^^^ use of undeclared type `UnionFindStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `UnionFindStEph`
+  --> tests/Chap65/TestUnionFindStEph.rs:87:18
+   |
+87 |     let mut uf = UnionFindStEph::<N>::new();
+   |                  ^^^^^^^^^^^^^^ use of undeclared type `UnionFindStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `UnionFindStEph`
+  --> tests/Chap65/TestUnionFindStEph.rs:99:18
+   |
+99 |     let mut uf = UnionFindStEph::<String>::new();
+   |                  ^^^^^^^^^^^^^^ use of undeclared type `UnionFindStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `UnionFindStEph`
+   --> tests/Chap65/TestUnionFindStEph.rs:115:18
+    |
+115 |     let mut uf = UnionFindStEph::<N>::new();
+    |                  ^^^^^^^^^^^^^^ use of undeclared type `UnionFindStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `UnionFindStEph`
+   --> tests/Chap65/TestUnionFindStEph.rs:130:18
+    |
+130 |     let mut uf = UnionFindStEph::<N>::new();
+    |                  ^^^^^^^^^^^^^^ use of undeclared type `UnionFindStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `UnionFindStEph`
+   --> tests/Chap65/TestUnionFindStEph.rs:146:18
+    |
+146 |     let mut uf = UnionFindStEph::<N>::new();
+    |                  ^^^^^^^^^^^^^^ use of undeclared type `UnionFindStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `UnionFindStEph`
+   --> tests/Chap65/TestUnionFindStEph.rs:183:18
+    |
+183 |     let mut uf = UnionFindStEph::<N>::new();
+    |                  ^^^^^^^^^^^^^^ use of undeclared type `UnionFindStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `UnionFindStEph`
+   --> tests/Chap65/TestUnionFindStEph.rs:191:18
+    |
+191 |     let mut uf = UnionFindStEph::<N>::new();
+    |                  ^^^^^^^^^^^^^^ use of undeclared type `UnionFindStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `UnionFindStEph`
+   --> tests/Chap65/TestUnionFindStEph.rs:202:18
+    |
+202 |     let mut uf = UnionFindStEph::<N>::new();
+    |                  ^^^^^^^^^^^^^^ use of undeclared type `UnionFindStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `UnionFindStEph`
+   --> tests/Chap65/TestUnionFindStEph.rs:215:18
+    |
+215 |     let mut uf = UnionFindStEph::<N>::new();
+    |                  ^^^^^^^^^^^^^^ use of undeclared type `UnionFindStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `UnionFindStEph`
+   --> tests/Chap65/TestUnionFindStEph.rs:247:18
+    |
+247 |     let mut uf = UnionFindStEph::<N>::new();
+    |                  ^^^^^^^^^^^^^^ use of undeclared type `UnionFindStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `UnionFindStEph`
+   --> tests/Chap65/TestUnionFindStEph.rs:269:18
+    |
+269 |     let mut uf = UnionFindStEph::<N>::new();
+    |                  ^^^^^^^^^^^^^^ use of undeclared type `UnionFindStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `UnionFindStEph`
+   --> tests/Chap65/TestUnionFindStEph.rs:292:18
+    |
+292 |     let mut uf = UnionFindStEph::<i32>::new();
+    |                  ^^^^^^^^^^^^^^ use of undeclared type `UnionFindStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `UnionFindStEph`
+   --> tests/Chap65/TestUnionFindStEph.rs:365:18
+    |
+365 |     let mut uf = UnionFindStEph::<i32>::new();
+    |                  ^^^^^^^^^^^^^^ use of undeclared type `UnionFindStEph`
+
+Some errors have detailed explanations: E0405, E0425, E0433.
+For more information about an error, try `rustc --explain E0405`.
+error: could not compile `apas-verus` (test "TestUnionFindStEph") due to 47 previous errors
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 23s

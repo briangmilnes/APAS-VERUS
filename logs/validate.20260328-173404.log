@@ -1,0 +1,32 @@
+error: this file contains an unclosed delimiter
+   --> src/Chap62/StarPartitionMtEph.rs:698:3
+    |
+  7 | pub mod StarPartitionMtEph {
+    |                            - unclosed delimiter
+...
+ 26 |     verus! {
+    |            - unclosed delimiter
+...
+ 89 |     {
+    |     - unclosed delimiter
+...
+246 |         {
+    |         - unclosed delimiter
+...
+276 |                         proof {
+    |                               - this delimiter might not be properly closed...
+...
+332 |                     None => {},
+    |                             -- block is empty, you might have not meant to close it
+...
+379 |         }
+    |         - ...as it matches this but it has different indentation
+...
+698 | }
+    |  ^
+
+error: aborting due to 1 previous error
+
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 10098MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

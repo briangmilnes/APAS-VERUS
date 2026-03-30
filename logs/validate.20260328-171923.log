@@ -1,0 +1,11 @@
+error: only one module-level `broadcast use` allowed for each module
+  --> src/Chap62/StarPartitionMtEph.rs:31:5
+   |
+31 |     broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 662MB, peak z3 RSS: 0MB, min free: 21829MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

@@ -1,0 +1,63 @@
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:1346:34
+     |
+ 416 |             requires self.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+     |                      -------------------------------- failed precondition
+...
+1346 |                 let other_find = other.find(&pair.0);
+     |                                  ^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:416:22
+    |
+416 |             requires self.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+other.spec_orderedtablestper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_view_eq() ✔
+obeys_feq_full() ✔
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStPer.rs:1328:46
+     |
+1328 |                         &&& result_v1[j]@ == self@[self.base_set.elements@[src].0]
+     |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+verification results:: 4476 verified, 1 errors
+error: aborting due to 1 previous error
+
+(use --output-json for machine-readable output)
+verus-build-info
+Verus
+  Version: 0.2026.03.17.a96bad0.dirty
+  Profile: release
+  Platform: linux_x86_64
+  Toolchain: 1.94.0-x86_64-unknown-linux-gnu
+
+total-time:          110775 ms    (estimated total cpu time 440332 ms)
+    rust-time:               13691 ms
+        init-and-types:          13271 ms
+        trait-conflicts:           420 ms
+        compile-time:                0 ms
+    verification-time:       90893 ms
+        vir-time:                24099 ms
+            hir-time:                 7010 ms
+            import-time:               178 ms
+            rust-to-vir:              5316 ms
+        verify-crate-time:       66793 ms
+    unaccounted-time:         6190 ms
+
+verify-crate-time-breakdown
+    total verify-time:         390776 ms   (8 threads)
+        total air-time:             50018 ms   (8 threads)
+        total smt-time:            147340 ms   (8 threads)
+            total smt-init:               350 ms,  1432517 rlimit (8 threads)
+            total smt-run:             146990 ms, 337515381 rlimit (8 threads)
+Elapsed: 111s

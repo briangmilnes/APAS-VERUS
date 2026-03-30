@@ -1,0 +1,40 @@
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:213:24
+    |
+213 |                 assert(v@ == e0.1);
+    |                        ^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:265:37
+    |
+265 | ...                   implies vertex_universe.contains(e.1) by {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:283:40
+    |
+283 |                     implies #[trigger] vertex_universe.contains(a) by {
+    |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+vertex_universe.contains(e.1) 
+    function is uninterpreted
+
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:390:29
+    |
+390 |                     implies vertex_universe.contains(e.1) by {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+vertex_universe.contains(e.1) 
+    function is uninterpreted
+
+verification results:: 4495 verified, 3 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 57s

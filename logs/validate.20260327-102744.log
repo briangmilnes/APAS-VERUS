@@ -1,0 +1,26 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphMtPer.rs:34:14
+   |
+34 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: Type parameter V of lib::Chap52::EdgeSetGraphMtPer::EdgeSetGraphMtPer::EdgeSetGraphMtPer must be declared #[verifier::reject_recursive_types] to be used in a non-positive position
+  --> src/Chap52/EdgeSetGraphMtPer.rs:35:5
+   |
+35 | /     pub struct EdgeSetGraphMtPer<V: StTInMtT + Ord + 'static> {
+36 | |         pub vertices: AVLTreeSetMtPer<V>,
+37 | |         pub edges: AVLTreeSetMtPer<Pair<V, V>>,
+38 | |     }
+   | |_____^
+
+error: aborting due to 1 previous error; 2 warnings emitted
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 2359MB, peak z3 RSS: 0MB, min free: 20667MB
+Sampled CPU Usage: rust_verify: 21s, z3 children: 0s

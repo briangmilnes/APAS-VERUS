@@ -1,0 +1,16 @@
+error: precondition not satisfied
+    --> src/Chap37/BSTSplayMtEph.rs:1759:21
+     |
+1570 |         requires link_height(*link) < usize::MAX as nat,
+     |                  -------------------------------------- failed precondition
+...
+1759 |             let h = height_rec(data);
+     |                     ^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+link_height(data) < UnsignedMax.Exec(usize::BITS) 
+
+Elapsed: 301s

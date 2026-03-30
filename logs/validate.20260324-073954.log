@@ -1,0 +1,45 @@
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:1952:36
+     |
+1952 | ...                   assert(old_map.dom().contains(self_sorted@[i as int].0)) by {
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:1956:33
+     |
+1956 | / ...                   old_map.dom().contains(p.0) &&
+1957 | | ...                   ((!other_map.dom().contains(p.0) && old_tree.contains(p))
+1958 | | ...                   || (other_map.dom().contains(p.0) && exists|v1: V, v2: V, r: V|
+1959 | | ...                       v1@ == old_map[p.0] && v2@ == other_map[p.0]
+1960 | | ...                       && f.ensures((&v1, &v2), r) && p.1 == r@))
+     | |____________________________________________________________________^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:1968:44
+     |
+1968 | ...                   assert(other_map.dom().contains(p.0));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:1992:36
+     |
+1992 | ...                   assert(old_map.dom().contains(self_sorted@[i as int].0)) by {
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2008:44
+     |
+2008 | ...                   assert(!other_map.dom().contains(p.0));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+old_map.dom().contains(self_sorted.view().index(i).0) 
+    function is uninterpreted
+
+verification results:: 4370 verified, 1 errors
+error: aborting due to 5 previous errors
+
+Elapsed: 56s

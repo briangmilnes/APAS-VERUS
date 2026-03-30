@@ -1,0 +1,18 @@
+error: Could not automatically infer triggers for this quantifier.  Use #[trigger] annotations to manually mark trigger terms instead.
+   --> src/Chap55/CycleDetectStEph.rs:209:32
+    |
+209 |           let o: Map<int, nat> = choose|o: Map<int, nat>| exists|n: nat|
+    |  ________________________________^
+210 | |             (#[trigger] spec_acyclic_ord(graph, o, n))
+211 | |             && (forall|v: int| 0 <= v < visited.len()
+212 | |                 && #[trigger] visited[v] && !ancestors[v]
+...   |
+217 | |                 ==> o.contains_key(v) && o[v] == prev_ord[v])
+218 | |             && n >= prev_next;
+    | |_____________________________^
+
+error: aborting due to 1 previous error
+
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 1573MB, peak z3 RSS: 360MB, min free: 21285MB
+Sampled CPU Usage: rust_verify: 22s, z3 children: 28s

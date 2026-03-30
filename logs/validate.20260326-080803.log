@@ -1,0 +1,18 @@
+error[E0599]: no method named `spec_documentindex_wf` found for reference `&Self` in the current scope
+  --> src/Chap44/DocumentIndex.rs:51:31
+   |
+51 |                 requires self.spec_documentindex_wf();
+   |                               ^^^^^^^^^^^^^^^^^^^^^ method not found in `&Self`
+
+error[E0599]: no method named `spec_documentindex_wf` found for reference `&Self` in the current scope
+  --> src/Chap44/DocumentIndex.rs:95:31
+   |
+95 |                 requires self.spec_documentindex_wf();
+   |                               ^^^^^^^^^^^^^^^^^^^^^ method not found in `&Self`
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 952MB, peak z3 RSS: 0MB, min free: 24144MB
+Sampled CPU Usage: rust_verify: 10s, z3 children: 0s

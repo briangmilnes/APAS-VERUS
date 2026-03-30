@@ -78,6 +78,7 @@ broadcast use {
     }
 
     /// Key uniqueness for a set of pairs: no two pairs share the same first component.
+    #[verifier::opaque]
     pub open spec fn spec_key_unique_pairs_set<KV, VV>(s: Set<(KV, VV)>) -> bool {
         forall|k: KV, v1: VV, v2: VV|
             s.contains((k, v1)) && s.contains((k, v2)) ==> v1 == v2
@@ -121,6 +122,7 @@ broadcast use {
         requires s.finite(), spec_key_unique_pairs_set(s)
         ensures spec_pair_set_to_map(s).dom().len() == s.len()
     {
+        reveal(spec_key_unique_pairs_set);
         lemma_pair_set_to_map_dom_finite(s);
         let dom_set = spec_pair_set_to_map(s).dom();
         let proj = |p: (KV, VV)| -> KV { p.0 };
@@ -157,6 +159,7 @@ broadcast use {
             spec_pair_set_to_map(s).contains_key(k),
             spec_pair_set_to_map(s)[k] == v,
     {
+        reveal(spec_key_unique_pairs_set);
         let m = spec_pair_set_to_map(s);
         assert(m.dom().contains(k));
         let v2 = choose|v2: VV| s.contains((k, v2));
@@ -179,6 +182,7 @@ broadcast use {
         ensures
             spec_key_unique_pairs_set(s.insert((k, v)))
     {
+        reveal(spec_key_unique_pairs_set);
         assert forall|k2: KV, v1: VV, v2: VV|
             s.insert((k, v)).contains((k2, v1)) && s.insert((k, v)).contains((k2, v2))
             implies v1 == v2
@@ -225,6 +229,7 @@ broadcast use {
                 0 <= i < sorted.len() && 0 <= j < sorted.len() && i != j
                 ==> (#[trigger] sorted[i]).0 != (#[trigger] sorted[j]).0,
     {
+        reveal(spec_key_unique_pairs_set);
         assert(sorted.to_set() =~= tree) by {
             assert forall|v: (KV, VV)| sorted.to_set().contains(v) <==> #[trigger] tree.contains(v) by {};
         };
@@ -246,6 +251,7 @@ broadcast use {
         requires spec_key_unique_pairs_set(s)
         ensures spec_key_unique_pairs_set(s.remove(pair))
     {
+        reveal(spec_key_unique_pairs_set);
     }
 
     /// Key uniqueness is preserved by subset.
@@ -256,6 +262,14 @@ broadcast use {
         ensures
             spec_key_unique_pairs_set(sub)
     {
+        reveal(spec_key_unique_pairs_set);
+    }
+
+    /// Key uniqueness holds trivially for the empty set.
+    proof fn lemma_key_unique_empty<KV, VV>()
+        ensures spec_key_unique_pairs_set(Set::<(KV, VV)>::empty())
+    {
+        reveal(spec_key_unique_pairs_set);
     }
 
     /// Map over the set after insert: extends the map with the new key-value pair.
@@ -267,6 +281,7 @@ broadcast use {
             spec_pair_set_to_map(s.insert((k, v)))
                 =~= spec_pair_set_to_map(s).insert(k, v),
     {
+        reveal(spec_key_unique_pairs_set);
         let old_m = spec_pair_set_to_map(s);
         let new_s = s.insert((k, v));
         let new_m = spec_pair_set_to_map(new_s);
@@ -316,6 +331,7 @@ broadcast use {
             spec_pair_set_to_map(s.remove((k, v)))
                 =~= spec_pair_set_to_map(s).remove(k),
     {
+        reveal(spec_key_unique_pairs_set);
         let old_m = spec_pair_set_to_map(s);
         let new_s = s.remove((k, v));
         let new_m = spec_pair_set_to_map(new_s);
@@ -860,6 +876,7 @@ broadcast use {
             let tree = ParamBST::<Pair<K, V>>::new();
             proof {
                 lemma_set_to_map_empty::<K::V, V::V>();
+                lemma_key_unique_empty::<K::V, V::V>();
                 assert(obeys_feq_full_trigger::<K>());
                 assert(obeys_feq_full_trigger::<V>());
                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
@@ -873,6 +890,8 @@ broadcast use {
                 let s = Set::<(K::V, V::V)>::empty().insert((k@, v@));
                 assert(bst@ =~= s);
                 lemma_set_to_map_empty::<K::V, V::V>();
+                lemma_key_unique_empty::<K::V, V::V>();
+                lemma_key_unique_insert(Set::<(K::V, V::V)>::empty(), k@, v@);
                 lemma_set_to_map_insert(Set::empty(), k@, v@);
                 lemma_pair_set_to_map_dom_finite(s);
                 assert(obeys_feq_full_trigger::<K>());
@@ -1073,6 +1092,7 @@ broadcast use {
             proof {
                 seq_view.unique_seq_to_set();
                 assert(seq_view.len() == keys@.len());
+                lemma_key_unique_empty::<K::V, V::V>();
             }
             while i < len
                 invariant
@@ -1190,6 +1210,7 @@ broadcast use {
             let mut i: usize = 0;
             proof {
                 lemma_sorted_keys_pairwise_distinct(self.tree@, sorted@);
+                lemma_key_unique_empty::<K::V, V::V>();
             }
             while i < len
                 invariant
@@ -1377,6 +1398,7 @@ broadcast use {
                 assert(obeys_feq_full_trigger::<K>());
                 lemma_pair_set_to_map_dom_finite(old_tree);
                 lemma_sorted_keys_pairwise_distinct(old_tree, sorted@);
+                lemma_key_unique_empty::<K::V, V::V>();
             }
             while i < len
                 invariant
@@ -1528,6 +1550,7 @@ broadcast use {
             let mut i: usize = 0;
             proof {
                 lemma_sorted_keys_pairwise_distinct(old_tree, self_sorted@);
+                lemma_key_unique_empty::<K::V, V::V>();
             }
             while i < self_len
                 invariant
@@ -1854,6 +1877,7 @@ broadcast use {
             let mut i: usize = 0;
             proof {
                 lemma_sorted_keys_pairwise_distinct(old_tree, sorted@);
+                lemma_key_unique_empty::<K::V, V::V>();
             }
             while i < len
                 invariant
@@ -1960,6 +1984,7 @@ broadcast use {
             let mut i: usize = 0;
             proof {
                 lemma_sorted_keys_pairwise_distinct(old_tree, sorted@);
+                lemma_key_unique_empty::<K::V, V::V>();
             }
             while i < len
                 invariant
@@ -2060,6 +2085,7 @@ broadcast use {
             let mut i: usize = 0;
             proof {
                 lemma_sorted_keys_pairwise_distinct(old_tree, sorted@);
+                lemma_key_unique_empty::<K::V, V::V>();
             }
             while i < len
                 invariant
@@ -2590,6 +2616,7 @@ broadcast use {
                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
                 reveal(obeys_view_eq);
                 lemma_sorted_keys_pairwise_distinct(old_tree, sorted@);
+                lemma_key_unique_empty::<K::V, V::V>();
             }
             while i < len
                 invariant
@@ -2808,6 +2835,7 @@ broadcast use {
             let mut i: usize = 0;
             proof {
                 lemma_sorted_keys_pairwise_distinct(self.tree@, sorted@);
+                lemma_key_unique_empty::<K::V, V::V>();
             }
             while i < len
                 invariant
@@ -3094,6 +3122,7 @@ broadcast use {
             proof {
                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
                 lemma_sorted_keys_pairwise_distinct(old_tree, sorted@);
+                lemma_key_unique_empty::<K::V, V::V>();
             }
             let mut left_tree = ParamBST::<Pair<K, V>>::new();
             let mut right_tree = ParamBST::<Pair<K, V>>::new();

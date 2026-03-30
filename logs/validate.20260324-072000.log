@@ -1,0 +1,23 @@
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:3283:32
+     |
+3283 |                         assert(old_tree.contains(sorted@[j as int]));
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:3313:32
+     |
+3313 |                         assert(old_tree.contains(sorted@[j as int]));
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+old_tree.contains(sorted.view().index(j)) 
+    function is uninterpreted
+
+verification results:: 4370 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 82s

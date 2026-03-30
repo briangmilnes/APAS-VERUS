@@ -1,0 +1,533 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+error[E0433]: failed to resolve: could not find `GraphSearchStPer` in `Chap53`
+ --> tests/Chap53/TestGraphSearchStPer.rs:8:25
+  |
+8 | use apas_verus::Chap53::GraphSearchStPer::GraphSearchStPer::*;
+  |                         ^^^^^^^^^^^^^^^^ could not find `GraphSearchStPer` in `Chap53`
+
+error[E0433]: failed to resolve: could not find `OrderedTableStPer` in `Chap43`
+ --> tests/Chap43/TestOrderedTableStPer.rs:8:25
+  |
+8 | use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::*;
+  |                         ^^^^^^^^^^^^^^^^^ could not find `OrderedTableStPer` in `Chap43`
+
+error[E0425]: cannot find function `graph_search` in this scope
+  --> tests/Chap53/TestGraphSearchStPer.rs:26:18
+   |
+26 |     let result = graph_search(&graph, 1, &SelectAll, Ghost::assume_new());
+   |                  ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::graph_search;
+   |
+
+error[E0425]: cannot find value `SelectAll` in this scope
+  --> tests/Chap53/TestGraphSearchStPer.rs:26:43
+   |
+26 |     let result = graph_search(&graph, 1, &SelectAll, Ghost::assume_new());
+   |                                           ^^^^^^^^^ not found in this scope
+   |
+help: consider importing this unit struct
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::SelectAll;
+   |
+
+error[E0425]: cannot find function `graph_search` in this scope
+  --> tests/Chap53/TestGraphSearchStPer.rs:40:18
+   |
+40 |     let result = graph_search(&graph, 1, &SelectAll, Ghost::assume_new());
+   |                  ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::graph_search;
+   |
+
+error[E0425]: cannot find value `SelectAll` in this scope
+  --> tests/Chap53/TestGraphSearchStPer.rs:40:43
+   |
+40 |     let result = graph_search(&graph, 1, &SelectAll, Ghost::assume_new());
+   |                                           ^^^^^^^^^ not found in this scope
+   |
+help: consider importing this unit struct
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::SelectAll;
+   |
+
+error[E0425]: cannot find function `graph_search` in this scope
+  --> tests/Chap53/TestGraphSearchStPer.rs:54:18
+   |
+54 |     let result = graph_search(&graph, 1, &SelectAll, Ghost::assume_new());
+   |                  ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::graph_search;
+   |
+
+error[E0425]: cannot find value `SelectAll` in this scope
+  --> tests/Chap53/TestGraphSearchStPer.rs:54:43
+   |
+54 |     let result = graph_search(&graph, 1, &SelectAll, Ghost::assume_new());
+   |                                           ^^^^^^^^^ not found in this scope
+   |
+help: consider importing this unit struct
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::SelectAll;
+   |
+
+error[E0425]: cannot find function `graph_search` in this scope
+  --> tests/Chap53/TestGraphSearchStPer.rs:64:18
+   |
+64 |     let result = graph_search(&graph, 1, &SelectAll, Ghost::assume_new());
+   |                  ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::graph_search;
+   |
+
+error[E0425]: cannot find value `SelectAll` in this scope
+  --> tests/Chap53/TestGraphSearchStPer.rs:64:43
+   |
+64 |     let result = graph_search(&graph, 1, &SelectAll, Ghost::assume_new());
+   |                                           ^^^^^^^^^ not found in this scope
+   |
+help: consider importing this unit struct
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::SelectAll;
+   |
+
+error[E0425]: cannot find function `graph_search` in this scope
+  --> tests/Chap53/TestGraphSearchStPer.rs:79:18
+   |
+79 |     let result = graph_search(&graph, 1, &SelectAll, Ghost::assume_new());
+   |                  ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::graph_search;
+   |
+
+error[E0425]: cannot find value `SelectAll` in this scope
+  --> tests/Chap53/TestGraphSearchStPer.rs:79:43
+   |
+79 |     let result = graph_search(&graph, 1, &SelectAll, Ghost::assume_new());
+   |                                           ^^^^^^^^^ not found in this scope
+   |
+help: consider importing this unit struct
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::SelectAll;
+   |
+
+error[E0425]: cannot find function `graph_search` in this scope
+  --> tests/Chap53/TestGraphSearchStPer.rs:94:18
+   |
+94 |     let result = graph_search(&graph, 1, &SelectAll, Ghost::assume_new());
+   |                  ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::graph_search;
+   |
+
+error[E0425]: cannot find value `SelectAll` in this scope
+  --> tests/Chap53/TestGraphSearchStPer.rs:94:43
+   |
+94 |     let result = graph_search(&graph, 1, &SelectAll, Ghost::assume_new());
+   |                                           ^^^^^^^^^ not found in this scope
+   |
+help: consider importing this unit struct
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::SelectAll;
+   |
+
+error[E0425]: cannot find function `graph_search_multi` in this scope
+   --> tests/Chap53/TestGraphSearchStPer.rs:106:18
+    |
+106 |     let result = graph_search_multi(&graph, sources, &SelectAll, Ghost::assume_new());
+    |                  ^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+  4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::graph_search_multi;
+    |
+
+error[E0425]: cannot find value `SelectAll` in this scope
+   --> tests/Chap53/TestGraphSearchStPer.rs:106:55
+    |
+106 |     let result = graph_search_multi(&graph, sources, &SelectAll, Ghost::assume_new());
+    |                                                       ^^^^^^^^^ not found in this scope
+    |
+help: consider importing this unit struct
+    |
+  4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::SelectAll;
+    |
+
+error[E0425]: cannot find function `reachable` in this scope
+   --> tests/Chap53/TestGraphSearchStPer.rs:117:21
+    |
+117 |     let reachable = reachable(&graph, 1, Ghost::assume_new());
+    |                     ^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+  4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::reachable;
+    |
+
+error[E0425]: cannot find function `graph_search` in this scope
+   --> tests/Chap53/TestGraphSearchStPer.rs:127:18
+    |
+127 |     let result = graph_search(&graph, 1, &SelectOne, Ghost::assume_new());
+    |                  ^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+  4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::graph_search;
+    |
+
+error[E0425]: cannot find value `SelectOne` in this scope
+   --> tests/Chap53/TestGraphSearchStPer.rs:127:43
+    |
+127 |     let result = graph_search(&graph, 1, &SelectOne, Ghost::assume_new());
+    |                                           ^^^^^^^^^ not found in this scope
+    |
+help: consider importing this unit struct
+    |
+  4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::SelectOne;
+    |
+
+error[E0432]: unresolved import `apas_verus::OrderedTableStPerLit`
+ --> tests/Chap43/TestOrderedTableStPer.rs:9:5
+  |
+9 | use apas_verus::OrderedTableStPerLit;
+  |     ^^^^^^^^^^^^--------------------
+  |     |           |
+  |     |           help: a similar name exists in the module: `OrderedTableStEphLit`
+  |     no `OrderedTableStPerLit` in the root
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+error: could not compile `apas-verus` (test "TestGraphSearchStPer") due to 18 previous errors
+warning: build failed, waiting for other jobs to finish...
+error[E0425]: cannot find type `OrderedTableStPer` in this scope
+   --> tests/Chap43/TestOrderedTableStPer.rs:456:16
+    |
+456 |     let table: OrderedTableStPer<i32, String> = OrderedTableStPerLit![
+    |                ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableStPer` in this scope
+   --> tests/Chap43/TestOrderedTableStPer.rs:467:22
+    |
+467 |     let empty_table: OrderedTableStPer<i32, String> = OrderedTableStPerLit![];
+    |                      ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+  --> tests/Chap43/TestOrderedTableStPer.rs:14:17
+   |
+14 |     let table = OrderedTableStPer::<i32, String>::empty();
+   |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+  --> tests/Chap43/TestOrderedTableStPer.rs:22:17
+   |
+22 |     let table = OrderedTableStPer::singleton(42, "answer".to_string());
+   |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+  --> tests/Chap43/TestOrderedTableStPer.rs:32:17
+   |
+32 |     let table = OrderedTableStPer::empty()
+   |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+  --> tests/Chap43/TestOrderedTableStPer.rs:51:17
+   |
+51 |     let table = OrderedTableStPer::empty()
+   |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+  --> tests/Chap43/TestOrderedTableStPer.rs:69:17
+   |
+69 |     let table = OrderedTableStPer::empty()
+   |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+  --> tests/Chap43/TestOrderedTableStPer.rs:79:23
+   |
+79 |     let empty_table = OrderedTableStPer::<i32, String>::empty();
+   |                       ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+  --> tests/Chap43/TestOrderedTableStPer.rs:86:17
+   |
+86 |     let table = OrderedTableStPer::empty()
+   |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:103:17
+    |
+103 |     let table = OrderedTableStPer::empty()
+    |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:121:17
+    |
+121 |     let table = OrderedTableStPer::empty()
+    |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0282]: type annotations needed
+   --> tests/Chap43/TestOrderedTableStPer.rs:132:16
+    |
+132 |     assert_eq!(left.size() + right.size(), 4);
+    |                ^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> tests/Chap43/TestOrderedTableStPer.rs:132:30
+    |
+132 |     assert_eq!(left.size() + right.size(), 4);
+    |                              ^^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> tests/Chap43/TestOrderedTableStPer.rs:147:16
+    |
+147 |     assert_eq!(left2.size() + right2.size(), 5);
+    |                ^^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> tests/Chap43/TestOrderedTableStPer.rs:147:31
+    |
+147 |     assert_eq!(left2.size() + right2.size(), 5);
+    |                               ^^^^^^ cannot infer type
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:161:16
+    |
+161 |     let left = OrderedTableStPer::empty()
+    |                ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:165:17
+    |
+165 |     let right = OrderedTableStPer::empty()
+    |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:169:18
+    |
+169 |     let joined = OrderedTableStPer::join_key(&left, &right);
+    |                  ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:179:17
+    |
+179 |     let table = OrderedTableStPer::empty()
+    |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:201:17
+    |
+201 |     let table = OrderedTableStPer::empty()
+    |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:218:17
+    |
+218 |     let table = OrderedTableStPer::empty()
+    |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:235:17
+    |
+235 |     let table = OrderedTableStPer::empty()
+    |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0282]: type annotations needed
+   --> tests/Chap43/TestOrderedTableStPer.rs:243:16
+    |
+243 |     assert_eq!(left.size(), 2);
+    |                ^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> tests/Chap43/TestOrderedTableStPer.rs:244:16
+    |
+244 |     assert_eq!(right.size(), 3);
+    |                ^^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> tests/Chap43/TestOrderedTableStPer.rs:253:16
+    |
+253 |     assert_eq!(left2.size(), 5);
+    |                ^^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> tests/Chap43/TestOrderedTableStPer.rs:254:16
+    |
+254 |     assert_eq!(right2.size(), 0);
+    |                ^^^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> tests/Chap43/TestOrderedTableStPer.rs:258:16
+    |
+258 |     assert_eq!(left3.size(), 0);
+    |                ^^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> tests/Chap43/TestOrderedTableStPer.rs:259:16
+    |
+259 |     assert_eq!(right3.size(), 5);
+    |                ^^^^^^ cannot infer type
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:264:17
+    |
+264 |     let table = OrderedTableStPer::empty()
+    |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:284:17
+    |
+284 |     let table = OrderedTableStPer::tabulate(|k| format!("value_{k}"), &keys);
+    |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:293:17
+    |
+293 |     let table = OrderedTableStPer::empty()
+    |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0282]: type annotations needed
+   --> tests/Chap43/TestOrderedTableStPer.rs:298:29
+    |
+298 |     let mapped = table.map(|v| v.to_uppercase());
+    |                             ^  - type must be known at this point
+    |
+help: consider giving this closure parameter an explicit type
+    |
+298 |     let mapped = table.map(|v: /* Type */| v.to_uppercase());
+    |                              ++++++++++++
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:307:17
+    |
+307 |     let table = OrderedTableStPer::empty()
+    |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:325:18
+    |
+325 |     let table1 = OrderedTableStPer::empty()
+    |                  ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:331:18
+    |
+331 |     let table2 = OrderedTableStPer::empty()
+    |                  ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0282]: type annotations needed
+   --> tests/Chap43/TestOrderedTableStPer.rs:337:54
+    |
+337 |     let intersection = table1.intersection(&table2, |v1, _v2| v1.clone());
+    |                                                      ^^       -- type must be known at this point
+    |
+help: consider giving this closure parameter an explicit type
+    |
+337 |     let intersection = table1.intersection(&table2, |v1: /* Type */, _v2| v1.clone());
+    |                                                        ++++++++++++
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:347:18
+    |
+347 |     let table1 = OrderedTableStPer::empty()
+    |                  ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:352:18
+    |
+352 |     let table2 = OrderedTableStPer::empty()
+    |                  ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0282]: type annotations needed
+   --> tests/Chap43/TestOrderedTableStPer.rs:357:40
+    |
+357 |     let union = table1.union(&table2, |v1, _v2| v1.clone());
+    |                                        ^^       -- type must be known at this point
+    |
+help: consider giving this closure parameter an explicit type
+    |
+357 |     let union = table1.union(&table2, |v1: /* Type */, _v2| v1.clone());
+    |                                          ++++++++++++
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:368:18
+    |
+368 |     let table1 = OrderedTableStPer::empty()
+    |                  ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:374:18
+    |
+374 |     let table2 = OrderedTableStPer::empty()
+    |                  ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:388:17
+    |
+388 |     let table = OrderedTableStPer::empty()
+    |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:410:17
+    |
+410 |     let table = OrderedTableStPer::empty()
+    |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:432:20
+    |
+432 |     let original = OrderedTableStPer::empty()
+    |                    ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:473:17
+    |
+473 |     let table = OrderedTableStPer::empty()
+    |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:486:17
+    |
+486 |     let table = OrderedTableStPer::empty()
+    |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:502:17
+    |
+502 |     let empty = OrderedTableStPer::<i32, String>::empty();
+    |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:521:17
+    |
+521 |     let table = OrderedTableStPer::empty()
+    |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:534:21
+    |
+534 |     let mut table = OrderedTableStPer::empty();
+    |                     ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStPer`
+   --> tests/Chap43/TestOrderedTableStPer.rs:553:17
+    |
+553 |     let table = OrderedTableStPer::empty()
+    |                 ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStPer`
+
+Some errors have detailed explanations: E0282, E0425, E0432, E0433.
+For more information about an error, try `rustc --explain E0282`.
+error: could not compile `apas-verus` (test "TestOrderedTableStPer") due to 52 previous errors
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 8s

@@ -1,0 +1,43 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStEph.rs:45:14
+   |
+45 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStPer.rs:47:14
+   |
+47 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStEph.rs:332:36
+    |
+332 |                     proof { assert(ns@.contains(v_view)); nv_contains_v = true; }
+    |                                    ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphStEph.rs:338:36
+    |
+338 |                     proof { assert(s@.contains(v_view)); nv_contains_v = true; }
+    |                                    ^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+s.view().contains(v_view) 
+    function is uninterpreted
+
+verification results:: 2790 verified, 1 errors
+error: aborting due to 2 previous errors; 3 warnings emitted
+
+Elapsed: 32s
+Sampled Memory Usage: peak rust_verify RSS: 4495MB, peak z3 RSS: 348MB, min free: 17095MB
+Sampled CPU Usage: rust_verify: 84s, z3 children: 52s

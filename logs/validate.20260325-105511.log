@@ -1,0 +1,34 @@
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:254:24
+    |
+254 |                 assert(self.parent@ =~= old_parent.insert(v@, v)) by {
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:257:24
+    |
+257 |                 assert(self.rank@ =~= old_rank.insert(v@, 0usize));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:258:24
+    |
+258 |                 assert(self.elements@ =~= old_elements.push(v));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:241:9
+    |
+241 |         fn insert(&mut self, v: V) {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+self.parent.view() =~= old_parent.insert(v.view(), v) 
+
+verification results:: 4869 verified, 1 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 87s

@@ -1,0 +1,17 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+    --> src/Chap43/OrderedTableStEph.rs:1453:17
+     |
+1453 |                 assert forall|k: K::V| self@.dom().contains(k) && spec_pred(k, self@[k])
+     |                 ^^^^^^
+     |
+     = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: cannot call function `vstd::set::Set::contains` with mode spec
+    --> src/Chap43/OrderedTableStEph.rs:2351:29
+     |
+2351 |                         if !counted.contains(pair.0@) {
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error; 1 warning emitted
+
+Elapsed: 21s

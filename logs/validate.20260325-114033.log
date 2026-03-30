@@ -1,0 +1,21 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:435:9
+    |
+435 |         fn insert(&mut self, v: V) {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+  --> src/Chap65/UnionFindStEph.rs:92:11
+   |
+92 |       proof fn lemma_insert_preserves_wf<V: StT + Hash>(
+   |  ___________^
+93 | |         uf: UnionFindStEph<V>,
+94 | |         old_uf: UnionFindStEph<V>,
+95 | |         v: V,
+96 | |     )
+   | |_____^
+
+verification results:: 4869 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 60s

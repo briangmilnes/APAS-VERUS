@@ -1,0 +1,62 @@
+error: assertion failed
+    --> src/Chap37/BSTSplayMtEph.rs:1567:17
+     |
+1567 |                 TotalOrder::le(x, node.key) && x != node.key
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayMtEph.rs:1578:17
+     |
+1578 |                 TotalOrder::le(node.key, x) && x != node.key
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayMtEph.rs:1590:17
+     |
+1590 |                 exists|i: int| 0 <= i < values@.len() && values@[i] == x
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayMtEph.rs:1594:28
+     |
+1594 |                     assert(values@[mid as int] == x);
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayMtEph.rs:1600:28
+     |
+1600 |                     assert(values@[mid as int + 1 + j] == x);
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap37/BSTSplayMtEph.rs:1567:17
+     |
+1567 |                 TotalOrder::le(x, node.key) && x != node.key
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^
+
+note: 
+
+x.le(node.key) ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+!(x == node.key) ✘
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap37/BSTSplayMtEph.rs:1599:44
+     |
+1599 |                     let j = choose|j: int| 0 <= j < right_slice@.len() && right_slice@[j] == x;
+     |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+    --> src/Chap37/BSTSplayMtEph.rs:1600:28
+     |
+1600 |                     assert(values@[mid as int + 1 + j] == x);
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+verification results:: 4907 verified, 1 errors
+error: aborting due to 5 previous errors
+
+Elapsed: 115s

@@ -1,0 +1,60 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap62/StarPartitionMtEph.rs:410:21
+    |
+410 |                     assert forall|j2: int| 0 <= j2 < nv as int implies
+    |                     ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap62/StarPartitionMtEph.rs:532:21
+    |
+532 |                     assert forall|j2: int| 0 <= j2 < q as int implies
+    |                     ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap62/StarPartitionMtEph.rs:546:21
+    |
+546 |                     assert forall|j2: int| 0 <= j2 < q as int implies
+    |                     ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap62/StarPartitionMtEph.rs:216:17
+    |
+216 | /                 forall|j2: int| 0 <= j2 < nv as int ==>
+217 | |                     #[trigger] vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+218 | |                     vertex_to_index@[vertices_vec@[j2]@] as usize == j2,
+    | |_______________________________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap62/StarPartitionMtEph.rs:227:17
+    |
+227 | /                 forall|s: int| 0 <= s < th_edges@.len() ==>
+228 | |                     (th_edges@[s].0 as usize) < nv &&
+229 | |                     #[trigger] coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@) &&
+230 | |                     !coin_flips@[vertices_vec@[(th_edges@[s].0 as usize) as int]@] &&
+...   |
+233 | |                     vertex_to_index@.contains_key(th_edges@[s].1@) &&
+234 | |                     (vertex_to_index@[th_edges@[s].1@] as usize) < nv,
+    | |_____________________________________________________________________^
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:276:33
+    |
+276 | / ...                   (th_edges@.push(new_entry)[s].0 as usize) < nv &&
+277 | | ...                   coin_flips@.contains_key(vertices_vec@[(th_edges@.push(new_entry)[s].0 as usize) as int]@) &&
+278 | | ...                   !coin_flips@[vertices_vec@[(th_edges@.push(new_entry)[s].0 as usize) as int]@] &&
+279 | | ...                   coin_flips@.contains_key(th_edges@.push(new_entry)[s].1@) &&
+280 | | ...                   coin_flips@[th_edges@.push(new_entry)[s].1@] &&
+281 | | ...                   vertex_to_index@.contains_key(th_edges@.push(new_entry)[s].1@) &&
+282 | | ...                   (vertex_to_index@[th_edges@.push(new_entry)[s].1@] as usize) < nv by {
+    | |_______________________________________________________________________________________^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:307:33
+    |
+307 | / ...                   (th_ed

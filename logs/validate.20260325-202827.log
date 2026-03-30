@@ -1,0 +1,46 @@
+warning: invariant_ensures is deprecated - instead of 'invariant/invariant_ensures/ensures', use 'invariant_except_break/invariant/ensures'
+   --> src/Chap65/KruskalStEph.rs:205:13
+    |
+205 | /             invariant_ensures
+206 | |                 uf.spec_unionfindsteph_wf(),
+207 | |                 forall|j: int| 0 <= j < vit@.0 ==>
+208 | |                     #[trigger] uf@.parent.contains_key(vseq[j]@),
+    | |_________________________________________________________________^
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:200:9
+    |
+200 |         loop
+    |         ^^^^
+
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:308:24
+    |
+308 |                 assert(edge_view_set.contains(eseq[j]@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:278:9
+    |
+278 |         while i < edges_vec.len()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:180:5
+    |
+180 | /     pub fn kruskal_mst<V: HashOrd>(
+181 | |         graph: &LabUnDirGraphStEph<V, WrappedF64>,
+182 | |     ) -> (mst_edges: SetStEph<LabEdge<V, WrappedF64>>)
+    | |_____________________________________________________^
+
+note: diagnostics via expansion
+
+note: 
+
+edge_view_set.contains(eseq.index(j).view()) 
+    function is uninterpreted
+
+verification results:: 4916 verified, 3 errors
+error: aborting due to 4 previous errors; 1 warning emitted
+
+Elapsed: 96s

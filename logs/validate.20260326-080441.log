@@ -1,0 +1,14 @@
+error: The verifier does not yet support the following Rust feature: dyn with more that one trait
+  --> src/Chap44/Example44_1.rs:49:9
+   |
+49 | /         pub struct TweetQueryExamples {
+50 | |             pub index: DocumentIndex,
+51 | |             pub fw: Box<dyn Fn(&Word) -> DocumentSet>,
+52 | |         }
+   | |_________^
+
+error: aborting due to 1 previous error
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 1400MB, peak z3 RSS: 0MB, min free: 23720MB
+Sampled CPU Usage: rust_verify: 14s, z3 children: 0s

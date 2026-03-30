@@ -1,0 +1,23 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphMtPer.rs:34:14
+   |
+34 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: cannot call function `lib::Chap43::OrderedSetMtEph::OrderedSetMtEph::OrderedSetMtEphTrait::size` with mode exec
+   --> src/Chap52/AdjTableGraphMtPer.rs:169:32
+    |
+169 |                 invariant i <= domain.size()
+    |                                ^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error; 2 warnings emitted
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 3526MB, peak z3 RSS: 0MB, min free: 19172MB
+Sampled CPU Usage: rust_verify: 63s, z3 children: 50s

@@ -1,0 +1,96 @@
+error: postcondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:243:17
+    |
+243 |                 rank as int == self@.filter(|x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, *k) && t@ == x && t@ != k@).len();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+532 |             rank
+    |             ---- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetMtEph.rs:243:17
+    |
+243 |                 rank as int == self@.filter(|x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, *k) && t@ == x && t@ != k@).len();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).view().finite() ✔
+%return <= old(self).view().len() ✔
+%return == old(self).view().filter((|x| (exists |t| t.le(old(k)) && t.view() == x && !(t.view() == old(k).view())))).len() ✘
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:252:17
+    |
+252 | ...       selected matches Some(v) ==> self@.filter(|x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, v) && t@ == x && t@ != v@).len() == i as int;
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+545 | ...   selected
+    |       -------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetMtEph.rs:252:46
+    |
+252 | ...e(v) ==> self@.filter(|x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, v) && t@ == x && t@ != v@).len() == i as int;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).view().finite() ✔
+old(i) >= old(self).view().len() ==>
+    let tmp%% = %return;
+        tmp%% is None ==>
+            true ✔
+        !(tmp%% is None) ==>
+            false ✔
+let tmp%% = %return;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            old(self).view().contains(v.view()) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+let tmp%% = %return;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            old(self).view().filter((|x| (exists |t| t.le(v) && t.view() == x && !(t.view() == v.view())))).len() == old(i) ✘
+    !(tmp%% is Some && true) ==>
+        true ✔
+
+error: constructed value may fail to meet its declared type invariant
+   --> src/Chap43/OrderedTableMtPer.rs:521:13
+    |
+ 62 |           spec fn inv(self) -> bool {
+    |                -------------------- type invariant declared here
+...
+521 | /             OrderedTableMtPer {
+522 | |                 locked_table: RwLock::new(result, Ghost(OrderedTableMtPerInv)),
+523 | |                 ghost_locked_table: Ghost(view),
+524 | |             }
+    | |_____________^
+
+note: diagnostics via expansion
+
+note: 
+
+tmp%.inv()
+|   tmp%.ghost_locked_table.dom().finite() 
+|       function is uninterpreted
++---
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:532:13
+    |
+ 77 |         requires inner@.dom().finite()
+    |                  --------------------- failed precondition
+...
+532 |             from_st_table(range)
+    |             ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+range.view().dom().finite() 
+    function is uninterpreted
+
+verification results:: 2561 verified, 4 errors
+error: aborting due to 4 previous errors
+

@@ -1,0 +1,68 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphMtPer.rs:36:14
+   |
+36 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: postcondition not satisfied
+   --> vstd/std_specs/cmp.rs:21:12
+    |
+    = note: failed this postcondition
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:667:13
+    |
+667 |             equal
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+ --> vstd/std_specs/cmp.rs:21:38
+
+note: 
+
+obeys_eq_spec() ==>
+    equal == old(self).eq_spec(old(other)) ✘
+equal == (old(self).view() == old(other).view()) ✔
+
+error: assertion failed
+   --> src/Chap52/EdgeSetGraphMtPer.rs:236:29
+    |
+236 |                     implies new_vertices@.contains(a) && new_vertices@.contains(b) by {}
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap52/EdgeSetGraphMtPer.rs:236:29
+    |
+236 |                     implies new_vertices@.contains(a) && new_vertices@.contains(b) by {}
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+new_vertices.view().contains(a) ✘
+    function is uninterpreted
+new_vertices.view().contains(b) ✘
+    function is uninterpreted
+
+error: assertion failed
+   --> src/Chap52/EdgeSetGraphMtPer.rs:249:24
+    |
+249 |                 assert(new_edges@ == self.edges@.remove((u@, v@)));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+new_edges.view() =~= self.edges.view().remove((u.view(), v.view())) 
+
+verification results:: 2746 verified, 3 errors
+error: aborting due to 3 previous errors; 2 warnings emitted
+
+Elapsed: 25s
+Sampled Memory Usage: peak rust_verify RSS: 2498MB, peak z3 RSS: 364MB, min free: 19515MB
+Sampled CPU Usage: rust_verify: 41s, z3 children: 43s

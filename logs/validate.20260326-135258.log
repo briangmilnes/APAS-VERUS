@@ -1,0 +1,108 @@
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:70:17
+    |
+ 70 |                 has_cycle == !spec_is_dag(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+233 |                         return true;
+    |                         ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:70:17
+    |
+ 70 |                 has_cycle == !spec_is_dag(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+238 |             false
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+  --> src/Chap55/CycleDetectStEph.rs:70:31
+   |
+70 |                 has_cycle == !spec_is_dag(graph),
+   |                               ^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == !(spec_is_dag(old(graph)))
+|   %return ==>
+|       !(spec_is_dag(old(graph))) ✘
+|       |   (exists |path| spec_is_path(old(graph), path) && path.len() >= 2 && path.index(0) == path.last()) 
+|       +---
+|   !(spec_is_dag(old(graph))) ==>
+|       %return ✔
++---
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStPer.rs:69:17
+    |
+ 69 |                 has_cycle == !spec_is_dag_per(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+200 |                         return true;
+    |                         ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStPer.rs:69:17
+    |
+ 69 |                 has_cycle == !spec_is_dag_per(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+205 |             false
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+  --> src/Chap55/CycleDetectStPer.rs:69:31
+   |
+69 |                 has_cycle == !spec_is_dag_per(graph),
+   |                               ^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == !(spec_is_dag_per(old(graph)))
+|   %return ==>
+|       !(spec_is_dag_per(old(graph))) ✘
+|       |   (exists |path| spec_is_path_per(old(graph), path) && path.len() >= 2 && path.index(0) == path.last()) 
+|       +---
+|   !(spec_is_dag_per(old(graph))) ==>
+|       %return ✔
++---
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:136:17
+    |
+136 |                 spec_is_dag_per(graph) ==> spec_is_topo_order_per(graph, order@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+462 |             AVLTreeSeqStPerS::from_vec(reversed)
+    |             ------------------------------------ at the end of the function body
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/TopoSortStPer.rs:431:21
+    |
+431 |                     forall|j: int| #![trigger visited@[j]] 0 <= j < start ==> visited@[j],
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap55/TopoSortStPer.rs:64:12
+    |
+ 64 |         && order.no_duplicates()
+    |            ^^^^^^^^^^^^^^^^^^^^^
+ 65 |         && (forall|k: int| 0 <= k < order.len() ==> (#[trigger] order[k] as int) < graph@.len())
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+ 69 |             ==> i < j)
+    |                 ^^^^^
+...
+136 |                 spec_is_dag_per(graph) ==> spec_is_topo_order_per(graph, order@),
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view().len() == old(graph).view().len() ✔
+spec_is_dag_per(old(graph)) ==>
+    spec_is_topo_order_per(old(graph), %return.view()) ✘
+    |   %return.view().len() == old(graph).view().len() ✔
+    |   %return.view().no_duplicates() ✘
+    |   |   forall |i, j|
+    |   |       let tmp%% = 0 in let tmp%% = i in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == 

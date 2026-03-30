@@ -1,0 +1,146 @@
+note: hint: because the iterator is an exec-only value (not a spec value), Verus did not add an automatic loop invariant about the iterator. You may need to (1) write a manual loop invariant about the iterator, or (2) store the loop expression in a variable outside the loop, or (3) use a while loop. For example, change `for i in 0..f() { ... }` to (1) `for i in iter: 0..f() invariant iter.end == 10 { ... }` or (2): `let n = f(); for i in 0..n invariant n == 10 { ... }`.
+  --> src/Chap61/EdgeContractionStEph.rs:74:21
+   |
+74 |         for edge in matching.iter()
+   |                     ^^^^^^^^^^^^^^^
+
+note: hint: because the iterator is an exec-only value (not a spec value), Verus did not add an automatic loop invariant about the iterator. You may need to (1) write a manual loop invariant about the iterator, or (2) store the loop expression in a variable outside the loop, or (3) use a while loop. For example, change `for i in 0..f() { ... }` to (1) `for i in iter: 0..f() invariant iter.end == 10 { ... }` or (2): `let n = f(); for i in 0..n invariant n == 10 { ... }`.
+  --> src/Chap61/EdgeContractionStEph.rs:84:23
+   |
+84 |         for vertex in graph.vertices().iter()
+   |                       ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: hint: because the iterator is an exec-only value (not a spec value), Verus did not add an automatic loop invariant about the iterator. You may need to (1) write a manual loop invariant about the iterator, or (2) store the loop expression in a variable outside the loop, or (3) use a while loop. For example, change `for i in 0..f() { ... }` to (1) `for i in iter: 0..f() invariant iter.end == 10 { ... }` or (2): `let n = f(); for i in 0..n invariant n == 10 { ... }`.
+  --> src/Chap61/EdgeContractionStEph.rs:97:36
+   |
+97 |         for (_, representative) in vertex_to_block.iter()
+   |                                    ^^^^^^^^^^^^^^^^^^^^^^
+
+note: hint: because the iterator is an exec-only value (not a spec value), Verus did not add an automatic loop invariant about the iterator. You may need to (1) write a manual loop invariant about the iterator, or (2) store the loop expression in a variable outside the loop, or (3) use a while loop. For example, change `for i in 0..f() { ... }` to (1) `for i in iter: 0..f() invariant iter.end == 10 { ... }` or (2): `let n = f(); for i in 0..n invariant n == 10 { ... }`.
+   --> src/Chap61/EdgeContractionStEph.rs:105:21
+    |
+105 |         for edge in graph.edges().iter()
+    |                     ^^^^^^^^^^^^^^^^^^^^
+
+error: loop invariant not satisfied
+  --> src/Chap61/EdgeContractionStEph.rs:74:9
+   |
+74 | /         for edge in matching.iter()
+75 | |             invariant
+76 | |                 valid_key_type_Edge::<V>(),
+77 | |                 matching.spec_setsteph_wf(),
+...  |
+81 | |             vertex_to_block.insert(v.clone(), u.clone());
+82 | |         }
+   | |         ^
+   | |         |
+   | |_________at this loop exit
+   |           failed this invariant
+
+error: loop invariant not satisfied
+  --> src/Chap61/EdgeContractionStEph.rs:84:9
+   |
+84 | /         for vertex in graph.vertices().iter()
+85 | |             invariant
+86 | |                 valid_key_type_Edge::<V>(),
+87 | |                 graph.V.spec_setsteph_wf(),
+...  |
+92 | |         }
+   | |         ^
+   | |         |
+   | |_________at this loop exit
+   |           failed this invariant
+
+error: loop invariant not satisfied
+   --> src/Chap61/EdgeContractionStEph.rs:97:9
+    |
+ 97 | /         for (_, representative) in vertex_to_block.iter()
+ 98 | |             invariant
+ 99 | |                 valid_key_type_Edge::<V>(),
+100 | |                 new_vertices.spec_setsteph_wf(),
+101 | |         {
+102 | |             let _ = new_vertices.insert(representative.clone());
+103 | |         }
+    | |         ^
+    | |         |
+    | |_________at this loop exit
+    |           failed this invariant
+
+error: loop invariant not satisfied
+   --> src/Chap61/EdgeContractionStEph.rs:105:9
+    |
+105 | /         for edge in graph.edges().iter()
+106 | |             invariant
+107 | |                 valid_key_type_Edge::<V>(),
+108 | |                 graph.E.spec_setsteph_wf(),
+...   |
+129 | |         }
+    | |         ^
+    | |         |
+    | |_________at this loop exit
+    |           failed this invariant
+
+note: hint: because the iterator is an exec-only value (not a spec value), Verus did not add an automatic loop invariant about the iterator. You may need to (1) write a manual loop invariant about the iterator, or (2) store the loop expression in a variable outside the loop, or (3) use a while loop. For example, change `for i in 0..f() { ... }` to (1) `for i in iter: 0..f() invariant iter.end == 10 { ... }` or (2): `let n = f(); for i in 0..n invariant n == 10 { ... }`.
+   --> src/Chap61/VertexMatchingMtEph.rs:225:25
+    |
+225 |         for adj_edge in graph.edges().iter()
+    |                         ^^^^^^^^^^^^^^^^^^^^
+
+error: loop invariant not satisfied
+   --> src/Chap61/VertexMatchingMtEph.rs:225:9
+    |
+225 | /         for adj_edge in graph.edges().iter()
+226 | |             invariant
+227 | |                 valid_key_type_Edge::<V>(),
+228 | |                 graph.E.spec_setsteph_wf(),
+...   |
+241 | |         }
+    | |         ^
+    | |         |
+    | |_________at this loop exit
+    |           failed this invariant
+
+note: hint: because the iterator is an exec-only value (not a spec value), Verus did not add an automatic loop invariant about the iterator. You may need to (1) write a manual loop invariant about the iterator, or (2) store the loop expression in a variable outside the loop, or (3) use a while loop. For example, change `for i in 0..f() { ... }` to (1) `for i in iter: 0..f() invariant iter.end == 10 { ... }` or (2): `let n = f(); for i in 0..n invariant n == 10 { ... }`.
+  --> src/Chap61/VertexMatchingStEph.rs:62:21
+   |
+62 |         for edge in graph.edges().iter()
+   |                     ^^^^^^^^^^^^^^^^^^^^
+
+error: loop invariant not satisfied
+  --> src/Chap61/VertexMatchingStEph.rs:62:9
+   |
+62 | /         for edge in graph.edges().iter()
+63 | |             invariant
+64 | |                 valid_key_type_Edge::<V>(),
+65 | |                 graph.E.spec_setsteph_wf(),
+...  |
+76 | |         }
+   | |         ^
+   | |         |
+   | |_________at this loop exit
+   |           failed this invariant
+
+error: bitvector assertion not satisfied
+  --> src/experiments/f32_ieee_total_order.rs:46:9
+   |
+46 |         assert(0.0f32 <= x && 0.0f32 <= y
+   |         ^^^^^^
+
+error: bitvector assertion not satisfied
+  --> src/experiments/f32_ieee_total_order.rs:54:9
+   |
+54 |         assert(0.0f32 <= x ==> x + 0.0f32 == x) by(bit_vector);
+   |         ^^^^^^
+
+error: bitvector assertion not satisfied: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+  --> src/experiments/f32_ieee_total_order.rs:63:9
+   |
+63 |         assert(0.0f32 <= a && 0.0f32 <= b && 0.0f32 <= c
+   |         ^^^^^^
+
+verification results:: 1247 verified, 9 errors
+error: aborting due to 9 previous errors
+
+Elapsed: 21s
+Sampled Memory Usage: peak rust_verify RSS: 2379MB, peak z3 RSS: 431MB, min free: 19519MB
+Sampled CPU Usage: rust_verify: 32s, z3 children: 23s

@@ -1,0 +1,54 @@
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:263:32
+    |
+263 |                         assert(neighbor_entry@ == (ne_pv, ne_v));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:283:40
+    |
+283 |                     implies #[trigger] vertex_universe.contains(a) by {
+    |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap53/PQMinStEph.rs:263:32
+    |
+263 |                         assert(neighbor_entry@ == (ne_pv, ne_v));
+    |                                ^^^^^^^^^^^^^^^
+
+note: 
+
+neighbor_entry.view() =~= (ne_pv, ne_v)
+|   neighbor_entry.view().0 =~= ne_pv ✘
+|   |   neighbor_entry.view().0.0 =~= ne_pv.0 ✘
+|   |   neighbor_entry.view().0.1 =~= ne_pv.1 ✘
+|   +---
+|   neighbor_entry.view().1 =~= ne_v ✘
++---
+
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:384:24
+    |
+384 |                 assert(entry@ == (e_pv, e_v));
+    |                        ^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap53/PQMinStEph.rs:384:24
+    |
+384 |                 assert(entry@ == (e_pv, e_v));
+    |                        ^^^^^^
+
+note: 
+
+entry.view() =~= (e_pv, e_v)
+|   entry.view().0 =~= e_pv ✘
+|   |   entry.view().0.0 =~= e_pv.0 ✘
+|   |   entry.view().0.1 =~= e_pv.1 ✘
+|   +---
+|   entry.view().1 =~= e_v ✘
++---
+
+verification results:: 4495 verified, 3 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 57s

@@ -1,0 +1,201 @@
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStPer.rs:69:17
+    |
+ 69 |                 has_cycle == !spec_is_dag_per(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+200 |                         return true;
+    |                         ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStPer.rs:69:17
+    |
+ 69 |                 has_cycle == !spec_is_dag_per(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+205 |             false
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+  --> src/Chap55/CycleDetectStPer.rs:69:31
+   |
+69 |                 has_cycle == !spec_is_dag_per(graph),
+   |                               ^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == !(spec_is_dag_per(old(graph)))
+|   %return ==>
+|       !(spec_is_dag_per(old(graph))) ✘
+|       |   (exists |path| spec_is_path_per(old(graph), path) && path.len() >= 2 && path.index(0) == path.last()) 
+|       +---
+|   !(spec_is_dag_per(old(graph))) ==>
+|       %return ✔
++---
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:108:13
+    |
+108 |             !has_cycle ==> ancestors@ =~= old(ancestors)@,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+276 |         false
+    |         ----- at the end of the function body
+
+error: invariant not satisfied before loop
+   --> src/Chap55/CycleDetectStEph.rs:236:17
+    |
+236 | /                 forall|v: int| 0 <= v < ancestors@.len() ==> (
+237 | |                     #[trigger] ancestors@[v] <==>
+238 | |                     exists|k: int| 0 <= k < ext_path.len() && ext_path[k] == v
+239 | |                 ),
+    | |_________________^
+
+error: precondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:257:16
+    |
+ 95 |             dfs_path.len() > 0 ==> spec_has_edge(graph, dfs_path.last(), vertex as int),
+    |             --------------------------------------------------------------------------- failed precondition
+...
+257 |             if dfs_check_cycle(graph, visited, ancestors, neighbor, Ghost(ext_path)) {
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+neighbor < visited.view().len() ✔
+visited.view().len() == graph.view().len() ✔
+ancestors.view().len() == graph.view().len() ✔
+spec_toposortsteph_wf(graph) ✔
+forall |k|
+    let tmp%% = 0 in let tmp%% = k in let tmp%% = ext_path.len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        let tmp%% = 0;
+            let tmp%% = ext_path.index(k);
+                let tmp%% = graph.view().len();
+                    tmp%% <= tmp%% ✔
+                    tmp%% < tmp%% ✔
+forall |k|
+    let tmp%% = 0 in let tmp%% = k in let tmp%% = ext_path.len() - 1 in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        spec_has_edge(graph, ext_path.index(k), ext_path.index(k + 1)) ✔
+ext_path.len() > 0 ==>
+    spec_has_edge(graph, ext_path.last(), neighbor) ✔
+forall |v|
+    let tmp%% = 0 in let tmp%% = v in let tmp%% = ancestors.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        ancestors.view().index(v) == (exists |k| let tmp%% = 0 in let tmp%% = k in let tmp%% = ext_path.len() in tmp%% <= tmp%% && tmp%% < tmp%% && ext_path.index(k) == v) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:232:48
+    |
+232 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:104:44
+    |
+104 |                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:70:17
+    |
+ 70 |                 has_cycle == !spec_is_dag(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+317 |             false
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+  --> src/Chap55/CycleDetectStEph.rs:70:17
+   |
+70 |                 has_cycle == !spec_is_dag(graph),
+   |                 ^^^^^^^^^     ^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == !(spec_is_dag(old(graph)))
+|   %return ==>
+|       !(spec_is_dag(old(graph))) ✘
+|       |   (exists |path| spec_is_path(old(graph), path) && path.len() >= 2 && path.index(0) == path.last()) 
+|       +---
+|   !(spec_is_dag(old(graph))) ==>
+|       %return ✘
++---
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:136:17
+    |
+136 |                 spec_is_dag_per(graph) ==> spec_is_topo_order_per(graph, order@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+485 |             AVLTreeSeqStPerS::from_vec(reversed)
+    |             ------------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap55/TopoSortStPer.rs:64:12
+    |
+ 64 |         && order.no_duplicates()
+    |            ^^^^^^^^^^^^^^^^^^^^^
+ 65 |         && (forall|k: int| 0 <= k < order.len() ==> (#[trigger] order[k] as int) < graph@.len())
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+ 69 |             ==> i < j)
+    |                 ^^^^^
+...
+136 |                 spec_is_dag_per(graph) ==> spec_is_topo_order_per(graph, order@),
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view().len() == old(graph).view().len() ✔
+spec_is_dag_per(old(graph)) ==>
+    spec_is_topo_order_per(old(graph), %return.view()) ✘
+    |   %return.view().len() == old(graph).view().len() ✔
+    |   %return.view().no_duplicates() ✘
+    |   |   forall |i, j|
+    |   |       let tmp%% = 0 in let tmp%% = i in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+    |   |           !(%return.view().index(i) == %return.view().index(j)) 
+    |   +---
+    |   forall |k|
+    |       let tmp%% = 0 in let tmp%% = k in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+    |           %return.view().index(k) < old(graph).view().len() ✘
+    |   forall |i, j|
+    |       let tmp%% = 0 in let tmp%% = i in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && spec_has_edge_per(old(graph), %return.view().index(i), %return.view().index(j)) ==>
+    |           i < j ✘
+    +---
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:342:13
+    |
+342 |             topo_order.is_some() <==> spec_is_dag_per(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+382 |                     return None;
+    |                     ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:342:13
+    |
+342 |             topo_order.is_some() <==> spec_is_dag_per(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+405 |         Some(AVLTreeSeqStPerS::from_vec(reversed))
+    |         ------------------------------------------ at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:343:13
+    |
+343 |             topo_order.is_some() ==> spec_is_topo_order_per(graph

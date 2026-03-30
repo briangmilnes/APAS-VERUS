@@ -1,0 +1,195 @@
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:261:13
+    |
+261 |             !has_cycle ==> visited@[vertex as int],
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+670 |         false
+    |         ----- at the end of the function body
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/CycleDetectStEph.rs:449:17
+    |
+449 |                 spec_acyclic_ord(graph, cur_ord, cur_next),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/CycleDetectStEph.rs:450:17
+    |
+450 | /                 forall|v: int| 0 <= v < visited@.len()
+451 | |                     && #[trigger] visited@[v] && !ancestors@[v]
+452 | |                     ==> cur_ord.contains_key(v),
+    | |_______________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/CycleDetectStEph.rs:453:17
+    |
+453 | /                 forall|v: int| #[trigger] cur_ord.contains_key(v)
+454 | |                     ==> visited@[v] && !ancestors@[v],
+    | |_____________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/CycleDetectStEph.rs:457:17
+    |
+457 |                 cur_next >= next_time,
+    |                 ^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/CycleDetectStEph.rs:459:17
+    |
+459 | /                 forall|j: int| 0 <= j < i as int
+460 | |                     ==> #[trigger] visited@[graph@[vertex as int][j] as int],
+    | |____________________________________________________________________________^
+
+error: assertion failed
+   --> src/Chap55/CycleDetectStEph.rs:517:28
+    |
+517 |                     assert(new_ord.contains_key(v));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap55/CycleDetectStEph.rs:518:28
+    |
+518 |                     assert(new_ord[v] == cur_ord[v]);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap55/CycleDetectStEph.rs:540:25
+    |
+540 |                 implies visited@[v] && !old(ancestors)@[v] by {
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap55/CycleDetectStEph.rs:562:28
+    |
+562 |                     assert(false);
+    |                            ^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap55/CycleDetectStEph.rs:619:28
+    |
+619 |                     assert(cur_ord.contains_key(v));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap55/CycleDetectStEph.rs:650:28
+    |
+650 |                     assert(visited@[vertex as int]);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+new_ord.dom().contains(v) 
+    function is uninterpreted
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:434:48
+    |
+434 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:447:32
+    |
+447 |                 ancestors@ =~= old(ancestors)@.update(vertex as int, true),
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:97:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:256:44
+    |
+256 |                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:496:35
+    |
+496 |             assert(ancestors@ =~= old(ancestors)@.update(vertex as int, true));
+    |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:97:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap55/CycleDetectStEph.rs:501:21
+    |
+501 | /                     #[trigger] spec_acyclic_ord(graph, p.0, p.1)
+502 | |                     && (forall|v: int| 0 <= v < visited@.len()
+503 | |                         && #[trigger] visited@[v] && !ancestors@[v]
+504 | |                         ==> p.0.contains_key(v))
+...   |
+508 | |                         ==> p.0.contains_key(v) && p.0[v] == cur_ord[v])
+509 | |                     && p.1 >= cur_next;
+    | |______________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/CycleDetectStEph.rs:710:21
+    |
+710 |                     forall|j: int| 0 <= j < start as int ==> #[trigger] visited@[j],
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/CycleDetectStEph.rs:712:21
+    |
+712 |                     spec_acyclic_ord(graph, cur_ord, cur_next),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap55/CycleDetectStEph.rs:758:37
+    |
+758 | ...                   implies new_ord.contains_key(v) by {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap55/CycleDetectStEph.rs:762:37
+    |
+762 | ...                   implies visited@[v] by {};
+    |                               ^^^^^^^^^^^ assertion failed
+
+note: 
+
+new_ord.dom().contains(v) 
+    function is uninterpreted
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap55/CycleDetectStEph.rs:744:29
+    |
+744 | / ...                   #[trigger] spec_acyclic_ord(graph, p.0, p.1)
+745 | | ...                   && (forall|v: int| 0 <= v < visited@.len()
+746 | | ...                       && #[trigger] visited@[v] && !ancestors@[v]
+747 | | ...                       ==> p.0.contains_key(v))
+...   |
+751 | | ...                       ==> p.0.contains_key(v) && p.0[v] == cur_ord[v])
+752 | | ...                   && p.1 >= cur_next;
+    | |________________________________________^
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:762:37
+    |
+762 | ...                   implies visited@[v] by {};
+    |                               ^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2118 verified, 3 errors
+error: aborting due to 16 previous errors
+
+Elapsed: 19s
+Sampled Memory Usage: peak rust_verify RSS: 5076MB, peak z3 RSS: 9624MB, min free: 8982MB
+Sampled CPU Usage: rust_verify: 88s, z3 children: 94s

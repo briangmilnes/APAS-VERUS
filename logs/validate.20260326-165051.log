@@ -1,0 +1,98 @@
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:319:13
+    |
+319 |             !has_cycle ==> visited@[vertex as int],
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+715 |         false
+    |         ----- at the end of the function body
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/CycleDetectStEph.rs:511:17
+    |
+511 | /                 forall|j: int| 0 <= j < i as int
+512 | |                     ==> #[trigger] visited@[graph@[vertex as int][j] as int],
+    | |____________________________________________________________________________^
+
+error: assertion failed
+   --> src/Chap55/CycleDetectStEph.rs:583:25
+    |
+583 |                 implies visited@[v] && !old(ancestors)@[v] by {
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap55/CycleDetectStEph.rs:605:28
+    |
+605 |                     assert(false);
+    |                            ^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap55/CycleDetectStEph.rs:662:28
+    |
+662 |                     assert(cur_ord.contains_key(v));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap55/CycleDetectStEph.rs:693:28
+    |
+693 |                     assert(visited@[vertex as int]);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+false 
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:486:48
+    |
+486 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:499:32
+    |
+499 |                 ancestors@ =~= old(ancestors)@.update(vertex as int, true),
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:97:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:314:44
+    |
+314 |                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:548:35
+    |
+548 |             assert(ancestors@ =~= old(ancestors)@.update(vertex as int, true));
+    |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:97:12
+    |
+    = note: recommendation not met
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/CycleDetectStEph.rs:755:21
+    |
+755 |                     forall|j: int| 0 <= j < start as int ==> #[trigger] visited@[j],
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 2119 verified, 3 errors
+error: aborting due to 7 previous errors
+
+Elapsed: 19s
+Sampled Memory Usage: peak rust_verify RSS: 4195MB, peak z3 RSS: 11167MB, min free: 7583MB
+Sampled CPU Usage: rust_verify: 79s, z3 children: 157s

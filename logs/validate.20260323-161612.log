@@ -1,0 +1,317 @@
+error[E0277]: the trait bound `V: std::cmp::Ord` is not satisfied
+  --> src/Chap43/AugOrderedTableMtEph.rs:58:25
+   |
+58 |         pub base_table: OrderedTableMtEph<K, V>,
+   |                         ^^^^^^^^^^^^^^^^^^^^^^^ the trait `std::cmp::Ord` is not implemented for `V`
+   |
+note: required by a bound in `Chap43::OrderedTableMtEph::OrderedTableMtEph::OrderedTableMtEph`
+  --> src/Chap43/OrderedTableMtEph.rs:61:55
+   |
+61 |     pub struct OrderedTableMtEph<K: MtKey, V: MtVal + Ord> {
+   |                                                       ^^^ required by this bound in `OrderedTableMtEph`
+help: consider further restricting type parameter `V` with trait `Ord`
+   |
+57 |     pub struct AugOrderedTableMtEph<K: MtKey, V: MtVal + std::cmp::Ord, F: MtReduceFn<V>> {
+   |                                                        +++++++++++++++
+
+error[E0277]: the trait bound `V: std::cmp::Ord` is not satisfied
+  --> src/Chap43/AugOrderedTableMtEph.rs:87:16
+   |
+87 |         base: &OrderedTableMtEph<K, V>,
+   |                ^^^^^^^^^^^^^^^^^^^^^^^ the trait `std::cmp::Ord` is not implemented for `V`
+   |
+note: required by a bound in `Chap43::OrderedTableMtEph::OrderedTableMtEph::OrderedTableMtEph`
+  --> src/Chap43/OrderedTableMtEph.rs:61:55
+   |
+61 |     pub struct OrderedTableMtEph<K: MtKey, V: MtVal + Ord> {
+   |                                                       ^^^ required by this bound in `OrderedTableMtEph`
+help: consider further restricting type parameter `V` with trait `Ord`
+   |
+86 |     pub fn calculate_reduction<K: MtKey, V: MtVal + std::cmp::Ord, F: MtReduceFn<V>>(
+   |                                                   +++++++++++++++
+
+error[E0277]: the trait bound `V: std::cmp::Ord` is not satisfied
+   --> src/Chap43/AugOrderedTableMtEph.rs:766:25
+    |
+766 |         type IntoIter = OrderedTableMtEphIter<'a, K, V>;
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `std::cmp::Ord` is not implemented for `V`
+    |
+note: required for `Chap43::OrderedTableMtEph::OrderedTableMtEph::OrderedTableMtEphIter<'a, K, V>` to implement `std::iter::Iterator`
+   --> src/Chap43/OrderedTableMtEph.rs:807:36
+    |
+807 |     impl<K: MtKey, V: MtVal + Ord> std::iter::Iterator for OrderedTableMtEphIter<'_, K, V> {
+    |                               ---  ^^^^^^^^^^^^^^^^^^^     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |                               |
+    |                               unsatisfied trait bound introduced here
+note: required by a bound in `std::iter::IntoIterator::IntoIter`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/iter/traits/collect.rs:289:4
+help: consider further restricting type parameter `V` with trait `Ord`
+    |
+764 |     impl<'a, K: MtKey, V: MtVal + std::cmp::Ord, F: MtReduceFn<V>> std::iter::IntoIterator for &'a AugOrderedTableMtEph<K, V, F> {
+    |                                 +++++++++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `K` in the current scope
+  --> src/Chap43/OrderedTableStEph.rs:85:18
+   |
+83 |     pub open spec fn spec_pair_key_determines_order<K: StT + Ord, V: StT + Ord>() -> bool {
+   |                                                     - method `cmp_spec` not found for this type parameter
+84 |         forall|p1: Pair<K, V>, p2: Pair<K, V>|
+85 |             p1.0.cmp_spec(&p2.0) != Equal ==>
+   |                  ^^^^^^^^
+   |
+  --> vstd/std_specs/cmp.rs:121:12
+   |
+   = note: the method is available for `K` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+   |
+ 6 +     use vstd::std_specs::cmp::OrdSpec;
+   |
+help: there is a method `partial_cmp_spec` with a similar name
+   |
+85 |             p1.0.partial_cmp_spec(&p2.0) != Equal ==>
+   |                  ++++++++
+
+error[E0599]: no method named `cmp_spec` found for struct `Types::Types::Pair<K, V>` in the current scope
+   --> vstd/std_specs/cmp.rs:121:12
+    |
+    = note: the method is available for `Types::Types::Pair<K, V>` here
+    |
+   ::: src/Types.rs:103:5
+    |
+103 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- method `cmp_spec` not found for this struct
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:86:28
+    |
+ 86 |             (#[trigger] p1.cmp_spec(&p2)) == p1.0.cmp_spec(&p2.0)
+    |                            ^^^^^^^^
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+   --> src/Chap43/OrderedTableStEph.rs:6:5
+    |
+  6 +     use vstd::std_specs::cmp::OrdSpec;
+    |
+help: there is a method `partial_cmp_spec` with a similar name
+   --> src/Chap43/OrderedTableStEph.rs:86:28
+    |
+ 86 |             (#[trigger] p1.partial_cmp_spec(&p2)) == p1.0.cmp_spec(&p2.0)
+    |                            ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `K` in the current scope
+  --> src/Chap43/OrderedTableStEph.rs:86:51
+   |
+83 |     pub open spec fn spec_pair_key_determines_order<K: StT + Ord, V: StT + Ord>() -> bool {
+   |                                                     - method `cmp_spec` not found for this type parameter
+...
+86 |             (#[trigger] p1.cmp_spec(&p2)) == p1.0.cmp_spec(&p2.0)
+   |                                                   ^^^^^^^^
+   |
+  --> vstd/std_specs/cmp.rs:121:12
+   |
+   = note: the method is available for `K` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+   |
+ 6 +     use vstd::std_specs::cmp::OrdSpec;
+   |
+help: there is a method `partial_cmp_spec` with a similar name
+   |
+86 |             (#[trigger] p1.cmp_spec(&p2)) == p1.0.partial_cmp_spec(&p2.0)
+   |                                                   ++++++++
+
+error[E0525]: expected a closure that implements the `Fn` trait, but this closure only implements `FnOnce`
+    --> src/Chap43/OrderedTableStEph.rs:1414:29
+     |
+1414 |             let pair_pred = |p: &Pair<K, V>| -> (keep: bool)
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this closure implements `FnOnce`, not `Fn`
+1415 |                 requires f.requires((&p.0, &p.1))
+     |                          - closure is `FnOnce` because it moves the variable `f` out of its environment
+...
+1421 |             let filtered_tree = self.tree.filter(pair_pred, Ghost(pair_spec_pred));
+     |                                           ------ --------- the requirement to implement `Fn` derives from here
+     |                                           |
+     |                                           required by a bound introduced by this call
+     |
+note: required by a bound in `Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait::filter`
+    --> src/Chap38/BSTParaStEph.rs:402:22
+     |
+ 402 |         fn filter<F: Fn(&T) -> bool>(
+     |                      ^^^^^^^^^^^^^^ required by this bound in `ParamBSTTrait::filter`
+
+error[E0599]: no method named `spec_avltreeseqstper_wf` found for struct `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+    --> src/Chap43/OrderedTableStEph.rs:2501:39
+     |
+2501 |             requires old(self).sorted.spec_avltreeseqstper_wf(), iter_invariant(old(self))
+     |                                       ^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap18/ArraySeqStPer.rs:62:5
+     |
+  62 |     pub struct ArraySeqStPerS<T> {
+     |     ---------------------------- method `spec_avltreeseqstper_wf` not found for this struct
+     |
+     = help: items from traits can only be used if the trait is implemented and in scope
+note: `Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::AVLTreeSeqStPerTrait` defines an item `spec_avltreeseqstper_wf`, perhaps you need to implement it
+    --> src/Chap37/AVLTreeSeqStPer.rs:201:5
+     |
+ 201 |     pub trait AVLTreeSeqStPerTrait<T: StT>: Sized {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: there is a method `spec_arrayseqstper_wf` with a similar name
+     |
+2501 -             requires old(self).sorted.spec_avltreeseqstper_wf(), iter_invariant(old(self))
+2501 +             requires old(self).sorted.spec_arrayseqstper_wf(), iter_invariant(old(self))
+     |
+
+error[E0599]: no method named `in_order` found for struct `Chap38::BSTParaStEph::BSTParaStEph::ParamBST<T>` in the current scope
+   --> src/Chap43/OrderedTableMtEph.rs:825:37
+    |
+825 |             let sorted = inner.tree.in_order();
+    |                                     ^^^^^^^^
+    |
+   ::: src/Chap38/BSTParaStEph.rs:92:5
+    |
+ 92 |     pub struct ParamBST<T: StT + Ord> {
+    |     --------------------------------- method `in_order` not found for this struct
+...
+437 |         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
+    |            -------- the method is available for `Chap38::BSTParaStEph::BSTParaStEph::ParamBST<Types::Types::Pair<K, V>>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `collect_in_order` with a similar name, but with different arguments
+   --> src/Chap38/BSTParaStEph.rs:431:9
+    |
+431 | /         fn collect_in_order(&self, out: &mut Vec<T>)
+432 | |             requires
+433 | |                 self@.finite(),
+434 | |             ensures out@.len() == old(out)@.len() + self@.len();
+    | |________________________________________________________________^
+help: trait `ParamBSTTrait` which provides `in_order` is implemented but not in scope; perhaps you want to import it
+    |
+ 22 +     use crate::Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait;
+    |
+
+error[E0599]: no method named `size` found for struct `Chap38::BSTParaStEph::BSTParaStEph::ParamBST<T>` in the current scope
+   --> src/Chap43/OrderedTableMtEph.rs:850:50
+    |
+850 |             let result = self_read.borrow().tree.size() == other_read.borrow().tree.size();
+    |                                                  ^^^^ method not found in `Chap38::BSTParaStEph::BSTParaStEph::ParamBST<Types::Types::Pair<K, V>>`
+    |
+   ::: src/Chap38/BSTParaStEph.rs:92:5
+    |
+ 92 |     pub struct ParamBST<T: StT + Ord> {
+    |     --------------------------------- method `size` not found for this struct
+...
+305 |         fn size(&self) -> (count: usize)
+    |            ---- the method is available for `Chap38::BSTParaStEph::BSTParaStEph::ParamBST<Types::Types::Pair<K, V>>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `ParamBSTTrait` which provides `size` is implemented but not in scope; perhaps you want to import it
+    |
+ 22 +     use crate::Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait;
+    |
+
+error[E0599]: no method named `size` found for struct `Chap38::BSTParaStEph::BSTParaStEph::ParamBST<T>` in the current scope
+   --> src/Chap43/OrderedTableMtEph.rs:850:85
+    |
+850 |             let result = self_read.borrow().tree.size() == other_read.borrow().tree.size();
+    |                                                                                     ^^^^ method not found in `Chap38::BSTParaStEph::BSTParaStEph::ParamBST<Types::Types::Pair<K, V>>`
+    |
+   ::: src/Chap38/BSTParaStEph.rs:92:5
+    |
+ 92 |     pub struct ParamBST<T: StT + Ord> {
+    |     --------------------------------- method `size` not found for this struct
+...
+305 |         fn size(&self) -> (count: usize)
+    |            ---- the method is available for `Chap38::BSTParaStEph::BSTParaStEph::ParamBST<Types::Types::Pair<K, V>>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `ParamBSTTrait` which provides `size` is implemented but not in scope; perhaps you want to import it
+    |
+ 22 +     use crate::Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait;
+    |
+
+error[E0599]: the method `view` exists for struct `Chap43::OrderedTableMtEph::OrderedTableMtEph::OrderedTableMtEph<K, V>`, but its trait bounds were not satisfied
+  --> src/Chap43/AugOrderedTableMtEph.rs:70:70
+   |
+70 |         open spec fn view(&self) -> Map<K::V, V::V> { self.base_table@ }
+   |                                                                      ^ method cannot be called due to unsatisfied trait bounds
+   |
+  ::: src/Chap43/OrderedTableMtEph.rs:61:5
+   |
+61 |     pub struct OrderedTableMtEph<K: MtKey, V: MtVal + Ord> {
+   |     ------------------------------------------------------ method `view` not found for this struct because it doesn't satisfy `_: View`
+   |
+note: trait bound `V: std::cmp::Ord` was not satisfied
+  --> src/Chap43/OrderedTableMtEph.rs:76:31
+   |
+76 |     impl<K: MtKey, V: MtVal + Ord> View for OrderedTableMtEph<K, V> {
+   |                               ^^^  ----     -----------------------
+   |                               |
+   |                               unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+  --> src/Chap43/OrderedTableMtEph.rs:61:59
+   |
+61 |     pub struct OrderedTableMtEph<K: MtKey, V: MtVal + Ord> where V: std::cmp::Ord {
+   |                                                            ++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: std::cmp::Ord` is not satisfied
+  --> src/Chap43/AugOrderedTableMtEph.rs:81:43
+   |
+81 |         let reduced = calculate_reduction(&table.base_table, &table.reducer, &table.identity);
+   |                                           ^^^^^^^^^^^^^^^^^ the trait `std::cmp::Ord` is not implemented for `V`
+   |
+note: required by a bound in `Chap43::OrderedTableMtEph::OrderedTableMtEph::OrderedTableMtEph`
+  --> src/Chap43/OrderedTableMtEph.rs:61:55
+   |
+61 |     pub struct OrderedTableMtEph<K: MtKey, V: MtVal + Ord> {
+   |                                                       ^^^ required by this bound in `OrderedTableMtEph`
+help: consider further restricting type parameter `V` with trait `Ord`
+   |
+75 |     pub fn recalculate_reduction<K: MtKey, V: MtVal + std::cmp::Ord, F: MtReduceFn<V>>(
+   |                                                     +++++++++++++++
+
+error[E0277]: the trait bound `V: std::cmp::Ord` is not satisfied
+  --> src/Chap43/AugOrderedTableMtEph.rs:87:9
+   |
+87 |         base: &OrderedTableMtEph<K, V>,
+   |         ^^^^ the trait `std::cmp::Ord` is not implemented for `V`
+   |
+note: required by a bound in `Chap43::OrderedTableMtEph::OrderedTableMtEph::OrderedTableMtEph`
+  --> src/Chap43/OrderedTableMtEph.rs:61:55
+   |
+61 |     pub struct OrderedTableMtEph<K: MtKey, V: MtVal + Ord> {
+   |                                                       ^^^ required by this bound in `OrderedTableMtEph`
+help: consider further restricting type parameter `V` with trait `Ord`
+   |
+86 |     pub fn calculate_reduction<K: MtKey, V: MtVal + std::cmp::Ord, F: MtReduceFn<V>>(
+   |                                                   +++++++++++++++
+
+error[E0599]: the method `view` exists for reference `&Chap43::OrderedTableMtEph::OrderedTableMtEph::OrderedTableMtEph<K, V>`, but its trait bounds were not satisfied
+  --> src/Chap43/AugOrderedTableMtEph.rs:92:17
+   |
+92 |     ensures base@.dom().finite()
+   |                 ^ method cannot be called due to unsatisfied trait bounds
+   |
+  ::: src/Chap43/OrderedTableMtEph.rs:61:5
+   |
+61 |     pub struct OrderedTableMtEph<K: MtKey, V: MtVal + Ord> {
+   |     ------------------------------------------------------ doesn't satisfy `_: View`
+   |
+note: trait bound `V: std::cmp::Ord` was not satisfied
+  --> src/Chap43/OrderedTableMtEph.rs:76:31
+   |
+76 |     impl<K: MtKey, V: MtVal + Ord> View for OrderedTableMtEph<K, V> {
+   |                               ^^^  ----     -----------------------
+   |                               |
+   |                               unsatisfied trait bound introduced here
+   = note: the following trait bounds were not satisfied:
+           `Chap43::OrderedTableMtEph::OrderedTableMtEph::OrderedTableMtEph<K, V>: vstd::string::View`
+           which is required by `&Chap43::OrderedTableMtEph::OrderedTableMtEph::OrderedTableMtEph<K, V>: vstd::string::View`
+note: the trait `vstd::string::View` must be implemented
+  --> vstd/view.rs:10:0
+help: consider restricting the type parameter to satisfy the trait bound
+  --> src/Chap43/OrderedTableMtEph.rs:61:59
+   |

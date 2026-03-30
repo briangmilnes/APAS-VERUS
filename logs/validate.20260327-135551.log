@@ -1,0 +1,139 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap62/StarPartitionMtEph.rs:384:21
+    |
+384 |                     assert forall|j2: int| 0 <= j2 < nv as int implies
+    |                     ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap62/StarPartitionMtEph.rs:505:21
+    |
+505 |                     assert forall|j2: int| 0 <= j2 < q as int implies
+    |                     ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap62/StarPartitionMtEph.rs:519:21
+    |
+519 |                     assert forall|j2: int| 0 <= j2 < q as int implies
+    |                     ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:176:36
+    |
+176 | ...                   assert(false);
+    |                              ^^^^^ assertion failed
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap62/StarPartitionMtEph.rs:208:17
+    |
+208 | /                 forall|s: int| 0 <= s < th_edges@.len() ==>
+209 | |                     (th_edges@[s].0 as usize) < nv &&
+210 | |                     #[trigger] coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@) &&
+211 | |                     !coin_flips@[vertices_vec@[(th_edges@[s].0 as usize) as int]@] &&
+...   |
+214 | |                     vertex_to_index@.contains_key(th_edges@[s].1@) &&
+215 | |                     (vertex_to_index@[th_edges@[s].1@] as usize) < nv,
+    | |_____________________________________________________________________^
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:223:24
+    |
+223 |                 assert(edge_vec@.map(|_i: int, t: Edge<V>| t@).contains(edge_vec@[k as int]@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:224:24
+    |
+224 |                 assert(graph@.A.contains(edge_vec@[k as int]@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:252:33
+    |
+252 | / ...                   (th_edges@.push(new_entry)[s].0 as usize) < nv &&
+253 | | ...                   coin_flips@.contains_key(vertices_vec@[(th_edges@.push(new_entry)[s].0 as usize) as int]@) &&
+254 | | ...                   !coin_flips@[vertices_vec@[(th_edges@.push(new_entry)[s].0 as usize) as int]@] &&
+255 | | ...                   coin_flips@.contains_key(th_edges@.push(new_entry)[s].1@) &&
+256 | | ...                   coin_flips@[th_edges@.push(new_entry)[s].1@] &&
+257 | | ...                   vertex_to_index@.contains_key(th_edges@.push(new_entry)[s].1@) &&
+258 | | ...                   (vertex_to_index@[th_edges@.push(new_entry)[s].1@] as usize) < nv by {
+    | |_______________________________________________________________________________________^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:283:33
+    |
+283 | / ...                   (th_edges@.push(new_entry)[s].0 as usize) < nv &&
+284 | | ...                   coin_flips@.contains_key(vertices_vec@[(th_edges@.push(new_entry)[s].0 as usize) as int]@) &&
+285 | | ...                   !coin_flips@[vertices_vec@[(th_edges@.push(new_entry)[s].0 as usize) as int]@] &&
+286 | | ...                   coin_flips@.contains_key(th_edges@.push(new_entry)[s].1@) &&
+287 | | ...                   coin_flips@[th_edges@.push(new_entry)[s].1@] &&
+288 | | ...                   vertex_to_index@.contains_key(th_edges@.push(new_entry)[s].1@) &&
+289 | | ...                   (vertex_to_index@[th_edges@.push(new_entry)[s].1@] as usize) < nv by {
+    | |_______________________________________________________________________________________^ assertion failed
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap62/StarPartitionMtEph.rs:330:17
+    |
+330 | /                 forall|j2: int| 0 <= j2 < nv as int ==>
+331 | |                     coin_flips@.contains_key(vertices_vec@[j2]@) &&
+332 | |                     (coin_flips@[vertices_vec@[j2]@] ==>
+333 | |                      #[trigger] p_vec@[j2]@ == vertices_vec@[j2]@),
+    | |__________________________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap62/StarPartitionMtEph.rs:335:17
+    |
+335 | /                 forall|j2: int| 0 <= j2 < nv as int ==>
+336 | |                     p_vec@[j2]@ != vertices_vec@[j2]@ ==>
+337 | |                     (coin_flips@.contains_key(p_vec@[j2]@) &&
+338 | |                      #[trigger] coin_flips@[p_vec@[j2]@]),
+    | |_________________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap62/StarPartitionMtEph.rs:350:17
+    |
+350 | /                 forall|s: int| 0 <= s < th_edges@.len() ==>
+351 | |                     (th_edges@[s].0 as usize) < nv &&
+352 | |                     coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@) &&
+353 | |                     !coin_flips@[vertices_vec@[(th_edges@[s].0 as usize) as int]@] &&
+...   |
+356 | |                     vertex_to_index@.contains_key(th_edges@[s].1@) &&
+357 | |                     (vertex_to_index@[th_edges@[s].1@] as usize) < nv,
+    | |_____________________________________________________________________^
+
+error: invariant not satisfied before loop
+   --> src/Chap62/StarPartitionMtEph.rs:350:17
+    |
+350 | /                 forall|s: int| 0 <= s < th_edges@.len() ==>
+351 | |                     (th_edges@[s].0 as usize) < nv &&
+352 | |                     coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@) &&
+353 | |                     !coin_flips@[vertices_vec@[(th_edges@[s].0 as usize) as int]@] &&
+...   |
+356 | |                     vertex_to_index@.contains_key(th_edges@[s].1@) &&
+357 | |                     (vertex_to_index@[th_edges@[s].1@] as usize) < nv,
+    | |_____________________________________________________________________^
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:365:28
+    |
+365 |                     assert(!coin_flips@[tail_view]);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:375:25
+    |
+375 | /                         coin_flips@.contains_key(vertices_vec@[j2]@) &&
+376 | |                         (coin_flips@[vertices_vec@[j2]@] ==>
+377 | |                          p_vec@.update(idx as usize as int, *vertex)[j2]@ == vertices_vec@[j2]@) by {
+    | |________________________________________________________________________________________________^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:499:28
+    |
+499 |                     assert(cv == qv);
+    |    

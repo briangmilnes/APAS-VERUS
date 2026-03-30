@@ -1,0 +1,12 @@
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:124:9
+    |
+124 |         while i < edges_vec.len()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 2405 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 75s
+Sampled Memory Usage: peak rust_verify RSS: 2753MB, peak z3 RSS: 7034MB, min free: 13609MB
+Sampled CPU Usage: rust_verify: 43s, z3 children: 140s

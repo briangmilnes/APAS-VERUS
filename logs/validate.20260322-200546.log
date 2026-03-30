@@ -1,0 +1,13 @@
+error: function is marked `open` but not marked `pub`; for the body of a function to be visible, the function symbol must also be visible
+   --> src/Chap53/PQMinStEph.rs:150:15
+    |
+150 |       open spec fn spec_frontier_in_universe<V: StT + Ord, P: StT + Ord>(
+    |  _______________^
+151 | |         frontier: Set<<Pair<Pair<P, V>, V> as View>::V>,
+152 | |         universe: Set<<V as View>::V>,
+153 | |     ) -> bool {
+    | |_____________^
+
+error: aborting due to 1 previous error
+
+Elapsed: 19s

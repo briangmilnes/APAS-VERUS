@@ -1,0 +1,81 @@
+error: assertion failed
+   --> src/Chap55/CycleDetectStEph.rs:359:25
+    |
+359 |                 implies #[trigger] ancestors@[j] == old(ancestors)@[j] by {
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+ancestors.view().index(j) == old(ancestors).view().index(j) 
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:302:48
+    |
+302 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:315:32
+    |
+315 |                 ancestors@ =~= old(ancestors)@.update(vertex as int, true),
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:97:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:161:44
+    |
+161 |                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:344:35
+    |
+344 |             assert(ancestors@ =~= old(ancestors)@.update(vertex as int, true));
+    |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:97:12
+    |
+    = note: recommendation not met
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:126:17
+    |
+126 |                 has_cycle == !spec_is_dag(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+422 |             false
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap55/CycleDetectStEph.rs:126:17
+    |
+126 |                 has_cycle == !spec_is_dag(graph),
+    |                 ^^^^^^^^^     ^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == !(spec_is_dag(old(graph)))
+|   %return ==>
+|       !(spec_is_dag(old(graph))) ✘
+|       |   (exists |path| spec_is_path(old(graph), path) && path.len() >= 2 && path.index(0) == path.last()) 
+|       +---
+|   !(spec_is_dag(old(graph))) ==>
+|       %return ✘
++---
+
+verification results:: 2083 verified, 2 errors
+error: aborting due to 2 previous errors
+

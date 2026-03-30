@@ -1,0 +1,119 @@
+error[E0599]: the method `view` exists for reference `&Chap66::BoruvkaStEph::BoruvkaStEph::LabeledEdge<V>`, but its trait bounds were not satisfied
+  --> src/Chap66/BoruvkaStEph.rs:68:35
+   |
+53 |     pub struct LabeledEdge<V>(pub V, pub V, pub WrappedF64, pub usize);
+   |     ------------------------- doesn't satisfy `_: View`
+...
+68 |             ensures equal == (self@ == other@),
+   |                                   ^ method cannot be called due to unsatisfied trait bounds
+   |
+note: the following trait bounds were not satisfied:
+      `V: Types::Types::StT`
+      `V: std::cmp::Ord`
+  --> src/Chap66/BoruvkaStEph.rs:80:13
+   |
+80 |     impl<V: StT + Ord> View for LabeledEdge<V> {
+   |             ^^^   ^^^  ----     --------------
+   |             |     |
+   |             |     unsatisfied trait bound introduced here
+   |             unsatisfied trait bound introduced here
+   = note: the following trait bounds were not satisfied:
+           `Chap66::BoruvkaStEph::BoruvkaStEph::LabeledEdge<V>: vstd::string::View`
+           which is required by `&Chap66::BoruvkaStEph::BoruvkaStEph::LabeledEdge<V>: vstd::string::View`
+note: the trait `vstd::string::View` must be implemented
+  --> vstd/view.rs:10:0
+help: consider restricting the type parameters to satisfy the trait bounds
+   |
+53 |     pub struct LabeledEdge<V>(pub V, pub V, pub WrappedF64, pub usize) where V: Types::Types::StT, V: std::cmp::Ord;
+   |                                                                        ++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for reference `&Chap66::BoruvkaStEph::BoruvkaStEph::LabeledEdge<V>`, but its trait bounds were not satisfied
+  --> src/Chap66/BoruvkaStEph.rs:68:45
+   |
+53 |     pub struct LabeledEdge<V>(pub V, pub V, pub WrappedF64, pub usize);
+   |     ------------------------- doesn't satisfy `_: View`
+...
+68 |             ensures equal == (self@ == other@),
+   |                                             ^ method cannot be called due to unsatisfied trait bounds
+   |
+note: the following trait bounds were not satisfied:
+      `V: Types::Types::StT`
+      `V: std::cmp::Ord`
+  --> src/Chap66/BoruvkaStEph.rs:80:13
+   |
+80 |     impl<V: StT + Ord> View for LabeledEdge<V> {
+   |             ^^^   ^^^  ----     --------------
+   |             |     |
+   |             |     unsatisfied trait bound introduced here
+   |             unsatisfied trait bound introduced here
+   = note: the following trait bounds were not satisfied:
+           `Chap66::BoruvkaStEph::BoruvkaStEph::LabeledEdge<V>: vstd::string::View`
+           which is required by `&Chap66::BoruvkaStEph::BoruvkaStEph::LabeledEdge<V>: vstd::string::View`
+note: the trait `vstd::string::View` must be implemented
+  --> vstd/view.rs:10:0
+help: consider restricting the type parameters to satisfy the trait bounds
+   |
+53 |     pub struct LabeledEdge<V>(pub V, pub V, pub WrappedF64, pub usize) where V: Types::Types::StT, V: std::cmp::Ord;
+   |                                                                        ++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for reference `&Chap66::BoruvkaStEph::BoruvkaStEph::LabeledEdge<V>`, but its trait bounds were not satisfied
+  --> src/Chap66/BoruvkaStEph.rs:71:42
+   |
+53 |     pub struct LabeledEdge<V>(pub V, pub V, pub WrappedF64, pub usize);
+   |     ------------------------- doesn't satisfy `_: View`
+...
+71 |             proof { assume(equal == (self@ == other@)); }
+   |                                          ^ method cannot be called due to unsatisfied trait bounds
+   |
+note: the following trait bounds were not satisfied:
+      `V: Types::Types::StT`
+      `V: std::cmp::Ord`
+  --> src/Chap66/BoruvkaStEph.rs:80:13
+   |
+80 |     impl<V: StT + Ord> View for LabeledEdge<V> {
+   |             ^^^   ^^^  ----     --------------
+   |             |     |
+   |             |     unsatisfied trait bound introduced here
+   |             unsatisfied trait bound introduced here
+   = note: the following trait bounds were not satisfied:
+           `Chap66::BoruvkaStEph::BoruvkaStEph::LabeledEdge<V>: vstd::string::View`
+           which is required by `&Chap66::BoruvkaStEph::BoruvkaStEph::LabeledEdge<V>: vstd::string::View`
+note: the trait `vstd::string::View` must be implemented
+  --> vstd/view.rs:10:0
+help: consider restricting the type parameters to satisfy the trait bounds
+   |
+53 |     pub struct LabeledEdge<V>(pub V, pub V, pub WrappedF64, pub usize) where V: Types::Types::StT, V: std::cmp::Ord;
+   |                                                                        ++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for reference `&Chap66::BoruvkaStEph::BoruvkaStEph::LabeledEdge<V>`, but its trait bounds were not satisfied
+  --> src/Chap66/BoruvkaStEph.rs:71:52
+   |
+53 |     pub struct LabeledEdge<V>(pub V, pub V, pub WrappedF64, pub usize);
+   |     ------------------------- doesn't satisfy `_: View`
+...
+71 |             proof { assume(equal == (self@ == other@)); }
+   |                                                    ^ method cannot be called due to unsatisfied trait bounds
+   |
+note: the following trait bounds were not satisfied:
+      `V: Types::Types::StT`
+      `V: std::cmp::Ord`
+  --> src/Chap66/BoruvkaStEph.rs:80:13
+   |
+80 |     impl<V: StT + Ord> View for LabeledEdge<V> {
+   |             ^^^   ^^^  ----     --------------
+   |             |     |
+   |             |     unsatisfied trait bound introduced here
+   |             unsatisfied trait bound introduced here
+   = note: the following trait bounds were not satisfied:
+           `Chap66::BoruvkaStEph::BoruvkaStEph::LabeledEdge<V>: vstd::string::View`
+           which is required by `&Chap66::BoruvkaStEph::BoruvkaStEph::LabeledEdge<V>: vstd::string::View`
+note: the trait `vstd::string::View` must be implemented
+  --> vstd/view.rs:10:0
+help: consider restricting the type parameters to satisfy the trait bounds
+   |
+53 |     pub struct LabeledEdge<V>(pub V, pub V, pub WrappedF64, pub usize) where V: Types::Types::StT, V: std::cmp::Ord;
+   |                                                                        ++++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 4 previous errors
+
+For more information about this error, try `rustc --explain E0599`.

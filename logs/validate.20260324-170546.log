@@ -1,0 +1,559 @@
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:182:17
+    |
+182 |                 reveal_with_fuel(spec_is_bst_link, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:183:17
+    |
+183 |                 reveal_with_fuel(link_contains, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:194:21
+    |
+194 |                     reveal_with_fuel(spec_is_bst_link, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:195:21
+    |
+195 |                     reveal_with_fuel(link_contains, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:218:21
+    |
+218 |                     reveal_with_fuel(spec_is_bst_link, 3);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:219:21
+    |
+219 |                     reveal_with_fuel(link_contains, 4);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:228:25
+    |
+228 |                         reveal_with_fuel(link_contains, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:238:25
+    |
+238 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:241:25
+    |
+241 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:244:25
+    |
+244 |                         reveal_with_fuel(link_contains, 4);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:266:17
+    |
+266 |                 reveal_with_fuel(spec_is_bst_link, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:267:17
+    |
+267 |                 reveal_with_fuel(link_contains, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:278:21
+    |
+278 |                     reveal_with_fuel(spec_is_bst_link, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:279:21
+    |
+279 |                     reveal_with_fuel(link_contains, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:302:21
+    |
+302 |                     reveal_with_fuel(spec_is_bst_link, 3);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:303:21
+    |
+303 |                     reveal_with_fuel(link_contains, 4);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:312:25
+    |
+312 |                         reveal_with_fuel(link_contains, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:322:25
+    |
+322 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:325:25
+    |
+325 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:328:25
+    |
+328 |                         reveal_with_fuel(link_contains, 4);
+    |                         ^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap37/BSTRBMtEph.rs:886:21
+    |
+886 |               ensures tree.spec_bstrbmteph_wf();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+948 | /             BSTRBMtEph {
+949 | |                 root: RwLock::new(link, Ghost(BSTRBMtEphInv)),
+950 | |                 ghost_root: Ghost(ghost_link),
+951 | |             }
+    | |_____________- at the end of the function body
+
+error: constructed value may fail to meet its declared type invariant
+   --> src/Chap37/BSTRBMtEph.rs:948:13
+    |
+864 |           spec fn wf(self) -> bool {
+    |                ------------------- type invariant declared here
+...
+948 | /             BSTRBMtEph {
+949 | |                 root: RwLock::new(link, Ghost(BSTRBMtEphInv)),
+950 | |                 ghost_root: Ghost(ghost_link),
+951 | |             }
+    | |_____________^
+
+error: precondition not satisfied
+   --> src/Chap37/BSTRBMtEph.rs:949:23
+    |
+949 |                 root: RwLock::new(link, Ghost(BSTRBMtEphInv)),
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/rwlock.rs:504:12
+    |
+    = note: failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+tmp%.wf()
+|   link_spec_size(tmp%.ghost_root) <= UnsignedMax.Exec(usize::BITS) 
++---
+
+error: precondition not satisfied
+   --> src/Chap37/BSTRBMtEph.rs:432:25
+    |
+155 |         requires 1 + link_spec_size(old(node).left) + link_spec_size(old(node).right) <= usize::MAX as nat,
+    |                  ----------------------------------------------------------------------------------------- failed precondition
+...
+432 |                         update(&mut node);
+    |                         ^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap37/BSTRBMtEph.rs:474:25
+    |
+155 |         requires 1 + link_spec_size(old(node).left) + link_spec_size(old(node).right) <= usize::MAX as nat,
+    |                  ----------------------------------------------------------------------------------------- failed precondition
+...
+474 |                         update(&mut node);
+    |                         ^^^^^^^^^^^^^^^^^
+
+note: 
+
+clip(nat, clip(nat, 1 + link_spec_size(node.left)) + link_spec_size(node.right)) <= UnsignedMax.Exec(usize::BITS) 
+
+error: postcondition not satisfied
+   --> src/Chap37/BSTRBMtEph.rs:891:21
+    |
+891 | /                     match r {
+892 | |                         Ok(_) => link_spec_size(self@) <= link_spec_size(old(self)@) + 1,
+893 | |                         Err(_) => self@ == old(self)@,
+894 | |                     };
+    | |_____________________^ failed this postcondition
+...
+959 | /             if sz < usize::MAX {
+960 | |                 insert_link(&mut current, value);
+961 | |                 let temp = current.take();
+962 | |                 if let Some(mut node) = temp {
+...   |
+972 | |                 Err(())
+973 | |             }
+    | |_____________- at the end of the function body
+
+error: constructed value may fail to meet its declared type invariant
+   --> src/Chap37/BSTRBMtEph.rs:967:17
+    |
+864 |         spec fn wf(self) -> bool {
+    |              ------------------- type invariant declared here
+...
+967 |                 self.ghost_root = Ghost(new_root);
+    |                 ^^^^
+
+note: 
+
+tmp%.wf()
+|   link_spec_size(tmp%.ghost_root) <= UnsignedMax.Exec(usize::BITS) 
++---
+
+error: precondition not satisfied
+   --> src/Chap37/BSTRBMtEph.rs:979:25
+    |
+529 |         requires spec_is_bst_link(*link),
+    |                  ----------------------- failed precondition
+...
+979 |             let found = find_link(handle.borrow(), target).is_some();
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTRBMtEph.rs:101:17
+    |
+101 |                 spec_is_bst_link(node.left)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+102 |                 && spec_is_bst_link(node.right)
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+103 |                 && (forall|x: T| (#[trigger] link_contains(node.left, x)) ==>
+104 |                     TotalOrder::le(x, node.key) && x != node.key)
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^
+
+note: 
+
+spec_is_bst_link(tmp%)
+|   let tmp%% = tmp%;
+|       tmp%% is None ==>
+|           true ✔
+|       !(tmp%% is None) ==>
+|           let node = tmp%%.0;
+|               spec_is_bst_link(node.left) ✘
+|                   reached fuel limit for recursion
+|               spec_is_bst_link(node.right) ✘
+|                   reached fuel limit for recursion
+|               forall |x|
+|                   link_contains(node.left, x) ==>
+|                       x.le(node.key) ✘
+|                           trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|                       !(x == node.key) ✘
+|               forall |x|
+|                   link_contains(node.right, x) ==>
+|                       node.key.le(x) 
+|                       !(x == node.key) 
++---
+
+error: precondition not satisfied
+    --> src/Chap37/BSTRBMtEph.rs:1006:21
+     |
+ 817 |         requires link_height(*link) < usize::MAX as nat,
+     |                  -------------------------------------- failed precondition
+...
+1006 |             let h = height_rec(handle.borrow());
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+link_height(tmp%) < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+    --> src/Chap37/BSTRBMtEph.rs:1014:25
+     |
+ 529 |         requires spec_is_bst_link(*link),
+     |                  ----------------------- failed precondition
+...
+1014 |             let found = find_link(handle.borrow(), target).cloned();
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_is_bst_link(tmp%)
+|   let tmp%% = tmp%;
+|       tmp%% is None ==>
+|           true ✔
+|       !(tmp%% is None) ==>
+|           let node = tmp%%.0;
+|               spec_is_bst_link(node.left) ✘
+|                   reached fuel limit for recursion
+|               spec_is_bst_link(node.right) ✘
+|                   reached fuel limit for recursion
+|               forall |x|
+|                   link_contains(node.left, x) ==>
+|                       x.le(node.key) ✘
+|                           trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|                       !(x == node.key) ✘
+|               forall |x|
+|                   link_contains(node.right, x) ==>
+|                       node.key.le(x) 
+|                       !(x == node.key) 
++---
+
+error: precondition not satisfied
+    --> src/Chap37/BSTRBMtEph.rs:1021:23
+     |
+ 566 |         requires spec_is_bst_link(*link),
+     |                  ----------------------- failed precondition
+...
+1021 |             let min = min_link(handle.borrow()).cloned();
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_is_bst_link(tmp%)
+|   let tmp%% = tmp%;
+|       tmp%% is None ==>
+|           true ✔
+|       !(tmp%% is None) ==>
+|           let node = tmp%%.0;
+|               spec_is_bst_link(node.left) ✘
+|                   reached fuel limit for recursion
+|               spec_is_bst_link(node.right) ✘
+|                   reached fuel limit for recursion
+|               forall |x|
+|                   link_contains(node.left, x) ==>
+|                       x.le(node.key) ✘
+|                           trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|                       !(x == node.key) ✘
+|               forall |x|
+|                   link_contains(node.right, x) ==>
+|                       node.key.le(x) 
+|                       !(x == node.key) 
++---
+
+error: precondition not satisfied
+    --> src/Chap37/BSTRBMtEph.rs:1028:23
+     |
+ 614 |         requires spec_is_bst_link(*link),
+     |                  ----------------------- failed precondition
+...
+1028 |             let max = max_link(handle.borrow()).cloned();
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_is_bst_link(tmp%)
+|   let tmp%% = tmp%;
+|       tmp%% is None ==>
+|           true ✔
+|       !(tmp%% is None) ==>
+|           let node = tmp%%.0;
+|               spec_is_bst_link(node.left) ✘
+|                   reached fuel limit for recursion
+|               spec_is_bst_link(node.right) ✘
+|                   reached fuel limit for recursion
+|               forall |x|
+|                   link_contains(node.left, x) ==>
+|                       x.le(node.key) ✘
+|                           trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|                       !(x == node.key) ✘
+|               forall |x|
+|                   link_contains(node.right, x) ==>
+|                       node.key.le(x) 
+|                       !(x == node.key) 
++---
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:256:29
+    |
+256 | ...                   assert forall|x: T| new_left.tree_contains(x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:257:33
+    |
+257 | ...                   T::le(x, node_val) && x != node_val
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:259:29
+    |
+259 | ...                   assert forall|x: T| old_right.tree_contains(x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:260:33
+    |
+260 | ...                   T::le(node_val, x) && x != node_val by {};
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:280:29
+    |
+280 | ...                   assert forall|x: T| old_left.tree_contains(x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:281:33
+    |
+281 | ...                   T::le(x, node_val) && x != node_val by {};
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:282:29
+    |
+282 | ...                   assert forall|x: T| new_right.tree_contains(x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:283:33
+    |
+283 | ...                   T::le(node_val, x) && x != node_val
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:118:29
+    |
+118 | ...                   assert forall|z: T| old_lr.tree_contains(z) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:119:33
+    |
+119 | ...                   T::le(z, y_val) && z != y_val
+    |                       ^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:124:29
+    |
+124 | ...                   assert forall|z: T| right_sub.tree_contains(z) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:125:33
+    |
+125 | ...                   T::le(x_val, z) && z != x_val
+    |                       ^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:184:29
+    |
+184 | ...                   assert forall|z: T| old_rl.tree_contains(z) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:185:33
+    |
+185 | ...                   T::le(x_val, z) && z != x_val
+    |                       ^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:190:29
+    |
+190 | ...                   assert forall|z: T| left_sub.tree_contains(z) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:191:33
+    |
+191 | ...                   T::le(z, y_val) && z != y_val
+    |                       ^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:570:31
+    |
+570 |             min.is_some() ==> forall|x: T| link_contains(*link, x) ==> TotalOrder::le(*min.unwrap(), x),
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:570:44
+    |
+570 |             min.is_some() ==> forall|x: T| link_contains(*link, x) ==> TotalOrder::le(*min.unwrap(), x),
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:578:25
+    |
+578 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(node.key, x) by {
+    |                         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:578:45
+    |
+578 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(node.key, x) by {
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:596:25
+    |
+596 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(*min.unwrap(), x) by {
+    |                         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:596:45
+    |
+596 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(*min.unwrap(), x) by {
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:618:31
+    |
+618 |             max.is_some() ==> forall|x: T| link_contains(*link, x) ==> TotalOrder::le(x, *max.unwrap()),
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:618:44
+    |
+618 |             max.is_some() ==> forall|x: T| link_contains(*link, x) ==> TotalOrder::le(x, *max.unwrap()),
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:626:25
+    |
+626 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, node.key) by {
+    |                         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:626:45
+    |
+626 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, node.key) by {
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:644:25
+    |
+644 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, *max.unwrap()) by {
+    |                         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:644:45
+    |
+644 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, *max.unwrap()) by {
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap37/BSTRBMtEph.rs:644:25
+    |
+644 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, *max.unwrap()) by {
+    |                         ^^^^^^
+
+verification results:: 4491 verified, 8 errors
+error: aborting due to 12 previous errors; 20 warnings emitted
+
+Elapsed: 63s

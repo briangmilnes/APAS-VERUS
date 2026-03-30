@@ -1,0 +1,1119 @@
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:34:15
+    |
+ 34 |         tree: BSTAVLMtEph<T>,
+    |               ^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 33 |     pub struct BSTSetAVLMtEph<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder> {
+    |                                                 ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:141:45
+    |
+141 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTAVLMtEph<T>) -> (values: Vec<T>)
+    |                                             ^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+141 |     fn values_vec<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder>(tree: &BSTAVLMtEph<T>) -> (values: Vec<T>)
+    |                                     ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:149:70
+    |
+149 |     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTAVLMtEph<T>)
+    |                                                                      ^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+149 |     fn rebuild_from_vec<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder>(values: Vec<T>) -> (tree: BSTAVLMtEph<T>)
+    |                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:370:9
+    |
+370 |         fn as_tree(&self) -> &BSTAVLMtEph<T> { &self.tree }
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+179 |     impl<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder> BSTSetAVLMtEphTrait<T> for BSTSetAVLMtEph<T> {
+    |                            ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:370:31
+    |
+370 |         fn as_tree(&self) -> &BSTAVLMtEph<T> { &self.tree }
+    |                               ^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+179 |     impl<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder> BSTSetAVLMtEphTrait<T> for BSTSetAVLMtEph<T> {
+    |                            ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:131:38
+    |
+131 |         fn as_tree(&self) -> (tree: &BSTAVLMtEph<T>)
+    |                                      ^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 73 |     pub trait BSTSetAVLMtEphTrait<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder>: Sized {
+    |                                                     ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:131:12
+    |
+131 |         fn as_tree(&self) -> (tree: &BSTAVLMtEph<T>)
+    |            ^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 73 |     pub trait BSTSetAVLMtEphTrait<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder>: Sized {
+    |                                                     ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:133:13
+    |
+133 |             ensures true;
+    |             ^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 73 |     pub trait BSTSetAVLMtEphTrait<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder>: Sized {
+    |                                                     ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:131:31
+    |
+131 |         fn as_tree(&self) -> (tree: &BSTAVLMtEph<T>)
+    |                               ^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 73 |     pub trait BSTSetAVLMtEphTrait<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder>: Sized {
+    |                                                     ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_bstavlmteph_wf` exists for reference `&Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:142:23
+    |
+142 |         requires tree.spec_bstavlmteph_wf(),
+    |                       ^^^^^^^^^^^^^^^^^^^ method cannot be called on `&Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |     ------------------------------------- doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+141 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTAVLMtEph<T>) -> (values: Vec<T> where T: vstdplus::total_order::total_order::TotalOrder)
+    |                                                                                +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:141:38
+    |
+141 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTAVLMtEph<T>) -> (values: Vec<T>)
+    |                                      ^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+141 |     fn values_vec<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder>(tree: &BSTAVLMtEph<T>) -> (values: Vec<T>)
+    |                                     ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `in_order` exists for reference `&Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:145:14
+    |
+145 |         tree.in_order().iter().cloned().collect()
+    |              ^^^^^^^^ method cannot be called on `&Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |     ------------------------------------- doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+141 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTAVLMtEph<T>) -> (values: Vec<T> where T: vstdplus::total_order::total_order::TotalOrder)
+    |                                                                                +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:149:8
+    |
+149 |       fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTAVLMtEph<T>)
+    |  ________^
+150 | |         ensures true,
+    | |_______________^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+149 |     fn rebuild_from_vec<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder>(values: Vec<T>) -> (tree: BSTAVLMtEph<T>)
+    |                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:150:9
+    |
+150 |         ensures true,
+    |         ^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+149 |     fn rebuild_from_vec<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder>(values: Vec<T>) -> (tree: BSTAVLMtEph<T>)
+    |                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:149:64
+    |
+149 |     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTAVLMtEph<T>)
+    |                                                                ^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+149 |     fn rebuild_from_vec<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder>(values: Vec<T>) -> (tree: BSTAVLMtEph<T>)
+    |                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:152:24
+    |
+152 |         let mut tree = BSTAVLMtEph::new();
+    |                        ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` to implement `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait<T>`
+   --> src/Chap37/BSTAVLMtEph.rs:488:25
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ----------  ^^^^^^^^^^^^^^^^^^^     ^^^^^^^^^^^^^^
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+149 |     fn rebuild_from_vec<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder>(values: Vec<T>) -> (tree: BSTAVLMtEph<T>)
+    |                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:154:33
+    |
+154 |             let _ = tree.insert(value);
+    |                          ------ ^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |                          |
+    |                          required by a bound introduced by this call
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait::insert`
+   --> src/Chap37/BSTAVLMtEph.rs:441:35
+    |
+441 |     pub trait BSTAVLMtEphTrait<T: TotalOrder>: Sized + View<V = BalBinTree<T>> {
+    |                                   ^^^^^^^^^^ required by this bound in `BSTAVLMtEphTrait::insert`
+...
+448 |         fn insert(&mut self, value: T) -> (r: Result<(), ()>)
+    |            ------ required by a bound in this associated function
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+149 |     fn rebuild_from_vec<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder>(values: Vec<T>) -> (tree: BSTAVLMtEph<T>)
+    |                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `<I as std::iter::IntoIterator>::IntoIter: vstd::pervasive::ForLoopGhostIteratorNew` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:166:9
+    |
+166 | /         for value in values {
+167 | |             let _ = tree.insert(value);
+168 | |         }
+    | |_________^ the trait `vstd::pervasive::ForLoopGhostIteratorNew` is not implemented for `<I as std::iter::IntoIterator>::IntoIter`
+    |
+help: consider further restricting the associated type
+    |
+162 |         I: IntoIterator<Item = T>, <I as std::iter::IntoIterator>::IntoIter: vstd::pervasive::ForLoopGhostIteratorNew
+    |                                    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `<I as std::iter::IntoIterator>::IntoIter: vstd::pervasive::ForLoopGhostIteratorNew` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:166:22
+    |
+166 |         for value in values {
+    |                      ^^^^^^ the trait `vstd::pervasive::ForLoopGhostIteratorNew` is not implemented for `<I as std::iter::IntoIterator>::IntoIter`
+    |
+help: consider further restricting the associated type
+    |
+162 |         I: IntoIterator<Item = T>, <I as std::iter::IntoIterator>::IntoIter: vstd::pervasive::ForLoopGhostIteratorNew
+    |                                    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:165:24
+    |
+165 |         let mut tree = BSTAVLMtEph::new();
+    |                        ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` to implement `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait<T>`
+   --> src/Chap37/BSTAVLMtEph.rs:488:25
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ----------  ^^^^^^^^^^^^^^^^^^^     ^^^^^^^^^^^^^^
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+160 |     fn from_sorted_iter<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder, I>(values: I) -> (set: BSTSetAVLMtEph<T>)
+    |                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:167:33
+    |
+167 |             let _ = tree.insert(value);
+    |                          ------ ^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |                          |
+    |                          required by a bound introduced by this call
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait::insert`
+   --> src/Chap37/BSTAVLMtEph.rs:441:35
+    |
+441 |     pub trait BSTAVLMtEphTrait<T: TotalOrder>: Sized + View<V = BalBinTree<T>> {
+    |                                   ^^^^^^^^^^ required by this bound in `BSTAVLMtEphTrait::insert`
+...
+448 |         fn insert(&mut self, value: T) -> (r: Result<(), ()>)
+    |            ------ required by a bound in this associated function
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+160 |     fn from_sorted_iter<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder, I>(values: I) -> (set: BSTSetAVLMtEph<T>)
+    |                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:169:26
+    |
+169 |         BSTSetAVLMtEph { tree }
+    |                          ^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+160 |     fn from_sorted_iter<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder, I>(values: I) -> (set: BSTSetAVLMtEph<T>)
+    |                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:176:37
+    |
+176 |         from_sorted_iter(values_vec(&set.tree))
+    |                                     ^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+172 |     fn copy_set<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder>(set: &BSTSetAVLMtEph<T>) -> (out: BSTSetAVLMtEph<T>)
+    |                                   ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_bstavlmteph_wf` exists for struct `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:181:23
+    |
+181 |             self.tree.spec_bstavlmteph_wf()
+    |                       ^^^^^^^^^^^^^^^^^^^ method cannot be called on `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |     ------------------------------------- method `spec_bstavlmteph_wf` not found for this struct because it doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap37/BSTAVLMtEph.rs:418:42
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:186:23
+    |
+186 |                 tree: BSTAVLMtEph::new(),
+    |                       ^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+179 |     impl<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder> BSTSetAVLMtEphTrait<T> for BSTSetAVLMtEph<T> {
+    |                            ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:186:23
+    |
+186 |                 tree: BSTAVLMtEph::new(),
+    |                       ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` to implement `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait<T>`
+   --> src/Chap37/BSTAVLMtEph.rs:488:25
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ----------  ^^^^^^^^^^^^^^^^^^^     ^^^^^^^^^^^^^^
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+179 |     impl<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder> BSTSetAVLMtEphTrait<T> for BSTSetAVLMtEph<T> {
+    |                            ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:191:28
+    |
+191 |             let mut tree = BSTAVLMtEph::new();
+    |                            ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` to implement `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait<T>`
+   --> src/Chap37/BSTAVLMtEph.rs:488:25
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ----------  ^^^^^^^^^^^^^^^^^^^     ^^^^^^^^^^^^^^
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+179 |     impl<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder> BSTSetAVLMtEphTrait<T> for BSTSetAVLMtEph<T> {
+    |                            ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:192:33
+    |
+192 |             let _ = tree.insert(value);
+    |                          ------ ^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |                          |
+    |                          required by a bound introduced by this call
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait::insert`
+   --> src/Chap37/BSTAVLMtEph.rs:441:35
+    |
+441 |     pub trait BSTAVLMtEphTrait<T: TotalOrder>: Sized + View<V = BalBinTree<T>> {
+    |                                   ^^^^^^^^^^ required by this bound in `BSTAVLMtEphTrait::insert`
+...
+448 |         fn insert(&mut self, value: T) -> (r: Result<(), ()>)
+    |            ------ required by a bound in this associated function
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+179 |     impl<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder> BSTSetAVLMtEphTrait<T> for BSTSetAVLMtEph<T> {
+    |                            ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:193:20
+    |
+193 |             Self { tree }
+    |                    ^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+179 |     impl<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder> BSTSetAVLMtEphTrait<T> for BSTSetAVLMtEph<T> {
+    |                            ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for struct `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:196:41
+    |
+196 |         fn size(&self) -> N { self.tree.size() }
+    |                                         ^^^^ method cannot be called on `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |     ------------------------------------- method `size` not found for this struct because it doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap37/BSTAVLMtEph.rs:418:42
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `is_empty` exists for struct `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:198:45
+    |
+198 |         fn is_empty(&self) -> B { self.tree.is_empty() }
+    |                                             ^^^^^^^^ method cannot be called on `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |     ------------------------------------- method `is_empty` not found for this struct because it doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap37/BSTAVLMtEph.rs:418:42
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `find` exists for struct `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:200:60
+    |
+200 |         fn find(&self, value: &T) -> Option<T> { self.tree.find(value) }
+    |                                                            ^^^^ method cannot be called on `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |     ------------------------------------- method `find` not found for this struct because it doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap37/BSTAVLMtEph.rs:418:42
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `contains` exists for struct `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:202:56
+    |
+202 |         fn contains(&self, value: &T) -> B { self.tree.contains(value) }
+    |                                                        ^^^^^^^^ method cannot be called on `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |     ------------------------------------- method `contains` not found for this struct because it doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap37/BSTAVLMtEph.rs:418:42
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `minimum` exists for struct `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:204:52
+    |
+204 |         fn minimum(&self) -> Option<T> { self.tree.minimum() }
+    |                                                    ^^^^^^^ method cannot be called on `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |     ------------------------------------- method `minimum` not found for this struct because it doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap37/BSTAVLMtEph.rs:418:42
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `maximum` exists for struct `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:206:52
+    |
+206 |         fn maximum(&self) -> Option<T> { self.tree.maximum() }
+    |                                                    ^^^^^^^ method cannot be called on `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |     ------------------------------------- method `maximum` not found for this struct because it doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap37/BSTAVLMtEph.rs:418:42
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `insert` exists for struct `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:208:75
+    |
+208 |         fn insert(&mut self, value: T) -> (r: Result<(), ()>) { self.tree.insert(value) }
+    |                                                                           ^^^^^^ method cannot be called on `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |     ------------------------------------- method `insert` not found for this struct because it doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap37/BSTAVLMtEph.rs:418:42
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `in_order` exists for struct `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:216:18
+    |
+214 |               let filtered: Vec<T> = self
+    |  ____________________________________-
+215 | |                 .tree
+216 | |                 .in_order()
+    | |                 -^^^^^^^^ method cannot be called on `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    | |_________________|
+    |
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |       pub struct BSTAVLMtEph<T: TotalOrder> {
+    |       ------------------------------------- method `in_order` not found for this struct because it doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap37/BSTAVLMtEph.rs:418:42
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:221:25
+    |
+221 |             self.tree = rebuild_from_vec(filtered);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+179 |     impl<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder> BSTSetAVLMtEphTrait<T> for BSTSetAVLMtEph<T> {
+    |                            ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `minimum` exists for struct `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:233:27
+    |
+233 |                 self.tree.minimum().unwrap()
+    |                           ^^^^^^^ method cannot be called on `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |     ------------------------------------- method `minimum` not found for this struct because it doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap37/BSTAVLMtEph.rs:418:42
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `minimum` exists for struct `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:235:28
+    |
+235 |                 other.tree.minimum().unwrap()
+    |                            ^^^^^^^ method cannot be called on `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |     ------------------------------------- method `minimum` not found for this struct because it doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap37/BSTAVLMtEph.rs:418:42
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `minimum` exists for struct `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:260:27
+    |
+260 |                 self.tree.minimum().unwrap()
+    |                           ^^^^^^^ method cannot be called on `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |     ------------------------------------- method `minimum` not found for this struct because it doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap37/BSTAVLMtEph.rs:418:42
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `minimum` exists for struct `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:262:28
+    |
+262 |                 other.tree.minimum().unwrap()
+    |                            ^^^^^^^ method cannot be called on `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |     ------------------------------------- method `minimum` not found for this struct because it doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap37/BSTAVLMtEph.rs:418:42
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `minimum` exists for struct `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:289:35
+    |
+289 |             let pivot = self.tree.minimum().unwrap();
+    |                                   ^^^^^^^ method cannot be called on `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |     ------------------------------------- method `minimum` not found for this struct because it doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap37/BSTAVLMtEph.rs:418:42
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `in_order` exists for struct `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:311:36
+    |
+311 |             for value in self.tree.in_order().iter() {
+    |                                    ^^^^^^^^ method cannot be called on `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |     ------------------------------------- method `in_order` not found for this struct because it doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap37/BSTAVLMtEph.rs:418:42
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0282]: type annotations needed
+   --> src/Chap37/BSTSetAVLMtEph.rs:311:13
+    |
+311 | /             for value in self.tree.in_order().iter() {
+312 | |                 if value < pivot {
+313 | |                     left.push(value.clone());
+314 | |                 } else if value > pivot {
+...   |
+319 | |             }
+    | |_____________^
+    |
+help: consider giving `VERUS_loop_next` an explicit type
+    |
+319 |             }: /* Type */
+    |              ++++++++++++
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSetAVLMtEph.rs:314:35
+    |
+179 |     impl<T: StTInMtT + Ord> BSTSetAVLMtEphTrait<T> for BSTSetAVLMtEph<T> {
+    |          - expected this type parameter
+...
+314 |                 } else if value > pivot {
+    |                                   ^^^^^ expected type parameter `T`, found `&T`
+    |
+    = note: expected type parameter `_`
+                    found reference `&_`
+help: consider dereferencing the borrow
+    |
+314 |                 } else if value > *pivot {
+    |                                   +
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:326:36
+    |
+326 |                 move || values_vec(&left.tree),
+    |                                    ^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+179 |     impl<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder> BSTSetAVLMtEphTrait<T> for BSTSetAVLMtEph<T> {
+    |                            ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:327:36
+    |
+327 |                 move || values_vec(&right.tree)
+    |                                    ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+179 |     impl<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder> BSTSetAVLMtEphTrait<T> for BSTSetAVLMtEph<T> {
+    |                            ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:340:36
+    |
+340 |                 move || values_vec(&left.tree),
+    |                                    ^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+179 |     impl<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder> BSTSetAVLMtEphTrait<T> for BSTSetAVLMtEph<T> {
+    |                            ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:341:36
+    |
+341 |                 move || values_vec(&right.tree)
+    |                                    ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph`
+   --> src/Chap37/BSTAVLMtEph.rs:418:31
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |                               ^^^^^^^^^^ required by this bound in `BSTAVLMtEph`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+179 |     impl<T: StTInMtT + Ord + vstdplus::total_order::total_order::TotalOrder> BSTSetAVLMtEphTrait<T> for BSTSetAVLMtEph<T> {
+    |                            ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `in_order` exists for struct `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:355:18
+    |
+353 |               let filtered = self
+    |  ____________________________-
+354 | |                 .tree
+355 | |                 .in_order()
+    | |                 -^^^^^^^^ method cannot be called on `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    | |_________________|
+    |
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |       pub struct BSTAVLMtEph<T: TotalOrder> {
+    |       ------------------------------------- method `in_order` not found for this struct because it doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap37/BSTAVLMtEph.rs:418:42
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `in_order` exists for struct `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:363:18
+    |
+362 | /             self.tree
+363 | |                 .in_order()
+    | |                 -^^^^^^^^ method cannot be called on `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    | |_________________|
+    |
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |       pub struct BSTAVLMtEph<T: TotalOrder> {
+    |       ------------------------------------- method `in_order` not found for this struct because it doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap37/BSTAVLMtEph.rs:418:42
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0282]: type annotations needed
+   --> src/Chap37/BSTSetAVLMtEph.rs:365:35
+    |
+365 |                 .fold(base, |acc, value| op(acc, value.clone()))
+    |                                   ^^^^^          ----- type must be known at this point
+    |
+help: consider giving this closure parameter an explicit type
+    |
+365 |                 .fold(base, |acc, value: /* Type */| op(acc, value.clone()))
+    |                                        ++++++++++++
+
+error[E0599]: the method `in_order` exists for struct `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:368:66
+    |
+368 |         fn iter_in_order(&self) -> ArraySeqStPerS<T> { self.tree.in_order() }
+    |                                                                  ^^^^^^^^ method cannot be called on `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |     ------------------------------------- method `in_order` not found for this struct because it doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap37/BSTAVLMtEph.rs:418:42
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `in_order` exists for struct `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:373:44
+    |
+373 |             let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+    |                                            ^^^^^^^^ method cannot be called on `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |     ------------------------------------- method `in_order` not found for this struct because it doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap37/BSTAVLMtEph.rs:418:42
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `in_order` exists for struct `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:471:44
+    |
+471 |             let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+    |                                            ^^^^^^^^ method cannot be called on `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:418:5
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> {
+    |     ------------------------------------- method `in_order` not found for this struct because it doesn't satisfy `_: BSTAVLMtEphTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:488:13
+    |
+488 |     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
+    |             ^^^^^^^^^^  -------------------     --------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap37/BSTAVLMtEph.rs:418:42
+    |
+418 |     pub struct BSTAVLMtEph<T: TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap37/BSTSetAVLMtEph.rs:496:60
+    |
+496 |             f.debug_struct("BSTSetAVLMtEph").field("tree", &self.tree).finish()
+    |                                                            ^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` to implement `std::fmt::Debug`
+   --> src/Chap37/BSTAVLMtEph.rs:626:25
+    |
+626 |     impl<T: TotalOrder> std::fmt::Debug for BSTAVLMtEph<T> {
+    |             ----------  ^^^^^^^^^^^^^^^     ^^^^^^^^^^^^^^
+    |             |
+    |             unsatisfied trait bound introduced here
+    = note: required for the cast from `&Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<T>` to `&dyn std::fmt::Debug`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+494 |     impl<T: StTInMtT + Ord + fmt::Debug + vstdplus::total_order::total_order::TotalOrder> fmt::Debug for BSTSetAVLMtEph<T> {
+    |                                         ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 57 previous errors
+
+Some errors have detailed explanations: E0277, E0282, E0308, E0599.
+For more information about an error, try `rustc --explain E0277`.
+Elapsed: 14s

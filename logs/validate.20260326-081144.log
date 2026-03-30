@@ -1,0 +1,121 @@
+error: precondition not satisfied
+   --> src/Chap44/DocumentIndex.rs:214:58
+    |
+ 44 |                 requires self.spec_documentindex_wf();
+    |                          ---------------------------- failed precondition
+...
+214 |             fn find(&self, word: &Word) -> DocumentSet { self.index.find(word) }
+    |                                                          ^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+tmp%.spec_documentindex_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: precondition not satisfied
+   --> src/Chap44/DocumentIndex.rs:217:17
+    |
+ 50 |                     docs_a.spec_avltreesetstper_wf(),
+    |                     -------------------------------- failed precondition
+...
+217 |                 DocumentIndex::query_and(&docs_a, &docs_b)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/vstdplus/feq.rs:41:13
+    |
+ 41 |         &&& feq_reflexive::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^
+ 42 |         &&& feq_symmetric::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^
+ 43 |         &&& feq_transitive::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^^
+...
+ 68 |         &&& obeys_feq_properties::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap38/BSTParaStEph.rs:452:13
+    |
+452 |             self@.finite()
+    |             ^^^^^^^^^^^^^^
+453 |             && obeys_feq_full::<T>()
+    |                ^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:396:13
+    |
+396 |             self.tree.spec_bstparasteph_wf()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap44/DocumentIndex.rs:50:21
+    |
+ 50 |                     docs_a.spec_avltreesetstper_wf(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+docs_a.spec_avltreesetstper_wf() ✘
+|   docs_a.tree.spec_bstparasteph_wf() ✘
+|   |   docs_a.tree.view().finite() ✘
+|   |       function is uninterpreted
+|   |   obeys_feq_full() ✘
+|   |   |   obeys_feq_properties() ✘
+|   |   |   |   feq_reflexive() ✘
+|   |   |   |   |   forall |x|
+|   |   |   |   |       x.eq_spec(x) 
+|   |   |   |   +---
+|   |   |   |   feq_symmetric() ✘
+|   |   |   |   |   forall |x, y|
+|   |   |   |   |       x.eq_spec(y) == y.eq_spec(x) 
+|   |   |   |   +---
+|   |   |   |   feq_transitive() ✘
+|   |   |   |   |   forall |x, y, z|
+|   |   |   |   |       x.eq_spec(y) && y.eq_spec(z) ==>
+|   |   |   |   |           x.eq_spec(z) 
+|   |   |   |   |               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   |   |   +---
+|   |   |   +---
+|   |   |   obeys_feq_view() 
+|   |   |   obeys_feq_view_injective() 
+|   |   |   obeys_feq_clone() 
+|   |   |   obeys_feq_eq() 
+|   |   +---
+|   +---
+|   docs_a.view().len() < UnsignedMax.Exec(usize::BITS) 
++---
+docs_b.spec_avltreesetstper_wf() 
+
+error: precondition not satisfied
+   --> src/Chap44/DocumentIndex.rs:221:17
+    |
+ 57 |                     docs_a.spec_avltreesetstper_wf(),
+    |                     -------------------------------- failed precondition
+...
+221 |                 DocumentIndex::query_or(&docs_a, &docs_b)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/vstdplus/feq.rs:41:13
+    |
+ 41 |         &&& feq_reflexive::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^
+ 42 |         &&& feq_symmetric::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^
+ 43 |         &&& feq_transitive::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^^
+...
+ 68 |         &&& obeys_feq_properties::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap38/BSTParaStEph.rs:452:13
+    |
+452 |             self@.finite()
+    |             ^^^^^^^^^^^^^^
+453 |             && obeys_feq_full::<T>()
+    |                ^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:396:13
+    |
+396 |             self.tree.spec_bstparasteph_wf()
+    |             ^^^^^^^^^^^^^^^^^^^^

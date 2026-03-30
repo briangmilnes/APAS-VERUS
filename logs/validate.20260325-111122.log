@@ -1,0 +1,10 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:243:9
+    |
+243 |         fn insert(&mut self, v: V) {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 4869 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 79s

@@ -1,0 +1,64 @@
+error: invariant not satisfied before loop
+    --> src/Chap41/AVLTreeSetStEph.rs:1762:21
+     |
+1762 |                     filtered.spec_elements_sorted(),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap41/AVLTreeSetStEph.rs:1844:21
+     |
+1844 |                     common.spec_elements_sorted(),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap41/AVLTreeSetStEph.rs:1905:21
+     |
+1905 |                     remaining.spec_elements_sorted(),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap41/AVLTreeSetStEph.rs:1971:21
+     |
+1971 |                     combined.spec_elements_sorted(),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+    --> src/Chap41/AVLTreeSetStEph.rs:2027:21
+     |
+2027 |                     self.elements@.unique_seq_to_set();
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq_lib.rs:1037:12
+     |
+     = note: failed precondition
+
+error: precondition not satisfied
+    --> src/Chap41/AVLTreeSetStEph.rs:2028:21
+     |
+2028 |                     other.elements@.unique_seq_to_set();
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq_lib.rs:1037:12
+     |
+     = note: failed precondition
+
+error: assertion failed
+    --> src/Chap41/AVLTreeSetStEph.rs:2029:28
+     |
+2029 |                     assert(combined@.len() + 1 < usize::MAX as nat);
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+verification results:: 4481 verified, 5 errors
+error: aborting due to 7 previous errors
+
+Elapsed: 99s

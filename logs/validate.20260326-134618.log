@@ -1,0 +1,229 @@
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:70:17
+    |
+ 70 |                 has_cycle == !spec_is_dag(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+232 |                         return true;
+    |                         ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:70:17
+    |
+ 70 |                 has_cycle == !spec_is_dag(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+237 |             false
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+  --> src/Chap55/CycleDetectStEph.rs:70:31
+   |
+70 |                 has_cycle == !spec_is_dag(graph),
+   |                               ^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == !(spec_is_dag(old(graph)))
+|   %return ==>
+|       !(spec_is_dag(old(graph))) ✘
+|       |   (exists |path| spec_is_path(old(graph), path) && path.len() >= 2 && path.index(0) == path.last()) 
+|       +---
+|   !(spec_is_dag(old(graph))) ==>
+|       %return ✔
++---
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStPer.rs:69:17
+    |
+ 69 |                 has_cycle == !spec_is_dag_per(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+200 |                         return true;
+    |                         ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStPer.rs:69:17
+    |
+ 69 |                 has_cycle == !spec_is_dag_per(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+205 |             false
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+  --> src/Chap55/CycleDetectStPer.rs:69:31
+   |
+69 |                 has_cycle == !spec_is_dag_per(graph),
+   |                               ^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == !(spec_is_dag_per(old(graph)))
+|   %return ==>
+|       !(spec_is_dag_per(old(graph))) ✘
+|       |   (exists |path| spec_is_path_per(old(graph), path) && path.len() >= 2 && path.index(0) == path.last()) 
+|       +---
+|   !(spec_is_dag_per(old(graph))) ==>
+|       %return ✔
++---
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:136:17
+    |
+136 |                 spec_is_dag_per(graph) ==> spec_is_topo_order_per(graph, order@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+454 |             AVLTreeSeqStPerS::from_vec(reversed)
+    |             ------------------------------------ at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:434:17
+    |
+434 |                 lemma_all_true_num_false_zero(visited@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap55/TopoSortStEph.rs:204:18
+    |
+204 |         requires forall|j: int| 0 <= j < s.len() ==> #[trigger] s[j],
+    |                  --------------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        tmp%.index(j) 
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:328:13
+    |
+328 |             topo_order.is_some() <==> spec_is_dag_per(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+368 |                     return None;
+    |                     ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:328:13
+    |
+328 |             topo_order.is_some() <==> spec_is_dag_per(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+391 |         Some(AVLTreeSeqStPerS::from_vec(reversed))
+    |         ------------------------------------------ at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:329:13
+    |
+329 |             topo_order.is_some() ==> spec_is_topo_order_per(graph, topo_order.unwrap()@),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+391 |         Some(AVLTreeSeqStPerS::from_vec(reversed))
+    |         ------------------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap55/TopoSortStPer.rs:328:13
+    |
+328 |             topo_order.is_some() <==> spec_is_dag_per(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+topo_order is Some == spec_is_dag_per(old(graph)) ✘
+|   topo_order is Some ==>
+|       spec_is_dag_per(old(graph)) ✘
+|       |   forall |path|
+|       |       spec_is_path_per(old(graph), path) && path.len() >= 2 ==>
+|       |           !(path.index(0) == path.last()) 
+|       +---
+|   spec_is_dag_per(old(graph)) ==>
+|       topo_order is Some ✘
++---
+topo_order is Some ==>
+    spec_is_topo_order_per(old(graph), topo_order.0.view()) ✔
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStEph.rs:236:17
+    |
+236 |                 spec_is_dag(graph) ==> spec_is_topo_order(graph, order@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+602 |             AVLTreeSeqStEphS::from_vec(reversed)
+    |             ------------------------------------ at the end of the function body
+
+error: assertion failed
+   --> src/Chap55/TopoSortStEph.rs:553:28
+    |
+553 |                     assert(visited.seq@[j] == false);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap55/TopoSortStEph.rs:582:17
+    |
+204 |         requires forall|j: int| 0 <= j < s.len() ==> #[trigger] s[j],
+    |                  --------------------------------------------------- failed precondition
+...
+582 |                 lemma_all_true_num_false_zero(visited@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap55/TopoSortStEph.rs:553:47
+    |
+553 |                     assert(visited.seq@[j] == false);
+    |                                               ^^^^^
+
+note: 
+
+visited.seq.view().index(j) == false
+|   visited.seq.view().index(j) ==>
+|       false ✘
+|   false ==>
+|       visited.seq.view().index(j) ✔
++---
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStEph.rs:483:13
+    |
+483 |             topo_order.is_some() <==> spec_is_dag(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+516 |                     return None;
+    |                     ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStEph.rs:483:13
+    |
+483 |             topo_order.is_some() <==> spec_is_dag(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+539 |         Some(AVLTreeSeqStEphS::from_vec(reversed))
+    |         ------------------------------------------ at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStEph.rs:484:13
+    |
+484 |             topo_order.is_some() ==> spec_is_topo_order(graph, topo_order.unwrap()@),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+539 |         Some(AVLTreeSeqStEphS::from_vec(reversed))
+    |         ------------------------------------------ at the end of the function body
+
+error: assertion failed
+   --> src/Chap55/TopoSortStEph.rs:493:24
+    |
+493 |                 assert(visited.seq@[j] == false);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap55/TopoSortStEph.rs:483:13
+    |
+483 |             topo_order.is_some() <==> spec_is_dag(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^
+
+note: 
+
+topo_order is Some == spec_is_dag(old(graph)) ✘
+|   topo_order is Some ==>
+|       spec_is_dag(ol

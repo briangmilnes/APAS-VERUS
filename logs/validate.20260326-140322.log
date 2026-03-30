@@ -1,0 +1,122 @@
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStPer.rs:69:17
+    |
+ 69 |                 has_cycle == !spec_is_dag_per(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+200 |                         return true;
+    |                         ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStPer.rs:69:17
+    |
+ 69 |                 has_cycle == !spec_is_dag_per(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+205 |             false
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+  --> src/Chap55/CycleDetectStPer.rs:69:31
+   |
+69 |                 has_cycle == !spec_is_dag_per(graph),
+   |                               ^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == !(spec_is_dag_per(old(graph)))
+|   %return ==>
+|       !(spec_is_dag_per(old(graph))) ✘
+|       |   (exists |path| spec_is_path_per(old(graph), path) && path.len() >= 2 && path.index(0) == path.last()) 
+|       +---
+|   !(spec_is_dag_per(old(graph))) ==>
+|       %return ✔
++---
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:96:13
+    |
+ 96 |             has_cycle ==> !spec_is_dag(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+106 |             return true;
+    |             ----------- at this exit
+
+note: diagnostics via expansion
+  --> src/Chap55/CycleDetectStEph.rs:96:28
+   |
+96 |             has_cycle ==> !spec_is_dag(graph),
+   |                            ^^^^^^^^^^^^^^^^^^
+
+note: 
+
+visited.view().len() == old(graph).view().len() ✔
+ancestors.view().len() == old(graph).view().len() ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = visited.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && old(visited).view().index(j) ==>
+        visited.view().index(j) ✔
+spec_num_false(visited.view()) <= spec_num_false(old(visited).view()) ✔
+has_cycle ==>
+    !(spec_is_dag(old(graph))) ✘
+    |   (exists |path| spec_is_path(old(graph), path) && path.len() >= 2 && path.index(0) == path.last()) 
+    +---
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:181:48
+    |
+181 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+  --> src/Chap55/CycleDetectStEph.rs:93:44
+   |
+93 |                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+   |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+  --> vstd/seq.rs:62:12
+   |
+   = note: recommendation not met
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:70:17
+    |
+ 70 |                 has_cycle == !spec_is_dag(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+241 |             false
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+  --> src/Chap55/CycleDetectStEph.rs:70:17
+   |
+70 |                 has_cycle == !spec_is_dag(graph),
+   |                 ^^^^^^^^^     ^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == !(spec_is_dag(old(graph)))
+|   %return ==>
+|       !(spec_is_dag(old(graph))) ✘
+|       |   (exists |path| spec_is_path(old(graph), path) && path.len() >= 2 && path.index(0) == path.last()) 
+|       +---
+|   !(spec_is_dag(old(graph))) ==>
+|       %return ✘
++---
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:136:17
+    |
+136 |                 spec_is_dag_per(graph) ==> spec_is_topo_order_per(graph, order@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+485 |             AVLTreeSeqStPerS::from_vec(reversed)
+    |             ------------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap55/TopoSortStPer.rs:64:12
+    |
+ 64 |         && ord

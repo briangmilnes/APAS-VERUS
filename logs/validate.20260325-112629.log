@@ -1,0 +1,39 @@
+error: precondition not satisfied
+   --> src/Chap65/UnionFindStEph.rs:426:25
+    |
+102 |             uf.elements@ =~= old_uf.elements@.push(v),
+    |             ----------------------------------------- failed precondition
+...
+426 |                 proof { lemma_insert_preserves_wf(*self, old_uf, v); }
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap65/UnionFindStEph.rs:102:13
+    |
+102 |             uf.elements@ =~= old_uf.elements@.push(v),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old_uf.spec_unionfindsteph_wf() ✔
+!(old_uf.parent.view().dom().contains(v.view())) ✔
+self.parent.view() =~= old_uf.parent.view().insert(v.view(), v) ✔
+self.rank.view() =~= old_uf.rank.view().insert(v.view(), 0) ✔
+self.elements.view() =~= old_uf.elements.view().push(v) ✘
+self.roots =~= old_uf.roots.insert(v.view(), v.view()) ✔
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+  --> src/Chap65/UnionFindStEph.rs:92:11
+   |
+92 |       proof fn lemma_insert_preserves_wf<V: StT + Hash>(
+   |  ___________^
+93 | |         uf: UnionFindStEph<V>,
+94 | |         old_uf: UnionFindStEph<V>,
+95 | |         v: V,
+96 | |     )
+   | |_____^
+
+verification results:: 4869 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 59s

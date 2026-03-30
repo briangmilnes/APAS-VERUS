@@ -1,0 +1,72 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+    --> src/Chap43/OrderedTableStEph.rs:1453:17
+     |
+1453 |                 assert forall|k: K::V| self@.dom().contains(k) && spec_pred(k, self@[k])
+     |                 ^^^^^^
+     |
+     = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error[E0382]: use of moved value: `best`
+    --> src/Chap43/OrderedTableStEph.rs:2065:13
+     |
+1980 |             let mut best: Option<K> = None;
+     |                 -------- move occurs because `best` has type `std::option::Option<K>`, which does not implement the `Copy` trait
+1981 |             let mut i: usize = 0;
+1982 |             while i < len
+     |             ------------- inside of this loop
+...
+2013 |                             let old_best = best.unwrap();
+     |                                                 -------- `best` moved due to this method call, in previous iteration of loop
+...
+2065 |             best
+     |             ^^^^ value used here after move
+     |
+note: these 2 reinitializations might get skipped
+    --> src/Chap43/OrderedTableStEph.rs:2011:29
+     |
+2011 | ...                   best = Some(k_clone);
+     |                       ^^^^
+...
+2032 | ...                           best = Some(k_clone);
+     |                               ^^^^
+note: `std::option::Option::<T>::unwrap` takes ownership of the receiver `self`, which moves `best`
+    --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:1013:24
+help: you can `clone` the value and consume it, but this might not be your desired behavior
+     |
+2013 |                             let old_best = best.clone().unwrap();
+     |                                                ++++++++
+
+error[E0382]: use of moved value: `best`
+    --> src/Chap43/OrderedTableStEph.rs:2171:13
+     |
+2086 |             let mut best: Option<K> = None;
+     |                 -------- move occurs because `best` has type `std::option::Option<K>`, which does not implement the `Copy` trait
+2087 |             let mut i: usize = 0;
+2088 |             while i < len
+     |             ------------- inside of this loop
+...
+2119 |                             let old_best = best.unwrap();
+     |                                                 -------- `best` moved due to this method call, in previous iteration of loop
+...
+2171 |             best
+     |             ^^^^ value used here after move
+     |
+note: these 2 reinitializations might get skipped
+    --> src/Chap43/OrderedTableStEph.rs:2117:29
+     |
+2117 | ...                   best = Some(k_clone);
+     |                       ^^^^
+...
+2138 | ...                           best = Some(k_clone);
+     |                               ^^^^
+note: `std::option::Option::<T>::unwrap` takes ownership of the receiver `self`, which moves `best`
+    --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:1013:24
+help: you can `clone` the value and consume it, but this might not be your desired behavior
+     |
+2119 |                             let old_best = best.clone().unwrap();
+     |                                                ++++++++
+
+error: aborting due to 2 previous errors; 1 warning emitted
+
+For more information about this error, try `rustc --explain E0382`.
+Elapsed: 29s

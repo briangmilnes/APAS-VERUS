@@ -1,0 +1,42 @@
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:193:9
+    |
+193 |         loop
+    |         ^^^^
+
+error: precondition not satisfied
+   --> src/Chap65/KruskalStEph.rs:190:23
+    |
+190 |         let mut vit = vertices.iter();
+    |                       ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap05/SetStEph.rs:130:22
+    |
+130 |             requires self.spec_setsteph_wf()
+    |                      ----------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+vertices.spec_setsteph_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:268:9
+    |
+268 |         while i < edges_vec.len()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:316:5
+    |
+316 | /     pub fn kruskal_mst<V: HashOrd>(
+317 | |         graph: &LabUnDirGraphStEph<V, WrappedF64>,
+318 | |     ) -> (mst_edges: SetStEph<LabEdge<V, WrappedF64>>)
+    | |_____________________________________________________^
+
+verification results:: 4917 verified, 4 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 153s

@@ -1,0 +1,24 @@
+error: precondition not satisfied
+    --> src/Chap42/TableStPer.rs:1966:30
+     |
+1966 |                     let vc = pair.1.clone_wf();
+     |                              ^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/clone_view.rs:97:22
+     |
+  97 |             requires self.spec_wf(),
+     |                      -------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+tmp%.spec_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 2160 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 31s
+Sampled Memory Usage: peak rust_verify RSS: 13365MB, peak z3 RSS: 1200MB, min free: 7390MB
+Sampled CPU Usage: rust_verify: 327s, z3 children: 289s

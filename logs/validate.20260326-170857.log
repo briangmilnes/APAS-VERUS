@@ -1,0 +1,123 @@
+error: assertion failed
+   --> src/Chap55/CycleDetectStEph.rs:573:24
+    |
+573 |                 assert(!old(ancestors)@[neighbor as int]) by {
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap55/CycleDetectStEph.rs:598:25
+    |
+598 |                 implies #[trigger] visited@[graph@[vertex as int][j] as int] by {};
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(old(ancestors).view().index(neighbor)) 
+    function is uninterpreted
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:486:48
+    |
+486 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:499:32
+    |
+499 |                 ancestors@ =~= old(ancestors)@.update(vertex as int, true),
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:97:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:516:26
+    |
+516 |                     ==> !old(ancestors)@[graph@[vertex as int][j] as int],
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:314:44
+    |
+314 |                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:554:35
+    |
+554 |             assert(ancestors@ =~= old(ancestors)@.update(vertex as int, true));
+    |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:97:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:573:25
+    |
+573 |                 assert(!old(ancestors)@[neighbor as int]) by {
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/CycleDetectStEph.rs:779:21
+    |
+779 |                     forall|j: int| 0 <= j < start as int ==> #[trigger] visited@[j],
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap55/CycleDetectStEph.rs:515:17
+    |
+515 | /                 forall|j: int| 0 <= j < i as int
+516 | |                     ==> !old(ancestors)@[graph@[vertex as int][j] as int],
+    | |_________________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap55/CycleDetectStEph.rs:516:42
+    |
+516 |                     ==> !old(ancestors)@[graph@[vertex as int][j] as int],
+    |                                          ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap55/CycleDetectStEph.rs:515:17
+    |
+515 | /                 forall|j: int| 0 <= j < i as int
+516 | |                     ==> !old(ancestors)@[graph@[vertex as int][j] as int],
+    | |_________________________________________________________________________^
+
+verification results:: 2120 verified, 2 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 18s
+Sampled Memory Usage: peak rust_verify RSS: 3426MB, peak z3 RSS: 350MB, min free: 19339MB
+Sampled CPU Usage: rust_verify: 52s, z3 children: 35s

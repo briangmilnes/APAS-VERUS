@@ -1,0 +1,22 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+  --> src/Chap65/KruskalStEph.rs:91:5
+   |
+91 | /     fn kruskal_process_edge<V: HashOrd>(
+92 | |         uf: &mut UnionFindStEph<V>,
+93 | |         mst_edges: &mut SetStEph<LabEdge<V, WrappedF64>>,
+94 | |         edge: LabEdge<V, WrappedF64>,
+95 | |     )
+   | |_____^
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:159:9
+    |
+159 |         while i < edges_vec.len()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 2405 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 95s
+Sampled Memory Usage: peak rust_verify RSS: 2758MB, peak z3 RSS: 7147MB, min free: 13592MB
+Sampled CPU Usage: rust_verify: 43s, z3 children: 84s

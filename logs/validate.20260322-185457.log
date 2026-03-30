@@ -1,0 +1,201 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:467:17
+    |
+467 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:472:17
+    |
+472 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: invariant not satisfied before loop
+   --> src/Chap43/OrderedSetStPer.rs:910:21
+    |
+910 |                     size as nat == self@.len(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap53/PQMinStPer.rs:218:21
+    |
+218 |                     frontier_updated@.len() <= frontier_new_len + i as nat,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap53/PQMinStPer.rs:220:21
+    |
+220 |                     nlen_nat <= vertex_universe.len(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap53/PQMinStPer.rs:233:32
+    |
+233 |                         assert(frontier_updated@.len() + 1 < usize::MAX as nat);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap53/PQMinStPer.rs:243:44
+    |
+243 |                         implies #[trigger] vertex_universe.contains(a) by {}
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap53/PQMinStPer.rs:270:17
+    |
+270 |                 priorities@.len() <= j as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap53/PQMinStPer.rs:271:17
+    |
+271 |                 vlen as nat <= vertex_universe.len(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+clip(nat, frontier_updated.view().len() + 1) < UnsignedMax.Exec(usize::BITS) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap53/PQMinStPer.rs:327:17
+    |
+327 |                 initial_frontier@.len() <= i as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap53/PQMinStPer.rs:328:17
+    |
+328 |                 slen as nat <= vertex_universe.len(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap53/PQMinStEph.rs:228:21
+    |
+228 |                     frontier_updated@.len() <= frontier_new_len + i as nat,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap53/PQMinStEph.rs:230:21
+    |
+230 |                     nlen_nat <= vertex_universe.len(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:243:32
+    |
+243 |                         assert(frontier_updated@.len() + 1 < usize::MAX as nat);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:253:44
+    |
+253 |                         implies #[trigger] vertex_universe.contains(a) by {}
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap53/PQMinStEph.rs:281:17
+    |
+281 |                 priorities@.len() <= j as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap53/PQMinStEph.rs:282:17
+    |
+282 |                 vlen as nat <= vertex_universe.len(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+clip(nat, frontier_updated.view().len() + 1) < UnsignedMax.Exec(usize::BITS) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap53/PQMinStEph.rs:339:17
+    |
+339 |                 initial_frontier@.len() <= i as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap53/PQMinStEph.rs:340:17
+    |
+340 |                 slen as nat <= vertex_universe.len(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:169:13
+    |
+169 | /             forall |d: int| 0 <= d < table.current_size as int
+170 | |                 ==> !spec_flat_has_key(
+171 | |                     table.table@[spec_tri_probe(h as int, d, table.current_size as int)],
+172 | |                     *key),
+    | |_________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:171:34
+    |
+171 |                     table.table@[spec_tri_probe(h as int, d, table.current_size as int)],
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:467:17
+    |
+467 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:469:38
+    |
+469 |                         table.table@[spec_tri_probe(h as int, d, table.current_size as int)], key) by {
+    |                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarContractionStEph.rs:142:13
+    |
+142 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarContractionStEph.rs:142:37
+    |
+142 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+    |                                     ^^
+
+note: automatically chose triggers for this expression:
+  --> src/Chap62/StarContractionStEph.rs:82:13
+   |
+82 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+  --> src/Chap62/StarContractionStEph.rs:82:37
+   |
+82 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+   |                                     ^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap62/StarContractionStEph.rs:142:13
+    |
+142 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 4472 verified, 13 errors
+error: aborting due to 17 previous errors; 2 warnings emitted
+
+Elapsed: 50s

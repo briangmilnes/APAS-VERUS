@@ -1,0 +1,64 @@
+error: assertion failed
+   --> src/Chap53/PQMinStPer.rs:209:40
+    |
+209 |                     implies #[trigger] vertex_universe.contains(a) by {
+    |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap53/PQMinStPer.rs:254:32
+    |
+254 |                         assert(neighbor_entry@.1 == neighbor@);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+neighbor_entry.view().1 == neighbor.view() 
+
+error: assertion failed
+   --> src/Chap53/PQMinStPer.rs:374:24
+    |
+374 |                 assert(entry@.1 == v@);
+    |                        ^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+entry.view().1 == v.view() 
+
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:215:24
+    |
+215 |                 assert(seq@[0 as int].1 == v@);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:218:40
+    |
+218 |                     implies #[trigger] vertex_universe.contains(a) by {
+    |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:264:32
+    |
+264 |                         assert(neighbor_entry@.1 == neighbor@);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+neighbor_entry.view().1 == neighbor.view() 
+
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:384:24
+    |
+384 |                 assert(entry@.1 == v@);
+    |                        ^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+entry.view().1 == v.view() 
+
+verification results:: 4492 verified, 6 errors
+error: aborting due to 7 previous errors
+
+Elapsed: 63s

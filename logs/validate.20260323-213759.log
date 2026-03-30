@@ -1,0 +1,379 @@
+error[E0609]: no field `elements` on type `&AVLTreeSetStPer<Pair<Pair<P, V>, V>>`
+   --> src/Chap53/PQMinStPer.rs:145:22
+    |
+145 |             frontier.elements.spec_seq().len() == 0 ==> result.is_none(),
+    |                      ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+    = note: the full name for the type has been written to 'lib.long-type-17391696480310352548.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `&AVLTreeSetStPer<Pair<Pair<P, V>, V>>`
+   --> src/Chap53/PQMinStPer.rs:146:22
+    |
+146 |             frontier.elements.spec_seq().len() > 0 ==> result.is_some(),
+    |                      ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+    = note: the full name for the type has been written to 'lib.long-type-17391696480310352548.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `&AVLTreeSetStPer<Pair<Pair<P, V>, V>>`
+   --> src/Chap53/PQMinStPer.rs:148:21
+    |
+148 |         if frontier.elements.length() == 0 {
+    |                     ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+    = note: the full name for the type has been written to 'lib.long-type-17391696480310352548.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `&AVLTreeSetStPer<Pair<Pair<P, V>, V>>`
+   --> src/Chap53/PQMinStPer.rs:151:38
+    |
+151 |             let entry_ref = frontier.elements.nth(0);
+    |                                      ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+    = note: the full name for the type has been written to 'lib.long-type-17391696480310352548.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `AVLTreeSetStPer<Pair<Pair<P, V>, V>>`
+   --> src/Chap53/PQMinStPer.rs:192:24
+    |
+192 |         while frontier.elements.length() > 0
+    |                        ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+    = note: the full name for the type has been written to 'lib.long-type-7296594606906007135.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `AVLTreeSetStPer<Pair<Pair<P, V>, V>>`
+   --> src/Chap53/PQMinStPer.rs:212:38
+    |
+212 |             let entry_ref = frontier.elements.nth(0);
+    |                                      ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+    = note: the full name for the type has been written to 'lib.long-type-7296594606906007135.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `AVLTreeSetStPer<Pair<Pair<P, V>, V>>`
+   --> src/Chap53/PQMinStPer.rs:229:52
+    |
+229 |                 assert(frontier@.contains(frontier.elements@[0 as int]));
+    |                                                    ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+    = note: the full name for the type has been written to 'lib.long-type-7296594606906007135.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:238:34
+    |
+238 |             let nlen = neighbors.elements.length();
+    |                                  ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:242:58
+    |
+242 |                 assert forall|j: int| 0 <= j < neighbors.elements@.len()
+    |                                                          ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:243:75
+    |
+243 |                     implies vertex_universe.contains(#[trigger] neighbors.elements@[j]) by {
+    |                                                                           ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:244:58
+    |
+244 |                     assert(neighbors@.contains(neighbors.elements@[j]));
+    |                                                          ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:250:46
+    |
+250 |                     nlen as nat == neighbors.elements.spec_seq().len(),
+    |                                              ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:251:31
+    |
+251 |                     neighbors.elements.spec_avltreeseqstper_wf(),
+    |                               ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:259:55
+    |
+259 |                     forall|j: int| 0 <= j < neighbors.elements@.len()
+    |                                                       ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:260:75
+    |
+260 |                         ==> vertex_universe.contains(#[trigger] neighbors.elements@[j]),
+    |                                                                           ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:268:42
+    |
+268 |                 let neighbor = neighbors.elements.nth(i);
+    |                                          ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:323:67
+    |
+323 |                         assert(vertex_universe.contains(neighbors.elements@[i as int]));
+    |                                                                   ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:346:28
+    |
+346 |         let vlen = visited.elements.length();
+    |                            ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:351:40
+    |
+351 |                 vlen as nat == visited.elements.spec_seq().len(),
+    |                                        ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:352:25
+    |
+352 |                 visited.elements.spec_avltreeseqstper_wf(),
+    |                         ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:360:32
+    |
+360 |             let vref = visited.elements.nth(j);
+    |                                ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:364:58
+    |
+364 |                 lemma_wf_implies_len_bound_stper(visited.elements);
+    |                                                          ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:403:28
+    |
+403 |         let slen = sources.elements.length();
+    |                            ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:407:52
+    |
+407 |             assert forall|j: int| 0 <= j < sources.elements@.len()
+    |                                                    ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:408:69
+    |
+408 |                 implies vertex_universe.contains(#[trigger] sources.elements@[j]) by {
+    |                                                                     ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:409:50
+    |
+409 |                 assert(sources@.contains(sources.elements@[j]));
+    |                                                  ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:417:40
+    |
+417 |                 slen as nat == sources.elements.spec_seq().len(),
+    |                                        ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:418:25
+    |
+418 |                 sources.elements.spec_avltreeseqstper_wf(),
+    |                         ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:429:49
+    |
+429 |                 forall|j: int| 0 <= j < sources.elements@.len()
+    |                                                 ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:430:69
+    |
+430 |                     ==> vertex_universe.contains(#[trigger] sources.elements@[j]),
+    |                                                                     ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:439:29
+    |
+439 |             let v = sources.elements.nth(i);
+    |                             ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:446:58
+    |
+446 |                 lemma_wf_implies_len_bound_stper(sources.elements);
+    |                                                          ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/PQMinStPer.rs:457:57
+    |
+457 |                 assert(vertex_universe.contains(sources.elements@[i as int]));
+    |                                                         ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `&Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+  --> src/Chap53/GraphSearchStPer.rs:98:30
+   |
+98 |             let n = frontier.elements.length();
+   |                              ^^^^^^^^ unknown field
+   |
+   = note: available field is: `tree`
+
+error[E0308]: mismatched types
+  --> src/Chap53/GraphSearchStPer.rs:99:21
+   |
+96 |     impl<V: StT + Ord> SelectionStrategy<V> for SelectOne {
+   |          - expected this type parameter
+...
+99 |             if n == 0 {
+   |                     ^ expected type parameter `V`, found integer
+   |
+   = note: expected type parameter `V`
+                        found type `{integer}`
+
+error[E0609]: no field `elements` on type `&Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/GraphSearchStPer.rs:102:42
+    |
+102 |                 let first_ref = frontier.elements.nth(0);
+    |                                          ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `&Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/GraphSearchStPer.rs:107:33
+    |
+107 |                 assert(frontier.elements@[0] == first_ref@);
+    |                                 ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `&Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/GraphSearchStPer.rs:108:33
+    |
+108 |                 assert(frontier.elements@.contains(first_ref@));
+    |                                 ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/GraphSearchStPer.rs:175:24
+    |
+175 |         while frontier.elements.length() > 0
+    |                        ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0308]: mismatched types
+   --> src/Chap53/GraphSearchStPer.rs:175:44
+    |
+151 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, S: SelectionStrategy<V>>(
+    |                             - expected this type parameter
+...
+175 |         while frontier.elements.length() > 0
+    |                                            ^ expected type parameter `V`, found integer
+    |
+    = note: expected type parameter `V`
+                         found type `{integer}`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/GraphSearchStPer.rs:196:33
+    |
+196 |             let nlen = frontier.elements.length();
+    |                                 ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/GraphSearchStPer.rs:201:45
+    |
+201 |                     nlen as nat == frontier.elements.spec_seq().len(),
+    |                                             ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/GraphSearchStPer.rs:202:30
+    |
+202 |                     frontier.elements.spec_avltreeseqstper_wf(),
+    |                              ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap53/GraphSearchStPer.rs:212:34
+    |
+212 |                 let v = frontier.elements.nth(i);
+    |                                  ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error: aborting due to 44 previous errors
+
+Some errors have detailed explanations: E0308, E0609.
+For more information about an error, try `rustc --explain E0308`.
+Elapsed: 12s

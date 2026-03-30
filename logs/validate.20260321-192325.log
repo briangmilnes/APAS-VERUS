@@ -1,0 +1,38 @@
+error: expected `,`
+   --> src/Chap45/BalancedTreePQ.rs:401:47
+    |
+401 |                         n as nat < usize::MAX as nat,
+    |                                               ^^
+
+error[E0432]: unresolved import `crate::Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQ`
+  --> src/Chap45/HeapsortExample.rs:27:9
+   |
+27 |     use crate::Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQ;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `BalancedTreePQ` in `Chap45::BalancedTreePQ::BalancedTreePQ`
+   |
+help: consider importing one of these modules instead
+   |
+27 -     use crate::Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQ;
+27 +     use crate::Chap45::BalancedTreePQ;
+   |
+27 -     use crate::Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQ;
+27 +     use crate::Chap45::BalancedTreePQ::BalancedTreePQ;
+   |
+
+error[E0425]: cannot find type `BalancedTreePQ` in this scope
+   --> src/Chap45/BalancedTreePQ.rs:787:75
+    |
+787 |     impl<T: StT + Ord + TotalOrder + std::fmt::Debug> std::fmt::Debug for BalancedTreePQ<T> {
+    |                                                                           ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BalancedTreePQ` in this scope
+   --> src/Chap45/BalancedTreePQ.rs:793:49
+    |
+793 |     impl<T: StT + Ord + TotalOrder> Display for BalancedTreePQ<T> {
+    |                                                 ^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 4 previous errors
+
+Some errors have detailed explanations: E0425, E0432.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 27s

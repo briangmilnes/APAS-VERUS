@@ -1,0 +1,10 @@
+verification results:: 4437 verified, 0 errors
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2/rust_verify_test)
+    Finished `release` profile [optimized] target(s) in 0.82s
+────────────
+ Nextest run ID 4cebc6e3-cbab-4d0b-b455-b16b71610838 with nextest profile: default
+    Starting 1 test across 34 binaries (144 tests skipped)
+        PASS [   1.068s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_iter_over_subslice
+────────────
+     Summary [   1.068s] 1 test run: 1 passed, 144 skipped
+Elapsed: 67s

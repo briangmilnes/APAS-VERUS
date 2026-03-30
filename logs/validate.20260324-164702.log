@@ -1,0 +1,108 @@
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:256:29
+    |
+256 | ...                   assert forall|x: T| new_left.tree_contains(x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:257:33
+    |
+257 | ...                   T::le(x, node_val) && x != node_val
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:259:29
+    |
+259 | ...                   assert forall|x: T| old_right.tree_contains(x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:260:33
+    |
+260 | ...                   T::le(node_val, x) && x != node_val by {};
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:280:29
+    |
+280 | ...                   assert forall|x: T| old_left.tree_contains(x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:281:33
+    |
+281 | ...                   T::le(x, node_val) && x != node_val by {};
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:282:29
+    |
+282 | ...                   assert forall|x: T| new_right.tree_contains(x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:283:33
+    |
+283 | ...                   T::le(node_val, x) && x != node_val
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:118:29
+    |
+118 | ...                   assert forall|z: T| old_lr.tree_contains(z) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:119:33
+    |
+119 | ...                   T::le(z, y_val) && z != y_val
+    |                       ^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:124:29
+    |
+124 | ...                   assert forall|z: T| right_sub.tree_contains(z) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:125:33
+    |
+125 | ...                   T::le(x_val, z) && z != x_val
+    |                       ^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:184:29
+    |
+184 | ...                   assert forall|z: T| old_rl.tree_contains(z) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:185:33
+    |
+185 | ...                   T::le(x_val, z) && z != x_val
+    |                       ^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:190:29
+    |
+190 | ...                   assert forall|z: T| left_sub.tree_contains(z) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:191:33
+    |
+191 | ...                   T::le(z, y_val) && z != y_val
+    |                       ^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quant

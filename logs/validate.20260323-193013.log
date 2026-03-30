@@ -1,0 +1,360 @@
+error: expected `,`
+    --> src/Chap43/OrderedTableStEph.rs:1355:45
+     |
+1355 |                     len as nat < usize::MAX as nat,
+     |                                             ^^
+
+error[E0425]: cannot find type `OrderedTableStEph` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:3053:52
+     |
+3053 |     impl<K: StT + Ord, V: StT + Ord> PartialEq for OrderedTableStEph<K, V> {
+     |                                                    ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableStEph` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:3059:53
+     |
+3059 |     impl<K: StT + Ord, V: StT + Ord> fmt::Debug for OrderedTableStEph<K, V> {
+     |                                                     ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableStEph` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:3065:55
+     |
+3065 |     impl<K: StT + Ord, V: StT + Ord> fmt::Display for OrderedTableStEph<K, V> {
+     |                                                       ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableStEph` in this scope
+  --> src/Chap43/OrderedTableMtEph.rs:53:52
+   |
+53 |     impl<K: MtKey, V: MtVal + Ord> RwLockPredicate<OrderedTableStEph<K, V>> for OrderedTableMtEphInv {
+   |                                                    ^^^^^^^^^^^^^^^^^
+...
+61 |     pub struct OrderedTableMtEph<K: MtKey, V: MtVal + Ord> {
+   |     ------------------------------------------------------ similarly named struct `OrderedTableMtEph` defined here
+   |
+help: a struct with a similar name exists
+   |
+53 -     impl<K: MtKey, V: MtVal + Ord> RwLockPredicate<OrderedTableStEph<K, V>> for OrderedTableMtEphInv {
+53 +     impl<K: MtKey, V: MtVal + Ord> RwLockPredicate<OrderedTableMtEph<K, V>> for OrderedTableMtEphInv {
+   |
+
+error[E0425]: cannot find type `OrderedTableStEph` in this scope
+  --> src/Chap43/OrderedTableMtEph.rs:54:35
+   |
+54 |         open spec fn inv(self, v: OrderedTableStEph<K, V>) -> bool {
+   |                                   ^^^^^^^^^^^^^^^^^
+...
+61 |     pub struct OrderedTableMtEph<K: MtKey, V: MtVal + Ord> {
+   |     ------------------------------------------------------ similarly named struct `OrderedTableMtEph` defined here
+   |
+help: a struct with a similar name exists
+   |
+54 -         open spec fn inv(self, v: OrderedTableStEph<K, V>) -> bool {
+54 +         open spec fn inv(self, v: OrderedTableMtEph<K, V>) -> bool {
+   |
+
+error[E0425]: cannot find type `OrderedTableStEph` in this scope
+  --> src/Chap43/OrderedTableMtEph.rs:62:34
+   |
+62 |         pub locked_table: RwLock<OrderedTableStEph<K, V>, OrderedTableMtEphInv>,
+   |                                  ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableStEph` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:738:49
+    |
+ 61 |     pub struct OrderedTableMtEph<K: MtKey, V: MtVal + Ord> {
+    |     ------------------------------------------------------ similarly named struct `OrderedTableMtEph` defined here
+...
+738 |     fn from_st<K: MtKey, V: MtVal + Ord>(inner: OrderedTableStEph<K, V>) -> (s: OrderedTableMtEph<K, V>)
+    |                                                 ^^^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+738 -     fn from_st<K: MtKey, V: MtVal + Ord>(inner: OrderedTableStEph<K, V>) -> (s: OrderedTableMtEph<K, V>)
+738 +     fn from_st<K: MtKey, V: MtVal + Ord>(inner: OrderedTableMtEph<K, V>) -> (s: OrderedTableMtEph<K, V>)
+    |
+
+error[E0425]: cannot find function `from_sorted_entries` in module `crate::Chap43::OrderedTableStEph::OrderedTableStEph`
+   --> src/Chap43/OrderedTableMtEph.rs:769:74
+    |
+769 |         let inner = crate::Chap43::OrderedTableStEph::OrderedTableStEph::from_sorted_entries(entries);
+    |                                                                          ^^^^^^^^^^^^^^^^^^^ not found in `crate::Chap43::OrderedTableStEph::OrderedTableStEph`
+    |
+help: consider importing one of these functions
+    |
+ 22 +     use crate::Chap42::TableMtEph::TableMtEph::from_sorted_entries;
+    |
+ 22 +     use crate::Chap42::TableStEph::TableStEph::from_sorted_entries;
+    |
+ 22 +     use crate::Chap42::TableStPer::TableStPer::from_sorted_entries;
+    |
+ 22 +     use crate::Chap43::OrderedTableMtEph::OrderedTableMtEph::from_sorted_entries;
+    |
+    = and 1 other candidate
+help: if you import `from_sorted_entries`, refer to it directly
+    |
+769 -         let inner = crate::Chap43::OrderedTableStEph::OrderedTableStEph::from_sorted_entries(entries);
+769 +         let inner = from_sorted_entries(entries);
+    |
+
+error[E0425]: cannot find type `OrderedTableStEph` in this scope
+  --> src/Chap43/AugOrderedTableStEph.rs:51:25
+   |
+51 |         pub base_table: OrderedTableStEph<K, V>,
+   |                         ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableStEph` in this scope
+  --> src/Chap43/AugOrderedTableStEph.rs:72:16
+   |
+47 | /     pub struct AugOrderedTableStEph<K: StT + Ord, V: StT + Ord, F>
+48 | |     where
+49 | |         F: Fn(&V, &V) -> V + Clone,
+...  |
+54 | |         pub cached_reduction: V,
+55 | |     }
+   | |_____- similarly named struct `AugOrderedTableStEph` defined here
+...
+72 |           base: &OrderedTableStEph<K, V>,
+   |                  ^^^^^^^^^^^^^^^^^
+   |
+help: a struct with a similar name exists
+   |
+72 |         base: &AugOrderedTableStEph<K, V>,
+   |                +++
+
+error[E0425]: cannot find type `OrderedTableStEphIter` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:819:36
+    |
+ 47 | /     pub struct AugOrderedTableStEph<K: StT + Ord, V: StT + Ord, F>
+ 48 | |     where
+ 49 | |         F: Fn(&V, &V) -> V + Clone,
+...   |
+ 54 | |         pub cached_reduction: V,
+ 55 | |     }
+    | |_____- similarly named struct `AugOrderedTableStEph` defined here
+...
+819 |           pub fn iter(&self) -> (it: OrderedTableStEphIter<K, V>)
+    |                                      ^^^^^^^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+819 -         pub fn iter(&self) -> (it: OrderedTableStEphIter<K, V>)
+819 +         pub fn iter(&self) -> (it: AugOrderedTableStEph<K, V>)
+    |
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:824:17
+    |
+824 |                 iter_invariant(&it),
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing one of these functions
+    |
+ 19 +     use crate::Chap05::SetMtEph::SetMtEph::iter_invariant;
+    |
+ 19 +     use crate::Chap05::SetStEph::SetStEph::iter_invariant;
+    |
+ 19 +     use crate::Chap17::MathSeq::MathSeq::iter_invariant;
+    |
+ 19 +     use crate::Chap18::ArraySeq::ArraySeq::iter_invariant;
+    |
+    = and 21 other candidates
+
+error[E0425]: cannot find type `OrderedTableStEphIter` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:832:25
+    |
+ 47 | /     pub struct AugOrderedTableStEph<K: StT + Ord, V: StT + Ord, F>
+ 48 | |     where
+ 49 | |         F: Fn(&V, &V) -> V + Clone,
+...   |
+ 54 | |         pub cached_reduction: V,
+ 55 | |     }
+    | |_____- similarly named struct `AugOrderedTableStEph` defined here
+...
+832 |           type IntoIter = OrderedTableStEphIter<K, V>;
+    |                           ^^^^^^^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+832 -         type IntoIter = OrderedTableStEphIter<K, V>;
+832 +         type IntoIter = AugOrderedTableStEph<K, V>;
+    |
+
+error[E0425]: cannot find function `iter_invariant` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:838:17
+    |
+838 |                 iter_invariant(&it),
+    |                 ^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing one of these functions
+    |
+ 19 +     use crate::Chap05::SetMtEph::SetMtEph::iter_invariant;
+    |
+ 19 +     use crate::Chap05::SetStEph::SetStEph::iter_invariant;
+    |
+ 19 +     use crate::Chap17::MathSeq::MathSeq::iter_invariant;
+    |
+ 19 +     use crate::Chap18::ArraySeq::ArraySeq::iter_invariant;
+    |
+    = and 21 other candidates
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStEph`
+   --> src/Chap43/OrderedTableMtEph.rs:329:25
+    |
+329 |             let inner = OrderedTableStEph::empty();
+    |                         ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStEph`
+    |
+help: a struct with a similar name exists
+    |
+329 -             let inner = OrderedTableStEph::empty();
+329 +             let inner = OrderedTableMtEph::empty();
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStEph`
+   --> src/Chap43/OrderedTableMtEph.rs:337:25
+    |
+337 |             let inner = OrderedTableStEph::singleton(k, v);
+    |                         ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStEph`
+    |
+help: a struct with a similar name exists
+    |
+337 -             let inner = OrderedTableStEph::singleton(k, v);
+337 +             let inner = OrderedTableMtEph::singleton(k, v);
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStEph`
+   --> src/Chap43/OrderedTableMtEph.rs:401:25
+    |
+401 |             let inner = OrderedTableStEph::tabulate(f, keys);
+    |                         ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStEph`
+    |
+help: a struct with a similar name exists
+    |
+401 -             let inner = OrderedTableStEph::tabulate(f, keys);
+401 +             let inner = OrderedTableMtEph::tabulate(f, keys);
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStEph`
+   --> src/Chap43/OrderedTableMtEph.rs:584:29
+    |
+584 |             let empty_val = OrderedTableStEph::empty();
+    |                             ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStEph`
+    |
+help: a struct with a similar name exists
+    |
+584 -             let empty_val = OrderedTableStEph::empty();
+584 +             let empty_val = OrderedTableMtEph::empty();
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStEph`
+   --> src/Chap43/OrderedTableMtEph.rs:641:29
+    |
+641 |             let empty_val = OrderedTableStEph::empty();
+    |                             ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStEph`
+    |
+help: a struct with a similar name exists
+    |
+641 -             let empty_val = OrderedTableStEph::empty();
+641 +             let empty_val = OrderedTableMtEph::empty();
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStEph`
+   --> src/Chap43/AugOrderedTableStEph.rs:433:24
+    |
+433 |             let base = OrderedTableStEph::empty();
+    |                        ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStEph`
+    |
+help: a struct with a similar name exists
+    |
+433 |             let base = AugOrderedTableStEph::empty();
+    |                        +++
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStEph`
+   --> src/Chap43/AugOrderedTableStEph.rs:447:24
+    |
+447 |             let base = OrderedTableStEph::singleton(k, v.clone());
+    |                        ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStEph`
+    |
+help: a struct with a similar name exists
+    |
+447 |             let base = AugOrderedTableStEph::singleton(k, v.clone());
+    |                        +++
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStEph`
+   --> src/Chap43/AugOrderedTableStEph.rs:515:30
+    |
+515 |             let base_table = OrderedTableStEph::tabulate(f, keys);
+    |                              ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStEph`
+    |
+help: a struct with a similar name exists
+    |
+515 |             let base_table = AugOrderedTableStEph::tabulate(f, keys);
+    |                              +++
+
+error[E0425]: cannot find function `lemma_pair_set_to_map_dom_finite` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:483:17
+    |
+483 |                   lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStEph.rs:274:5
+    |
+274 | /     pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)
+275 | |         ensures spec_entries_to_map(entries).dom().finite()
+276 | |         decreases entries.len()
+...   |
+281 | |     }
+    | |_____- similarly named function `lemma_entries_to_map_finite` defined here
+    |
+help: a function with a similar name exists
+    |
+483 -                 lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
+483 +                 lemma_entries_to_map_finite(self.base_table.tree@);
+    |
+
+error[E0425]: cannot find function `lemma_pair_set_to_map_dom_finite` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:797:17
+    |
+797 |                   lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStEph.rs:274:5
+    |
+274 | /     pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)
+275 | |         ensures spec_entries_to_map(entries).dom().finite()
+276 | |         decreases entries.len()
+...   |
+281 | |     }
+    | |_____- similarly named function `lemma_entries_to_map_finite` defined here
+    |
+help: a function with a similar name exists
+    |
+797 -                 lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
+797 +                 lemma_entries_to_map_finite(self.base_table.tree@);
+    |
+
+error[E0425]: cannot find function `lemma_pair_set_to_map_dom_finite` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:808:17
+    |
+808 |                   lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStEph.rs:274:5
+    |
+274 | /     pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)
+275 | |         ensures spec_entries_to_map(entries).dom().finite()
+276 | |         decreases entries.len()
+...   |
+281 | |     }
+    | |_____- similarly named function `lemma_entries_to_map_finite` defined here
+    |
+help: a function with a similar name exists
+    |
+808 -                 lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
+808 +                 lemma_entries_to_map_finite(self.base_table.tree@);
+    |
+
+error: aborting due to 26 previous errors
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 11s

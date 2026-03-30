@@ -1,0 +1,107 @@
+error: assertion failed
+   --> src/Chap55/CycleDetectStEph.rs:327:24
+    |
+327 |                 assert(ext_path.last() == vertex as int);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap55/CycleDetectStEph.rs:355:21
+    |
+355 |             implies #[trigger] ancestors@[j] == old(ancestors)@[j] by {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+ext_path.last() == vertex 
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:302:48
+    |
+302 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:314:32
+    |
+314 |                 ancestors@ =~= old(ancestors)@.update(vertex as int, true),
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:97:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:161:44
+    |
+161 |                 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:343:35
+    |
+343 |             assert(ancestors@ =~= old(ancestors)@.update(vertex as int, true));
+    |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:97:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:327:24
+    |
+327 |                 assert(ext_path.last() == vertex as int);
+    |                        ^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:154:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/CycleDetectStEph.rs:328:45
+    |
+328 |                 assert(spec_has_edge(graph, ext_path.last(), neighbor as int));
+    |                                             ^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:154:12
+    |
+    = note: recommendation not met
+
+error: postcondition not satisfied
+   --> src/Chap55/CycleDetectStEph.rs:126:17
+    |
+126 |                 has_cycle == !spec_is_dag(graph),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+418 |             false
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap55/CycleDetectStEph.rs:126:17
+    |
+126 |                 has_cycle == !spec_is_dag(graph),
+    |                 ^^^^^^^^^     ^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == !(spec_is_dag(old(graph)))
+|   %return ==>
+|       !(spec_is_dag(old(graph))) ✘
+|       |   (exists |path| spec_is_path(old(graph), path) && path.len() >= 2 && path.index(0) == path.last()) 
+|       +---
+|   !(spec_is_dag(old(graph))) ==>
+|       %return ✘
++---
+
+verification results:: 2082 verified, 3 errors
+error: aborting due to 3 previous errors
+

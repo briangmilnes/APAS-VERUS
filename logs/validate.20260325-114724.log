@@ -1,0 +1,15 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+  --> src/Chap65/UnionFindStEph.rs:91:11
+   |
+91 |       proof fn lemma_insert_preserves_wf<V: StT + Hash>(
+   |  ___________^
+92 | |         uf: UnionFindStEph<V>,
+93 | |         old_uf: UnionFindStEph<V>,
+94 | |         v: V,
+95 | |     )
+   | |_____^
+
+verification results:: 4870 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 88s

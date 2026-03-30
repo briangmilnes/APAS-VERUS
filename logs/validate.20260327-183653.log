@@ -1,0 +1,46 @@
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1125:13
+     |
+1125 |             reveal(spec_uf_wf);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1326:21
+     |
+1326 |                     reveal(spec_uf_wf);
+     |                     ^^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStEph.rs:45:14
+   |
+45 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStPer.rs:47:14
+   |
+47 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap42/TableMtEph.rs:2086:21
+     |
+2086 | /                     forall|j: int| 0 <= j < sources.len() ==>
+2087 | |                         0 <= #[trigger] sources[j] < old_view.len()
+2088 | |                         && old_view[sources[j]].0 == kept@[j].0@
+2089 | |                         && old_view[sources[j]].1 == kept@[j].1@
+2090 | |                         && !keys@.contains(kept@[j].0@),
+     | |_______________________________________________________^
+
+verification results:: 5341 verified, 1 errors
+error: aborting due to 1 previous error; 5 warnings emitted
+
+Elapsed: 163s
+Sampled Memory Usage: peak rust_verify RSS: 16835MB, peak z3 RSS: 2722MB, min free: 1771MB
+Sampled CPU Usage: rust_verify: 349s, z3 children: 249s

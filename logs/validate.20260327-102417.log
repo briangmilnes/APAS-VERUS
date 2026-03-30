@@ -1,0 +1,43 @@
+error: Verus does not recognize this trait bound: <{closure@src/Chap52/EdgeSetGraphMtPer.rs:154:17: 154:28} as std::clone::Clone>
+   --> src/Chap52/EdgeSetGraphMtPer.rs:153:28
+    |
+153 |               let filtered = self.edges.filter(
+    |  ____________________________^
+154 | |                 move |edge| {
+155 | |                     let Pair(eu, _) = edge;
+156 | |                     *eu == u_clone
+157 | |                 },
+158 | |                 Ghost(|v: (V::V, V::V)| v.0 == u_view),
+159 | |             );
+    | |_____________^
+
+error: Verus does not recognize this trait bound: <{closure@src/Chap52/EdgeSetGraphMtPer.rs:233:17: 233:23} as std::clone::Clone>
+   --> src/Chap52/EdgeSetGraphMtPer.rs:232:29
+    |
+232 |               let new_edges = self.edges.filter(
+    |  _____________________________^
+233 | |                 |edge| {
+234 | |                     let Pair(u, w) = edge;
+235 | |                     *u != v_clone && *w != v_clone
+236 | |                 },
+237 | |                 Ghost(|p: (V::V, V::V)| p.0 != v_view && p.1 != v_view),
+238 | |             );
+    | |_____________^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphMtPer.rs:34:14
+   |
+34 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: aborting due to 2 previous errors; 2 warnings emitted
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 764MB, peak z3 RSS: 0MB, min free: 22083MB
+Sampled CPU Usage: rust_verify: 8s, z3 children: 0s

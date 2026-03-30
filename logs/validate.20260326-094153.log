@@ -1,0 +1,93 @@
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+   --> src/Chap43/OrderedSetMtEph.rs:185:23
+    |
+ 98 |     pub trait OrderedSetMtEphTrait<T: MtKey + TotalOrder + 'static>: Sized + View<V = Set<<T as View>::V>> {
+    |                                    - method `cmp_spec` not found for this type parameter
+...
+185 |                     v.cmp_spec(&t) == Less || v@ == t@;
+    |                       ^^^^^^^^
+    |
+   --> vstd/std_specs/cmp.rs:121:12
+    |
+    = note: the method is available for `T` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+    |
+ 19 +     use vstd::std_specs::cmp::OrdSpec;
+    |
+help: there is a method `partial_cmp_spec` with a similar name
+    |
+185 |                     v.partial_cmp_spec(&t) == Less || v@ == t@;
+    |                       ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+   --> src/Chap43/OrderedSetMtEph.rs:195:23
+    |
+ 98 |     pub trait OrderedSetMtEphTrait<T: MtKey + TotalOrder + 'static>: Sized + View<V = Set<<T as View>::V>> {
+    |                                    - method `cmp_spec` not found for this type parameter
+...
+195 |                     t.cmp_spec(&v) == Less || v@ == t@;
+    |                       ^^^^^^^^
+    |
+   --> vstd/std_specs/cmp.rs:121:12
+    |
+    = note: the method is available for `T` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+    |
+ 19 +     use vstd::std_specs::cmp::OrdSpec;
+    |
+help: there is a method `partial_cmp_spec` with a similar name
+    |
+195 |                     t.partial_cmp_spec(&v) == Less || v@ == t@;
+    |                       ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+   --> src/Chap43/OrderedSetMtEph.rs:203:51
+    |
+ 98 |     pub trait OrderedSetMtEphTrait<T: MtKey + TotalOrder + 'static>: Sized + View<V = Set<<T as View>::V>> {
+    |                                    - method `cmp_spec` not found for this type parameter
+...
+203 |                 predecessor matches Some(v) ==> v.cmp_spec(k) == Less,
+    |                                                   ^^^^^^^^
+    |
+   --> vstd/std_specs/cmp.rs:121:12
+    |
+    = note: the method is available for `T` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+    |
+ 19 +     use vstd::std_specs::cmp::OrdSpec;
+    |
+help: there is a method `partial_cmp_spec` with a similar name
+    |
+203 |                 predecessor matches Some(v) ==> v.partial_cmp_spec(k) == Less,
+    |                                                   ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+   --> src/Chap43/OrderedSetMtEph.rs:205:56
+    |
+ 98 |     pub trait OrderedSetMtEphTrait<T: MtKey + TotalOrder + 'static>: Sized + View<V = Set<<T as View>::V>> {
+    |                                    - method `cmp_spec` not found for this type parameter
+...
+205 |                     #[trigger] self@.contains(t@) && t.cmp_spec(k) == Less ==>
+    |                                                        ^^^^^^^^
+    |
+   --> vstd/std_specs/cmp.rs:121:12
+    |
+    = note: the method is available for `T` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+    |
+ 19 +     use vstd::std_specs::cmp::OrdSpec;
+    |
+help: there is a method `partial_cmp_spec` with a similar name
+    |
+205 |                     #[trigger] self@.contains(t@) && t.partial_cmp_spec(k) == Less ==>
+    |                                                        ++++++++
+
+er

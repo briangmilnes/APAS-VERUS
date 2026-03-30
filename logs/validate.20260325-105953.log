@@ -1,0 +1,67 @@
+error[E0425]: cannot find function `obeys_feq_clone` in this scope
+   --> src/Chap65/UnionFindStEph.rs:257:28
+    |
+257 |                     assert(obeys_feq_clone::<V>());
+    |                            ^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:67:5
+    |
+ 67 |     pub open spec fn obeys_feq_full<T: Eq + View + Clone + Sized>() -> bool {
+    |     ----------------------------------------------------------------------- similarly named function `obeys_feq_full` defined here
+    |
+help: a function with a similar name exists
+    |
+257 -                     assert(obeys_feq_clone::<V>());
+257 +                     assert(obeys_feq_full::<V>());
+    |
+help: consider importing this function
+    |
+ 14 +     use crate::vstdplus::feq::feq::obeys_feq_clone;
+    |
+
+error[E0425]: cannot find function `obeys_feq_clone` in this scope
+   --> src/Chap65/UnionFindStEph.rs:263:28
+    |
+263 |                     assert(obeys_feq_clone::<V>());
+    |                            ^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:67:5
+    |
+ 67 |     pub open spec fn obeys_feq_full<T: Eq + View + Clone + Sized>() -> bool {
+    |     ----------------------------------------------------------------------- similarly named function `obeys_feq_full` defined here
+    |
+help: a function with a similar name exists
+    |
+263 -                     assert(obeys_feq_clone::<V>());
+263 +                     assert(obeys_feq_full::<V>());
+    |
+help: consider importing this function
+    |
+ 14 +     use crate::vstdplus::feq::feq::obeys_feq_clone;
+    |
+
+error[E0425]: cannot find function `obeys_feq_clone` in this scope
+   --> src/Chap65/UnionFindStEph.rs:268:28
+    |
+268 |                     assert(obeys_feq_clone::<V>());
+    |                            ^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:67:5
+    |
+ 67 |     pub open spec fn obeys_feq_full<T: Eq + View + Clone + Sized>() -> bool {
+    |     ----------------------------------------------------------------------- similarly named function `obeys_feq_full` defined here
+    |
+help: a function with a similar name exists
+    |
+268 -                     assert(obeys_feq_clone::<V>());
+268 +                     assert(obeys_feq_full::<V>());
+    |
+help: consider importing this function
+    |
+ 14 +     use crate::vstdplus::feq::feq::obeys_feq_clone;
+    |
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 15s

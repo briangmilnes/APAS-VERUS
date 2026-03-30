@@ -1,0 +1,107 @@
+error: postcondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:242:17
+    |
+242 |                 rank as int == self@.filter(|x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, *k) && t@ == x && t@ != k@).len();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+533 |             rank
+    |             ---- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetMtEph.rs:242:17
+    |
+242 |                 rank as int == self@.filter(|x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, *k) && t@ == x && t@ != k@).len();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).view().finite() ✔
+%return <= old(self).view().len() ✔
+%return == old(self).view().filter((|x| (exists |t| t.le(old(k)) && t.view() == x && !(t.view() == old(k).view())))).len() ✘
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:251:17
+    |
+251 | ...       selected matches Some(v) ==> self@.filter(|x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, v) && t@ == x && t@ != v@).len() == i as int;
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+546 | ...   selected
+    |       -------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetMtEph.rs:251:46
+    |
+251 | ...e(v) ==> self@.filter(|x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, v) && t@ == x && t@ != v@).len() == i as int;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).view().finite() ✔
+old(i) >= old(self).view().len() ==>
+    let tmp%% = %return;
+        tmp%% is None ==>
+            true ✔
+        !(tmp%% is None) ==>
+            false ✔
+let tmp%% = %return;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            old(self).view().contains(v.view()) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+let tmp%% = %return;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            old(self).view().filter((|x| (exists |t| t.le(v) && t.view() == x && !(t.view() == v.view())))).len() == old(i) ✘
+    !(tmp%% is Some && true) ==>
+        true ✔
+
+error: constructed value may fail to meet its declared type invariant
+   --> src/Chap43/OrderedTableMtPer.rs:305:13
+    |
+ 62 |           spec fn inv(self) -> bool {
+    |                -------------------- type invariant declared here
+...
+305 | /             OrderedTableMtPer {
+306 | |                 locked_table: RwLock::new(result, Ghost(OrderedTableMtPerInv)),
+307 | |                 ghost_locked_table: Ghost(view),
+308 | |             }
+    | |_____________^
+
+note: diagnostics via expansion
+
+note: 
+
+tmp%.inv()
+|   tmp%.ghost_locked_table.dom().finite() 
+|       function is uninterpreted
++---
+
+error: constructed value may fail to meet its declared type invariant
+   --> src/Chap43/OrderedTableMtPer.rs:321:13
+    |
+ 62 |           spec fn inv(self) -> bool {
+    |                -------------------- type invariant declared here
+...
+321 | /             OrderedTableMtPer {
+322 | |                 locked_table: RwLock::new(result, Ghost(OrderedTableMtPerInv)),
+323 | |                 ghost_locked_table: Ghost(view),
+324 | |             }
+    | |_____________^
+
+note: 
+
+tmp%.inv()
+|   tmp%.ghost_locked_table.dom().finite() 
+|       function is uninterpreted
++---
+
+error: constructed value may fail to meet its declared type invariant
+   --> src/Chap43/OrderedTableMtPer.rs:515:13
+    |
+ 62 |           spec fn inv(self) -> bool {
+    |                -------------------- type invariant declared here
+...
+515 | /             OrderedTableMtPer {
+516 | |                 locked_table: RwLock::new(result, Ghost(OrderedTableMtPerInv)),
+517 | |                 ghost_locked_table: Gho

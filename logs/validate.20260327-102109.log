@@ -1,0 +1,473 @@
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/AdjTableGraphMtPer.rs:82:29
+   |
+82 |         fn empty() -> (out: Self)
+   |                             ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+82 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:111:52
+    |
+111 |         fn insert_vertex(&self, v: V) -> (updated: Self)
+    |                                                    ^^^^ doesn't have a size known at compile-time
+    |
+    = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+    |
+111 |         fn insert_vertex(&self, v: V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:115:53
+    |
+115 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
+    |                                                     ^^^^ doesn't have a size known at compile-time
+    |
+    = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+    |
+115 |         fn delete_vertex(&self, v: &V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                          ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:119:56
+    |
+119 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
+    |                                                        ^^^^ doesn't have a size known at compile-time
+    |
+    = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+    |
+119 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                             ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:127:58
+    |
+127 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
+    |                                                          ^^^^ doesn't have a size known at compile-time
+    |
+    = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+    |
+127 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                               ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:53:29
+   |
+53 |         fn empty() -> (out: Self)
+   |                             ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+53 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:56:100
+   |
+56 |         fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> (out: Self)
+   |                                                                                                    ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+56 |         fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> (out: Self where Self: std::marker::Sized)
+   |                                                                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:87:52
+   |
+87 |         fn insert_vertex(&self, v: V) -> (updated: Self)
+   |                                                    ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+87 |         fn insert_vertex(&self, v: V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:91:53
+   |
+91 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
+   |                                                     ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+91 |         fn delete_vertex(&self, v: &V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                          ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:95:56
+   |
+95 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
+   |                                                        ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+95 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                             ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:99:58
+   |
+99 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
+   |                                                          ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+99 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                               ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/AdjTableGraphMtPer.rs:89:13
+   |
+89 |             ensures out.spec_adjtablegraphmtper_wf();
+   |             ^^^^^^^ doesn't have a size known at compile-time
+   |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+  --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+   |
+82 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/AdjTableGraphMtPer.rs:82:24
+   |
+82 |         fn empty() -> (out: Self)
+   |                        ^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+82 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:113:13
+    |
+113 |             ensures updated.spec_adjtablegraphmtper_wf(), updated.spec_adj().dom().contains(v@);
+    |             ^^^^^^^ doesn't have a size known at compile-time
+    |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+   --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+    |
+111 |         fn insert_vertex(&self, v: V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:111:43
+    |
+111 |         fn insert_vertex(&self, v: V) -> (updated: Self)
+    |                                           ^^^^^^^ doesn't have a size known at compile-time
+    |
+    = note: all function arguments must have a statically known size
+    = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+    |
+111 |         fn insert_vertex(&self, v: V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:117:13
+    |
+117 |             ensures updated.spec_adjtablegraphmtper_wf(), !updated.spec_adj().dom().contains(v@);
+    |             ^^^^^^^ doesn't have a size known at compile-time
+    |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+   --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+    |
+115 |         fn delete_vertex(&self, v: &V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                          ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:115:44
+    |
+115 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
+    |                                            ^^^^^^^ doesn't have a size known at compile-time
+    |
+    = note: all function arguments must have a statically known size
+    = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+    |
+115 |         fn delete_vertex(&self, v: &V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                          ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:121:13
+    |
+121 |             ensures
+    |             ^^^^^^^ doesn't have a size known at compile-time
+    |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+   --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+    |
+119 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                             ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:119:47
+    |
+119 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
+    |                                               ^^^^^^^ doesn't have a size known at compile-time
+    |
+    = note: all function arguments must have a statically known size
+    = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+    |
+119 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                             ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:129:13
+    |
+129 |             ensures
+    |             ^^^^^^^ doesn't have a size known at compile-time
+    |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+   --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+    |
+127 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                               ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:127:49
+    |
+127 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
+    |                                                 ^^^^^^^ doesn't have a size known at compile-time
+    |
+    = note: all function arguments must have a statically known size
+    = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+    |
+127 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                               ++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `nth` found for struct `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:173:36
+    |
+173 |                 let v = domain_seq.nth(i).clone();
+    |                                    ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:62:5
+    |
+ 62 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `nth` not found for this struct
+...
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<V>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:127:9
+    |
+127 | /         fn length(&self) -> (len: usize)
+128 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  8 +     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:54:13
+   |
+54 |             ensures out.spec_edgesetgraphmtper_wf();
+   |             ^^^^^^^ doesn't have a size known at compile-time
+   |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+  --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+   |
+53 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:53:24
+   |
+53 |         fn empty() -> (out: Self)
+   |                        ^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+53 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:63:13
+   |
+63 |             ensures out.spec_edgesetgraphmtper_wf();
+   |             ^^^^^^^ doesn't have a size known at compile-time
+   |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+  --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+   |
+56 |         fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> (out: Self where Self: std::marker::Sized)
+   |                                                                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:56:95
+   |
+56 |         fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> (out: Self)
+   |                                                                                               ^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+56 |         fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> (out: Self where Self: std::marker::Sized)
+   |                                                                                                         ++++++++++++++++++++++++++++++
+
+error[E0615]: attempted to take value of method `edges` on type `&Self`
+  --> src/Chap52/EdgeSetGraphMtPer.rs:82:69
+   |
+82 |             ensures neighbors@ == Set::new(|v: <V as View>::V| self.edges@.contains((u@, v)));
+   |                                                                     ^^^^^ method, not a field
+   |
+help: use parentheses to call the method
+   |
+82 |             ensures neighbors@ == Set::new(|v: <V as View>::V| self.edges()@.contains((u@, v)));
+   |                                                                          ++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:89:13
+   |
+89 |             ensures updated.spec_edgesetgraphmtper_wf();
+   |             ^^^^^^^ doesn't have a size known at compile-time
+   |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+  --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+   |
+87 |         fn insert_vertex(&self, v: V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:87:43
+   |
+87 |         fn insert_vertex(&self, v: V) -> (updated: Self)
+   |                                           ^^^^^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+87 |         fn insert_vertex(&self, v: V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:93:13
+   |
+93 |             ensures updated.spec_edgesetgraphmtper_wf(), !updated.vertices@.contains(v@);
+   |             ^^^^^^^ doesn't have a size known at compile-time
+   |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+  --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+   |
+91 |         fn delete_vertex(&self, v: &V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                          ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:91:44
+   |
+91 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
+   |                                            ^^^^^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+91 |         fn delete_vertex(&self, v: &V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                          ++++++++++++++++++++++++++++++
+
+error[E0615]: attempted to take value of method `vertices` on type `Self`
+  --> src/Chap52/EdgeSetGraphMtPer.rs:93:67
+   |
+93 |             ensures updated.spec_edgesetgraphmtper_wf(), !updated.vertices@.contains(v@);
+   |                                                                   ^^^^^^^^ method, not a field
+   |
+help: use parentheses to call the method
+   |
+93 |             ensures updated.spec_edgesetgraphmtper_wf(), !updated.vertices()@.contains(v@);
+   |                                                                           ++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:97:13
+   |
+97 |             ensures updated.spec_edgesetgraphmtper_wf();
+   |             ^^^^^^^ doesn't have a size known at compile-time
+   |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+  --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+   |
+95 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                             ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:95:47
+   |
+95 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
+   |                                               ^^^^^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+95 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                             ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/EdgeSetGraphMtPer.rs:101:13
+    |
+101 |             ensures updated.spec_edgesetgraphmtper_wf();
+    |             ^^^^^^^ doesn't have a size known at compile-time
+    |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+   --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+    |
+ 99 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                               ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:99:49
+   |
+99 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
+   |                                                 ^^^^^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+99 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                               ++++++++++++++++++++++++++++++
+
+error: aborting due to 36 previous errors
+
+Some errors have detailed explanations: E0277, E0599, E0615.
+For more information about an error, try `rustc --explain E0277`.
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 618MB, peak z3 RSS: 0MB, min free: 22247MB
+Sampled CPU Usage: rust_verify: 8s, z3 children: 0s

@@ -1,0 +1,180 @@
+error[E0034]: multiple applicable items in scope
+   --> src/Chap37/BSTRBMtEph.rs:105:24
+    |
+105 |                     T::le(x, node.key) && x != node.key)
+    |                        ^^ multiple `le` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::PartialOrd`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:1420:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:12:10
+    |
+ 12 |     spec fn le(self, other: Self) -> bool;
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+105 -                     T::le(x, node.key) && x != node.key)
+105 +                     std::cmp::PartialOrd::le(x, node.key) && x != node.key)
+    |
+105 -                     T::le(x, node.key) && x != node.key)
+105 +                     vstdplus::total_order::total_order::TotalOrder::le(x, node.key) && x != node.key)
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap37/BSTRBMtEph.rs:107:24
+    |
+107 |                     T::le(node.key, x) && x != node.key)
+    |                        ^^ multiple `le` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::PartialOrd`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:1420:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:12:10
+    |
+ 12 |     spec fn le(self, other: Self) -> bool;
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+107 -                     T::le(node.key, x) && x != node.key)
+107 +                     std::cmp::PartialOrd::le(node.key, x) && x != node.key)
+    |
+107 -                     T::le(node.key, x) && x != node.key)
+107 +                     vstdplus::total_order::total_order::TotalOrder::le(node.key, x) && x != node.key)
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap37/BSTRBMtEph.rs:185:25
+    |
+185 |                     (T::le(z, h_key) && z != h_key) by {};
+    |                         ^^ multiple `le` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::PartialOrd`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:1420:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:12:10
+    |
+ 12 |     spec fn le(self, other: Self) -> bool;
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+185 -                     (T::le(z, h_key) && z != h_key) by {};
+185 +                     (std::cmp::PartialOrd::le(z, h_key) && z != h_key) by {};
+    |
+185 -                     (T::le(z, h_key) && z != h_key) by {};
+185 +                     (vstdplus::total_order::total_order::TotalOrder::le(z, h_key) && z != h_key) by {};
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap37/BSTRBMtEph.rs:187:25
+    |
+187 |                     (T::le(h_key, z) && z != h_key) by {};
+    |                         ^^ multiple `le` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::PartialOrd`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:1420:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:12:10
+    |
+ 12 |     spec fn le(self, other: Self) -> bool;
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+187 -                     (T::le(h_key, z) && z != h_key) by {};
+187 +                     (std::cmp::PartialOrd::le(h_key, z) && z != h_key) by {};
+    |
+187 -                     (T::le(h_key, z) && z != h_key) by {};
+187 +                     (vstdplus::total_order::total_order::TotalOrder::le(h_key, z) && z != h_key) by {};
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap37/BSTRBMtEph.rs:197:31
+    |
+197 |                     assert(T::le(h_key, x_key) && x_key != h_key);
+    |                               ^^ multiple `le` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::PartialOrd`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:1420:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:12:10
+    |
+ 12 |     spec fn le(self, other: Self) -> bool;
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+197 -                     assert(T::le(h_key, x_key) && x_key != h_key);
+197 +                     assert(std::cmp::PartialOrd::le(h_key, x_key) && x_key != h_key);
+    |
+197 -                     assert(T::le(h_key, x_key) && x_key != h_key);
+197 +                     assert(vstdplus::total_order::total_order::TotalOrder::le(h_key, x_key) && x_key != h_key);
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap37/BSTRBMtEph.rs:199:29
+    |
+199 |                         (T::le(z, x_key) && z != x_key) by {};
+    |                             ^^ multiple `le` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::PartialOrd`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:1420:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:12:10
+    |
+ 12 |     spec fn le(self, other: Self) -> bool;
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+199 -                         (T::le(z, x_key) && z != x_key) by {};
+199 +                         (std::cmp::PartialOrd::le(z, x_key) && z != x_key) by {};
+    |
+199 -                         (T::le(z, x_key) && z != x_key) by {};
+199 +                         (vstdplus::total_order::total_order::TotalOrder::le(z, x_key) && z != x_key) by {};
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap37/BSTRBMtEph.rs:201:29
+    |
+201 |                         (T::le(x_key, z) && z != x_key) by {};
+    |                             ^^ multiple `le` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::PartialOrd`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:1420:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:12:10
+    |
+ 12 |     spec fn le(self, other: Self) -> bool;
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+201 -                         (T::le(x_key, z) && z != x_key) by {};
+201 +                         (std::cmp::PartialOrd::le(x_key, z) && z != x_key) by {};
+    |
+201 -                         (T::le(x_key, z) && z != x_key) by {};
+201 +                         (vstdplus::total_order::total_order::TotalOrder::le(x_key, z) && z != x_key) by {};
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap37/BSTRBMtEph.rs:203:29
+    |
+203 |                         (T::le(h_key, z) && z != h_key) by {
+    |                             ^^ multiple `le` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::PartialOrd`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:1420:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:12:10
+    |
+ 12 |     spec fn le(self, other: Self) -> bool;
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+203 -                         (T::le(h_key, z) && z != h_key) by {
+203 +                         (std::cmp::PartialOrd::le(h_key, z) && z != h_key) by {
+    |
+203 -                         (T::le(h_key, z) && z != h_key) by {
+203 +                         (vstdplus::total_order::total_order::TotalOrder::le(h_key, z) && z != h_key) by {
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap37/BSTRBMtEph.rs:226:29
+    |
+226 |               

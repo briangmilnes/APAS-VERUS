@@ -1,0 +1,61 @@
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:200:9
+    |
+200 |         loop
+    |         ^^^^
+
+error: precondition not satisfied
+   --> src/Chap65/KruskalStEph.rs:302:17
+    |
+302 |                 lemma_seq_index_in_map_to_set(eseq, j);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/seq_set.rs:208:9
+    |
+208 |         0 <= i < seq.len(),
+    |         ------------------ failed precondition
+
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:303:24
+    |
+303 |                 assert(graph@.A.contains(eseq[j]@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:274:9
+    |
+274 |         while i < edges_vec.len()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:226:24
+    |
+226 |                 assert(uf@.parent.contains_key(vseq[j]@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:180:5
+    |
+180 | /     pub fn kruskal_mst<V: HashOrd>(
+181 | |         graph: &LabUnDirGraphStEph<V, WrappedF64>,
+182 | |     ) -> (mst_edges: SetStEph<LabEdge<V, WrappedF64>>)
+    | |_____________________________________________________^
+
+note: diagnostics via expansion
+   --> src/vstdplus/seq_set.rs:208:14
+    |
+208 |         0 <= i < seq.len(),
+    |              ^
+
+note: 
+
+let tmp%% = 0;
+    let tmp%% = j;
+        let tmp%% = eseq.len();
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✘
+
+verification results:: 4916 verified, 3 errors
+error: aborting due to 6 previous errors
+
+Elapsed: 124s

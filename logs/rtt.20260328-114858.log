@@ -1,0 +1,29 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+error[E0119]: conflicting implementations of trait `vstdplus::clone_view::clone_view::ClonePreservesWf` for type `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<_>`
+   --> src/Chap41/AVLTreeSetStEph.rs:788:5
+    |
+788 |     impl<T: StT + Ord> ClonePreservesWf for AVLTreeSetStEph<T> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ conflicting implementation for `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<_>`
+    |
+   ::: src/vstdplus/clone_view.rs:120:5
+    |
+120 |     impl<T: Clone> ClonePreservesWf for T {
+    |     ------------------------------------- first implementation here
+
+error[E0119]: conflicting implementations of trait `vstdplus::clone_view::clone_view::ClonePreservesWf` for type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<_>`
+   --> src/Chap41/AVLTreeSetStPer.rs:680:5
+    |
+680 |     impl<T: StT + Ord> ClonePreservesWf for AVLTreeSetStPer<T> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ conflicting implementation for `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<_>`
+    |
+   ::: src/vstdplus/clone_view.rs:120:5
+    |
+120 |     impl<T: Clone> ClonePreservesWf for T {
+    |     ------------------------------------- first implementation here
+
+For more information about this error, try `rustc --explain E0119`.
+error: could not compile `apas-verus` (lib test) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `apas-verus` (lib) due to 2 previous errors
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 8s

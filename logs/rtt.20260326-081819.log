@@ -1,0 +1,141 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+error[E0433]: failed to resolve: could not find `Chap62` in `apas_verus`
+ --> tests/Chap62/TestStarPartitionStEph.rs:7:17
+  |
+7 | use apas_verus::Chap62::StarPartitionStEph::StarPartitionStEph::*;
+  |                 ^^^^^^ could not find `Chap62` in `apas_verus`
+
+error[E0425]: cannot find function `sequential_star_partition` in this scope
+  --> tests/Chap62/TestStarPartitionStEph.rs:44:36
+   |
+44 |     let (centers, partition_map) = sequential_star_partition(&graph);
+   |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0282]: type annotations needed
+  --> tests/Chap62/TestStarPartitionStEph.rs:47:16
+   |
+47 |     assert_eq!(partition_map.len(), 6);
+   |                ^^^^^^^^^^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+  --> tests/Chap62/TestStarPartitionStEph.rs:53:19
+   |
+53 |     for center in centers.iter() {
+   |                   ^^^^^^^ cannot infer type
+
+error[E0425]: cannot find function `sequential_star_partition` in this scope
+  --> tests/Chap62/TestStarPartitionStEph.rs:67:36
+   |
+67 |     let (centers, partition_map) = sequential_star_partition(&graph);
+   |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0282]: type annotations needed
+  --> tests/Chap62/TestStarPartitionStEph.rs:71:13
+   |
+71 |     assert!(centers.size() >= 1 && centers.size() <= 5);
+   |             ^^^^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+  --> tests/Chap62/TestStarPartitionStEph.rs:75:22
+   |
+75 |         let center = partition_map.get(&v).unwrap();
+   |                      ^^^^^^^^^^^^^ cannot infer type
+
+error[E0425]: cannot find function `sequential_star_partition` in this scope
+  --> tests/Chap62/TestStarPartitionStEph.rs:83:36
+   |
+83 |     let (centers, partition_map) = sequential_star_partition(&graph);
+   |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0282]: type annotations needed
+  --> tests/Chap62/TestStarPartitionStEph.rs:86:16
+   |
+86 |     assert_eq!(partition_map.len(), graph.sizeV() as usize);
+   |                ^^^^^^^^^^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+  --> tests/Chap62/TestStarPartitionStEph.rs:89:19
+   |
+89 |     for center in centers.iter() {
+   |                   ^^^^^^^ cannot infer type
+
+error[E0425]: cannot find function `sequential_star_partition` in this scope
+   --> tests/Chap62/TestStarPartitionStEph.rs:103:36
+    |
+103 |     let (centers, partition_map) = sequential_star_partition(&graph);
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0282]: type annotations needed
+   --> tests/Chap62/TestStarPartitionStEph.rs:105:16
+    |
+105 |     assert_eq!(centers.size(), 0);
+    |                ^^^^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> tests/Chap62/TestStarPartitionStEph.rs:106:16
+    |
+106 |     assert_eq!(partition_map.len(), 0);
+    |                ^^^^^^^^^^^^^ cannot infer type
+
+error[E0425]: cannot find function `sequential_star_partition` in this scope
+   --> tests/Chap62/TestStarPartitionStEph.rs:115:36
+    |
+115 |     let (centers, partition_map) = sequential_star_partition(&graph);
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0282]: type annotations needed
+   --> tests/Chap62/TestStarPartitionStEph.rs:118:16
+    |
+118 |     assert_eq!(centers.size(), 1);
+    |                ^^^^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> tests/Chap62/TestStarPartitionStEph.rs:120:16
+    |
+120 |     assert_eq!(partition_map.get(&0), Some(&0));
+    |                ^^^^^^^^^^^^^ cannot infer type
+
+error[E0433]: failed to resolve: could not find `Chap56` in `apas_verus`
+ --> tests/Chap56/TestPathWeightUtilsStPer.rs:6:17
+  |
+6 | use apas_verus::Chap56::PathWeightUtilsStPer::PathWeightUtilsStPer::*;
+  |                 ^^^^^^ could not find `Chap56` in `apas_verus`
+
+Some errors have detailed explanations: E0282, E0425, E0433.
+For more information about an error, try `rustc --explain E0282`.
+error: could not compile `apas-verus` (test "TestStarPartitionStEph") due to 16 previous errors
+warning: build failed, waiting for other jobs to finish...
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStPerS`
+  --> tests/Chap56/TestPathWeightUtilsStPer.rs:21:16
+   |
+21 |     assert_eq!(PathWeightUtilsStPerS::path_weight_int(&path, &weights), Some(3));
+   |                ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStPerS`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStPerS`
+  --> tests/Chap56/TestPathWeightUtilsStPer.rs:32:16
+   |
+32 |     assert_eq!(PathWeightUtilsStPerS::path_weight_int(&path, &weights), Some(2));
+   |                ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStPerS`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStPerS`
+  --> tests/Chap56/TestPathWeightUtilsStPer.rs:43:16
+   |
+43 |     assert_eq!(PathWeightUtilsStPerS::path_weight_float(&path, &weights), Some(dist(4.0)));
+   |                ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStPerS`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStPerS`
+  --> tests/Chap56/TestPathWeightUtilsStPer.rs:55:13
+   |
+55 |     assert!(PathWeightUtilsStPerS::validate_subpath_property_int(&path, &distances, &weights));
+   |             ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStPerS`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStPerS`
+  --> tests/Chap56/TestPathWeightUtilsStPer.rs:67:13
+   |
+67 |     assert!(PathWeightUtilsStPerS::validate_subpath_property_float(&path, &distances, &weights));
+   |             ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStPerS`
+
+For more information about this error, try `rustc --explain E0433`.
+error: could not compile `apas-verus` (test "TestPathWeightUtilsStPer") due to 6 previous errors
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 18s

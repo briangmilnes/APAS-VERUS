@@ -1,0 +1,27 @@
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1846:17
+     |
+1846 |                 vstd::set_lib::lemma_len_subset(new_tree@, old_tree);
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/set_lib.rs:1099:8
+     |
+     = note: failed precondition
+
+note: diagnostics via expansion
+ --> vstd/set_lib.rs:1099:8
+
+note: 
+
+old_tree.finite() ✔
+tmp%.subset_of(old_tree) ✘
+|   forall |a|
+|       tmp%.contains(a) ==>
+|           old_tree.contains(a) 
+|               function is uninterpreted
++---
+
+verification results:: 4370 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 70s

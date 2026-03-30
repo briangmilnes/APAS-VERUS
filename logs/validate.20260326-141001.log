@@ -1,0 +1,192 @@
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:136:17
+    |
+136 |                 spec_is_dag_per(graph) ==> spec_is_topo_order_per(graph, order@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+485 |             AVLTreeSeqStPerS::from_vec(reversed)
+    |             ------------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap55/TopoSortStPer.rs:64:12
+    |
+ 64 |         && order.no_duplicates()
+    |            ^^^^^^^^^^^^^^^^^^^^^
+ 65 |         && (forall|k: int| 0 <= k < order.len() ==> (#[trigger] order[k] as int) < graph@.len())
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+ 69 |             ==> i < j)
+    |                 ^^^^^
+...
+136 |                 spec_is_dag_per(graph) ==> spec_is_topo_order_per(graph, order@),
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view().len() == old(graph).view().len() ✔
+spec_is_dag_per(old(graph)) ==>
+    spec_is_topo_order_per(old(graph), %return.view()) ✘
+    |   %return.view().len() == old(graph).view().len() ✔
+    |   %return.view().no_duplicates() ✘
+    |   |   forall |i, j|
+    |   |       let tmp%% = 0 in let tmp%% = i in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+    |   |           !(%return.view().index(i) == %return.view().index(j)) 
+    |   +---
+    |   forall |k|
+    |       let tmp%% = 0 in let tmp%% = k in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+    |           %return.view().index(k) < old(graph).view().len() ✘
+    |   forall |i, j|
+    |       let tmp%% = 0 in let tmp%% = i in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && spec_has_edge_per(old(graph), %return.view().index(i), %return.view().index(j)) ==>
+    |           i < j ✘
+    +---
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:342:13
+    |
+342 |             topo_order.is_some() <==> spec_is_dag_per(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+382 |                     return None;
+    |                     ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:342:13
+    |
+342 |             topo_order.is_some() <==> spec_is_dag_per(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+405 |         Some(AVLTreeSeqStPerS::from_vec(reversed))
+    |         ------------------------------------------ at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStPer.rs:343:13
+    |
+343 |             topo_order.is_some() ==> spec_is_topo_order_per(graph, topo_order.unwrap()@),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+405 |         Some(AVLTreeSeqStPerS::from_vec(reversed))
+    |         ------------------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap55/TopoSortStPer.rs:342:13
+    |
+342 |             topo_order.is_some() <==> spec_is_dag_per(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+topo_order is Some == spec_is_dag_per(old(graph)) ✘
+|   topo_order is Some ==>
+|       spec_is_dag_per(old(graph)) ✘
+|       |   forall |path|
+|       |       spec_is_path_per(old(graph), path) && path.len() >= 2 ==>
+|       |           !(path.index(0) == path.last()) 
+|       +---
+|   spec_is_dag_per(old(graph)) ==>
+|       topo_order is Some ✘
++---
+topo_order is Some ==>
+    spec_is_topo_order_per(old(graph), topo_order.0.view()) ✔
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStEph.rs:236:17
+    |
+236 |                 spec_is_dag(graph) ==> spec_is_topo_order(graph, order@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+606 |             AVLTreeSeqStEphS::from_vec(reversed)
+    |             ------------------------------------ at the end of the function body
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap55/TopoSortStEph.rs:574:21
+    |
+574 |                     forall|j: int| #![trigger visited@[j]] 0 <= j < start ==> visited@[j],
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap55/TopoSortStEph.rs:81:12
+    |
+ 81 |         && order.no_duplicates()
+    |            ^^^^^^^^^^^^^^^^^^^^^
+ 82 |         && (forall|k: int| 0 <= k < order.len() ==> (#[trigger] order[k] as int) < graph@.len())
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+ 86 |             ==> i < j)
+    |                 ^^^^^
+...
+236 |                 spec_is_dag(graph) ==> spec_is_topo_order(graph, order@),
+    |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view().len() == old(graph).view().len() ✔
+spec_is_dag(old(graph)) ==>
+    spec_is_topo_order(old(graph), %return.view()) ✘
+    |   %return.view().len() == old(graph).view().len() ✔
+    |   %return.view().no_duplicates() ✘
+    |   |   forall |i, j|
+    |   |       let tmp%% = 0 in let tmp%% = i in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+    |   |           !(%return.view().index(i) == %return.view().index(j)) 
+    |   +---
+    |   forall |k|
+    |       let tmp%% = 0 in let tmp%% = k in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+    |           %return.view().index(k) < old(graph).view().len() ✘
+    |   forall |i, j|
+    |       let tmp%% = 0 in let tmp%% = i in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && spec_has_edge(old(graph), %return.view().index(i), %return.view().index(j)) ==>
+    |           i < j ✘
+    +---
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStEph.rs:483:13
+    |
+483 |             topo_order.is_some() <==> spec_is_dag(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+519 |                     return None;
+    |                     ----------- at this exit
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStEph.rs:483:13
+    |
+483 |             topo_order.is_some() <==> spec_is_dag(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+542 |         Some(AVLTreeSeqStEphS::from_vec(reversed))
+    |         ------------------------------------------ at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap55/TopoSortStEph.rs:484:13
+    |
+484 |             topo_order.is_some() ==> spec_is_topo_order(graph, topo_order.unwrap()@),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+542 |         Some(AVLTreeSeqStEphS::from_vec(reversed))
+    |         ------------------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap55/TopoSortStEph.rs:483:13
+    |
+483 |             topo_order.is_some() <==> spec_is_dag(graph),
+    |             ^^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^
+
+note: 
+
+topo_order is Some == spec_is_dag(old(graph)) ✘
+|   topo_order is Some ==>
+|       spec_is_dag(old(graph)) ✘
+|       |   forall |path|
+|       |       spec_is_path(old(graph), path) && path.len() >= 2 ==>
+|       |           !(path.index(0) == path.last()) 
+|       +---
+|   spec_is_dag(old(graph)) ==>
+|       topo_order is Some ✘
++---
+topo_order is Some ==>
+    spec_is_topo_order(old(graph), topo_order.0.view()) ✔
+
+verification results:: 2089 verified, 7 errors
+error: aborting due to 9 previous errors
+
+Elapsed: 18s
+Sampled Memory Usage: peak rust_verify RSS: 4261MB, peak z3 RSS: 5960MB, min free: 12276MB
+Sampled CPU Usage: rust_verify: 83s, z3 children: 96s

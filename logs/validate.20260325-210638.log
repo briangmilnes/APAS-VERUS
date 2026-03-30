@@ -1,0 +1,10 @@
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:246:9
+    |
+246 |         while i < edges_vec.len()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 4920 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 144s

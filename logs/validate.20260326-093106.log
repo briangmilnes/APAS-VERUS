@@ -1,0 +1,227 @@
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:258:25
+    |
+258 |             let inner = OrderedSetStEph::empty();
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedSetStEph.rs:234:17
+    |
+234 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetStEph.rs:234:17
+    |
+234 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:268:25
+    |
+268 |             let inner = OrderedSetStEph::singleton(x);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedSetStEph.rs:242:17
+    |
+242 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetStEph.rs:242:17
+    |
+242 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:396:29
+    |
+396 |             let mut inner = OrderedSetStEph::empty();
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedSetStEph.rs:234:17
+    |
+234 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: 
+
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:171:17
+    |
+171 |                 first matches Some(v) ==> forall|t: T| self@.contains(t@) ==> #[trigger] TotalOrder::le(v, t);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+424 |             first
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetMtEph.rs:171:90
+    |
+171 |                 first matches Some(v) ==> forall|t: T| self@.contains(t@) ==> #[trigger] TotalOrder::le(v, t);
+    |                                                                                          ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).view().finite() ✔
+(old(self).view().len() == 0) == let tmp%% = %return in if tmp%% is None { true } else { false } ✔
+let tmp%% = %return;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            old(self).view().contains(v.view()) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+let tmp%% = %return;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            forall |t|
+                old(self).view().contains(t.view()) ==>
+                    v.le(t) ✘
+    !(tmp%% is Some && true) ==>
+        true ✔
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:180:17
+    |
+180 |                 last matches Some(v) ==> forall|t: T| self@.contains(t@) ==> #[trigger] TotalOrder::le(t, v);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+436 |             last
+    |             ---- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetMtEph.rs:180:89
+    |
+180 |                 last matches Some(v) ==> forall|t: T| self@.contains(t@) ==> #[trigger] TotalOrder::le(t, v);
+    |                                                                                         ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).view().finite() ✔
+(old(self).view().len() == 0) == let tmp%% = %return in if tmp%% is None { true } else { false } ✔
+let tmp%% = %return;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            old(self).view().contains(v.view()) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+let tmp%% = %return;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            forall |t|
+                old(self).view().contains(t.view()) ==>
+                    t.le(v) ✘
+    !(tmp%% is Some && true) ==>
+        true ✔
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:188:17
+    |
+188 |                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+448 |             predecessor
+    |             ----------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:189:17
+    |
+189 | ...       predecessor matches Some(v) ==> forall|t: T| #![trigger t@] self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+448 | ...   predecessor
+    |       ----------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetMtEph.rs:188:49
+    |
+188 | ...me(v) ==> TotalOrder::le(v, *k) && v@ != k@,
+    |              ^^^^^^^^^^^^^^^^^^^^^
+189 | ...me(v) ==> forall|t: T| #![trigger t@] self@.contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
+    |                                                                                                      ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).view().finite() ✔
+let tmp%% = %return;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            old(self).view().contains(v.view()) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+let tmp%% = %return;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            v.le(old(k)) ✘
+                trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+            !(v.view() == old(k).view()) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+let tmp%% = %return;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            forall |t|
+                old(self).view().contains(t.view()) && t.le(old(k)) && !(t.view() == old(k).view()) ==>
+                    t.le(v) ✘
+                        trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+    !(tmp%% is Some && true) ==>
+        true ✔
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:197:17
+    |
+197 |                 successor mat

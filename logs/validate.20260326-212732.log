@@ -1,0 +1,26 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+  --> src/Chap65/KruskalStEph.rs:64:9
+   |
+64 | /         pub fn equals_check<V: HashOrd>(
+65 | |             uf: &mut UnionFindStEph<V>,
+66 | |             u: &V,
+67 | |             v: &V,
+68 | |         ) -> (same: bool)
+   | |________________________^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+  --> src/Chap65/KruskalStEph.rs:84:9
+   |
+84 | /         pub fn union_check<V: HashOrd>(
+85 | |             uf: &mut UnionFindStEph<V>,
+86 | |             u: &V,
+87 | |             v: &V,
+88 | |         )
+   | |_________^
+
+verification results:: 2407 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 62s
+Sampled Memory Usage: peak rust_verify RSS: 2766MB, peak z3 RSS: 4543MB, min free: 15650MB
+Sampled CPU Usage: rust_verify: 43s, z3 children: 89s

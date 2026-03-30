@@ -1,0 +1,115 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphMtPer.rs:36:14
+   |
+36 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: postcondition not satisfied
+   --> vstd/std_specs/cmp.rs:21:12
+    |
+    = note: failed this postcondition
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:667:13
+    |
+667 |             equal
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+ --> vstd/std_specs/cmp.rs:21:38
+
+note: 
+
+obeys_eq_spec() ==>
+    equal == old(self).eq_spec(old(other)) ✘
+equal == (old(self).view() == old(other).view()) ✔
+
+error: could not prove termination
+  --> src/Chap52/AdjTableGraphMtPer.rs:72:26
+   |
+72 |             m[k].len() + spec_sum_adj_sizes(m.remove(k))
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:192:48
+    |
+192 |         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:98:22
+    |
+ 98 |             requires self.spec_avltreesetmtper_wf(),
+    |                      ------------------------------ failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+tmp%.spec_avltreesetmtper_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:111:21
+    |
+111 |               ensures updated.spec_edgesetgraphmtper_wf();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+224 | /             EdgeSetGraphMtPer {
+225 | |                 vertices: new_vertices,
+226 | |                 edges: new_edges,
+227 | |             }
+    | |_____________- at the end of the function body
+
+note: 
+
+%return.spec_edgesetgraphmtper_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:241:32
+    |
+ 60 |                 vstd::laws_cmp::obeys_cmp_spec::<V>(),
+    |                 ------------------------------------- failed precondition
+...
+241 |         fn default() -> Self { Self::empty() }
+    |                                ^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+  --> src/Chap52/EdgeSetGraphMtPer.rs:60:17
+   |
+60 |                 vstd::laws_cmp::obeys_cmp_spec::<V>(),
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+  --> vstd/laws_eq.rs:18:8
+  --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+obeys_cmp_spec() 
+view_ord_consistent() 
+
+verification results:: 2746 verified, 5 errors
+error: aborting due to 5 previous errors; 2 warnings emitted
+
+Elapsed: 26s
+Sampled Memory Usage: peak rust_verify RSS: 3363MB, peak z3 RSS: 357MB, min free: 18994MB
+Sampled CPU Usage: rust_verify: 51s, z3 children: 43s

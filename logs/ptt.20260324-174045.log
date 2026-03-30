@@ -1,0 +1,2025 @@
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:182:17
+    |
+182 |                 reveal_with_fuel(spec_is_bst_link, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:183:17
+    |
+183 |                 reveal_with_fuel(link_contains, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:194:21
+    |
+194 |                     reveal_with_fuel(spec_is_bst_link, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:195:21
+    |
+195 |                     reveal_with_fuel(link_contains, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:218:21
+    |
+218 |                     reveal_with_fuel(spec_is_bst_link, 3);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:219:21
+    |
+219 |                     reveal_with_fuel(link_contains, 4);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:228:25
+    |
+228 |                         reveal_with_fuel(link_contains, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:238:25
+    |
+238 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:241:25
+    |
+241 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:244:25
+    |
+244 |                         reveal_with_fuel(link_contains, 4);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:266:17
+    |
+266 |                 reveal_with_fuel(spec_is_bst_link, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:267:17
+    |
+267 |                 reveal_with_fuel(link_contains, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:278:21
+    |
+278 |                     reveal_with_fuel(spec_is_bst_link, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:279:21
+    |
+279 |                     reveal_with_fuel(link_contains, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:302:21
+    |
+302 |                     reveal_with_fuel(spec_is_bst_link, 3);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:303:21
+    |
+303 |                     reveal_with_fuel(link_contains, 4);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:312:25
+    |
+312 |                         reveal_with_fuel(link_contains, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:322:25
+    |
+322 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:325:25
+    |
+325 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:328:25
+    |
+328 |                         reveal_with_fuel(link_contains, 4);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:421:21
+    |
+421 |                     reveal_with_fuel(spec_is_bst_link, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:422:21
+    |
+422 |                     reveal_with_fuel(link_contains, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:436:29
+    |
+436 | ...                   reveal_with_fuel(spec_is_bst_link, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:437:29
+    |
+437 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:449:33
+    |
+449 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:454:33
+    |
+454 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:463:33
+    |
+463 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:478:29
+    |
+478 | ...                   reveal_with_fuel(spec_is_bst_link, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:479:29
+    |
+479 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:491:33
+    |
+491 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:496:33
+    |
+496 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:505:33
+    |
+505 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:518:29
+    |
+518 | ...                   reveal_with_fuel(spec_is_bst_link, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:519:29
+    |
+519 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap23/BalBinTreeStEph.rs:358:9
+    |
+358 |         fn size(&self) -> (count: usize)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap23/BalBinTreeStEph.rs:364:35
+    |
+221 |             requires self.spec_balbintreesteph_wf(),
+    |                      ------------------------------ failed precondition
+...
+364 |                     let left_sz = node.left.size();
+    |                                   ^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap23/BalBinTreeStEph.rs:365:36
+    |
+221 |             requires self.spec_balbintreesteph_wf(),
+    |                      ------------------------------ failed precondition
+...
+365 |                     let right_sz = node.right.size();
+    |                                    ^^^^^^^^^^^^^^^^^
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap23/BalBinTreeStEph.rs:371:9
+    |
+371 |         fn height(&self) -> (h: usize)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap23/BalBinTreeStEph.rs:377:34
+    |
+228 |             requires self.spec_balbintreesteph_wf(),
+    |                      ------------------------------ failed precondition
+...
+377 |                     let left_h = node.left.height();
+    |                                  ^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap23/BalBinTreeStEph.rs:378:35
+    |
+228 |             requires self.spec_balbintreesteph_wf(),
+    |                      ------------------------------ failed precondition
+...
+378 |                     let right_h = node.right.height();
+    |                                   ^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:571:31
+    |
+571 |             min.is_some() ==> forall|x: T| link_contains(*link, x) ==> TotalOrder::le(*min.unwrap(), x),
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:571:44
+    |
+571 |             min.is_some() ==> forall|x: T| link_contains(*link, x) ==> TotalOrder::le(*min.unwrap(), x),
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:579:25
+    |
+579 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(node.key, x) by {
+    |                         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:579:45
+    |
+579 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(node.key, x) by {
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:597:25
+    |
+597 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(*min.unwrap(), x) by {
+    |                         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:597:45
+    |
+597 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(*min.unwrap(), x) by {
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:619:31
+    |
+619 |             max.is_some() ==> forall|x: T| link_contains(*link, x) ==> TotalOrder::le(x, *max.unwrap()),
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:619:44
+    |
+619 |             max.is_some() ==> forall|x: T| link_contains(*link, x) ==> TotalOrder::le(x, *max.unwrap()),
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:627:25
+    |
+627 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, node.key) by {
+    |                         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:627:45
+    |
+627 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, node.key) by {
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:645:25
+    |
+645 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, *max.unwrap()) by {
+    |                         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:645:45
+    |
+645 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, *max.unwrap()) by {
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:257:29
+    |
+257 | ...                   assert forall|x: T| new_left.tree_contains(x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:258:33
+    |
+258 | ...                   T::le(x, node_val) && x != node_val
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:260:29
+    |
+260 | ...                   assert forall|x: T| old_right.tree_contains(x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:261:33
+    |
+261 | ...                   T::le(node_val, x) && x != node_val by {};
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:281:29
+    |
+281 | ...                   assert forall|x: T| old_left.tree_contains(x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:282:33
+    |
+282 | ...                   T::le(x, node_val) && x != node_val by {};
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:283:29
+    |
+283 | ...                   assert forall|x: T| new_right.tree_contains(x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:284:33
+    |
+284 | ...                   T::le(node_val, x) && x != node_val
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:119:29
+    |
+119 | ...                   assert forall|z: T| old_lr.tree_contains(z) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:120:33
+    |
+120 | ...                   T::le(z, y_val) && z != y_val
+    |                       ^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:125:29
+    |
+125 | ...                   assert forall|z: T| right_sub.tree_contains(z) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:126:33
+    |
+126 | ...                   T::le(x_val, z) && z != x_val
+    |                       ^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:185:29
+    |
+185 | ...                   assert forall|z: T| old_rl.tree_contains(z) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:186:33
+    |
+186 | ...                   T::le(x_val, z) && z != x_val
+    |                       ^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:191:29
+    |
+191 | ...                   assert forall|z: T| left_sub.tree_contains(z) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:192:33
+    |
+192 | ...                   T::le(z, y_val) && z != y_val
+    |                       ^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap37/BSTAVLMtEph.rs:191:29
+    |
+191 | ...                   assert forall|z: T| left_sub.tree_contains(z) implies
+    |                       ^^^^^^
+
+verification results:: 4518 verified, 2 errors
+error: aborting due to 4 previous errors; 34 warnings emitted
+
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2/rust_verify_test)
+    Finished `release` profile [optimized] target(s) in 1.11s
+────────────
+ Nextest run ID c9e2d899-d308-4e80-8cfe-21af85f92f5b with nextest profile: default
+    Starting 157 tests across 37 binaries
+        PASS [   1.228s] rust_verify_test::HashSetWithViewPlus hash_set_wvp_for_iter
+        PASS [   1.273s] rust_verify_test::HashSetWithViewPlus hash_set_wvp_loop_loop
+        PASS [   1.293s] rust_verify_test::HashMapWithViewPlus hash_map_wvp_loop_loop
+        PASS [   1.319s] rust_verify_test::HashMapWithViewPlus hash_map_wvp_for_iter
+        PASS [   1.370s] rust_verify_test::MappingStEph mapping_st_eph_loop_loop
+        PASS [   1.440s] rust_verify_test::MappingStEph mapping_st_eph_for_iter
+        PASS [   1.258s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_for_borrow_into
+        PASS [   1.257s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_for_borrow_iter
+        PASS [   1.350s] rust_verify_test::ProveAVLTreeSeq avltreeseq_for_borrow_iter
+        PASS [   1.314s] rust_verify_test::ProveAVLTreeSeq avltreeseq_loop_borrow_iter
+        PASS [   1.225s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_loop_borrow_iter
+        PASS [   1.222s] rust_verify_test::ProveArraySeq arrayseq_filter
+        PASS [   1.225s] rust_verify_test::ProveArraySeq arrayseq_iterate_prefixes
+        PASS [   1.258s] rust_verify_test::ProveArraySeq arrayseq_for_iter
+        PASS [   1.268s] rust_verify_test::ProveArraySeq arrayseq_map
+        PASS [   1.301s] rust_verify_test::ProveArraySeq arrayseq_iterate
+        PASS [   1.307s] rust_verify_test::ProveArraySeq arrayseq_loop_loop
+        PASS [   1.292s] rust_verify_test::ProveArraySeq arrayseq_reduce
+        PASS [   1.160s] rust_verify_test::ProveArraySeq arrayseq_tabulate
+        PASS [   1.246s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_loop_loop
+        PASS [   1.270s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_for_iter
+        PASS [   1.397s] rust_verify_test::ProveArraySeq arrayseq_scan
+        PASS [   1.448s] rust_verify_test::ProveArraySeq arrayseq_scan_inclusive
+        PASS [   1.397s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_for_iter
+        PASS [   1.256s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_loop_loop
+        PASS [   1.224s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_borrow_into
+        PASS [   1.254s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_borrow_iter
+        PASS [   1.212s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_consume
+        PASS [   1.218s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_borrow_into
+        PASS [   1.258s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_borrow_iter
+        PASS [   1.256s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_consume
+        PASS [   1.232s] rust_verify_test::ProveArraySeqStPer arrayseqstper_for_iter
+        PASS [   1.231s] rust_verify_test::ProveArraySeqStPer arrayseqstper_loop_loop
+        PASS [   1.248s] rust_verify_test::ProveBFSMtEph chap54_bfsmteph_bottom_up_loop
+        PASS [   1.265s] rust_verify_test::ProveBFSMtEph chap54_bfsmteph_top_down_loop
+        PASS [   1.196s] rust_verify_test::ProveBFSStEph chap54_bfssteph_bottom_up_loop
+        PASS [   1.139s] rust_verify_test::ProveBFSStEph chap54_bfssteph_top_down_loop
+        PASS [   1.333s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_inorder
+        PASS [   1.310s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_postorder
+        PASS [   1.208s] rust_verify_test::ProveBalBinTreeStEph balbintree_inorder_spec_match
+        PASS [   1.306s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_preorder
+        PASS [   1.279s] rust_verify_test::ProveBalBinTreeStEph balbintree_leaf_iter_exhausted
+        PASS [   1.264s] rust_verify_test::ProveBalBinTreeStEph balbintree_leaf_traversals_empty
+        PASS [   1.247s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_inorder
+        PASS [   1.236s] rust_verify_test::ProveBalBinTreeStEph balbintree_postorder_spec_match
+        PASS [   1.302s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_preorder
+        PASS [   1.351s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_postorder
+        PASS [   1.279s] rust_verify_test::ProveBalBinTreeStEph balbintree_preorder_spec_match
+        PASS [   1.311s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_borrow_into
+        PASS [   1.297s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_borrow_iter
+        PASS [   1.329s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_consume
+        PASS [   1.287s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_borrow_iter
+        PASS [   1.330s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_borrow_into
+        PASS [   1.235s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_consume
+        PASS [   1.244s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_for_borrow_into
+        PASS [   1.260s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_for_borrow_iter
+        PASS [   1.243s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_operations
+        PASS [   1.275s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_loop_borrow_iter
+        PASS [   1.339s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_iter_over_subslice
+        PASS [   1.274s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_borrow_into
+        PASS [   1.338s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_borrow_iter
+        PASS [   1.212s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_consume
+        PASS [   1.235s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_borrow_iter
+        PASS [   1.268s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_borrow_into
+        PASS [   1.265s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_consume
+        PASS [   1.292s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_borrow_into
+        PASS [   1.226s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_borrow_iter
+        PASS [   1.210s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_consume
+        PASS [   1.227s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_borrow_into
+        PASS [   1.230s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_borrow_iter
+        PASS [   1.288s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_consume
+        PASS [   1.309s] rust_verify_test::ProveKleeneStPer kleene_alphabet
+        PASS [   1.305s] rust_verify_test::ProveKleeneStPer kleene_mem_plus
+        PASS [   1.206s] rust_verify_test::ProveKleeneStPer kleene_mem_star
+        PASS [   1.287s] rust_verify_test::ProveLinkedListStEph linkedliststeph_loop_loop
+        PASS [   1.320s] rust_verify_test::ProveLinkedListStEph linkedliststeph_for_iter
+        PASS [   1.263s] rust_verify_test::ProveLinkedListStPer linkedliststper_for_iter
+        PASS [   1.269s] rust_verify_test::ProveLinkedListStPer linkedliststper_loop_loop
+        FAIL [   1.036s] rust_verify_test::ProveMathSeq mathseq_for_borrow_iter
+  stdout ───
+
+    running 1 test
+    test mathseq_for_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        mathseq_for_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.03s
+
+  stderr ───
+    error: `apas_verus::Chap17::MathSeq::MathSeq::MathSeqGhostIter` is not supported (note: you may be able to add a Verus specification to this type with the `external_type_specification` attribute)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveMathSeq-e7ab5920bace3a6c-mathseq_for_borrow_iter/test.rs:24:5
+       |
+    24 |       for x in iter: it
+       |  _____^        ----  --
+    25 | |         invariant
+    26 | |             iter.elements == iter_seq,
+       | |             -------------------------
+    27 | |             items =~= iter_seq.take(iter.pos),
+       | |             ---------------------------------
+    28 | |             iter.pos <= iter_seq.len(),
+       | |             --------------------------
+    ...  |
+    33 | |     }
+       | |_____^
+       |
+       = help: The following declaration may resolve this error:
+               #[verifier::reject_recursive_types(T)]
+               #[verifier::external_type_specification]
+               pub struct ExMathSeqGhostIter<'a, T>(apas_verus::Chap17::MathSeq::MathSeq::MathSeqGhostIter<'a, T>);
+
+
+    error: aborting due to 1 previous error
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveMathSeq-e7ab5920bace3a6c-mathseq_for_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveMathSeq-e7ab5920bace3a6c-mathseq_for_borrow_iter/test.rs
+
+
+    thread 'mathseq_for_borrow_iter' (2802335) panicked at tests/Chap17/ProveMathSeq.rs:128:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   1.077s] rust_verify_test::ProveMathSeq mathseq_for_borrow_into
+  stdout ───
+
+    running 1 test
+    test mathseq_for_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        mathseq_for_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.07s
+
+  stderr ───
+    error: `apas_verus::Chap17::MathSeq::MathSeq::MathSeqGhostIter` is not supported (note: you may be able to add a Verus specification to this type with the `external_type_specification` attribute)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveMathSeq-e7ab5920bace3a6c-mathseq_for_borrow_into/test.rs:24:5
+       |
+    24 |       for x in iter: it
+       |  _____^        ----  --
+    25 | |         invariant
+    26 | |             iter.elements == iter_seq,
+       | |             -------------------------
+    27 | |             items =~= iter_seq.take(iter.pos),
+       | |             ---------------------------------
+    28 | |             iter.pos <= iter_seq.len(),
+       | |             --------------------------
+    ...  |
+    33 | |     }
+       | |_____^
+       |
+       = help: The following declaration may resolve this error:
+               #[verifier::reject_recursive_types(T)]
+               #[verifier::external_type_specification]
+               pub struct ExMathSeqGhostIter<'a, T>(apas_verus::Chap17::MathSeq::MathSeq::MathSeqGhostIter<'a, T>);
+
+
+    error: aborting due to 1 previous error
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveMathSeq-e7ab5920bace3a6c-mathseq_for_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveMathSeq-e7ab5920bace3a6c-mathseq_for_borrow_into/test.rs
+
+
+    thread 'mathseq_for_borrow_into' (2802334) panicked at tests/Chap17/ProveMathSeq.rs:156:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   1.234s] rust_verify_test::ProveMathSeq mathseq_for_consume
+        PASS [   1.237s] rust_verify_test::ProveMathSeq mathseq_loop_borrow_into
+        PASS [   1.292s] rust_verify_test::ProveMathSeq mathseq_loop_borrow_iter
+        PASS [   1.280s] rust_verify_test::ProveMathSeq mathseq_loop_consume
+        FAIL [   0.920s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_for_borrow_iter
+  stdout ───
+
+    running 1 test
+    test chap43_orderedsetsteph_for_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        chap43_orderedsetsteph_for_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.92s
+
+  stderr ───
+    error[E0308]: mismatched types
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedSetStEph-b993df90949011eb-chap43_orderedsetsteph_for_borrow_iter/test.rs:37:36
+       |
+    37 |         proof { items = items.push(x); }
+       |                               ---- ^ expected `u64`, found `&u64`
+       |                               |
+       |                               arguments to this method are incorrect
+       |
+    help: the return type of this call is `&u64` due to the type of the argument passed
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedSetStEph-b993df90949011eb-chap43_orderedsetsteph_for_borrow_iter/test.rs:37:25
+       |
+    37 |         proof { items = items.push(x); }
+       |                         ^^^^^^^^^^^-^
+       |                                    |
+       |                                    this argument influences the return type of `push`
+    note: method defined here
+      --> vstd/seq.rs:80:25
+    help: consider dereferencing the borrow
+       |
+    37 |         proof { items = items.push(*x); }
+       |                                    +
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0308`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedSetStEph-b993df90949011eb-chap43_orderedsetsteph_for_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedSetStEph-b993df90949011eb-chap43_orderedsetsteph_for_borrow_iter/test.rs
+
+
+    thread 'chap43_orderedsetsteph_for_borrow_iter' (2802504) panicked at tests/Chap43/ProveOrderedSetStEph.rs:97:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.969s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_for_borrow_into
+  stdout ───
+
+    running 1 test
+    test chap43_orderedsetsteph_for_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        chap43_orderedsetsteph_for_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.96s
+
+  stderr ───
+    error[E0308]: mismatched types
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedSetStEph-b993df90949011eb-chap43_orderedsetsteph_for_borrow_into/test.rs:37:36
+       |
+    37 |         proof { items = items.push(x); }
+       |                               ---- ^ expected `u64`, found `&u64`
+       |                               |
+       |                               arguments to this method are incorrect
+       |
+    help: the return type of this call is `&u64` due to the type of the argument passed
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedSetStEph-b993df90949011eb-chap43_orderedsetsteph_for_borrow_into/test.rs:37:25
+       |
+    37 |         proof { items = items.push(x); }
+       |                         ^^^^^^^^^^^-^
+       |                                    |
+       |                                    this argument influences the return type of `push`
+    note: method defined here
+      --> vstd/seq.rs:80:25
+    help: consider dereferencing the borrow
+       |
+    37 |         proof { items = items.push(*x); }
+       |                                    +
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0308`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedSetStEph-b993df90949011eb-chap43_orderedsetsteph_for_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedSetStEph-b993df90949011eb-chap43_orderedsetsteph_for_borrow_into/test.rs
+
+
+    thread 'chap43_orderedsetsteph_for_borrow_into' (2802476) panicked at tests/Chap43/ProveOrderedSetStEph.rs:130:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.965s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_loop_borrow_into
+  stdout ───
+
+    running 1 test
+    test chap43_orderedsetsteph_loop_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        chap43_orderedsetsteph_loop_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.96s
+
+  stderr ───
+    error[E0308]: mismatched types
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedSetStEph-b993df90949011eb-chap43_orderedsetsteph_loop_borrow_into/test.rs:41:40
+       |
+    41 |             proof { items = items.push(x); }
+       |                                   ---- ^ expected `u64`, found `&u64`
+       |                                   |
+       |                                   arguments to this method are incorrect
+       |
+    help: the return type of this call is `&u64` due to the type of the argument passed
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedSetStEph-b993df90949011eb-chap43_orderedsetsteph_loop_borrow_into/test.rs:41:29
+       |
+    41 |             proof { items = items.push(x); }
+       |                             ^^^^^^^^^^^-^
+       |                                        |
+       |                                        this argument influences the return type of `push`
+    note: method defined here
+      --> vstd/seq.rs:80:25
+    help: consider dereferencing the borrow
+       |
+    41 |             proof { items = items.push(*x); }
+       |                                        +
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0308`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedSetStEph-b993df90949011eb-chap43_orderedsetsteph_loop_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedSetStEph-b993df90949011eb-chap43_orderedsetsteph_loop_borrow_into/test.rs
+
+
+    thread 'chap43_orderedsetsteph_loop_borrow_into' (2802568) panicked at tests/Chap43/ProveOrderedSetStEph.rs:56:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.975s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_loop_borrow_iter
+  stdout ───
+
+    running 1 test
+    test chap43_orderedsetsteph_loop_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        chap43_orderedsetsteph_loop_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.97s
+
+  stderr ───
+    error[E0308]: mismatched types
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedSetStEph-b993df90949011eb-chap43_orderedsetsteph_loop_borrow_iter/test.rs:41:40
+       |
+    41 |             proof { items = items.push(x); }
+       |                                   ---- ^ expected `u64`, found `&u64`
+       |                                   |
+       |                                   arguments to this method are incorrect
+       |
+    help: the return type of this call is `&u64` due to the type of the argument passed
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedSetStEph-b993df90949011eb-chap43_orderedsetsteph_loop_borrow_iter/test.rs:41:29
+       |
+    41 |             proof { items = items.push(x); }
+       |                             ^^^^^^^^^^^-^
+       |                                        |
+       |                                        this argument influences the return type of `push`
+    note: method defined here
+      --> vstd/seq.rs:80:25
+    help: consider dereferencing the borrow
+       |
+    41 |             proof { items = items.push(*x); }
+       |                                        +
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0308`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedSetStEph-b993df90949011eb-chap43_orderedsetsteph_loop_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedSetStEph-b993df90949011eb-chap43_orderedsetsteph_loop_borrow_iter/test.rs
+
+
+    thread 'chap43_orderedsetsteph_loop_borrow_iter' (2802590) panicked at tests/Chap43/ProveOrderedSetStEph.rs:15:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.974s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_for_borrow_iter
+  stdout ───
+
+    running 1 test
+    test chap43_orderedtablesteph_for_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        chap43_orderedtablesteph_for_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.97s
+
+  stderr ───
+    error[E0308]: mismatched types
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStEph-eaa6cbe1b91ec503-chap43_orderedtablesteph_for_borrow_iter/test.rs:29:5
+       |
+    29 |     let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
+       |     ^^^^^^^^^^^^^^^^^^^^-------------------^^^^^^^^^
+       |     |                   |
+       |     |                   expected due to this
+       |     expected `Seq<Pair<u64, u64>>`, found `Seq<(u64, u64)>`
+       |
+       = note: expected struct `vstd::seq::Seq<apas_verus::Types::Types::Pair<u64, u64>>`
+                  found struct `vstd::seq::Seq<(u64, u64)>`
+       = note: this error originates in the macro `::verus_builtin_macros::verus` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+
+    error[E0277]: the trait bound `apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEphIter<u64, u64>: vstd::pervasive::ForLoopGhostIteratorNew` is not satisfied
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStEph-eaa6cbe1b91ec503-chap43_orderedtablesteph_for_borrow_iter/test.rs:32:5
+       |
+    32 | /     for x in iter: it
+    33 | |         invariant
+    34 | |             iter.elements == iter_seq,
+    35 | |             items =~= iter_seq.take(iter.pos),
+    ...  |
+    38 | |         proof { items = items.push(x); }
+    39 | |     }
+       | |_____^ unsatisfied trait bound
+       |
+       = help: the trait `vstd::pervasive::ForLoopGhostIteratorNew` is not implemented for `apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEphIter<u64, u64>`
+       = help: the following other types implement trait `vstd::pervasive::ForLoopGhostIteratorNew`:
+                 apas_verus::Chap05::MappingStEph::MappingStEph::MappingStEphIter<'a, X, Y>
+                 apas_verus::Chap05::RelationStEph::RelationStEph::RelationStEphIter<'a, X, Y>
+                 apas_verus::Chap05::SetMtEph::SetMtEph::SetMtEphIter<'a, T>
+                 apas_verus::Chap05::SetStEph::SetStEph::SetStEphIter<'a, T>
+                 apas_verus::Chap17::MathSeq::MathSeq::MathSeqIter<'a, T>
+                 apas_verus::Chap18::ArraySeq::ArraySeq::ArraySeqIter<'a, T>
+                 apas_verus::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphIter<'a, T>
+                 apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerIter<'a, T>
+               and 38 others
+
+
+    error[E0277]: the trait bound `apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEphIter<u64, u64>: vstd::pervasive::ForLoopGhostIteratorNew` is not satisfied
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStEph-eaa6cbe1b91ec503-chap43_orderedtablesteph_for_borrow_iter/test.rs:32:20
+       |
+    32 |     for x in iter: it
+       |                    ^^ unsatisfied trait bound
+       |
+       = help: the trait `vstd::pervasive::ForLoopGhostIteratorNew` is not implemented for `apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEphIter<u64, u64>`
+       = help: the following other types implement trait `vstd::pervasive::ForLoopGhostIteratorNew`:
+                 apas_verus::Chap05::MappingStEph::MappingStEph::MappingStEphIter<'a, X, Y>
+                 apas_verus::Chap05::RelationStEph::RelationStEph::RelationStEphIter<'a, X, Y>
+                 apas_verus::Chap05::SetMtEph::SetMtEph::SetMtEphIter<'a, T>
+                 apas_verus::Chap05::SetStEph::SetStEph::SetStEphIter<'a, T>
+                 apas_verus::Chap17::MathSeq::MathSeq::MathSeqIter<'a, T>
+                 apas_verus::Chap18::ArraySeq::ArraySeq::ArraySeqIter<'a, T>
+                 apas_verus::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphIter<'a, T>
+                 apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerIter<'a, T>
+               and 38 others
+
+
+    error: aborting due to 3 previous errors
+
+
+    Some errors have detailed explanations: E0277, E0308.
+
+    For more information about an error, try `rustc --explain E0277`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStEph-eaa6cbe1b91ec503-chap43_orderedtablesteph_for_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStEph-eaa6cbe1b91ec503-chap43_orderedtablesteph_for_borrow_iter/test.rs
+
+
+    thread 'chap43_orderedtablesteph_for_borrow_iter' (2802634) panicked at tests/Chap43/ProveOrderedTableStEph.rs:99:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   1.030s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_for_borrow_into
+  stdout ───
+
+    running 1 test
+    test chap43_orderedtablesteph_for_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        chap43_orderedtablesteph_for_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 1.03s
+
+  stderr ───
+    error[E0599]: the method `into_iter` exists for reference `&apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>`, but its trait bounds were not satisfied
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStEph-eaa6cbe1b91ec503-chap43_orderedtablesteph_for_borrow_into/test.rs:28:52
+       |
+    28 |     let it: OrderedTableStEphIter<u64, u64> = (&t).into_iter();
+       |                                                    ^^^^^^^^^
+       |
+       = note: the following trait bounds were not satisfied:
+               `&apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>: std::iter::Iterator`
+               which is required by `&apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>: std::iter::IntoIterator`
+               `&&apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>: std::iter::Iterator`
+               which is required by `&&apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>: std::iter::IntoIterator`
+               `&mut &apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>: std::iter::Iterator`
+               which is required by `&mut &apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>: std::iter::IntoIterator`
+               `apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>: std::iter::Iterator`
+               which is required by `apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>: std::iter::IntoIterator`
+               `&mut apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>: std::iter::Iterator`
+               which is required by `&mut apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>: std::iter::IntoIterator`
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0599`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStEph-eaa6cbe1b91ec503-chap43_orderedtablesteph_for_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStEph-eaa6cbe1b91ec503-chap43_orderedtablesteph_for_borrow_into/test.rs
+
+
+    thread 'chap43_orderedtablesteph_for_borrow_into' (2802612) panicked at tests/Chap43/ProveOrderedTableStEph.rs:133:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.938s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_loop_borrow_iter
+  stdout ───
+
+    running 1 test
+    test chap43_orderedtablesteph_loop_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        chap43_orderedtablesteph_loop_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.93s
+
+  stderr ───
+    error[E0308]: mismatched types
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStEph-eaa6cbe1b91ec503-chap43_orderedtablesteph_loop_borrow_iter/test.rs:29:5
+       |
+    29 |     let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
+       |     ^^^^^^^^^^^^^^^^^^^^-------------------^^^^^^^^^
+       |     |                   |
+       |     |                   expected due to this
+       |     expected `Seq<Pair<u64, u64>>`, found `Seq<(u64, u64)>`
+       |
+       = note: expected struct `vstd::seq::Seq<apas_verus::Types::Types::Pair<u64, u64>>`
+                  found struct `vstd::seq::Seq<(u64, u64)>`
+       = note: this error originates in the macro `::verus_builtin_macros::verus` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0308`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStEph-eaa6cbe1b91ec503-chap43_orderedtablesteph_loop_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStEph-eaa6cbe1b91ec503-chap43_orderedtablesteph_loop_borrow_iter/test.rs
+
+
+    thread 'chap43_orderedtablesteph_loop_borrow_iter' (2802671) panicked at tests/Chap43/ProveOrderedTableStEph.rs:15:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.986s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_loop_borrow_into
+  stdout ───
+
+    running 1 test
+    test chap43_orderedtablesteph_loop_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        chap43_orderedtablesteph_loop_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.98s
+
+  stderr ───
+    error[E0599]: the method `into_iter` exists for reference `&apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>`, but its trait bounds were not satisfied
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStEph-eaa6cbe1b91ec503-chap43_orderedtablesteph_loop_borrow_into/test.rs:28:56
+       |
+    28 |     let mut it: OrderedTableStEphIter<u64, u64> = (&t).into_iter();
+       |                                                        ^^^^^^^^^
+       |
+       = note: the following trait bounds were not satisfied:
+               `&apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>: std::iter::Iterator`
+               which is required by `&apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>: std::iter::IntoIterator`
+               `&&apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>: std::iter::Iterator`
+               which is required by `&&apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>: std::iter::IntoIterator`
+               `&mut &apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>: std::iter::Iterator`
+               which is required by `&mut &apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>: std::iter::IntoIterator`
+               `apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>: std::iter::Iterator`
+               which is required by `apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>: std::iter::IntoIterator`
+               `&mut apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>: std::iter::Iterator`
+               which is required by `&mut apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<u64, u64>: std::iter::IntoIterator`
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0599`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStEph-eaa6cbe1b91ec503-chap43_orderedtablesteph_loop_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStEph-eaa6cbe1b91ec503-chap43_orderedtablesteph_loop_borrow_into/test.rs
+
+
+    thread 'chap43_orderedtablesteph_loop_borrow_into' (2802659) panicked at tests/Chap43/ProveOrderedTableStEph.rs:57:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.937s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_for_borrow_into
+  stdout ───
+
+    running 1 test
+    test chap43_orderedtablestper_for_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        chap43_orderedtablestper_for_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.93s
+
+  stderr ───
+    error[E0277]: the trait bound `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerIter<u64, u64>: vstd::pervasive::ForLoopGhostIteratorNew` is not satisfied
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_for_borrow_into/test.rs:32:5
+       |
+    32 | /     for x in iter: it
+    33 | |         invariant
+    34 | |             iter.elements == iter_seq,
+    35 | |             items =~= iter_seq.take(iter.pos),
+    ...  |
+    38 | |         proof { items = items.push(x); }
+    39 | |     }
+       | |_____^ unsatisfied trait bound
+       |
+       = help: the trait `vstd::pervasive::ForLoopGhostIteratorNew` is not implemented for `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerIter<u64, u64>`
+       = help: the following other types implement trait `vstd::pervasive::ForLoopGhostIteratorNew`:
+                 apas_verus::Chap05::MappingStEph::MappingStEph::MappingStEphIter<'a, X, Y>
+                 apas_verus::Chap05::RelationStEph::RelationStEph::RelationStEphIter<'a, X, Y>
+                 apas_verus::Chap05::SetMtEph::SetMtEph::SetMtEphIter<'a, T>
+                 apas_verus::Chap05::SetStEph::SetStEph::SetStEphIter<'a, T>
+                 apas_verus::Chap17::MathSeq::MathSeq::MathSeqIter<'a, T>
+                 apas_verus::Chap18::ArraySeq::ArraySeq::ArraySeqIter<'a, T>
+                 apas_verus::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphIter<'a, T>
+                 apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerIter<'a, T>
+               and 38 others
+
+
+    error[E0277]: the trait bound `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerIter<u64, u64>: vstd::pervasive::ForLoopGhostIteratorNew` is not satisfied
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_for_borrow_into/test.rs:32:20
+       |
+    32 |     for x in iter: it
+       |                    ^^ unsatisfied trait bound
+       |
+       = help: the trait `vstd::pervasive::ForLoopGhostIteratorNew` is not implemented for `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerIter<u64, u64>`
+       = help: the following other types implement trait `vstd::pervasive::ForLoopGhostIteratorNew`:
+                 apas_verus::Chap05::MappingStEph::MappingStEph::MappingStEphIter<'a, X, Y>
+                 apas_verus::Chap05::RelationStEph::RelationStEph::RelationStEphIter<'a, X, Y>
+                 apas_verus::Chap05::SetMtEph::SetMtEph::SetMtEphIter<'a, T>
+                 apas_verus::Chap05::SetStEph::SetStEph::SetStEphIter<'a, T>
+                 apas_verus::Chap17::MathSeq::MathSeq::MathSeqIter<'a, T>
+                 apas_verus::Chap18::ArraySeq::ArraySeq::ArraySeqIter<'a, T>
+                 apas_verus::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphIter<'a, T>
+                 apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerIter<'a, T>
+               and 38 others
+
+
+    error: aborting due to 2 previous errors
+
+
+    For more information about this error, try `rustc --explain E0277`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_for_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_for_borrow_into/test.rs
+
+
+    thread 'chap43_orderedtablestper_for_borrow_into' (2802703) panicked at tests/Chap43/ProveOrderedTableStPer.rs:133:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.977s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_for_borrow_iter
+  stdout ───
+
+    running 1 test
+    test chap43_orderedtablestper_for_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        chap43_orderedtablestper_for_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.97s
+
+  stderr ───
+    error[E0277]: the trait bound `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerIter<u64, u64>: vstd::pervasive::ForLoopGhostIteratorNew` is not satisfied
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_for_borrow_iter/test.rs:32:5
+       |
+    32 | /     for x in iter: it
+    33 | |         invariant
+    34 | |             iter.elements == iter_seq,
+    35 | |             items =~= iter_seq.take(iter.pos),
+    ...  |
+    38 | |         proof { items = items.push(x); }
+    39 | |     }
+       | |_____^ unsatisfied trait bound
+       |
+       = help: the trait `vstd::pervasive::ForLoopGhostIteratorNew` is not implemented for `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerIter<u64, u64>`
+       = help: the following other types implement trait `vstd::pervasive::ForLoopGhostIteratorNew`:
+                 apas_verus::Chap05::MappingStEph::MappingStEph::MappingStEphIter<'a, X, Y>
+                 apas_verus::Chap05::RelationStEph::RelationStEph::RelationStEphIter<'a, X, Y>
+                 apas_verus::Chap05::SetMtEph::SetMtEph::SetMtEphIter<'a, T>
+                 apas_verus::Chap05::SetStEph::SetStEph::SetStEphIter<'a, T>
+                 apas_verus::Chap17::MathSeq::MathSeq::MathSeqIter<'a, T>
+                 apas_verus::Chap18::ArraySeq::ArraySeq::ArraySeqIter<'a, T>
+                 apas_verus::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphIter<'a, T>
+                 apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerIter<'a, T>
+               and 38 others
+
+
+    error[E0277]: the trait bound `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerIter<u64, u64>: vstd::pervasive::ForLoopGhostIteratorNew` is not satisfied
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_for_borrow_iter/test.rs:32:20
+       |
+    32 |     for x in iter: it
+       |                    ^^ unsatisfied trait bound
+       |
+       = help: the trait `vstd::pervasive::ForLoopGhostIteratorNew` is not implemented for `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerIter<u64, u64>`
+       = help: the following other types implement trait `vstd::pervasive::ForLoopGhostIteratorNew`:
+                 apas_verus::Chap05::MappingStEph::MappingStEph::MappingStEphIter<'a, X, Y>
+                 apas_verus::Chap05::RelationStEph::RelationStEph::RelationStEphIter<'a, X, Y>
+                 apas_verus::Chap05::SetMtEph::SetMtEph::SetMtEphIter<'a, T>
+                 apas_verus::Chap05::SetStEph::SetStEph::SetStEphIter<'a, T>
+                 apas_verus::Chap17::MathSeq::MathSeq::MathSeqIter<'a, T>
+                 apas_verus::Chap18::ArraySeq::ArraySeq::ArraySeqIter<'a, T>
+                 apas_verus::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphIter<'a, T>
+                 apas_verus::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerIter<'a, T>
+               and 38 others
+
+
+    error: aborting due to 2 previous errors
+
+
+    For more information about this error, try `rustc --explain E0277`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_for_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_for_borrow_iter/test.rs
+
+
+    thread 'chap43_orderedtablestper_for_borrow_iter' (2802725) panicked at tests/Chap43/ProveOrderedTableStPer.rs:99:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   1.024s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_loop_borrow_iter
+  stdout ───
+
+    running 1 test
+    test chap43_orderedtablestper_loop_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        chap43_orderedtablestper_loop_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 1.02s
+
+  stderr ───
+    error: `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::impl&%3::singleton` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_loop_borrow_iter/test.rs:24:13
+       |
+    24 |     let t = OrderedTableStPer::singleton(1u64, 10u64)
+       |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<K, V> [<apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V> as apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerTrait<K, V>>::singleton] (_0: K, _1: V) -> apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V>
+               where
+               K: apas_verus::Types::Types::StT + std::cmp::Ord,
+               V: apas_verus::Types::Types::StT + std::cmp::Ord,;
+
+
+    error: `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::impl&%4::iter` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_loop_borrow_iter/test.rs:28:51
+       |
+    28 |     let mut it: OrderedTableStPerIter<u64, u64> = t.iter();
+       |                                                   ^^^^^^^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<K, V> [apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer::<K, V>::iter] (_0: &apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V>) -> apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerIter<K, V>
+               where
+               K: apas_verus::Types::Types::StT + std::cmp::Ord,
+               V: apas_verus::Types::Types::StT + std::cmp::Ord,;
+
+
+    error: `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::impl&%5::view` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_loop_borrow_iter/test.rs:29:47
+       |
+    29 |     let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
+       |                                               ^^^
+    ...
+    35 |             items =~= iter_seq.take(it@.0 as int),
+       |                                     ---
+    36 |             iter_invariant(&it),
+    37 |             iter_seq == it@.1,
+       |                         ---
+    38 |             it@.0 <= iter_seq.len(),
+       |             ---
+    39 |         decreases iter_seq.len() - it@.0,
+       |                                    ---
+    ...
+    48 |     assert(it@.0 == iter_seq.len());
+       |            ---
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<K, V> [<apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerIter<K, V> as vstd::string::View>::view] (_0: &apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerIter<K, V>) -> (verus_builtin::int, vstd::seq::Seq<apas_verus::Types::Types::Pair<K, V>>)
+               where
+               K: apas_verus::Types::Types::StT + std::cmp::Ord,
+               V: apas_verus::Types::Types::StT + std::cmp::Ord,;
+
+
+    error: `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::impl&%6::next` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_loop_borrow_iter/test.rs:41:26
+       |
+    41 |         if let Some(x) = it.next() {
+       |                          ^^^^^^^^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<K, V> [<apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerIter<K, V> as std::iter::Iterator>::next] (_0: &apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerIter<K, V>) -> std::option::Option<apas_verus::Types::Types::Pair<K, V>>
+               where
+               K: apas_verus::Types::Types::StT + std::cmp::Ord,
+               V: apas_verus::Types::Types::StT + std::cmp::Ord,;
+
+
+    error: `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::impl&%3::insert` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_loop_borrow_iter/test.rs:24:13
+       |
+    24 |        let t = OrderedTableStPer::singleton(1u64, 10u64)
+       |   _____________^
+       |  |_____________|
+    25 | ||         .insert(2u64, 20u64)
+       | ||____________________________-
+    26 | |          .insert(3u64, 30u64);
+       | |_____________________________^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<K, V> [<apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V> as apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerTrait<K, V>>::insert] (_0: &apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V>, _1: K, _2: V) -> apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V>
+               where
+               K: apas_verus::Types::Types::StT + std::cmp::Ord,
+               V: apas_verus::Types::Types::StT + std::cmp::Ord,;
+
+
+    error: aborting due to 5 previous errors
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_loop_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_loop_borrow_iter/test.rs
+
+
+    thread 'chap43_orderedtablestper_loop_borrow_iter' (2802759) panicked at tests/Chap43/ProveOrderedTableStPer.rs:15:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   1.084s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_loop_borrow_into
+  stdout ───
+
+    running 1 test
+    test chap43_orderedtablestper_loop_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        chap43_orderedtablestper_loop_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 1.08s
+
+  stderr ───
+    error: `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::impl&%3::singleton` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_loop_borrow_into/test.rs:24:13
+       |
+    24 |     let t = OrderedTableStPer::singleton(1u64, 10u64)
+       |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<K, V> [<apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V> as apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerTrait<K, V>>::singleton] (_0: K, _1: V) -> apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V>
+               where
+               K: apas_verus::Types::Types::StT + std::cmp::Ord,
+               V: apas_verus::Types::Types::StT + std::cmp::Ord,;
+
+
+    error: `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::impl&%7::into_iter` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_loop_borrow_into/test.rs:28:51
+       |
+    28 |     let mut it: OrderedTableStPerIter<u64, u64> = (&t).into_iter();
+       |                                                   ^^^^^^^^^^^^^^^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, K, V> [<&'a apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V> as std::iter::IntoIterator>::into_iter] (_0: &'a apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V>) -> <&'a apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V> as std::iter::IntoIterator>::IntoIter
+               where
+               K: apas_verus::Types::Types::StT + std::cmp::Ord,
+               V: apas_verus::Types::Types::StT + std::cmp::Ord,;
+
+
+    error: `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::impl&%5::view` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_loop_borrow_into/test.rs:29:47
+       |
+    29 |     let ghost iter_seq: Seq<Pair<u64, u64>> = it@.1;
+       |                                               ^^^
+    ...
+    35 |             items =~= iter_seq.take(it@.0 as int),
+       |                                     ---
+    36 |             iter_invariant(&it),
+    37 |             iter_seq == it@.1,
+       |                         ---
+    38 |             it@.0 <= iter_seq.len(),
+       |             ---
+    39 |         decreases iter_seq.len() - it@.0,
+       |                                    ---
+    ...
+    48 |     assert(it@.0 == iter_seq.len());
+       |            ---
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<K, V> [<apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerIter<K, V> as vstd::string::View>::view] (_0: &apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerIter<K, V>) -> (verus_builtin::int, vstd::seq::Seq<apas_verus::Types::Types::Pair<K, V>>)
+               where
+               K: apas_verus::Types::Types::StT + std::cmp::Ord,
+               V: apas_verus::Types::Types::StT + std::cmp::Ord,;
+
+
+    error: `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::impl&%6::next` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_loop_borrow_into/test.rs:41:26
+       |
+    41 |         if let Some(x) = it.next() {
+       |                          ^^^^^^^^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<K, V> [<apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerIter<K, V> as std::iter::Iterator>::next] (_0: &apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerIter<K, V>) -> std::option::Option<apas_verus::Types::Types::Pair<K, V>>
+               where
+               K: apas_verus::Types::Types::StT + std::cmp::Ord,
+               V: apas_verus::Types::Types::StT + std::cmp::Ord,;
+
+
+    error: `apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::impl&%3::insert` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_loop_borrow_into/test.rs:24:13
+       |
+    24 |        let t = OrderedTableStPer::singleton(1u64, 10u64)
+       |   _____________^
+       |  |_____________|
+    25 | ||         .insert(2u64, 20u64)
+       | ||____________________________-
+    26 | |          .insert(3u64, 30u64);
+       | |_____________________________^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<K, V> [<apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V> as apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerTrait<K, V>>::insert] (_0: &apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V>, _1: K, _2: V) -> apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V>
+               where
+               K: apas_verus::Types::Types::StT + std::cmp::Ord,
+               V: apas_verus::Types::Types::StT + std::cmp::Ord,;
+
+
+    error: aborting due to 5 previous errors
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_loop_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableStPer-c6e89d4435eaa5a8-chap43_orderedtablestper_loop_borrow_into/test.rs
+
+
+    thread 'chap43_orderedtablestper_loop_borrow_into' (2802747) panicked at tests/Chap43/ProveOrderedTableStPer.rs:57:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   1.190s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_borrow_into
+        PASS [   1.202s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_borrow_iter
+        PASS [   1.215s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_consume
+        PASS [   1.209s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_borrow_into
+        PASS [   1.192s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_borrow_iter
+        PASS [   1.169s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_consume
+        PASS [   1.312s] rust_verify_test::ProveSetMtEph set_mt_eph_for_borrow_into
+        PASS [   1.306s] rust_verify_test::ProveSetMtEph set_mt_eph_for_borrow_iter
+        PASS [   1.166s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_borrow_into
+        PASS [   1.248s] rust_verify_test::ProveSetMtEph set_mt_eph_loop_borrow_iter
+        PASS [   1.208s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_borrow_iter
+        PASS [   1.232s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_consume
+        PASS [   1.133s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_borrow_into
+        PASS [   1.202s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_borrow_iter
+        PASS [   1.146s] rust_verify_test::Provedeep_view_standard deep_view_standard_simple
+        PASS [   1.158s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_consume
+        PASS [   1.160s] rust_verify_test::Proveiterators_standard iterators_standard_for_borrow_into
+        PASS [   1.176s] rust_verify_test::Proveiterators_standard iterators_standard_for_borrow_iter
+        PASS [   1.165s] rust_verify_test::Proveiterators_standard iterators_standard_for_consume
+        PASS [   1.116s] rust_verify_test::Proveiterators_standard iterators_standard_loop_borrow_into
+        PASS [   1.167s] rust_verify_test::Proveiterators_standard iterators_standard_loop_consume
+        PASS [   1.264s] rust_verify_test::Proveiterators_standard iterators_standard_loop_borrow_iter
+        PASS [   1.190s] rust_verify_test::Provemod_standard mod_standard_for_borrow_iter
+        PASS [   1.317s] rust_verify_test::Provemod_standard mod_standard_for_borrow_into
+        PASS [   1.156s] rust_verify_test::Provemod_standard mod_standard_loop_borrow_into
+        PASS [   1.226s] rust_verify_test::Provemod_standard mod_standard_for_consume
+        PASS [   1.161s] rust_verify_test::Provemod_standard mod_standard_loop_borrow_iter
+        PASS [   1.241s] rust_verify_test::Provemod_standard mod_standard_loop_consume
+        FAIL [   1.039s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_borrow_into
+  stdout ───
+
+    running 1 test
+    test toc_standard_for_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        toc_standard_for_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.03s
+
+  stderr ───
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%7::view` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_into/test.rs:22:36
+       |
+    22 |     let ghost iter_seq: Seq<u64> = it@.1;
+       |                                    ^^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T> as vstd::string::View>::view] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T>) -> (verus_builtin::int, vstd::seq::Seq<T>);
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%13::ghost_iter` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_into/test.rs:25:5
+       |
+    25 |       for x in iter: it
+       |  _____^              --
+    26 | |         invariant
+    27 | |             iter.elements == iter_seq,
+    28 | |             items =~= iter_seq.take(iter.pos),
+    ...  |
+    31 | |         proof { items = items.push(*x); }
+    32 | |     }
+       | |_____^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T> as vstd::pervasive::ForLoopGhostIteratorNew>::ghost_iter] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T>) -> apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T>;
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%12::next` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_into/test.rs:25:5
+       |
+    25 | /     for x in iter: it
+    26 | |         invariant
+    27 | |             iter.elements == iter_seq,
+    28 | |             items =~= iter_seq.take(iter.pos),
+    ...  |
+    31 | |         proof { items = items.push(*x); }
+    32 | |     }
+       | |_____^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T> as std::iter::Iterator>::next] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T>) -> std::option::Option<&'a T>;
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%14::ghost_advance` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_into/test.rs:25:5
+       |
+    25 | /     for x in iter: it
+    26 | |         invariant
+    27 | |             iter.elements == iter_seq,
+    28 | |             items =~= iter_seq.take(iter.pos),
+    ...  |
+    31 | |         proof { items = items.push(*x); }
+    32 | |     }
+       | |_____^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T> as vstd::pervasive::ForLoopGhostIterator>::ghost_advance] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T>, _1: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T>) -> apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T>;
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%14::exec_invariant` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_into/test.rs:25:20
+       |
+    25 |     for x in iter: it
+       |                    ^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T> as vstd::pervasive::ForLoopGhostIterator>::exec_invariant] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T>, _1: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T>) -> bool;
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%14::ghost_invariant` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_into/test.rs:25:20
+       |
+    25 |     for x in iter: it
+       |                    ^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T> as vstd::pervasive::ForLoopGhostIterator>::ghost_invariant] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T>, _1: std::option::Option<&apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T>>) -> bool;
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%14::ghost_peek_next` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_into/test.rs:27:13
+       |
+    27 |             iter.elements == iter_seq,
+       |             ^^^^^^^^^^^^^^^^^^^^^^^^^
+    28 |             items =~= iter_seq.take(iter.pos),
+       |             ---------------------------------
+    29 |             iter.pos <= iter_seq.len(),
+       |             --------------------------
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T> as vstd::pervasive::ForLoopGhostIterator>::ghost_peek_next] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T>) -> std::option::Option<T>;
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%14::ghost_ensures` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_into/test.rs:25:5
+       |
+    25 | /     for x in iter: it
+    26 | |         invariant
+    27 | |             iter.elements == iter_seq,
+    28 | |             items =~= iter_seq.take(iter.pos),
+    ...  |
+    31 | |         proof { items = items.push(*x); }
+    32 | |     }
+       | |_____^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T> as vstd::pervasive::ForLoopGhostIterator>::ghost_ensures] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T>) -> bool;
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%14::ghost_decrease` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_into/test.rs:25:5
+       |
+    25 | /     for x in iter: it
+    26 | |         invariant
+    27 | |             iter.elements == iter_seq,
+    28 | |             items =~= iter_seq.take(iter.pos),
+    ...  |
+    31 | |         proof { items = items.push(*x); }
+    32 | |     }
+       | |_____^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T> as vstd::pervasive::ForLoopGhostIterator>::ghost_decrease] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T>) -> std::option::Option<verus_builtin::int>;
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%15::into_iter` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_into/test.rs:21:32
+       |
+    21 |     let it: ExampleIter<u64> = (&a).into_iter();
+       |                                ^^^^^^^^^^^^^^^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<&'a apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleS<T> as std::iter::IntoIterator>::into_iter] (_0: &'a apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleS<T>) -> <&'a apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleS<T> as std::iter::IntoIterator>::IntoIter;
+
+
+    error: aborting due to 10 previous errors
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_into/test.rs
+
+
+    thread 'toc_standard_for_borrow_into' (2803631) panicked at tests/standards/Provetable_of_contents_standard.rs:151:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   1.098s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_borrow_iter
+  stdout ───
+
+    running 1 test
+    test toc_standard_for_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        toc_standard_for_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.09s
+
+  stderr ───
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%7::view` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_iter/test.rs:22:36
+       |
+    22 |     let ghost iter_seq: Seq<u64> = it@.1;
+       |                                    ^^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T> as vstd::string::View>::view] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T>) -> (verus_builtin::int, vstd::seq::Seq<T>);
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%13::ghost_iter` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_iter/test.rs:25:5
+       |
+    25 |       for x in iter: it
+       |  _____^              --
+    26 | |         invariant
+    27 | |             iter.elements == iter_seq,
+    28 | |             items =~= iter_seq.take(iter.pos),
+    ...  |
+    31 | |         proof { items = items.push(*x); }
+    32 | |     }
+       | |_____^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T> as vstd::pervasive::ForLoopGhostIteratorNew>::ghost_iter] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T>) -> apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T>;
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%12::next` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_iter/test.rs:25:5
+       |
+    25 | /     for x in iter: it
+    26 | |         invariant
+    27 | |             iter.elements == iter_seq,
+    28 | |             items =~= iter_seq.take(iter.pos),
+    ...  |
+    31 | |         proof { items = items.push(*x); }
+    32 | |     }
+       | |_____^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T> as std::iter::Iterator>::next] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T>) -> std::option::Option<&'a T>;
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%14::ghost_advance` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_iter/test.rs:25:5
+       |
+    25 | /     for x in iter: it
+    26 | |         invariant
+    27 | |             iter.elements == iter_seq,
+    28 | |             items =~= iter_seq.take(iter.pos),
+    ...  |
+    31 | |         proof { items = items.push(*x); }
+    32 | |     }
+       | |_____^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T> as vstd::pervasive::ForLoopGhostIterator>::ghost_advance] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T>, _1: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T>) -> apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T>;
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%14::exec_invariant` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_iter/test.rs:25:20
+       |
+    25 |     for x in iter: it
+       |                    ^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T> as vstd::pervasive::ForLoopGhostIterator>::exec_invariant] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T>, _1: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T>) -> bool;
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%14::ghost_invariant` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_iter/test.rs:25:20
+       |
+    25 |     for x in iter: it
+       |                    ^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T> as vstd::pervasive::ForLoopGhostIterator>::ghost_invariant] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T>, _1: std::option::Option<&apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T>>) -> bool;
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%14::ghost_peek_next` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_iter/test.rs:27:13
+       |
+    27 |             iter.elements == iter_seq,
+       |             ^^^^^^^^^^^^^^^^^^^^^^^^^
+    28 |             items =~= iter_seq.take(iter.pos),
+       |             ---------------------------------
+    29 |             iter.pos <= iter_seq.len(),
+       |             --------------------------
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T> as vstd::pervasive::ForLoopGhostIterator>::ghost_peek_next] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T>) -> std::option::Option<T>;
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%14::ghost_ensures` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_iter/test.rs:25:5
+       |
+    25 | /     for x in iter: it
+    26 | |         invariant
+    27 | |             iter.elements == iter_seq,
+    28 | |             items =~= iter_seq.take(iter.pos),
+    ...  |
+    31 | |         proof { items = items.push(*x); }
+    32 | |     }
+       | |_____^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T> as vstd::pervasive::ForLoopGhostIterator>::ghost_ensures] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T>) -> bool;
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%14::ghost_decrease` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_iter/test.rs:25:5
+       |
+    25 | /     for x in iter: it
+    26 | |         invariant
+    27 | |             iter.elements == iter_seq,
+    28 | |             items =~= iter_seq.take(iter.pos),
+    ...  |
+    31 | |         proof { items = items.push(*x); }
+    32 | |     }
+       | |_____^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T> as vstd::pervasive::ForLoopGhostIterator>::ghost_decrease] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleGhostIterator<'a, T>) -> std::option::Option<verus_builtin::int>;
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%10::iter` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_iter/test.rs:21:32
+       |
+    21 |     let it: ExampleIter<u64> = a.iter();
+       |                                ^^^^^^^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<T> [apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleS::<T>::iter] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleS<T>) -> apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'_, T>;
+
+
+    error: aborting due to 10 previous errors
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_borrow_iter/test.rs
+
+
+    thread 'toc_standard_for_borrow_iter' (2803661) panicked at tests/standards/Provetable_of_contents_standard.rs:124:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   1.005s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_consume
+  stdout ───
+
+    running 1 test
+    test toc_standard_for_consume ... FAILED
+
+    failures:
+
+    failures:
+        toc_standard_for_consume
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.00s
+
+  stderr ───
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%16::into_iter` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_consume/test.rs:22:14
+       |
+    22 |     let it = a.into_iter();
+       |              ^^^^^^^^^^^^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleS<T> as std::iter::IntoIterator>::into_iter] (_0: apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleS<T>) -> <apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleS<T> as std::iter::IntoIterator>::IntoIter;
+
+
+    error: aborting due to 1 previous error
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_consume
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_for_consume/test.rs
+
+
+    thread 'toc_standard_for_consume' (2803699) panicked at tests/standards/Provetable_of_contents_standard.rs:178:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   1.070s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_borrow_into
+  stdout ───
+
+    running 1 test
+    test toc_standard_loop_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        toc_standard_loop_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.07s
+
+  stderr ───
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%7::view` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_loop_borrow_into/test.rs:22:36
+       |
+    22 |     let ghost iter_seq: Seq<u64> = it@.1;
+       |                                    ^^^
+    ...
+    28 |             items =~= iter_seq.take(it@.0 as int),
+       |                                     ---
+    29 |             iter_invariant(&it),
+    30 |             iter_seq == it@.1,
+       |                         ---
+    31 |             it@.0 <= iter_seq.len(),
+       |             ---
+    32 |         decreases iter_seq.len() - it@.0,
+       |                                    ---
+    ...
+    41 |     assert(it@.0 == iter_seq.len());
+       |            ---
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T> as vstd::string::View>::view] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T>) -> (verus_builtin::int, vstd::seq::Seq<T>);
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%12::next` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_loop_borrow_into/test.rs:34:26
+       |
+    34 |         if let Some(x) = it.next() {
+       |                          ^^^^^^^^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T> as std::iter::Iterator>::next] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T>) -> std::option::Option<&'a T>;
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%15::into_iter` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_loop_borrow_into/test.rs:21:36
+       |
+    21 |     let mut it: ExampleIter<u64> = (&a).into_iter();
+       |                                    ^^^^^^^^^^^^^^^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<&'a apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleS<T> as std::iter::IntoIterator>::into_iter] (_0: &'a apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleS<T>) -> <&'a apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleS<T> as std::iter::IntoIterator>::IntoIter;
+
+
+    error: aborting due to 3 previous errors
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_loop_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_loop_borrow_into/test.rs
+
+
+    thread 'toc_standard_loop_borrow_into' (2803711) panicked at tests/standards/Provetable_of_contents_standard.rs:52:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   1.020s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_borrow_iter
+  stdout ───
+
+    running 1 test
+    test toc_standard_loop_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        toc_standard_loop_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.02s
+
+  stderr ───
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%7::view` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_loop_borrow_iter/test.rs:22:36
+       |
+    22 |     let ghost iter_seq: Seq<u64> = it@.1;
+       |                                    ^^^
+    ...
+    28 |             items =~= iter_seq.take(it@.0 as int),
+       |                                     ---
+    29 |             iter_invariant(&it),
+    30 |             iter_seq == it@.1,
+       |                         ---
+    31 |             it@.0 <= iter_seq.len(),
+       |             ---
+    32 |         decreases iter_seq.len() - it@.0,
+       |                                    ---
+    ...
+    41 |     assert(it@.0 == iter_seq.len());
+       |            ---
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T> as vstd::string::View>::view] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T>) -> (verus_builtin::int, vstd::seq::Seq<T>);
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%12::next` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_loop_borrow_iter/test.rs:34:26
+       |
+    34 |         if let Some(x) = it.next() {
+       |                          ^^^^^^^^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T> as std::iter::Iterator>::next] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'a, T>) -> std::option::Option<&'a T>;
+
+
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%10::iter` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_loop_borrow_iter/test.rs:21:36
+       |
+    21 |     let mut it: ExampleIter<u64> = a.iter();
+       |                                    ^^^^^^^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<T> [apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleS::<T>::iter] (_0: &apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleS<T>) -> apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleIter<'_, T>;
+
+
+    error: aborting due to 3 previous errors
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_loop_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_loop_borrow_iter/test.rs
+
+
+    thread 'toc_standard_loop_borrow_iter' (2803749) panicked at tests/standards/Provetable_of_contents_standard.rs:17:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   1.003s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_consume
+  stdout ───
+
+    running 1 test
+    test toc_standard_loop_consume ... FAILED
+
+    failures:
+
+    failures:
+        toc_standard_loop_consume
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.00s
+
+  stderr ───
+    error: `apas_verus::standards::table_of_contents_standard::table_of_contents_standard::impl&%16::into_iter` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_loop_consume/test.rs:22:18
+       |
+    22 |     let mut it = a.into_iter();
+       |                  ^^^^^^^^^^^^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<T> [<apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleS<T> as std::iter::IntoIterator>::into_iter] (_0: apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleS<T>) -> <apas_verus::standards::table_of_contents_standard::table_of_contents_standard::ExampleS<T> as std::iter::IntoIterator>::IntoIter;
+
+
+    error: aborting due to 1 previous error
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_loop_consume
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/Provetable_of_contents_standard-702629d80e017d42-toc_standard_loop_consume/test.rs
+
+
+    thread 'toc_standard_loop_consume' (2803771) panicked at tests/standards/Provetable_of_contents_standard.rs:87:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   1.190s] rust_verify_test::Proveusing_closures_standard closures_ghost_spec_fn
+        PASS [   1.148s] rust_verify_test::Proveusing_closures_standard closures_inline_requires_ensures
+        PASS [   1.088s] rust_verify_test::Proveusing_closures_standard closures_map_apply
+        PASS [   1.167s] rust_verify_test::Proveusing_closures_standard closures_let_bind_ensures
+        PASS [   1.075s] rust_verify_test::Proveview_standard view_standard_collection
+        PASS [   1.233s] rust_verify_test::Proveview_standard view_standard_for_borrow_into
+        PASS [   1.204s] rust_verify_test::Proveview_standard view_standard_for_borrow_iter
+        PASS [   1.178s] rust_verify_test::Proveview_standard view_standard_for_consume
+        PASS [   1.142s] rust_verify_test::Proveview_standard view_standard_loop_borrow_into
+        PASS [   1.199s] rust_verify_test::Proveview_standard view_standard_loop_borrow_iter
+        PASS [   1.173s] rust_verify_test::Proveview_standard view_standard_loop_consume
+        PASS [   1.073s] rust_verify_test::Proveview_standard view_standard_simple
+        PASS [   1.182s] rust_verify_test::Provewrapping_iterators_standard wrapping_for_borrow_into
+        PASS [   1.175s] rust_verify_test::Provewrapping_iterators_standard wrapping_for_borrow_iter
+        PASS [   1.154s] rust_verify_test::Provewrapping_iterators_standard wrapping_loop_borrow_into
+        PASS [   1.142s] rust_verify_test::Provewrapping_iterators_standard wrapping_loop_borrow_iter
+        PASS [   1.382s] rust_verify_test::RelationStEph relation_st_eph_for_iter
+        PASS [   1.260s] rust_verify_test::RelationStEph relation_st_eph_loop_loop
+        PASS [   1.202s] rust_verify_test::SetMtEph set_mt_eph_from_vec
+        PASS [   1.296s] rust_verify_test::SetMtEph set_mt_eph_for_iter
+        PASS [   1.242s] rust_verify_test::SetMtEph set_mt_eph_loop_loop
+        PASS [   1.197s] rust_verify_test::SetStEph set_st_eph_for_iter
+        PASS [   1.202s] rust_verify_test::SetStEph set_st_eph_from_vec
+        PASS [   1.246s] rust_verify_test::SetStEph set_st_eph_loop_loop
+        PASS [   1.094s] rust_verify_test::prove_MathSeq_iters mathseq_iter_consuming
+        PASS [   1.098s] rust_verify_test::prove_MathSeq_iters mathseq_iter_nested
+        PASS [   1.036s] rust_verify_test::prove_MathSeq_iters mathseq_iter_range
+────────────
+     Summary [  32.067s] 157 tests run: 137 passed, 20 failed, 0 skipped
+        FAIL [   1.077s] rust_verify_test::ProveMathSeq mathseq_for_borrow_into
+        FAIL [   1.036s] rust_verify_test::ProveMathSeq mathseq_for_borrow_iter
+        FAIL [   0.969s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_for_borrow_into
+        FAIL [   0.920s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_for_borrow_iter
+        FAIL [   0.965s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_loop_borrow_into
+        FAIL [   0.975s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_loop_borrow_iter
+        FAIL [   1.030s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_for_borrow_into
+        FAIL [   0.974s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_for_borrow_iter
+        FAIL [   0.986s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_loop_borrow_into
+        FAIL [   0.938s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_loop_borrow_iter
+        FAIL [   0.937s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_for_borrow_into
+        FAIL [   0.977s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_for_borrow_iter
+        FAIL [   1.084s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_loop_borrow_into
+        FAIL [   1.024s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_loop_borrow_iter
+        FAIL [   1.039s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_borrow_into
+        FAIL [   1.098s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_borrow_iter
+        FAIL [   1.005s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_consume
+        FAIL [   1.070s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_borrow_into
+        FAIL [   1.020s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_borrow_iter
+        FAIL [   1.003s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_consume
+error: test run failed
+Elapsed: 85s

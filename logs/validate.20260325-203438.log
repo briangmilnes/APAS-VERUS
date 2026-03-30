@@ -1,0 +1,19 @@
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:201:9
+    |
+201 |         loop
+    |         ^^^^
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:286:9
+    |
+286 |         while i < edges_vec.len()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap65/KruskalStEph.rs:297:17
+    |
+297 |                 pre_sort.len() == eseq.len(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Elapsed: 301s

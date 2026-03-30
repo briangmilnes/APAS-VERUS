@@ -1,0 +1,72 @@
+error[E0425]: cannot find function `lemma_cmp_equal_congruent` in this scope
+   --> src/Chap43/OrderedTableStEph.rs:983:37
+    |
+983 | ...                   lemma_cmp_equal_congruent::<K>(t.0, *k, root.0);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: these functions exist but are inaccessible
+   --> src/Chap38/BSTParaStEph.rs:209:11
+    |
+209 |       proof fn lemma_cmp_equal_congruent<T: StT + Ord>(a: T, b: T, c: T)
+    |  ___________^
+210 | |         requires
+211 | |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+212 | |             view_ord_consistent::<T>(),
+...   |
+226 | |     }
+    | |_____^ `crate::Chap38::BSTParaStEph::BSTParaStEph::lemma_cmp_equal_congruent`: not accessible
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:204:11
+    |
+204 |       proof fn lemma_cmp_equal_congruent<T: MtKey>(a: T, b: T, c: T)
+    |  ___________^
+205 | |         requires
+206 | |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+207 | |             view_ord_consistent::<T>(),
+...   |
+213 | |         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+214 | |     }
+    | |_____^ `crate::Chap38::BSTParaMtEph::BSTParaMtEph::lemma_cmp_equal_congruent`: not accessible
+help: consider importing this function
+    |
+  6 +     use crate::Chap39::BSTParaTreapMtEph::BSTParaTreapMtEph::lemma_cmp_equal_congruent;
+    |
+
+error[E0425]: cannot find function `lemma_cmp_equal_congruent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:1015:37
+     |
+1015 | ...                   lemma_cmp_equal_congruent::<K>(t.0, *k, root.0);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+note: these functions exist but are inaccessible
+    --> src/Chap38/BSTParaStEph.rs:209:11
+     |
+ 209 |       proof fn lemma_cmp_equal_congruent<T: StT + Ord>(a: T, b: T, c: T)
+     |  ___________^
+ 210 | |         requires
+ 211 | |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+ 212 | |             view_ord_consistent::<T>(),
+...    |
+ 226 | |     }
+     | |_____^ `crate::Chap38::BSTParaStEph::BSTParaStEph::lemma_cmp_equal_congruent`: not accessible
+     |
+    ::: src/Chap38/BSTParaMtEph.rs:204:11
+     |
+ 204 |       proof fn lemma_cmp_equal_congruent<T: MtKey>(a: T, b: T, c: T)
+     |  ___________^
+ 205 | |         requires
+ 206 | |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+ 207 | |             view_ord_consistent::<T>(),
+...    |
+ 213 | |         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+ 214 | |     }
+     | |_____^ `crate::Chap38::BSTParaMtEph::BSTParaMtEph::lemma_cmp_equal_congruent`: not accessible
+help: consider importing this function
+     |
+   6 +     use crate::Chap39::BSTParaTreapMtEph::BSTParaTreapMtEph::lemma_cmp_equal_congruent;
+     |
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 8s

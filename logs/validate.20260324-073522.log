@@ -1,0 +1,24 @@
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:1904:21
+     |
+1904 | /                     forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) ==>
+1905 | |                         ((!other_map.dom().contains(p.0) && old_tree.contains(p))
+1906 | |                         || (other_map.dom().contains(p.0) && exists|v1: V, v2: V, r: V|
+1907 | |                             v1@ == old_map[p.0] && v2@ == other_map[p.0]
+1908 | |                             && f.ensures((&v1, &v2), r) && p.1 == r@)),
+     | |______________________________________________________________________^
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStEph.rs:1907:36
+     |
+1907 | ...                   v1@ == old_map[p.0] && v2@ == other_map[p.0]
+     |                              ^^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+verification results:: 4370 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 70s

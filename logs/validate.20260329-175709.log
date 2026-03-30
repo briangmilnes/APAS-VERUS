@@ -1,0 +1,278 @@
+error: assertion failed
+   --> src/Chap43/OrderedTableStPer.rs:146:25
+    |
+146 |                 implies x1 == x2
+    |                         ^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:146:25
+    |
+146 |                 implies x1 == x2
+    |                         ^^
+
+note: 
+
+x1 =~= x2
+|   x1.0 =~= x2.0 ✔
+|   x1.1 =~= x2.1 ✘
++---
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:456:59
+    |
+456 |             ensures table@ == Map::<K::V, V::V>::empty(), table.spec_orderedtablestper_wf();
+    |                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+868 |             OrderedTableStPer { tree }
+    |             -------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:456:59
+    |
+456 |             ensures table@ == Map::<K::V, V::V>::empty(), table.spec_orderedtablestper_wf();
+    |                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view() =~= empty() ✔
+%return.spec_orderedtablestper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:181:13
+    |
+176 |     proof fn lemma_key_unique_insert<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+    |           ------------------------------------------------------------------ at the end of the function body
+...
+181 |             spec_key_unique_pairs_set(s.insert((k, v)))
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+error: assertion failed
+   --> src/Chap43/OrderedTableStPer.rs:185:21
+    |
+185 |             implies v1 == v2
+    |                     ^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+v1 == v2 
+
+error: assertion failed
+   --> src/Chap43/OrderedTableStPer.rs:306:24
+    |
+306 |                 assert(cv == cv2);
+    |                        ^^^^^^^^^ assertion failed
+
+note: 
+
+cv == cv2 
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:466:74
+    |
+466 |             ensures table@ == Map::<K::V, V::V>::empty().insert(k@, v@), table.spec_orderedtablestper_wf();
+    |                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+883 |             OrderedTableStPer { tree: bst }
+    |             ------------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:877:17
+    |
+265 |             spec_key_unique_pairs_set(s),
+    |             ---------------------------- failed precondition
+...
+877 |                 lemma_set_to_map_insert(Set::empty(), k@, v@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:265:13
+    |
+265 |             spec_key_unique_pairs_set(s),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_key_unique_pairs_set(tmp%) ✘
+    function is opaque
+!(spec_pair_set_to_map(tmp%).dom().contains(tmp%)) ✔
+
+error: assertion failed
+   --> src/Chap43/OrderedTableStPer.rs:165:16
+    |
+165 |         assert(v2 == v);
+    |                ^^^^^^^ assertion failed
+
+note: 
+
+v2 == v 
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:317:13
+    |
+312 |       proof fn lemma_set_to_map_remove_pair<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+    |             ----------------------------------------------------------------------- at the end of the function body
+...
+317 | /             spec_pair_set_to_map(s.remove((k, v)))
+318 | |                 =~= spec_pair_set_to_map(s).remove(k),
+    | |_____________________________________________________^ failed this postcondition
+
+error: assertion failed
+   --> src/Chap43/OrderedTableStPer.rs:334:24
+    |
+334 |                 assert(false);
+    |                        ^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap43/OrderedTableStPer.rs:337:20
+    |
+337 |             assert(cv == vv);
+    |                    ^^^^^^^^ assertion failed
+
+note: 
+
+false 
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:248:17
+    |
+246 |     proof fn lemma_key_unique_remove<KV, VV>(s: Set<(KV, VV)>, pair: (KV, VV))
+    |           -------------------------------------------------------------------- at the end of the function body
+247 |         requires spec_key_unique_pairs_set(s)
+248 |         ensures spec_key_unique_pairs_set(s.remove(pair))
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: 
+
+spec_key_unique_pairs_set(old(s).remove(old(pair))) 
+    function is opaque
+
+error: invariant not satisfied before loop
+    --> src/Chap43/OrderedTableStPer.rs:1095:21
+     |
+1095 |                     spec_key_unique_pairs_set(tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap43/OrderedTableStPer.rs:240:24
+    |
+240 |                 assert(sorted[i] == sorted[j]);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:240:24
+    |
+240 |                 assert(sorted[i] == sorted[j]);
+    |                        ^^^^^^^^^
+
+note: 
+
+sorted.index(i) =~= sorted.index(j)
+|   sorted.index(i).0 =~= sorted.index(j).0 ✔
+|   sorted.index(i).1 =~= sorted.index(j).1 ✘
++---
+
+error: invariant not satisfied before loop
+    --> src/Chap43/OrderedTableStPer.rs:1212:21
+     |
+1212 |                     spec_key_unique_pairs_set(new_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:258:13
+    |
+253 |     proof fn lemma_key_unique_subset<KV, VV>(s: Set<(KV, VV)>, sub: Set<(KV, VV)>)
+    |           ------------------------------------------------------------------------ at the end of the function body
+...
+258 |             spec_key_unique_pairs_set(sub)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: 
+
+spec_key_unique_pairs_set(old(sub)) 
+    function is opaque
+
+error: invariant not satisfied before loop
+    --> src/Chap43/OrderedTableStPer.rs:1401:21
+     |
+1401 |                     spec_key_unique_pairs_set(new_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap43/OrderedTableStPer.rs:1568:21
+     |
+1568 |                     spec_key_unique_pairs_set(new_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStPer.rs:1707:68
+     |
+1707 |                         && !old_map.dom().contains(p.0) ==> p.1 == other_map[p.0],
+     |                                                                    ^^^^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+error: invariant not satisfied before loop
+    --> src/Chap43/OrderedTableStPer.rs:1884:21
+     |
+1884 |                     spec_key_unique_pairs_set(new_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap43/OrderedTableStPer.rs:1849:9
+     |
+1849 |         fn difference(&self, other: &Self) -> (table: Self) {
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap43/OrderedTableStPer.rs:1988:21
+     |
+1988 |                     spec_key_unique_pairs_set(new_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap43/OrderedTableStPer.rs:2088:21
+     |
+2088 |                     spec_key_unique_pairs_set(new_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap43/OrderedTableStPer.rs:2612:21
+     |
+2612 |                     spec_key_unique_pairs_set(left_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap43/OrderedTableStPer.rs:2613:21
+     |
+2613 |                     spec_key_unique_pairs_set(right_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap43/OrderedTableStPer.rs:2825:21
+     |
+2825 |                     spec_key_unique_pairs_set(new_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap43/OrderedTableStPer.rs:3117:21
+     |
+3117 |                     spec_key_unique_pairs_set(left_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap43/OrderedTableStPer.rs:3118:21
+     |
+3118 |                     spec_key_unique_pairs_set(right_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 2562 verified, 20 errors
+error: aborting due to 26 previous errors
+
+Elapsed: 64s
+Sampled Memory Usage: peak rust_verify RSS: 3049MB, peak z3 RSS: 924MB, min free: 18955MB
+Sampled CPU Usage: rust_verify: 43s, z3 children: 45s

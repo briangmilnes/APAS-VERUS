@@ -1,0 +1,121 @@
+error: postcondition not satisfied
+  --> src/Chap44/DocumentIndex.rs:81:25
+   |
+81 |                 ensures result == *self
+   |                         ^^^^^^^^^^^^^^^ failed this postcondition
+82 |             {
+83 |                 DocumentIndex { word_to_docs: self.word_to_docs.clone() }
+   |                 --------------------------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+result == old(self)
+|   result.word_to_docs == old(self).word_to_docs 
++---
+
+error: postcondition not satisfied
+  --> vstd/std_specs/cmp.rs:21:12
+   |
+   = note: failed this postcondition
+   |
+  ::: src/Chap44/DocumentIndex.rs:91:17
+   |
+91 |                 self.word_to_docs == other.word_to_docs
+   |                 --------------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+  --> src/Chap44/DocumentIndex.rs:89:25
+   |
+89 |                 ensures b == (self.word_to_docs == other.word_to_docs)
+   |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+90 |             {
+91 |                 self.word_to_docs == other.word_to_docs
+   |                 --------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+  --> src/Chap44/DocumentIndex.rs:89:30
+   |
+89 |                 ensures b == (self.word_to_docs == other.word_to_docs)
+   |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+  --> vstd/std_specs/cmp.rs:21:38
+
+note: 
+
+obeys_eq_spec() ==>
+    b == old(self).eq_spec(old(other)) ✘
+b == (old(self).word_to_docs == old(other).word_to_docs) ✘
+|   b ==>
+|       old(self).word_to_docs == old(other).word_to_docs ✘
+|       |   old(self).word_to_docs.entries == old(other).word_to_docs.entries 
+|       +---
+|   old(self).word_to_docs == old(other).word_to_docs ==>
+|       b ✔
++---
+
+error: precondition not satisfied
+   --> src/Chap44/DocumentIndex.rs:106:23
+    |
+106 |                 match self.word_to_docs.find(word) {
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:499:22
+    |
+499 |             requires self.spec_tablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/vstdplus/feq.rs:70:13
+    |
+ 70 |         &&& obeys_feq_view_injective::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableStPer.rs:499:22
+    |
+499 |             requires self.spec_tablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_tablestper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_view_eq() ✘
+    function is uninterpreted
+obeys_feq_full() ✘
+|   obeys_feq_properties() ✔
+|   obeys_feq_view() ✔
+|   obeys_feq_view_injective() ✘
+|   |   forall |x, y|
+|   |       x.view() == y.view() ==>
+|   |           x == y
+|   |           |   x.tree == y.tree 
+|   |           +---
+|   +---
+|   obeys_feq_clone() ✔
+|   obeys_feq_eq() ✔
++---
+
+error: precondition not satisfied
+   --> src/Chap44/DocumentIndex.rs:114:17
+    |
+114 |                 docs_a.intersection(docs_b)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:240:17
+    |
+240 |                 self.spec_avltreesetstper_wf(),
+    |                 ------------------------------ failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:240:17
+    |
+240 |                 self.spec_avltreesetstper_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+241 |                 other.spec_avltreesetstper_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+242 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8

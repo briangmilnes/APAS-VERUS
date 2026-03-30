@@ -1,0 +1,19 @@
+error: assertion failed
+    --> src/Chap42/TableStPer.rs:1965:32
+     |
+1965 |                         assert(self.spec_stored_value(k_at_i).spec_wf());
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+self.spec_stored_value(k_at_i).spec_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 2160 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 30s
+Sampled Memory Usage: peak rust_verify RSS: 13532MB, peak z3 RSS: 1892MB, min free: 6645MB
+Sampled CPU Usage: rust_verify: 298s, z3 children: 208s

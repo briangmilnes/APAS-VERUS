@@ -1,0 +1,83 @@
+error[E0308]: mismatched types
+   --> src/Chap53/PQMinStEph.rs:264:49
+    |
+150 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(
+    |                   - found this type parameter
+...
+264 |                         assert(cloned(neighbor, neighbor.clone()));
+    |                                ------           ^^^^^^^^^^^^^^^^ expected `&V`, found type parameter `V`
+    |                                |
+    |                                arguments to this function are incorrect
+    |
+    = note:   expected reference `&_`
+            found type parameter `_`
+note: function defined here
+   --> vstd/pervasive.rs:426:17
+help: consider borrowing here
+    |
+264 |                         assert(cloned(neighbor, &neighbor.clone()));
+    |                                                 +
+
+error[E0308]: mismatched types
+   --> src/Chap53/PQMinStEph.rs:385:34
+    |
+317 |     pub fn pq_min_multi<V: StT + Ord, P: StT + Ord, G, PF>(
+    |                         - found this type parameter
+...
+385 |                 assert(cloned(v, v.clone()));
+    |                        ------    ^^^^^^^^^ expected `&V`, found type parameter `V`
+    |                        |
+    |                        arguments to this function are incorrect
+    |
+    = note:   expected reference `&_`
+            found type parameter `_`
+note: function defined here
+   --> vstd/pervasive.rs:426:17
+help: consider borrowing here
+    |
+385 |                 assert(cloned(v, &v.clone()));
+    |                                  +
+
+error[E0308]: mismatched types
+   --> src/Chap53/PQMinStPer.rs:254:49
+    |
+147 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P>(
+    |                   - found this type parameter
+...
+254 |                         assert(cloned(neighbor, neighbor.clone()));
+    |                                ------           ^^^^^^^^^^^^^^^^ expected `&V`, found type parameter `V`
+    |                                |
+    |                                arguments to this function are incorrect
+    |
+    = note:   expected reference `&_`
+            found type parameter `_`
+note: function defined here
+   --> vstd/pervasive.rs:426:17
+help: consider borrowing here
+    |
+254 |                         assert(cloned(neighbor, &neighbor.clone()));
+    |                                                 +
+
+error[E0308]: mismatched types
+   --> src/Chap53/PQMinStPer.rs:375:34
+    |
+306 |     pub fn pq_min_multi<V: StT + Ord, P: StT + Ord, G, PF>(
+    |                         - found this type parameter
+...
+375 |                 assert(cloned(v, v.clone()));
+    |                        ------    ^^^^^^^^^ expected `&V`, found type parameter `V`
+    |                        |
+    |                        arguments to this function are incorrect
+    |
+    = note:   expected reference `&_`
+            found type parameter `_`
+note: function defined here
+   --> vstd/pervasive.rs:426:17
+help: consider borrowing here
+    |
+375 |                 assert(cloned(v, &v.clone()));
+    |                                  +
+
+error: aborting due to 4 previous errors
+
+For more information about this error, try `rustc --explain E0308`.

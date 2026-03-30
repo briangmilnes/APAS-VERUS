@@ -1,0 +1,89 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStEph.rs:45:14
+   |
+45 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStPer.rs:38:14
+   |
+38 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:155:17
+    |
+155 |                   self.spec_adj()[u@].contains(v@);
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+332 |               proof {
+    |  ___________________-
+...   |
+337 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:322:21
+    |
+322 |                     ns.insert(v.clone());
+    |                     ^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:298:17
+    |
+298 |                 old(self)@.len() + 1 < usize::MAX as nat,
+    |                 ---------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjTableGraphStEph.rs:155:17
+    |
+155 |                 self.spec_adj()[u@].contains(v@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_adjtablegraphsteph_wf() ✔
+self.spec_adj().dom().contains(old(u).view()) ✔
+self.spec_adj().dom().contains(old(v).view()) ✔
+self.spec_adj().index(old(u).view()).contains(old(v).view()) ✘
+    function is uninterpreted
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:162:17
+    |
+162 | /                 !self.spec_adj().dom().contains(u@)
+163 | |                     || !self.spec_adj()[u@].contains(v@);
+    | |________________________________________________________^ failed this postcondition
+...
+342 | /             if self.adj.find_ref(u).is_some() {
+343 | |                 if let Some(ns_ref) = self.adj.find_ref(u) {
+344 | |                     let mut neighbors = ns_ref.clone_wf();
+345 | |                     neighbors.delete(v);
+...   |
+353 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjTableGraphStEph.rs:163:25
+    |
+163 |                     || !self.spec_adj()[u@].contains(v@);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_adjtablegraphsteph_wf() ✔
+self.spec_adj().dom().contains(old(u).view()) ==>
+    !(self.spec_adj().index(old(u).view()).contains(old(v).view())) ✘
+        function is uninterpreted
+
+verification results:: 2773 verified, 2 errors
+error: aborting due to 3 previous errors; 3 warnings emitted
+
+Elapsed: 26s
+Sampled Memory Usage: peak rust_verify RSS: 2513MB, peak z3 RSS: 296MB, min free: 18833MB
+Sampled CPU Usage: rust_verify: 45s, z3 children: 49s

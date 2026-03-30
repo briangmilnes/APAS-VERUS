@@ -1,0 +1,44 @@
+verification results:: 4437 verified, 0 errors
+    Finished `release` profile [optimized] target(s) in 0.02s
+────────────
+ Nextest run ID c1aa5058-8859-4a56-9c51-dfc05494020c with nextest profile: default
+    Starting 1 test across 34 binaries (144 tests skipped)
+        FAIL [   0.779s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_iter_over_subslice
+  stdout ───
+
+    running 1 test
+    test slice_iter_over_subslice ... FAILED
+
+    failures:
+
+    failures:
+        slice_iter_over_subslice
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.78s
+
+  stderr ───
+    error: invariant not satisfied before loop
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveChap19ArraySeqMtEphSlice-4bf3b79803f21f3b-slice_iter_over_subslice/test.rs:34:13
+       |
+    34 | /             forall|j: int| #![trigger iter_seq[j]]
+    35 | |                 0 <= j < iter_seq.len() ==> iter_seq[j] == 55u64,
+       | |________________________________________________________________^
+
+
+    error: aborting due to 1 previous error
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveChap19ArraySeqMtEphSlice-4bf3b79803f21f3b-slice_iter_over_subslice
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveChap19ArraySeqMtEphSlice-4bf3b79803f21f3b-slice_iter_over_subslice/test.rs
+
+
+    thread 'slice_iter_over_subslice' (1459292) panicked at tests/Chap19/ProveArraySeqMtEphSlice.rs:200:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+────────────
+     Summary [   0.780s] 1 test run: 0 passed, 1 failed, 144 skipped
+        FAIL [   0.779s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_iter_over_subslice
+error: test run failed
+Elapsed: 62s

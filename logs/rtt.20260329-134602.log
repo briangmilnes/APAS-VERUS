@@ -1,0 +1,24 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+error[E0599]: no method named `clone_wf` found for reference `&Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<String>` in the current scope
+   --> src/Chap44/DocumentIndex.rs:217:33
+    |
+217 |                     doc_set_ref.clone_wf()
+    |                                 ^^^^^^^^
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `ClonePreservesWf` which provides `clone_wf` is implemented but not in scope; perhaps you want to import it
+    |
+ 22 +     use crate::vstdplus::clone_view::clone_view::ClonePreservesWf;
+    |
+help: there is a method `clone` with a similar name
+    |
+217 -                     doc_set_ref.clone_wf()
+217 +                     doc_set_ref.clone()
+    |
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `apas-verus` (lib test) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `apas-verus` (lib) due to 1 previous error
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 10s

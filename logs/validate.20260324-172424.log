@@ -1,0 +1,368 @@
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:182:17
+    |
+182 |                 reveal_with_fuel(spec_is_bst_link, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:183:17
+    |
+183 |                 reveal_with_fuel(link_contains, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:194:21
+    |
+194 |                     reveal_with_fuel(spec_is_bst_link, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:195:21
+    |
+195 |                     reveal_with_fuel(link_contains, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:218:21
+    |
+218 |                     reveal_with_fuel(spec_is_bst_link, 3);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:219:21
+    |
+219 |                     reveal_with_fuel(link_contains, 4);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:228:25
+    |
+228 |                         reveal_with_fuel(link_contains, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:238:25
+    |
+238 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:241:25
+    |
+241 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:244:25
+    |
+244 |                         reveal_with_fuel(link_contains, 4);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:266:17
+    |
+266 |                 reveal_with_fuel(spec_is_bst_link, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:267:17
+    |
+267 |                 reveal_with_fuel(link_contains, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:278:21
+    |
+278 |                     reveal_with_fuel(spec_is_bst_link, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:279:21
+    |
+279 |                     reveal_with_fuel(link_contains, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:302:21
+    |
+302 |                     reveal_with_fuel(spec_is_bst_link, 3);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:303:21
+    |
+303 |                     reveal_with_fuel(link_contains, 4);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:312:25
+    |
+312 |                         reveal_with_fuel(link_contains, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:322:25
+    |
+322 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:325:25
+    |
+325 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:328:25
+    |
+328 |                         reveal_with_fuel(link_contains, 4);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:421:21
+    |
+421 |                     reveal_with_fuel(spec_is_bst_link, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:422:21
+    |
+422 |                     reveal_with_fuel(link_contains, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:436:29
+    |
+436 | ...                   reveal_with_fuel(spec_is_bst_link, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:437:29
+    |
+437 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:449:33
+    |
+449 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:454:33
+    |
+454 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:463:33
+    |
+463 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:478:29
+    |
+478 | ...                   reveal_with_fuel(spec_is_bst_link, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:479:29
+    |
+479 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:491:33
+    |
+491 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:496:33
+    |
+496 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:505:33
+    |
+505 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:518:29
+    |
+518 | ...                   reveal_with_fuel(spec_is_bst_link, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:519:29
+    |
+519 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap23/BalBinTreeStEph.rs:223:21
+    |
+223 |               ensures count == self.spec_size();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+361 | /             match self {
+362 | |                 BalBinTree::Leaf => 0,
+363 | |                 BalBinTree::Node(node) => {
+364 | |                     let left_sz = node.left.size();
+...   |
+368 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap23/BalBinTreeStEph.rs:364:35
+    |
+221 |             requires self.spec_balbintreesteph_wf(),
+    |                      ------------------------------ failed precondition
+...
+364 |                     let left_sz = node.left.size();
+    |                                   ^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap23/BalBinTreeStEph.rs:365:36
+    |
+221 |             requires self.spec_balbintreesteph_wf(),
+    |                      ------------------------------ failed precondition
+...
+365 |                     let right_sz = node.right.size();
+    |                                    ^^^^^^^^^^^^^^^^^
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap23/BalBinTreeStEph.rs:366:21
+    |
+366 |                     1 + left_sz + right_sz
+    |                     ^^^^^^^^^^^
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap23/BalBinTreeStEph.rs:366:21
+    |
+366 |                     1 + left_sz + right_sz
+    |                     ^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap23/BalBinTreeStEph.rs:221:22
+    |
+221 |             requires self.spec_balbintreesteph_wf(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+222 |                      self.spec_size() <= usize::MAX,
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_balbintreesteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+tmp%.spec_size() <= UnsignedMax.Exec(usize::BITS) ✘
+
+error: postcondition not satisfied
+   --> src/Chap23/BalBinTreeStEph.rs:230:21
+    |
+230 |               ensures h == self.spec_height();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+374 | /             match self {
+375 | |                 BalBinTree::Leaf => 0,
+376 | |                 BalBinTree::Node(node) => {
+377 | |                     let left_h = node.left.height();
+...   |
+381 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap23/BalBinTreeStEph.rs:377:34
+    |
+228 |             requires self.spec_balbintreesteph_wf(),
+    |                      ------------------------------ failed precondition
+...
+377 |                     let left_h = node.left.height();
+    |                                  ^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap23/BalBinTreeStEph.rs:378:35
+    |
+228 |             requires self.spec_balbintreesteph_wf(),
+    |                      ------------------------------ failed precondition
+...
+378 |                     let right_h = node.right.height();
+    |                                   ^^^^^^^^^^^^^^^^^^^
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap23/BalBinTreeStEph.rs:379:21
+    |
+379 |                     1 + if left_h >= right_h { left_h } else { right_h }
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap23/BalBinTreeStEph.rs:228:22
+    |
+228 |             requires self.spec_balbintreesteph_wf(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+229 |                      self.spec_height() <= usize::MAX,
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_balbintreesteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+tmp%.spec_height() <= UnsignedMax.Exec(usize::BITS) ✘
+
+
+thread '<unnamed>' (2361054) panicked at rust_verify/src/verifier.rs:656:17:
+internal error: ill-typed AIR code: error 'use of undeclared function proj%%core!iter.traits.collect.IntoIterator./Item' in expression '(proj%%core!iter.traits.collect.IntoIterator./Item (REF $) (TYPE%lib!Chap37.BSTSetAVLMtEph.BSTSetAVLMtEph.BSTSetAVLMtEph.
+  T&. T&
+))'
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread '<unnamed>' (2361054) panicked at rust_verify/src/verifier.rs:2217:29:
+worker thread panicked
+
+thread '<unnamed>' (2361018) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (2361055) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (2361017) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (2361042) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (2361059) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (2361053) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (2361049) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (2361017) panicked at rust_verify/src/verifier.rs:2216:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (2361055) panicked at rust_verify/src/verifier.rs:2216:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (2361018) panicked at rust_verify/src/verifier.rs:2216:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (2361049) panicked at rust_verify/src/verifier.rs:2216:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (2361053) panicked at rust_verify/src/verifier.rs:2216:34:
+mpsc open: SendError { .. }
+error: aborting due to 9 previous errors; 34 warnings emitted
+
+
+thread '<unnamed>' (2361059) panicked at rust_verify/src/verifier.rs:2216:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (2361042) panicked at rust_verify/src/verifier.rs:2216:34:
+mpsc open: SendError { .. }
+Elapsed: 53s

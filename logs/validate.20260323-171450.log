@@ -1,0 +1,1205 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+    --> src/Chap43/OrderedTableStEph.rs:1514:17
+     |
+1514 |                 assert forall|k: K::V| self@.dom().contains(k) && spec_pred(k, self@[k])
+     |                 ^^^^^^
+     |
+     = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:551:17
+     |
+ 551 |                   self.spec_orderedtablesteph_wf();
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1109 | /             match existing {
+1110 | |                 Some(old_v) => {
+1111 | |                     // Key exists: combine old and new values.
+1112 | |                     let combined = combine(&old_v, &v);
+...    |
+1175 | |                 },
+1176 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:551:17
+    |
+551 |                 self.spec_orderedtablesteph_wf();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.view().dom().contains(old(k).view()) ✔
+self.view().dom() =~= old(self).view().dom().insert(old(k).view()) ✔
+forall |key|
+    !(key == old(k).view()) && old(self).view().dom().contains(key) ==>
+        self.view().index(key) == old(self).view().index(key) ✔
+!(old(self).view().dom().contains(old(k).view())) ==>
+    self.view().index(old(k).view()) == old(v).view() ✔
+old(self).view().dom().contains(old(k).view()) ==>
+    (exists |old_v, r| old_v.view() == old(self).view().index(old(k).view()) && ClosureEns(old(combine), (old_v, old(v)), r) && self.view().index(old(k).view()) == r.view()) ✔
+self.view().dom().finite() ✔
+self.spec_orderedtablesteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:1249:28
+     |
+1249 |                     assert(self.tree@.contains(sorted@[i as int]));
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+self.tree.view().contains(sorted.view().index(i)) 
+    function is uninterpreted
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:1344:28
+     |
+1344 |                     assert(tree@.len() < usize::MAX as nat);
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+tree.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:1423:21
+     |
+1423 |                     new_tree@.len() == i as nat,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:1424:21
+     |
+1424 |                     new_tree@.len() < usize::MAX as nat,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:1425:21
+     |
+1425 |                     spec_key_unique_pairs_set(new_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:1427:21
+     |
+1427 | /                     forall|p: (K::V, V::V)| new_tree@.contains(p) ==>
+1428 | |                         exists|j: int| 0 <= j < i as int && p.0 == sorted@[j].0,
+     | |_______________________________________________________________________________^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:1430:21
+     |
+1430 | /                     forall|j: int| 0 <= j < i as int ==>
+1431 | |                         new_tree@.contains((sorted@[j].0, choose|v: V::V| new_tree@.contains((sorted@[j].0, v)))),
+     | |_________________________________________________________________________________________________________________^
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:607:17
+     |
+ 607 |                 filtered.spec_orderedtablesteph_wf();
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1527 |             filtered
+     |             -------- at the end of the function body
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1517:21
+     |
+ 174 |         requires spec_pair_set_to_map(s).contains_key(k)
+     |                  --------------------------------------- failed precondition
+...
+1517 |                     lemma_map_contains_pair_in_set(self.tree@, k);
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:1521:28
+     |
+1521 |                     assert(pair_spec_pred((k, v)));
+     |                            ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_pair_set_to_map(tmp%).dom().contains(k) 
+    function is uninterpreted
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:624:17
+     |
+ 624 | /                 forall|k: K::V| #[trigger] self@.contains_key(k) ==>
+ 625 | |                     (exists|v1: V, v2: V, r: V|
+ 626 | |                         v1@ == old(self)@[k] && v2@ == other@[k]
+ 627 | |                         && f.ensures((&v1, &v2), r)
+ 628 | |                         && self@[k] == r@),
+     | |__________________________________________^ failed this postcondition
+...
+1621 |               proof {
+     |  ___________________-
+1622 | |                 lemma_pair_set_to_map_dom_finite(new_tree@);
+1623 | |                 // Postconditions proved via invariant + final assertions.
+1624 | |                 assert(self@.dom() =~= old_map.dom().intersect(other_map.dom()));
+1625 | |             }
+     | |_____________- at the end of the function body
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:1591:21
+     |
+1591 |                     spec_key_unique_pairs_set(new_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:1593:21
+     |
+1593 |                     result_v1.len() == new_tree@.len() as int,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:1594:21
+     |
+1594 |                     result_v2.len() == new_tree@.len() as int,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:1595:21
+     |
+1595 |                     result_r.len() == new_tree@.len() as int,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:1624:24
+     |
+1624 |                 assert(self@.dom() =~= old_map.dom().intersect(other_map.dom()));
+     |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+self.view().dom() =~= old_map.dom().intersect(other_map.dom()) 
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:643:17
+     |
+ 643 | /                 forall|k: K::V| #[trigger] old(self)@.contains_key(k) && !other@.contains_key(k)
+ 644 | |                     ==> self@[k] == old(self)@[k],
+     | |_________________________________________________^ failed this postcondition
+...
+1720 |               proof {
+     |  ___________________-
+1721 | |                 lemma_pair_set_to_map_dom_finite(new_tree@);
+1722 | |                 assert(self@.dom() =~= old_map.dom().union(other_map.dom()));
+1723 | |             }
+     | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:645:17
+     |
+ 645 | /                 forall|k: K::V| #[trigger] other@.contains_key(k) && !old(self)@.contains_key(k)
+ 646 | |                     ==> self@[k] == other@[k],
+     | |_____________________________________________^ failed this postcondition
+...
+1720 |               proof {
+     |  ___________________-
+1721 | |                 lemma_pair_set_to_map_dom_finite(new_tree@);
+1722 | |                 assert(self@.dom() =~= old_map.dom().union(other_map.dom()));
+1723 | |             }
+     | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:647:17
+     |
+ 647 | /                 forall|k: K::V| #[trigger] old(self)@.contains_key(k) && other@.contains_key(k) ==>
+ 648 | |                     (exists|v1: V, v2: V, r: V|
+ 649 | |                         v1@ == old(self)@[k] && v2@ == other@[k]
+ 650 | |                         && f.ensures((&v1, &v2), r)
+ 651 | |                         && self@[k] == r@),
+     | |__________________________________________^ failed this postcondition
+...
+1720 |               proof {
+     |  ___________________-
+1721 | |                 lemma_pair_set_to_map_dom_finite(new_tree@);
+1722 | |                 assert(self@.dom() =~= old_map.dom().union(other_map.dom()));
+1723 | |             }
+     | |_____________- at the end of the function body
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:1660:21
+     |
+1660 |                     new_tree@.len() == i as nat,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:1661:21
+     |
+1661 |                     new_tree@.len() < usize::MAX as nat,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:1662:21
+     |
+1662 |                     spec_key_unique_pairs_set(new_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:1700:21
+     |
+1700 |                     new_tree@.len() < usize::MAX as nat,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:1701:21
+     |
+1701 |                     spec_key_unique_pairs_set(new_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:1722:24
+     |
+1722 |                 assert(self@.dom() =~= old_map.dom().union(other_map.dom()));
+     |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+self.view().dom() =~= old_map.dom().union(other_map.dom()) 
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:660:17
+     |
+ 660 |                   forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1766 |               proof {
+     |  ___________________-
+1767 | |                 lemma_pair_set_to_map_dom_finite(new_tree@);
+1768 | |                 assert(self@.dom() =~= old_map.dom().difference(other_map.dom()));
+1769 | |             }
+     | |_____________- at the end of the function body
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:1748:21
+     |
+1748 |                     new_tree@.len() < usize::MAX as nat,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:1749:21
+     |
+1749 |                     spec_key_unique_pairs_set(new_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:1768:24
+     |
+1768 |                 assert(self@.dom() =~= old_map.dom().difference(other_map.dom()));
+     |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+self.view().dom() =~= old_map.dom().difference(other_map.dom()) 
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:669:17
+     |
+ 669 |                   forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1809 |               proof {
+     |  ___________________-
+1810 | |                 lemma_pair_set_to_map_dom_finite(new_tree@);
+1811 | |                 assert(self@.dom() =~= old_map.dom().intersect(keys_set));
+1812 | |             }
+     | |_____________- at the end of the function body
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:1794:21
+     |
+1794 |                     new_tree@.len() < usize::MAX as nat,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:1795:21
+     |
+1795 |                     spec_key_unique_pairs_set(new_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:1811:24
+     |
+1811 |                 assert(self@.dom() =~= old_map.dom().intersect(keys_set));
+     |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+self.view().dom() =~= old_map.dom().intersect(keys_set) 
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:678:17
+     |
+ 678 |                   forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1852 |               proof {
+     |  ___________________-
+1853 | |                 lemma_pair_set_to_map_dom_finite(new_tree@);
+1854 | |                 assert(self@.dom() =~= old_map.dom().difference(keys_set));
+1855 | |             }
+     | |_____________- at the end of the function body
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:1837:21
+     |
+1837 |                     new_tree@.len() < usize::MAX as nat,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:1838:21
+     |
+1838 |                     spec_key_unique_pairs_set(new_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:1854:24
+     |
+1854 |                 assert(self@.dom() =~= old_map.dom().difference(keys_set));
+     |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+self.view().dom() =~= old_map.dom().difference(keys_set) 
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1880:25
+     |
+1880 |                 proof { lemma_cloned_view_eq(*elem, cloned); }
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/feq.rs:88:32
+     |
+  88 |         requires cloned(x, y), obeys_feq_full::<T>(),
+     |                                --------------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/feq.rs:41:13
+   |
+41 |         &&& feq_reflexive::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^
+42 |         &&& feq_symmetric::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^
+43 |         &&& feq_transitive::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^
+...
+68 |         &&& obeys_feq_properties::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+69 |         &&& obeys_feq_view::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^
+...
+88 |         requires cloned(x, y), obeys_feq_full::<T>(),
+   |                                ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+cloned(elem, cloned) ✔
+obeys_feq_full() ✘
+|   obeys_feq_properties() ✘
+|   |   feq_reflexive() ✘
+|   |   |   forall |x|
+|   |   |       x.eq_spec(x) 
+|   |   +---
+|   |   feq_symmetric() ✘
+|   |   |   forall |x, y|
+|   |   |       x.eq_spec(y) == y.eq_spec(x) 
+|   |   +---
+|   |   feq_transitive() ✘
+|   |   |   forall |x, y, z|
+|   |   |       x.eq_spec(y) && y.eq_spec(z) ==>
+|   |   |           x.eq_spec(z) 
+|   |   |               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   +---
+|   +---
+|   obeys_feq_view() ✘
+|   |   forall |x, y|
+|   |       x.eq_spec(y) ==>
+|   |           x.view() == y.view() 
+|   +---
+|   obeys_feq_view_injective() 
+|   obeys_feq_clone() 
+|   obeys_feq_eq() 
++---
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:849:17
+     |
+ 849 |                   first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1911 | /             match min_opt {
+1912 | |                 None => {
+1913 | |                     proof {
+1914 | |                         assert(self.tree@.len() == 0);
+...    |
+1932 | |                 },
+1933 | |             }
+     | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1904:17
+     |
+1904 |                   first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t),
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1911 | /             match min_opt {
+1912 | |                 None => {
+1913 | |                     proof {
+1914 | |                         assert(self.tree@.len() == 0);
+...    |
+1932 | |                 },
+1933 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:849:96
+    |
+849 |                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
+    |                                                                                                ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).view().dom().finite() ✔
+(old(self).view().dom().len() == 0) == let tmp%% = first in if tmp%% is None { true } else { false } ✔
+let tmp%% = first;
+    tmp%% is Some && true ==>
+        let k = tmp%%.0;
+            old(self).view().dom().contains(k.view()) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+let tmp%% = first;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            forall |t|
+                old(self).view().dom().contains(t.view()) ==>
+                    v.le(t) ✘
+    !(tmp%% is Some && true) ==>
+        true ✔
+old(self).view().dom().finite() ✔
+(old(self).view().dom().len() == 0) == let tmp%% = first in if tmp%% is None { true } else { false } ✔
+let tmp%% = first;
+    tmp%% is Some && true ==>
+        let k = tmp%%.0;
+            old(self).view().dom().contains(k.view()) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+let tmp%% = first;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            forall |t|
+                old(self).view().dom().contains(t.view()) ==>
+                    v.le(t) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2068:40
+     |
+2068 | ...                   assert(self.tree@.contains(sorted@[i as int]));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2081:48
+     |
+2081 | ...                   assert(self.tree@.contains(sorted@[i as int]));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+self.tree.view().contains(sorted.view().index(i)) 
+    function is uninterpreted
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2175:40
+     |
+2175 | ...                   assert(self.tree@.contains(sorted@[i as int]));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2188:48
+     |
+2188 | ...                   assert(self.tree@.contains(sorted@[i as int]));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+self.tree.view().contains(sorted.view().index(i)) 
+    function is uninterpreted
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:890:17
+     |
+ 890 |                 !split.0@.dom().contains(k@),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+2297 |             (left_table, found_val, right_table)
+     |             ------------------------------------ at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:892:17
+     |
+ 892 |                 split.0@.dom().subset_of(old(self)@.dom()),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+2297 |             (left_table, found_val, right_table)
+     |             ------------------------------------ at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:895:17
+     |
+ 895 | ...       forall|key| #[trigger] old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.2@.dom().contains(key) || key == k@,
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+2297 | ...   (left_table, found_val, right_table)
+     |       ------------------------------------ at the end of the function body
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:2272:21
+     |
+2272 |                     left_tree@.len() < usize::MAX as nat,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:2274:21
+     |
+2274 |                     spec_key_unique_pairs_set(left_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:890:18
+    |
+890 | ...   !split.0@.dom().contains(k@),
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+891 | ...   !split.2@.dom().contains(k@),
+892 | ...   split.0@.dom().subset_of(old(self)@.dom()),
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+895 | ...   forall|key| #[trigger] old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.2@.dom().contains(key) || key == k@,
+    |                                                                                                                                 ^^^^^^^^^
+
+note: 
+
+self.view().dom().finite() ✔
+old(self).view().dom().finite() ✔
+%return.0.view().dom().finite() ✔
+%return.2.view().dom().finite() ✔
+let tmp%% = %return.1;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            old(self).view().dom().contains(old(k).view()) ✔
+            v.view() == old(self).view().index(old(k).view()) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+let tmp%% = %return.1;
+    tmp%% is None ==>
+        !(old(self).view().dom().contains(old(k).view())) ✔
+    !(tmp%% is None) ==>
+        true ✔
+!(%return.0.view().dom().contains(old(k).view())) ✘
+    function is uninterpreted
+!(%return.2.view().dom().contains(old(k).view())) ✔
+%return.0.view().dom().subset_of(old(self).view().dom()) ✘
+|   forall |a|
+|       %return.0.view().dom().contains(a) ==>
+|           old(self).view().dom().contains(a) 
+|               function is uninterpreted
++---
+%return.2.view().dom().subset_of(old(self).view().dom()) ✔
+%return.0.view().dom().disjoint(%return.2.view().dom()) ✔
+forall |key|
+    old(self).view().dom().contains(key) ==>
+        !(%return.0.view().dom().contains(key) || %return.2.view().dom().contains(key)) ==>
+            key == old(k).view() ✘
+%return.0.spec_orderedtablesteph_wf() ✔
+%return.2.spec_orderedtablesteph_wf() ✔
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:2326:21
+     |
+2326 |                     new_tree@.len() < usize::MAX as nat,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:2327:21
+     |
+2327 |                     spec_key_unique_pairs_set(new_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2352:24
+     |
+2352 |                 assert(range@.dom().subset_of(self@.dom()));
+     |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2354:29
+     |
+2354 |                     implies range@[key] == self@[key] by {};
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+range.view().dom().subset_of(self.view().dom())
+|   forall |a|
+|       range.view().dom().contains(a) ==>
+|           self.view().dom().contains(a) 
+|               function is uninterpreted
++---
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:2391:21
+     |
+2391 |                     count as int == counted.len(),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:2395:21
+     |
+2395 |                     forall|x: K::V| #[trigger] counted.contains(x) ==> dom.contains(x),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2407:36
+     |
+2407 | ...                   assert(self.tree@.contains(sorted@[i as int]));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2417:24
+     |
+2417 |                 assert(counted =~= dom.filter(pred));
+     |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+self.tree.view().contains(sorted.view().index(i)) 
+    function is uninterpreted
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:792:17
+     |
+ 792 |                   selected matches Some(k) ==> self@.dom().contains(k@),
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+2431 | /             if i >= self.size() {
+2432 | |                 None
+2433 | |             } else {
+2434 | |                 let sorted = self.tree.in_order();
+...    |
+2463 | |                 result_key
+2464 | |             }
+     | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:793:17
+     |
+ 793 |                   selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+2431 | /             if i >= self.size() {
+2432 | |                 None
+2433 | |             } else {
+2434 | |                 let sorted = self.tree.in_order();
+...    |
+2463 | |                 result_key
+2464 | |             }
+     | |_____________- at the end of the function body
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2456:36
+     |
+2456 | ...                   assert(self.tree@.contains(sorted@[j as int]));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+self.tree.view().contains(sorted.view().index(j)) 
+    function is uninterpreted
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:927:17
+     |
+ 927 |                 split.0@.dom().subset_of(old(self)@.dom()),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+2521 |             (left_table, right_table)
+     |             ------------------------- at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:928:17
+     |
+ 928 |                 split.1@.dom().subset_of(old(self)@.dom()),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+2521 |             (left_table, right_table)
+     |             ------------------------- at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:929:17
+     |
+ 929 |                 split.0@.dom().disjoint(split.1@.dom()),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+2521 |             (left_table, right_table)
+     |             ------------------------- at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:930:17
+     |
+ 930 | ...       forall|key| #[trigger] old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key),
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+2521 | ...   (left_table, right_table)
+     |       ------------------------- at the end of the function body
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:2496:21
+     |
+2496 |                     left_tree@.len() < usize::MAX as nat,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:2497:21
+     |
+2497 |                     right_tree@.len() < usize::MAX as nat,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:2498:21
+     |
+2498 |                     spec_key_unique_pairs_set(left_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:2499:21
+     |
+2499 |                     spec_key_unique_pairs_set(right_tree@),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:927:17
+    |
+927 | ...   split.0@.dom().subset_of(old(self)@.dom()),
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+928 | ...   split.1@.dom().subset_of(old(self)@.dom()),
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+929 | ...   split.0@.dom().disjoint(split.1@.dom()),
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+930 | ...   forall|key| #[trigger] old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key),
+    |                                                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.view().dom().finite() ✔
+old(self).view().dom().finite() ✔
+%return.0.view().dom().finite() ✔
+%return.1.view().dom().finite() ✔
+%return.0.view().dom().subset_of(old(self).view().dom()) ✘
+|   forall |a|
+|       %return.0.view().dom().contains(a) ==>
+|           old(self).view().dom().contains(a) 
+|               function is uninterpreted
++---
+%return.1.view().dom().subset_of(old(self).view().dom()) ✘
+|   forall |a|
+|       %return.1.view().dom().contains(a) ==>
+|           old(self).view().dom().contains(a) 
+|               function is uninterpreted
++---
+%return.0.view().dom().disjoint(%return.1.view().dom()) ✘
+|   forall |a|
+|       %return.0.view().dom().contains(a) ==>
+|           !(%return.1.view().dom().contains(a)) 
+|               function is uninterpreted
++---
+forall |key|
+    old(self).view().dom().contains(key) ==>
+        !(%return.0.view().dom().contains(key)) ==>
+            %return.1.view().dom().contains(key) ✘
+                function is uninterpreted
+%return.0.spec_orderedtablesteph_wf() 
+%return.1.spec_orderedtablesteph_wf() 
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2562:21
+     |
+2562 |               ensures ({
+     |  _____________________^
+2563 | |                 let (old_index, old_seq) = old(self)@;
+2564 | |                 match next {
+2565 | |                     None => {
+...    |
+2577 | |             })
+     | |______________^ failed this postcondition
+2578 |           {
+2579 | /             if self.pos < self.len {
+2580 | |                 let elem = self.sorted.nth(self.pos);
+2581 | |                 let cloned = elem.clone_plus();
+2582 | |                 proof { lemma_cloned_view_eq(*elem, cloned); }
+...    |
+2586 | |                 None
+2587 | |             }
+     | |_____________- at the end of the function body
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2580:28
+     |
+2580 |                 let elem = self.sorted.nth(self.pos);
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap18/ArraySeqStPer.rs:134:22
+     |
+ 134 |             requires index < self.spec_len()
+     |                      ----------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2582:25
+     |
+2582 |                 proof { lemma_cloned_view_eq(*elem, cloned); }
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/feq.rs:88:32
+     |
+  88 |         requires cloned(x, y), obeys_feq_full::<T>(),
+     |                                --------------------- failed precondition
+
+note: diagnostics via expansion
+    --> src/Chap43/OrderedTableStEph.rs:2567:29
+     |
+2567 |                         &&& old_index >= old_seq.len()
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+2571 |                         &&& 0 <= old_index < old_seq.len()
+     |                                  ^^^^^^^^^
+
+note: 
+
+let next = __verus_tmp_ret;
+    let tmp%% = old(self).view();
+        let old_index = tmp%%.0;
+            let old_seq = tmp%%.1;
+                let tmp%% = next;
+                    tmp%% is None ==>
+                        self.view() =~= old(self).view() ✔
+                        old_index >= old_seq.len() ✘
+                    !(tmp%% is None) ==>
+                        let element = tmp%%.0;
+                            let tmp%% = self.view();
+                                let new_index = tmp%%.0;
+                                    let new_seq = tmp%%.1;
+                                        let tmp%% = 0;
+                                            let tmp%% = old_index;
+                                                let tmp%% = old_seq.len();
+                                                    tmp%% <= tmp%% ✔
+                                                    tmp%% < tmp%% ✘
+                                        new_seq =~= old_seq ✔
+                                        new_index == old_index + 1 ✔
+                                        element.view() =~= old_seq.index(old_index) ✔
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:2626:17
+     |
+2626 |                 tree@.len() < usize::MAX as nat,
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedTableStEph.rs:138:35
+    |
+138 |                 let p: (KV, VV) = choose|p: (KV, VV)| s.contains(p) && p.0 == k;
+    |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap43/OrderedTableStEph.rs:138:55
+    |
+138 |                 let p: (KV, VV) = choose|p: (KV, VV)| s.contains(p) && p.0 == k;
+    |                                                       ^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedTableStEph.rs:301:9
+    |
+301 |         assert forall|key: KV| new_m.dom().contains(key)
+    |         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap43/OrderedTableStEph.rs:301:32
+    |
+301 |         assert forall|key: KV| new_m.dom().contains(key)
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedTableStEph.rs:321:9
+    |
+321 |         assert forall|key: KV| new_m.dom().contains(key)
+    |         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap43/OrderedTableStEph.rs:322:21
+    |
+322 |             implies new_m[key] == old_m.insert(k, v)[key]
+    |                     ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedTableStEph.rs:352:9
+    |
+352 |         assert forall|key: KV| new_m.dom().contains(key)
+    |         ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap43/OrderedTableStEph.rs:353:73
+    |
+353 |             implies (#[trigger] old_m.remove(k)).dom().contains(key) && new_m[key] == old_m[key]
+    |                                                                         ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap43/OrderedTableStEph.rs:353:87
+    |
+353 |             implies (#[trigger] old_m.remove(k)).dom().contains(key) && new_m[key] == old_m[key]
+    |                                                                                       ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:1428:25
+     |
+1428 |                         exists|j: int| 0 <= j < i as int && p.0 == sorted@[j].0,
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:1428:68
+     |
+1428 |                         exists|j: int| 0 <= j < i as int && p.0 == sorted@[j].0,
+     |                                                                    ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:1430:21
+     |
+1430 | /                     forall|j: int| 0 <= j < i as int ==>
+1431 | |                         new_tree@.contains((sorted@[j].0, choose|v: V::V| new_tree@.contains((sorted@[j].0, v)))),
+     | |_________________________________________________________________________________________________________________^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:1431:45
+     |
+1431 |                         new_tree@.contains((sorted@[j].0, choose|v: V::V| new_tree@.contains((sorted@[j].0, v)))),
+     |                                             ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:1454:33
+     |
+1454 |                         let j = choose|j: int| 0 <= j < i as int && (key, v).0 == sorted@[j].0;
+     |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:1454:83
+     |
+1454 |                         let j = choose|j: int| 0 <= j < i as int && (key, v).0 == sorted@[j].0;
+     |                                                                                   ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:1985:33
+     |
+1985 | ...                   assert forall|j: int| 0 <= j < i + 1
+     |                       ^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:1986:60
+     |
+1986 | ...                   implies TotalOrder::le(sorted.spec_index(j).0, elem.0) by {
+     |                                              ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:1974:25
+     |
+1974 | /                         forall|j: int| 0 <= j < i as int ==>
+1975 | |                             TotalOrder::le(sorted.spec_index(j).0, max_key),
+     | |___________________________________________________________________________^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:1975:44
+     |
+1975 | ...                   TotalOrder::le(sorted.spec_index(j).0, max_key),
+     |                                      ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2083:41
+     |
+2083 | ...                   assert forall|j: int| 0 <= j < i + 1
+     |                       ^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2084:63
+     |
+2084 | ...                   && TotalOrder::le(sorted.spec_index(j).0, *k) && sorted.spec_index(j).0@ != k@
+     |                                         ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2049:32
+     |
+2049 |                       !found ==> forall|j: int| 0 <= j < i as int ==>
+     |  ________________________________^
+2050 | |                         !(TotalOrder::le(sorted.spec_index(j).0, *k) && sorted.spec_index(j).0@ != k@),
+     | |______________________________________________________________________________________________________^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2050:42
+     |
+2050 |                         !(TotalOrder::le(sorted.spec_index(j).0, *k) && sorted.spec_index(j).0@ != k@),
+     |                                          ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2054:31
+     |
+2054 |                       found ==> forall|j: int| 0 <= j < i as int
+     |  _______________________________^
+2055 | |                         && TotalOrder::le(sorted.spec_index(j).0, *k) && sorted.spec_index(j).0@ != k@
+2056 | |                         ==> TotalOrder::le(sorted.spec_index(j).0, best->Some_0),
+     | |________________________________________________________________________________^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2055:43
+     |
+2055 |                         && TotalOrder::le(sorted.spec_index(j).0, *k) && sorted.spec_index(j).0@ != k@
+     |                                           ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2190:41
+     |
+2190 | ...                   assert forall|j: int| 0 <= j < i + 1
+     |                       ^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2191:67
+     |
+2191 | ...                   && TotalOrder::le(*k, sorted.spec_index(j).0) && sorted.spec_index(j).0@ != k@
+     |                                             ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2156:32
+     |
+2156 |                       !found ==> forall|j: int| 0 <= j < i as int ==>
+     |  ________________________________^
+2157 | |                         !(TotalOrder::le(*k, sorted.spec_index(j).0) && sorted.spec_index(j).0@ != k@),
+     | |______________________________________________________________________________________________________^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2157:46
+     |
+2157 |                         !(TotalOrder::le(*k, sorted.spec_index(j).0) && sorted.spec_index(j).0@ != k@),
+     |                                              ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2161:31
+     |
+2161 |                       found ==> forall|j: int| 0 <= j < i as int
+     |  _______________________________^
+2162 | |                         && TotalOrder::le(*k, sorted.spec_index(j).0) && sorted.spec_index(j).0@ != k@
+2163 | |                         ==> TotalOrder::le(best->Some_0, sorted.spec_index(j).0),
+     | |________________________________________________________________________________^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2162:47
+     |
+2162 |                         && TotalOrder::le(*k, sorted.spec_index(j).0) && sorted.spec_index(j).0@ != k@
+     |                                               ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedTableStEph.rs:248:13
+    |
+248 | /             forall|p1: (KV, VV), p2: (KV, VV)|
+249 | |                 s1.contains(p1) && s2.contains(p2) ==> p1.0 != p2.0,
+    | |___________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap43/OrderedTableStEph.rs:249:17
+    |
+249 |                 s1.contains(p1) && s2.contains(p2) ==> p1.0 != p2.0,
+    |                 ^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedTableStEph.rs:250:13
+    |
+250 |             forall|p: (KV, VV)| s1.contains(p) ==> p.0 != root.0,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap43/OrderedTableStEph.rs:250:33
+    |
+250 |             forall|p: (KV, VV)| s1.contains(p) ==> p.0 != root.0,
+    |                                 ^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedTableStEph.rs:251:13
+    |
+251 |             forall|p: (KV, VV)| s2.contains(p) ==> p.0 != root.0,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap43/OrderedTableStEph.rs:251:33
+    |
+251 |             forall|p: (KV, VV)| s2.contains(p) ==> p.0 != root.0,
+    |                                 ^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedTableStEph.rs:392:13
+    |
+392 |             forall|p: (KV, VV)| left.contains(p) ==> p.0 != root_k,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap43/OrderedTableStEph.rs:392:33
+    |
+392 |             forall|p: (KV, VV)| left.contains(p) ==> p.0 != root_k,
+    |                                 ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedTableStEph.rs:393:13
+    |
+393 |             forall|p: (KV, VV)| right.contains(p) ==> p.0 != root_k,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap43/OrderedTableStEph.rs:393:33
+    |
+393 |             forall|p: (KV, VV)| right.contains(p) ==> p.0 != root_k,
+    |                                 ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedTableStEph.rs:394:13
+    |
+394 | /             forall|p1: (KV, VV), p2: (KV, VV)|
+395 | |                 left.contains(p1) && right.contains(p2) ==> p1.0 != p2.0,
+    | |________________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap43/OrderedTableStEph.rs:395:17
+    |
+395 |                 left.contains(p1) && right.contains(p2) ==> p1.0 != p2.0,
+    |                 ^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap43/OrderedTableStEph.rs:394:13
+    |
+394 | /             forall|p1: (KV, VV), p2: (KV, VV)|
+395 | |                 left.contains(p1) && right.contains(p2) ==> p1.0 != p2.0,
+    | |________________________________________________________________________^
+
+verification results:: 4455 verified, 32 errors
+error: aborting due to 73 previous errors; 1 warning emitted
+
+Elapsed: 48s

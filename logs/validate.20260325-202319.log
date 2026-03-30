@@ -1,0 +1,43 @@
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:200:9
+    |
+200 |         loop
+    |         ^^^^
+
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:312:24
+    |
+312 |                 assert(graph@.A.contains(eseq[j]@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:281:9
+    |
+281 |         while i < edges_vec.len()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:227:20
+    |
+227 |             assert(vit@.0 == vseq.len());
+    |                    ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:180:5
+    |
+180 | /     pub fn kruskal_mst<V: HashOrd>(
+181 | |         graph: &LabUnDirGraphStEph<V, WrappedF64>,
+182 | |     ) -> (mst_edges: SetStEph<LabEdge<V, WrappedF64>>)
+    | |_____________________________________________________^
+
+note: diagnostics via expansion
+
+note: 
+
+graph.view().A.contains(eseq.index(j).view()) 
+    function is uninterpreted
+
+verification results:: 4916 verified, 3 errors
+error: aborting due to 5 previous errors
+
+Elapsed: 96s

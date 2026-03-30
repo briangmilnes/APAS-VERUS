@@ -1,0 +1,22 @@
+error: assertion failed
+   --> src/Chap65/UnionFindStEph.rs:258:28
+    |
+258 |                     assert(v4@ == v@) by {
+    |                            ^^^^^^^^^ assertion failed
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:242:9
+    |
+242 |         fn insert(&mut self, v: V) {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+v4.view() == v.view() 
+
+verification results:: 4869 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 96s

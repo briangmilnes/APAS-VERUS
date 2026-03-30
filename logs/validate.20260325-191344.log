@@ -1,0 +1,16 @@
+error: assertion failed
+    --> src/Chap37/BSTSplayMtEph.rs:1607:20
+     |
+1607 |             assert(node.key == pivot);
+     |                    ^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+node.key == pivot 
+
+verification results:: 4907 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 275s

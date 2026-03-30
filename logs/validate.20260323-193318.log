@@ -1,0 +1,10 @@
+error[E0432]: unresolved import `crate::Chap43::OrderedTableStEph::from_sorted_entries`
+  --> src/Chap43/OrderedTableMtEph.rs:30:9
+   |
+30 |     use crate::Chap43::OrderedTableStEph::from_sorted_entries;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `from_sorted_entries` in `Chap43::OrderedTableStEph`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0432`.
+Elapsed: 13s

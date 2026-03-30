@@ -1,0 +1,556 @@
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedTableStEph.rs:138:35
+    |
+138 |                 let p: (KV, VV) = choose|p: (KV, VV)| s.contains(p) && p.0 == k;
+    |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap43/OrderedTableStEph.rs:138:55
+    |
+138 |                 let p: (KV, VV) = choose|p: (KV, VV)| s.contains(p) && p.0 == k;
+    |                                                       ^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedTableStEph.rs:339:9
+    |
+339 |         assert forall|key: KV| new_m.dom().contains(key)
+    |         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap43/OrderedTableStEph.rs:339:32
+    |
+339 |         assert forall|key: KV| new_m.dom().contains(key)
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedTableStEph.rs:359:9
+    |
+359 |         assert forall|key: KV| new_m.dom().contains(key)
+    |         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap43/OrderedTableStEph.rs:360:21
+    |
+360 |             implies new_m[key] == old_m.insert(k, v)[key]
+    |                     ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedTableStEph.rs:390:9
+    |
+390 |         assert forall|key: KV| new_m.dom().contains(key)
+    |         ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap43/OrderedTableStEph.rs:391:73
+    |
+391 |             implies (#[trigger] old_m.remove(k)).dom().contains(key) && new_m[key] == old_m[key]
+    |                                                                         ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap43/OrderedTableStEph.rs:391:87
+    |
+391 |             implies (#[trigger] old_m.remove(k)).dom().contains(key) && new_m[key] == old_m[key]
+    |                                                                                       ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:1505:38
+     |
+1505 | ...                   let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == sorted@[jj].0;
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:1505:107
+     |
+1505 | ...                   let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == sorted@[jj].0;
+     |                                                                                                     ^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:1482:21
+     |
+1482 |                     forall|v: (K::V, V::V)| self.tree@.contains(v) <==> sorted@.contains(v),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:1482:73
+     |
+1482 |                     forall|v: (K::V, V::V)| self.tree@.contains(v) <==> sorted@.contains(v),
+     |                                                                         ^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:1491:25
+     |
+1491 |                         exists|j: int| 0 <= j < i as int && p.0 == sorted@[j].0,
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:1491:68
+     |
+1491 |                         exists|j: int| 0 <= j < i as int && p.0 == sorted@[j].0,
+     |                                                                    ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:1529:33
+     |
+1529 |                         let j = choose|j: int| 0 <= j < i as int && (key, v).0 == sorted@[j].0;
+     |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:1529:83
+     |
+1529 |                         let j = choose|j: int| 0 <= j < i as int && (key, v).0 == sorted@[j].0;
+     |                                                                                   ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:1709:46
+     |
+1709 | ...                   let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == sorted@[jj].0;
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:1709:115
+     |
+1709 | ...                   let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == sorted@[jj].0;
+     |                                                                                                     ^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:1689:25
+     |
+1689 |                         exists|j: int| 0 <= j < i as int && p.0 == sorted@[j].0,
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:1689:68
+     |
+1689 |                         exists|j: int| 0 <= j < i as int && p.0 == sorted@[j].0,
+     |                                                                    ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:1800:38
+     |
+1800 | ...                   let jj = choose|jj: int| 0 <= jj < i as int && (self_sorted@[i as int].0, vv).0 == self_sorted@[jj].0;
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:1800:112
+     |
+1800 | ...                   let jj = choose|jj: int| 0 <= jj < i as int && (self_sorted@[i as int].0, vv).0 == self_sorted@[jj].0;
+     |                                                                                                          ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:1779:25
+     |
+1779 |                         exists|j: int| 0 <= j < i as int && p.0 == self_sorted@[j].0,
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:1779:68
+     |
+1779 |                         exists|j: int| 0 <= j < i as int && p.0 == self_sorted@[j].0,
+     |                                                                    ^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:1840:30
+     |
+1840 |                     let jx = choose|jx: int| 0 <= jx < self_sorted@.len() && p.0 == self_sorted@[jx].0;
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:1840:85
+     |
+1840 |                     let jx = choose|jx: int| 0 <= jx < self_sorted@.len() && p.0 == self_sorted@[jx].0;
+     |                                                                                     ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:1891:50
+     |
+1891 | ...                   let j2 = choose|j2: int| 0 <= j2 < j as int && (other_sorted@[j as int].0, vv).0 == other_sorted@[j2].0;
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:1891:125
+     |
+1891 | ...                   let j2 = choose|j2: int| 0 <= j2 < j as int && (other_sorted@[j as int].0, vv).0 == other_sorted@[j2].0;
+     |                                                                                                           ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:1863:25
+     |
+1863 |                         (exists|j2: int| 0 <= j2 < j as int && p.0 == other_sorted@[j2].0),
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:1863:71
+     |
+1863 |                         (exists|j2: int| 0 <= j2 < j as int && p.0 == other_sorted@[j2].0),
+     |                                                                       ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:1971:46
+     |
+1971 | ...                   let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == sorted@[jj].0;
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:1971:115
+     |
+1971 | ...                   let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == sorted@[jj].0;
+     |                                                                                                     ^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:1944:25
+     |
+1944 |                         exists|j: int| 0 <= j < i as int && p.0 == sorted@[j].0,
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:1944:68
+     |
+1944 |                         exists|j: int| 0 <= j < i as int && p.0 == sorted@[j].0,
+     |                                                                    ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2054:42
+     |
+2054 | ...                   let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == sorted@[jj].0;
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2054:111
+     |
+2054 | ...                   let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == sorted@[jj].0;
+     |                                                                                                     ^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2031:25
+     |
+2031 |                         exists|j: int| 0 <= j < i as int && p.0 == sorted@[j].0,
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2031:68
+     |
+2031 |                         exists|j: int| 0 <= j < i as int && p.0 == sorted@[j].0,
+     |                                                                    ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2133:42
+     |
+2133 | ...                   let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == sorted@[jj].0;
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2133:111
+     |
+2133 | ...                   let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == sorted@[jj].0;
+     |                                                                                                     ^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2110:25
+     |
+2110 |                         exists|j: int| 0 <= j < i as int && p.0 == sorted@[j].0,
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2110:68
+     |
+2110 |                         exists|j: int| 0 <= j < i as int && p.0 == sorted@[j].0,
+     |                                                                    ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2287:33
+     |
+2287 | ...                   assert forall|j: int| 0 <= j < i + 1
+     |                       ^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2288:60
+     |
+2288 | ...                   implies TotalOrder::le(sorted.spec_index(j).0, elem.0) by {
+     |                                              ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2276:25
+     |
+2276 | /                         forall|j: int| 0 <= j < i as int ==>
+2277 | |                             TotalOrder::le(sorted.spec_index(j).0, max_key),
+     | |___________________________________________________________________________^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2277:44
+     |
+2277 | ...                   TotalOrder::le(sorted.spec_index(j).0, max_key),
+     |                                      ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2393:41
+     |
+2393 | ...                   assert forall|j: int| 0 <= j < i + 1
+     |                       ^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2394:63
+     |
+2394 | ...                   && TotalOrder::le(sorted.spec_index(j).0, *k) && sorted.spec_index(j).0@ != k@
+     |                                         ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2357:32
+     |
+2357 |                       !found ==> forall|j: int| 0 <= j < i as int ==>
+     |  ________________________________^
+2358 | |                         !(TotalOrder::le(sorted.spec_index(j).0, *k) && sorted.spec_index(j).0@ != k@),
+     | |______________________________________________________________________________________________________^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2358:42
+     |
+2358 |                         !(TotalOrder::le(sorted.spec_index(j).0, *k) && sorted.spec_index(j).0@ != k@),
+     |                                          ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2362:31
+     |
+2362 |                       found ==> forall|j: int| 0 <= j < i as int
+     |  _______________________________^
+2363 | |                         && TotalOrder::le(sorted.spec_index(j).0, *k) && sorted.spec_index(j).0@ != k@
+2364 | |                         ==> TotalOrder::le(sorted.spec_index(j).0, best->Some_0),
+     | |________________________________________________________________________________^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2363:43
+     |
+2363 |                         && TotalOrder::le(sorted.spec_index(j).0, *k) && sorted.spec_index(j).0@ != k@
+     |                                           ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2508:41
+     |
+2508 | ...                   assert forall|j: int| 0 <= j < i + 1
+     |                       ^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2509:67
+     |
+2509 | ...                   && TotalOrder::le(*k, sorted.spec_index(j).0) && sorted.spec_index(j).0@ != k@
+     |                                             ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2472:32
+     |
+2472 |                       !found ==> forall|j: int| 0 <= j < i as int ==>
+     |  ________________________________^
+2473 | |                         !(TotalOrder::le(*k, sorted.spec_index(j).0) && sorted.spec_index(j).0@ != k@),
+     | |______________________________________________________________________________________________________^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2473:46
+     |
+2473 |                         !(TotalOrder::le(*k, sorted.spec_index(j).0) && sorted.spec_index(j).0@ != k@),
+     |                                              ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2477:31
+     |
+2477 |                       found ==> forall|j: int| 0 <= j < i as int
+     |  _______________________________^
+2478 | |                         && TotalOrder::le(*k, sorted.spec_index(j).0) && sorted.spec_index(j).0@ != k@
+2479 | |                         ==> TotalOrder::le(best->Some_0, sorted.spec_index(j).0),
+     | |________________________________________________________________________________^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2478:47
+     |
+2478 |                         && TotalOrder::le(*k, sorted.spec_index(j).0) && sorted.spec_index(j).0@ != k@
+     |                                               ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2614:42
+     |
+2614 | ...                   let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == sorted@[jj].0;
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2614:111
+     |
+2614 | ...                   let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == sorted@[jj].0;
+     |                                                                                                     ^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2599:25
+     |
+2599 |                         exists|j: int| 0 <= j < i as int && p.0 == sorted@[j].0,
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2599:68
+     |
+2599 |                         exists|j: int| 0 <= j < i as int && p.0 == sorted@[j].0,
+     |                                                                    ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2699:42
+     |
+2699 | ...                   let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == sorted@[jj].0;
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2699:111
+     |
+2699 | ...                   let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == sorted@[jj].0;
+     |                                                                                                     ^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2677:25
+     |
+2677 |                         exists|j: int| 0 <= j < i as int && p.0 == sorted@[j].0,
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2677:68
+     |
+2677 |                         exists|j: int| 0 <= j < i as int && p.0 == sorted@[j].0,
+     |                                                                    ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2878:42
+     |
+2878 | ...                   let jj = choose|jj: int| 0 <= jj < j as int && (sorted@[j as int].0, vv).0 == sorted@[jj].0;
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2878:111
+     |
+2878 | ...                   let jj = choose|jj: int| 0 <= jj < j as int && (sorted@[j as int].0, vv).0 == sorted@[jj].0;
+     |                                                                                                     ^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2900:42
+     |
+2900 | ...                   let jj = choose|jj: int| 0 <= jj < j as int && (sorted@[j as int].0, vv).0 == sorted@[jj].0;
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2900:111
+     |
+2900 | ...                   let jj = choose|jj: int| 0 <= jj < j as int && (sorted@[j as int].0, vv).0 == sorted@[jj].0;
+     |                                                                                                     ^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2862:25
+     |
+2862 |                         exists|jj: int| 0 <= jj < j as int && p.0 == sorted@[jj].0,
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2862:70
+     |
+2862 |                         exists|jj: int| 0 <= jj < j as int && p.0 == sorted@[jj].0,
+     |                                                                      ^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap43/OrderedTableStEph.rs:2864:25
+     |
+2864 |                         exists|jj: int| 0 <= jj < j as int && p.0 == sorted@[jj].0,
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap43/OrderedTableStEph.rs:2864:70
+     |
+2864 |                         exists|jj: int| 0 <= jj < j as int && p.0 == sorted@[jj].0,
+     |                                                                      ^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedTableStEph.rs:286:13
+    |
+286 | /             forall|p1: (KV, VV), p2: (KV, VV)|
+287 | |                 s1.contains(p1) && s2.contains(p2) ==> p1.0 != p2.0,
+    | |___________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap43/OrderedTableStEph.rs:287:17
+    |
+287 |                 s1.contains(p1) && s2.contains(p2) ==> p1.0 != p2.0,
+    |                 ^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedTableStEph.rs:288:13
+    |
+288 |             forall|p: (KV, VV)| s1.contains(p) ==> p.0 != root.0,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap43/OrderedTableStEph.rs:288:33
+    |
+288 |             forall|p: (KV, VV)| s1.contains(p) ==> p.0 != root.0,
+    |                                 ^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedTableStEph.rs:289:13
+    |
+289 |             forall|p: (KV, VV)| s2.contains(p) ==> p.0 != root.0,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap43/OrderedTableStEph.rs:289:33
+    |
+289 |             forall|p: (KV, VV)| s2.contains(p) ==> p.0 != root.0,
+    |                                 ^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedTableStEph.rs:430:13
+    |
+430 |             forall|p: (KV, VV)| left.contains(p) ==> p.0 != root_k,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap43/OrderedTableStEph.rs:430:33
+    |
+430 |             forall|p: (KV, VV)| left.contains(p) ==> p.0 != root_k,
+    |                                 ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedTableStEph.rs:431:13
+    |
+431 |             forall|p: (KV, VV)| right.contains(p) ==> p.0 != root_k,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap43/OrderedTableStEph.rs:431:33
+    |
+431 |             forall|p: (KV, VV)| right.contains(p) ==> p.0 != root_k,
+    |                                 ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap43/OrderedTableStEph.rs:432:13
+    |
+432 | /             forall|p1: (KV, VV), p2: (KV, VV)|
+433 | |                 left.contains(p1) && right.contains(p2) ==> p1.0 != p2.0,
+    | |________________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap43/OrderedTableStEph.rs:433:17
+    |
+433 |                 left.contains(p1) && right.contains(p2) ==> p1.0 != p2.0,
+    |                 ^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap43/OrderedTableStEph.rs:432:13
+    |
+432 | /             forall|p1: (KV, VV), p2: (KV, VV)|
+433 | |                 left.contains(p1) && right.contains(p2) ==> p1.0 != p2.0,
+    | |________________________________________________________________________^
+
+verification results:: 4488 verified, 0 errors
+Elapsed: 71s

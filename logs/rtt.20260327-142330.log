@@ -1,0 +1,48 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+error[E0432]: unresolved import `crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent`
+  --> src/Chap52/AdjTableGraphStEph.rs:10:9
+   |
+10 |     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `view_ord_consistent` in `Chap38::BSTParaStEph::BSTParaStEph`
+
+error[E0432]: unresolved imports `crate::vstdplus::float::float::f64_add_spec`, `crate::vstdplus::float::float::f64_sub_spec`, `crate::vstdplus::float::float::f64_mul_spec`, `crate::vstdplus::float::float::f64_sqrt_spec`
+  --> src/Chap26/ETSPMtEph.rs:42:18
+   |
+42 |         f64_add, f64_add_spec, f64_sub, f64_sub_spec,
+   |                  ^^^^^^^^^^^^           ^^^^^^^^^^^^ no `f64_sub_spec` in `vstdplus::float::float`
+   |                  |
+   |                  no `f64_add_spec` in `vstdplus::float::float`
+43 |         f64_mul, f64_mul_spec, f64_sqrt, f64_sqrt_spec,
+   |                  ^^^^^^^^^^^^            ^^^^^^^^^^^^^ no `f64_sqrt_spec` in `vstdplus::float::float`
+   |                  |
+   |                  no `f64_mul_spec` in `vstdplus::float::float`
+
+error[E0433]: failed to resolve: use of undeclared type `CycleDetectStEph`
+   --> src/Chap55/TopoSortStEph.rs:883:12
+    |
+883 |         if CycleDetectStEph::has_cycle(graph) {
+    |            ^^^^^^^^^^^^^^^^ use of undeclared type `CycleDetectStEph`
+    |
+help: consider importing this struct
+    |
+  8 +     use crate::Chap55::CycleDetectStEph::CycleDetectStEph::CycleDetectStEph;
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `CycleDetectStPer`
+   --> src/Chap55/TopoSortStPer.rs:692:12
+    |
+692 |         if CycleDetectStPer::has_cycle(graph) {
+    |            ^^^^^^^^^^^^^^^^ use of undeclared type `CycleDetectStPer`
+    |
+help: consider importing this struct
+    |
+  8 +     use crate::Chap55::CycleDetectStPer::CycleDetectStPer::CycleDetectStPer;
+    |
+
+Some errors have detailed explanations: E0432, E0433.
+For more information about an error, try `rustc --explain E0432`.
+error: could not compile `apas-verus` (lib) due to 4 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `apas-verus` (lib test) due to 4 previous errors
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 9s

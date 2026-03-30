@@ -1,0 +1,27 @@
+error[E0425]: cannot find function `from_sorted_entries` in module `crate::Chap43::OrderedTableStEph`
+   --> src/Chap43/OrderedTableMtEph.rs:769:55
+    |
+769 |         let inner = crate::Chap43::OrderedTableStEph::from_sorted_entries(entries);
+    |                                                       ^^^^^^^^^^^^^^^^^^^ not found in `crate::Chap43::OrderedTableStEph`
+    |
+help: consider importing one of these functions
+    |
+ 22 +     use crate::Chap42::TableMtEph::TableMtEph::from_sorted_entries;
+    |
+ 22 +     use crate::Chap42::TableStEph::TableStEph::from_sorted_entries;
+    |
+ 22 +     use crate::Chap42::TableStPer::TableStPer::from_sorted_entries;
+    |
+ 22 +     use crate::Chap43::OrderedTableMtEph::OrderedTableMtEph::from_sorted_entries;
+    |
+    = and 2 other candidates
+help: if you import `from_sorted_entries`, refer to it directly
+    |
+769 -         let inner = crate::Chap43::OrderedTableStEph::from_sorted_entries(entries);
+769 +         let inner = from_sorted_entries(entries);
+    |
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 12s

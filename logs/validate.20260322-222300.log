@@ -1,0 +1,9 @@
+error: cannot call function `core::clone::Clone::clone` with mode exec
+   --> src/Chap53/PQMinStEph.rs:264:50
+    |
+264 |                         assert(cloned(neighbor, &neighbor.clone()));
+    |                                                  ^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 25s

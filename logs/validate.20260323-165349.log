@@ -1,0 +1,22 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+    --> src/Chap43/OrderedTableStEph.rs:1475:17
+     |
+1475 |                 assert forall|k: K::V| self@.dom().contains(k) && spec_pred(k, self@[k])
+     |                 ^^^^^^
+     |
+     = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: type invariant function is not visible to this program point
+   --> src/Chap43/OrderedTableStEph.rs:990:49
+    |
+990 | ...                   use_type_invariant(&right);
+    |                                           ^^^^^
+    |
+   ::: src/Chap38/BSTParaStEph.rs:119:14
+    |
+119 |         spec fn wf(self) -> bool {
+    |              -------------------
+
+error: aborting due to 1 previous error; 1 warning emitted
+
+Elapsed: 19s

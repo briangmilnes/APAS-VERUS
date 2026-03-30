@@ -1,0 +1,44 @@
+error[E0599]: no method named `is_finite_spec` found for type `f64` in the current scope
+   --> src/Chap65/KruskalStEph.rs:186:63
+    |
+186 |                 #[trigger] graph@.A.contains((u, w, d)) ==> d.is_finite_spec(),
+    |                                                               ^^^^^^^^^^^^^^
+    |
+   --> vstd/float.rs:18:12
+    |
+    = note: the method is available for `f64` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `FloatBitsProperties` which provides `is_finite_spec` is implemented but not in scope; perhaps you want to import it
+    |
+  9 +     use vstd::float::FloatBitsProperties;
+    |
+help: there is a method `is_infinite_spec` with a similar name
+    |
+186 |                 #[trigger] graph@.A.contains((u, w, d)) ==> d.is_infinite_spec(),
+    |                                                                  ++
+
+error[E0599]: no method named `is_finite_spec` found for type `f64` in the current scope
+   --> src/Chap65/KruskalStEph.rs:283:67
+    |
+283 |                     #[trigger] graph@.A.contains((u, w, d)) ==> d.is_finite_spec(),
+    |                                                                   ^^^^^^^^^^^^^^
+    |
+   --> vstd/float.rs:18:12
+    |
+    = note: the method is available for `f64` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `FloatBitsProperties` which provides `is_finite_spec` is implemented but not in scope; perhaps you want to import it
+    |
+  9 +     use vstd::float::FloatBitsProperties;
+    |
+help: there is a method `is_infinite_spec` with a similar name
+    |
+283 |                     #[trigger] graph@.A.contains((u, w, d)) ==> d.is_infinite_spec(),
+    |                                                                      ++
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 14s

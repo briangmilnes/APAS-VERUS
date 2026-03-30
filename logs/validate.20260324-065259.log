@@ -1,0 +1,35 @@
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2751:36
+     |
+2751 | ...                   assert(pair.0.cmp_spec(k) == Less);
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2786:36
+     |
+2786 | ...                   assert(pair.0.cmp_spec(k) == Greater);
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2822:36
+     |
+2822 | ...                   assert(pair.0.cmp_spec(k) == Equal);
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap43/OrderedTableStEph.rs:2751:58
+     |
+2751 | ...                   assert(pair.0.cmp_spec(k) == Less);
+     |                                                    ^^^^
+
+note: 
+
+pair.0.cmp_spec(k) == Less
+|   !(pair.0.cmp_spec(k) is Equal) ✘
+|   !(pair.0.cmp_spec(k) is Greater) ✘
++---
+
+verification results:: 4369 verified, 1 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 104s

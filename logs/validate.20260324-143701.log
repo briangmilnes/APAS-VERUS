@@ -1,0 +1,18 @@
+error[E0599]: no method named `spec_backing_seq` found for reference `&Self` in the current scope
+   --> src/Chap19/ArraySeqMtEphSlice.rs:158:31
+    |
+158 |                 it@.1 == self.spec_backing_seq(),
+    |                               ^^^^^^^^^^^^^^^^
+    |
+help: there is a method `spec_index` with a similar name, but with different arguments
+   --> src/Chap19/ArraySeqMtEphSlice.rs:87:14
+    |
+ 87 |           spec fn spec_index(&self, i: int) -> T
+    |  ______________^
+ 88 | |             recommends self.spec_arrayseqmtephslice_wf(), i < self.spec_len();
+    | |______________________________________________________________________________^
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 15s

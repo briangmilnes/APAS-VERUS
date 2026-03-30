@@ -1,0 +1,91 @@
+error[E0599]: no method named `length` found for struct `Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::AVLTreeSeqMtPerS<T>` in the current scope
+   --> src/Chap52/EdgeSetGraphMtPer.rs:161:27
+    |
+161 |             let len = seq.length();
+    |                           ^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqMtPer.rs:68:5
+    |
+ 68 |     pub struct AVLTreeSeqMtPerS<T: StTInMtT> {
+    |     ---------------------------------------- method `length` not found for this struct
+...
+238 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::AVLTreeSeqMtPerS<Types::Types::Pair<V, V>>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap37/AVLTreeSeqMtPer.rs:242:9
+    |
+242 | /         fn nth(&self, index: usize) -> (elem: &T)
+243 | |             requires self.spec_avltreeseqmtper_wf(), (index as int) < self.spec_seq().len(),
+244 | |             ensures elem@ == self.spec_seq()[index as int];
+    | |___________________________________________________________^
+help: trait `AVLTreeSeqMtPerTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+ 10 +     use crate::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::AVLTreeSeqMtPerTrait;
+    |
+
+error[E0599]: no method named `spec_avltreeseqmtper_wf` found for struct `Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::AVLTreeSeqMtPerS<T>` in the current scope
+   --> src/Chap52/EdgeSetGraphMtPer.rs:168:25
+    |
+168 |                     seq.spec_avltreeseqmtper_wf(),
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqMtPer.rs:68:5
+    |
+ 68 |     pub struct AVLTreeSeqMtPerS<T: StTInMtT> {
+    |     ---------------------------------------- method `spec_avltreeseqmtper_wf` not found for this struct
+...
+227 |         spec fn spec_avltreeseqmtper_wf(&self) -> bool;
+    |                 ----------------------- the method is available for `Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::AVLTreeSeqMtPerS<Types::Types::Pair<V, V>>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `AVLTreeSeqMtPerTrait` which provides `spec_avltreeseqmtper_wf` is implemented but not in scope; perhaps you want to import it
+    |
+ 10 +     use crate::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::AVLTreeSeqMtPerTrait;
+    |
+help: there is a method `VERUS_SPEC__spec_avltreeseqmtper_wf` with a similar name
+    |
+168 |                     seq.VERUS_SPEC__spec_avltreeseqmtper_wf(),
+    |                         ++++++++++++
+
+error[E0599]: no method named `nth` found for struct `Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::AVLTreeSeqMtPerS<T>` in the current scope
+   --> src/Chap52/EdgeSetGraphMtPer.rs:185:32
+    |
+185 |                 let elem = seq.nth(i);
+    |                                ^^^
+    |
+   ::: src/Chap37/AVLTreeSeqMtPer.rs:68:5
+    |
+ 68 |     pub struct AVLTreeSeqMtPerS<T: StTInMtT> {
+    |     ---------------------------------------- method `nth` not found for this struct
+...
+242 |         fn nth(&self, index: usize) -> (elem: &T)
+    |            --- the method is available for `Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::AVLTreeSeqMtPerS<Types::Types::Pair<V, V>>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap37/AVLTreeSeqMtPer.rs:238:9
+    |
+238 | /         fn length(&self) -> (len: usize)
+239 | |             requires self.spec_avltreeseqmtper_wf(),
+240 | |             ensures len as nat == self.spec_seq().len();
+    | |________________________________________________________^
+help: trait `AVLTreeSeqMtPerTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+ 10 +     use crate::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::AVLTreeSeqMtPerTrait;
+    |
+
+error[E0282]: type annotations needed
+   --> src/Chap52/EdgeSetGraphMtPer.rs:193:46
+    |
+193 |                 neighbors = neighbors.insert(v.clone());
+    |                                              ^ cannot infer type
+
+error: aborting due to 4 previous errors
+
+Some errors have detailed explanations: E0282, E0599.
+For more information about an error, try `rustc --explain E0282`.
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 1231MB, peak z3 RSS: 0MB, min free: 21669MB
+Sampled CPU Usage: rust_verify: 16s, z3 children: 0s
