@@ -1,0 +1,134 @@
+error: assertion failed
+    --> src/Chap42/TableMtEph.rs:1237:32
+     |
+1237 |                         assert(sa != sb);
+     |                                ^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(sa == sb) 
+
+error: assertion failed
+    --> src/Chap42/TableMtEph.rs:1641:33
+     |
+1641 |                         implies (#[trigger] self.entries@[a]).0 != (#[trigger] self.entries@[b]).0
+     |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap42/TableMtEph.rs:1686:28
+     |
+1686 |                       assert(combine.ensures(
+     |  ____________________________^
+1687 | |                         (&old_self_raw[si].1, &other_raw[ci].1), kept@[si].1));
+     | |_____________________________________________________________________________^ assertion failed
+
+error: assertion failed
+    --> src/Chap42/TableMtEph.rs:1694:33
+     |
+1694 |                         implies (#[trigger] self.entries@[idx]).0 != k
+     |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+!(self.entries.view().index(a).0 == self.entries.view().index(b).0) 
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1570:45
+     |
+1570 |                         assert(prefix[i] == self.entries@[i]);
+     |                                             ^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1571:32
+     |
+1571 |                         assert(self.entries.spec_index(i) == kept@[i]);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:183:24
+     |
+ 183 |             recommends i < self.spec_len();
+     |                        ------------------- recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1571:62
+     |
+1571 |                         assert(self.entries.spec_index(i) == kept@[i]);
+     |                                                              ^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1568:61
+     |
+1568 |                         implies (#[trigger] prefix[i]).0 == (#[trigger] old_self_view[i]).0
+     |                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1577:45
+     |
+1577 |                         assert(prefix[i] == self.entries@[i]);
+     |                                             ^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1578:32
+     |
+1578 |                         assert(self.entries.spec_index(i) == kept@[i]);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:183:24
+     |
+ 183 |             recommends i < self.spec_len();
+     |                        ------------------- recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1578:62
+     |
+1578 |                         assert(self.entries.spec_index(i) == kept@[i]);
+     |                                                              ^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1575:48
+     |
+1575 |                         implies prefix[i].1 == old_self_view[i].1
+     |                                                ^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1712:28
+     |
+1712 |                     assert(prefix[si] == self.entries@[si]);
+     |                            ^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+verification results:: 2167 verified, 2 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 32s
+Sampled Memory Usage: peak rust_verify RSS: 11573MB, peak z3 RSS: 477MB, min free: 11326MB
+Sampled CPU Usage: rust_verify: 302s, z3 children: 216s
