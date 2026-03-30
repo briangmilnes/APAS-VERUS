@@ -1,0 +1,156 @@
+error: postcondition not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:171:13
+    |
+171 |               rotated.spec_size() == tree.spec_size(),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+175 | /         match tree {
+176 | |             BalBinTree::Node(x_box) => {
+177 | |                 let BalBinNode { left: l, value: x_val, right: right_tree } = *x_box;
+178 | |                 let ghost old_right = right_tree;
+...   |
+229 | |             BalBinTree::Leaf => { proof { assert(false); } BalBinTree::Leaf }
+230 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTAVLMtEph.rs:171:13
+    |
+171 |             rotated.spec_size() == tree.spec_size(),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+rotated.tree_is_bst() ✔
+rotated.spec_size() == old(tree).spec_size() ✘
+forall |x|
+    rotated.tree_contains(x) == old(tree).tree_contains(x) ✔
+
+error: postcondition not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:104:13
+    |
+104 |               rotated.spec_size() == tree.spec_size(),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+108 | /         match tree {
+109 | |             BalBinTree::Node(y_box) => {
+110 | |                 let BalBinNode { left: left_tree, value: y_val, right: r } = *y_box;
+111 | |                 let ghost old_left = left_tree;
+...   |
+163 | |             BalBinTree::Leaf => { proof { assert(false); } BalBinTree::Leaf }
+164 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTAVLMtEph.rs:104:13
+    |
+104 |             rotated.spec_size() == tree.spec_size(),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+rotated.tree_is_bst() ✔
+rotated.spec_size() == old(tree).spec_size() ✘
+forall |x|
+    rotated.tree_contains(x) == old(tree).tree_contains(x) ✔
+
+error: postcondition not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:252:13
+    |
+252 |               avl_balanced(balanced),
+    |               ^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+267 | /         match tree {
+268 | |             BalBinTree::Node(inner) => {
+269 | |                 let lh = inner.left.height();
+270 | |                 let rh = inner.right.height();
+...   |
+498 | |             BalBinTree::Leaf => { proof { assert(false); } BalBinTree::Leaf }
+499 | |         }
+    | |_________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:254:13
+    |
+254 |               balanced.spec_height() <= tree.spec_height(),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+267 | /         match tree {
+268 | |             BalBinTree::Node(inner) => {
+269 | |                 let lh = inner.left.height();
+270 | |                 let rh = inner.right.height();
+...   |
+498 | |             BalBinTree::Leaf => { proof { assert(false); } BalBinTree::Leaf }
+499 | |         }
+    | |_________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:255:13
+    |
+255 |               balanced.spec_height() + 1 >= tree.spec_height(),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+267 | /         match tree {
+268 | |             BalBinTree::Node(inner) => {
+269 | |                 let lh = inner.left.height();
+270 | |                 let rh = inner.right.height();
+...   |
+498 | |             BalBinTree::Leaf => { proof { assert(false); } BalBinTree::Leaf }
+499 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTAVLStEph.rs:56:17
+    |
+ 56 |                 avl_balanced(node.left)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^
+ 57 |                 && avl_balanced(node.right)
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^
+...
+ 61 |                     -1 <= lh - rh && lh - rh <= 1
+    |                     ^^^^^^^^^^^^^    ^^^^^^^^^^^^
+    |
+   ::: src/Chap37/BSTAVLMtEph.rs:252:13
+    |
+252 |             avl_balanced(balanced),
+    |             ^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+balanced.tree_is_bst() ✔
+avl_balanced(balanced) ✘
+|   let tmp%% = balanced;
+|       tmp%% is Leaf ==>
+|           true ✔
+|       !(tmp%% is Leaf) ==>
+|           let node = tmp%%.0;
+|               avl_balanced(node.left) ✘
+|                   reached fuel limit for recursion
+|               avl_balanced(node.right) ✘
+|                   reached fuel limit for recursion
+|               let lh = node.left.spec_height();
+|                   let rh = node.right.spec_height();
+|                       0 - 1 <= lh - rh ✘
+|                       lh - rh <= 1 ✘
++---
+balanced.spec_size() == old(tree).spec_size() 
+balanced.spec_height() <= old(tree).spec_height() 
+clip(nat, balanced.spec_height() + 1) >= old(tree).spec_height() 
+forall |x|
+    balanced.tree_contains(x) == old(tree).tree_contains(x) 
+let tmp%% = old(tree);
+    tmp%% is Node && true ==>
+        let inner = tmp%%.0;
+            let lh = inner.left.spec_height();
+                let rh = inner.right.spec_height();
+                    0 - 1 <= lh - rh && lh - rh <= 1 ==>
+                        balanced.spec_height() == old(tree).spec_height() 
+    !(tmp%% is Node && true) ==>
+        true 
+
+verification results:: 1795 verified, 3 errors
+error: aborting due to 5 previous errors
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 1240MB, peak z3 RSS: 315MB, min free: 20830MB
+Sampled CPU Usage: rust_verify: 19s, z3 children: 29s

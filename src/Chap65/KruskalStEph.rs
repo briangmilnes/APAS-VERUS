@@ -5,8 +5,8 @@
 //! Uses Union-Find data structure for efficient cycle detection.
 //!
 //! Tricky three proof holes (2 of 3):
-//! - uf_wf_opaque (line 40): opaque wf wrapper — Z3 diverges on 13-quantifier wf through equals+union+if.
-//! - kruskal (line 49): external_body — blocked by UnionFindStEph union proof.
+//! - opaque_spec_unionfindsteph_wf (line 45): opaque wf wrapper, no external_body needed.
+//! - kruskal_process_edge (line 54): external_body — blocked by UnionFindStEph union proof.
 
 pub mod KruskalStEph {
 
@@ -42,7 +42,7 @@ pub mod KruskalStEph {
 
         /// Opaque wrapper for UF well-formedness.
         #[verifier::opaque]
-        pub open spec fn uf_wf_opaque<V: HashOrd>(uf: &UnionFindStEph<V>) -> bool {
+        pub open spec fn opaque_spec_unionfindsteph_wf<V: HashOrd>(uf: &UnionFindStEph<V>) -> bool {
             uf.spec_unionfindsteph_wf()
         }
 
@@ -57,12 +57,12 @@ pub mod KruskalStEph {
             edge: LabEdge<V, u64>,
         )
             requires
-                uf_wf_opaque(old(uf)),
+                opaque_spec_unionfindsteph_wf(old(uf)),
                 old(mst_edges).spec_setsteph_wf(),
                 old(uf)@.parent.contains_key(edge@.0),
                 old(uf)@.parent.contains_key(edge@.1),
             ensures
-                uf_wf_opaque(uf),
+                opaque_spec_unionfindsteph_wf(uf),
                 mst_edges.spec_setsteph_wf(),
                 uf@.parent.dom() =~= old(uf)@.parent.dom(),
         {
@@ -167,13 +167,13 @@ pub mod KruskalStEph {
         let ghost initial_dom = uf@.parent.dom();
 
         // Establish opaque wf for the loop invariant.
-        proof { assert(uf_wf_opaque(uf)) by { reveal(uf_wf_opaque); }; }
+        proof { assert(opaque_spec_unionfindsteph_wf(uf)) by { reveal(opaque_spec_unionfindsteph_wf); }; }
 
         let mut i: usize = 0;
         while i < edges_vec.len()
             invariant
                 0 <= i <= edges_vec@.len(),
-                uf_wf_opaque(uf),
+                opaque_spec_unionfindsteph_wf(uf),
                 mst_edges.spec_setsteph_wf(),
                 uf@.parent.dom() =~= initial_dom,
                 forall|v: <V as View>::V| #[trigger] graph_V.contains(v) ==>

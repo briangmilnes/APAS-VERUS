@@ -1,0 +1,17 @@
+error: postcondition not satisfied
+   --> src/Chap65/UnionFindStEph.rs:284:13
+    |
+271 |       proof fn lemma_insert_preserves_wf<V: StT + Hash>(
+    |  ___________-
+272 | |         uf: UnionFindStEph<V>,
+273 | |         old_uf: UnionFindStEph<V>,
+274 | |         v: V,
+275 | |     )
+    | |_____- at the end of the function body
+...
+284 |               uf.spec_unionfindsteph_wf(),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+Elapsed: 138s
+Sampled Memory Usage: peak rust_verify RSS: 13029MB, peak z3 RSS: 13422MB, min free: 166MB
+Sampled CPU Usage: rust_verify: 297s, z3 children: 208s
