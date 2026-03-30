@@ -222,7 +222,7 @@ pub mod DoubleHashFlatHashTableStEph {
         ParaHashTableStEphTrait<Key, Value, FlatEntry<Key, Value>, Metrics, H>
         for DoubleHashFlatHashTableStEph
     {
-        open spec fn spec_impl_wf(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) -> bool {
+        open spec fn spec_parahashtablesteph_wf(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>) -> bool {
             spec_doublehashflathashsteph_wf(table)
             && spec_hash_fn_valid::<Key, H>(table.spec_hash@)
         }
@@ -922,7 +922,7 @@ pub mod DoubleHashFlatHashTableStEph {
                     new_table.current_size == new_size,
                     new_table.table@.len() == new_table.current_size as int,
                     new_table.num_elements <= j,
-                    Self::spec_impl_wf(&new_table),
+                    Self::spec_parahashtablesteph_wf(&new_table),
                     new_table@ =~= spec_seq_pairs_to_map(pairs@.subrange(0, j as int)),
                     new_table.spec_hash == table.spec_hash,
                     pairs@.len() <= table.current_size as int,
