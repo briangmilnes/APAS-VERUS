@@ -1,0 +1,976 @@
+# APAS Cost Reference — All Chapters (1–66)
+#
+# Single source of truth for algorithm cost specifications from
+# "A Practical Approach to Data Structures" (Blelloch).
+#
+# Notation:
+#   n = |a| or max(|a|, |b|)
+#   m = min(|a|, |b|)
+#   lg = log base 2
+#   W(f(x)) = work of applying f to x
+#   S(f(x)) = span of applying f to x
+#   h(T) = height of tree T
+#
+# 80 cost_spec entries across chapters 2–66.
+# Generated from per-chapter TOML files, human-reviewed, then frozen.
+#
+# (CS = Cost Specification, Alg = Algorithm, DT = Data Type, Thm = Theorem).
+#
+#
+
+# ---------------------------------------------------------------------------
+# Ch2: Parallelism (Def 2.1 work/span composition, Ex 2.7, Ex 2.8)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch2 Def 2.1"
+chapter = 2
+description = "Work and span composition rules for sequential and parallel composition"
+operations = [
+    { name = "seq_compose", work = "1 + W1 + W2", span = "1 + S1 + S2", notes = "sequential: span adds" },
+    { name = "par_compose", work = "1 + W1 + W2", span = "1 + max(S1,S2)", notes = "parallel: span takes max" },
+]
+
+[[cost_spec]]
+ref = "Ch2 Ex 2.8"
+chapter = 2
+description = "Parallel merge sort"
+operations = [
+    { name = "merge_sort", work = "O(n lg n)", span = "O(lg^2 n)" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch3: Specification (CS 3.2, CS 3.3, DT 3.4, CS 3.5)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch3 CS 3.2"
+chapter = 3
+description = "Efficient parallel comparison sort"
+operations = [
+    { name = "sort", work = "O(n lg n)", span = "O(lg^2 n)", notes = "assumes constant-work comparisons" },
+]
+
+[[cost_spec]]
+ref = "Ch3 CS 3.3"
+chapter = 3
+description = "Inefficient but parallel comparison sort"
+operations = [
+    { name = "sort", work = "O(n^2)", span = "O(lg n)", notes = "smaller span than CS 3.2 but much more work" },
+]
+
+[[cost_spec]]
+ref = "Ch3 DT 3.4 / CS 3.5"
+chapter = 3
+description = "Priority Queue ADT"
+operations = [
+    { name = "empty", work = "O(1)", span = "O(1)" },
+    { name = "insert", work = "O(lg n)", span = "O(lg n)" },
+    { name = "removeMin", work = "O(lg n)", span = "O(lg n)" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch4: Genome Sequencing (Alg 4.14)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch4 Alg 4.14"
+chapter = 4
+description = "Greedy approximate shortest superstring (greedyApproxSS)"
+operations = [
+    { name = "greedyApproxSS", work = "O(n * m^2)", span = "O(n lg m)", notes = "n snippets, m = max snippet length" },
+]
+#
+#
+#
+# Ch11-14: No algorithm cost specifications (definitional/structural chapters).
+# Ch15-16: Work/span analysis framework, recurrence examples.
+
+# ---------------------------------------------------------------------------
+# Ch15: Work and Span Analysis
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch15 Ex 15.6"
+chapter = 15
+description = "Parallel mergesort with linear-time merge"
+operations = [
+    { name = "mergesort", work = "O(n lg n)", span = "O(lg^2 n)", notes = "parallelism = Theta(n / lg n)" },
+]
+
+[[cost_spec]]
+ref = "Ch15 Def 15.7"
+chapter = 15
+description = "Greedy scheduler execution time bound on P processors"
+operations = [
+    { name = "greedy_schedule", work = "W", span = "S", notes = "T_P < W/P + S; near-optimal within factor 2 of max(W/P, S)" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch16: Recurrences
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch16 Ex 16.2"
+chapter = 16
+description = "Mergesort work and span recurrences"
+operations = [
+    { name = "mergesort", work = "O(n lg n)", span = "O(lg^2 n)", notes = "W(n) <= 2W(n/2) + O(n); S(n) <= S(n/2) + O(lg n)" },
+]
+
+[[cost_spec]]
+ref = "Ch16 Thm 16.1"
+chapter = 16
+description = "Superlinear recurrence theorem: W(n) = 2W(n/2) + k*n^(1+eps)"
+operations = [
+    { name = "superlinear_recurrence", work = "O(n^(1+eps))", span = "O(n^(1+eps))", notes = "root dominated" },
+]
+#
+#
+
+# ---------------------------------------------------------------------------
+# Ch19: Flatten (Alg 19.15)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch19 Alg 19.15"
+chapter = 19
+description = "Array-sequence flatten implementation"
+operations = [
+    { name = "flatten", work = "O(|a| + sum |a[i]|)", span = "O(lg |a|)", notes = "uses scan to compute starting positions" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch20: Sequences (CS 20.2–20.7)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch20 CS 20.2"
+chapter = 20
+description = "Array-sequence cost specification: basic operations"
+operations = [
+    { name = "length",      work = "O(1)", span = "O(1)" },
+    { name = "nth",         work = "O(1)", span = "O(1)" },
+    { name = "empty",       work = "O(1)", span = "O(1)" },
+    { name = "singleton",   work = "O(1)", span = "O(1)" },
+    { name = "isEmpty",     work = "O(1)", span = "O(1)" },
+    { name = "isSingleton", work = "O(1)", span = "O(1)" },
+    { name = "subseq",      work = "O(1)", span = "O(1)" },
+]
+
+[[cost_spec]]
+ref = "Ch20 CS 20.2"
+chapter = 20
+description = "Array-sequence cost specification: higher-order operations"
+operations = [
+    { name = "tabulate f n", work = "O(1 + Sigma W(f(i)))", span = "O(1 + max S(f(i)))" },
+    { name = "map f a",      work = "O(1 + Sigma W(f(x)))", span = "O(1 + max S(f(x)))" },
+    { name = "filter f a",   work = "O(1 + Sigma W(f(x)))", span = "O(lg |a| + max S(f(x)))", notes = "lg |a| from compaction" },
+]
+
+[[cost_spec]]
+ref = "Ch20 CS 20.2"
+chapter = 20
+description = "Array-sequence cost specification: combining operations"
+operations = [
+    { name = "append a b",    work = "O(|a| + |b|)", span = "O(1)" },
+    { name = "flatten a",     work = "O(|a| + sum |a[i]|)", span = "O(lg |a|)" },
+    { name = "update a (i,x)", work = "O(|a|)", span = "O(1)", notes = "functional: full copy" },
+    { name = "inject a b",    work = "O(|a| + |b|)", span = "O(lg(degree(b)))", notes = "degree = max updates per position" },
+    { name = "ninject a b",   work = "O(|a| + |b|)", span = "O(1)", notes = "nondeterministic" },
+]
+
+[[cost_spec]]
+ref = "Ch20 CS 20.3"
+chapter = 20
+description = "Array-sequence iterate (inherently sequential)"
+operations = [
+    { name = "iterate f x a", work = "O(1 + Sigma W(f))", span = "O(1 + Sigma S(f))", notes = "span sums because sequential" },
+]
+
+[[cost_spec]]
+ref = "Ch20 CS 20.4"
+chapter = 20
+description = "Array-sequence reduce (parallel)"
+operations = [
+    { name = "reduce f x a", work = "O(1 + Sigma W(f))", span = "O(lg |a| * max S(f))", notes = "log-depth tree of combines" },
+]
+
+[[cost_spec]]
+ref = "Ch20 CS 20.5"
+chapter = 20
+description = "Array-sequence scan"
+operations = [
+    { name = "scan f x a", work = "O(|a|)", span = "O(lg |a|)", notes = "assumes f is O(1)" },
+]
+
+[[cost_spec]]
+ref = "Ch20 CS 20.6"
+chapter = 20
+description = "Array-sequence collect (sort-based grouping)"
+operations = [
+    { name = "collect cmp a", work = "O(W(cmp) * |a| * lg |a|)", span = "O(S(cmp) * lg^2 |a|)", notes = "dominated by comparison sort" },
+]
+
+[[cost_spec]]
+ref = "Ch20 CS 20.6"
+chapter = 20
+description = "Tree-sequence cost specification: key differences from array-sequence"
+operations = [
+    { name = "nth",     work = "O(lg |a|)", span = "O(lg |a|)" },
+    { name = "append",  work = "O(|lg(|a|/|b|)|)", span = "O(|lg(|a|/|b|)|)", notes = "logarithmic ratio" },
+    { name = "update",  work = "O(lg |a|)", span = "O(lg |a|)" },
+    { name = "subseq",  work = "O(lg |a|)", span = "O(lg |a|)" },
+    { name = "inject",  work = "O((|a|+|b|) * lg |a|)", span = "O(lg(|a|+|b|))" },
+    { name = "ninject", work = "O((|a|+|b|) * lg |a|)", span = "O(lg(|a|+|b|))" },
+]
+
+[[cost_spec]]
+ref = "Ch20 CS 20.7"
+chapter = 20
+description = "List-sequence cost specification (inherently sequential)"
+operations = [
+    { name = "nth",     work = "O(i)", span = "O(i)" },
+    { name = "subseq",  work = "O(i)", span = "O(i)" },
+    { name = "append",  work = "O(|a|)", span = "O(|a|)" },
+    { name = "tabulate", work = "O(Sigma W(f))", span = "O(Sigma S(f))", notes = "span sums; no parallelism" },
+    { name = "map",     work = "O(Sigma W(f))", span = "O(Sigma S(f))" },
+    { name = "filter",  work = "O(Sigma W(f))", span = "O(Sigma S(f))" },
+    { name = "reduce",  work = "O(Sigma W(f))", span = "O(Sigma S(f))" },
+    { name = "scan",    work = "O(|a|)", span = "O(|a|)" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch21: Primes (Alg 21.4–21.6)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch21 Alg 21.4"
+chapter = 21
+description = "Brute-force primality test"
+operations = [
+    { name = "isPrime", work = "O(sqrt(n))", span = "O(lg n)" },
+]
+
+[[cost_spec]]
+ref = "Ch21 Alg 21.5"
+chapter = 21
+description = "Brute-force primes via filter"
+operations = [
+    { name = "primesBF", work = "O(n^(3/2))", span = "O(lg n)" },
+]
+
+[[cost_spec]]
+ref = "Ch21 Alg 21.6"
+chapter = 21
+description = "Sieve of Eratosthenes using ninject"
+operations = [
+    { name = "primeSieve", work = "O(n lg n)", span = "O(lg n)" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch22: Single-Threaded Array Sequences (CS 22.2)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch22 CS 22.2"
+chapter = 22
+description = "Single-threaded array sequence (ephemeral)"
+operations = [
+    { name = "fromSeq", work = "O(|a|)", span = "O(1)" },
+    { name = "toSeq",   work = "O(|a|)", span = "O(1)" },
+    { name = "nth",     work = "O(1)", span = "O(1)", notes = "O(1) for latest version" },
+    { name = "update",  work = "O(1)", span = "O(1)", notes = "in-place mutation" },
+    { name = "inject",  work = "O(|b|)", span = "O(lg(degree(b)))" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch23: Primitive Tree Sequences (CS 23.2)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch23 CS 23.2"
+chapter = 23
+description = "Primitive tree sequence (expose/join interface)"
+operations = [
+    { name = "length", work = "O(1)", span = "O(1)" },
+    { name = "expose", work = "O(1)", span = "O(1)" },
+    { name = "join(Zero)", work = "O(1)", span = "O(1)" },
+    { name = "join(One(x))", work = "O(1)", span = "O(1)" },
+    { name = "join(Two(L,R))", work = "O(|r(L) - r(R)|)", span = "O(|r(L) - r(R)|)", notes = "r(T) = rank; O(1) when ranks equal" },
+]
+#
+#
+
+# ---------------------------------------------------------------------------
+# Ch25: Reductions (Ex 25.1–25.5)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch25 Ex 25.2"
+chapter = 25
+description = "Reduction from finding minimum to finding maximum"
+operations = [
+    { name = "find_min_via_max", work = "O(n)", span = "O(n)", notes = "work-efficient; linear transform + linear max" },
+]
+
+[[cost_spec]]
+ref = "Ch25 Ex 25.5"
+chapter = 25
+description = "Brute-force overlap computation for two strings"
+operations = [
+    { name = "overlap_brute_force", work = "O(|a| * |b|)", span = "O(lg(|a| + |b|))" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch26: Divide and Conquer (Alg 26.2, 26.4, 26.5, 26.7)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch26 Alg 26.2"
+chapter = 26
+description = "Reduce via divide and conquer"
+operations = [
+    { name = "reduce", work = "O(n)", span = "O(lg n)", notes = "assumes O(1) associative binary op" },
+]
+
+[[cost_spec]]
+ref = "Ch26 Alg 26.4"
+chapter = 26
+description = "Merge sort"
+operations = [
+    { name = "merge_sort", work = "O(n lg n)", span = "O(lg^2 n)", notes = "merge is O(n) work, O(lg n) span" },
+]
+
+[[cost_spec]]
+ref = "Ch26 Alg 26.5"
+chapter = 26
+description = "Scan via divide and conquer"
+operations = [
+    { name = "scan_dc", work = "O(n lg n)", span = "O(lg n)" },
+]
+
+[[cost_spec]]
+ref = "Ch26 Alg 26.7"
+chapter = 26
+description = "Divide-and-conquer heuristic for planar Euclidean TSP"
+operations = [
+    { name = "etsp_dc", work = "O(n^2)", span = "O(lg^2 n)" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch27: Contraction (Alg 27.2, 27.3)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch27 Alg 27.2"
+chapter = 27
+description = "Reduce with contraction"
+operations = [
+    { name = "reduce_contract", work = "O(n)", span = "O(lg n)", notes = "W(n) = W(n/2) + n; S(n) = S(n/2) + 1" },
+]
+
+[[cost_spec]]
+ref = "Ch27 Alg 27.3"
+chapter = 27
+description = "Scan with contraction"
+operations = [
+    { name = "scan_contract", work = "O(n)", span = "O(lg n)", notes = "W(n) = W(n/2) + n; S(n) = S(n/2) + 1" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch28: MCSS (Alg 28.6–28.19)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch28 Alg 28.6"
+chapter = 28
+description = "Brute-force MCS"
+operations = [
+    { name = "mcs_brute_force", work = "O(n^3)", span = "O(lg n)" },
+]
+
+[[cost_spec]]
+ref = "Ch28 Alg 28.15"
+chapter = 28
+description = "Kadane's iterative MCSS"
+operations = [
+    { name = "mcss_kadane", work = "O(n)", span = "O(n)", notes = "work-optimal but no parallelism" },
+]
+
+[[cost_spec]]
+ref = "Ch28 Alg 28.16"
+chapter = 28
+description = "Work-optimal parallel MCSS using scans"
+operations = [
+    { name = "mcss_scan", work = "O(n)", span = "O(lg n)", notes = "two scans + tabulate" },
+]
+
+[[cost_spec]]
+ref = "Ch28 Alg 28.17"
+chapter = 28
+description = "Simple divide-and-conquer MCSS"
+operations = [
+    { name = "mcss_dc", work = "O(n lg n)", span = "O(lg^2 n)" },
+]
+
+[[cost_spec]]
+ref = "Ch28 Alg 28.19"
+chapter = 28
+description = "Linear-work divide-and-conquer MCSS with MCSSPS strengthening"
+operations = [
+    { name = "mcss_dc_strengthened", work = "O(n)", span = "O(lg^2 n)", notes = "returns (max, prefix, suffix, total); combine is O(1)" },
+]
+#
+#
+#
+# Ch29-32: No algorithm cost specifications in study materials.
+# Ch33: Darts Game framework. Ch35: Select. Ch36: Quicksort.
+
+# ---------------------------------------------------------------------------
+# Ch33: Darts Game
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch33 Darts Game"
+chapter = 33
+description = "Darts Game total expected throws with linear penalty f(n) = n"
+operations = [
+    { name = "darts_game", work = "O(n)", span = "O(lg^2 n)", notes = "per-round work linear, per-round span O(lg n); O(lg n) rounds expected" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch35: Select (Alg 35.2)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch35 Alg 35.2"
+chapter = 35
+description = "Contraction-based randomized select (order statistics)"
+operations = [
+    { name = "select", work = "O(n)", span = "O(lg^2 n)", notes = "expected; contraction by 3/4 per round" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch36: Quicksort (Alg 36.1)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch36 Alg 36.1"
+chapter = 36
+description = "Randomized quicksort"
+operations = [
+    { name = "quicksort (expected)", work = "O(n lg n)", span = "O(lg^2 n)", notes = "expected bounds; E[comparisons] = 2n*H_n" },
+    { name = "quicksort (worst case)", work = "O(n^2)", span = "O(n lg n)", notes = "pivot always extreme element" },
+]
+#
+# (CS = Cost Specification, Alg = Algorithm, DT = Data Type).
+#
+#
+
+# ---------------------------------------------------------------------------
+# Ch37: BST Introduction (DT 37.7, Alg 37.4)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch37 Alg 37.4"
+chapter = 37
+description = "BST find — root-to-leaf path"
+operations = [
+    { name = "find", work = "O(h(T))", span = "O(h(T))", notes = "h(T) = height; O(lg n) when balanced" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch38: Parametric BSTs (CS 38.11)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch38 CS 38.11"
+chapter = 38
+description = "Parametric BST cost specification (balanced BST via joinMid)"
+operations = [
+    { name = "empty",        work = "O(1)",             span = "O(1)" },
+    { name = "singleton",    work = "O(1)",             span = "O(1)" },
+    { name = "split",        work = "O(lg |t|)",        span = "O(lg |t|)" },
+    { name = "join",         work = "O(lg(|t1|+|t2|))", span = "O(lg(|t1|+|t2|))" },
+    { name = "joinM",        work = "O(lg(|t1|+|t2|))", span = "O(lg(|t1|+|t2|))" },
+    { name = "joinPair",     work = "O(lg(|t1|+|t2|))", span = "O(lg(|t1|+|t2|))" },
+    { name = "find",         work = "O(lg |t|)",        span = "O(lg |t|)" },
+    { name = "insert",       work = "O(lg |t|)",        span = "O(lg |t|)" },
+    { name = "delete",       work = "O(lg |t|)",        span = "O(lg |t|)" },
+    { name = "union",        work = "O(m * lg(n/m))",   span = "O(lg n)" },
+    { name = "intersect",    work = "O(m * lg(n/m))",   span = "O(lg n)" },
+    { name = "difference",   work = "O(m * lg(n/m))",   span = "O(lg n)" },
+    { name = "filter",       work = "O(Σ W(f(x)))",     span = "O(lg |t| + max S(f(x)))" },
+    { name = "reduce",       work = "O(Σ W(f(x)))",     span = "O(lg |t| + max S(f(x)))" },
+]
+
+# Treap-specific costs (Ch39)
+[[cost_spec]]
+ref = "Ch39 DS 39.3"
+chapter = 39
+description = "Treap implementation of parametric BST — w.h.p. bounds"
+operations = [
+    { name = "join",    work = "O(lg(|t1|+|t2|))", span = "O(lg(|t1|+|t2|))", notes = "bounded by h(t1)+h(t2); w.h.p." },
+    { name = "split",   work = "O(lg |t|)",         span = "O(lg |t|)",         notes = "joinM at each level is O(1) due to priority ordering" },
+    { name = "expose",  work = "O(1)",              span = "O(1)" },
+    { name = "joinMid", work = "O(lg(|t1|+|t2|))", span = "O(lg(|t1|+|t2|))", notes = "delegates to join" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch40: Augmenting BSTs (Alg 40.1)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch40 Alg 40.1"
+chapter = 40
+description = "Rank and select on size-augmented BSTs"
+operations = [
+    { name = "rank",   work = "O(lg n)", span = "O(lg n)", notes = "requires size augmentation" },
+    { name = "select", work = "O(lg n)", span = "O(lg n)", notes = "requires size augmentation" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch41: Sets ADT (CS 41.3 enumerable, CS 41.4 tree-based, Ex 41.3 fromSeq)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch41 CS 41.3"
+chapter = 41
+description = "Enumerable sets (array-based, universe size u)"
+operations = [
+    { name = "size",         work = "O(u)", span = "O(1)" },
+    { name = "singleton",    work = "O(u)", span = "O(1)" },
+    { name = "toSeq",        work = "O(u)", span = "O(1)" },
+    { name = "filter",       work = "O(u + Σ W(f(x)))", span = "O(1 + max S(f(x)))" },
+    { name = "intersection", work = "O(u)", span = "O(1)" },
+    { name = "union",        work = "O(u)", span = "O(1)" },
+    { name = "difference",   work = "O(u)", span = "O(1)" },
+    { name = "find",         work = "O(1)", span = "O(1)" },
+    { name = "insert",       work = "O(u)", span = "O(1)" },
+    { name = "delete",       work = "O(u)", span = "O(1)" },
+]
+
+[[cost_spec]]
+ref = "Ch41 CS 41.4"
+chapter = 41
+description = "Tree-based sets (BST implementation)"
+operations = [
+    { name = "size",         work = "O(1)",             span = "O(1)" },
+    { name = "singleton",    work = "O(1)",             span = "O(1)" },
+    { name = "toSeq",        work = "O(|a|)",           span = "O(lg |a|)" },
+    { name = "filter",       work = "O(Σ W(f(x)))",     span = "O(lg |a| + max S(f(x)))" },
+    { name = "intersection", work = "O(m * lg(1+n/m))", span = "O(lg n)" },
+    { name = "union",        work = "O(m * lg(1+n/m))", span = "O(lg n)" },
+    { name = "difference",   work = "O(m * lg(1+n/m))", span = "O(lg n)" },
+    { name = "find",         work = "O(lg |a|)",        span = "O(lg |a|)" },
+    { name = "insert",       work = "O(lg |a|)",        span = "O(lg |a|)" },
+    { name = "delete",       work = "O(lg |a|)",        span = "O(lg |a|)" },
+]
+
+[[cost_spec]]
+ref = "Ch41 Ex 41.3"
+chapter = 41
+description = "fromSeq — sequential and parallel variants"
+operations = [
+    { name = "fromSeq (sequential)", work = "O(n lg n)", span = "O(n lg n)", notes = "iterate insert" },
+    { name = "fromSeq (parallel)",   work = "O(n lg n)", span = "O(lg^2 n)", notes = "reduce union over singletons" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch42: Tables ADT (CS 42.5)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch42 CS 42.5"
+chapter = 42
+description = "Tree-based tables (combining function assumed O(1))"
+operations = [
+    { name = "size",         work = "O(1)",             span = "O(1)" },
+    { name = "singleton",    work = "O(1)",             span = "O(1)" },
+    { name = "domain",       work = "O(|a|)",           span = "O(lg |a|)" },
+    { name = "filter",       work = "O(Σ W(f(.)))",     span = "O(lg |a| + max S(f(.)))" },
+    { name = "map",          work = "O(Σ W(f(.)))",     span = "O(lg |a| + max S(f(.)))" },
+    { name = "find",         work = "O(lg |a|)",        span = "O(lg |a|)" },
+    { name = "delete",       work = "O(lg |a|)",        span = "O(lg |a|)" },
+    { name = "insert",       work = "O(lg |a|)",        span = "O(lg |a|)" },
+    { name = "intersection", work = "O(m * lg(1+n/m))", span = "O(lg(n+m))" },
+    { name = "union",        work = "O(m * lg(1+n/m))", span = "O(lg(n+m))" },
+    { name = "difference",   work = "O(m * lg(1+n/m))", span = "O(lg(n+m))" },
+    { name = "restrict",     work = "O(m * lg(1+n/m))", span = "O(lg(n+m))" },
+    { name = "subtract",     work = "O(m * lg(1+n/m))", span = "O(lg(n+m))" },
+    { name = "tabulate",     work = "O(|s| * W(f))",    span = "O(lg |s| + S(f))" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch43: Ordered Sets and Tables (CS 43.2)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch43 CS 43.2"
+chapter = 43
+description = "Ordered set/table operations (tree-based). Base ops inherit CS 41.4/42.5."
+operations = [
+    { name = "first",     work = "O(lg n)", span = "O(lg n)" },
+    { name = "last",      work = "O(lg n)", span = "O(lg n)" },
+    { name = "previous",  work = "O(lg n)", span = "O(lg n)" },
+    { name = "next",      work = "O(lg n)", span = "O(lg n)" },
+    { name = "split",     work = "O(lg n)", span = "O(lg n)" },
+    { name = "join",      work = "O(lg n)", span = "O(lg n)", notes = "requires max(A1) < min(A2)" },
+    { name = "getRange",  work = "O(lg n)", span = "O(lg n)" },
+    { name = "rank",      work = "O(lg n)", span = "O(lg n)" },
+    { name = "select",    work = "O(lg n)", span = "O(lg n)" },
+    { name = "splitRank", work = "O(lg n)", span = "O(lg n)" },
+]
+
+# Ch43 Def 43.3: Reducer-augmented ordered table
+[[cost_spec]]
+ref = "Ch43 Def 43.3"
+chapter = 43
+description = "Reducer-augmented ordered table (reduceVal via augmented nodes)"
+operations = [
+    { name = "reduceVal", work = "O(1)", span = "O(1)", notes = "stored at root; range queries via getRange + reduceVal = O(lg n)" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch44: Indexing and Searching (Alg 44.2, Alg 44.3)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch44 Alg 44.2"
+chapter = 44
+description = "Document index construction"
+operations = [
+    { name = "makeIndex", work = "O(n lg n)", span = "O(lg^2 n)", notes = "n = total tokens; dominated by collect (sort)" },
+]
+
+[[cost_spec]]
+ref = "Ch44 Alg 44.3"
+chapter = 44
+description = "Document index query operations"
+operations = [
+    { name = "find",        work = "O(lg n)", span = "O(lg n)", notes = "n = number of unique words" },
+    { name = "queryAnd",    work = "O(m * lg(1+n/m))", span = "O(lg n + lg m)", notes = "delegates to Set.intersection" },
+    { name = "queryOr",     work = "O(m * lg(1+n/m))", span = "O(lg n + lg m)", notes = "delegates to Set.union" },
+    { name = "queryAndNot", work = "O(m * lg(1+n/m))", span = "O(lg n + lg m)", notes = "delegates to Set.difference" },
+]
+#
+#
+
+# ---------------------------------------------------------------------------
+# Ch45: Priority Queues (DT 45.1, DT 45.3, Alg 45.2)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch45 DT 45.1"
+chapter = 45
+description = "Meldable Priority Queue — balanced tree implementation"
+operations = [
+    { name = "insert",    work = "O(lg n)", span = "O(lg n)" },
+    { name = "deleteMin", work = "O(lg n)", span = "O(lg n)" },
+    { name = "meld",      work = "O(m * lg(1 + n/m))", span = "O(m * lg(1 + n/m))", notes = "m = min(|A|,|B|), n = max(|A|,|B|)" },
+    { name = "fromSeq",   work = "O(n lg n)", span = "O(n lg n)" },
+]
+
+[[cost_spec]]
+ref = "Ch45 DT 45.3"
+chapter = 45
+description = "Leftist heap"
+operations = [
+    { name = "meld",      work = "O(lg |A| + lg |B|)", span = "O(lg |A| + lg |B|)", notes = "traverses right spines only" },
+    { name = "insert",    work = "O(lg n)", span = "O(lg n)", notes = "meld(singleton(k), Q)" },
+    { name = "deleteMin", work = "O(lg n)", span = "O(lg n)", notes = "meld(L, R)" },
+    { name = "fromSeq",   work = "O(n)", span = "O(lg^2 n)", notes = "reduce meld over singletons" },
+]
+
+[[cost_spec]]
+ref = "Ch45 Alg 45.2"
+chapter = 45
+description = "Heapsort"
+operations = [
+    { name = "sort", work = "O(n lg n)", span = "O(n lg n)", notes = "n inserts + n deleteMins" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch47: Hash Tables (Def 47.3, Alg 47.4, Def 47.5)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch47 Def 47.3"
+chapter = 47
+description = "Separate chaining hash table"
+operations = [
+    { name = "insert", work = "O(1)", span = "O(1)" },
+    { name = "lookup", work = "O(1 + alpha)", span = "O(1 + alpha)", notes = "alpha = load factor = n/m" },
+    { name = "delete", work = "O(1 + alpha)", span = "O(1 + alpha)" },
+]
+
+[[cost_spec]]
+ref = "Ch47 Alg 47.4"
+chapter = 47
+description = "Perfect hashing (static set)"
+operations = [
+    { name = "lookup", work = "O(1)", span = "O(1)", notes = "worst-case; collision-free" },
+]
+
+[[cost_spec]]
+ref = "Ch47 Def 47.5"
+chapter = 47
+description = "Open addressing probe costs"
+operations = [
+    { name = "unsuccessful lookup / insert", work = "O(1 / (1 - alpha))", span = "O(1 / (1 - alpha))" },
+    { name = "successful lookup", work = "O((1/alpha) ln(1/(1-alpha)))", span = "O((1/alpha) ln(1/(1-alpha)))" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch49: Subset Sum and Edit Distance (Alg 49.2, 49.5)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch49 Alg 49.2"
+chapter = 49
+description = "Subset Sum with DP"
+operations = [
+    { name = "SS", work = "O(k * |S|)", span = "O(|S|)", notes = "pseudo-polynomial" },
+]
+
+[[cost_spec]]
+ref = "Ch49 Alg 49.5"
+chapter = 49
+description = "Minimum Edit Distance with DP"
+operations = [
+    { name = "MED", work = "O(|S| * |T|)", span = "O(|S| + |T|)" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch50: Optimal BST (Alg 50.2)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch50 Alg 50.2"
+chapter = 50
+description = "Optimal Binary Search Tree with DP"
+operations = [
+    { name = "OBST", work = "O(n^3)", span = "O(n lg n)", notes = "n^2 subproblems, n work each" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch51: Bottom-up DP (Alg 51.1)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch51 Alg 51.1"
+chapter = 51
+description = "Bottom-up MED (anti-diagonal pebbling)"
+operations = [
+    { name = "MED_bottom_up", work = "O(|S| * |T|)", span = "O(|S| + |T|)", notes = "same asymptotic as recursive DP" },
+]
+#
+#
+#   d = diameter
+#   d_g(v) = degree of vertex v
+
+# ---------------------------------------------------------------------------
+# Ch52: Graph Representations (CS 52.1, 52.3, 52.5, 52.6)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch52 CS 52.1"
+chapter = 52
+description = "Edge-set graph representation (tree-based sets)"
+operations = [
+    { name = "map_over_vertices",    work = "O(n)", span = "O(lg n)" },
+    { name = "map_over_edges",       work = "O(m)", span = "O(lg n)" },
+    { name = "map_over_neighbors",   work = "O(m)", span = "O(lg n)" },
+    { name = "find_degree",          work = "O(m)", span = "O(lg n)" },
+    { name = "is_edge",              work = "O(lg n)", span = "O(lg n)" },
+    { name = "insert_delete_vertex", work = "O(lg n)", span = "O(lg n)" },
+    { name = "insert_delete_edge",   work = "O(lg n)", span = "O(lg n)" },
+]
+
+[[cost_spec]]
+ref = "Ch52 CS 52.3"
+chapter = 52
+description = "Adjacency-table graph representation (tree-based)"
+operations = [
+    { name = "map_over_vertices",    work = "O(n)", span = "O(lg n)" },
+    { name = "map_over_edges",       work = "O(m)", span = "O(lg n)" },
+    { name = "map_over_neighbors",   work = "O(lg n + d_g(v))", span = "O(lg n)" },
+    { name = "find_degree",          work = "O(lg n)", span = "O(lg n)" },
+    { name = "is_edge",              work = "O(lg n)", span = "O(lg n)" },
+    { name = "insert_delete_vertex", work = "O(lg n)", span = "O(lg n)" },
+    { name = "insert_delete_edge",   work = "O(lg n)", span = "O(lg n)" },
+]
+
+[[cost_spec]]
+ref = "Ch52 CS 52.5"
+chapter = 52
+description = "Adjacency-sequence graph representation (array-based)"
+operations = [
+    { name = "map_over_vertices",    work = "O(n)", span = "O(1)" },
+    { name = "map_over_edges",       work = "O(n + m)", span = "O(1)" },
+    { name = "map_over_neighbors",   work = "O(d_g(v))", span = "O(1)" },
+    { name = "find_degree",          work = "O(1)", span = "O(1)" },
+    { name = "is_edge",              work = "O(d_g(u))", span = "O(lg d_g(u))" },
+    { name = "insert_delete_vertex", work = "O(n)", span = "O(1)" },
+    { name = "insert_delete_edge",   work = "O(n)", span = "O(1)" },
+]
+
+[[cost_spec]]
+ref = "Ch52 CS 52.6"
+chapter = 52
+description = "Adjacency-matrix graph representation"
+operations = [
+    { name = "map_over_vertices",    work = "O(n)", span = "O(1)" },
+    { name = "map_over_edges",       work = "O(n^2)", span = "O(1)" },
+    { name = "map_over_neighbors",   work = "O(n)", span = "O(1)" },
+    { name = "find_degree",          work = "O(n)", span = "O(lg n)" },
+    { name = "is_edge",              work = "O(1)", span = "O(1)" },
+    { name = "insert_delete_vertex", work = "O(n^2)", span = "O(1)" },
+    { name = "insert_delete_edge",   work = "O(n)", span = "O(1)" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch54: BFS (Alg 54.4, 54.6)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch54 Alg 54.4"
+chapter = 54
+description = "Parallel BFS reachability (tree-based sets and tables)"
+operations = [
+    { name = "bfs_reach", work = "O(m lg n)", span = "O(d lg^2 n)", notes = "d = diameter" },
+]
+
+[[cost_spec]]
+ref = "Ch54 Alg 54.6"
+chapter = 54
+description = "BFS shortest-path tree (ephemeral sequences)"
+operations = [
+    { name = "bfs_tree", work = "O(n + m)", span = "O(d lg n)" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch55: DFS (CS 55.8)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch55 CS 55.8"
+chapter = 55
+description = "DFS cost"
+operations = [
+    { name = "dfs (adjacency table)", work = "O((m+n) lg n)", span = "O((m+n) lg n)" },
+    { name = "dfs (adjacency sequence)", work = "O(m + n)", span = "O(m + n)", notes = "with ephemeral sequences" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch57: Dijkstra (Alg 57.2)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch57 Alg 57.2"
+chapter = 57
+description = "Dijkstra's algorithm with priority queue"
+operations = [
+    { name = "dijkstra", work = "O(m lg n)", span = "O(m lg n)", notes = "sequential; span = work" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch58: Bellman-Ford (Alg 58.2)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch58 Alg 58.2"
+chapter = 58
+description = "Bellman-Ford SSSP"
+operations = [
+    { name = "bellman_ford (tables)", work = "O(nm lg n)", span = "O(n lg n)", notes = "n rounds, each O((n+m) lg n) work, O(lg n) span" },
+    { name = "bellman_ford (sequences)", work = "O(nm)", span = "O(n lg n)", notes = "lg n factor better work than table version" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch59: Johnson's APSP (Alg 59.1)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch59 Alg 59.1"
+chapter = 59
+description = "Johnson's all-pairs shortest paths"
+operations = [
+    { name = "johnson_apsp", work = "O(mn lg n)", span = "O(m lg n)", notes = "1 Bellman-Ford + n parallel Dijkstras" },
+]
+#
+#
+
+# ---------------------------------------------------------------------------
+# Ch61: Edge Contraction (Alg 61.6)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch61 Alg 61.6"
+chapter = 61
+description = "Parallel edge contraction on cycle graphs"
+operations = [
+    { name = "parallel_edge_contraction", work = "O(n)", span = "O(lg^2 n)", notes = "O(lg n) rounds w.h.p." },
+]
+
+# ---------------------------------------------------------------------------
+# Ch62: Star Contraction (Thm 62.1, 62.3)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch62 Thm 62.1"
+chapter = 62
+description = "Star partition"
+operations = [
+    { name = "starPartition", work = "O(n + m)", span = "O(lg n)", notes = "array-based" },
+]
+
+[[cost_spec]]
+ref = "Ch62 Thm 62.3"
+chapter = 62
+description = "Star contraction to isolated vertices"
+operations = [
+    { name = "starContract", work = "O((n + m) lg n)", span = "O(lg^2 n)" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch65: MST — Prim and Kruskal (Alg 65.1, 65.2)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch65 Alg 65.1"
+chapter = 65
+description = "Prim's MST algorithm"
+operations = [
+    { name = "prim (binary heap)", work = "O(m lg n)", span = "O(m lg n)" },
+    { name = "prim (Fibonacci heap)", work = "O(m + n lg n)", span = "O(m + n lg n)" },
+]
+
+[[cost_spec]]
+ref = "Ch65 Alg 65.2"
+chapter = 65
+description = "Kruskal's MST algorithm"
+operations = [
+    { name = "kruskal", work = "O(m lg n)", span = "O(m lg n)", notes = "sequential; sort + union-find" },
+]
+
+# ---------------------------------------------------------------------------
+# Ch66: Boruvka's MST (Alg 66.1, 66.3)
+# ---------------------------------------------------------------------------
+
+[[cost_spec]]
+ref = "Ch66 Alg 66.1"
+chapter = 66
+description = "Boruvka's parallel MST with tree contraction"
+operations = [
+    { name = "boruvka", work = "O(m lg n)", span = "O(lg^3 n)" },
+]
+
+[[cost_spec]]
+ref = "Ch66 Alg 66.3"
+chapter = 66
+description = "Boruvka's parallel MST with star contraction"
+operations = [
+    { name = "boruvka_star", work = "O(m lg n)", span = "O(lg^2 n)", notes = "removes expected n/4 vertices per round" },
+]
