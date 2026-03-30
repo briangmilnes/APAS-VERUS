@@ -163,8 +163,8 @@ pub mod UnionFindStEph {
 
     /// Closed conjunction of all sub-predicates. The open trait method delegates
     /// to this so wf unfolds to one opaque boolean in exec contexts. Use
-    /// `reveal(spec_uf_wf)` in proof contexts to see the sub-predicate conjunction.
-    pub closed spec fn spec_uf_wf<V: StT + Hash>(uf: &UnionFindStEph<V>) -> bool {
+    /// `reveal(spec_unionfindsteph_wf)` in proof contexts to see the sub-predicate conjunction.
+    pub closed spec fn spec_unionfindsteph_wf<V: StT + Hash>(uf: &UnionFindStEph<V>) -> bool {
         &&& spec_key_model::<V>()
         &&& spec_feq_full::<V>()
         &&& spec_parent_rank_same_dom(uf)
@@ -218,9 +218,9 @@ pub mod UnionFindStEph {
         ensures
             uf.spec_unionfindsteph_wf(),
     {
-        // Reveal spec_uf_wf to access sub-predicates, then reveal each closed
+        // Reveal spec_unionfindsteph_wf to access sub-predicates, then reveal each closed
         // sub-predicate for old_uf's quantifiers and new uf's proof.
-        reveal(spec_uf_wf);
+        reveal(spec_unionfindsteph_wf);
         reveal(spec_roots_idempotent);
         reveal(spec_parent_closed);
         reveal(spec_roots_in_dom);
@@ -314,7 +314,7 @@ pub mod UnionFindStEph {
             uf@.parent.contains_key(rv),
             uf@.parent[rv]@ == rv,
     {
-        reveal(spec_uf_wf);
+        reveal(spec_unionfindsteph_wf);
         reveal(spec_rank_increases);
         reveal(spec_parent_preserves_root);
         reveal(spec_rank_bounded);
@@ -648,7 +648,7 @@ pub mod UnionFindStEph {
         ensures
             uf@.rank[cv] < uf@.rank[rv],
     {
-        reveal(spec_uf_wf);
+        reveal(spec_unionfindsteph_wf);
         reveal(spec_self_parent_is_root);
         reveal(spec_rank_increases);
         reveal(spec_parent_preserves_root);
@@ -685,7 +685,7 @@ pub mod UnionFindStEph {
             spec_rank_increases(uf),
             spec_rank_bounded(uf),
     {
-        reveal(spec_uf_wf);
+        reveal(spec_unionfindsteph_wf);
     }
 
     /// Assemble the monolithic wf from individual sub-predicates.
@@ -708,7 +708,7 @@ pub mod UnionFindStEph {
         ensures
             uf.spec_unionfindsteph_wf(),
     {
-        reveal(spec_uf_wf);
+        reveal(spec_unionfindsteph_wf);
     }
 
     /// Chase parent pointers to the root (no mutation).
@@ -725,7 +725,7 @@ pub mod UnionFindStEph {
     {
         broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
         proof {
-            reveal(spec_uf_wf);
+            reveal(spec_unionfindsteph_wf);
             reveal(spec_parent_closed);
             reveal(spec_rank_increases);
             reveal(spec_rank_bounded);
@@ -1014,7 +1014,7 @@ pub mod UnionFindStEph {
 
     /// Coordinate all sub-lemmas to prove wf after union merge.
     /// Separated from exec to keep &mut encoding out of the proof context.
-    /// Reveals spec_uf_wf to decompose mid's wf into sub-predicates.
+    /// Reveals spec_unionfindsteph_wf to decompose mid's wf into sub-predicates.
     #[verifier::rlimit(80)]
     proof fn lemma_union_merge_wf<V: StT + Hash>(
         uf: &UnionFindStEph<V>,
@@ -1058,8 +1058,8 @@ pub mod UnionFindStEph {
         ensures
             uf.spec_unionfindsteph_wf(),
     {
-        // Reveal spec_uf_wf to decompose mid's wf into sub-predicates.
-        reveal(spec_uf_wf);
+        // Reveal spec_unionfindsteph_wf to decompose mid's wf into sub-predicates.
+        reveal(spec_unionfindsteph_wf);
 
         assert(uf.parent@.dom() =~= mid.parent@.dom());
 
@@ -1095,7 +1095,7 @@ pub mod UnionFindStEph {
             uf.parent@.dom() =~= uf.roots@.dom(),
             uf.parent@.dom() =~= uf.rank@.dom(),
     {
-        reveal(spec_uf_wf);
+        reveal(spec_unionfindsteph_wf);
         reveal(spec_parent_rank_same_dom);
         reveal(spec_roots_parent_same_dom);
     }
@@ -1201,7 +1201,7 @@ pub mod UnionFindStEph {
 
         proof {
             // BYPASSED: reveal has no effect inside external_body.
-            // reveal(spec_uf_wf);
+            // reveal(spec_unionfindsteph_wf);
         }
 
         let info = union_merge_exec(uf, root_u, root_v);
@@ -1331,11 +1331,11 @@ pub mod UnionFindStEph {
 
     impl<V: StT + Hash> UnionFindStEphTrait<V> for UnionFindStEph<V> {
         /// Well-formedness invariant for the Union-Find structure.
-        /// Delegates to closed spec_uf_wf so wf unfolds to one opaque boolean
-        /// in exec contexts. Proof functions use `reveal(spec_uf_wf)` to
+        /// Delegates to closed spec_unionfindsteph_wf so wf unfolds to one opaque boolean
+        /// in exec contexts. Proof functions use `reveal(spec_unionfindsteph_wf)` to
         /// access the sub-predicate conjunction.
         open spec fn spec_unionfindsteph_wf(&self) -> bool {
-            spec_uf_wf(self)
+            spec_unionfindsteph_wf(self)
         }
 
         /// - APAS: Work Theta(1), Span Theta(1)
@@ -1347,8 +1347,8 @@ pub mod UnionFindStEph {
                 roots: Ghost(Map::empty()),
             };
             proof {
-                // Reveal spec_uf_wf then sub-predicates — all vacuously true on empty maps.
-                reveal(spec_uf_wf);
+                // Reveal spec_unionfindsteph_wf then sub-predicates — all vacuously true on empty maps.
+                reveal(spec_unionfindsteph_wf);
                 reveal(spec_roots_idempotent);
                 reveal(spec_parent_closed);
                 reveal(spec_roots_in_dom);
@@ -1394,8 +1394,8 @@ pub mod UnionFindStEph {
 
         /// - APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
         // BLOCKED: Z3 matching loop between obeys_feq_view_injective and
-        // spec_elements_distinct. Both leak from spec_uf_wf's closed body
-        // into Z3 via spec_unionfindsteph_wf → spec_uf_wf. The loop
+        // spec_elements_distinct. Both leak from spec_unionfindsteph_wf's closed body
+        // into Z3 via spec_unionfindsteph_wf → spec_unionfindsteph_wf. The loop
         // diverges unboundedly (17GB OOM at rlimit 200). See
         // plans/agent1-r103-profiling-notes.md for full analysis.
         // Infrastructure ready: lemma_union_ensures_bridge (quantifier),
@@ -1434,7 +1434,7 @@ pub mod UnionFindStEph {
         /// - APAS: Work O(n alpha(n)), Span O(n alpha(n))
         fn num_sets(&mut self) -> (count: usize) {
             broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
-            proof { reveal(spec_uf_wf); reveal(spec_elements_forward); }
+            proof { reveal(spec_unionfindsteph_wf); reveal(spec_elements_forward); }
             let mut roots_set = HashSetWithViewPlus::<V>::new();
             let mut i: usize = 0;
             while i < self.elements.len()

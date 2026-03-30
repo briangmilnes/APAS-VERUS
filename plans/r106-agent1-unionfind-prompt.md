@@ -98,7 +98,7 @@ and use a targeted reveal ONLY in this frame lemma with a tight rlimit.
 
 ### Decomposing union_merge proof
 
-The `union_merge` proof needs to establish `spec_uf_wf(uf)` after mutations.
+The `union_merge` proof needs to establish `spec_unionfindsteph_wf(uf)` after mutations.
 Instead of revealing all sub-predicates at once (which triggers the loop),
 decompose into individual sub-predicate lemmas:
 
@@ -125,7 +125,7 @@ should follow from `union_merge`'s ensures.
 ## Read first
 
 - `src/Chap65/UnionFindStEph.rs` — the entire file, especially:
-  - `spec_uf_wf` and all sub-predicates (lines 114-185)
+  - `spec_unionfindsteph_wf` and all sub-predicates (lines 114-185)
   - `lemma_insert_preserves_wf` (line 205) — working proof that reveals everything
   - `lemma_union_wf_frame` (line 894) — existing frame lemma
   - `union_merge_exec` (line 917) — the exec mutations, already verified
