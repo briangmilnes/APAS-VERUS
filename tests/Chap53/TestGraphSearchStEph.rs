@@ -87,3 +87,41 @@ fn test_cycle_detection() {
     let reachable_set = reachable(&graph, 1, Ghost::assume_new());
     assert_eq!(reachable_set.size(), 3);
 }
+
+#[test]
+fn test_disconnected_graph() {
+    let graph = |v: &i32| match *v {
+        | 1 => AVLTreeSetStEph::singleton(2),
+        | _ => AVLTreeSetStEph::empty(),
+    };
+    let reachable_set = reachable(&graph, 1, Ghost::assume_new());
+    assert_eq!(reachable_set.size(), 2);
+    assert!(reachable_set.find(&1));
+    assert!(reachable_set.find(&2));
+}
+
+#[test]
+fn test_star_graph() {
+    let graph = |v: &i32| match *v {
+        | 0 => {
+            let mut s = AVLTreeSetStEph::singleton(1);
+            s.insert(2);
+            s.insert(3);
+            s.insert(4);
+            s
+        },
+        | _ => AVLTreeSetStEph::empty(),
+    };
+    let reachable_set = reachable(&graph, 0, Ghost::assume_new());
+    assert_eq!(reachable_set.size(), 5);
+}
+
+#[test]
+fn test_self_loop() {
+    let graph = |v: &i32| match *v {
+        | 1 => AVLTreeSetStEph::singleton(1),
+        | _ => AVLTreeSetStEph::empty(),
+    };
+    let reachable_set = reachable(&graph, 1, Ghost::assume_new());
+    assert_eq!(reachable_set.size(), 1);
+}

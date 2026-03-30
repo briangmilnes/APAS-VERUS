@@ -286,3 +286,54 @@ fn para_reduce_product() {
     let product = tree.reduce(|a, b| a * b, 1);
     assert_eq!(product, 120);
 }
+
+#[test]
+fn para_in_order_sorted() {
+    let tree = make_range_tree(1, 20);
+    let seq = tree.in_order();
+    assert_eq!(seq.length(), 19);
+    for i in 0..seq.length() - 1 {
+        assert!(seq.nth(i) < seq.nth(i + 1), "not sorted at {i}");
+    }
+}
+
+#[test]
+fn para_duplicate_insert() {
+    let mut tree = ParamBST::<i32>::new();
+    tree.insert(5);
+    tree.insert(5);
+    assert_eq!(tree.size(), 1);
+}
+
+#[test]
+fn para_delete_root() {
+    let mut tree = make_tree(&[5, 3, 7]);
+    tree.delete(&5);
+    assert_eq!(tree.size(), 2);
+    assert_eq!(tree.find(&5), None);
+    assert_eq!(tree.find(&3), Some(3));
+    assert_eq!(tree.find(&7), Some(7));
+}
+
+#[test]
+fn para_join_pair_disjoint() {
+    let left = make_range_tree(1, 5);
+    let right = make_range_tree(10, 15);
+    let joined = left.join_pair(right);
+    assert_eq!(joined.size(), 9);
+    for i in 1..5 {
+        assert_eq!(joined.find(&i), Some(i));
+    }
+    for i in 10..15 {
+        assert_eq!(joined.find(&i), Some(i));
+    }
+}
+
+#[test]
+fn para_clone_independence() {
+    let mut tree = make_tree(&[1, 2, 3]);
+    let cloned = tree.clone();
+    tree.insert(4);
+    assert_eq!(tree.size(), 4);
+    assert_eq!(cloned.size(), 3);
+}

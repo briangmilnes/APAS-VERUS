@@ -402,3 +402,38 @@ fn para_sequential_insert_delete() {
         assert_eq!(tree.find(&i), None);
     }
 }
+
+#[test]
+fn para_mt_in_order_sorted() {
+    let tree = make_range_tree(1, 30);
+    let seq = tree.in_order();
+    assert_eq!(seq.length(), 29);
+    for i in 0..seq.length() - 1 {
+        assert!(seq.nth(i) < seq.nth(i + 1));
+    }
+}
+
+#[test]
+fn para_mt_duplicate_insert() {
+    let mut tree = ParamBST::<i32>::new();
+    tree.insert(5);
+    tree.insert(5);
+    assert_eq!(tree.size(), 1);
+}
+
+#[test]
+fn para_mt_clone_independence() {
+    let mut tree = make_tree(&[1, 2, 3]);
+    let cloned = tree.clone();
+    tree.insert(4);
+    assert_eq!(tree.size(), 4);
+    assert_eq!(cloned.size(), 3);
+}
+
+#[test]
+fn para_mt_join_pair_disjoint() {
+    let left = make_range_tree(1, 5);
+    let right = make_range_tree(10, 15);
+    let joined = left.join_pair(right);
+    assert_eq!(joined.size(), 9);
+}

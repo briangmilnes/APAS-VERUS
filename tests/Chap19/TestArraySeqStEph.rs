@@ -122,3 +122,40 @@ fn test_iter() {
     assert_eq!(it.next(), Some(&3));
     assert_eq!(it.next(), None);
 }
+
+#[test]
+fn test_large_from_vec() {
+    let v: Vec<usize> = (0..200).collect();
+    let seq = ArraySeqStEphS::from_vec(v);
+    assert_eq!(seq.length(), 200);
+    assert_eq!(*seq.nth(0), 0);
+    assert_eq!(*seq.nth(199), 199);
+}
+
+#[test]
+fn test_flatten() {
+    let inner1 = ArraySeqStEphS::from_vec(vec![1, 2]);
+    let inner2 = ArraySeqStEphS::from_vec(vec![3, 4, 5]);
+    let outer = ArraySeqStEphS::from_vec(vec![inner1, inner2]);
+    let flat = ArraySeqStEphS::flatten(&outer);
+    assert_eq!(flat.length(), 5);
+    assert_eq!(*flat.nth(0), 1);
+    assert_eq!(*flat.nth(4), 5);
+}
+
+#[test]
+fn test_for_loop_iter() {
+    let seq = ArraySeqStEphS::from_vec(vec![10, 20, 30]);
+    let mut sum = 0;
+    for v in &seq {
+        sum += v;
+    }
+    assert_eq!(sum, 60);
+}
+
+#[test]
+fn test_map_identity() {
+    let seq = ArraySeqStEphS::from_vec(vec![1, 2, 3]);
+    let mapped = ArraySeqStEphS::map(&seq, &|x| *x);
+    assert_eq!(seq, mapped);
+}

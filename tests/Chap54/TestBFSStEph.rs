@@ -181,3 +181,33 @@ fn test_tree_bottom_up_iteration() {
     assert_eq!(collected, vec![2, 1, 0]);
 }
 
+#[test]
+fn test_complete_graph_distances() {
+    // K4: every vertex connected to every other.
+    let graph = ArraySeqStEphS::from_vec(vec![
+        ArraySeqStEphSLit![1, 2, 3],
+        ArraySeqStEphSLit![0, 2, 3],
+        ArraySeqStEphSLit![0, 1, 3],
+        ArraySeqStEphSLit![0, 1, 2],
+    ]);
+    let distances = BFSStEph::bfs(&graph, 0);
+    assert_eq!(*distances.nth(0), 0);
+    assert_eq!(*distances.nth(1), 1);
+    assert_eq!(*distances.nth(2), 1);
+    assert_eq!(*distances.nth(3), 1);
+}
+
+#[test]
+fn test_bfs_cycle() {
+    // 0 -> 1 -> 2 -> 0.
+    let graph = ArraySeqStEphS::from_vec(vec![
+        ArraySeqStEphSLit![1],
+        ArraySeqStEphSLit![2],
+        ArraySeqStEphSLit![0],
+    ]);
+    let distances = BFSStEph::bfs(&graph, 0);
+    assert_eq!(*distances.nth(0), 0);
+    assert_eq!(*distances.nth(1), 1);
+    assert_eq!(*distances.nth(2), 2);
+}
+

@@ -301,3 +301,32 @@ fn test_table_large_operations() {
         }
     }
 }
+
+#[test]
+fn table_delete_nonexistent_key() {
+    let mut table = TableStEph::<i32, i32>::empty();
+    table.insert(1, 10, |_old, new| *new);
+    table.insert(2, 20, |_old, new| *new);
+    table.insert(3, 30, |_old, new| *new);
+    table.delete(&99);
+    assert_eq!(table.size(), 3);
+}
+
+#[test]
+fn table_insert_then_delete_same() {
+    let mut table = TableStEph::<i32, i32>::empty();
+    table.insert(1, 10, |_old, new| *new);
+    assert_eq!(table.find(&1), Some(10));
+    table.delete(&1);
+    assert_eq!(table.find(&1), None);
+    assert_eq!(table.size(), 0);
+}
+
+#[test]
+fn table_insert_duplicate_key_combines() {
+    let mut table = TableStEph::<i32, i32>::empty();
+    table.insert(1, 10, |_old, new| *new);
+    table.insert(1, 20, |old, new| old + new);
+    assert_eq!(table.size(), 1);
+    assert_eq!(table.find(&1), Some(30)); // 10 + 20
+}

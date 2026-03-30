@@ -1,0 +1,40 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent1)
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap65/TestUnionFindStEph.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: `apas-verus` (test "TestUnionFindStEph") generated 1 warning
+error[E0428]: the name `key_value_bst_delete_nonexistent` is defined multiple times
+   --> tests/Chap40/TestBSTKeyValueStEph.rs:255:1
+    |
+149 | fn key_value_bst_delete_nonexistent() {
+    | ------------------------------------- previous definition of the value `key_value_bst_delete_nonexistent` here
+...
+255 | fn key_value_bst_delete_nonexistent() {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `key_value_bst_delete_nonexistent` redefined here
+    |
+    = note: `key_value_bst_delete_nonexistent` must be defined only once in the value namespace of this module
+
+error[E0428]: the name `key_value_bst_delete_all` is defined multiple times
+   --> tests/Chap40/TestBSTKeyValueStEph.rs:263:1
+    |
+158 | fn key_value_bst_delete_all() {
+    | ----------------------------- previous definition of the value `key_value_bst_delete_all` here
+...
+263 | fn key_value_bst_delete_all() {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `key_value_bst_delete_all` redefined here
+    |
+    = note: `key_value_bst_delete_all` must be defined only once in the value namespace of this module
+
+For more information about this error, try `rustc --explain E0428`.
+error: could not compile `apas-verus` (test "TestBSTKeyValueStEph") due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 1s
