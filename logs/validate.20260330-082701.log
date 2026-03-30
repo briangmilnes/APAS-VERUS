@@ -1,0 +1,72 @@
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:485:40
+    |
+485 |             let (left, found, right) = locked_val.split(k);
+    |                                        ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedSetStEph.rs:365:17
+    |
+365 |                 old(self)@.len() + 1 < usize::MAX as nat,
+    |                 ---------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetStEph.rs:365:17
+    |
+365 |                 old(self)@.len() + 1 < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+locked_val.spec_orderedsetsteph_wf() ✔
+clip(nat, locked_val.view().len() + 1) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:515:25
+    |
+515 |             let range = inner.get_range(k1, k2);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedSetStEph.rs:389:17
+    |
+389 |                 self@.len() + 1 < usize::MAX as nat,
+    |                 ----------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetStEph.rs:389:17
+    |
+389 |                 self@.len() + 1 < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+inner.spec_orderedsetsteph_wf() ✔
+clip(nat, inner.view().len() + 1) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:548:33
+    |
+548 |             let (left, right) = locked_val.split_rank(i);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedSetStEph.rs:412:17
+    |
+412 |                 old(self)@.len() + 1 < usize::MAX as nat,
+    |                 ---------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetStEph.rs:412:17
+    |
+412 |                 old(self)@.len() + 1 < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+locked_val.spec_orderedsetsteph_wf() ✔
+clip(nat, locked_val.view().len() + 1) < UnsignedMax.Exec(usize::BITS) ✘
+
+verification results:: 2586 verified, 3 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 40s
+Sampled Memory Usage: peak rust_verify RSS: 12057MB, peak z3 RSS: 433MB, min free: 9228MB
+Sampled CPU Usage: rust_verify: 329s, z3 children: 220s

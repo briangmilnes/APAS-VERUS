@@ -1,0 +1,96 @@
+error: postcondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:154:17
+    |
+154 |                   self@.subset_of(old(self)@),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+355 | /         fn filter<F: Pred<T>>(
+356 | |             &mut self,
+357 | |             f: F,
+358 | |             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+359 | |         ) {
+    | |_________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:156:17
+    |
+156 | /                 forall|v: T::V| #[trigger] self@.contains(v)
+157 | |                     ==> old(self)@.contains(v) && spec_pred(v),
+    | |______________________________________________________________^ failed this postcondition
+...
+355 | /         fn filter<F: Pred<T>>(
+356 | |             &mut self,
+357 | |             f: F,
+358 | |             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+359 | |         ) {
+    | |_________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:158:17
+    |
+158 | /                 forall|v: T::V| old(self)@.contains(v) && spec_pred(v)
+159 | |                     ==> #[trigger] self@.contains(v);
+    | |____________________________________________________^ failed this postcondition
+...
+355 | /         fn filter<F: Pred<T>>(
+356 | |             &mut self,
+357 | |             f: F,
+358 | |             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+359 | |         ) {
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetMtEph.rs:154:17
+    |
+154 |                 self@.subset_of(old(self)@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+159 |                     ==> #[trigger] self@.contains(v);
+    |                                    ^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.view().subset_of(old(self).view()) ✘
+|   forall |a|
+|       self.view().contains(a) ==>
+|           old(self).view().contains(a) 
+|               function is uninterpreted
++---
+self.view().finite() ✔
+forall |v|
+    self.view().contains(v) ==>
+        old(self).view().contains(v) ✔
+        old(spec_pred)(v) ✔
+forall |v|
+    old(self).view().contains(v) && old(spec_pred)(v) ==>
+        self.view().contains(v) ✘
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:412:17
+    |
+412 |                 result.insert(pair.0.clone());
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedSetMtEph.rs:133:17
+    |
+133 |                 old(self).spec_orderedsetmteph_wf(),
+    |                 ----------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetMtEph.rs:133:17
+    |
+133 |                 old(self).spec_orderedsetmteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+result.spec_orderedsetmteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+clip(nat, result.view().len() + 1) < UnsignedMax.Exec(usize::BITS) ✔
+
+verification results:: 2587 verified, 2 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 2421MB, peak z3 RSS: 362MB, min free: 19281MB
+Sampled CPU Usage: rust_verify: 41s, z3 children: 45s

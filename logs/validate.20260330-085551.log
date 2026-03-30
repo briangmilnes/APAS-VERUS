@@ -1,0 +1,257 @@
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:246:31
+    |
+246 |                         match remaining.find(&v_key) {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:142:56
+    |
+142 |             requires self.spec_orderedtablemtper_wf(), obeys_view_eq::<K>()
+    |                                                        -------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:279:45
+    |
+279 | ...                   remaining = remaining.delete(&v_key);
+    |                                   ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:175:56
+    |
+175 |             requires self.spec_orderedtablemtper_wf(), obeys_feq_clone::<Pair<K, V>>(), obeys_view_eq::<K>()
+    |                                                        ------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableMtPer.rs:142:56
+    |
+142 |             requires self.spec_orderedtablemtper_wf(), obeys_view_eq::<K>()
+    |                                                        ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+remaining.spec_orderedtablemtper_wf() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:322:19
+    |
+322 |             match self.adj.find(u) {
+    |                   ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:142:56
+    |
+142 |             requires self.spec_orderedtablemtper_wf(), obeys_view_eq::<K>()
+    |                                                        -------------------- failed precondition
+
+note: 
+
+tmp%.spec_orderedtablemtper_wf() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:350:19
+    |
+350 |             match self.adj.find(u) {
+    |                   ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:142:56
+    |
+142 |             requires self.spec_orderedtablemtper_wf(), obeys_view_eq::<K>()
+    |                                                        -------------------- failed precondition
+
+note: 
+
+tmp%.spec_orderedtablemtper_wf() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:380:16
+    |
+380 |             if self.adj.find(&v).is_some() {
+    |                ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:142:56
+    |
+142 |             requires self.spec_orderedtablemtper_wf(), obeys_view_eq::<K>()
+    |                                                        -------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:392:26
+    |
+392 |                     adj: self.adj.insert_wf(v, empty_set),
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:164:17
+    |
+164 |                 obeys_view_eq::<K>(),
+    |                 -------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableMtPer.rs:164:17
+    |
+164 |                 obeys_view_eq::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_orderedtablemtper_wf() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+clip(nat, tmp%.view().dom().len() + 1) < UnsignedMax.Exec(usize::BITS) ✔
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:426:29
+    |
+426 |             let without_v = self.adj.delete(v);
+    |                             ^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:175:56
+    |
+175 |             requires self.spec_orderedtablemtper_wf(), obeys_feq_clone::<Pair<K, V>>(), obeys_view_eq::<K>()
+    |                                                        ------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/vstdplus/feq.rs:51:61
+    |
+ 51 |         &&& forall|x: T, y: T|  #[trigger] cloned(x, y) ==> x.eq_spec(&y)
+    |                                                             ^^^^^^^^^^^^^
+ 52 |         &&& forall|x: &T, y: T| #[trigger] cloned(*x, y) ==> x.eq_spec(&y)
+ 53 |         &&& forall|x: T, y: T|  #[trigger] strictly_cloned(x, y) ==> x.eq_spec(&y)
+    |                                                                      ^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:175:56
+    |
+175 |             requires self.spec_orderedtablemtper_wf(), obeys_feq_clone::<Pair<K, V>>(), obeys_view_eq::<K>()
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_orderedtablemtper_wf() ✔
+obeys_feq_clone() ✘
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✔
++---
+obeys_view_eq() ✘
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:500:19
+    |
+500 |             match new_adj.find(&u) {
+    |                   ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:142:56
+    |
+142 |             requires self.spec_orderedtablemtper_wf(), obeys_view_eq::<K>()
+    |                                                        -------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:509:31
+    |
+509 |                     new_adj = new_adj.insert_wf(u_clone, AVLTreeSetMtPer::empty());
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:164:17
+    |
+164 |                 obeys_view_eq::<K>(),
+    |                 -------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:528:19
+    |
+528 |             match new_adj.find(&v) {
+    |                   ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:142:56
+    |
+142 |             requires self.spec_orderedtablemtper_wf(), obeys_view_eq::<K>()
+    |                                                        -------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:537:31
+    |
+537 |                     new_adj = new_adj.insert_wf(v_clone, AVLTreeSetMtPer::empty());
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:164:17
+    |
+164 |                 obeys_view_eq::<K>(),
+    |                 -------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:567:37
+    |
+567 |             let u_neighbors = match new_adj.find(&u) {
+    |                                     ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:142:56
+    |
+142 |             requires self.spec_orderedtablemtper_wf(), obeys_view_eq::<K>()
+    |                                                        -------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:593:22
+    |
+593 |                 adj: new_adj.insert_wf(u, new_u_neighbors),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:164:17
+    |
+164 |                 obeys_view_eq::<K>(),
+    |                 -------------------- failed precondition
+
+note: 
+
+new_adj.spec_orderedtablemtper_wf() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:652:33
+    |
+652 |             let updated = match self.adj.find(u) {
+    |                                 ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:142:56
+    |
+142 |             requires self.spec_orderedtablemtper_wf(), obeys_view_eq::<K>()
+    |                                                        -------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:676:30
+    |
+676 |                         adj: self.adj.insert_wf(u_clone, new_u_neighbors),
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:164:17
+    |
+164 |                 obeys_view_eq::<K>(),
+    |                 -------------------- failed precondition
+
+note: 
+
+tmp%.spec_orderedtablemtper_wf() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+clip(nat, tmp%.view().dom().len() + 1) < UnsignedMax.Exec(usize::BITS) ✔
+
+verification results:: 5381 verified, 7 errors
+error: aborting due to 15 previous errors
+
+Elapsed: 88s
+Sampled Memory Usage: peak rust_verify RSS: 12917MB, peak z3 RSS: 581MB, min free: 10642MB
+Sampled CPU Usage: rust_verify: 289s, z3 children: 156s

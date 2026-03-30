@@ -130,12 +130,24 @@ broadcast use {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- constructs empty base table + stores reducer
         fn empty(reducer: F, identity: V) -> (empty: Self)
+            requires
+                forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
+                obeys_feq_fulls::<K, V>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                view_ord_consistent::<Pair<K, V>>(),
+                spec_pair_key_determines_order::<K, V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                view_ord_consistent::<K>(),
             ensures empty@ == Map::<K::V, V::V>::empty();
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- wraps OrderedTableStEph.singleton
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
             requires
                 obeys_feq_clone::<Pair<K, V>>(),
+                forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
+                obeys_feq_fulls::<K, V>(),
+                obeys_feq_full::<Pair<K, V>>(),
                 vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
                 view_ord_consistent::<Pair<K, V>>(),
                 spec_pair_key_determines_order::<K, V>(),
@@ -186,6 +198,7 @@ broadcast use {
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
             requires
                 old(self).spec_augorderedtablesteph_wf(),
+                obeys_feq_clone::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
             ensures self@.dom().finite();
         /// - APAS: Work Θ(n), Span Θ(n)

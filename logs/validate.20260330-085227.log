@@ -1,0 +1,81 @@
+error: precondition not satisfied
+   --> src/Chap43/AugOrderedTableMtEph.rs:98:21
+    |
+ 98 |         let pairs = base.collect();
+    |                     ^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtEph.rs:243:22
+    |
+243 |             requires self.spec_orderedtablemteph_wf()
+    |                      -------------------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+base.spec_orderedtablemteph_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: precondition not satisfied
+   --> src/Chap43/AugOrderedTableMtEph.rs:567:13
+    |
+567 |             self.base_table.difference(&other.base_table);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtEph.rs:219:61
+    |
+219 |             requires old(self).spec_orderedtablemteph_wf(), other.spec_orderedtablemteph_wf(), obeys_view_eq::<K>()
+    |                                                             --------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableMtEph.rs:219:61
+    |
+219 |             requires old(self).spec_orderedtablemteph_wf(), other.spec_orderedtablemteph_wf(), obeys_view_eq::<K>()
+    |                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.base_table.spec_orderedtablemteph_wf() ✔
+tmp%.spec_orderedtablemteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_view_eq() ✘
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap43/AugOrderedTableMtEph.rs:659:13
+    |
+659 |             self.base_table.join_key(other.base_table);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtEph.rs:302:17
+    |
+302 |                 other.spec_orderedtablemteph_wf(),
+    |                 --------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableMtEph.rs:302:17
+    |
+302 |                 other.spec_orderedtablemteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+303 |                 obeys_feq_clone::<K>(),
+304 |                 obeys_view_eq::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^
+305 |                 old(self)@.dom().len() + other@.dom().len() < usize::MAX,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.base_table.spec_orderedtablemteph_wf() ✔
+tmp%.spec_orderedtablemteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_feq_clone() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+clip(nat, self.base_table.view().dom().len() + tmp%.view().dom().len()) < UnsignedMax.Exec(usize::BITS) ✘
+
+verification results:: 2586 verified, 3 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 26s
+Sampled Memory Usage: peak rust_verify RSS: 2422MB, peak z3 RSS: 356MB, min free: 19326MB
+Sampled CPU Usage: rust_verify: 38s, z3 children: 42s

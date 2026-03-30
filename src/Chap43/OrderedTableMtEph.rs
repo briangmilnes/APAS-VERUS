@@ -96,6 +96,12 @@ broadcast use {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- constructs empty StEph + RwLock
         fn empty() -> (empty: Self)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                view_ord_consistent::<Pair<K, V>>(),
+                spec_pair_key_determines_order::<K, V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                view_ord_consistent::<K>(),
             ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_orderedtablemteph_wf();
 
         /// - APAS: Work Θ(1), Span Θ(1)
@@ -156,6 +162,7 @@ broadcast use {
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StEph.domain
         fn domain(&self) -> (domain: ArraySetStEph<K>)
+            requires self.spec_orderedtablemteph_wf(), obeys_feq_clone::<K>()
             ensures self@.dom().finite();
 
         /// - APAS: Work Θ(n log n), Span Θ(n log n)
@@ -209,16 +216,19 @@ broadcast use {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- acquires locks, delegates to StEph.difference
         fn difference(&mut self, other: &Self)
+            requires old(self).spec_orderedtablemteph_wf()
             ensures self@.dom().finite();
 
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- acquires write lock, delegates to StEph.restrict
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
+            requires old(self).spec_orderedtablemteph_wf()
             ensures self@.dom().finite();
 
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- acquires write lock, delegates to StEph.subtract
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
+            requires old(self).spec_orderedtablemteph_wf()
             ensures self@.dom().finite();
 
         /// - APAS: Work Θ(n), Span Θ(n)
@@ -236,6 +246,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StEph.first_key
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
+            requires self.spec_orderedtablemteph_wf()
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
@@ -246,6 +257,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StEph.last_key
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
+            requires self.spec_orderedtablemteph_wf()
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
@@ -256,6 +268,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StEph.previous_key
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
+            requires self.spec_orderedtablemteph_wf()
             ensures
                 self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
@@ -266,6 +279,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StEph.next_key
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
+            requires self.spec_orderedtablemteph_wf()
             ensures
                 self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
@@ -276,11 +290,13 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires write lock, delegates to StEph.split_key
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
+            requires old(self).spec_orderedtablemteph_wf(), obeys_view_eq::<K>()
             ensures self@.dom().finite();
 
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to union
         fn join_key(&mut self, other: Self)
+            requires old(self).spec_orderedtablemteph_wf()
             ensures self@.dom().finite();
 
         /// - APAS: Work Θ(log n + m), Span Θ(log n)
@@ -318,6 +334,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires write lock, delegates to StEph.split_rank_key
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
+            requires old(self).spec_orderedtablemteph_wf()
             ensures self@.dom().finite();
 
         fn iter<'a>(&'a self) -> (it: OrderedTableMtEphIter<'a, K, V>)

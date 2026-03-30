@@ -140,13 +140,24 @@ broadcast use {
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- constructs empty base table with reducer/identity
         fn empty(reducer: F, identity: V) -> (empty: Self)
-            requires forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2))
+            requires
+                forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
+                obeys_feq_fulls::<K, V>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                view_ord_consistent::<Pair<K, V>>(),
+                spec_pair_key_determines_order::<K, V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                view_ord_consistent::<K>(),
             ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_augorderedtablemteph_wf();
         /// - APAS: Work O(1), Span O(1)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- constructs singleton base table with reducer/identity
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
             requires
+                obeys_feq_clone::<Pair<K, V>>(),
                 forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
+                obeys_feq_fulls::<K, V>(),
+                obeys_feq_full::<Pair<K, V>>(),
                 vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
                 view_ord_consistent::<Pair<K, V>>(),
                 spec_pair_key_determines_order::<K, V>(),
@@ -190,11 +201,13 @@ broadcast use {
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
             requires
                 old(self).spec_augorderedtablemteph_wf(),
+                obeys_feq_clone::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
             ensures self@.dom().finite();
         /// - APAS: Work O(n), Span O(n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- extracts keys from base table entries
         fn domain(&self) -> (domain: ArraySetStEph<K>)
+            requires self.spec_augorderedtablemteph_wf(), obeys_feq_clone::<K>()
             ensures self@.dom().finite();
         /// - APAS: Work O(n log n), Span O(n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- applies f to each key, then recalculates reduction O(n)
@@ -224,6 +237,7 @@ broadcast use {
             requires
                 self.spec_augorderedtablemteph_wf(),
                 forall|k: &K, v: &V| f.requires((k, v)),
+                obeys_feq_clone::<Pair<K, V>>(),
             ensures mapped@.dom().finite();
         /// - APAS: Work O(n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- filters base table linearly, then recalculates reduction O(n)
@@ -238,14 +252,20 @@ broadcast use {
         fn intersection<G: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: G)
             requires
                 old(self).spec_augorderedtablemteph_wf(),
+                other.spec_augorderedtablemteph_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
+                obeys_feq_clone::<K>(),
+                obeys_view_eq::<K>(),
             ensures self@.dom().finite();
         /// - APAS: Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) -- delegates to base table union (linear merge), then recalculates reduction
         fn union<G: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: G)
             requires
                 old(self).spec_augorderedtablemteph_wf(),
+                other.spec_augorderedtablemteph_wf(),
                 forall|v1: &V, v2: &V| f.requires((v1, v2)),
+                obeys_feq_clone::<K>(),
+                obeys_view_eq::<K>(),
             ensures self@.dom().finite();
         /// - APAS: Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Claude-Opus-4.6: Work O(n * m), Span O(n * m) -- delegates to base table difference (linear scan), then recalculates reduction
@@ -270,11 +290,13 @@ broadcast use {
         /// - APAS: Work O(n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- collects base table entries into AVLTreeSeqStPer
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
+            requires self.spec_augorderedtablemteph_wf()
             ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf();
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- external_body, delegates to base table which collects+sorts
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
+            requires self.spec_augorderedtablemteph_wf()
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
@@ -284,6 +306,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- external_body, delegates to base table which collects+sorts
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
+            requires self.spec_augorderedtablemteph_wf()
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
@@ -293,6 +316,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- external_body, delegates to base table which collects+sorts
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
+            requires self.spec_augorderedtablemteph_wf()
             ensures
                 self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
@@ -302,6 +326,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- external_body, delegates to base table which collects+sorts
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
+            requires self.spec_augorderedtablemteph_wf()
             ensures
                 self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),

@@ -614,6 +614,7 @@ broadcast use {
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
             requires
                 old(self).spec_orderedtablesteph_wf(),
+                obeys_feq_clone::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
             ensures self@ == old(self)@.remove(k@), self@.dom().finite(), self.spec_orderedtablesteph_wf();
         /// - APAS: Work Θ(n), Span Θ(n)
@@ -902,6 +903,7 @@ broadcast use {
         fn delete_iter(&mut self, k: &K) -> (updated: Option<V>)
             requires
                 old(self).spec_orderedtablesteph_wf(),
+                obeys_feq_clone::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
             ensures self@ == old(self)@.remove(k@), self@.dom().finite(), self.spec_orderedtablesteph_wf();
         /// Iterative alternative to `first_key`.
