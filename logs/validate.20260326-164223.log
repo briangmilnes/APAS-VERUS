@@ -1,0 +1,11 @@
+error: cannot call function `lib::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::LabUnDirGraphStEphTrait::labeled_edges` with mode exec
+   --> src/Chap65/KruskalStEph.rs:264:24
+    |
+264 |                 assert(graph.labeled_edges()@.contains(edge_seq@[ei as int]@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 5112MB, peak z3 RSS: 9267MB, min free: 9044MB
+Sampled CPU Usage: rust_verify: 80s, z3 children: 55s

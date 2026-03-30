@@ -1,0 +1,11 @@
+error: Could not automatically infer triggers for this quantifier.  Use #[trigger] annotations to manually mark trigger terms instead.
+   --> src/Chap53/PQMinStEph.rs:327:47
+    |
+327 |   ...                   let v1r: &V = choose|v_ref: &V| exists|p_val: P|
+    |  _____________________________________^
+328 | | ...                       v_ref@ == e1.1 && #[trigger] priority_fn.ensures((v_ref,), p_val) && p_val@ == e1.0.0;
+    | |_______________________________________________________________________________________________________________^
+
+error: aborting due to 1 previous error
+
+Elapsed: 71s

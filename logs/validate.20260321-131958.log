@@ -1,0 +1,99 @@
+error[E0425]: cannot find function `lemma_size_eq_inorder_len` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:235:17
+    |
+235 |                 lemma_size_eq_inorder_len::<T>(&seq.root);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: these functions exist but are inaccessible
+   --> src/Chap37/AVLTreeSeq.rs:183:11
+    |
+183 |       proof fn lemma_size_eq_inorder_len<T: StT>(link: &Link<T>)
+    |  ___________^
+184 | |         requires spec_avltreeseq_wf(*link),
+185 | |         ensures spec_avltreeseq_cached_size(link) == spec_avltreeseq_inorder(*link).len(),
+186 | |         decreases *link,
+...   |
+195 | |     }
+    | |_____^ `crate::Chap37::AVLTreeSeq::AVLTreeSeq::lemma_size_eq_inorder_len`: not accessible
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:179:11
+    |
+179 |       proof fn lemma_size_eq_inorder_len<T: StT>(link: &Link<T>)
+    |  ___________^
+180 | |         requires spec_avltreeseqsteph_wf(*link),
+181 | |         ensures spec_cached_size(link) == spec_inorder(*link).len(),
+182 | |         decreases *link,
+...   |
+191 | |     }
+    | |_____^ `crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::lemma_size_eq_inorder_len`: not accessible
+    |
+   ::: src/Chap37/AVLTreeSeqStPer.rs:138:11
+    |
+138 |       proof fn lemma_size_eq_inorder_len<T: StT>(link: &Link<T>)
+    |  ___________^
+139 | |         requires spec_avltreeseqstper_wf(*link),
+140 | |         ensures spec_cached_size(link) == spec_inorder(*link).len(),
+141 | |         decreases *link,
+...   |
+150 | |     }
+    | |_____^ `crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::lemma_size_eq_inorder_len`: not accessible
+
+error[E0425]: cannot find function `lemma_size_eq_inorder_len` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:317:17
+    |
+317 |                 lemma_size_eq_inorder_len::<T>(&self.elements.root);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: these functions exist but are inaccessible
+   --> src/Chap37/AVLTreeSeq.rs:183:11
+    |
+183 |       proof fn lemma_size_eq_inorder_len<T: StT>(link: &Link<T>)
+    |  ___________^
+184 | |         requires spec_avltreeseq_wf(*link),
+185 | |         ensures spec_avltreeseq_cached_size(link) == spec_avltreeseq_inorder(*link).len(),
+186 | |         decreases *link,
+...   |
+195 | |     }
+    | |_____^ `crate::Chap37::AVLTreeSeq::AVLTreeSeq::lemma_size_eq_inorder_len`: not accessible
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:179:11
+    |
+179 |       proof fn lemma_size_eq_inorder_len<T: StT>(link: &Link<T>)
+    |  ___________^
+180 | |         requires spec_avltreeseqsteph_wf(*link),
+181 | |         ensures spec_cached_size(link) == spec_inorder(*link).len(),
+182 | |         decreases *link,
+...   |
+191 | |     }
+    | |_____^ `crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::lemma_size_eq_inorder_len`: not accessible
+    |
+   ::: src/Chap37/AVLTreeSeqStPer.rs:138:11
+    |
+138 |       proof fn lemma_size_eq_inorder_len<T: StT>(link: &Link<T>)
+    |  ___________^
+139 | |         requires spec_avltreeseqstper_wf(*link),
+140 | |         ensures spec_cached_size(link) == spec_inorder(*link).len(),
+141 | |         decreases *link,
+...   |
+150 | |     }
+    | |_____^ `crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::lemma_size_eq_inorder_len`: not accessible
+
+error[E0425]: cannot find function `lemma_size_eq_inorder_len` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:411:17
+    |
+411 |                 lemma_size_eq_inorder_len::<T>(&self.elements.root);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: these functions exist but are inaccessible
+   --> src/Chap37/AVLTreeSeq.rs:183:11
+    |
+183 |       proof fn lemma_size_eq_inorder_len<T: StT>(link: &Link<T>)
+    |  ___________^
+184 | |         requires spec_avltreeseq_wf(*link),
+185 | |         ensures spec_avltreeseq_cached_size(link) == spec_avltreeseq_inorder(*link).len(),
+186 | |         decreases *link,
+...   |
+195 | |     }
+    | |_____^ `crate::Chap37::AVLTreeSeq::AVLTreeSeq::lemma_size_eq_inorder_len`: not accessible
+    |
+   ::: src/Chap37/AVLT

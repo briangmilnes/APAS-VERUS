@@ -1,0 +1,27 @@
+error: precondition not satisfied
+   --> src/Chap65/KruskalStEph.rs:136:17
+    |
+ 53 |               pre_sort.contains(edges_vec_i),
+    |               ------------------------------ failed precondition
+...
+136 | /                 lemma_sorted_edge_in_uf::<V>(
+137 | |                     edges_vec@[i as int], pre_sort, edge_seq, mapped_es,
+138 | |                     labeled_view, graph_V, graph_A, initial_dom,
+139 | |                 );
+    | |_________________^
+
+
+thread '<unnamed>' (1957124) panicked at air/src/smt_process.rs:93:17:
+Got too many empty lines!
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread '<unnamed>' (1955994) panicked at air/src/smt_process.rs:213:34:
+internal error: Z3 reader thread failure: RecvError
+
+thread '<unnamed>' (1955994) panicked at rust_verify/src/verifier.rs:2217:29:
+worker thread panicked
+error: aborting due to 1 previous error
+
+Elapsed: 77s
+Sampled Memory Usage: peak rust_verify RSS: 12142MB, peak z3 RSS: 12651MB, min free: 133MB
+Sampled CPU Usage: rust_verify: 282s, z3 children: 225s

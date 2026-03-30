@@ -1,0 +1,39 @@
+error: postcondition not satisfied
+    --> src/Chap41/AVLTreeSetStPer.rs:262:17
+     |
+ 262 |                 updated.spec_elements_sorted_per();
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1214 |                 return updated;
+     |                 -------------- at this exit
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:262:17
+    |
+262 |                 updated.spec_elements_sorted_per();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view() =~= old(self).view().insert(old(x).view()) ✔
+%return.spec_avltreesetstper_wf() ✔
+%return.spec_elements_sorted_per() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: assertion failed
+   --> src/Chap41/AVLTreeSetStPer.rs:119:32
+    |
+119 |                         assert(TotalOrder::le(s[i], s.last()));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+s.index(i).le(s.last()) 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 4499 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 98s

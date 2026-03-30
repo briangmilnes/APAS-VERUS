@@ -1,0 +1,24 @@
+error: bitvector assertion not satisfied
+  --> src/experiments/f32_ieee_total_order.rs:46:9
+   |
+46 |         assert(0.0f32 <= x && 0.0f32 <= y
+   |         ^^^^^^
+
+error: bitvector assertion not satisfied
+  --> src/experiments/f32_ieee_total_order.rs:54:9
+   |
+54 |         assert(0.0f32 <= x ==> x + 0.0f32 == x) by(bit_vector);
+   |         ^^^^^^
+
+error: bitvector assertion not satisfied: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+  --> src/experiments/f32_ieee_total_order.rs:63:9
+   |
+63 |         assert(0.0f32 <= a && 0.0f32 <= b && 0.0f32 <= c
+   |         ^^^^^^
+
+verification results:: 954 verified, 3 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 683MB, peak z3 RSS: 131MB, min free: 21051MB
+Sampled CPU Usage: rust_verify: 7s, z3 children: 5s

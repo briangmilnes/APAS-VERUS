@@ -1,0 +1,17 @@
+error: triggers cannot contain let/forall/exists/lambda/choose
+    --> src/Chap43/OrderedSetStEph.rs:1184:29
+     |
+1184 | / ...                   |x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, result)
+1185 | | ...                       && t@ == x && t@ != result@
+     | |_____________________________________________________^
+
+error: triggers cannot contain let/forall/exists/lambda/choose
+    --> src/Chap43/OrderedSetStPer.rs:1150:29
+     |
+1150 | / ...                   |x: T::V| exists|t: T| #[trigger] TotalOrder::le(t, result)
+1151 | | ...                       && t@ == x && t@ != result@
+     | |_____________________________________________________^
+
+error: aborting due to 2 previous errors
+
+Elapsed: 93s

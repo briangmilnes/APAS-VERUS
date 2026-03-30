@@ -1,0 +1,32 @@
+error: assertion failed
+   --> src/Chap63/ConnectivityMtEph.rs:155:24
+    |
+155 |                 assert(0 <= idx < kv_seq.len());
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap63/ConnectivityMtEph.rs:157:24
+    |
+157 |                 assert(u_key@ == kv_seq[idx].0@);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap63/ConnectivityMtEph.rs:155:24
+    |
+155 |                 assert(0 <= idx < kv_seq.len());
+    |                        ^
+
+note: 
+
+let tmp%% = 0;
+    let tmp%% = idx;
+        let tmp%% = kv_seq.len();
+            tmp%% <= tmp%% ✘
+            tmp%% < tmp%% ✔
+
+verification results:: 1242 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 1717MB, peak z3 RSS: 292MB, min free: 20196MB
+Sampled CPU Usage: rust_verify: 23s, z3 children: 17s

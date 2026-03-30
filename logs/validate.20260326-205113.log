@@ -1,0 +1,122 @@
+error: invariant not satisfied before loop
+   --> src/Chap55/TopoSortStEph.rs:566:17
+    |
+566 | /                 ((forall|k: int| 0 <= k < old(finish_order)@.len()
+567 | |                     ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])
+568 | |                     && spec_neighbors_explored(graph, old(visited)@, old(finish_order)@))
+569 | |                     ==> spec_neighbors_explored(graph, visited@, finish_order@),
+    | |_______________________________________________________________________________^
+
+error: assertion failed
+   --> src/Chap55/TopoSortStEph.rs:625:33
+    |
+625 |                         implies spec_reachable(graph, vertex as int, finish_order@[k] as int) by {
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+spec_reachable(graph, vertex, finish_order.view().index(k))
+|   (exists |path| spec_is_path(graph, path) && path.index(0) == vertex && path.last() == finish_order.view().index(k)) 
++---
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:531:48
+    |
+531 |                     0 <= j < visited@.len() && #[trigger] old(visited)@[j]
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:545:26
+    |
+545 |                     ==> !old(visited)@[#[trigger] finish_order@[k] as int],
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:548:25
+    |
+548 |                     ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:567:25
+    |
+567 |                     ==> old(visited)@[#[trigger] old(finish_order)@[k] as int])
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:579:18
+    |
+579 |                 !old(visited)@[vertex as int]
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:609:28
+    |
+609 |                         if old(visited)@[finish_order@[k] as int] {
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:604:30
+    |
+604 |                     implies !old(visited)@[#[trigger] finish_order@[k] as int] by {
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:623:21
+    |
+623 |                 if !old(visited)@[vertex as int] {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:554:29
+    |
+554 |                         ==> old(visited)@[#[trigger] old(finish_order)@[k] as int]))
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap55/TopoSortStEph.rs:559:29
+    |
+559 |                         ==> old(visited)@[#[trigger] old(finish_order)@[k] as int]))
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: rec

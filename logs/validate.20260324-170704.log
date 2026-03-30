@@ -1,0 +1,188 @@
+error: recursive function must have a decreases clause
+   --> src/Chap37/BSTSetSplayMtEph.rs:222:9
+    |
+222 |         fn union(&self, other: &Self) -> Self {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: to disable this check, use #[verifier::exec_allows_no_decreases_clause] on the function
+
+error: postcondition not satisfied
+    --> src/Chap37/BSTSplayMtEph.rs:1646:21
+     |
+1646 |               ensures tree.spec_bstsplaymteph_wf();
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1708 | /             BSTSplayMtEph {
+1709 | |                 root: RwLock::new(link, Ghost(BSTSplayMtEphInv)),
+1710 | |                 ghost_root: Ghost(ghost_link),
+1711 | |             }
+     | |_____________- at the end of the function body
+
+error: constructed value may fail to meet its declared type invariant
+    --> src/Chap37/BSTSplayMtEph.rs:1708:13
+     |
+1624 |           spec fn wf(self) -> bool {
+     |                ------------------- type invariant declared here
+...
+1708 | /             BSTSplayMtEph {
+1709 | |                 root: RwLock::new(link, Ghost(BSTSplayMtEphInv)),
+1710 | |                 ghost_root: Ghost(ghost_link),
+1711 | |             }
+     | |_____________^
+
+error: precondition not satisfied
+    --> src/Chap37/BSTSplayMtEph.rs:1709:23
+     |
+1709 |                 root: RwLock::new(link, Ghost(BSTSplayMtEphInv)),
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/rwlock.rs:504:12
+     |
+     = note: failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+tmp%.wf()
+|   link_spec_size(tmp%.ghost_root) <= UnsignedMax.Exec(usize::BITS) 
++---
+
+error: precondition not satisfied
+    --> src/Chap37/BSTSplayMtEph.rs:1156:25
+     |
+ 137 |         requires 1 + link_spec_size(old(node).left) + link_spec_size(old(node).right) <= usize::MAX as nat,
+     |                  ----------------------------------------------------------------------------------------- failed precondition
+...
+1156 |                         update(&mut node);
+     |                         ^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+    --> src/Chap37/BSTSplayMtEph.rs:1204:25
+     |
+ 137 |         requires 1 + link_spec_size(old(node).left) + link_spec_size(old(node).right) <= usize::MAX as nat,
+     |                  ----------------------------------------------------------------------------------------- failed precondition
+...
+1204 |                         update(&mut node);
+     |                         ^^^^^^^^^^^^^^^^^
+
+note: 
+
+clip(nat, clip(nat, 1 + link_spec_size(node.left)) + link_spec_size(node.right)) <= UnsignedMax.Exec(usize::BITS) 
+
+note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+   --> src/Chap37/BSTSplayMtEph.rs:153:5
+    |
+153 |     fn splay<T: StTInMtT + Ord + TotalOrder>(root: Box<Node<T>>, target: &T) -> (result: Box<Node<T>>)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSplayMtEph.rs:210:25
+    |
+137 |         requires 1 + link_spec_size(old(node).left) + link_spec_size(old(node).right) <= usize::MAX as nat,
+    |                  ----------------------------------------------------------------------------------------- failed precondition
+...
+210 |                         update(&mut root);
+    |                         ^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSplayMtEph.rs:217:25
+    |
+137 |         requires 1 + link_spec_size(old(node).left) + link_spec_size(old(node).right) <= usize::MAX as nat,
+    |                  ----------------------------------------------------------------------------------------- failed precondition
+...
+217 |                         update(&mut left);
+    |                         ^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSplayMtEph.rs:280:25
+    |
+137 |         requires 1 + link_spec_size(old(node).left) + link_spec_size(old(node).right) <= usize::MAX as nat,
+    |                  ----------------------------------------------------------------------------------------- failed precondition
+...
+280 |                         update(&mut root);
+    |                         ^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSplayMtEph.rs:287:25
+    |
+137 |         requires 1 + link_spec_size(old(node).left) + link_spec_size(old(node).right) <= usize::MAX as nat,
+    |                  ----------------------------------------------------------------------------------------- failed precondition
+...
+287 |                         update(&mut left);
+    |                         ^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSplayMtEph.rs:293:29
+    |
+137 |         requires 1 + link_spec_size(old(node).left) + link_spec_size(old(node).right) <= usize::MAX as nat,
+    |                  ----------------------------------------------------------------------------------------- failed precondition
+...
+293 |                             update(&mut left);
+    |                             ^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSplayMtEph.rs:299:29
+    |
+137 |         requires 1 + link_spec_size(old(node).left) + link_spec_size(old(node).right) <= usize::MAX as nat,
+    |                  ----------------------------------------------------------------------------------------- failed precondition
+...
+299 |                             update(&mut ll);
+    |                             ^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap37/BSTSplayMtEph.rs:392:40
+    |
+392 | ...                   assert(spec_is_bst_link(Some(ll))) by {
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTSplayMtEph.rs:440:40
+    |
+440 | ...                   assert(spec_is_bst_link(Some(left))) by {
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSplayMtEph.rs:468:29
+    |
+137 |         requires 1 + link_spec_size(old(node).left) + link_spec_size(old(node).right) <= usize::MAX as nat,
+    |                  ----------------------------------------------------------------------------------------- failed precondition
+...
+468 |                             update(&mut left);
+    |                             ^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSplayMtEph.rs:475:29
+    |
+137 |         requires 1 + link_spec_size(old(node).left) + link_spec_size(old(node).right) <= usize::MAX as nat,
+    |                  ----------------------------------------------------------------------------------------- failed precondition
+...
+475 |                             update(&mut lr);
+    |                             ^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSplayMtEph.rs:477:29
+    |
+137 |         requires 1 + link_spec_size(old(node).left) + link_spec_size(old(node).right) <= usize::MAX as nat,
+    |                  ----------------------------------------------------------------------------------------- failed precondition
+...
+477 |                             update(&mut root);
+    |                             ^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSplayMtEph.rs:484:29
+    |
+137 |         requires 1 + link_spec_size(old(node).left) + link_spec_size(old(node).right) <= usize::MAX as nat,
+    |                  ----------------------------------------------------------------------------------------- failed precondition
+...
+484 |                             update(&mut lr);
+    |                             ^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap37/BSTSplayMtEph.rs:583:40
+    |
+583 | ...                   assert(spec_is_bst_link(Some(lr))) by {
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap37/BSTSplayMtEph.r

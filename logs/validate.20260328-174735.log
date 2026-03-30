@@ -1,0 +1,89 @@
+error: postcondition not satisfied
+   --> src/Chap41/ArraySetStEph.rs:323:63
+    |
+323 |             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_arraysetsteph_wf();
+    |                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+467 |             empty
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap41/ArraySetStEph.rs:323:63
+    |
+323 |             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_arraysetsteph_wf();
+    |                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view() =~= empty() ✔
+%return.spec_arraysetsteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+    --> src/Chap41/ArraySetStEph.rs:418:17
+     |
+ 418 |                   self.spec_arraysetsteph_wf();
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1201 |               proof {
+     |  ___________________-
+1202 | |                 if old(self)@.contains(x@) {
+1203 | |                     assert(self@ == old(self)@);
+...    |
+1206 | |                 assert(self.spec_arraysetsteph_wf());
+1207 | |             }
+     | |_____________- at the end of the function body
+
+error: precondition not satisfied
+    --> src/Chap41/ArraySetStEph.rs:1166:25
+     |
+1166 |                         lemma_cloned_view_eq(*elem, cloned_elem);
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/feq.rs:88:32
+     |
+  88 |         requires cloned(x, y), obeys_feq_full::<T>(),
+     |                                --------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap41/ArraySetStEph.rs:1194:21
+     |
+ 118 |             s.no_duplicates(),
+     |             ----------------- failed precondition
+...
+1194 |                     lemma_push_preserves_no_dups(old(self).elements@, x@);
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap41/ArraySetStEph.rs:1206:24
+     |
+1206 |                 assert(self.spec_arraysetsteph_wf());
+     |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap41/ArraySetStEph.rs:118:13
+    |
+118 |             s.no_duplicates(),
+    |             ^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.no_duplicates() ✘
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+!(tmp%.contains(tmp%)) ✔
+
+error: invariant not satisfied before loop
+    --> src/Chap42/TableStPer.rs:1551:21
+     |
+1551 |                     self.spec_tablestper_wf(),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 2175 verified, 3 errors
+error: aborting due to 6 previous errors
+
+Elapsed: 21s
+Sampled Memory Usage: peak rust_verify RSS: 1947MB, peak z3 RSS: 354MB, min free: 19413MB
+Sampled CPU Usage: rust_verify: 32s, z3 children: 37s

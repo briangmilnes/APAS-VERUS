@@ -1,0 +1,17 @@
+error: in exec code, the index operator is only supported for usize index
+    --> src/Chap37/BSTSplayMtEph.rs:1489:27
+     |
+1489 |         let left_slice = &values[..mid];
+     |                           ^^^^^^^-----^
+     |                                  |
+     |                                  expected usize, found core::ops::range::RangeTo<usize>
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap37/BSTSplayMtEph.rs:40:14
+   |
+40 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: aborting due to 1 previous error; 1 warning emitted
+
+Elapsed: 40s

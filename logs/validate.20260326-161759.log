@@ -1,0 +1,21 @@
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:267:28
+    |
+267 |                     assert(eseq[idx]@.2.is_finite_spec());
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+
+thread '<unnamed>' (1771293) panicked at air/src/smt_process.rs:93:17:
+Got too many empty lines!
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread '<unnamed>' (1770114) panicked at air/src/smt_process.rs:213:34:
+internal error: Z3 reader thread failure: RecvError
+
+thread '<unnamed>' (1770114) panicked at rust_verify/src/verifier.rs:2217:29:
+worker thread panicked
+error: aborting due to 1 previous error
+
+Elapsed: 113s
+Sampled Memory Usage: peak rust_verify RSS: 5475MB, peak z3 RSS: 15671MB, min free: 2163MB
+Sampled CPU Usage: rust_verify: 111s, z3 children: 183s

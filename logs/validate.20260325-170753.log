@@ -1,0 +1,10 @@
+error[E0423]: expected value, found built-in attribute `link`
+    --> src/Chap37/BSTSplayMtEph.rs:1533:37
+     |
+1533 |             assume(spec_is_bst_link(link));
+     |                                     ^^^^ not a value
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0423`.
+Elapsed: 10s

@@ -1,0 +1,166 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent3)
+error[E0433]: failed to resolve: could not find `Chap56` in `apas_verus`
+ --> tests/Chap56/TestPathWeightUtilsStPer.rs:6:17
+  |
+6 | use apas_verus::Chap56::PathWeightUtilsStPer::PathWeightUtilsStPer::*;
+  |                 ^^^^^^ could not find `Chap56` in `apas_verus`
+
+error[E0433]: failed to resolve: could not find `Chap56` in `apas_verus`
+ --> tests/Chap57/TestDijkstraStEphU64.rs:8:17
+  |
+8 | use apas_verus::Chap56::SSSPResultStEphI64::SSSPResultStEphI64::*;
+  |                 ^^^^^^ could not find `Chap56` in `apas_verus`
+
+error[E0433]: failed to resolve: could not find `Chap57` in `apas_verus`
+ --> tests/Chap57/TestDijkstraStEphU64.rs:9:17
+  |
+9 | use apas_verus::Chap57::DijkstraStEphU64::DijkstraStEphU64::*;
+  |                 ^^^^^^ could not find `Chap57` in `apas_verus`
+
+error[E0433]: failed to resolve: could not find `Chap57` in `apas_verus`
+ --> tests/Chap57/TestStackStEph.rs:5:17
+  |
+5 | use apas_verus::Chap57::StackStEph::StackStEph::*;
+  |                 ^^^^^^ could not find `Chap57` in `apas_verus`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStPerS`
+  --> tests/Chap56/TestPathWeightUtilsStPer.rs:21:16
+   |
+21 |     assert_eq!(PathWeightUtilsStPerS::path_weight_int(&path, &weights), Some(3));
+   |                ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStPerS`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStPerS`
+  --> tests/Chap56/TestPathWeightUtilsStPer.rs:32:16
+   |
+32 |     assert_eq!(PathWeightUtilsStPerS::path_weight_int(&path, &weights), Some(2));
+   |                ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStPerS`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStPerS`
+  --> tests/Chap56/TestPathWeightUtilsStPer.rs:43:16
+   |
+43 |     assert_eq!(PathWeightUtilsStPerS::path_weight_float(&path, &weights), Some(dist(4.0)));
+   |                ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStPerS`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStPerS`
+  --> tests/Chap56/TestPathWeightUtilsStPer.rs:55:13
+   |
+55 |     assert!(PathWeightUtilsStPerS::validate_subpath_property_int(&path, &distances, &weights));
+   |             ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStPerS`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStPerS`
+  --> tests/Chap56/TestPathWeightUtilsStPer.rs:67:13
+   |
+67 |     assert!(PathWeightUtilsStPerS::validate_subpath_property_float(&path, &distances, &weights));
+   |             ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStPerS`
+
+For more information about this error, try `rustc --explain E0433`.
+error: could not compile `apas-verus` (test "TestPathWeightUtilsStPer") due to 6 previous errors
+warning: build failed, waiting for other jobs to finish...
+error[E0425]: cannot find function `dijkstra` in this scope
+  --> tests/Chap57/TestDijkstraStEphU64.rs:30:18
+   |
+30 |     let result = dijkstra(&graph, 0);
+   |                  ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `dijkstra` in this scope
+  --> tests/Chap57/TestDijkstraStEphU64.rs:63:18
+   |
+63 |     let result = dijkstra(&graph, 0);
+   |                  ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `dijkstra` in this scope
+  --> tests/Chap57/TestDijkstraStEphU64.rs:80:18
+   |
+80 |     let result = dijkstra(&graph, 0);
+   |                  ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `dijkstra` in this scope
+  --> tests/Chap57/TestDijkstraStEphU64.rs:97:18
+   |
+97 |     let result = dijkstra(&graph, 0);
+   |                  ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `dijkstra` in this scope
+   --> tests/Chap57/TestDijkstraStEphU64.rs:118:18
+    |
+118 |     let result = dijkstra(&graph, 0);
+    |                  ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `dijkstra` in this scope
+   --> tests/Chap57/TestDijkstraStEphU64.rs:143:18
+    |
+143 |     let result = dijkstra(&graph, 0);
+    |                  ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `dijkstra` in this scope
+   --> tests/Chap57/TestDijkstraStEphU64.rs:166:18
+    |
+166 |     let result = dijkstra(&graph, 0);
+    |                  ^^^^^^^^ not found in this scope
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+error: could not compile `apas-verus` (test "TestDijkstraStEphU64") due to 9 previous errors
+error[E0433]: failed to resolve: use of undeclared type `StackStEph`
+  --> tests/Chap57/TestStackStEph.rs:10:17
+   |
+10 |     let stack = StackStEph::<i32>::new();
+   |                 ^^^^^^^^^^ use of undeclared type `StackStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `StackStEph`
+  --> tests/Chap57/TestStackStEph.rs:17:21
+   |
+17 |     let mut stack = StackStEph::new();
+   |                     ^^^^^^^^^^ use of undeclared type `StackStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `StackStEph`
+  --> tests/Chap57/TestStackStEph.rs:25:21
+   |
+25 |     let mut stack = StackStEph::new();
+   |                     ^^^^^^^^^^ use of undeclared type `StackStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `StackStEph`
+  --> tests/Chap57/TestStackStEph.rs:40:21
+   |
+40 |     let mut stack = StackStEph::new();
+   |                     ^^^^^^^^^^ use of undeclared type `StackStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `StackStEph`
+  --> tests/Chap57/TestStackStEph.rs:57:21
+   |
+57 |     let mut stack = StackStEph::<String>::new();
+   |                     ^^^^^^^^^^ use of undeclared type `StackStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `StackStEph`
+  --> tests/Chap57/TestStackStEph.rs:64:21
+   |
+64 |     let mut stack = StackStEph::new();
+   |                     ^^^^^^^^^^ use of undeclared type `StackStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `StackStEph`
+  --> tests/Chap57/TestStackStEph.rs:89:21
+   |
+89 |     let mut stack = StackStEph::new();
+   |                     ^^^^^^^^^^ use of undeclared type `StackStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `StackStEph`
+   --> tests/Chap57/TestStackStEph.rs:104:21
+    |
+104 |     let mut stack = StackStEph::new();
+    |                     ^^^^^^^^^^ use of undeclared type `StackStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `StackStEph`
+   --> tests/Chap57/TestStackStEph.rs:125:17
+    |
+125 |     let stack = StackStEph::<i32>::default();
+    |                 ^^^^^^^^^^ use of undeclared type `StackStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `StackStEph`
+   --> tests/Chap57/TestStackStEph.rs:132:22
+    |
+132 |     let mut stack1 = StackStEph::new();
+    |                      ^^^^^^^^^^ use of undeclared type `StackStEph`
+
+error: could not compile `apas-verus` (test "TestStackStEph") due to 11 previous errors
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 9s

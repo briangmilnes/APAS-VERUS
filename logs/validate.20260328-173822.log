@@ -1,0 +1,33 @@
+error[E0609]: no field `word_to_docs` on type `&Self`
+   --> src/Chap44/DocumentIndex.rs:150:35
+    |
+ 62 |     pub trait DocumentIndexTrait: Sized {
+    |     ----------------------------------- type parameter 'Self' declared here
+...
+150 |             ensures count == self.word_to_docs@.len();
+    |                                   ^^^^^^^^^^^^ unknown field
+
+error[E0609]: no field `index` on type `&Self`
+   --> src/Chap44/DocumentIndex.rs:289:44
+    |
+279 |     pub trait QueryBuilderTrait<'a>: Sized {
+    |     -------------------------------------- type parameter 'Self' declared here
+...
+289 |                 spec_documentindex_wf(self.index),
+    |                                            ^^^^^ unknown field
+
+error[E0609]: no field `index` on type `&Self`
+   --> src/Chap44/DocumentIndex.rs:338:44
+    |
+279 |     pub trait QueryBuilderTrait<'a>: Sized {
+    |     -------------------------------------- type parameter 'Self' declared here
+...
+338 |                 spec_documentindex_wf(self.index),
+    |                                            ^^^^^ unknown field
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0609`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 280MB, peak z3 RSS: 0MB, min free: 21420MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

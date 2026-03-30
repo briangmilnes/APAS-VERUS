@@ -1,0 +1,23 @@
+error: assertion failed
+    --> src/Chap41/AVLTreeSetStPer.rs:1226:32
+     |
+1226 |                         assert(upd_vals[k]@ == self_vals[k]@);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap41/AVLTreeSetStPer.rs:1250:21
+     |
+1250 | /                     forall|k: int| #![trigger orig_vals[k]]
+1251 | |                         0 <= k < lo ==> (TotalOrder::le(orig_vals[k], x) && orig_vals[k] != x),
+     | |______________________________________________________________________________________________^
+
+note: diagnostics via expansion
+
+note: 
+
+upd_vals.index(k).view() == self_vals.index(k).view() 
+
+verification results:: 4500 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 64s

@@ -1,0 +1,9 @@
+error: reveal_with_fuel statements require a spec function with a decreases clause
+    --> src/Chap37/BSTSplayMtEph.rs:1527:13
+     |
+1527 |             reveal_with_fuel(link_spec_size, 2);
+     |             ^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 47s

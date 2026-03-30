@@ -1,0 +1,64 @@
+note: automatically chose triggers for this expression:
+   --> src/Chap55/TopoSortStEph.rs:470:21
+    |
+470 |                   ==> (forall|k: int| old(finish_order)@.len() <= k < finish_order@.len()
+    |  _____________________^
+471 | |                     ==> spec_reachable(graph, vertex as int, finish_order@[k] as int)),
+    | |______________________________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap55/TopoSortStEph.rs:471:62
+    |
+471 |                     ==> spec_reachable(graph, vertex as int, finish_order@[k] as int)),
+    |                                                              ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap55/TopoSortStEph.rs:650:21
+    |
+650 |                     assert forall|k: int| old(finish_order)@.len() <= k < finish_order@.len()
+    |                     ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap55/TopoSortStEph.rs:651:70
+    |
+651 |                         implies spec_reachable(graph, vertex as int, finish_order@[k] as int) by {
+    |                                                                      ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap55/TopoSortStEph.rs:602:25
+    |
+602 |                       ==> (forall|k: int| old(finish_order)@.len() <= k < finish_order@.len()
+    |  _________________________^
+603 | |                         ==> spec_reachable(graph, vertex as int, finish_order@[k] as int)),
+    | |__________________________________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap55/TopoSortStEph.rs:603:66
+    |
+603 |                         ==> spec_reachable(graph, vertex as int, finish_order@[k] as int)),
+    |                                                                  ^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap55/TopoSortStEph.rs:602:25
+    |
+602 |                       ==> (forall|k: int| old(finish_order)@.len() <= k < finish_order@.len()
+    |  _________________________^
+603 | |                         ==> spec_reachable(graph, vertex as int, finish_order@[k] as int)),
+    | |__________________________________________________________________________________________^
+
+verification results:: 2132 verified, 0 errors
+Elapsed: 32s
+Sampled Memory Usage: peak rust_verify RSS: 7008MB, peak z3 RSS: 1352MB, min free: 14737MB
+Sampled CPU Usage: rust_verify: 142s, z3 children: 122s

@@ -1,0 +1,156 @@
+error[E0599]: no method named `length` found for struct `Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap52/AdjTableGraphStPer.rs:205:40
+    |
+205 |             let len = self.adj.entries.length();
+    |                                        ^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:76:5
+    |
+ 76 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `length` not found for this struct
+...
+186 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<Types::Types::Pair<V, Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>>>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap19/ArraySeqStPer.rs:192:9
+    |
+192 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+193 | |             requires index < self.spec_len()
+194 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  8 +     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerTrait;
+    |
+
+error[E0599]: no method named `spec_len` found for struct `Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap52/AdjTableGraphStPer.rs:213:45
+    |
+213 |                     len == self.adj.entries.spec_len(),
+    |                                             ^^^^^^^^ method not found in `ArraySeqStPerS<Pair<V, AVLTreeSetStPer<V>>>`
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:76:5
+    |
+ 76 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `spec_len` not found for this struct
+...
+166 |         spec fn spec_len(&self) -> nat;
+    |                 -------- the method is available for `Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<Types::Types::Pair<V, Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>>>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: the full name for the type has been written to 'lib.long-type-6918204432005614376.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: trait `ArraySeqStPerTrait` which provides `spec_len` is implemented but not in scope; perhaps you want to import it
+    |
+  8 +     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerTrait;
+    |
+
+error[E0599]: no method named `nth` found for struct `Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap52/AdjTableGraphStPer.rs:220:75
+    |
+220 |                 let pair: &Pair<V, AVLTreeSetStPer<V>> = self.adj.entries.nth(i);
+    |                                                                           ^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:76:5
+    |
+ 76 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `nth` not found for this struct
+...
+192 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<Types::Types::Pair<V, Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>>>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap19/ArraySeqStPer.rs:186:9
+    |
+186 | /         fn length(&self) -> (len: usize)
+187 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  8 +     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerTrait;
+    |
+
+error[E0599]: no method named `length` found for struct `Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap52/AdjTableGraphStPer.rs:241:40
+    |
+241 |             let len = self.adj.entries.length();
+    |                                        ^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:76:5
+    |
+ 76 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `length` not found for this struct
+...
+186 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<Types::Types::Pair<V, Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>>>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap19/ArraySeqStPer.rs:192:9
+    |
+192 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+193 | |             requires index < self.spec_len()
+194 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  8 +     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerTrait;
+    |
+
+error[E0599]: no method named `spec_len` found for struct `Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap52/AdjTableGraphStPer.rs:248:45
+    |
+248 |                     len == self.adj.entries.spec_len(),
+    |                                             ^^^^^^^^ method not found in `ArraySeqStPerS<Pair<V, AVLTreeSetStPer<V>>>`
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:76:5
+    |
+ 76 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `spec_len` not found for this struct
+...
+166 |         spec fn spec_len(&self) -> nat;
+    |                 -------- the method is available for `Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<Types::Types::Pair<V, Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>>>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: the full name for the type has been written to 'lib.long-type-6918204432005614376.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: trait `ArraySeqStPerTrait` which provides `spec_len` is implemented but not in scope; perhaps you want to import it
+    |
+  8 +     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerTrait;
+    |
+
+error[E0599]: no method named `nth` found for struct `Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap52/AdjTableGraphStPer.rs:260:75
+    |
+260 |                 let pair: &Pair<V, AVLTreeSetStPer<V>> = self.adj.entries.nth(i);
+    |                                                                           ^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:76:5
+    |
+ 76 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `nth` not found for this struct
+...
+192 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<Types::Types::Pair<V, Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>>>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap19/ArraySeqStPer.rs:186:9
+    |
+186 | /         fn length(&self) -> (len: usize)
+187 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  8 +     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerTrait;
+    |
+
+error: aborting due to 6 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 3687MB, peak z3 RSS: 0MB, min free: 18374MB
+Sampled CPU Usage: rust_verify: 49s, z3 children: 0s

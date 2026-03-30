@@ -1,0 +1,30 @@
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:292:9
+    |
+292 |         while i < edges_vec.len()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:233:20
+    |
+233 |             assert(vit@.0 >= vseq.len());
+    |                    ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:284:24
+    |
+284 |         proof { assert(eit@.0 >= eseq.len()); }
+    |                        ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+vit.view().0 >= vseq.len() 
+
+verification results:: 2396 verified, 2 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 150s
+Sampled Memory Usage: peak rust_verify RSS: 2748MB, peak z3 RSS: 13668MB, min free: 6389MB
+Sampled CPU Usage: rust_verify: 50s, z3 children: 244s

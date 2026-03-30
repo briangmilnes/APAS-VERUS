@@ -1,0 +1,41 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStEph.rs:36:14
+   |
+36 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStPer.rs:39:14
+   |
+39 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphStEph.rs:32:14
+   |
+32 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphStPer.rs:36:14
+   |
+36 |     #[derive(Clone, PartialEq, Eq)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap53/GraphSearchMtPer.rs:23:14
+   |
+23 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: cannot call function `lib::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeSeqStEphTrait::length` with mode exec
+   --> src/Chap52/EdgeSetGraphStEph.rs:239:32
+    |
+239 |                 invariant i <= seq.length()
+    |                                ^^^^^^^^^^^^
+
+error: aborting due to 1 previous error; 5 warnings emitted
+
+Elapsed: 37s
+Sampled Memory Usage: peak rust_verify RSS: 7244MB, peak z3 RSS: 407MB, min free: 17767MB
+Sampled CPU Usage: rust_verify: 150s, z3 children: 95s

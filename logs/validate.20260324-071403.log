@@ -1,0 +1,9 @@
+error: Could not automatically infer triggers for this quantifier.  Use #[trigger] annotations to manually mark trigger terms instead.
+    --> src/Chap43/OrderedTableStPer.rs:1213:21
+     |
+1213 |                     assert forall|j: int| 0 <= j < i as int + 1 implies
+     |                     ^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 55s

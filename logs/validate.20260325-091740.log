@@ -1,0 +1,59 @@
+error: invariant not satisfied at end of loop body
+   --> src/Chap66/BoruvkaStEph.rs:221:21
+    |
+221 | /                     forall|v: V| #[trigger] bridges@.contains_key(v@) ==> {
+222 | |                         let (neighbor, weight, label) = bridges@[v@];
+223 | |                         spec_valid_bridge(v, neighbor, weight, label, edges@)
+224 | |                     },
+    | |_____________________^
+
+error: assertion failed
+   --> src/Chap66/BoruvkaStEph.rs:240:28
+    |
+240 |                     assert(LabeledEdge(u, v, w, label) == *edge);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap66/BoruvkaStEph.rs:240:28
+    |
+240 |                     assert(LabeledEdge(u, v, w, label) == *edge);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+LabeledEdge(u, v, w, label) == edge
+|   u == edge.0 ✘
+|   v == edge.1 ✘
+|   w == edge.2 ✘
+|   |   w.val == edge.2.val 
+|   +---
+|   label == edge.3 ✘
++---
+
+error: assertion failed
+   --> src/Chap66/BoruvkaStEph.rs:461:28
+    |
+461 |                     assert(LabeledEdge(u, v, w, label) == *edge);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap66/BoruvkaStEph.rs:461:28
+    |
+461 |                     assert(LabeledEdge(u, v, w, label) == *edge);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+LabeledEdge(u, v, w, label) == edge
+|   u == edge.0 ✘
+|   v == edge.1 ✘
+|   w == edge.2 ✘
+|   |   w.val == edge.2.val 
+|   +---
+|   label == edge.3 ✘
++---
+
+verification results:: 4827 verified, 2 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 84s

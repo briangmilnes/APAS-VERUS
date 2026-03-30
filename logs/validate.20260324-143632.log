@@ -1,0 +1,9 @@
+error: The Verus types 'nat' and 'int' can only be used in ghost code (e.g., in a 'spec' or 'proof' function, inside a 'proof' block, or when assigning to a 'ghost' or 'tracked' variable)
+   --> src/Chap37/AVLTreeSeqStEph.rs:941:22
+    |
+941 |                 pos: 0 as int,
+    |                      ^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 10s

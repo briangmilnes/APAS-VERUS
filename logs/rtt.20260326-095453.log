@@ -1,0 +1,166 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent3)
+error[E0433]: failed to resolve: could not find `Chap56` in `apas_verus`
+ --> tests/Chap59/TestJohnsonStEphI64.rs:4:17
+  |
+4 | use apas_verus::Chap56::AllPairsResultStEphI64::AllPairsResultStEphI64::*;
+  |                 ^^^^^^ could not find `Chap56` in `apas_verus`
+
+error[E0433]: failed to resolve: could not find `Chap59` in `apas_verus`
+ --> tests/Chap59/TestJohnsonStEphI64.rs:5:17
+  |
+5 | use apas_verus::Chap59::JohnsonStEphI64::JohnsonStEphI64::*;
+  |                 ^^^^^^ could not find `Chap59` in `apas_verus`
+
+error[E0433]: failed to resolve: could not find `Chap63` in `apas_verus`
+ --> tests/Chap63/TestConnectivityStEph.rs:7:17
+  |
+7 | use apas_verus::Chap63::ConnectivityStEph::ConnectivityStEph::*;
+  |                 ^^^^^^ could not find `Chap63` in `apas_verus`
+
+error[E0425]: cannot find function `johnson_apsp` in this scope
+  --> tests/Chap59/TestJohnsonStEphI64.rs:24:18
+   |
+24 |     let result = johnson_apsp(&graph);
+   |                  ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `johnson_apsp` in this scope
+  --> tests/Chap59/TestJohnsonStEphI64.rs:50:18
+   |
+50 |     let result = johnson_apsp(&graph);
+   |                  ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `johnson_apsp` in this scope
+  --> tests/Chap59/TestJohnsonStEphI64.rs:72:18
+   |
+72 |     let result = johnson_apsp(&graph);
+   |                  ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `johnson_apsp` in this scope
+  --> tests/Chap59/TestJohnsonStEphI64.rs:83:18
+   |
+83 |     let result = johnson_apsp(&graph);
+   |                  ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `johnson_apsp` in this scope
+  --> tests/Chap59/TestJohnsonStEphI64.rs:95:18
+   |
+95 |     let result = johnson_apsp(&graph);
+   |                  ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `count_components` in this scope
+  --> tests/Chap63/TestConnectivityStEph.rs:44:17
+   |
+44 |     let count = count_components(&graph);
+   |                 ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `count_components` in this scope
+  --> tests/Chap63/TestConnectivityStEph.rs:51:17
+   |
+51 |     let count = count_components(&graph);
+   |                 ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `johnson_apsp` in this scope
+   --> tests/Chap59/TestJohnsonStEphI64.rs:118:18
+    |
+118 |     let result = johnson_apsp(&graph);
+    |                  ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `count_components` in this scope
+  --> tests/Chap63/TestConnectivityStEph.rs:60:17
+   |
+60 |     let count = count_components(&graph);
+   |                 ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `connected_components` in this scope
+  --> tests/Chap63/TestConnectivityStEph.rs:67:28
+   |
+67 |     let (reps, comp_map) = connected_components(&graph);
+   |                            ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0282]: type annotations needed
+  --> tests/Chap63/TestConnectivityStEph.rs:70:16
+   |
+70 |     assert_eq!(reps.size(), 1);
+   |                ^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+  --> tests/Chap63/TestConnectivityStEph.rs:73:22
+   |
+73 |     let first_comp = comp_map.get(&0).unwrap();
+   |                      ^^^^^^^^ cannot infer type
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+error[E0425]: cannot find function `connected_components` in this scope
+  --> tests/Chap63/TestConnectivityStEph.rs:82:28
+   |
+82 |     let (reps, comp_map) = connected_components(&graph);
+   |                            ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0282]: type annotations needed
+  --> tests/Chap63/TestConnectivityStEph.rs:85:16
+   |
+85 |     assert_eq!(reps.size(), 3);
+   |                ^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+  --> tests/Chap63/TestConnectivityStEph.rs:88:17
+   |
+88 |     let comp0 = comp_map.get(&0).unwrap();
+   |                 ^^^^^^^^ cannot infer type
+
+error[E0425]: cannot find function `count_components_hof` in this scope
+   --> tests/Chap63/TestConnectivityStEph.rs:108:17
+    |
+108 |     let count = count_components_hof(&graph);
+    |                 ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `count_components` in this scope
+   --> tests/Chap63/TestConnectivityStEph.rs:112:24
+    |
+112 |     let count_direct = count_components(&graph);
+    |                        ^^^^^^^^^^^^^^^^ not found in this scope
+
+error: could not compile `apas-verus` (test "TestJohnsonStEphI64") due to 8 previous errors
+warning: build failed, waiting for other jobs to finish...
+error[E0425]: cannot find function `connected_components_hof` in this scope
+   --> tests/Chap63/TestConnectivityStEph.rs:119:36
+    |
+119 |     let (reps_hof, comp_map_hof) = connected_components_hof(&graph);
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `connected_components` in this scope
+   --> tests/Chap63/TestConnectivityStEph.rs:120:42
+    |
+120 |     let (reps_direct, comp_map_direct) = connected_components(&graph);
+    |                                          ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0282]: type annotations needed
+   --> tests/Chap63/TestConnectivityStEph.rs:123:16
+    |
+123 |     assert_eq!(reps_hof.size(), reps_direct.size());
+    |                ^^^^^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> tests/Chap63/TestConnectivityStEph.rs:123:33
+    |
+123 |     assert_eq!(reps_hof.size(), reps_direct.size());
+    |                                 ^^^^^^^^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> tests/Chap63/TestConnectivityStEph.rs:130:33
+    |
+130 |             let same_comp_hof = comp_map_hof.get(&i) == comp_map_hof.get(&j);
+    |                                 ^^^^^^^^^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> tests/Chap63/TestConnectivityStEph.rs:131:36
+    |
+131 |             let same_comp_direct = comp_map_direct.get(&i) == comp_map_direct.get(&j);
+    |                                    ^^^^^^^^^^^^^^^ cannot infer type
+
+Some errors have detailed explanations: E0282, E0425, E0433.
+For more information about an error, try `rustc --explain E0282`.
+error: could not compile `apas-verus` (test "TestConnectivityStEph") due to 18 previous errors
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 12s

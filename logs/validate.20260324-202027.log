@@ -1,0 +1,103 @@
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:182:17
+    |
+182 |                 reveal_with_fuel(spec_is_bst_link, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:183:17
+    |
+183 |                 reveal_with_fuel(link_contains, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:194:21
+    |
+194 |                     reveal_with_fuel(spec_is_bst_link, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:195:21
+    |
+195 |                     reveal_with_fuel(link_contains, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:218:21
+    |
+218 |                     reveal_with_fuel(spec_is_bst_link, 3);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:219:21
+    |
+219 |                     reveal_with_fuel(link_contains, 4);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:228:25
+    |
+228 |                         reveal_with_fuel(link_contains, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:238:25
+    |
+238 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:241:25
+    |
+241 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:244:25
+    |
+244 |                         reveal_with_fuel(link_contains, 4);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:266:17
+    |
+266 |                 reveal_with_fuel(spec_is_bst_link, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:267:17
+    |
+267 |                 reveal_with_fuel(link_contains, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:278:21
+    |
+278 |                     reveal_with_fuel(spec_is_bst_link, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:279:21
+    |
+279 |                     reveal_with_fuel(link_contains, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:302:21
+    |
+302 |                     reveal_with_fuel(spec_is_bst_link, 3);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:303:21
+    |
+303 |                     reveal_with_fuel(link_contains, 4);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:312:25
+    |
+312 |                         reveal_with_fuel(link_contains, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-rel

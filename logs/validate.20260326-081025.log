@@ -1,0 +1,1908 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStEph.rs:36:14
+   |
+36 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStPer.rs:39:14
+   |
+39 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphStEph.rs:32:14
+   |
+32 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphStPer.rs:36:14
+   |
+36 |     #[derive(Clone, PartialEq, Eq)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap53/GraphSearchMtPer.rs:23:14
+   |
+23 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: could not prove termination
+  --> src/Chap52/AdjTableGraphStEph.rs:67:26
+   |
+67 |             m[k].len() + spec_sum_adj_sizes(m.remove(k))
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:179:39
+    |
+179 |         fn num_vertices(&self) -> N { self.adj.size() }
+    |                                       ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:540:22
+    |
+540 |             requires self.spec_orderedtablesteph_wf(),
+    |                      -------------------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+tmp%.spec_orderedtablesteph_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:107:21
+    |
+107 |             ensures m as nat == self.spec_num_edges();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+197 |             count
+    |             ----- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:182:26
+    |
+182 |             let domain = self.adj.domain();
+    |                          ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:607:22
+    |
+607 |             requires self.spec_orderedtablesteph_wf(), obeys_feq_clone::<K>()
+    |                      -------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:183:23
+    |
+183 |             let seq = domain.to_seq();
+    |                       ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/ArraySetStEph.rs:314:22
+    |
+314 |             requires self.spec_arraysetsteph_wf(),
+    |                      ---------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:192:42
+    |
+192 |                 if let Some(neighbors) = self.adj.find(&v) {
+    |                                          ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:560:22
+    |
+560 |             requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>()
+    |                      -------------------------------- failed precondition
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap52/AdjTableGraphStEph.rs:193:21
+    |
+193 |                     count += neighbors.size();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:193:30
+    |
+193 |                     count += neighbors.size();
+    |                              ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:193:22
+    |
+193 |             requires self.spec_avltreesetsteph_wf(),
+    |                      ------------------------------ failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:560:22
+    |
+560 |             requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>()
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_orderedtablesteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_view_eq() ✘
+    function is uninterpreted
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:201:21
+    |
+201 |             ensures verts@ == self.spec_adj().dom()
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+219 |             verts
+    |             ----- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:203:26
+    |
+203 |             let domain = self.adj.domain();
+    |                          ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:607:22
+    |
+607 |             requires self.spec_orderedtablesteph_wf(), obeys_feq_clone::<K>()
+    |                      -------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:204:23
+    |
+204 |             let seq = domain.to_seq();
+    |                       ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/ArraySetStEph.rs:314:22
+    |
+314 |             requires self.spec_arraysetsteph_wf(),
+    |                      ---------------------------- failed precondition
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap52/AdjTableGraphStEph.rs:213:21
+    |
+213 |                     verts@ == seq@.subrange(0, i as int).to_set(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:216:17
+    |
+216 |                 verts.insert(seq.nth(i).clone());
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:294:17
+    |
+294 |                 old(self).spec_avltreesetsteph_wf(),
+    |                 ----------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStEph.rs:294:17
+    |
+294 |                 old(self).spec_avltreesetsteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+295 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+verts.spec_avltreesetsteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() 
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+clip(nat, verts.view().len() + 1) < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:225:19
+    |
+225 |             match self.adj.find(u) {
+    |                   ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:560:22
+    |
+560 |             requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>()
+    |                      -------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:226:36
+    |
+226 |                 Some(neighbors) => neighbors.find(v),
+    |                                    ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:278:17
+    |
+278 |                 self.spec_avltreesetsteph_wf(),
+    |                 ------------------------------ failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStEph.rs:278:17
+    |
+278 |                 self.spec_avltreesetsteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+279 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+neighbors.spec_avltreesetsteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() 
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:236:19
+    |
+236 |             match self.adj.find(u) {
+    |                   ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:560:22
+    |
+560 |             requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>()
+    |                      -------------------------------- failed precondition
+
+note: 
+
+tmp%.spec_orderedtablesteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_view_eq() ✘
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:242:44
+    |
+242 |         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:193:22
+    |
+193 |             requires self.spec_avltreesetsteph_wf(),
+    |                      ------------------------------ failed precondition
+
+note: 
+
+tmp%.spec_avltreesetsteph_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:128:21
+    |
+128 |             ensures self.spec_adjtablegraphsteph_wf(), self.spec_adj().dom().contains(v@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+244 |         fn insert_vertex(&mut self, v: V)
+    |         --------------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:247:13
+    |
+247 |             self.adj.insert(v, AVLTreeSetStEph::empty(), |old, _new| old.clone());
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:584:17
+    |
+584 |                 old(self).spec_orderedtablesteph_wf(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjTableGraphStEph.rs:128:21
+    |
+128 |             ensures self.spec_adjtablegraphsteph_wf(), self.spec_adj().dom().contains(v@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_adjtablegraphsteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+self.spec_adj().dom().contains(old(v).view()) ✔
+self.spec_adj().dom().contains(old(v).view()) ✔
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:133:21
+    |
+133 |             ensures self.spec_adjtablegraphsteph_wf(), !self.spec_adj().dom().contains(v@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+259 |             while i < len
+    |             ------------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:133:56
+    |
+133 |             ensures self.spec_adjtablegraphsteph_wf(), !self.spec_adj().dom().contains(v@);
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+259 |             while i < len
+    |             ------------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:251:21
+    |
+251 |             ensures !self.spec_adj().dom().contains(v@)
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+259 |             while i < len
+    |             ------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:254:26
+    |
+254 |             let domain = self.adj.domain();
+    |                          ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:607:22
+    |
+607 |             requires self.spec_orderedtablesteph_wf(), obeys_feq_clone::<K>()
+    |                      -------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:255:23
+    |
+255 |             let seq = domain.to_seq();
+    |                       ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/ArraySetStEph.rs:314:22
+    |
+314 |             requires self.spec_arraysetsteph_wf(),
+    |                      ---------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:258:13
+    |
+258 |             self.adj.delete(&v_clone);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:601:17
+    |
+601 |                 old(self).spec_orderedtablesteph_wf(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:264:42
+    |
+264 |                 if let Some(neighbors) = self.adj.find(&u) {
+    |                                          ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:560:22
+    |
+560 |             requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>()
+    |                      -------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:266:21
+    |
+266 |                     neighbors.delete(&v_clone);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:285:17
+    |
+285 |                 old(self).spec_avltreesetsteph_wf(),
+    |                 ----------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:267:21
+    |
+267 |                     self.adj.insert(u, neighbors, |_old, new| new.clone());
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:584:17
+    |
+584 |                 old(self).spec_orderedtablesteph_wf(),
+    |                 ------------------------------------- failed precondition
+
+note: 
+
+tmp%.spec_orderedtablesteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_view_eq() ✘
+    function is uninterpreted
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:139:17
+    |
+139 |                   self.spec_adjtablegraphsteph_wf(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+288 | /             if self.adj.find(&v).is_none() {
+289 | |                 self.adj.insert(v, AVLTreeSetStEph::empty(), |old, _new| old.clone());
+290 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:142:17
+    |
+142 |                   self.spec_adj()[u@].contains(v@);
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+288 | /             if self.adj.find(&v).is_none() {
+289 | |                 self.adj.insert(v, AVLTreeSetStEph::empty(), |old, _new| old.clone());
+290 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:277:17
+    |
+277 |                   self.spec_adj()[u@].contains(v@),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+288 | /             if self.adj.find(&v).is_none() {
+289 | |                 self.adj.insert(v, AVLTreeSetStEph::empty(), |old, _new| old.clone());
+290 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:279:35
+    |
+279 |             let neighbors = match self.adj.find(&u) {
+    |                                   ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:560:22
+    |
+560 |             requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>()
+    |                      -------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:282:21
+    |
+282 |                     ns.insert(v.clone());
+    |                     ^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:294:17
+    |
+294 |                 old(self).spec_avltreesetsteph_wf(),
+    |                 ----------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:287:13
+    |
+287 |             self.adj.insert(u, neighbors, |_old, new| new.clone());
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:584:17
+    |
+584 |                 old(self).spec_orderedtablesteph_wf(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:288:16
+    |
+288 |             if self.adj.find(&v).is_none() {
+    |                ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:560:56
+    |
+560 |             requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>()
+    |                                                        -------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:289:17
+    |
+289 |                 self.adj.insert(v, AVLTreeSetStEph::empty(), |old, _new| old.clone());
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:586:17
+    |
+586 |                 obeys_view_eq::<K>(),
+    |                 -------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:584:17
+    |
+584 |                 old(self).spec_orderedtablesteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+585 |                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+586 |                 obeys_view_eq::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^
+587 |                 !old(self)@.contains_key(k@) ==> old(self)@.dom().len() + 1 < usize::MAX as nat,
+    |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.adj.spec_orderedtablesteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+forall |v1, v2|
+    ClosureReq(tmp%%, (v1, v2)) ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+!(self.adj.view().dom().contains(tmp%.view())) ==>
+    clip(nat, self.adj.view().dom().len() + 1) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:148:17
+    |
+148 |                   self.spec_adjtablegraphsteph_wf(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+298 | /             if let Some(neighbors) = self.adj.find(u) {
+299 | |                 let mut neighbors = neighbors.clone();
+300 | |                 neighbors.delete(v);
+301 | |                 self.adj.insert(u.clone(), neighbors, |_old, new| new.clone());
+302 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:149:17
+    |
+149 | /                 !self.spec_adj().dom().contains(u@)
+150 | |                     || !self.spec_adj()[u@].contains(v@);
+    | |________________________________________________________^ failed this postcondition
+...
+298 | /             if let Some(neighbors) = self.adj.find(u) {
+299 | |                 let mut neighbors = neighbors.clone();
+300 | |                 neighbors.delete(v);
+301 | |                 self.adj.insert(u.clone(), neighbors, |_old, new| new.clone());
+302 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:295:17
+    |
+295 | /                 !self.spec_adj().dom().contains(u@)
+296 | |                     || !self.spec_adj()[u@].contains(v@),
+    | |________________________________________________________^ failed this postcondition
+297 |           {
+298 | /             if let Some(neighbors) = self.adj.find(u) {
+299 | |                 let mut neighbors = neighbors.clone();
+300 | |                 neighbors.delete(v);
+301 | |                 self.adj.insert(u.clone(), neighbors, |_old, new| new.clone());
+302 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:298:38
+    |
+298 |             if let Some(neighbors) = self.adj.find(u) {
+    |                                      ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:560:22
+    |
+560 |             requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>()
+    |                      -------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:300:17
+    |
+300 |                 neighbors.delete(v);
+    |                 ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:285:17
+    |
+285 |                 old(self).spec_avltreesetsteph_wf(),
+    |                 ----------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:301:17
+    |
+301 |                 self.adj.insert(u.clone(), neighbors, |_old, new| new.clone());
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:584:17
+    |
+584 |                 old(self).spec_orderedtablesteph_wf(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStEph.rs:285:17
+    |
+285 |                 old(self).spec_avltreesetsteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+286 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+neighbors.spec_avltreesetsteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() 
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:151:39
+    |
+151 |         fn num_vertices(&self) -> N { self.adj.size() }
+    |                                       ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:445:22
+    |
+445 |             requires self.spec_orderedtablestper_wf(),
+    |                      -------------------------------- failed precondition
+
+note: 
+
+tmp%.spec_orderedtablestper_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:82:21
+    |
+ 82 |             ensures m as nat == self.spec_num_edges();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+169 |             count
+    |             ----- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:154:26
+    |
+154 |             let domain = self.adj.domain();
+    |                          ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:492:22
+    |
+492 |             requires self.spec_orderedtablestper_wf(), obeys_feq_clone::<K>()
+    |                      -------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:155:23
+    |
+155 |             let seq = domain.to_seq();
+    |                       ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/ArraySetStEph.rs:314:22
+    |
+314 |             requires self.spec_arraysetsteph_wf(),
+    |                      ---------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:164:42
+    |
+164 |                 if let Some(neighbors) = self.adj.find(&v) {
+    |                                          ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:468:22
+    |
+468 |             requires self.spec_orderedtablestper_find_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ------------------------------------- failed precondition
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap52/AdjTableGraphStPer.rs:165:21
+    |
+165 |                     count += neighbors.size();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:165:30
+    |
+165 |                     count += neighbors.size();
+    |                              ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:186:22
+    |
+186 |             requires self.spec_avltreesetstper_wf(),
+    |                      ------------------------------ failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:468:22
+    |
+468 |             requires self.spec_orderedtablestper_find_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_orderedtablestper_find_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_view_eq() ✘
+    function is uninterpreted
+obeys_feq_full() ✔
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:86:21
+    |
+ 86 |             ensures verts@ == self.spec_adj().dom();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+191 |             vertices
+    |             -------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:173:21
+    |
+173 |             ensures verts@ == self.spec_adj().dom()
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+191 |             vertices
+    |             -------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:175:30
+    |
+175 |             let domain_set = self.adj.domain();
+    |                              ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:492:22
+    |
+492 |             requires self.spec_orderedtablestper_wf(), obeys_feq_clone::<K>()
+    |                      -------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:176:23
+    |
+176 |             let seq = domain_set.to_seq();
+    |                       ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/ArraySetStEph.rs:314:22
+    |
+314 |             requires self.spec_arraysetsteph_wf(),
+    |                      ---------------------------- failed precondition
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap52/AdjTableGraphStPer.rs:185:21
+    |
+185 |                     vertices@ == seq@.subrange(0, i as int).to_set(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:188:28
+    |
+188 |                 vertices = vertices.insert(seq.nth(i).clone());
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:287:17
+    |
+287 |                 self.spec_avltreesetstper_wf(),
+    |                 ------------------------------ failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:287:17
+    |
+287 |                 self.spec_avltreesetstper_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+288 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() 
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+clip(nat, tmp%.view().len() + 1) < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:197:19
+    |
+197 |             match self.adj.find(u) {
+    |                   ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:468:22
+    |
+468 |             requires self.spec_orderedtablestper_find_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:198:36
+    |
+198 |                 Some(neighbors) => neighbors.find(v),
+    |                                    ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:271:17
+    |
+271 |                 self.spec_avltreesetstper_wf(),
+    |                 ------------------------------ failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:271:17
+    |
+271 |                 self.spec_avltreesetstper_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+272 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+neighbors.spec_avltreesetstper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() 
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:208:19
+    |
+208 |             match self.adj.find(u) {
+    |                   ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:468:22
+    |
+468 |             requires self.spec_orderedtablestper_find_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ------------------------------------- failed precondition
+
+note: 
+
+tmp%.spec_orderedtablestper_find_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_view_eq() ✘
+    function is uninterpreted
+obeys_feq_full() ✔
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:214:44
+    |
+214 |         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:186:22
+    |
+186 |             requires self.spec_avltreesetstper_wf(),
+    |                      ------------------------------ failed precondition
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:103:21
+    |
+103 |             ensures updated.spec_adjtablegraphstper_wf(), updated.spec_adj().dom().contains(v@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+220 |             AdjTableGraphStPer { adj: new_adj }
+    |             ----------------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:219:27
+    |
+219 |             let new_adj = self.adj.insert(v, AVLTreeSetStPer::empty());
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:477:17
+    |
+477 |                 self.spec_orderedtablestper_wf(),
+    |                 -------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjTableGraphStPer.rs:103:21
+    |
+103 |             ensures updated.spec_adjtablegraphstper_wf(), updated.spec_adj().dom().contains(v@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+updated.spec_adjtablegraphstper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+updated.spec_adj().dom().contains(old(v).view()) ✔
+updated.spec_adj().dom().contains(old(v).view()) ✔
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:107:21
+    |
+107 |             ensures updated.spec_adjtablegraphstper_wf(), !updated.spec_adj().dom().contains(v@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+244 |             AdjTableGraphStPer { adj: result_adj }
+    |             -------------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:107:59
+    |
+107 |             ensures updated.spec_adjtablegraphstper_wf(), !updated.spec_adj().dom().contains(v@);
+    |                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+244 |             AdjTableGraphStPer { adj: result_adj }
+    |             -------------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:224:21
+    |
+224 |             ensures !updated.spec_adj().dom().contains(v@)
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+244 |             AdjTableGraphStPer { adj: result_adj }
+    |             -------------------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:227:27
+    |
+227 |             let new_adj = self.adj.delete(&v_clone);
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:486:17
+    |
+486 |                 self.spec_orderedtablestper_wf(),
+    |                 -------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:229:23
+    |
+229 |             let seq = domain.to_seq();
+    |                       ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/ArraySetStEph.rs:314:22
+    |
+314 |             requires self.spec_arraysetsteph_wf(),
+    |                      ---------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:238:42
+    |
+238 |                 if let Some(neighbors) = result_adj.find(&u) {
+    |                                          ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:468:22
+    |
+468 |             requires self.spec_orderedtablestper_find_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:239:41
+    |
+239 |                     let new_neighbors = neighbors.delete(&v_clone);
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:278:17
+    |
+278 |                 self.spec_avltreesetstper_wf(),
+    |                 ------------------------------ failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:240:34
+    |
+240 |                     result_adj = result_adj.insert(u, new_neighbors);
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:477:17
+    |
+477 |                 self.spec_orderedtablestper_wf(),
+    |                 -------------------------------- failed precondition
+
+note: 
+
+result_adj.spec_orderedtablestper_find_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_view_eq() ✘
+    function is uninterpreted
+obeys_feq_full() ✔
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:112:17
+    |
+112 |                 updated.spec_adjtablegraphstper_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+263 |             AdjTableGraphStPer { adj: final_adj }
+    |             ------------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:115:17
+    |
+115 |                 updated.spec_adj()[u@].contains(v@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+263 |             AdjTableGraphStPer { adj: final_adj }
+    |             ------------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:251:17
+    |
+251 |                 updated.spec_adj()[u@].contains(v@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+263 |             AdjTableGraphStPer { adj: final_adj }
+    |             ------------------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:253:35
+    |
+253 |             let neighbors = match self.adj.find(&u) {
+    |                                   ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:468:22
+    |
+468 |             requires self.spec_orderedtablestper_find_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:254:29
+    |
+254 |                 Some(ns) => ns.insert(v.clone()),
+    |                             ^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:287:17
+    |
+287 |                 self.spec_avltreesetstper_wf(),
+    |                 ------------------------------ failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:257:27
+    |
+257 |             let new_adj = self.adj.insert(u, neighbors);
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:477:17
+    |
+477 |                 self.spec_orderedtablestper_wf(),
+    |                 -------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:258:32
+    |
+258 |             let final_adj = if new_adj.find(&v).is_none() {
+    |                                ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:468:61
+    |
+468 |             requires self.spec_orderedtablestper_find_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                                                             -------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:259:17
+    |
+259 |                 new_adj.insert(v, AVLTreeSetStPer::empty())
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:478:17
+    |
+478 |                 obeys_view_eq::<K>(),
+    |                 -------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:477:17
+    |
+477 |                 self.spec_orderedtablestper_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+478 |                 obeys_view_eq::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^
+479 |                 self@.dom().len() + 1 < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_orderedtablestper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_view_eq() ✘
+    function is uninterpreted
+clip(nat, tmp%.view().dom().len() + 1) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:120:17
+    |
+120 |                   updated.spec_adjtablegraphstper_wf(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+271 | /             match self.adj.find(u) {
+272 | |                 Some(neighbors) => {
+273 | |                     let new_neighbors = neighbors.delete(v);
+274 | |                     let new_adj = self.adj.insert(u.clone(), new_neighbors);
+...   |
+277 | |                 None => self.clone(),
+278 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:121:17
+    |
+121 | /                 !updated.spec_adj().dom().contains(u@)
+122 | |                     || !updated.spec_adj()[u@].contains(v@);
+    | |___________________________________________________________^ failed this postcondition
+...
+271 | /             match self.adj.find(u) {
+272 | |                 Some(neighbors) => {
+273 | |                     let new_neighbors = neighbors.delete(v);
+274 | |                     let new_adj = self.adj.insert(u.clone(), new_neighbors);
+...   |
+277 | |                 None => self.clone(),
+278 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:268:17
+    |
+268 | /                 !updated.spec_adj().dom().contains(u@)
+269 | |                     || !updated.spec_adj()[u@].contains(v@),
+    | |___________________________________________________________^ failed this postcondition
+270 |           {
+271 | /             match self.adj.find(u) {
+272 | |                 Some(neighbors) => {
+273 | |                     let new_neighbors = neighbors.delete(v);
+274 | |                     let new_adj = self.adj.insert(u.clone(), new_neighbors);
+...   |
+277 | |                 None => self.clone(),
+278 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:271:19
+    |
+271 |             match self.adj.find(u) {
+    |                   ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:468:22
+    |
+468 |             requires self.spec_orderedtablestper_find_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:273:41
+    |
+273 |                     let new_neighbors = neighbors.delete(v);
+    |                                         ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:278:17
+    |
+278 |                 self.spec_avltreesetstper_wf(),
+    |                 ------------------------------ failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:274:35
+    |
+274 |                     let new_adj = self.adj.insert(u.clone(), new_neighbors);
+    |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:477:17
+    |
+477 |                 self.spec_orderedtablestper_wf(),
+    |                 -------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjTableGraphStPer.rs:120:17
+    |
+120 |                 updated.spec_adjtablegraphstper_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+121 |                 !updated.spec_adj().dom().contains(u@)
+122 |                     || !updated.spec_adj()[u@].contains(v@);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+updated.spec_adjtablegraphstper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+updated.spec_adj().dom().contains(old(u).view()) ==>
+    !(updated.spec_adj().index(old(u).view()).contains(old(v).view())) ✘
+        function is uninterpreted
+updated.spec_adj().dom().contains(old(u).view()) ==>
+    !(updated.spec_adj().index(old(u).view()).contains(old(v).view())) ✔
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:161:49
+    |
+161 |         fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
+    |                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:279:17
+    |
+279 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStEph.rs:279:17
+    |
+279 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+tmp%.spec_avltreesetsteph_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:167:28
+    |
+167 |               let filtered = self.edges.filter(
+    |  ____________________________^
+168 | |                 |edge| edge.0 == u_clone,
+169 | |                 Ghost(|v: (V::V, V::V)| v.0 == u@),
+170 | |             );
+    | |_____________^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:232:17
+    |
+232 |                   vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                   ------------------------------------- failed precondition
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap52/EdgeSetGraphStEph.rs:190:21
+    |
+190 | /                     forall|v: <V as View>::V| #[trigger] neighbors@.contains(v) ==>
+191 | |                         self.edges@.contains((u@, v)),
+    | |_____________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap52/EdgeSetGraphStEph.rs:192:21
+    |
+192 | /                     forall|j: int| 0 <= j < i ==>
+193 | |                         #[trigger] neighbors@.contains(seq@[j].1),
+    | |_________________________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:204:17
+    |
+204 |                 neighbors.insert(v);
+    |                 ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:295:17
+    |
+295 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStEph.rs:295:17
+    |
+295 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+neighbors.spec_avltreesetsteph_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+clip(nat, neighbors.view().len() + 1) < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:226:44
+    |
+226 |         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:193:22
+    |
+193 |             requires self.spec_avltreesetsteph_wf(),
+    |                      ------------------------------ failed precondition
+
+note: 
+
+tmp%.spec_avltreesetsteph_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:101:21
+    |
+101 |             ensures self.spec_edgesetgraphsteph_wf();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+228 |         fn insert_vertex(&mut self, v: V) { self.vertices.insert(v); }
+    |         --------------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:228:45
+    |
+228 |         fn insert_vertex(&mut self, v: V) { self.vertices.insert(v); }
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:295:17
+    |
+295 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: 
+
+self.spec_edgesetgraphsteph_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:106:21
+    |
+106 |             ensures self.spec_edgesetgraphsteph_wf(), !self.spec_vertices().contains(v@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+252 |             while j < to_remove.len()
+    |             ------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:234:13
+    |
+234 |             self.vertices.delete(&v_clone);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:286:17
+    |
+286 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:243:32
+    |
+243 |                 let edge_ref = seq.nth(i);
+    |                                ^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:278:22
+    |
+278 |             requires self.spec_avltreeseqsteph_wf(), (index as int) < self.spec_seq().len(),
+    |                      ------------------------------ failed precondition
+
+error: invariant not satisfied before loop
+   --> src/Chap52/EdgeSetGraphStEph.rs:255:21
+    |
+255 |                     !self.spec_vertices().contains(v@),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:259:17
+    |
+259 |                 self.edges.delete(&to_remove[j]);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:286:17
+    |
+286 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap37/AVLTreeSeqStEph.rs:278:22
+    |
+278 |             requires self.spec_avltreeseqsteph_wf(), (index as int) < self.spec_seq().len(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+seq.spec_avltreeseqsteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+i < seq.spec_seq().len() ✔
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:111:21
+    |
+111 |             ensures self.spec_edgesetgraphsteph_wf();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+264 |         fn insert_edge(&mut self, u: V, v: V) {
+    |         ------------------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:265:13
+    |
+265 |             self.vertices.insert(u.clone());
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:295:17
+    |
+295 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:266:13
+    |
+266 |             self.vertices.insert(v.clone());
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:295:17
+    |
+295 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:267:13
+    |
+267 |             self.edges.insert(Pair(u, v));
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:295:17
+    |
+295 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: 
+
+self.vertices.spec_avltreesetsteph_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+clip(nat, self.vertices.view().len() + 1) < UnsignedMax.Exec(usize::BITS) 
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:116:21
+    |
+116 |             ensures self.spec_edgesetgraphsteph_wf();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+270 |         fn delete_edge(&mut self, u: &V, v: &V) { self.edges.delete(&Pair(u.clone(), v.clone())); }
+    |         --------------------------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:270:51
+    |
+270 |         fn delete_edge(&mut self, u: &V, v: &V) { self.edges.delete(&Pair(u.clone(), v.clone())); }
+    |                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:286:17
+    |
+286 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: 
+
+self.spec_edgesetgraphsteph_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:147:49
+    |
+147 |         fn has_edge(&self, u: &V, v: &V) -> B { self.edges.find(&Pair(u.clone(), v.clone())) }
+    |                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:272:17
+    |
+272 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:272:17
+    |
+272 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:153:28
+    |
+153 |               let filtered = self.edges.filter(
+    |  ____________________________^
+154 | |                 |edge| edge.0 == u_clone,
+155 | |                 Ghost(|v: (V::V, V::V)| v.0 == u@),
+156 | |             );
+    | |_____________^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:225:17
+    |
+225 |                   vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                   ------------------------------------- failed precondition
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap52/EdgeSetGraphStPer.rs:176:21
+    |
+176 | /                     forall|v: <V as View>::V| #[trigger] neighbors@.contains(v) ==>
+177 | |                         self.edges@.contains((u@, v)),
+    | |_____________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap52/EdgeSetGraphStPer.rs:178:21
+    |
+178 | /                     forall|j: int| 0 <= j < i ==>
+179 | |                         #[trigger] neighbors@.contains(seq@[j].1),
+    | |_________________________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:190:29
+    |
+190 |                 neighbors = neighbors.insert(v);
+    |                             ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:288:17
+    |
+288 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:288:17
+    |
+288 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+neighbors.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+clip(nat, neighbors.view().len() + 1) < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:212:44
+    |
+212 |         fn out_degree(&self, u: &V) -> N { self.out_neighbors(u).size() }
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:186:22
+    |
+186 |             requires self.spec_avltreesetstper_wf(),
+    |                      ------------------------------ failed precondition
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:216:27
+    |
+216 |                 vertices: self.vertices.insert(v),
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:288:17
+    |
+288 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+clip(nat, tmp%.view().len() + 1) < UnsignedMax.Exec(usize::BITS) 
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:98:58
+    |
+ 98 |               ensures updated.spec_edgesetgraphstper_wf(), !updated.spec_vertices().contains(v@);
+    |                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+250 | /             EdgeSetGraphStPer {
+251 | |                 vertices: new_vertices,
+252 | |                 edges: new_edges,
+253 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:222:21
+    |
+222 |               ensures !updated.vertices@.contains(v@)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+250 | /             EdgeSetGraphStPer {
+251 | |                 vertices: new_vertices,
+252 | |                 edges: new_edges,
+253 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:226:32
+    |
+226 |             let new_vertices = self.vertices.delete(&v_clone);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:279:17
+    |
+279 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:227:29
+    |
+227 |               let new_edges = self.edges.filter(
+    |  _____________________________^
+228 | |                 |edge| {
+229 | |                     let Pair(u, w) = edge;
+230 | |                     *u != v_clone && *w != v_clone
+231 | |                 },
+232 | |                 Ghost(|p: (V::V, V::V)| p.0 != v_view && p.1 != v_view),
+233 | |             );
+    | |_____________^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:225:17
+    |
+225 |                   vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                   ------------------------------------- failed precondition
+
+error: assertion failed
+   --> src/Chap52/EdgeSetGraphStPer.rs:246:28
+    |
+246 |                     assert(new_vertices@.contains(a));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/EdgeSetGraphStPer.rs:247:28
+    |
+247 |                     assert(new_vertices@.contains(b));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:225:17
+    |
+225 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+forall |t|
+    ClosureReq(tmp%%, (t)) 
+forall |x, keep|
+    ClosureEns(tmp%%, (x), keep) ==>
+        keep == tmp%(x.view()) 
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:102:21
+    |
+102 |               ensures updated.spec_edgesetgraphstper_wf();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+259 | /             EdgeSetGraphStPer {
+260 | |                 vertices: new_vertices,
+261 | |                 edges: new_edges,
+262 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:257:32
+    |
+257 |             let new_vertices = self.vertices.insert(u.clone()).insert(v.clone());
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:288:17
+    |
+288 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:257:32
+    |
+257 |             let new_vertices = self.vertices.insert(u.clone()).insert(v.clone());
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:288:17
+    |
+288 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:258:29
+    |
+258 |             let new_edges = self.edges.insert(Pair(u, v));
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:288:17
+    |
+288 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+clip(nat, tmp%.view().len() + 1) < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:266:29
+    |
+266 |             let new_edges = self.edges.delete(&Pair(u.clone(), v.clone()));
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:279:17
+    |
+279 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:279:17
+    |
+279 |                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+
+error: precondition not satisfied
+  --> src/Chap53/GraphSearchMtPer.rs:77:16
+   |
+77 |             if frontier.size() == 0 {
+   |                ^^^^^^^^^^^^^^^
+   |
+  ::: src/Chap41/AVLTreeSetMtPer.rs:98:22
+   |
+98 |             requires self.spec_avltreesetmtper_wf(),
+   |                      ------------------------------ failed precondition
+
+note: 
+
+frontier.spec_avltreesetmtper_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: precondition not satisfied
+   --> src/Chap53/GraphSearchMtPer.rs:155:25
+    |
+155 |                 let v = frontier_seq.nth(i);
+    |                         ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqMtPer.rs:243:22
+    |
+243 |             requires self.spec_avltreeseqmtper_wf(), (index as int) < self.spec_seq().len(),
+    |                      ------------------------------ failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap37/AVLTreeSeqMtPer.rs:243:22
+    |
+243 |             requires self.spec_avltreeseqmtper_wf(), (index as int) < self.spec_seq().len(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+frontier_seq.spec_avltreeseqmtper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+i < frontier_seq.spec_seq().len() ✔
+
+verification results:: 4632 verified, 45 errors
+error: aborting due to 122 previous errors; 5 warnings emitted
+
+Elapsed: 62s
+Sampled Memory Usage: peak rust_verify RSS: 7157MB, peak z3 RSS: 446MB, min free: 17407MB
+Sampled CPU Usage: rust_verify: 158s, z3 children: 120s

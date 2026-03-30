@@ -1,0 +1,965 @@
+verification results:: 4428 verified, 0 errors
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS-agent3/rust_verify_test)
+    Finished `release` profile [optimized] target(s) in 1.37s
+────────────
+ Nextest run ID 80ed3797-6b8e-4553-8142-4e9738695227 with nextest profile: default
+    Starting 157 tests across 37 binaries
+        PASS [   1.474s] rust_verify_test::HashSetWithViewPlus hash_set_wvp_loop_loop
+        PASS [   1.524s] rust_verify_test::HashSetWithViewPlus hash_set_wvp_for_iter
+        PASS [   1.553s] rust_verify_test::HashMapWithViewPlus hash_map_wvp_for_iter
+        PASS [   1.647s] rust_verify_test::HashMapWithViewPlus hash_map_wvp_loop_loop
+        PASS [   1.807s] rust_verify_test::MappingStEph mapping_st_eph_for_iter
+        PASS [   1.973s] rust_verify_test::MappingStEph mapping_st_eph_loop_loop
+        PASS [   1.456s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_for_borrow_into
+        PASS [   1.443s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_for_borrow_iter
+        PASS [   1.558s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_loop_borrow_iter
+        PASS [   1.510s] rust_verify_test::ProveArraySeq arrayseq_filter
+        PASS [   1.392s] rust_verify_test::ProveArraySeq arrayseq_iterate
+        PASS [   1.814s] rust_verify_test::ProveArraySeq arrayseq_for_iter
+        PASS [   1.506s] rust_verify_test::ProveArraySeq arrayseq_loop_loop
+        PASS [   1.676s] rust_verify_test::ProveArraySeq arrayseq_iterate_prefixes
+        PASS [   1.677s] rust_verify_test::ProveArraySeq arrayseq_map
+        PASS [   1.648s] rust_verify_test::ProveArraySeq arrayseq_reduce
+        PASS [   1.626s] rust_verify_test::ProveArraySeq arrayseq_scan
+        PASS [   1.650s] rust_verify_test::ProveArraySeq arrayseq_scan_inclusive
+        PASS [   1.322s] rust_verify_test::ProveArraySeq arrayseq_tabulate
+        PASS [   1.508s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_for_iter
+        PASS [   1.736s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_for_iter
+        PASS [   1.731s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_loop_loop
+        PASS [   1.556s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_loop_loop
+        PASS [   1.582s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_borrow_into
+        PASS [   1.672s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_borrow_iter
+        PASS [   1.821s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_borrow_into
+        PASS [   2.124s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_consume
+        PASS [   1.944s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_consume
+        PASS [   2.119s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_borrow_iter
+        PASS [   1.807s] rust_verify_test::ProveArraySeqStPer arrayseqstper_for_iter
+        FAIL [   0.193s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_for_borrow_into
+  stdout ───
+
+    running 1 test
+    test bstsetplainmteph_for_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        bstsetplainmteph_for_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.19s
+
+  stderr ───
+    error[E0433]: failed to resolve: could not find `BSTSetPlainMtEph` in `Chap37`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_for_borrow_into/test.rs:16:25
+       |
+    16 | use apas_verus::Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::*;
+       |                         ^^^^^^^^^^^^^^^^ could not find `BSTSetPlainMtEph` in `Chap37`
+       |
+    note: found an item that was configured out
+      --> src/lib.rs:480:10
+       |
+       = note: the item is gated behind the `all_chapters` feature
+
+
+    error[E0425]: cannot find type `BSTSetPlainMtEph` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_for_borrow_into/test.rs:19:16
+       |
+    19 |     let mut a: BSTSetPlainMtEph<u64> = BSTSetPlainMtEph::empty();
+       |                ^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0425]: cannot find type `BSTSetPlainMtEphIter` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_for_borrow_into/test.rs:24:13
+       |
+    24 |     let it: BSTSetPlainMtEphIter<u64> = (&a).into_iter();
+       |             ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0433]: failed to resolve: use of undeclared type `BSTSetPlainMtEph`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_for_borrow_into/test.rs:19:40
+       |
+    19 |     let mut a: BSTSetPlainMtEph<u64> = BSTSetPlainMtEph::empty();
+       |                                        ^^^^^^^^^^^^^^^^ use of undeclared type `BSTSetPlainMtEph`
+
+
+    error: aborting due to 4 previous errors
+
+
+    Some errors have detailed explanations: E0425, E0433.
+
+    For more information about an error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_for_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_for_borrow_into/test.rs
+
+
+    thread 'bstsetplainmteph_for_borrow_into' (1924652) panicked at tests/Chap37/ProveBSTSetPlainMtEph.rs:131:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.161s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_for_borrow_iter
+  stdout ───
+
+    running 1 test
+    test bstsetplainmteph_for_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        bstsetplainmteph_for_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.16s
+
+  stderr ───
+    error[E0433]: failed to resolve: could not find `BSTSetPlainMtEph` in `Chap37`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_for_borrow_iter/test.rs:16:25
+       |
+    16 | use apas_verus::Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::*;
+       |                         ^^^^^^^^^^^^^^^^ could not find `BSTSetPlainMtEph` in `Chap37`
+       |
+    note: found an item that was configured out
+      --> src/lib.rs:480:10
+       |
+       = note: the item is gated behind the `all_chapters` feature
+
+
+    error[E0425]: cannot find type `BSTSetPlainMtEph` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_for_borrow_iter/test.rs:19:16
+       |
+    19 |     let mut a: BSTSetPlainMtEph<u64> = BSTSetPlainMtEph::empty();
+       |                ^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0425]: cannot find type `BSTSetPlainMtEphIter` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_for_borrow_iter/test.rs:24:13
+       |
+    24 |     let it: BSTSetPlainMtEphIter<u64> = a.iter();
+       |             ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0433]: failed to resolve: use of undeclared type `BSTSetPlainMtEph`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_for_borrow_iter/test.rs:19:40
+       |
+    19 |     let mut a: BSTSetPlainMtEph<u64> = BSTSetPlainMtEph::empty();
+       |                                        ^^^^^^^^^^^^^^^^ use of undeclared type `BSTSetPlainMtEph`
+
+
+    error: aborting due to 4 previous errors
+
+
+    Some errors have detailed explanations: E0425, E0433.
+
+    For more information about an error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_for_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_for_borrow_iter/test.rs
+
+
+    thread 'bstsetplainmteph_for_borrow_iter' (1924682) panicked at tests/Chap37/ProveBSTSetPlainMtEph.rs:99:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.161s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_loop_borrow_into
+  stdout ───
+
+    running 1 test
+    test bstsetplainmteph_loop_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        bstsetplainmteph_loop_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.16s
+
+  stderr ───
+    error[E0433]: failed to resolve: could not find `BSTSetPlainMtEph` in `Chap37`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_loop_borrow_into/test.rs:16:25
+       |
+    16 | use apas_verus::Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::*;
+       |                         ^^^^^^^^^^^^^^^^ could not find `BSTSetPlainMtEph` in `Chap37`
+       |
+    note: found an item that was configured out
+      --> src/lib.rs:480:10
+       |
+       = note: the item is gated behind the `all_chapters` feature
+
+
+    error[E0425]: cannot find type `BSTSetPlainMtEph` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_loop_borrow_into/test.rs:19:16
+       |
+    19 |     let mut a: BSTSetPlainMtEph<u64> = BSTSetPlainMtEph::empty();
+       |                ^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0425]: cannot find type `BSTSetPlainMtEphIter` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_loop_borrow_into/test.rs:24:17
+       |
+    24 |     let mut it: BSTSetPlainMtEphIter<u64> = (&a).into_iter();
+       |                 ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0433]: failed to resolve: use of undeclared type `BSTSetPlainMtEph`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_loop_borrow_into/test.rs:19:40
+       |
+    19 |     let mut a: BSTSetPlainMtEph<u64> = BSTSetPlainMtEph::empty();
+       |                                        ^^^^^^^^^^^^^^^^ use of undeclared type `BSTSetPlainMtEph`
+
+
+    error[E0425]: cannot find function `bstsetplainmteph_iter_invariant` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_loop_borrow_into/test.rs:32:13
+       |
+    32 |             bstsetplainmteph_iter_invariant(&it),
+       |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error: aborting due to 5 previous errors
+
+
+    Some errors have detailed explanations: E0425, E0433.
+
+    For more information about an error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_loop_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_loop_borrow_into/test.rs
+
+
+    thread 'bstsetplainmteph_loop_borrow_into' (1924707) panicked at tests/Chap37/ProveBSTSetPlainMtEph.rs:59:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.170s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_loop_borrow_iter
+  stdout ───
+
+    running 1 test
+    test bstsetplainmteph_loop_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        bstsetplainmteph_loop_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.16s
+
+  stderr ───
+    error[E0433]: failed to resolve: could not find `BSTSetPlainMtEph` in `Chap37`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_loop_borrow_iter/test.rs:16:25
+       |
+    16 | use apas_verus::Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::*;
+       |                         ^^^^^^^^^^^^^^^^ could not find `BSTSetPlainMtEph` in `Chap37`
+       |
+    note: found an item that was configured out
+      --> src/lib.rs:480:10
+       |
+       = note: the item is gated behind the `all_chapters` feature
+
+
+    error[E0425]: cannot find type `BSTSetPlainMtEph` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_loop_borrow_iter/test.rs:19:16
+       |
+    19 |     let mut a: BSTSetPlainMtEph<u64> = BSTSetPlainMtEph::empty();
+       |                ^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0425]: cannot find type `BSTSetPlainMtEphIter` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_loop_borrow_iter/test.rs:24:17
+       |
+    24 |     let mut it: BSTSetPlainMtEphIter<u64> = a.iter();
+       |                 ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0433]: failed to resolve: use of undeclared type `BSTSetPlainMtEph`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_loop_borrow_iter/test.rs:19:40
+       |
+    19 |     let mut a: BSTSetPlainMtEph<u64> = BSTSetPlainMtEph::empty();
+       |                                        ^^^^^^^^^^^^^^^^ use of undeclared type `BSTSetPlainMtEph`
+
+
+    error[E0425]: cannot find function `bstsetplainmteph_iter_invariant` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_loop_borrow_iter/test.rs:32:13
+       |
+    32 |             bstsetplainmteph_iter_invariant(&it),
+       |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error: aborting due to 5 previous errors
+
+
+    Some errors have detailed explanations: E0425, E0433.
+
+    For more information about an error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_loop_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-341892db9f9de3bf-bstsetplainmteph_loop_borrow_iter/test.rs
+
+
+    thread 'bstsetplainmteph_loop_borrow_iter' (1924752) panicked at tests/Chap37/ProveBSTSetPlainMtEph.rs:19:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   1.936s] rust_verify_test::ProveArraySeqStPer arrayseqstper_loop_loop
+        FAIL [   0.190s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_for_borrow_into
+  stdout ───
+
+    running 1 test
+    test bstsetrbmteph_for_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        bstsetrbmteph_for_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.19s
+
+  stderr ───
+    error[E0433]: failed to resolve: could not find `BSTSetRBMtEph` in `Chap37`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_for_borrow_into/test.rs:16:25
+       |
+    16 | use apas_verus::Chap37::BSTSetRBMtEph::BSTSetRBMtEph::*;
+       |                         ^^^^^^^^^^^^^ could not find `BSTSetRBMtEph` in `Chap37`
+       |
+    note: found an item that was configured out
+      --> src/lib.rs:484:10
+       |
+       = note: the item is gated behind the `all_chapters` feature
+
+
+    error[E0425]: cannot find type `BSTSetRBMtEph` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_for_borrow_into/test.rs:19:16
+       |
+    19 |     let mut a: BSTSetRBMtEph<u64> = BSTSetRBMtEph::empty();
+       |                ^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0425]: cannot find type `BSTSetRBMtEphIter` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_for_borrow_into/test.rs:24:13
+       |
+    24 |     let it: BSTSetRBMtEphIter<u64> = (&a).into_iter();
+       |             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0433]: failed to resolve: use of undeclared type `BSTSetRBMtEph`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_for_borrow_into/test.rs:19:37
+       |
+    19 |     let mut a: BSTSetRBMtEph<u64> = BSTSetRBMtEph::empty();
+       |                                     ^^^^^^^^^^^^^ use of undeclared type `BSTSetRBMtEph`
+
+
+    error: aborting due to 4 previous errors
+
+
+    Some errors have detailed explanations: E0425, E0433.
+
+    For more information about an error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_for_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_for_borrow_into/test.rs
+
+
+    thread 'bstsetrbmteph_for_borrow_into' (1924807) panicked at tests/Chap37/ProveBSTSetRBMtEph.rs:131:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.200s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_for_borrow_iter
+  stdout ───
+
+    running 1 test
+    test bstsetrbmteph_for_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        bstsetrbmteph_for_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.19s
+
+  stderr ───
+    error[E0433]: failed to resolve: could not find `BSTSetRBMtEph` in `Chap37`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_for_borrow_iter/test.rs:16:25
+       |
+    16 | use apas_verus::Chap37::BSTSetRBMtEph::BSTSetRBMtEph::*;
+       |                         ^^^^^^^^^^^^^ could not find `BSTSetRBMtEph` in `Chap37`
+       |
+    note: found an item that was configured out
+      --> src/lib.rs:484:10
+       |
+       = note: the item is gated behind the `all_chapters` feature
+
+
+    error[E0425]: cannot find type `BSTSetRBMtEph` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_for_borrow_iter/test.rs:19:16
+       |
+    19 |     let mut a: BSTSetRBMtEph<u64> = BSTSetRBMtEph::empty();
+       |                ^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0425]: cannot find type `BSTSetRBMtEphIter` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_for_borrow_iter/test.rs:24:13
+       |
+    24 |     let it: BSTSetRBMtEphIter<u64> = a.iter();
+       |             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0433]: failed to resolve: use of undeclared type `BSTSetRBMtEph`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_for_borrow_iter/test.rs:19:37
+       |
+    19 |     let mut a: BSTSetRBMtEph<u64> = BSTSetRBMtEph::empty();
+       |                                     ^^^^^^^^^^^^^ use of undeclared type `BSTSetRBMtEph`
+
+
+    error: aborting due to 4 previous errors
+
+
+    Some errors have detailed explanations: E0425, E0433.
+
+    For more information about an error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_for_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_for_borrow_iter/test.rs
+
+
+    thread 'bstsetrbmteph_for_borrow_iter' (1924833) panicked at tests/Chap37/ProveBSTSetRBMtEph.rs:99:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.192s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_loop_borrow_into
+  stdout ───
+
+    running 1 test
+    test bstsetrbmteph_loop_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        bstsetrbmteph_loop_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.19s
+
+  stderr ───
+    error[E0433]: failed to resolve: could not find `BSTSetRBMtEph` in `Chap37`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_loop_borrow_into/test.rs:16:25
+       |
+    16 | use apas_verus::Chap37::BSTSetRBMtEph::BSTSetRBMtEph::*;
+       |                         ^^^^^^^^^^^^^ could not find `BSTSetRBMtEph` in `Chap37`
+       |
+    note: found an item that was configured out
+      --> src/lib.rs:484:10
+       |
+       = note: the item is gated behind the `all_chapters` feature
+
+
+    error[E0425]: cannot find type `BSTSetRBMtEph` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_loop_borrow_into/test.rs:19:16
+       |
+    19 |     let mut a: BSTSetRBMtEph<u64> = BSTSetRBMtEph::empty();
+       |                ^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0425]: cannot find type `BSTSetRBMtEphIter` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_loop_borrow_into/test.rs:24:17
+       |
+    24 |     let mut it: BSTSetRBMtEphIter<u64> = (&a).into_iter();
+       |                 ^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0433]: failed to resolve: use of undeclared type `BSTSetRBMtEph`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_loop_borrow_into/test.rs:19:37
+       |
+    19 |     let mut a: BSTSetRBMtEph<u64> = BSTSetRBMtEph::empty();
+       |                                     ^^^^^^^^^^^^^ use of undeclared type `BSTSetRBMtEph`
+
+
+    error[E0425]: cannot find function `bstsetrbmteph_iter_invariant` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_loop_borrow_into/test.rs:32:13
+       |
+    32 |             bstsetrbmteph_iter_invariant(&it),
+       |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error: aborting due to 5 previous errors
+
+
+    Some errors have detailed explanations: E0425, E0433.
+
+    For more information about an error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_loop_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_loop_borrow_into/test.rs
+
+
+    thread 'bstsetrbmteph_loop_borrow_into' (1924855) panicked at tests/Chap37/ProveBSTSetRBMtEph.rs:59:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.190s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_loop_borrow_iter
+  stdout ───
+
+    running 1 test
+    test bstsetrbmteph_loop_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        bstsetrbmteph_loop_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.18s
+
+  stderr ───
+    error[E0433]: failed to resolve: could not find `BSTSetRBMtEph` in `Chap37`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_loop_borrow_iter/test.rs:16:25
+       |
+    16 | use apas_verus::Chap37::BSTSetRBMtEph::BSTSetRBMtEph::*;
+       |                         ^^^^^^^^^^^^^ could not find `BSTSetRBMtEph` in `Chap37`
+       |
+    note: found an item that was configured out
+      --> src/lib.rs:484:10
+       |
+       = note: the item is gated behind the `all_chapters` feature
+
+
+    error[E0425]: cannot find type `BSTSetRBMtEph` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_loop_borrow_iter/test.rs:19:16
+       |
+    19 |     let mut a: BSTSetRBMtEph<u64> = BSTSetRBMtEph::empty();
+       |                ^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0425]: cannot find type `BSTSetRBMtEphIter` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_loop_borrow_iter/test.rs:24:17
+       |
+    24 |     let mut it: BSTSetRBMtEphIter<u64> = a.iter();
+       |                 ^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0433]: failed to resolve: use of undeclared type `BSTSetRBMtEph`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_loop_borrow_iter/test.rs:19:37
+       |
+    19 |     let mut a: BSTSetRBMtEph<u64> = BSTSetRBMtEph::empty();
+       |                                     ^^^^^^^^^^^^^ use of undeclared type `BSTSetRBMtEph`
+
+
+    error[E0425]: cannot find function `bstsetrbmteph_iter_invariant` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_loop_borrow_iter/test.rs:32:13
+       |
+    32 |             bstsetrbmteph_iter_invariant(&it),
+       |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error: aborting due to 5 previous errors
+
+
+    Some errors have detailed explanations: E0425, E0433.
+
+    For more information about an error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_loop_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-94426477dd32a739-bstsetrbmteph_loop_borrow_iter/test.rs
+
+
+    thread 'bstsetrbmteph_loop_borrow_iter' (1924877) panicked at tests/Chap37/ProveBSTSetRBMtEph.rs:19:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.189s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_for_borrow_into
+  stdout ───
+
+    running 1 test
+    test bstsetsplaymteph_for_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        bstsetsplaymteph_for_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.18s
+
+  stderr ───
+    error[E0433]: failed to resolve: could not find `BSTSetSplayMtEph` in `Chap37`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_for_borrow_into/test.rs:16:25
+       |
+    16 | use apas_verus::Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::*;
+       |                         ^^^^^^^^^^^^^^^^ could not find `BSTSetSplayMtEph` in `Chap37`
+       |
+    note: found an item that was configured out
+      --> src/lib.rs:486:10
+       |
+       = note: the item is gated behind the `all_chapters` feature
+
+
+    error[E0425]: cannot find type `BSTSetSplayMtEph` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_for_borrow_into/test.rs:19:16
+       |
+    19 |     let mut a: BSTSetSplayMtEph<u64> = BSTSetSplayMtEph::empty();
+       |                ^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0425]: cannot find type `BSTSetSplayMtEphIter` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_for_borrow_into/test.rs:24:13
+       |
+    24 |     let it: BSTSetSplayMtEphIter<u64> = (&a).into_iter();
+       |             ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0433]: failed to resolve: use of undeclared type `BSTSetSplayMtEph`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_for_borrow_into/test.rs:19:40
+       |
+    19 |     let mut a: BSTSetSplayMtEph<u64> = BSTSetSplayMtEph::empty();
+       |                                        ^^^^^^^^^^^^^^^^ use of undeclared type `BSTSetSplayMtEph`
+
+
+    error: aborting due to 4 previous errors
+
+
+    Some errors have detailed explanations: E0425, E0433.
+
+    For more information about an error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_for_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_for_borrow_into/test.rs
+
+
+    thread 'bstsetsplaymteph_for_borrow_into' (1924916) panicked at tests/Chap37/ProveBSTSetSplayMtEph.rs:131:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.158s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_for_borrow_iter
+  stdout ───
+
+    running 1 test
+    test bstsetsplaymteph_for_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        bstsetsplaymteph_for_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.15s
+
+  stderr ───
+    error[E0433]: failed to resolve: could not find `BSTSetSplayMtEph` in `Chap37`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_for_borrow_iter/test.rs:16:25
+       |
+    16 | use apas_verus::Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::*;
+       |                         ^^^^^^^^^^^^^^^^ could not find `BSTSetSplayMtEph` in `Chap37`
+       |
+    note: found an item that was configured out
+      --> src/lib.rs:486:10
+       |
+       = note: the item is gated behind the `all_chapters` feature
+
+
+    error[E0425]: cannot find type `BSTSetSplayMtEph` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_for_borrow_iter/test.rs:19:16
+       |
+    19 |     let mut a: BSTSetSplayMtEph<u64> = BSTSetSplayMtEph::empty();
+       |                ^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0425]: cannot find type `BSTSetSplayMtEphIter` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_for_borrow_iter/test.rs:24:13
+       |
+    24 |     let it: BSTSetSplayMtEphIter<u64> = a.iter();
+       |             ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0433]: failed to resolve: use of undeclared type `BSTSetSplayMtEph`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_for_borrow_iter/test.rs:19:40
+       |
+    19 |     let mut a: BSTSetSplayMtEph<u64> = BSTSetSplayMtEph::empty();
+       |                                        ^^^^^^^^^^^^^^^^ use of undeclared type `BSTSetSplayMtEph`
+
+
+    error: aborting due to 4 previous errors
+
+
+    Some errors have detailed explanations: E0425, E0433.
+
+    For more information about an error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_for_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_for_borrow_iter/test.rs
+
+
+    thread 'bstsetsplaymteph_for_borrow_iter' (1924943) panicked at tests/Chap37/ProveBSTSetSplayMtEph.rs:99:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   1.916s] rust_verify_test::ProveBFSMtEph chap54_bfsmteph_bottom_up_loop
+        FAIL [   0.189s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_loop_borrow_into
+  stdout ───
+
+    running 1 test
+    test bstsetsplaymteph_loop_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        bstsetsplaymteph_loop_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.18s
+
+  stderr ───
+    error[E0433]: failed to resolve: could not find `BSTSetSplayMtEph` in `Chap37`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_loop_borrow_into/test.rs:16:25
+       |
+    16 | use apas_verus::Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::*;
+       |                         ^^^^^^^^^^^^^^^^ could not find `BSTSetSplayMtEph` in `Chap37`
+       |
+    note: found an item that was configured out
+      --> src/lib.rs:486:10
+       |
+       = note: the item is gated behind the `all_chapters` feature
+
+
+    error[E0425]: cannot find type `BSTSetSplayMtEph` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_loop_borrow_into/test.rs:19:16
+       |
+    19 |     let mut a: BSTSetSplayMtEph<u64> = BSTSetSplayMtEph::empty();
+       |                ^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0425]: cannot find type `BSTSetSplayMtEphIter` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_loop_borrow_into/test.rs:24:17
+       |
+    24 |     let mut it: BSTSetSplayMtEphIter<u64> = (&a).into_iter();
+       |                 ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0433]: failed to resolve: use of undeclared type `BSTSetSplayMtEph`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_loop_borrow_into/test.rs:19:40
+       |
+    19 |     let mut a: BSTSetSplayMtEph<u64> = BSTSetSplayMtEph::empty();
+       |                                        ^^^^^^^^^^^^^^^^ use of undeclared type `BSTSetSplayMtEph`
+
+
+    error[E0425]: cannot find function `bstsetsplaymteph_iter_invariant` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_loop_borrow_into/test.rs:32:13
+       |
+    32 |             bstsetsplaymteph_iter_invariant(&it),
+       |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error: aborting due to 5 previous errors
+
+
+    Some errors have detailed explanations: E0425, E0433.
+
+    For more information about an error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_loop_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_loop_borrow_into/test.rs
+
+
+    thread 'bstsetsplaymteph_loop_borrow_into' (1925024) panicked at tests/Chap37/ProveBSTSetSplayMtEph.rs:59:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.182s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_loop_borrow_iter
+  stdout ───
+
+    running 1 test
+    test bstsetsplaymteph_loop_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        bstsetsplaymteph_loop_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.18s
+
+  stderr ───
+    error[E0433]: failed to resolve: could not find `BSTSetSplayMtEph` in `Chap37`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_loop_borrow_iter/test.rs:16:25
+       |
+    16 | use apas_verus::Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::*;
+       |                         ^^^^^^^^^^^^^^^^ could not find `BSTSetSplayMtEph` in `Chap37`
+       |
+    note: found an item that was configured out
+      --> src/lib.rs:486:10
+       |
+       = note: the item is gated behind the `all_chapters` feature
+
+
+    error[E0425]: cannot find type `BSTSetSplayMtEph` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_loop_borrow_iter/test.rs:19:16
+       |
+    19 |     let mut a: BSTSetSplayMtEph<u64> = BSTSetSplayMtEph::empty();
+       |                ^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0425]: cannot find type `BSTSetSplayMtEphIter` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_loop_borrow_iter/test.rs:24:17
+       |
+    24 |     let mut it: BSTSetSplayMtEphIter<u64> = a.iter();
+       |                 ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error[E0433]: failed to resolve: use of undeclared type `BSTSetSplayMtEph`
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_loop_borrow_iter/test.rs:19:40
+       |
+    19 |     let mut a: BSTSetSplayMtEph<u64> = BSTSetSplayMtEph::empty();
+       |                                        ^^^^^^^^^^^^^^^^ use of undeclared type `BSTSetSplayMtEph`
+
+
+    error[E0425]: cannot find function `bstsetsplaymteph_iter_invariant` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_loop_borrow_iter/test.rs:32:13
+       |
+    32 |             bstsetsplaymteph_iter_invariant(&it),
+       |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+
+    error: aborting due to 5 previous errors
+
+
+    Some errors have detailed explanations: E0425, E0433.
+
+    For more information about an error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_loop_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent3/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-f275d70d09ab364c-bstsetsplaymteph_loop_borrow_iter/test.rs
+
+
+    thread 'bstsetsplaymteph_loop_borrow_iter' (1925060) panicked at tests/Chap37/ProveBSTSetSplayMtEph.rs:19:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   1.932s] rust_verify_test::ProveBFSMtEph chap54_bfsmteph_top_down_loop
+        PASS [   1.745s] rust_verify_test::ProveBFSStEph chap54_bfssteph_top_down_loop
+        PASS [   2.005s] rust_verify_test::ProveBFSStEph chap54_bfssteph_bottom_up_loop
+        PASS [   1.980s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_postorder
+        PASS [   2.059s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_inorder
+        PASS [   1.805s] rust_verify_test::ProveBalBinTreeStEph balbintree_leaf_iter_exhausted
+        PASS [   2.071s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_preorder
+        PASS [   1.983s] rust_verify_test::ProveBalBinTreeStEph balbintree_leaf_traversals_empty
+        PASS [   2.119s] rust_verify_test::ProveBalBinTreeStEph balbintree_inorder_spec_match
+        PASS [   1.801s] rust_verify_test::ProveBalBinTreeStEph balbintree_postorder_spec_match
+        PASS [   1.933s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_inorder
+        PASS [   1.956s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_preorder
+        PASS [   2.164s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_postorder
+        PASS [   2.100s] rust_verify_test::ProveBalBinTreeStEph balbintree_preorder_spec_match
+        PASS [   2.136s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_borrow_into
+        PASS [   1.974s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_borrow_iter
+        PASS [   2.007s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_consume
+        PASS [   1.879s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_borrow_iter
+        PASS [   2.110s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_borrow_into
+        PASS [   1.904s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_consume
+        PASS [   2.240s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_for_borrow_into
+        PASS [   1.862s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_loop_borrow_iter
+        PASS [   2.072s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_iter_over_subslice
+        PASS [   2.178s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_for_borrow_iter
+        PASS [   1.963s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_operations
+        PASS [   2.190s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_borrow_into
+        PASS [   2.022s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_borrow_iter
+        PASS [   1.878s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_consume
+        PASS [   1.998s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_borrow_into
+        PASS [   1.993s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_borrow_iter
+        PASS [   1.937s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_consume
+        PASS [   1.990s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_borrow_into
+        PASS [   2.121s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_borrow_iter
+        PASS [   2.212s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_consume
+        PASS [   1.987s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_borrow_iter
+        PASS [   2.147s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_borrow_into
+        PASS [   2.115s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_consume
+        PASS [   1.905s] rust_verify_test::ProveKleeneStPer kleene_alphabet
+        PASS [   1.744s] rust_verify_test::ProveKleeneStPer kleene_mem_plus
+        PASS [   1.918s] rust_verify_test::ProveLinkedListStEph linkedliststeph_for_iter
+        PASS [   2.052s] rust_verify_test::ProveKleeneStPer kleene_mem_star
+        PASS [   2.012s] rust_verify_test::ProveLinkedListStEph linkedliststeph_loop_loop
+        PASS [   2.163s] rust_verify_test::ProveLinkedListStPer linkedliststper_for_iter
+        PASS [   2.048s] rust_verify_test::ProveLinkedListStPer linkedliststper_loop_loop
+        PASS [   1.882s] rust_verify_test::ProveMathSeq mathseq_for_borrow_into
+        PASS [   1.831s] rust_verify_test::ProveMathSeq mathseq_loop_borrow_into
+        PASS [   2.049s] rust_verify_test::ProveMathSeq mathseq_for_borrow_iter
+        PASS [   1.941s] rust_verify_test::ProveMathSeq mathseq_for_consume
+        PASS [   1.829s] rust_verify_test::ProveMathSeq mathseq_loop_borrow_iter
+        PASS [   2.091s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_loop_borrow_into
+        PASS [   2.120s] rust_verify_test::ProveMathSeq mathseq_loop_consume
+        PASS [   1.909s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_borrow_into
+        PASS [   2.111s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_borrow_iter
+        PASS [   1.998s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_consume
+        PASS [   2.202s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_loop_borrow_iter
+        PASS [   1.948s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_borrow_into
+        PASS [   1.956s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_borrow_iter
+        PASS [   2.075s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_consume
+        PASS [   2.055s] rust_verify_test::ProveSetMtEph set_mt_eph_for_borrow_into
+        PASS [   2.134s] rust_verify_test::ProveSetMtEph set_mt_eph_for_borrow_iter
+        PASS [   2.238s] rust_verify_test::ProveSetMtEph set_mt_eph_loop_borrow_iter
+        PASS [   2.273s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_borrow_into
+        PASS [   2.509s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_borrow_iter
+        PASS [   2.604s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_consume
+        PASS [   2.484s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_borrow_into
+        PASS [   2.550s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_borrow_iter
+        PASS [   2.799s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_consume
+        PASS [   2.437s] rust_verify_test::Provedeep_view_standard deep_view_standard_simple
+        PASS [   2.800s] rust_verify_test::Proveiterators_standard iterators_standard_for_borrow_into
+        PASS [   3.035s] rust_verify_test::Proveiterators_standard iterators_standard_for_borrow_iter
+        PASS [   4.196s] rust_verify_test::Proveiterators_standard iterators_standard_for_consume
+        PASS [   4.292s] rust_verify_test::Proveiterators_standard iterators_standard_loop_borrow_into
+        PASS [   4.162s] rust_verify_test::Proveiterators_standard iterators_standard_loop_borrow_iter
+        PASS [   4.409s] rust_verify_test::Proveiterators_standard iterators_standard_loop_consume
+        PASS [   4.408s] rust_verify_test::Provemod_standard mod_standard_for_borrow_into
+        PASS [   4.073s] rust_verify_test::Provemod_standard mod_standard_for_borrow_iter
+        PASS [   4.081s] rust_verify_test::Provemod_standard mod_standard_for_consume
+        PASS [   3.670s] rust_verify_test::Provemod_standard mod_standard_loop_consume
+        PASS [   4.695s] rust_verify_test::Provemod_standard mod_standard_loop_borrow_into
+        PASS [   4.853s] rust_verify_test::Provemod_standard mod_standard_loop_borrow_iter
+        PASS [   4.675s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_borrow_into
+        PASS [   4.845s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_borrow_iter
+        PASS [   4.036s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_consume
+        PASS [   4.421s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_borrow_iter
+        PASS [   5.043s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_borrow_into
+        PASS [   4.192s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_consume
+        PASS [   4.703s] rust_verify_test::Proveusing_closures_standard closures_ghost_spec_fn
+        PASS [   3.511s] rust_verify_test::Proveusing_closures_standard closures_inline_requires_ensures
+        PASS [   3.190s] rust_verify_test::Proveview_standard view_standard_collection
+        PASS [   5.144s] rust_verify_test::Proveusing_closures_standard closures_let_bind_ensures
+        PASS [   4.115s] rust_verify_test::Proveusing_closures_standard closures_map_apply
+        PASS [   4.234s] rust_verify_test::Proveview_standard view_standard_for_borrow_iter
+        PASS [   6.006s] rust_verify_test::Proveview_standard view_standard_for_borrow_into
+        PASS [   4.750s] rust_verify_test::Proveview_standard view_standard_for_consume
+        PASS [   4.077s] rust_verify_test::Proveview_standard view_standard_loop_borrow_iter
+        PASS [   4.847s] rust_verify_test::Proveview_standard view_standard_loop_borrow_into
+        PASS [   4.390s] rust_verify_test::Proveview_standard view_standard_loop_consume
+        PASS [   4.518s] rust_verify_test::Proveview_standard view_standard_simple
+        PASS [   4.186s] rust_verify_test::Provewrapping_iterators_standard wrapping_for_borrow_iter
+        PASS [   5.582s] rust_verify_test::Provewrapping_iterators_standard wrapping_for_borrow_into
+        PASS [   3.995s] rust_verify_test::Provewrapping_iterators_standard wrapping_loop_borrow_into
+        PASS [   4.291s] rust_verify_test::Provewrapping_iterators_standard wrapping_loop_borrow_iter
+        PASS [   4.756s] rust_verify_test::RelationStEph relation_st_eph_for_iter
+        PASS [   4.919s] rust_verify_test::RelationStEph relation_st_eph_loop_loop
+        PASS [   4.247s] rust_verify_test::SetMtEph set_mt_eph_loop_loop
+        PASS [   5.837s] rust_verify_test::SetMtEph set_mt_eph_for_iter
+        PASS [   5.373s] rust_verify_test::SetMtEph set_mt_eph_from_vec
+        PASS [   5.429s] rust_verify_test::SetStEph set_st_eph_for_iter
+        PASS [   5.359s] rust_verify_test::SetStEph set_st_eph_from_vec
+        PASS [   3.715s] rust_verify_test::prove_MathSeq_iters mathseq_iter_nested
+        PASS [   5.982s] rust_verify_test::SetStEph set_st_eph_loop_loop
+        PASS [   4.412s] rust_verify_test::prove_MathSeq_iters mathseq_iter_range
+        PASS [   5.429s] rust_verify_test::prove_MathSeq_iters mathseq_iter_consuming
+────────────
+     Summary [  67.988s] 157 tests run: 145 passed, 12 failed, 0 skipped
+        FAIL [   0.193s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_for_borrow_into
+        FAIL [   0.161s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_for_borrow_iter
+        FAIL [   0.161s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_loop_borrow_into
+        FAIL [   0.170s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_loop_borrow_iter
+        FAIL [   0.190s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_for_borrow_into
+        FAIL [   0.200s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_for_borrow_iter
+        FAIL [   0.192s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_loop_borrow_into
+        FAIL [   0.190s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_loop_borrow_iter
+        FAIL [   0.189s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_for_borrow_into
+        FAIL [   0.158s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_for_borrow_iter
+        FAIL [   0.189s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_loop_borrow_into
+        FAIL [   0.182s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_loop_borrow_iter
+error: test run failed
+Elapsed: 160s

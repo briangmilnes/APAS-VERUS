@@ -1,0 +1,523 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap52/AdjTableGraphStEph.rs:616:25
+    |
+616 |                         assert forall|j: int| #![trigger seq@[j]] 0 <= j < (i + 1) as int implies
+    |                         ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap52/AdjTableGraphStPer.rs:574:25
+    |
+574 |                         assert forall|j: int| #![trigger seq@[j]] 0 <= j < (i + 1) as int implies
+    |                         ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:131:17
+    |
+131 |                 assert forall|j: int| 0 <= j < i as int + 1 implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:132:51
+    |
+132 |                     vertex_to_index@.contains_key(vertices_vec@[j]@) &&
+    |                                                   ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:150:21
+    |
+150 |                     exists|j: int| 0 <= j < i as int + 1 && vertices_vec@[j]@ == v_view by {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:150:61
+    |
+150 |                     exists|j: int| 0 <= j < i as int + 1 && vertices_vec@[j]@ == v_view by {
+    |                                                             ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:124:21
+    |
+124 |                     exists|j: int| 0 <= j < i as int && vertices_vec@[j]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:124:57
+    |
+124 |                     exists|j: int| 0 <= j < i as int && vertices_vec@[j]@ == v_view,
+    |                                                         ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:192:17
+    |
+192 |                 assert forall|jj: int| 0 <= jj < j as int + 1 implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:193:46
+    |
+193 |                     coin_flips@.contains_key(vertices_vec@[jj]@) by {
+    |                                              ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:287:29
+    |
+287 | ...                   assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:288:34
+    |
+288 | ...                   (th_edges@[s].0 as usize) < nv &&
+    |                        ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:329:29
+    |
+329 | ...                   assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:330:34
+    |
+330 | ...                   (th_edges@[s].0 as usize) < nv &&
+    |                        ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:358:17
+    |
+358 |                 assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:359:22
+    |
+359 |                     (th_edges@[s].0 as usize) < nv &&
+    |                      ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:231:21
+    |
+231 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:231:60
+    |
+231 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                                                            ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:378:13
+    |
+378 |             assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |             ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:379:18
+    |
+379 |                 (th_edges@[s].0 as usize) < nv &&
+    |                  ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:400:17
+    |
+400 |                 forall|j2: int| 0 <= j2 < m as int ==> p_vec@[j2]@ == vertices_vec@[j2]@,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:400:56
+    |
+400 |                 forall|j2: int| 0 <= j2 < m as int ==> p_vec@[j2]@ == vertices_vec@[j2]@,
+    |                                                        ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:400:71
+    |
+400 |                 forall|j2: int| 0 <= j2 < m as int ==> p_vec@[j2]@ == vertices_vec@[j2]@,
+    |                                                                       ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:406:21
+    |
+406 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:406:60
+    |
+406 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                                                            ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:503:21
+    |
+503 |                     assert forall|j2: int| 0 <= j2 < nv as int implies
+    |                     ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:504:50
+    |
+504 |                         coin_flips@.contains_key(vertices_vec@[j2]@) &&
+    |                                                  ^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:506:26
+    |
+506 |                          p_vec@[j2]@ == vertices_vec@[j2]@) by {
+    |                          ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:513:21
+    |
+513 |                     assert forall|j2: int|
+    |                     ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:514:49
+    |
+514 |                         (0 <= j2 < nv as int && p_vec@[j2]@ != vertices_vec@[j2]@) implies
+    |                                                 ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:514:64
+    |
+514 |                         (0 <= j2 < nv as int && p_vec@[j2]@ != vertices_vec@[j2]@) implies
+    |                                                                ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:540:17
+    |
+540 |                 assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:541:22
+    |
+541 |                     (th_edges@[s].0 as usize) < nv &&
+    |                      ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:464:17
+    |
+464 | /                 forall|j2: int| 0 <= j2 < nv as int ==>
+465 | |                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+466 | |                     vertex_to_index@[vertices_vec@[j2]@] as usize == j2,
+    | |_______________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:465:51
+    |
+465 |                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+    |                                                   ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:468:21
+    |
+468 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:468:60
+    |
+468 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                                                            ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:615:17
+    |
+615 |                 assert forall|j2: int| 0 <= j2 < q as int implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:617:60
+    |
+617 |                     partition_map@[vertices_vec@[j2]@]@ == p_vec@[j2]@ by {
+    |                                                            ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:632:21
+    |
+632 |                     exists|j2: int| 0 <= j2 < q as int + 1 && vertices_vec@[j2]@ == v_view by {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:632:63
+    |
+632 |                     exists|j2: int| 0 <= j2 < q as int + 1 && vertices_vec@[j2]@ == v_view by {
+    |                                                               ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:653:21
+    |
+653 |                     assert forall|j2: int|
+    |                     ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:654:48
+    |
+654 |                         (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+    |                                                ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:654:63
+    |
+654 |                         (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+    |                                                               ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:667:21
+    |
+667 |                     assert forall|j2: int|
+    |                     ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:668:48
+    |
+668 |                         (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+    |                                                ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:668:63
+    |
+668 |                         (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+    |                                                               ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:583:17
+    |
+583 | /                 forall|j2: int| 0 <= j2 < nv as int ==>
+584 | |                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+585 | |                     vertex_to_index@[vertices_vec@[j2]@] as usize == j2,
+    | |_______________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:584:51
+    |
+584 |                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+    |                                                   ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:587:21
+    |
+587 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:587:60
+    |
+587 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                                                            ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:598:21
+    |
+598 |                     exists|j2: int| 0 <= j2 < q as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:598:59
+    |
+598 |                     exists|j2: int| 0 <= j2 < q as int && vertices_vec@[j2]@ == v_view,
+    |                                                           ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:695:25
+    |
+695 |                 let j = choose|j: int| 0 <= j < nv as int && vertices_vec@[j]@ == v_view;
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:695:62
+    |
+695 |                 let j = choose|j: int| 0 <= j < nv as int && vertices_vec@[j]@ == v_view;
+    |                                                              ^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap62/StarPartitionMtEph.rs:695:25
+    |
+695 |                 let j = choose|j: int| 0 <= j < nv as int && vertices_vec@[j]@ == v_view;
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 5424 verified, 0 errors
+warning: 2 warnings emitted
+
+    Finished `release` profile [optimized] target(s) in 0.05s
+────────────
+ Nextest run ID 31bcdc62-4655-41ea-bc64-4e6201f3660d with nextest profile: default
+    Starting 157 tests across 37 binaries
+        PASS [   1.504s] rust_verify_test::HashMapWithViewPlus hash_map_wvp_loop_loop
+        PASS [   1.598s] rust_verify_test::HashMapWithViewPlus hash_map_wvp_for_iter
+        PASS [   1.625s] rust_verify_test::HashSetWithViewPlus hash_set_wvp_loop_loop
+        PASS [   1.625s] rust_verify_test::MappingStEph mapping_st_eph_loop_loop
+        PASS [   1.642s] rust_verify_test::HashSetWithViewPlus hash_set_wvp_for_iter
+        PASS [   1.917s] rust_verify_test::MappingStEph mapping_st_eph_for_iter
+        PASS [   1.524s] rust_verify_test::ProveAVLTreeSeq avltreeseq_for_borrow_iter
+        PASS [   1.519s] rust_verify_test::ProveAVLTreeSeq avltreeseq_loop_borrow_iter
+        PASS [   1.502s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_for_borrow_iter
+        PASS [   1.543s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_for_borrow_into
+        PASS [   1.532s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_loop_borrow_iter
+        PASS [   1.724s] rust_verify_test::ProveArraySeq arrayseq_filter
+        PASS [   1.417s] rust_verify_test::ProveArraySeq arrayseq_iterate
+        PASS [   1.516s] rust_verify_test::ProveArraySeq arrayseq_for_iter
+        PASS [   1.380s] rust_verify_test::ProveArraySeq arrayseq_map
+        PASS [   1.426s] rust_verify_test::ProveArraySeq arrayseq_iterate_prefixes
+        PASS [   1.453s] rust_verify_test::ProveArraySeq arrayseq_loop_loop
+        PASS [   1.574s] rust_verify_test::ProveArraySeq arrayseq_reduce
+        PASS [   1.378s] rust_verify_test::ProveArraySeq arrayseq_tabulate
+        PASS [   1.505s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_for_iter
+        PASS [   1.646s] rust_verify_test::ProveArraySeq arrayseq_scan
+        PASS [   1.679s] rust_verify_test::ProveArraySeq arrayseq_scan_inclusive
+        PASS [   1.730s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_loop_loop
+        PASS [   1.584s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_for_iter
+        PASS [   1.493s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_loop_loop
+        PASS [   1.542s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_borrow_into
+        PASS [   1.546s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_borrow_iter
+        PASS [   1.507s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_consume
+        PASS [   1.495s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_borrow_into
+        PASS [   1.478s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_borrow_iter
+        PASS [   1.651s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_consume
+        PASS [   1.411s] rust_verify_test::ProveBFSMtEph chap54_bfsmteph_top_down_loop
+        PASS [   1.545s] rust_verify_test::ProveBFSMtEph chap54_bfsmteph_bottom_up_loop
+        PASS [   1.688s] rust_verify_test::ProveArraySeqStPer arrayseqstper_for_iter
+        PASS [   1.656s] rust_verify_test::ProveArraySeqStPer arrayseqstper_loop_loop
+        PASS [   1.476s] rust_verify_test::ProveBFSStEph chap54_bfssteph_bottom_up_loop
+        PASS [   1.460s] rust_verify_test::ProveBFSStEph chap54_bfssteph_top_down_loop
+        PASS [   1.504s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_preorder
+        PASS [   1.580s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_inorder
+        PASS [   1.526s] rust_verify_test::ProveBalBinTreeStEph balbintree_inorder_spec_match
+        PASS [   1.673s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_postorder
+        PASS [   1.402s] rust_verify_test::ProveBalBinTreeStEph balbintree_leaf_iter_exhausted
+        PASS [   1.597s] rust_verify_test::ProveBalBinTreeStEph balbintree_leaf_traversals_empty
+        PASS [   1.525s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_inorder
+        PASS [   1.555s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_preorder
+        PASS [   1.555s] rust_verify_test::ProveBalBinTreeStEph balbintree_postorder_spec_match
+        PASS [   1.438s] rust_verify_test::ProveBalBinTreeStEph balbintree_preorder_spec_match
+        PASS [   1.761s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_postorder
+        PASS [   1.548s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_borrow_into
+        PASS [   1.467s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_borrow_iter
+        PASS [   1.545s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_consume
+        PASS [   1.536s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_borrow_into
+        PASS [   1.475s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_consume
+        PASS [   1.612s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_borrow_iter
+        PASS [   1.573s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_for_borrow_into
+        PASS [   1.586s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_for_borrow_iter
+        PASS [   1.450s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_loop_borrow_iter
+        PASS [   1.491s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_operations
+        PASS [   1.601s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_iter_over_subslice
+        PASS [   1.837s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_borrow_into
+        PASS [   1.513s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_consume
+        PASS [   1.644s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_borrow_iter
+        PASS [   1.576s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_borrow_into
+        PASS [   1.641s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_borrow_iter
+        PASS [   1.601s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_consume
+        PASS [   1.651s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_borrow_into
+        PASS [   1.617s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_borrow_iter
+        PASS [   1.634s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_consume
+        PASS [   1.483s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_consume
+        PASS [   1.764s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_borrow_into
+        PASS [   1.666s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_borrow_iter
+        PASS [   1.409s] rust_verify_test::ProveKleeneStPer kleene_alphabet
+        PASS [   1.455s] rust_verify_test::ProveKleeneStPer kleene_mem_plus
+        PASS [   1.574s] rust_verify_test::ProveKleeneStPer kleene_mem_star
+        PASS [   1.487s] rust_verify_test::ProveLinkedListStEph linkedliststeph_for_iter
+        PASS [   1.692s] rust_verify_test::ProveLinkedListStEph linkedliststeph_loop_loop
+        PASS [   1.745s] rust_verify_test::ProveLinkedListStPer linkedliststper_for_iter
+        PASS [   1.692s] rust_verify_test::ProveLinkedListStPer linkedliststper_loop_loop
+        PASS [   1.699s] rust_verify_test::ProveMathSeq mathseq_for_borrow_into
+        PASS [   1.626s] rust_verify_test::ProveMathSeq mathseq_for_borrow_iter
+        PASS [   1.586s] rust_verify_test::ProveMathSeq mathseq_for_consume
+        PASS [   1.518s] rust_verify_test::ProveMathSeq mathseq_loop_borrow_into
+        PASS [   1.560s] rust_verify_test::ProveMathSeq mathseq_loop_borrow_iter
+        PASS [   1.486s] rust_verify_test::ProveMathSeq mathseq_loop_consume
+        PASS [   1.613s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_for_borrow_iter
+        PASS [   1.721s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_loop_borrow_into
+        PASS [   1.560s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_loop_borrow_iter
+        PASS [   1.974s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_for_borrow_into
+        PASS [   1.639s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_for_borrow_into
+        PASS [   1.679s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_for_borrow_iter
+        PASS [   1.782s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_loop_borrow_into
+        PASS [   1.698s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_loop_borrow_iter
+        PASS [   1.623s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_for_borrow_iter
+        PASS [   1.678s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_for_borrow_into
+        PASS [   1.628s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_loop_borrow_into
+        PASS [   1.634s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_loop_borrow_iter
+        PASS [   1.483s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_borrow_into
+        PASS [   1.548s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_consume
+        PASS [   1.654s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_borrow_iter
+        PASS [   1.511s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_borrow_iter
+        PASS [   1.825s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_borrow_into
+        PASS [   1.570s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_consume
+        PASS [   1.599s] rust_verify_test::ProveSetMtEph set_mt_eph_for_borrow_into
+        PASS [   1.492s] rust_verify_test::ProveSetMtEph set_mt_eph_loop_borrow_iter
+        PASS [   1.657s] rust_verify_test::ProveSetMtEph set_mt_eph_for_borrow_iter
+        PASS [   1.511s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_borrow_iter
+        PASS [   1.662s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_borrow_into
+        PASS [   1.575s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_consume
+        PASS [   1.476s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_borrow_into
+        PASS [   1.427s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_borrow_iter
+        PASS [   1.511s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_consume
+        PASS [   1.455s] rust_verify_test::Provedeep_view_standard deep_view_standard_simple
+        PASS [   1.545s] rust_verify_test::Proveiterators_standard iterators_standard_for_borrow_into
+        PASS [   1.591s] rust_verify_test::Proveiterators_standard iterators_standard_for_borrow_iter
+        PASS [   1.441s] rust_verify_test::Proveiterators_standard iterators_standard_for_consume
+        PASS [   1.448s] rust_verify_test::Proveiterators_standard iterators_standard_loop_borrow_into
+        PASS [   1.419s] rust_verify_test::Proveiterators_standard iterators_standard_loop_borrow_iter
+        PASS [   1.489s] rust_verify_test::Proveiterators_standard iterators_standard_loop_consume
+        PASS [   1.557s] rust_verify_test::Provemod_standard mod_standard_for_borrow_into
+        PASS [   1.540s] rust_verify_test::Provemod_standard mod_standard_for_borrow_iter
+        PASS [   1.391s] rust_verify_test::Provemod_standard mod_standard_loop_borrow_into
+        PASS [   1.521s] rust_verify_test::Provemod_standard mod_standard_for_consume
+        PASS [   1.483s] rust_verify_test::Provemod_standard mod_standard_loop_borrow_iter
+        PASS [   1.551s] rust_verify_test::Provemod_standard mod_standard_loop_consume
+        PASS [   1.688s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_borrow_into
+        PASS [   1.574s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_borrow_iter
+        PASS [   1.474s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_borrow_into
+        PASS [   1.527s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_consume
+        PASS [   1.414s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_borrow_iter
+        PASS [   1.479s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_consume
+        PASS [   1.541s] rust_verify_test::Proveusing_closures_standard closures_inline_requires_ensures
+        PASS [   1.624s] rust_verify_test::Proveusing_closures_standard closures_ghost_spec_fn
+        PASS [   1.431s] rust_verify_test::Proveusing_closures_standard closures_map_apply
+        PASS [   1.496s] rust_verify_test::Proveusing_closures_standard closures_let_bind_ensures
+        PASS [   1.501s] rust_verify_test::Proveview_standard view_standard_collection
+        PASS [   1.473s] rust_verify_test::Proveview_standard view_standard_for_borrow_iter
+        PASS [   1.925s] rust_verify_test::Proveview_standard view_standard_for_borrow_into
+        PASS [   1.522s] rust_verify_test::Proveview_standard view_standard_for_consume
+        PASS [   1.412s] rust_verify_test::Proveview_standard view_standard_loop_borrow_iter
+        PASS [   1.522s] rust_verify_test::Proveview_standard view_standard_loop_borrow_into
+        PASS [   1.531s] rust_verify_test::Proveview_standard view_standard_loop_consume
+        PASS [   1.409s] rust_verify_test::Proveview_standard view_standard_simple
+        PASS [   1.481s] rust_verify_test::Provewrapping_iterators_standard wrapping_for_borrow_into
+        PASS [   1.483s] rust_verify_test::Provewrapping_iterators_standard wrapping_for_borrow_iter
+        PASS [   1.396s] rust_verify_test::Provewrapping_iterators_standard wrapping_loop_borrow_into
+        PASS [   1.498s] rust_verify_test::Provewrapping_iterators_standard wrapping_loop_borrow_iter
+        PASS [   1.974s] rust_verify_test::RelationStEph relation_st_eph_for_iter
+        PASS [   1.596s] rust_verify_test::RelationStEph relation_st_eph_loop_loop
+        PASS [   1.601s] rust_verify_test::SetMtEph set_mt_eph_for_iter
+        PASS [   1.562s] rust_verify_test::SetMtEph set_mt_eph_from_vec
+        PASS [   1.486s] rust_verify_test::SetMtEph set_mt_eph_loop_loop
+        PASS [   1.797s] rust_verify_test::SetStEph set_st_eph_for_iter
+        PASS [   1.452s] rust_verify_test::SetStEph set_st_eph_from_vec
+        PASS [   1.514s] rust_verify_test::SetStEph set_st_eph_loop_loop
+        PASS [   1.407s] rust_verify_test::prove_MathSeq_iters mathseq_iter_nested
+        PASS [   1.532s] rust_verify_test::prove_MathSeq_iters mathseq_iter_consuming
+        PASS [   1.354s] rust_verify_test::prove_MathSeq_iters mathseq_iter_range
+────────────
+     Summary [  41.267s] 157 tests run: 157 passed, 0 skipped
+Elapsed: 196s

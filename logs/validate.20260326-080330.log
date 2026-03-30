@@ -1,0 +1,169 @@
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStEph.rs:55:29
+   |
+55 |         fn empty() -> (out: Self)
+   |                             ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+55 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStEph.rs:59:100
+   |
+59 |         fn from_vertices_and_edges(v: AVLTreeSetStEph<V>, e: AVLTreeSetStEph<Pair<V, V>>) -> (out: Self)
+   |                                                                                                    ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+59 |         fn from_vertices_and_edges(v: AVLTreeSetStEph<V>, e: AVLTreeSetStEph<Pair<V, V>>) -> (out: Self where Self: std::marker::Sized)
+   |                                                                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStPer.rs:56:29
+   |
+56 |         fn empty() -> (out: Self)
+   |                             ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+56 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStPer.rs:59:100
+   |
+59 |         fn from_vertices_and_edges(v: AVLTreeSetStPer<V>, e: AVLTreeSetStPer<Pair<V, V>>) -> (out: Self)
+   |                                                                                                    ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+59 |         fn from_vertices_and_edges(v: AVLTreeSetStPer<V>, e: AVLTreeSetStPer<Pair<V, V>>) -> (out: Self where Self: std::marker::Sized)
+   |                                                                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStPer.rs:90:52
+   |
+90 |         fn insert_vertex(&self, v: V) -> (updated: Self)
+   |                                                    ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+90 |         fn insert_vertex(&self, v: V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStPer.rs:94:53
+   |
+94 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
+   |                                                     ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+94 |         fn delete_vertex(&self, v: &V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                          ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStPer.rs:98:56
+   |
+98 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
+   |                                                        ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+98 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                             ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/EdgeSetGraphStPer.rs:102:58
+    |
+102 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
+    |                                                          ^^^^ doesn't have a size known at compile-time
+    |
+    = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+    |
+102 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                               ++++++++++++++++++++++++++++++
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap41/AVLTreeSetStEph.rs:828:20
+    |
+828 |             n_self.cmp(&n_other)
+    |                    ^^^ multiple `cmp` found
+    |
+note: candidate #1 is defined in an impl of the trait `vstdplus::total_order::total_order::TotalOrder` for the type `usize`
+   --> src/vstdplus/total_order.rs:239:5
+    |
+239 |     fn cmp(&self, other: &Self) -> (c: Ordering) {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: candidate #2 is defined in an impl of the trait `std::cmp::Ord` for the type `usize`
+help: disambiguate the method for candidate #1
+    |
+828 -             n_self.cmp(&n_other)
+828 +             vstdplus::total_order::total_order::TotalOrder::cmp(&n_self, &n_other)
+    |
+help: disambiguate the method for candidate #2
+    |
+828 -             n_self.cmp(&n_other)
+828 +             std::cmp::Ord::cmp(&n_self, &n_other)
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap41/AVLTreeSetStPer.rs:720:20
+    |
+720 |             n_self.cmp(&n_other)
+    |                    ^^^ multiple `cmp` found
+    |
+note: candidate #1 is defined in an impl of the trait `vstdplus::total_order::total_order::TotalOrder` for the type `usize`
+   --> src/vstdplus/total_order.rs:239:5
+    |
+239 |     fn cmp(&self, other: &Self) -> (c: Ordering) {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: candidate #2 is defined in an impl of the trait `std::cmp::Ord` for the type `usize`
+help: disambiguate the method for candidate #1
+    |
+720 -             n_self.cmp(&n_other)
+720 +             vstdplus::total_order::total_order::TotalOrder::cmp(&n_self, &n_other)
+    |
+help: disambiguate the method for candidate #2
+    |
+720 -             n_self.cmp(&n_other)
+720 +             std::cmp::Ord::cmp(&n_self, &n_other)
+    |
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStEph.rs:56:13
+   |
+56 |             ensures out.spec_edgesetgraphsteph_wf();
+   |             ^^^^^^^ doesn't have a size known at compile-time
+   |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+  --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+   |
+55 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStEph.rs:55:24
+   |
+55 |         fn empty() -> (out: Self)
+   |                        ^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+55 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation 

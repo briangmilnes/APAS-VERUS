@@ -1,0 +1,38 @@
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:266:28
+    |
+266 |                     assert(wt_v.is_finite_spec());
+    |                            ^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:308:24
+    |
+308 |                 assert(labeled@.contains(eseq[j]@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:281:9
+    |
+281 |         while i < edges_vec.len()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:235:24
+    |
+235 |                 assert(uf@.parent.contains_key(vseq[j]@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+wt_v.is_finite_spec()
+|   wt_v.to_bits_abs_spec() < 9218868437227405312 
++---
+
+verification results:: 2395 verified, 3 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 128s
+Sampled Memory Usage: peak rust_verify RSS: 2968MB, peak z3 RSS: 13590MB, min free: 6888MB
+Sampled CPU Usage: rust_verify: 47s, z3 children: 221s

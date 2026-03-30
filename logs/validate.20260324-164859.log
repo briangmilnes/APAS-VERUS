@@ -1,0 +1,46 @@
+error[E0046]: not all trait items implemented, missing: `spec_avltreesetmtper_wf`
+   --> src/Chap41/AVLTreeSetMtPer.rs:170:5
+    |
+ 90 |         spec fn spec_avltreesetmtper_wf(&self) -> bool;
+    |              ------------------------------------------ `spec_avltreesetmtper_wf` from trait
+...
+170 |     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ missing `spec_avltreesetmtper_wf` in implementation
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSetSplayMtEph.rs:329:30
+    |
+329 |             from_sorted_iter(combined)
+    |             ---------------- ^^^^^^^^ expected `Vec<T>`, found `BTreeSet<T>`
+    |             |
+    |             arguments to this function are incorrect
+    |
+    = note: expected struct `std::vec::Vec<T>`
+               found struct `std::collections::BTreeSet<T>`
+note: function defined here
+   --> src/Chap37/BSTSetSplayMtEph.rs:161:8
+    |
+161 |     fn from_sorted_iter<T: StTInMtT + Ord + TotalOrder>(values: Vec<T>) -> (set: BSTSetSplayMtEph<T>)
+    |        ^^^^^^^^^^^^^^^^                                 --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSetSplayMtEph.rs:344:30
+    |
+344 |             from_sorted_iter(combined)
+    |             ---------------- ^^^^^^^^ expected `Vec<T>`, found `BTreeSet<T>`
+    |             |
+    |             arguments to this function are incorrect
+    |
+    = note: expected struct `std::vec::Vec<T>`
+               found struct `std::collections::BTreeSet<T>`
+note: function defined here
+   --> src/Chap37/BSTSetSplayMtEph.rs:161:8
+    |
+161 |     fn from_sorted_iter<T: StTInMtT + Ord + TotalOrder>(values: Vec<T>) -> (set: BSTSetSplayMtEph<T>)
+    |        ^^^^^^^^^^^^^^^^                                 --------------
+
+error: aborting due to 3 previous errors
+
+Some errors have detailed explanations: E0046, E0308.
+For more information about an error, try `rustc --explain E0046`.
+Elapsed: 30s

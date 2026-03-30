@@ -1,0 +1,11 @@
+error: trait method declaration body must end with call to no_method_body()
+  --> src/Chap44/DocumentIndex.rs:69:9
+   |
+69 |         fn make_index(docs: &DocumentCollection) -> (di: Self)
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 537MB, peak z3 RSS: 0MB, min free: 21403MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 0s

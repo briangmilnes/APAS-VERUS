@@ -1,0 +1,70 @@
+error[E0599]: no method named `view` found for struct `vstd::seq::Seq<A>` in the current scope
+  --> src/Chap65/KruskalStEph.rs:54:39
+   |
+54 |             pre_sort.len() == edge_seq@.len(),
+   |                                       ^ method not found in `vstd::seq::Seq<Types::Types::LabEdge<V, vstdplus::float::float::WrappedF64>>`
+
+error[E0599]: no method named `view` found for struct `vstd::seq::Seq<A>` in the current scope
+  --> src/Chap65/KruskalStEph.rs:55:91
+   |
+55 |             forall|k: int| 0 <= k < pre_sort.len() ==> #[trigger] pre_sort[k]@ == edge_seq@[k]@,
+   |                                                                                           ^ method not found in `vstd::seq::Seq<Types::Types::LabEdge<V, vstdplus::float::float::WrappedF64>>`
+
+error[E0599]: no method named `view` found for struct `vstd::seq::Seq<A>` in the current scope
+  --> src/Chap65/KruskalStEph.rs:56:34
+   |
+56 |             mapped_es == edge_seq@.map(|_i: int, e: LabEdge<V, WrappedF64>| e@),
+   |                                  ^ method not found in `vstd::seq::Seq<Types::Types::LabEdge<V, vstdplus::float::float::WrappedF64>>`
+
+error[E0599]: no method named `view` found for struct `vstd::seq::Seq<A>` in the current scope
+  --> src/Chap65/KruskalStEph.rs:67:28
+   |
+67 |         assert(j < edge_seq@.len());
+   |                            ^ method not found in `vstd::seq::Seq<Types::Types::LabEdge<V, vstdplus::float::float::WrappedF64>>`
+
+error[E0599]: no method named `view` found for struct `vstd::seq::Seq<A>` in the current scope
+  --> src/Chap65/KruskalStEph.rs:68:40
+   |
+68 |         assert(pre_sort[j]@ == edge_seq@[j]@);
+   |                                        ^ method not found in `vstd::seq::Seq<Types::Types::LabEdge<V, vstdplus::float::float::WrappedF64>>`
+
+error[E0599]: no method named `view` found for struct `vstd::seq::Seq<A>` in the current scope
+  --> src/Chap65/KruskalStEph.rs:69:40
+   |
+69 |         assert(edges_vec_i@ == edge_seq@[j]@);
+   |                                        ^ method not found in `vstd::seq::Seq<Types::Types::LabEdge<V, vstdplus::float::float::WrappedF64>>`
+
+error[E0599]: no method named `view` found for struct `vstd::seq::Seq<A>` in the current scope
+  --> src/Chap65/KruskalStEph.rs:70:40
+   |
+70 |         assert(mapped_es[j] == edge_seq@[j]@);
+   |                                        ^ method not found in `vstd::seq::Seq<Types::Types::LabEdge<V, vstdplus::float::float::WrappedF64>>`
+
+error[E0599]: no method named `view` found for struct `vstd::seq::Seq<A>` in the current scope
+  --> src/Chap65/KruskalStEph.rs:71:43
+   |
+71 |         assert(mapped_es.contains(edge_seq@[j]@));
+   |                                           ^ method not found in `vstd::seq::Seq<Types::Types::LabEdge<V, vstdplus::float::float::WrappedF64>>`
+
+error[E0599]: no method named `view` found for struct `vstd::seq::Seq<A>` in the current scope
+  --> src/Chap65/KruskalStEph.rs:72:46
+   |
+72 |         assert(labeled_view.contains(edge_seq@[j]@));
+   |                                              ^ method not found in `vstd::seq::Seq<Types::Types::LabEdge<V, vstdplus::float::float::WrappedF64>>`
+
+error[E0599]: no method named `view` found for struct `vstd::seq::Seq<A>` in the current scope
+  --> src/Chap65/KruskalStEph.rs:73:41
+   |
+73 |         assert(graph_A.contains(edge_seq@[j]@));
+   |                                         ^ method not found in `vstd::seq::Seq<Types::Types::LabEdge<V, vstdplus::float::float::WrappedF64>>`
+
+error[E0599]: no method named `view` found for struct `vstd::seq::Seq<A>` in the current scope
+  --> src/Chap65/KruskalStEph.rs:74:42
+   |
+74 |         assert(graph_A.contains((edge_seq@[j]@.0, edge_seq@[j]@.1, edge_seq@[j]@.2)));
+   |                                          ^ method not found in `vstd::seq::Seq<Types::Types::LabEdge<V, vstdplus::float::float::WrappedF64>>`
+
+error[E0599]: no method named `view` found for struct `vstd::seq::Seq<A>` in the current scope
+  --> src/Chap65/KruskalStEph.rs:74:59
+   |
+74 |         assert(graph_A.contains((edge_seq@[j]@.0, edge_seq@[j]@.1, edge_se

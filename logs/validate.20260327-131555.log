@@ -1,0 +1,30 @@
+error: postcondition not satisfied
+   --> src/Chap64/SpanTreeMtEph.rs:65:17
+    |
+ 65 |         ensures result.spec_setsteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+152 |         star_contract_mt(graph, seed, &base, &expand)
+    |         --------------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap05/SetStEph.rs:306:16
+    |
+306 |                self@.finite()
+    |                ^^^^^^^^^^^^^^
+
+note: 
+
+result.spec_setsteph_wf()
+|   result.view().finite() ✘
+|       function is uninterpreted
+|   valid_key_type() ✔
+|   obeys_feq_full() ✔
++---
+
+verification results:: 1244 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 1745MB, peak z3 RSS: 269MB, min free: 19968MB
+Sampled CPU Usage: rust_verify: 24s, z3 children: 17s

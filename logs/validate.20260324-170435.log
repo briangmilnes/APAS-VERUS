@@ -1,0 +1,21 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap37/BSTSplayMtEph.rs:41:14
+   |
+41 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: found a cyclic self-reference in a definition, which may result in nontermination
+  --> src/Chap37/BSTSplayMtEph.rs:41:14
+   |
+41 |     #[derive(Clone)]
+   |              ^^^^^
+   |              |
+   |              may be part of cycle (node 1 of 3 in cycle): function definition, whose body may have dependencies
+   |              may be part of cycle (node 3 of 3 in cycle): implementation of trait for a type
+...
+46 |         pub right: Option<Box<Node<T>>>,
+   |         ------------------------------- may be part of cycle (node 2 of 3 in cycle): application of a function to some type arguments, which may depend on other trait implementations to satisfy trait bounds
+
+error: aborting due to 1 previous error; 1 warning emitted
+
+Elapsed: 26s

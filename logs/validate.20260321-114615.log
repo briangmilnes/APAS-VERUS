@@ -1,0 +1,51 @@
+error: recursive function must have a decreases clause
+   --> src/Chap38/BSTParaMtEph.rs:631:9
+    |
+631 |         fn clone(&self) -> (cloned: Self)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: to disable this check, use #[verifier::exec_allows_no_decreases_clause] on the function
+
+error: recursive function must have a decreases clause
+    --> src/Chap38/BSTParaStEph.rs:1582:9
+     |
+1582 |         fn clone(&self) -> (cloned: Self)
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+     = help: to disable this check, use #[verifier::exec_allows_no_decreases_clause] on the function
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:1346:34
+     |
+ 416 |             requires self.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+     |                      -------------------------------- failed precondition
+...
+1346 |                 let other_find = other.find(&pair.0);
+     |                                  ^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:416:22
+    |
+416 |             requires self.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+other.spec_orderedtablestper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_view_eq() ✔
+obeys_feq_full() ✔
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStPer.rs:1328:46
+     |
+1328 |                         &&& result_v1[j]@ == self@[self.base_set.elements@[src].0]
+     |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+error: aborting due to 3 previous errors
+
+Elapsed: 84s

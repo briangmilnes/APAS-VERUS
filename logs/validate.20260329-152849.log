@@ -1,0 +1,12 @@
+error: invariant not satisfied before loop
+   --> src/Chap44/DocumentIndex.rs:192:21
+    |
+192 |                     obeys_feq_full::<Pair<Word, DocumentSet>>(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 2187 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 1808MB, peak z3 RSS: 398MB, min free: 19153MB
+Sampled CPU Usage: rust_verify: 27s, z3 children: 35s

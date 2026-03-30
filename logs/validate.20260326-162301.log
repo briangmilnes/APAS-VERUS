@@ -1,0 +1,51 @@
+error: precondition not satisfied
+   --> src/Chap65/KruskalStEph.rs:283:21
+    |
+ 47 | /             forall|u2: <V as View>::V, w2: <V as View>::V, wt2: f64|
+ 48 | |                 #[trigger] arc_set.contains((u2, w2, wt2)) ==> wt2.is_finite_spec(),
+    | |___________________________________________________________________________________- failed precondition
+...
+283 | /                     lemma_edge_weight_finite::<V>(
+284 | |                         graph@.A, eseq[idx]@.0, eseq[idx]@.1, eseq[idx]@.2,
+285 | |                     );
+    | |_____________________^
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:300:9
+    |
+300 |         while i < edges_vec.len()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:253:48
+    |
+253 |                 assert(j < vit@.0) by { assert(vseq.len() <= vit@.0); };
+    |                                                ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: invariant not satisfied before loop
+   --> src/Chap65/KruskalStEph.rs:309:17
+    |
+309 |                 pre_sort.len() == eseq.len(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+  --> src/Chap65/KruskalStEph.rs:48:64
+   |
+48 |                 #[trigger] arc_set.contains((u2, w2, wt2)) ==> wt2.is_finite_spec(),
+   |                                                                ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.contains((tmp%, tmp%, tmp%)) ✔
+forall |u2, w2, wt2|
+    tmp%.contains((u2, w2, wt2)) ==>
+        wt2.is_finite_spec() ✘
+        |   wt2.to_bits_abs_spec() < 9218868437227405312 
+        +---
+
+verification results:: 2396 verified, 3 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 127s
+Sampled Memory Usage: peak rust_verify RSS: 2744MB, peak z3 RSS: 13591MB, min free: 6801MB
+Sampled CPU Usage: rust_verify: 47s, z3 children: 114s

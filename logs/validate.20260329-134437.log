@@ -1,0 +1,34 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap52/AdjTableGraphStEph.rs:616:25
+    |
+616 |                         assert forall|j: int| #![trigger seq@[j]] 0 <= j < (i + 1) as int implies
+    |                         ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap52/AdjTableGraphStPer.rs:574:25
+    |
+574 |                         assert forall|j: int| #![trigger seq@[j]] 0 <= j < (i + 1) as int implies
+    |                         ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphMtPer.rs:429:28
+    |
+429 |             proof { assert(v_clone@ == v_view); }
+    |                            ^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+v_clone.view() == v_view 
+
+verification results:: 2818 verified, 1 errors
+error: aborting due to 1 previous error; 2 warnings emitted
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 5419MB, peak z3 RSS: 4700MB, min free: 11551MB
+Sampled CPU Usage: rust_verify: 94s, z3 children: 94s

@@ -1,0 +1,65 @@
+error: expected an expression
+   --> src/Chap66/BoruvkaMtEph.rs:714:24
+    |
+714 |             decreases *,
+    |                        ^
+
+error[E0425]: cannot find type `LabeledEdge` in this scope
+   --> src/Chap66/BoruvkaMtEph.rs:999:96
+    |
+999 |     impl<V: Clone + Copy + PartialEq + Eq + PartialOrd + Ord + std::hash::Hash> PartialOrd for LabeledEdge<V> {
+    |                                                                                                ^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this struct
+    |
+  9 +     use crate::Chap66::BoruvkaStEph::BoruvkaStEph::LabeledEdge;
+    |
+
+error[E0425]: cannot find type `LabeledEdge` in this scope
+    --> src/Chap66/BoruvkaMtEph.rs:1004:89
+     |
+1004 |     impl<V: Clone + Copy + PartialEq + Eq + PartialOrd + Ord + std::hash::Hash> Ord for LabeledEdge<V> {
+     |                                                                                         ^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this struct
+     |
+   9 +     use crate::Chap66::BoruvkaStEph::BoruvkaStEph::LabeledEdge;
+     |
+
+error[E0425]: cannot find type `LabeledEdge` in this scope
+    --> src/Chap66/BoruvkaMtEph.rs:1012:50
+     |
+1012 |     impl<V: std::hash::Hash> std::hash::Hash for LabeledEdge<V> {
+     |                                                  ^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this struct
+     |
+   9 +     use crate::Chap66::BoruvkaStEph::BoruvkaStEph::LabeledEdge;
+     |
+
+error[E0425]: cannot find type `LabeledEdge` in this scope
+    --> src/Chap66/BoruvkaMtEph.rs:1020:50
+     |
+1020 |     impl<V: std::fmt::Debug> std::fmt::Debug for LabeledEdge<V> {
+     |                                                  ^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this struct
+     |
+   9 +     use crate::Chap66::BoruvkaStEph::BoruvkaStEph::LabeledEdge;
+     |
+
+error[E0425]: cannot find type `LabeledEdge` in this scope
+    --> src/Chap66/BoruvkaMtEph.rs:1025:54
+     |
+1025 |     impl<V: std::fmt::Display> std::fmt::Display for LabeledEdge<V> {
+     |                                                      ^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this struct
+     |
+   9 +     use crate::Chap66::BoruvkaStEph::BoruvkaStEph::LabeledEdge;
+     |
+
+error: aborting due to 6 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 9s

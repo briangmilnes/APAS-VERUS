@@ -1,0 +1,43 @@
+error: assertion failed
+   --> src/Chap66/BoruvkaStEph.rs:262:86
+    |
+262 |                       assert forall|k: V| #[trigger] bridges@.contains_key(k@) implies {
+    |  ______________________________________________________________________________________^
+263 | |                         let (neighbor, weight, lbl) = bridges@[k@];
+264 | |                         spec_valid_bridge(k, neighbor, weight, lbl, edges@)
+265 | |                     } by {
+    | |_____________________^ assertion failed
+
+error: assertion failed
+   --> src/Chap66/BoruvkaStEph.rs:270:36
+    |
+270 | ...                   assert(bridges_before_u.contains_key(k@));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap66/BoruvkaStEph.rs:288:86
+    |
+288 |                       assert forall|k: V| #[trigger] bridges@.contains_key(k@) implies {
+    |  ______________________________________________________________________________________^
+289 | |                         let (neighbor, weight, lbl) = bridges@[k@];
+290 | |                         spec_valid_bridge(k, neighbor, weight, lbl, edges@)
+291 | |                     } by {
+    | |_____________________^ assertion failed
+
+error: assertion failed
+   --> src/Chap66/BoruvkaStEph.rs:296:36
+    |
+296 | ...                   assert(bridges_before_v.contains_key(k@));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+bridges_before_u.dom().contains(k.view()) 
+    function is uninterpreted
+
+verification results:: 4828 verified, 1 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 85s

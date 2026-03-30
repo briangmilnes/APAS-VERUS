@@ -1,0 +1,38 @@
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:270:28
+    |
+270 |                     assert(eseq[idx]@.2.is_finite_spec());
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/KruskalStEph.rs:285:9
+    |
+285 |         while i < edges_vec.len()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap65/KruskalStEph.rs:239:48
+    |
+239 |                 assert(j < vit@.0) by { assert(vseq.len() <= vit@.0); };
+    |                                                ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: invariant not satisfied before loop
+   --> src/Chap65/KruskalStEph.rs:294:17
+    |
+294 |                 pre_sort.len() == eseq.len(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+eseq.index(idx).view().2.is_finite_spec()
+|   eseq.index(idx).view().2.to_bits_abs_spec() < 9218868437227405312 
++---
+
+verification results:: 2395 verified, 3 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 134s
+Sampled Memory Usage: peak rust_verify RSS: 5480MB, peak z3 RSS: 17847MB, min free: 443MB
+Sampled CPU Usage: rust_verify: 109s, z3 children: 237s

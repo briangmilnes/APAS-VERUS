@@ -1,0 +1,31 @@
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:788:17
+     |
+ 788 |                 rank <= self@.dom().len(),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+2985 |             count
+     |             ----- at the end of the function body
+
+error: possible arithmetic underflow/overflow
+    --> src/Chap43/OrderedTableStPer.rs:2933:33
+     |
+2933 |                         count = count + 1;
+     |                                 ^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:788:17
+    |
+788 |                 rank <= self@.dom().len(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).view().dom().finite() ✔
+%return <= old(self).view().dom().len() ✘
+%return == old(self).view().dom().filter((|x| (exists |t| ))).len() ✔
+
+verification results:: 4369 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 59s

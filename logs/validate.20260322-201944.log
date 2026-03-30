@@ -1,0 +1,59 @@
+error[E0507]: cannot move out of an `Arc`
+  --> src/Chap43/OrderedSetStPer.rs:89:61
+   |
+89 |                 lemma_inorder_values_maps_to_views_per::<T>(node.left);
+   |                                                             ^^^^^^^^^ move occurs because value has type `std::option::Option<std::sync::Arc<Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::Node<T>>>`, which does not implement the `Copy` trait
+   |
+help: consider cloning the value if the performance cost is acceptable
+   |
+89 |                 lemma_inorder_values_maps_to_views_per::<T>(node.left.clone());
+   |                                                                      ++++++++
+
+error[E0507]: cannot move out of an `Arc`
+  --> src/Chap43/OrderedSetStPer.rs:90:61
+   |
+90 |                 lemma_inorder_values_maps_to_views_per::<T>(node.right);
+   |                                                             ^^^^^^^^^^ move occurs because value has type `std::option::Option<std::sync::Arc<Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::Node<T>>>`, which does not implement the `Copy` trait
+   |
+help: consider cloning the value if the performance cost is acceptable
+   |
+90 |                 lemma_inorder_values_maps_to_views_per::<T>(node.right.clone());
+   |                                                                       ++++++++
+
+error[E0507]: cannot move out of an `Arc`
+  --> src/Chap43/OrderedSetStPer.rs:91:50
+   |
+91 |                 let lv = spec_inorder_values_per(node.left);
+   |                                                  ^^^^^^^^^ move occurs because value has type `std::option::Option<std::sync::Arc<Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::Node<T>>>`, which does not implement the `Copy` trait
+   |
+help: consider cloning the value if the performance cost is acceptable
+   |
+91 |                 let lv = spec_inorder_values_per(node.left.clone());
+   |                                                           ++++++++
+
+error[E0507]: cannot move out of an `Arc`
+  --> src/Chap43/OrderedSetStPer.rs:92:56
+   |
+92 |                 let rv_right = spec_inorder_values_per(node.right);
+   |                                                        ^^^^^^^^^^ move occurs because value has type `std::option::Option<std::sync::Arc<Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::Node<T>>>`, which does not implement the `Copy` trait
+   |
+help: consider cloning the value if the performance cost is acceptable
+   |
+92 |                 let rv_right = spec_inorder_values_per(node.right.clone());
+   |                                                                  ++++++++
+
+error[E0507]: cannot move out of an `Arc`
+  --> src/Chap43/OrderedSetStPer.rs:93:40
+   |
+93 |                 let mid: Seq<T> = seq![node.value];
+   |                                        ^^^^^^^^^^ move occurs because value has type `T`, which does not implement the `Copy` trait
+   |
+help: consider cloning the value if the performance cost is acceptable
+   |
+93 |                 let mid: Seq<T> = seq![node.value.clone()];
+   |                                                  ++++++++
+
+error: aborting due to 5 previous errors
+
+For more information about this error, try `rustc --explain E0507`.
+Elapsed: 23s

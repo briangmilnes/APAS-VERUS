@@ -1,0 +1,615 @@
+error[E0277]: the trait bound `<I as std::iter::IntoIterator>::IntoIter: vstd::pervasive::ForLoopGhostIteratorNew` is not satisfied
+   --> src/Chap37/BSTSetSplayMtEph.rs:167:9
+    |
+167 | /         for value in values {
+168 | |             let _ = tree.insert(value);
+169 | |         }
+    | |_________^ the trait `vstd::pervasive::ForLoopGhostIteratorNew` is not implemented for `<I as std::iter::IntoIterator>::IntoIter`
+    |
+help: consider further restricting the associated type
+    |
+163 |         I: IntoIterator<Item = T>, <I as std::iter::IntoIterator>::IntoIter: vstd::pervasive::ForLoopGhostIteratorNew
+    |                                    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `<I as std::iter::IntoIterator>::IntoIter: vstd::pervasive::ForLoopGhostIteratorNew` is not satisfied
+   --> src/Chap37/BSTSetSplayMtEph.rs:167:22
+    |
+167 |         for value in values {
+    |                      ^^^^^^ the trait `vstd::pervasive::ForLoopGhostIteratorNew` is not implemented for `<I as std::iter::IntoIterator>::IntoIter`
+    |
+help: consider further restricting the associated type
+    |
+163 |         I: IntoIterator<Item = T>, <I as std::iter::IntoIterator>::IntoIter: vstd::pervasive::ForLoopGhostIteratorNew
+    |                                    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: can't compare `&T` with `T`
+   --> src/Chap37/BSTSetSplayMtEph.rs:219:31
+    |
+219 |                 .filter(|x| x != target)
+    |                               ^^ no implementation for `&T == T`
+    |
+    = help: the trait `std::cmp::PartialEq<T>` is not implemented for `&T`
+    = note: required for `&&T` to implement `std::cmp::PartialEq<&T>`
+help: consider dereferencing here
+    |
+219 |                 .filter(|x| *x != target)
+    |                             +
+help: consider introducing a `where` clause, but there might be an alternative better way to express this requirement
+    |
+180 |     impl<T: StTInMtT + Ord + TotalOrder> BSTSetSplayMtEphTrait<T> for BSTSetSplayMtEph<T> where &T: std::cmp::PartialEq<T> {
+    |                                                                                           ++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `spec_avltreesetmtper_wf` found for reference `&Self` in the current scope
+  --> src/Chap41/AVLTreeSetMtPer.rs:92:27
+   |
+92 |             requires self.spec_avltreesetmtper_wf(),
+   |                           ^^^^^^^^^^^^^^^^^^^^^^^ method not found in `&Self`
+
+error[E0599]: the method `view` exists for reference `&Self`, but its trait bounds were not satisfied
+  --> src/Chap41/AVLTreeSetMtPer.rs:93:34
+   |
+93 |             ensures count == self@.len(), self@.finite();
+   |                                  ^ method cannot be called on `&Self` due to unsatisfied trait bounds
+   |
+   = note: the following trait bounds were not satisfied:
+           `Self: vstd::string::View`
+           which is required by `&Self: vstd::string::View`
+   = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+   |
+88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+   |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+   |                                                                        ++++++++++++++++++++
+
+error[E0599]: the method `view` exists for reference `&Self`, but its trait bounds were not satisfied
+  --> src/Chap41/AVLTreeSetMtPer.rs:93:47
+   |
+93 |             ensures count == self@.len(), self@.finite();
+   |                                               ^ method cannot be called on `&Self` due to unsatisfied trait bounds
+   |
+   = note: the following trait bounds were not satisfied:
+           `Self: vstd::string::View`
+           which is required by `&Self: vstd::string::View`
+   = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+   |
+88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+   |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+   |                                                                        ++++++++++++++++++++
+
+error[E0599]: no method named `spec_avltreesetmtper_wf` found for reference `&Self` in the current scope
+  --> src/Chap41/AVLTreeSetMtPer.rs:97:27
+   |
+97 |             requires self.spec_avltreesetmtper_wf(),
+   |                           ^^^^^^^^^^^^^^^^^^^^^^^ method not found in `&Self`
+
+error[E0599]: the method `view` exists for reference `&Self`, but its trait bounds were not satisfied
+  --> src/Chap41/AVLTreeSetMtPer.rs:99:21
+   |
+99 |                 self@.finite(),
+   |                     ^ method cannot be called on `&Self` due to unsatisfied trait bounds
+   |
+   = note: the following trait bounds were not satisfied:
+           `Self: vstd::string::View`
+           which is required by `&Self: vstd::string::View`
+   = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+   |
+88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+   |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+   |                                                                        ++++++++++++++++++++
+
+error[E0599]: the method `view` exists for reference `&Self`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:100:39
+    |
+100 |                 seq@.to_set() =~= self@,
+    |                                       ^ method cannot be called on `&Self` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `Self: vstd::string::View`
+            which is required by `&Self: vstd::string::View`
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: the method `view` exists for reference `&Self`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:102:71
+    |
+102 |                 forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
+    |                                                                       ^ method cannot be called on `&Self` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `Self: vstd::string::View`
+            which is required by `&Self: vstd::string::View`
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for type parameter `Self` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:106:26
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized {
+    |     ------------------------------------------------------------------ method `view` not found for this type parameter
+...
+106 |             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_avltreesetmtper_wf();
+    |                          ^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: no method named `spec_avltreesetmtper_wf` found for type parameter `Self` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:106:69
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized {
+    |     ------------------------------------------------------------------ method `spec_avltreesetmtper_wf` not found for this type parameter
+...
+106 |             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_avltreesetmtper_wf();
+    |                                                                     ^^^^^^^^^^^^^^^^^^^^^^^ method not found in `Self`
+
+error[E0599]: no method named `view` found for type parameter `Self` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:110:25
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized {
+    |     ------------------------------------------------------------------ method `view` not found for this type parameter
+...
+110 |             ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_avltreesetmtper_wf();
+    |                         ^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: no method named `spec_avltreesetmtper_wf` found for type parameter `Self` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:110:78
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized {
+    |     ------------------------------------------------------------------ method `spec_avltreesetmtper_wf` not found for this type parameter
+...
+110 |             ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_avltreesetmtper_wf();
+    |                                                                              ^^^^^^^^^^^^^^^^^^^^^^^ method not found in `Self`
+
+error[E0599]: no method named `spec_avltreesetmtper_wf` found for type parameter `Self` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:113:33
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized {
+    |     ------------------------------------------------------------------ method `spec_avltreesetmtper_wf` not found for this type parameter
+...
+113 |             ensures constructed.spec_avltreesetmtper_wf();
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^ method not found in `Self`
+
+error[E0599]: no method named `view` found for type parameter `Self` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:126:25
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized {
+    |     ------------------------------------------------------------------ method `view` not found for this type parameter
+...
+126 |                 filtered@.subset_of(self@),
+    |                         ^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: the method `view` exists for reference `&Self`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:126:41
+    |
+126 |                 filtered@.subset_of(self@),
+    |                                         ^ method cannot be called on `&Self` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `Self: vstd::string::View`
+            which is required by `&Self: vstd::string::View`
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: no method named `spec_avltreesetmtper_wf` found for type parameter `Self` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:127:26
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized {
+    |     ------------------------------------------------------------------ method `spec_avltreesetmtper_wf` not found for this type parameter
+...
+127 |                 filtered.spec_avltreesetmtper_wf(),
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^ method not found in `Self`
+
+error[E0599]: no method named `view` found for type parameter `Self` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:128:52
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized {
+    |     ------------------------------------------------------------------ method `view` not found for this type parameter
+...
+128 |                 forall|v: T::V| #[trigger] filtered@.contains(v)
+    |                                                    ^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: the method `view` exists for reference `&Self`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:129:29
+    |
+129 |                     ==> self@.contains(v) && spec_pred(v),
+    |                             ^ method cannot be called on `&Self` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `Self: vstd::string::View`
+            which is required by `&Self: vstd::string::View`
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: the method `view` exists for reference `&Self`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:130:37
+    |
+130 |                 forall|v: T::V| self@.contains(v) && spec_pred(v)
+    |                                     ^ method cannot be called on `&Self` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `Self: vstd::string::View`
+            which is required by `&Self: vstd::string::View`
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for type parameter `Self` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:131:44
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized {
+    |     ------------------------------------------------------------------ method `view` not found for this type parameter
+...
+131 |                     ==> #[trigger] filtered@.contains(v);
+    |                                            ^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for type parameter `Self` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:135:27
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized {
+    |     ------------------------------------------------------------------ method `view` not found for this type parameter
+...
+135 |             ensures common@ == self@.intersect(other@), common.spec_avltreesetmtper_wf();
+    |                           ^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: the method `view` exists for reference `&Self`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:135:36
+    |
+135 |             ensures common@ == self@.intersect(other@), common.spec_avltreesetmtper_wf();
+    |                                    ^ method cannot be called on `&Self` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `Self: vstd::string::View`
+            which is required by `&Self: vstd::string::View`
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: the method `view` exists for reference `&Self`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:135:53
+    |
+135 |             ensures common@ == self@.intersect(other@), common.spec_avltreesetmtper_wf();
+    |                                                     ^ method cannot be called on `&Self` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `Self: vstd::string::View`
+            which is required by `&Self: vstd::string::View`
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: no method named `spec_avltreesetmtper_wf` found for type parameter `Self` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:135:64
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized {
+    |     ------------------------------------------------------------------ method `spec_avltreesetmtper_wf` not found for this type parameter
+...
+135 |             ensures common@ == self@.intersect(other@), common.spec_avltreesetmtper_wf();
+    |                                                                ^^^^^^^^^^^^^^^^^^^^^^^ method not found in `Self`
+
+error[E0599]: no method named `view` found for type parameter `Self` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:139:30
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized {
+    |     ------------------------------------------------------------------ method `view` not found for this type parameter
+...
+139 |             ensures remaining@ == self@.difference(other@), remaining.spec_avltreesetmtper_wf();
+    |                              ^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: the method `view` exists for reference `&Self`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:139:39
+    |
+139 |             ensures remaining@ == self@.difference(other@), remaining.spec_avltreesetmtper_wf();
+    |                                       ^ method cannot be called on `&Self` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `Self: vstd::string::View`
+            which is required by `&Self: vstd::string::View`
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: the method `view` exists for reference `&Self`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:139:57
+    |
+139 |             ensures remaining@ == self@.difference(other@), remaining.spec_avltreesetmtper_wf();
+    |                                                         ^ method cannot be called on `&Self` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `Self: vstd::string::View`
+            which is required by `&Self: vstd::string::View`
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: no method named `spec_avltreesetmtper_wf` found for type parameter `Self` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:139:71
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized {
+    |     ------------------------------------------------------------------ method `spec_avltreesetmtper_wf` not found for this type parameter
+...
+139 |             ensures remaining@ == self@.difference(other@), remaining.spec_avltreesetmtper_wf();
+    |                                                                       ^^^^^^^^^^^^^^^^^^^^^^^ method not found in `Self`
+
+error[E0599]: no method named `view` found for type parameter `Self` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:143:29
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized {
+    |     ------------------------------------------------------------------ method `view` not found for this type parameter
+...
+143 |             ensures combined@ == self@.union(other@), combined.spec_avltreesetmtper_wf();
+    |                             ^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: the method `view` exists for reference `&Self`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:143:38
+    |
+143 |             ensures combined@ == self@.union(other@), combined.spec_avltreesetmtper_wf();
+    |                                      ^ method cannot be called on `&Self` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `Self: vstd::string::View`
+            which is required by `&Self: vstd::string::View`
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: the method `view` exists for reference `&Self`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:143:51
+    |
+143 |             ensures combined@ == self@.union(other@), combined.spec_avltreesetmtper_wf();
+    |                                                   ^ method cannot be called on `&Self` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `Self: vstd::string::View`
+            which is required by `&Self: vstd::string::View`
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: no method named `spec_avltreesetmtper_wf` found for type parameter `Self` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:143:64
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized {
+    |     ------------------------------------------------------------------ method `spec_avltreesetmtper_wf` not found for this type parameter
+...
+143 |             ensures combined@ == self@.union(other@), combined.spec_avltreesetmtper_wf();
+    |                                                                ^^^^^^^^^^^^^^^^^^^^^^^ method not found in `Self`
+
+error[E0599]: no method named `spec_avltreesetmtper_wf` found for reference `&Self` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:147:27
+    |
+147 |             requires self.spec_avltreesetmtper_wf(),
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^ method not found in `&Self`
+
+error[E0599]: the method `view` exists for reference `&Self`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:148:34
+    |
+148 |             ensures found == self@.contains(x@);
+    |                                  ^ method cannot be called on `&Self` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `Self: vstd::string::View`
+            which is required by `&Self: vstd::string::View`
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: no method named `view` found for type parameter `Self` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:152:28
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized {
+    |     ------------------------------------------------------------------ method `view` not found for this type parameter
+...
+152 |             ensures updated@ == self@.remove(x@), updated.spec_avltreesetmtper_wf();
+    |                            ^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: the method `view` exists for reference `&Self`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:152:37
+    |
+152 |             ensures updated@ == self@.remove(x@), updated.spec_avltreesetmtper_wf();
+    |                                     ^ method cannot be called on `&Self` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `Self: vstd::string::View`
+            which is required by `&Self: vstd::string::View`
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: no method named `spec_avltreesetmtper_wf` found for type parameter `Self` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:152:59
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized {
+    |     ------------------------------------------------------------------ method `spec_avltreesetmtper_wf` not found for this type parameter
+...
+152 |             ensures updated@ == self@.remove(x@), updated.spec_avltreesetmtper_wf();
+    |                                                           ^^^^^^^^^^^^^^^^^^^^^^^ method not found in `Self`
+
+error[E0599]: no method named `view` found for type parameter `Self` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:156:28
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized {
+    |     ------------------------------------------------------------------ method `view` not found for this type parameter
+...
+156 |             ensures updated@ == self@.insert(x@), updated.spec_avltreesetmtper_wf();
+    |                            ^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: the method `view` exists for reference `&Self`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:156:37
+    |
+156 |             ensures updated@ == self@.insert(x@), updated.spec_avltreesetmtper_wf();
+    |                                     ^ method cannot be called on `&Self` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `Self: vstd::string::View`
+            which is required by `&Self: vstd::string::View`
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + vstd::string::View {
+    |                                                                        ++++++++++++++++++++
+
+error[E0599]: no method named `spec_avltreesetmtper_wf` found for type parameter `Self` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:156:59
+    |
+ 88 |     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized {
+    |     ------------------------------------------------------------------ method `spec_avltreesetmtper_wf` not found for this type parameter
+...
+156 |             ensures updated@ == self@.insert(x@), updated.spec_avltreesetmtper_wf();
+    |                                                           ^^^^^^^^^^^^^^^^^^^^^^^ method not found in `Self`
+
+error[E0599]: no method named `collect_in_order` found for struct `Chap38::BSTParaStEph::BSTParaStEph::ParamBST<T>` in the current scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:185:28
+    |
+185 |             inner_ref.tree.collect_in_order(&mut vals);
+    |                            ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap38/BSTParaStEph.rs:92:5
+    |
+ 92 |     pub struct ParamBST<T: StT + Ord> {
+    |     --------------------------------- method `collect_in_order` not found for this struct
+...
+431 |         fn collect_in_order(&self, out: &mut Vec<T>)
+    |            ---------------- the method is available for `Chap38::BSTParaStEph::BSTParaStEph::ParamBST<T>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `in_

@@ -1,0 +1,17 @@
+error: expected `,`
+   --> src/Chap55/SCCStEph.rs:267:55
+    |
+267 |                     assert(adj_vecs@[m][j] as int < n as int);
+    |                                                       ^^
+
+error: expected `,`
+   --> src/Chap55/SCCStPer.rs:352:55
+    |
+352 |                     assert(adj_vecs@[m][j] as int < n as int);
+    |                                                       ^^
+
+error: aborting due to 2 previous errors
+
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 1157MB, peak z3 RSS: 0MB, min free: 24049MB
+Sampled CPU Usage: rust_verify: 9s, z3 children: 0s

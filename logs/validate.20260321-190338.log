@@ -1,0 +1,43 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:466:17
+    |
+466 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:471:17
+    |
+471 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: found a cyclic self-reference in a definition, which may result in nontermination
+   --> src/Chap05/SetStEph.rs:216:9
+    |
+123 | /      pub trait SetStEphTrait<T: StT + Hash> : View<V = Set<<T as View>::V>> + Sized {
+124 | |
+125 | |          spec fn spec_setsteph_wf(&self) -> bool;
+126 | |          spec fn spec_valid_key_type() -> bool;
+...   |
+216 | |/         fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
+217 | ||             requires
+218 | ||               Self::spec_valid_key_type(),
+219 | ||               s2.spec_setsteph_wf(),
+...   ||
+222 | ||                product.spec_setsteph_wf(),
+223 | ||                forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (av == a@ && s2@.contains(bv));
+    | ||___________________________________________________________________________________________________________^ may be part of cycle (node 1 of 3 in cycle): function definition, whose body may have dependencies
+...   |
+304 | |                  self@.contains(element@);
+305 | |      }
+    | |______- may be part of cycle (node 3 of 3 in cycle): declaration of trait
+...
+312 |            open spec fn spec_setsteph_wf(&self) -> bool {
+    |                      ---------------------------------- may be part of cycle (node 2 of 3 in cycle): function definition, whose body may have dependencies
+
+error: aborting due to 1 previous error; 2 warnings emitted
+
+Elapsed: 49s

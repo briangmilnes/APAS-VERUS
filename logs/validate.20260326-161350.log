@@ -1,0 +1,11 @@
+error: only one module-level `broadcast use` allowed for each module
+  --> src/Chap65/KruskalStEph.rs:33:5
+   |
+33 |     broadcast use crate::Types::Types::group_LabEdge_axioms;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 584MB, peak z3 RSS: 0MB, min free: 22858MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 0s

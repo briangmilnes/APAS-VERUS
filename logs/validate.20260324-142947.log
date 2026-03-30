@@ -1,0 +1,44 @@
+error[E0599]: the method `view` exists for reference `&'a Self`, but its trait bounds were not satisfied
+   --> src/Chap37/AVLTreeSeqStEph.rs:337:30
+    |
+337 |                 it@.1 == self@,
+    |                              ^ method cannot be called on `&'a Self` due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `Self: vstd::string::View`
+            which is required by `&Self: vstd::string::View`
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `view`, perhaps you need to add another supertrait for one of them:
+    |
+263 |     pub trait AVLTreeSeqStEphTrait<T: StT>: Sized + vstd::std_specs::btree::MapIterAdditionalSpecFns {
+    |                                                   ++++++++++++++++++++++++++++++++++++++++++++++++++
+263 |     pub trait AVLTreeSeqStEphTrait<T: StT>: Sized + vstd::string::View {
+    |                                                   ++++++++++++++++++++
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:940:27
+    |
+940 |                 elements: Ghost(self@),
+    |                           ^^^^^^^^^^^^ expected `Seq<_>`, found `Ghost<Seq<<T as View>::V>>`
+    |
+    = note: expected struct `vstd::seq::Seq<_>`
+               found struct `vstd::prelude::Ghost<vstd::seq::Seq<<T as vstd::string::View>::V>>`
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:941:22
+    |
+941 |                 pos: Ghost(0int),
+    |                      ^^^^^^^^^^^ expected `int`, found `Ghost<int>`
+    |
+    = note: expected struct `vstd::prelude::int`
+               found struct `vstd::prelude::Ghost<vstd::prelude::int>`
+help: consider dereferencing the type
+    |
+941 |                 pos: *Ghost(0int),
+    |                      +
+
+error: aborting due to 3 previous errors
+
+Some errors have detailed explanations: E0308, E0599.
+For more information about an error, try `rustc --explain E0308`.
+Elapsed: 25s

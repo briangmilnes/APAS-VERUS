@@ -1,0 +1,286 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap37/BSTSplayMtEph.rs:41:14
+   |
+41 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: `core::iter::adapters::cloned::impl&%1%default%collect` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetSplayMtEph.rs:146:9
+    |
+146 |           tree.in_order().iter().cloned().collect()
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+209 |               let filtered: Vec<T> = self
+    |  ____________________________________-
+210 | |                 .tree
+211 | |                 .in_order()
+212 | |                 .iter()
+213 | |                 .filter(|x| *x != target)
+214 | |                 .cloned()
+215 | |                 .collect();
+    | |__________________________-
+...
+368 |               let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+    |                                    ----------------------------------------------
+...
+466 |               let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+    |                                    ----------------------------------------------
+
+error: `core::iter::adapters::cloned::Cloned` is not supported (note: you may be able to add a Verus specification to this type with the `external_type_specification` attribute) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetSplayMtEph.rs:146:9
+    |
+146 |            tree.in_order().iter().cloned().collect()
+    |            -------------------------------^^^^^^^^^^
+...
+209 |                let filtered: Vec<T> = self
+    |   ____________________________________-
+    |  |____________________________________|
+210 | ||                 .tree
+211 | ||                 .in_order()
+212 | ||                 .iter()
+213 | ||                 .filter(|x| *x != target)
+214 | ||                 .cloned()
+    | ||_________________________-
+215 | |                  .collect();
+    | |___________________________-
+...
+368 |                let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+    |                                     ----------------------------------------------
+...
+466 |                let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+    |                                     ----------------------------------------------
+    |
+    = help: The following declaration may resolve this error:
+            #[verifier::reject_recursive_types(I)]
+            #[verifier::external_type_specification]
+            pub struct ExCloned<I>(std::iter::Cloned<I>);
+
+error: `lib::Chap18::ArraySeqStPer::ArraySeqStPer::impl&%10%default%cloned` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+   --> src/Chap37/BSTSetSplayMtEph.rs:146:9
+    |
+146 |         tree.in_order().iter().cloned().collect()
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+368 |             let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+    |                                  ------------------------------------
+...
+466 |             let values: Vec<T> = self.tree.in_order().iter().cloned().collect();
+    |                                  ------------------------------------
+
+error: `core::iter::adapters::filter::Filter` is not supported (note: you may be able to add a Verus specification to this type with the `external_type_specification` attribute) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetSplayMtEph.rs:209:36
+    |
+209 |                  let filtered: Vec<T> = self
+    |     ____________________________________^
+    |    |____________________________________|
+    |  _||____________________________________|
+210 | | ||                 .tree
+211 | | ||                 .in_order()
+212 | | ||                 .iter()
+213 | | ||                 .filter(|x| *x != target)
+    | | ||_________________________________________-
+214 | | |                  .cloned()
+    | | |__________________________-
+215 | |                    .collect();
+    | |_____________________________^
+    |
+    = help: The following declaration may resolve this error:
+            #[verifier::reject_recursive_types(I)]
+            #[verifier::reject_recursive_types(P)]
+            #[verifier::external_type_specification]
+            pub struct ExFilter<I, P>(std::iter::Filter<I, P>);
+
+error: `core::iter::adapters::filter::impl&%3%default%cloned` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetSplayMtEph.rs:209:36
+    |
+209 |               let filtered: Vec<T> = self
+    |  ____________________________________^
+210 | |                 .tree
+211 | |                 .in_order()
+212 | |                 .iter()
+213 | |                 .filter(|x| *x != target)
+214 | |                 .cloned()
+    | |_________________________^
+
+error: `lib::Chap18::ArraySeqStPer::ArraySeqStPer::impl&%10%default%filter` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+   --> src/Chap37/BSTSetSplayMtEph.rs:209:36
+    |
+209 |               let filtered: Vec<T> = self
+    |  ____________________________________^
+210 | |                 .tree
+211 | |                 .in_order()
+212 | |                 .iter()
+213 | |                 .filter(|x| *x != target)
+    | |_________________________________________^
+
+error: `core::cmp::impls::impl&%9::ne` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetSplayMtEph.rs:213:29
+    |
+213 |                 .filter(|x| *x != target)
+    |                             ^^^^^^^^^^^^
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification<'a, 'b, A, B> [<&'b A as std::cmp::PartialEq<&B>>::ne] (_0: &&'b A, _1: &&B) -> bool
+            where
+            A: std::cmp::PartialEq<B> + ?Sized,
+            B: ?Sized,;
+
+error: `core::cmp::impls::impl&%10::lt` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetSplayMtEph.rs:307:20
+    |
+307 |                 if value < pivot {
+    |                    ^^^^^^^^^^^^^
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification<'a, 'b, A, B> [<&'b A as std::cmp::PartialOrd<&B>>::lt] (_0: &&'b A, _1: &&B) -> bool
+            where
+            A: std::cmp::PartialOrd<B> + ?Sized,
+            B: ?Sized,;
+
+error: `core::cmp::impls::impl&%10::gt` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetSplayMtEph.rs:309:27
+    |
+309 |                 } else if value > pivot {
+    |                           ^^^^^^^^^^^^^
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification<'a, 'b, A, B> [<&'b A as std::cmp::PartialOrd<&B>>::gt] (_0: &&'b A, _1: &&B) -> bool
+            where
+            A: std::cmp::PartialOrd<B> + ?Sized,
+            B: ?Sized,;
+
+error: `alloc::vec::into_iter::impl&%6%default%collect` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetSplayMtEph.rs:325:32
+    |
+325 |             let mut combined = left_values.into_iter().collect::<BTreeSet<T>>();
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+339 |             let mut combined = left_values.into_iter().collect::<BTreeSet<T>>();
+    |                                ------------------------------------------------
+
+error: `alloc::collections::btree::set::impl&%37%default%collect` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetSplayMtEph.rs:329:30
+    |
+329 |             from_sorted_iter(combined.into_iter().collect())
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+344 |             from_sorted_iter(combined.into_iter().collect())
+    |                              ------------------------------
+
+error: `alloc::collections::btree::set::IntoIter` is not supported (note: you may be able to add a Verus specification to this type with the `external_type_specification` attribute) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetSplayMtEph.rs:329:30
+    |
+329 |             from_sorted_iter(combined.into_iter().collect())
+    |                              --------------------^^^^^^^^^^
+...
+344 |             from_sorted_iter(combined.into_iter().collect())
+    |                              ------------------------------
+    |
+    = help: The following declaration may resolve this error:
+            #[verifier::reject_recursive_types(A)]
+            #[verifier::reject_recursive_types(T)]
+            #[verifier::external_type_specification]
+            pub struct ExIntoIter<T, A>(std::collections::btree_set::IntoIter<T, A>)
+            where
+            A: std::alloc::Allocator + std::clone::Clone,;
+
+error: `alloc::collections::btree::set::impl&%18::into_iter` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetSplayMtEph.rs:329:30
+    |
+329 |             from_sorted_iter(combined.into_iter().collect())
+    |                              ^^^^^^^^^^^^^^^^^^^^
+...
+344 |             from_sorted_iter(combined.into_iter().collect())
+    |                              --------------------
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification<T, A> [<std::collections::BTreeSet<T, A> as std::iter::IntoIterator>::into_iter] (_0: std::collections::BTreeSet<T, A>) -> std::collections::btree_set::IntoIter<T, A>
+            where
+            A: std::alloc::Allocator + std::clone::Clone,;
+
+error: `core::iter::adapters::filter_map::impl&%2%default%collect` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetSplayMtEph.rs:348:28
+    |
+348 |               let filtered = self
+    |  ____________________________^
+349 | |                 .tree
+350 | |                 .in_order()
+351 | |                 .iter()
+352 | |                 .filter_map(|v| if predicate(v) { Some(v.clone()) } else { None }).collect::<Vec<T>>();
+    | |______________________________________________________________________________________________________^
+
+error: `core::iter::adapters::filter_map::FilterMap` is not supported (note: you may be able to add a Verus specification to this type with the `external_type_specification` attribute) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap37/BSTSetSplayMtEph.rs:348:28
+    |
+348 |                let filtered = self
+    |   ____________________________^
+    |  |____________________________|
+349 | ||                 .tree
+350 | ||                 .in_order()
+351 | ||                 .iter()
+352 | ||                 .filter_map(|v| if predicate(v) { Some(v.clone()) } else { None }).collect::<Vec<T>>();
+    | ||__________________________________________________________________________________-___________________^
+    | |___________________________________________________________________________________|
+    |
+    |
+    = help: The following declaration may resolve this error:
+            #[verifier::reject_recursive_types(F)]
+            #[verifier::reject_recursive_types(I)]
+            #[verifier::external_type_specification]
+            pub struct ExFilterMap<I, F>(std::iter::FilterMap<I, F>);
+
+error: `lib::Chap18::ArraySeqStPer::ArraySeqStPer::impl&%10%default%filter_map` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+   --> src/Chap37/BSTSetSplayMtEph.rs:348:28
+    |
+348 |               let filtered = self
+    |  ____________________________^
+349 | |                 .tree
+350 | |                 .in_order()
+351 | |                 .iter()
+352 | |                 .filter_map(|v| if predicate(v) { Some(v.clone()) } else { None }).collect::<Vec<T>>();
+    | |__________________________________________________________________________________^
+
+error: `lib::Chap18::ArraySeqStPer::ArraySeqStPer::impl&%10%default%fold` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`)
+   --> src/Chap37/BSTSetSplayMtEph.rs:357:13
+    |
+357 | /             self.tree
+358 | |                 .in_order()
+359 | |                 .iter()
+360 | |                 .fold(base, |acc, value| op(acc, value.clone()))
+    | |________________________________________________________________^
+
+error: `core::cmp::impls::impl&%9::eq` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap41/AVLTreeSetMtPer.rs:402:25
+    |
+402 |             let equal = self_handle.borrow() == other_handle.borrow();
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification<'a, 'b, A, B> [<&'b A as std::cmp::PartialEq<&B>>::eq] (_0: &&'b A, _1: &&B) -> bool
+            where
+            A: std::cmp::PartialEq<B> + ?Sized,
+            B: ?Sized,;
+
+error: `alloc::vec::impl&%20::extend` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+    --> src/Chap37/BSTSplayMtEph.rs:1454:17
+     |
+1454 |                 result.extend(right_vec);
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^
+...
+1474 |                 result.extend(left_vec);
+     |                 -----------------------
+1475 |                 result.extend(right_vec);
+     |                 ------------------------
+...
+1532 |                 result.extend(right_vals);
+     |                 -------------------------
+     |
+     = help: The following declaration may resolve this error:
+             pub assume_specification<T, A, I> [<std::vec::Vec<T, A> as std::iter::Extend<T>>::extend] (_0: &std::vec::Vec<T, A>, _1: I)
+             where
+             A: std::alloc::Allocator,
+             I: std::iter::IntoIterator<Item = T>,;
+
+error: aborting due to 19 previous errors; 1 warning emitted
+
+Elapsed: 36s

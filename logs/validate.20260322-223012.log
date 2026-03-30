@@ -1,0 +1,25 @@
+error: postcondition not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:137:13
+    |
+132 |     proof fn lemma_map_view_feq_implies_ext_eq_per<T: View + Eq + Clone>(a: Seq<T>, b: Seq<T>)
+    |           ------------------------------------------------------------------------------------ at the end of the function body
+...
+137 |             a =~= b,
+    |             ^^^^^^^ failed this postcondition
+
+error: assertion failed
+   --> src/Chap41/AVLTreeSetStPer.rs:142:20
+    |
+142 |             assert(b.map_values(|t: T| t@)[k] == b[k]@);
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+b.map_values((|t| t.view())).index(k) == b.index(k).view() 
+
+verification results:: 4501 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 62s

@@ -1,0 +1,279 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap37/BSTSplayMtEph.rs:41:14
+   |
+41 |     #[derive(Clone)]
+   |              ^^^^^
+
+error[E0507]: cannot move out of an `Arc`
+   --> src/Chap37/AVLTreeSeqMtPer.rs:200:59
+    |
+200 |                 lemma_inorder_values_maps_to_inorder::<T>(node.left);
+    |                                                           ^^^^^^^^^ move occurs because value has type `std::option::Option<std::sync::Arc<Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::Node<T>>>`, which does not implement the `Copy` trait
+    |
+help: consider cloning the value if the performance cost is acceptable
+    |
+200 |                 lemma_inorder_values_maps_to_inorder::<T>(node.left.clone());
+    |                                                                    ++++++++
+
+error[E0507]: cannot move out of an `Arc`
+   --> src/Chap37/AVLTreeSeqMtPer.rs:201:59
+    |
+201 |                 lemma_inorder_values_maps_to_inorder::<T>(node.right);
+    |                                                           ^^^^^^^^^^ move occurs because value has type `std::option::Option<std::sync::Arc<Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::Node<T>>>`, which does not implement the `Copy` trait
+    |
+help: consider cloning the value if the performance cost is acceptable
+    |
+201 |                 lemma_inorder_values_maps_to_inorder::<T>(node.right.clone());
+    |                                                                     ++++++++
+
+error[E0521]: borrowed data escapes outside of function
+    --> src/ParaPairs.rs:105:9
+     |
+ 105 |           $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |           |
+     |           `link` escapes the function body here
+     |           argument requires that `'1` must outlive `'static`
+     |
+    ::: src/Chap37/BSTSplayMtEph.rs:1439:58
+     |
+1439 |       fn in_order_parallel<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (result: Vec<T>)
+     |                                                            ----  - let's call the lifetime of this reference `'1`
+     |                                                            |
+     |                                                            `link` is a reference that is only valid in the function body
+...
+1448 |                   let Pair(left_vec, right_vec) = crate::ParaPair!(
+     |  _________________________________________________-
+1449 | |                     move || in_order_parallel(&node.left),
+1450 | |                     move || in_order_parallel(&node.right)
+1451 | |                 );
+     | |_________________- in this macro invocation
+     |
+     = note: this error originates in the macro `crate::ParaPair` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0521]: borrowed data escapes outside of function
+    --> src/ParaPairs.rs:105:9
+     |
+ 105 |           $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |           |
+     |           `link` escapes the function body here
+     |           argument requires that `'1` must outlive `'static`
+     |
+    ::: src/Chap37/BSTSplayMtEph.rs:1462:59
+     |
+1462 |       fn pre_order_parallel<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (result: Vec<T>)
+     |                                                             ----  - let's call the lifetime of this reference `'1`
+     |                                                             |
+     |                                                             `link` is a reference that is only valid in the function body
+...
+1471 |                   let Pair(left_vec, right_vec) = crate::ParaPair!(
+     |  _________________________________________________-
+1472 | |                     move || pre_order_parallel(&node.left),
+1473 | |                     move || pre_order_parallel(&node.right)
+1474 | |                 );
+     | |_________________- in this macro invocation
+     |
+     = note: this error originates in the macro `crate::ParaPair` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0521]: borrowed data escapes outside of function
+    --> src/ParaPairs.rs:105:9
+     |
+ 105 |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |         |
+     |         `values` escapes the function body here
+     |         argument requires that `'1` must outlive `'static`
+     |
+    ::: src/Chap37/BSTSplayMtEph.rs:1488:55
+     |
+1488 |     fn build_balanced<T: StTInMtT + Ord + TotalOrder>(values: &[T]) -> (link: Link<T>)
+     |                                                       ------  - let's call the lifetime of this reference `'1`
+     |                                                       |
+     |                                                       `values` is a reference that is only valid in the function body
+...
+1506 |         let Pair(left, right) = crate::ParaPair!(f1, f2);
+     |                                 ------------------------ in this macro invocation
+     |
+     = note: this error originates in the macro `crate::ParaPair` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0310]: the parameter type `F` may not live long enough
+    --> src/ParaPairs.rs:105:9
+     |
+ 105 |           $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |           |
+     |           the parameter type `F` must be valid for the static lifetime...
+     |           ...so that the type `F` will meet its required lifetime bounds
+     |
+    ::: src/Chap37/BSTSplayMtEph.rs:1529:51
+     |
+1529 |                   let Pair(left_vals, right_vals) = crate::ParaPair!(
+     |  ___________________________________________________-
+1530 | |                     move || filter_parallel(&node.left, &pred_left),
+1531 | |                     move || filter_parallel(&node.right, &pred_right)
+1532 | |                 );
+     | |_________________- in this macro invocation
+     |
+     = note: this error originates in the macro `crate::ParaPair` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider adding an explicit lifetime bound
+    -->  src/Chap37/BSTSplayMtEph.rs:1517:44
+     |
+1517 |             F: Fn(&T) -> bool + Send + Sync + 'static,
+     |                                             +++++++++
+
+error[E0521]: borrowed data escapes outside of function
+    --> src/ParaPairs.rs:105:9
+     |
+ 105 |           $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |           |
+     |           `link` escapes the function body here
+     |           argument requires that `'1` must outlive `'static`
+     |
+    ::: src/Chap37/BSTSplayMtEph.rs:1515:59
+     |
+1515 |       fn filter_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, predicate: &Arc<F>) -> (result: Vec<T>)
+     |                                                             ----  - let's call the lifetime of this reference `'1`
+     |                                                             |
+     |                                                             `link` is a reference that is only valid in the function body
+...
+1529 |                   let Pair(left_vals, right_vals) = crate::ParaPair!(
+     |  ___________________________________________________-
+1530 | |                     move || filter_parallel(&node.left, &pred_left),
+1531 | |                     move || filter_parallel(&node.right, &pred_right)
+1532 | |                 );
+     | |_________________- in this macro invocation
+     |
+     = note: this error originates in the macro `crate::ParaPair` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0310]: the parameter type `F` may not live long enough
+    --> src/ParaPairs.rs:105:9
+     |
+ 105 |           $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |           |
+     |           the parameter type `F` must be valid for the static lifetime...
+     |           ...so that the type `F` will meet its required lifetime bounds
+     |
+    ::: src/Chap37/BSTSplayMtEph.rs:1561:49
+     |
+1561 |                   let Pair(left_acc, right_acc) = crate::ParaPair!(
+     |  _________________________________________________-
+1562 | |                     move || reduce_parallel(&node.left, &op_left, id_left),
+1563 | |                     move || reduce_parallel(&node.right, &op_right, identity)
+1564 | |                 );
+     | |_________________- in this macro invocation
+     |
+     = note: this error originates in the macro `crate::ParaPair` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider adding an explicit lifetime bound
+    -->  src/Chap37/BSTSplayMtEph.rs:1548:43
+     |
+1548 |             F: Fn(T, T) -> T + Send + Sync + 'static,
+     |                                            +++++++++
+
+error[E0521]: borrowed data escapes outside of function
+    --> src/ParaPairs.rs:105:9
+     |
+ 105 |           $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |           |
+     |           `link` escapes the function body here
+     |           argument requires that `'1` must outlive `'static`
+     |
+    ::: src/Chap37/BSTSplayMtEph.rs:1546:59
+     |
+1546 |       fn reduce_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (result: T)
+     |                                                             ----  - let's call the lifetime of this reference `'1`
+     |                                                             |
+     |                                                             `link` is a reference that is only valid in the function body
+...
+1561 |                   let Pair(left_acc, right_acc) = crate::ParaPair!(
+     |  _________________________________________________-
+1562 | |                     move || reduce_parallel(&node.left, &op_left, id_left),
+1563 | |                     move || reduce_parallel(&node.right, &op_right, identity)
+1564 | |                 );
+     | |_________________- in this macro invocation
+     |
+     = note: this error originates in the macro `crate::ParaPair` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0310]: the parameter type `T` may not live long enough
+   --> src/ParaPairs.rs:105:9
+    |
+105 |           $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |           |
+    |           the parameter type `T` must be valid for the static lifetime...
+    |           ...so that the type `T` will meet its required lifetime bounds
+    |
+   ::: src/Chap37/BSTSetSplayMtEph.rs:240:49
+    |
+240 |               let Pair(left_union, right_union) = crate::ParaPair!(
+    |  _________________________________________________-
+241 | |                 move || self_left.union(&other_left),
+242 | |                 move || self_right.union(&other_right)
+243 | |             );
+    | |_____________- in this macro invocation
+    |
+    = note: this error originates in the macro `crate::ParaPair` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider adding an explicit lifetime bound
+   --> src/Chap37/BSTSetSplayMtEph.rs:176:40
+    |
+176 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> BSTSetSplayMtEphTrait<T> for BSTSetSplayMtEph<T> {
+    |                                         +++++++++
+
+error[E0310]: the parameter type `T` may not live long enough
+   --> src/ParaPairs.rs:105:9
+    |
+105 |           $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |           |
+    |           the parameter type `T` must be valid for the static lifetime...
+    |           ...so that the type `T` will meet its required lifetime bounds
+    |
+   ::: src/Chap37/BSTSetSplayMtEph.rs:267:49
+    |
+267 |               let Pair(left_inter, right_inter) = crate::ParaPair!(
+    |  _________________________________________________-
+268 | |                 move || self_left.intersection(&other_left),
+269 | |                 move || self_right.intersection(&other_right)
+270 | |             );
+    | |_____________- in this macro invocation
+    |
+    = note: this error originates in the macro `crate::ParaPair` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider adding an explicit lifetime bound
+   --> src/Chap37/BSTSetSplayMtEph.rs:176:40
+    |
+176 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> BSTSetSplayMtEphTrait<T> for BSTSetSplayMtEph<T> {
+    |                                         +++++++++
+
+error[E0310]: the parameter type `T` may not live long enough
+   --> src/ParaPairs.rs:105:9
+    |
+105 |           $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |           |
+    |           the parameter type `T` must be valid for the static lifetime...
+    |           ...so that the type `T` will meet its required lifetime bounds
+    |
+   ::: src/Chap37/BSTSetSplayMtEph.rs:293:47
+    |
+293 |               let Pair(left_diff, right_diff) = crate::ParaPair!(
+    |  _______________________________________________-
+294 | |                 move || self_left.difference(&other_left),
+295 | |                 move || self_right.difference(&other_right)
+296 | |             );
+    | |_____________- in this macro invocation
+    |
+    = note: this error originates in the macro `crate::ParaPair` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider adding an explicit lifetime bound
+   --> src/Chap37/BSTSetSplayMtEph.rs:176:40
+    |
+176 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> BSTSetSplayMtEphTrait<T> for BSTSetSplayMtEph<T> {
+    |                                         +++++++++
+
+error: aborting due to 12 previous errors; 1 warning emitted
+
+Some errors have detailed explanations: E0310, E0507, E0521.
+For more information about an error, try `rustc --explain E0310`.
+Elapsed: 35s

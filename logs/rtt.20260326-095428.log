@@ -1,0 +1,247 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent3)
+error[E0433]: failed to resolve: could not find `Chap56` in `apas_verus`
+ --> tests/Chap56/TestPathWeightUtilsStEph.rs:7:17
+  |
+7 | use apas_verus::Chap56::PathWeightUtilsStEph::PathWeightUtilsStEph::*;
+  |                 ^^^^^^ could not find `Chap56` in `apas_verus`
+
+error[E0433]: failed to resolve: could not find `Chap56` in `apas_verus`
+ --> tests/Chap56/TestAllPairsResultStEphI64.rs:7:17
+  |
+7 | use apas_verus::Chap56::AllPairsResultStEphI64::AllPairsResultStEphI64::*;
+  |                 ^^^^^^ could not find `Chap56` in `apas_verus`
+
+error[E0433]: failed to resolve: could not find `Chap56` in `apas_verus`
+ --> tests/Chap57/TestDijkstraStEphU64.rs:8:17
+  |
+8 | use apas_verus::Chap56::SSSPResultStEphI64::SSSPResultStEphI64::*;
+  |                 ^^^^^^ could not find `Chap56` in `apas_verus`
+
+error[E0433]: failed to resolve: could not find `Chap57` in `apas_verus`
+ --> tests/Chap57/TestDijkstraStEphU64.rs:9:17
+  |
+9 | use apas_verus::Chap57::DijkstraStEphU64::DijkstraStEphU64::*;
+  |                 ^^^^^^ could not find `Chap57` in `apas_verus`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStEphS`
+  --> tests/Chap56/TestPathWeightUtilsStEph.rs:22:16
+   |
+22 |     assert_eq!(PathWeightUtilsStEphS::path_weight_int(&path, &weights), Some(3));
+   |                ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStEphS`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStEphS`
+  --> tests/Chap56/TestPathWeightUtilsStEph.rs:33:16
+   |
+33 |     assert_eq!(PathWeightUtilsStEphS::path_weight_int(&path, &weights), Some(2));
+   |                ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStEphS`
+
+error[E0433]: failed to resolve: use of undeclared type `AllPairsResultStEphI64`
+  --> tests/Chap56/TestAllPairsResultStEphI64.rs:12:18
+   |
+12 |     let result = AllPairsResultStEphI64::new(3);
+   |                  ^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `AllPairsResultStEphI64`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStEphS`
+  --> tests/Chap56/TestPathWeightUtilsStEph.rs:44:16
+   |
+44 |     assert_eq!(PathWeightUtilsStEphS::path_weight_float(&path, &weights), Some(dist(4.0)));
+   |                ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStEphS`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStEphS`
+  --> tests/Chap56/TestPathWeightUtilsStEph.rs:56:13
+   |
+56 |     assert!(PathWeightUtilsStEphS::validate_subpath_property_int(&path, &distances, &weights));
+   |             ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStEphS`
+
+error[E0433]: failed to resolve: use of undeclared type `AllPairsResultStEphI64`
+  --> tests/Chap56/TestAllPairsResultStEphI64.rs:21:22
+   |
+21 |     let mut result = AllPairsResultStEphI64::new(3);
+   |                      ^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `AllPairsResultStEphI64`
+
+error[E0433]: failed to resolve: use of undeclared type `PathWeightUtilsStEphS`
+  --> tests/Chap56/TestPathWeightUtilsStEph.rs:68:13
+   |
+68 |     assert!(PathWeightUtilsStEphS::validate_subpath_property_float(&path, &distances, &weights));
+   |             ^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `PathWeightUtilsStEphS`
+
+error[E0433]: failed to resolve: use of undeclared type `AllPairsResultStEphI64`
+  --> tests/Chap56/TestAllPairsResultStEphI64.rs:30:22
+   |
+30 |     let mut result = AllPairsResultStEphI64::new(3);
+   |                      ^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `AllPairsResultStEphI64`
+
+error[E0433]: failed to resolve: use of undeclared type `AllPairsResultStEphI64`
+  --> tests/Chap56/TestAllPairsResultStEphI64.rs:39:22
+   |
+39 |     let mut result = AllPairsResultStEphI64::new(4);
+   |                      ^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `AllPairsResultStEphI64`
+
+error[E0433]: failed to resolve: use of undeclared type `AllPairsResultStEphI64`
+  --> tests/Chap56/TestAllPairsResultStEphI64.rs:57:18
+   |
+57 |     let result = AllPairsResultStEphI64::new(3);
+   |                  ^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `AllPairsResultStEphI64`
+
+For more information about this error, try `rustc --explain E0433`.
+error: could not compile `apas-verus` (test "TestPathWeightUtilsStEph") due to 6 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `apas-verus` (test "TestAllPairsResultStEphI64") due to 6 previous errors
+error[E0433]: failed to resolve: could not find `Chap63` in `apas_verus`
+ --> tests/Chap63/TestConnectivityStEph.rs:7:17
+  |
+7 | use apas_verus::Chap63::ConnectivityStEph::ConnectivityStEph::*;
+  |                 ^^^^^^ could not find `Chap63` in `apas_verus`
+
+error[E0425]: cannot find function `dijkstra` in this scope
+  --> tests/Chap57/TestDijkstraStEphU64.rs:30:18
+   |
+30 |     let result = dijkstra(&graph, 0);
+   |                  ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `dijkstra` in this scope
+  --> tests/Chap57/TestDijkstraStEphU64.rs:63:18
+   |
+63 |     let result = dijkstra(&graph, 0);
+   |                  ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `dijkstra` in this scope
+  --> tests/Chap57/TestDijkstraStEphU64.rs:80:18
+   |
+80 |     let result = dijkstra(&graph, 0);
+   |                  ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `dijkstra` in this scope
+  --> tests/Chap57/TestDijkstraStEphU64.rs:97:18
+   |
+97 |     let result = dijkstra(&graph, 0);
+   |                  ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `dijkstra` in this scope
+   --> tests/Chap57/TestDijkstraStEphU64.rs:118:18
+    |
+118 |     let result = dijkstra(&graph, 0);
+    |                  ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `dijkstra` in this scope
+   --> tests/Chap57/TestDijkstraStEphU64.rs:143:18
+    |
+143 |     let result = dijkstra(&graph, 0);
+    |                  ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `dijkstra` in this scope
+   --> tests/Chap57/TestDijkstraStEphU64.rs:166:18
+    |
+166 |     let result = dijkstra(&graph, 0);
+    |                  ^^^^^^^^ not found in this scope
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+error: could not compile `apas-verus` (test "TestDijkstraStEphU64") due to 9 previous errors
+error[E0425]: cannot find function `count_components` in this scope
+  --> tests/Chap63/TestConnectivityStEph.rs:44:17
+   |
+44 |     let count = count_components(&graph);
+   |                 ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `count_components` in this scope
+  --> tests/Chap63/TestConnectivityStEph.rs:51:17
+   |
+51 |     let count = count_components(&graph);
+   |                 ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `count_components` in this scope
+  --> tests/Chap63/TestConnectivityStEph.rs:60:17
+   |
+60 |     let count = count_components(&graph);
+   |                 ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `connected_components` in this scope
+  --> tests/Chap63/TestConnectivityStEph.rs:67:28
+   |
+67 |     let (reps, comp_map) = connected_components(&graph);
+   |                            ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0282]: type annotations needed
+  --> tests/Chap63/TestConnectivityStEph.rs:70:16
+   |
+70 |     assert_eq!(reps.size(), 1);
+   |                ^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+  --> tests/Chap63/TestConnectivityStEph.rs:73:22
+   |
+73 |     let first_comp = comp_map.get(&0).unwrap();
+   |                      ^^^^^^^^ cannot infer type
+
+error[E0425]: cannot find function `connected_components` in this scope
+  --> tests/Chap63/TestConnectivityStEph.rs:82:28
+   |
+82 |     let (reps, comp_map) = connected_components(&graph);
+   |                            ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0282]: type annotations needed
+  --> tests/Chap63/TestConnectivityStEph.rs:85:16
+   |
+85 |     assert_eq!(reps.size(), 3);
+   |                ^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+  --> tests/Chap63/TestConnectivityStEph.rs:88:17
+   |
+88 |     let comp0 = comp_map.get(&0).unwrap();
+   |                 ^^^^^^^^ cannot infer type
+
+error[E0425]: cannot find function `count_components_hof` in this scope
+   --> tests/Chap63/TestConnectivityStEph.rs:108:17
+    |
+108 |     let count = count_components_hof(&graph);
+    |                 ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `count_components` in this scope
+   --> tests/Chap63/TestConnectivityStEph.rs:112:24
+    |
+112 |     let count_direct = count_components(&graph);
+    |                        ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `connected_components_hof` in this scope
+   --> tests/Chap63/TestConnectivityStEph.rs:119:36
+    |
+119 |     let (reps_hof, comp_map_hof) = connected_components_hof(&graph);
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `connected_components` in this scope
+   --> tests/Chap63/TestConnectivityStEph.rs:120:42
+    |
+120 |     let (reps_direct, comp_map_direct) = connected_components(&graph);
+    |                                          ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0282]: type annotations needed
+   --> tests/Chap63/TestConnectivityStEph.rs:123:16
+    |
+123 |     assert_eq!(reps_hof.size(), reps_direct.size());
+    |                ^^^^^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> tests/Chap63/TestConnectivityStEph.rs:123:33
+    |
+123 |     assert_eq!(reps_hof.size(), reps_direct.size());
+    |                                 ^^^^^^^^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> tests/Chap63/TestConnectivityStEph.rs:130:33
+    |
+130 |             let same_comp_hof = comp_map_hof.get(&i) == comp_map_hof.get(&j);
+    |                                 ^^^^^^^^^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> tests/Chap63/TestConnectivityStEph.rs:131:36
+    |
+131 |             let same_comp_direct = comp_map_direct.get(&i) == comp_map_direct.get(&j);
+    |                                    ^^^^^^^^^^^^^^^ cannot infer type
+
+Some errors have detailed explanations: E0282, E0425, E0433.
+For more information about an error, try `rustc --explain E0282`.
+error: could not compile `apas-verus` (test "TestConnectivityStEph") due to 18 previous errors
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 1s

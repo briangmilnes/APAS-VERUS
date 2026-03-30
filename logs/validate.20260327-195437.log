@@ -1,0 +1,106 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStEph.rs:47:14
+   |
+47 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphStPer.rs:53:14
+   |
+53 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap52/AdjTableGraphStPer.rs:216:21
+    |
+216 |                     total == self.spec_num_edges(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap52/AdjTableGraphStPer.rs:283:37
+    |
+283 |   ...                   let j = choose|j: int| 0 <= j < i
+    |  _______________________________^
+284 | | ...                       && self.adj.entries@[j].0 == v;
+    | |________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap52/AdjTableGraphStPer.rs:284:36
+    |
+284 | ...                   && self.adj.entries@[j].0 == v;
+    |                          ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap52/AdjTableGraphStPer.rs:279:33
+    |
+279 |                           implies exists|j: int| 0 <= j < i + 1
+    |  _________________________________^
+280 | |                             && self.adj.entries@[j].0 == v
+    | |__________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap52/AdjTableGraphStPer.rs:280:32
+    |
+280 | ...                   && self.adj.entries@[j].0 == v
+    |                          ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap52/AdjTableGraphStPer.rs:257:29
+    |
+257 |                           ==> exists|j: int| 0 <= j < i
+    |  _____________________________^
+258 | |                             && self.adj.entries@[j].0 == v,
+    | |__________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap52/AdjTableGraphStPer.rs:258:32
+    |
+258 | ...                   && self.adj.entries@[j].0 == v,
+    |                          ^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap52/AdjTableGraphStPer.rs:300:33
+    |
+300 |                           let j = choose|j: int| 0 <= j < len as int
+    |  _________________________________^
+301 | |                             && self.adj.entries@[j].0 == v;
+    | |__________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap52/AdjTableGraphStPer.rs:301:32
+    |
+301 | ...                   && self.adj.entries@[j].0 == v;
+    |                          ^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap52/AdjTableGraphStPer.rs:300:33
+    |
+300 |                           let j = choose|j: int| 0 <= j < len as int
+    |  _________________________________^
+301 | |                             && self.adj.entries@[j].0 == v;
+    | |__________________________________________________________^
+
+verification results:: 2801 verified, 1 errors
+error: aborting due to 1 previous error; 3 warnings emitted
+
+Elapsed: 50s
+Sampled Memory Usage: peak rust_verify RSS: 12036MB, peak z3 RSS: 1149MB, min free: 8606MB
+Sampled CPU Usage: rust_verify: 314s, z3 children: 218s
