@@ -50,6 +50,10 @@ name = "ProveSetMtEph"
 path = "tests/Chap05/ProveSetMtEph.rs"
 
 [[test]]
+name = "ProveSetStEph"
+path = "tests/Chap05/ProveSetStEph.rs"
+
+[[test]]
 name = "ProveKleeneStPer"
 path = "tests/Chap05/ProveKleeneStPer.rs"
 
@@ -122,10 +126,46 @@ path = "tests/Chap23/ProvePrimTreeSeqStPer.rs"
 name = "ProveAVLTreeSeq"
 path = "tests/Chap37/ProveAVLTreeSeq.rs"
 
+[[test]]
+name = "ProveAVLTreeSeqStEph"
+path = "tests/Chap37/ProveAVLTreeSeqStEph.rs"
+
+[[test]]
+name = "ProveAVLTreeSeqStPer"
+path = "tests/Chap37/ProveAVLTreeSeqStPer.rs"
+
+[[test]]
+name = "ProveAVLTreeSeqMtPer"
+path = "tests/Chap37/ProveAVLTreeSeqMtPer.rs"
+
+[[test]]
+name = "ProveBSTSetAVLMtEph"
+path = "tests/Chap37/ProveBSTSetAVLMtEph.rs"
+
+[[test]]
+name = "ProveBSTSetBBAlphaMtEph"
+path = "tests/Chap37/ProveBSTSetBBAlphaMtEph.rs"
+
+[[test]]
+name = "ProveBSTSetPlainMtEph"
+path = "tests/Chap37/ProveBSTSetPlainMtEph.rs"
+
+[[test]]
+name = "ProveBSTSetRBMtEph"
+path = "tests/Chap37/ProveBSTSetRBMtEph.rs"
+
+[[test]]
+name = "ProveBSTSetSplayMtEph"
+path = "tests/Chap37/ProveBSTSetSplayMtEph.rs"
+
 # Chap43 iterator proof tests
 [[test]]
 name = "ProveOrderedSetStEph"
 path = "tests/Chap43/ProveOrderedSetStEph.rs"
+
+[[test]]
+name = "ProveOrderedSetStPer"
+path = "tests/Chap43/ProveOrderedSetStPer.rs"
 
 [[test]]
 name = "ProveOrderedTableStEph"
@@ -134,6 +174,22 @@ path = "tests/Chap43/ProveOrderedTableStEph.rs"
 [[test]]
 name = "ProveOrderedTableStPer"
 path = "tests/Chap43/ProveOrderedTableStPer.rs"
+
+[[test]]
+name = "ProveOrderedTableMtEph"
+path = "tests/Chap43/ProveOrderedTableMtEph.rs"
+
+[[test]]
+name = "ProveAugOrderedTableStEph"
+path = "tests/Chap43/ProveAugOrderedTableStEph.rs"
+
+[[test]]
+name = "ProveAugOrderedTableStPer"
+path = "tests/Chap43/ProveAugOrderedTableStPer.rs"
+
+[[test]]
+name = "ProveAugOrderedTableMtEph"
+path = "tests/Chap43/ProveAugOrderedTableMtEph.rs"
 
 # Chap54 BFS tree iterator proof tests
 [[test]]
