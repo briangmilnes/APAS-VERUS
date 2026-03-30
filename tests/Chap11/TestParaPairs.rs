@@ -68,3 +68,67 @@ fn test_para_pair_nested() {
     assert_eq!(ab, 3);
     assert_eq!(cd, 7);
 }
+
+#[test]
+fn test_para_pair_zero_values() {
+    let Pair(a, b) = ParaPair!(move || 0u64, move || 0u64);
+    assert_eq!(a, 0);
+    assert_eq!(b, 0);
+}
+
+#[test]
+fn test_para_pair_max_values() {
+    let Pair(a, b) = ParaPair!(move || u64::MAX, move || u64::MAX);
+    assert_eq!(a, u64::MAX);
+    assert_eq!(b, u64::MAX);
+}
+
+#[test]
+fn test_para_pair_bool_results() {
+    let Pair(a, b) = ParaPair!(move || true, move || false);
+    assert!(a);
+    assert!(!b);
+}
+
+#[test]
+fn test_para_pair_vec_results() {
+    let Pair(v1, v2) = ParaPair!(
+        move || vec![1, 2, 3],
+        move || vec![4, 5, 6]
+    );
+    assert_eq!(v1, vec![1, 2, 3]);
+    assert_eq!(v2, vec![4, 5, 6]);
+}
+
+#[test]
+fn test_para_pair_closure_captures() {
+    let x = 10;
+    let y = 20;
+    let Pair(a, b) = ParaPair!(
+        move || x * 2,
+        move || y * 3
+    );
+    assert_eq!(a, 20);
+    assert_eq!(b, 60);
+}
+
+#[test]
+fn test_para_pair_heavy_compute() {
+    // Both arms do substantial work.
+    let Pair(sum1, sum2) = ParaPair!(
+        move || (0..1000u64).sum::<u64>(),
+        move || (1000..2000u64).sum::<u64>()
+    );
+    assert_eq!(sum1, 999 * 1000 / 2);
+    assert_eq!(sum2, (0..2000u64).sum::<u64>() - sum1);
+}
+
+#[test]
+fn test_para_pair_option_results() {
+    let Pair(a, b) = ParaPair!(
+        move || Some(42),
+        move || None::<i32>
+    );
+    assert_eq!(a, Some(42));
+    assert_eq!(b, None);
+}

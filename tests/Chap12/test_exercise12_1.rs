@@ -87,3 +87,77 @@ fn test_with_lock_returns_value() {
     let result = lock.with_lock(|| 42);
     assert_eq!(result, 42);
 }
+
+#[test]
+fn test_lock_unlock_sequential() {
+    let lock = SpinLock::new();
+    for _ in 0..100 {
+        lock.lock();
+        lock.unlock();
+    }
+}
+
+#[test]
+fn test_with_lock_string_return() {
+    let lock = SpinLock::new();
+    let result = lock.with_lock(|| "hello".to_string());
+    assert_eq!(result, "hello");
+}
+
+#[test]
+fn test_with_lock_vec_mutation() {
+    let lock = SpinLock::new();
+    let mut v = vec![1, 2, 3];
+    lock.with_lock(|| v.push(4));
+    assert_eq!(v, vec![1, 2, 3, 4]);
+}
+
+#[test]
+fn test_parallel_increment_zero() {
+    assert_eq!(parallel_increment(0), 0);
+}
+
+#[test]
+fn test_parallel_increment_one() {
+    assert_eq!(parallel_increment(1), 4);
+}
+
+#[test]
+fn test_parallel_increment_large() {
+    assert_eq!(parallel_increment(10_000), 40_000);
+}
+
+#[test]
+fn test_with_lock_nested_computation() {
+    let lock = SpinLock::new();
+    let result = lock.with_lock(|| {
+        (0..10).sum::<i32>()
+    });
+    assert_eq!(result, 45);
+}
+
+#[test]
+fn test_spin_lock_multiple_threads_stress() {
+    let lock = Arc::new(SpinLock::new());
+    let counter = Arc::new(AtomicUsize::new(0));
+    let mut handles = Vec::new();
+
+    for _ in 0..8 {
+        let lock_clone = Arc::clone(&lock);
+        let counter_clone = Arc::clone(&counter);
+        handles.push(thread::spawn(move || {
+            for _ in 0..500 {
+                lock_clone.lock();
+                let current = counter_clone.load(Ordering::Relaxed);
+                counter_clone.store(current + 1, Ordering::Relaxed);
+                lock_clone.unlock();
+            }
+        }));
+    }
+
+    for handle in handles {
+        handle.join().expect("worker panicked");
+    }
+
+    assert_eq!(counter.load(Ordering::Relaxed), 8 * 500);
+}

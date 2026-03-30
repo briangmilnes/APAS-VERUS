@@ -127,3 +127,72 @@ fn test_multiple_push_pop_cycles() {
 
     assert!(stack.is_empty());
 }
+
+#[test]
+fn test_push_many_pop_all() {
+    let stack = ConcurrentStackMt::new();
+    for i in 0..100 {
+        stack.push(i);
+    }
+    for i in (0..100).rev() {
+        assert_eq!(stack.pop(), Some(i));
+    }
+    assert!(stack.is_empty());
+}
+
+#[test]
+fn test_interleaved_push_pop() {
+    let stack = ConcurrentStackMt::new();
+    for i in 0..50 {
+        stack.push(i);
+        if i % 2 == 0 {
+            assert_eq!(stack.pop(), Some(i));
+        }
+    }
+}
+
+#[test]
+fn test_drain_empty_stack() {
+    let stack = ConcurrentStackMt::<i32>::new();
+    let drained = stack.drain();
+    assert!(drained.is_empty());
+}
+
+#[test]
+fn test_is_empty_after_operations() {
+    let stack = ConcurrentStackMt::new();
+    assert!(stack.is_empty());
+    stack.push(1);
+    assert!(!stack.is_empty());
+    stack.pop();
+    assert!(stack.is_empty());
+}
+
+#[test]
+fn test_pop_on_empty_multiple_times() {
+    let stack = ConcurrentStackMt::<i32>::new();
+    for _ in 0..10 {
+        assert_eq!(stack.pop(), None);
+    }
+}
+
+#[test]
+fn test_string_values() {
+    let stack = ConcurrentStackMt::new();
+    stack.push("hello".to_string());
+    stack.push("world".to_string());
+    assert_eq!(stack.pop(), Some("world".to_string()));
+    assert_eq!(stack.pop(), Some("hello".to_string()));
+}
+
+#[test]
+fn test_drain_preserves_all_elements() {
+    let stack = ConcurrentStackMt::new();
+    for i in 0..50 {
+        stack.push(i);
+    }
+    let mut drained = stack.drain();
+    drained.sort_unstable();
+    let expected: Vec<i32> = (0..50).collect();
+    assert_eq!(drained, expected);
+}

@@ -227,3 +227,45 @@ fn test_self_distance_zero() {
         assert_eq!(result.get_distance(v, v), 0);
     }
 }
+
+#[test]
+fn test_star_out_graph() {
+    // Source connects to all other vertices.
+    let vertices = SetLit![0, 1, 2, 3];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 10),
+        WeightedEdge(0, 2, 20),
+        WeightedEdge(0, 3, 30)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = johnson_apsp(&graph);
+    assert_eq!(result.get_distance(0, 1), 10);
+    assert_eq!(result.get_distance(0, 2), 20);
+    assert_eq!(result.get_distance(0, 3), 30);
+    assert_eq!(result.get_distance(1, 2), i64::MAX); // No path between spokes.
+}
+
+#[test]
+fn test_bidirectional_negative_weights() {
+    let vertices = SetLit![0, 1, 2];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 5),
+        WeightedEdge(1, 2, -3),
+        WeightedEdge(2, 0, 4)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = johnson_apsp(&graph);
+    // Total cycle weight: 5 + (-3) + 4 = 6 (positive, no negative cycle).
+    assert_eq!(result.get_distance(0, 2), 2); // 0->1->2: 5+(-3) = 2
+    assert_eq!(result.get_distance(2, 1), 9); // 2->0->1: 4+5 = 9
+}
+
+#[test]
+fn test_two_vertices_one_edge() {
+    let vertices = SetLit![0, 1];
+    let edges = SetLit![WeightedEdge(0, 1, 7)];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = johnson_apsp(&graph);
+    assert_eq!(result.get_distance(0, 1), 7);
+    assert_eq!(result.get_distance(1, 0), i64::MAX);
+}

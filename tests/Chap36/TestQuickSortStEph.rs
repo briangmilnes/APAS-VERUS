@@ -130,3 +130,45 @@ fn quick_sort_three_elements_all_permutations() {
         assert_eq!(data.to_vec(), vec![1, 2, 3], "Failed for perm {:?}", perm);
     }
 }
+
+#[test]
+fn quick_sort_alternating_high_low() {
+    let mut data = ArraySeqStEphSLit![100, 1, 99, 2, 98, 3, 97, 4];
+    ArraySeqStEphS::quick_sort_random(&mut data);
+    assert_eq!(data.to_vec(), vec![1, 2, 3, 4, 97, 98, 99, 100]);
+}
+
+#[test]
+fn quick_sort_all_same_large() {
+    let mut data = ArraySeqStEphS::from_vec(vec![42; 200]);
+    ArraySeqStEphS::quick_sort_first(&mut data);
+    assert!(data.to_vec().iter().all(|&x| x == 42));
+}
+
+#[test]
+fn quick_sort_sorted_then_one_wrong() {
+    let mut data = ArraySeqStEphSLit![1, 2, 3, 4, 0, 5, 6, 7];
+    ArraySeqStEphS::quick_sort_median3(&mut data);
+    assert_eq!(data.to_vec(), vec![0, 1, 2, 3, 4, 5, 6, 7]);
+}
+
+#[test]
+fn quick_sort_organ_pipe() {
+    let mut data = ArraySeqStEphSLit![1, 3, 5, 7, 9, 8, 6, 4, 2];
+    ArraySeqStEphS::quick_sort_first(&mut data);
+    assert_eq!(data.to_vec(), vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
+}
+
+#[test]
+fn quick_sort_plateau() {
+    let mut data = ArraySeqStEphSLit![5, 5, 5, 1, 1, 1, 9, 9, 9];
+    ArraySeqStEphS::quick_sort_random(&mut data);
+    assert_eq!(data.to_vec(), vec![1, 1, 1, 5, 5, 5, 9, 9, 9]);
+}
+
+#[test]
+fn quick_sort_min_max_values() {
+    let mut data = ArraySeqStEphSLit![i32::MAX, i32::MIN, 0, i32::MAX, i32::MIN];
+    ArraySeqStEphS::quick_sort_median3(&mut data);
+    assert_eq!(data.to_vec(), vec![i32::MIN, i32::MIN, 0, i32::MAX, i32::MAX]);
+}
