@@ -1,0 +1,1674 @@
+error: assertion failed
+   --> src/Chap05/SetMtEph.rs:611:28
+    |
+611 |                     assert(!joined_views.contains(a_view)) by {
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(joined_views.contains(a_view)) 
+    function is uninterpreted
+
+note: recommendation not met
+   --> src/Chap05/SetMtEph.rs:522:76
+    |
+522 | ...   forall |i: int, ret: SetMtEph<Pair<T, U>>| (#[trigger] handles@[i].predicate(ret) && 0 <= i < handles@.len()) ==> (
+    |                                                              ^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap05/SetMtEph.rs:587:76
+    |
+587 | ...   forall |i: int, ret: SetMtEph<Pair<T, U>>| (#[trigger] handles@[i].predicate(ret) && 0 <= i < handles@.len()) ==> (
+    |                                                              ^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: postcondition not satisfied
+   --> src/Chap05/SetMtEph.rs:259:17
+    |
+259 | /                 partition_on_elt <==> (
+260 | |                     (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x@)) &&
+261 | |                     (forall |s1: Set<T::V>, s2: Set<T::V>|
+262 | |                         #![trigger parts@.contains(s1), parts@.contains(s2)]
+263 | |                         parts@.contains(s1) && s1.contains(x@) &&
+264 | |                         parts@.contains(s2) && s2.contains(x@) ==> s1 == s2)
+265 | |                 );
+    | |_________________^ failed this postcondition
+...
+737 |                                   return false;
+    |                                   ------------ at this exit
+
+note: diagnostics via expansion
+   --> src/Chap05/SetMtEph.rs:259:17
+    |
+259 |                 partition_on_elt <==> (
+    |                 ^^^^^^^^^^^^^^^^
+...
+264 |                         parts@.contains(s2) && s2.contains(x@) ==> s1 == s2)
+    |                                                                    ^^^^^^^^
+
+note: 
+
+%return == ((exists |s| ) && (forall |s1, s2| ))
+|   %return ==>
+|       (exists |s| ) ✔
+|       forall |s1, s2|
+|           old(parts).view().contains(s1) && s1.contains(old(x).view()) && old(parts).view().contains(s2) && s2.contains(old(x).view()) ==>
+|               s1 == s2 ✘
+|   (exists |s| ) && (forall |s1, s2| ) ==>
+|       %return ✘
++---
+
+error: postcondition not satisfied
+   --> src/Chap05/SetStEph.rs:246:17
+    |
+246 | /                 partition_on_elt <==> (
+247 | |                     (exists |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) && s.contains(x@)) &&
+248 | |                     (forall |s1: Set<T::V>, s2: Set<T::V>|
+249 | |                         #![trigger parts@.contains(s1), parts@.contains(s2)]
+250 | |                         parts@.contains(s1) && s1.contains(x@) &&
+251 | |                         parts@.contains(s2) && s2.contains(x@) ==> s1 == s2)
+252 | |                 );
+    | |_________________^ failed this postcondition
+...
+616 |                                   return false;
+    |                                   ------------ at this exit
+
+note: diagnostics via expansion
+   --> src/Chap05/SetStEph.rs:246:17
+    |
+246 |                 partition_on_elt <==> (
+    |                 ^^^^^^^^^^^^^^^^
+...
+251 |                         parts@.contains(s2) && s2.contains(x@) ==> s1 == s2)
+    |                                                                    ^^^^^^^^
+
+note: 
+
+%return == ((exists |s| ) && (forall |s1, s2| ))
+|   %return ==>
+|       (exists |s| ) ✔
+|       forall |s1, s2|
+|           old(parts).view().contains(s1) && s1.contains(old(x).view()) && old(parts).view().contains(s2) && s2.contains(old(x).view()) ==>
+|               s1 == s2 ✘
+|   (exists |s| ) && (forall |s1, s2| ) ==>
+|       %return ✘
++---
+
+error: assertion failed
+   --> src/Chap05/SetStEph.rs:709:28
+    |
+709 |                     assert(!iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set().contains(x@)) by {
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+!(iter_seq.subrange(0, iter.pos).map((|_i, k| k.view())).to_set().contains(x.view())) 
+    function is uninterpreted
+
+error: precondition not satisfied
+    --> src/Chap06/WeightedDirGraphStEphI128.rs:342:29
+     |
+ 342 | ...                   lemma_signed_weighted_seq_fold_equals_set_fold_i128(wa_seq.map(|_i: int, e: LabEdge<V, i128>| e@));
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/seq_set.rs:1240:14
+     |
+1240 |     requires seq.no_duplicates(),
+     |              ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+    --> src/Chap06/WeightedDirGraphStEphI16.rs:325:29
+     |
+ 325 | ...                   lemma_signed_weighted_seq_fold_equals_set_fold_i16(wa_seq.map(|_i: int, e: LabEdge<V, i16>| e@));
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/seq_set.rs:1114:14
+     |
+1114 |     requires seq.no_duplicates(),
+     |              ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+    --> src/Chap06/WeightedDirGraphStEphI32.rs:325:29
+     |
+ 325 | ...                   lemma_signed_weighted_seq_fold_equals_set_fold(wa_seq.map(|_i: int, e: LabEdge<V, i32>| e@));
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/seq_set.rs:1157:14
+     |
+1157 |     requires seq.no_duplicates(),
+     |              ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+    --> src/Chap06/WeightedDirGraphStEphI64.rs:325:29
+     |
+ 325 | ...                   lemma_signed_weighted_seq_fold_equals_set_fold_i64(wa_seq.map(|_i: int, e: LabEdge<V, i64>| e@));
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/seq_set.rs:1198:14
+     |
+1198 |     requires seq.no_duplicates(),
+     |              ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+    --> src/Chap06/WeightedDirGraphStEphI8.rs:325:29
+     |
+ 325 | ...                   lemma_signed_weighted_seq_fold_equals_set_fold_i8(wa_seq.map(|_i: int, e: LabEdge<V, i8>| e@));
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/seq_set.rs:1072:14
+     |
+1072 |     requires seq.no_duplicates(),
+     |              ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+    --> src/Chap06/WeightedDirGraphStEphIsize.rs:325:29
+     |
+ 325 | ...                   lemma_signed_weighted_seq_fold_equals_set_fold_isize(wa_seq.map(|_i: int, e: LabEdge<V, isize>| e@));
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/seq_set.rs:1282:14
+     |
+1282 |     requires seq.no_duplicates(),
+     |              ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+   --> src/Chap06/WeightedDirGraphStEphU128.rs:326:29
+    |
+326 | ...                   lemma_weighted_seq_fold_equals_set_fold_u128(wa_seq.map(|_i: int, e: LabEdge<V, u128>| e@));
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/seq_set.rs:978:14
+    |
+978 |     requires seq.no_duplicates(),
+    |              ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+   --> src/Chap06/WeightedDirGraphStEphU16.rs:326:29
+    |
+326 | ...                   lemma_weighted_seq_fold_equals_set_fold_u16(wa_seq.map(|_i: int, e: LabEdge<V, u16>| e@));
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/seq_set.rs:879:14
+    |
+879 |     requires seq.no_duplicates(),
+    |              ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+   --> src/Chap06/WeightedDirGraphStEphU32.rs:326:29
+    |
+326 | ...                   lemma_weighted_seq_fold_equals_set_fold(wa_seq.map(|_i: int, e: LabEdge<V, u32>| e@));
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/seq_set.rs:667:9
+    |
+667 |         seq.no_duplicates(),
+    |         ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+   --> src/Chap06/WeightedDirGraphStEphU64.rs:326:29
+    |
+326 | ...                   lemma_weighted_seq_fold_equals_set_fold_u64(wa_seq.map(|_i: int, e: LabEdge<V, u64>| e@));
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/seq_set.rs:928:14
+    |
+928 |     requires seq.no_duplicates(),
+    |              ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+   --> src/Chap06/WeightedDirGraphStEphU8.rs:326:29
+    |
+326 | ...                   lemma_weighted_seq_fold_equals_set_fold_u8(wa_seq.map(|_i: int, e: LabEdge<V, u8>| e@));
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/seq_set.rs:829:14
+    |
+829 |     requires seq.no_duplicates(),
+    |              ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: precondition not satisfied
+    --> src/Chap06/WeightedDirGraphStEphUsize.rs:326:29
+     |
+ 326 | ...                   lemma_weighted_seq_fold_equals_set_fold_usize(wa_seq.map(|_i: int, e: LabEdge<V, usize>| e@));
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/seq_set.rs:1028:14
+     |
+1028 |     requires seq.no_duplicates(),
+     |              ------------------- failed precondition
+
+note: 
+
+tmp%.no_duplicates()
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && let tmp%% = 0 in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == j) ==>
+|           !(tmp%.index(i) == tmp%.index(j)) 
++---
+
+error: assertion failed
+   --> src/Chap41/AVLTreeSetStPer.rs:153:21
+    |
+153 |             implies #[trigger] a[k] == b[k] by {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+a.index(k) == b.index(k) 
+
+error: invariant not satisfied before loop
+    --> src/Chap43/OrderedTableStEph.rs:2682:25
+     |
+2682 |                         self@.dom().contains(min_key@),
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2722:32
+     |
+2722 |                         assert(sorted.spec_index(j).0 == t);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+sorted.spec_index(j).0 == t 
+
+error: invariant not satisfied before loop
+    --> src/Chap43/OrderedTableStEph.rs:2769:25
+     |
+2769 |                         self@.dom().contains(max_key@),
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2809:32
+     |
+2809 |                         assert(sorted.spec_index(j).0 == t);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+sorted.spec_index(j).0 == t 
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:2852:21
+     |
+2852 |                     found ==> TotalOrder::le(best->Some_0, *k) && best->Some_0@ != k@,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2924:32
+     |
+2924 |                         assert(sorted.spec_index(j).0 == t);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+sorted.spec_index(j).0 == t 
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStEph.rs:2967:21
+     |
+2967 |                     found ==> TotalOrder::le(*k, best->Some_0) && best->Some_0@ != k@,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:3039:32
+     |
+3039 |                         assert(sorted.spec_index(j).0 == t);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+sorted.spec_index(j).0 == t 
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:3466:36
+     |
+3466 | ...                   assert(pair.0@ != k@);
+     |                              ^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:3505:36
+     |
+3505 | ...                   assert(pair.0@ != k@);
+     |                              ^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:3511:44
+     |
+3511 | ...                   assert(t == pair.0);
+     |                              ^^^^^^^^^^^ assertion failed
+
+note: 
+
+!(pair.0.view() == k.view()) 
+
+error: assertion failed
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:289:40
+    |
+289 | ...                   assert(spec_flat_has_key(old_table_seq[slot as int], key));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+  --> src/Chap47/FlatHashTable.rs:47:43
+   |
+47 |             FlatEntry::Occupied(ek, _) => ek == k,
+   |                                           ^^^^^^^
+
+note: 
+
+spec_flat_has_key(old_table_seq.index(slot), key)
+|   let tmp%% = old_table_seq.index(slot);
+|       tmp%% is Occupied && true && true ==>
+|           let ek = tmp%%.0;
+|               ek == key ✘
+|       !(tmp%% is Occupied && true && true) ==>
+|           false ✔
++---
+
+error: assertion failed
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:562:40
+    |
+562 | ...                   assert(spec_flat_has_key(table.table@[slot as int], *key));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_flat_has_key(table.table.view().index(slot), key)
+|   let tmp%% = table.table.view().index(slot);
+|       tmp%% is Occupied && true && true ==>
+|           let ek = tmp%%.0;
+|               ek == key ✘
+|       !(tmp%% is Occupied && true && true) ==>
+|           false ✔
++---
+
+error: assertion failed
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:696:40
+    |
+696 | ...                   assert(spec_flat_has_key(old_table_seq[slot as int], *key));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_flat_has_key(old_table_seq.index(slot), key)
+|   let tmp%% = old_table_seq.index(slot);
+|       tmp%% is Occupied && true && true ==>
+|           let ek = tmp%%.0;
+|               ek == key ✘
+|       !(tmp%% is Occupied && true && true) ==>
+|           false ✔
++---
+
+error: assertion failed
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:243:40
+    |
+243 | ...                   assert(spec_flat_has_key(old_table_seq[slot as int], key));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_flat_has_key(old_table_seq.index(slot), key)
+|   let tmp%% = old_table_seq.index(slot);
+|       tmp%% is Occupied && true && true ==>
+|           let ek = tmp%%.0;
+|               ek == key ✘
+|       !(tmp%% is Occupied && true && true) ==>
+|           false ✔
++---
+
+error: assertion failed
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:515:40
+    |
+515 | ...                   assert(spec_flat_has_key(table.table@[slot as int], *key));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_flat_has_key(table.table.view().index(slot), key)
+|   let tmp%% = table.table.view().index(slot);
+|       tmp%% is Occupied && true && true ==>
+|           let ek = tmp%%.0;
+|               ek == key ✘
+|       !(tmp%% is Occupied && true && true) ==>
+|           false ✔
++---
+
+error: assertion failed
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:627:40
+    |
+627 | ...                   assert(spec_flat_has_key(old_table_seq[slot as int], *key));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_flat_has_key(old_table_seq.index(slot), key)
+|   let tmp%% = old_table_seq.index(slot);
+|       tmp%% is Occupied && true && true ==>
+|           let ek = tmp%%.0;
+|               ek == key ✘
+|       !(tmp%% is Occupied && true && true) ==>
+|           false ✔
++---
+
+error: loop invariant not satisfied
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:201:25
+    |
+192 | /                         existed ==> found_idx < bucket_len
+193 | |                             && original[found_idx as int].0 == key,
+    | |                                                                  -
+    | |                                                                  |
+    | |__________________________________________________________________failed this invariant
+    |                                                                    (hint: if this is not supposed to be true at the break, use 'invariant_except_break' for it instead of 'invariant', and use 'ensures' for what is true at the break)
+...
+201 |                           break;
+    |                           ^^^^^ at this loop exit
+
+error: precondition not satisfied
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:301:29
+    |
+301 | / ...                   lemma_seq_pairs_last_key_gives_value::<Key, Value>(
+302 | | ...                       bv, *key, i as int);
+    | |_____________________________________________^
+    |
+   ::: src/Chap47/ChainedHashTable.rs:132:17
+    |
+132 |                   pairs[i].0 == key,
+    |                   ----------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap47/ChainedHashTable.rs:132:17
+    |
+132 |                 pairs[i].0 == key,
+    |                 ^^^^^^^^^^^^^^^^^
+
+note: 
+
+let tmp%% = 0;
+    let tmp%% = i;
+        let tmp%% = bv.len();
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✔
+bv.index(i).0 == key ✘
+forall |j|
+    let tmp%% = i in let tmp%% = j in let tmp%% = bv.len() in tmp%% < tmp%% && tmp%% < tmp%% ==>
+        !(bv.index(j).0 == key) ✔
+
+note: recommendation not met
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:271:51
+    |
+271 |                 let ghost bv: Seq<(Key, Value)> = table.table@[index as int].seq@;
+    |                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:349:25
+    |
+349 |                         spec_seq_pairs_to_map(new_seq@) =~= prefix_map.remove(*key),
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:352:25
+    |
+352 | /                         deleted ==> exists |j: int| 0 <= j < i as int
+353 | |                             && (#[trigger] original[j]).0 == *key,
+    | |_________________________________________________________________^
+
+error: assertion failed
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:605:40
+    |
+605 | ...                   assert(spec_flat_has_key(old_table_seq[slot as int], key));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_flat_has_key(old_table_seq.index(slot), key)
+|   let tmp%% = old_table_seq.index(slot);
+|       tmp%% is Occupied && true && true ==>
+|           let ek = tmp%%.0;
+|               ek == key ✘
+|       !(tmp%% is Occupied && true && true) ==>
+|           false ✔
++---
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:843:29
+    |
+843 |                   let s_wit = choose |s: int| #![trigger old(table).table@[s]]
+    |  _____________________________^
+844 | |                     0 <= s < old(table).table@.len() && old(table).table@[s] is Empty;
+    | |_____________________________________________________________________________________^
+
+note: recommendation not met
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:845:24
+    |
+845 |                 assert(table.table@[s_wit] is Empty);
+    |                        ^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: assertion failed
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:888:40
+    |
+888 | ...                   assert(spec_flat_has_key(table.table@[slot as int], *key));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_flat_has_key(table.table.view().index(slot), key)
+|   let tmp%% = table.table.view().index(slot);
+|       tmp%% is Occupied && true && true ==>
+|           let ek = tmp%%.0;
+|               ek == key ✘
+|       !(tmp%% is Occupied && true && true) ==>
+|           false ✔
++---
+
+error: assertion failed
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1012:40
+     |
+1012 | ...                   assert(spec_flat_has_key(old_table_seq[slot as int], *key));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_flat_has_key(old_table_seq.index(slot), key)
+|   let tmp%% = old_table_seq.index(slot);
+|       tmp%% is Occupied && true && true ==>
+|           let ek = tmp%%.0;
+|               ek == key ✘
+|       !(tmp%% is Occupied && true && true) ==>
+|           false ✔
++---
+
+error: postcondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:132:17
+    |
+132 |                   spec_chain_to_map(inserted.0) == spec_chain_to_map(chain).insert(key, value),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+137 | /             match chain {
+138 | |                 None => {
+139 | |                     let out = Some(Box::new(Node { key, value, next: None }));
+140 | |                     proof {
+...   |
+174 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:133:17
+    |
+133 |                   inserted.1 == spec_chain_to_map(chain).dom().contains(key),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+137 | /             match chain {
+138 | |                 None => {
+139 | |                     let out = Some(Box::new(Node { key, value, next: None }));
+140 | |                     proof {
+...   |
+174 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:134:17
+    |
+134 |                   spec_chain_keys_unique(chain) ==> spec_chain_keys_unique(inserted.0),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+137 | /             match chain {
+138 | |                 None => {
+139 | |                     let out = Some(Box::new(Node { key, value, next: None }));
+140 | |                     proof {
+...   |
+174 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap47/StructChainedHashTable.rs:81:22
+    |
+ 81 |                     !spec_chain_to_map(node.next).dom().contains(node.key)
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+132 |                 spec_chain_to_map(inserted.0) == spec_chain_to_map(chain).insert(key, value),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+133 |                 inserted.1 == spec_chain_to_map(chain).dom().contains(key),
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+134 |                 spec_chain_keys_unique(chain) ==> spec_chain_keys_unique(inserted.0),
+    |                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+inserted.0 is Some ✔
+spec_chain_to_map(inserted.0) =~= spec_chain_to_map(old(chain)).insert(old(key), old(value)) ✘
+inserted.1 == spec_chain_to_map(old(chain)).dom().contains(old(key)) ✘
+|   inserted.1 ==>
+|       spec_chain_to_map(old(chain)).dom().contains(old(key)) ✘
+|           function is uninterpreted
+|   spec_chain_to_map(old(chain)).dom().contains(old(key)) ==>
+|       inserted.1 ✔
++---
+spec_chain_keys_unique(old(chain)) ==>
+    spec_chain_keys_unique(inserted.0) ✘
+    |   let tmp%% = inserted.0;
+    |       tmp%% is None ==>
+    |           true ✔
+    |       !(tmp%% is None) ==>
+    |           let node = tmp%%.0;
+    |               !(spec_chain_to_map(node.next).dom().contains(node.key)) ✘
+    |                   function is uninterpreted
+    |               spec_chain_keys_unique(node.next) ✔
+    +---
+
+error: postcondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:185:17
+    |
+185 | /                 spec_chain_to_map(*chain).dom().contains(*key)
+186 | |                     ==> found == Some(spec_chain_to_map(*chain)[*key]),
+    | |______________________________________________________________________^ failed this postcondition
+...
+191 | /             match chain {
+192 | |                 None => {
+193 | |                     proof { reveal_with_fuel(spec_chain_to_map, 1); }
+194 | |                     None
+...   |
+215 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:187:17
+    |
+187 | /                 !spec_chain_to_map(*chain).dom().contains(*key)
+188 | |                     ==> found is None,
+    | |_____________________________________^ failed this postcondition
+...
+191 | /             match chain {
+192 | |                 None => {
+193 | |                     proof { reveal_with_fuel(spec_chain_to_map, 1); }
+194 | |                     None
+...   |
+215 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap47/StructChainedHashTable.rs:186:25
+    |
+186 |                     ==> found == Some(spec_chain_to_map(*chain)[*key]),
+    |                         ^^^^^
+187 |                 !spec_chain_to_map(*chain).dom().contains(*key)
+188 |                     ==> found is None,
+    |                         ^^^^^^^^^^^^^
+
+note: 
+
+spec_chain_to_map(old(chain)).dom().contains(old(key)) ==>
+    found =~= Some(spec_chain_to_map(old(chain)).index(old(key))) ✘
+    |   !(found is None) ✔
+    |   found is Some ==>
+    |       found.0 =~= spec_chain_to_map(old(chain)).index(old(key)) ✘
+    +---
+!(spec_chain_to_map(old(chain)).dom().contains(old(key))) ==>
+    found is None ✘
+
+error: postcondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:225:17
+    |
+225 | /                 spec_chain_to_map(remaining_and_deleted.0)
+226 | |                     == spec_chain_to_map(chain).remove(*key),
+    | |____________________________________________________________^ failed this postcondition
+...
+232 | /             match chain {
+233 | |                 None => {
+234 | |                     proof { reveal_with_fuel(spec_chain_to_map, 1); }
+235 | |                     (None, false)
+...   |
+264 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:227:17
+    |
+227 | /                 remaining_and_deleted.1
+228 | |                     == spec_chain_to_map(chain).dom().contains(*key),
+    | |____________________________________________________________________^ failed this postcondition
+...
+232 | /             match chain {
+233 | |                 None => {
+234 | |                     proof { reveal_with_fuel(spec_chain_to_map, 1); }
+235 | |                     (None, false)
+...   |
+264 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap47/StructChainedHashTable.rs:225:17
+    |
+225 | /                 spec_chain_to_map(remaining_and_deleted.0)
+226 | |                     == spec_chain_to_map(chain).remove(*key),
+    | |____________________________________________________________^
+227 |                   remaining_and_deleted.1
+228 |                       == spec_chain_to_map(chain).dom().contains(*key),
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_chain_to_map(remaining_and_deleted.0) =~= spec_chain_to_map(old(chain)).remove(old(key)) ✘
+remaining_and_deleted.1 == spec_chain_to_map(old(chain)).dom().contains(old(key)) ✘
+|   remaining_and_deleted.1 ==>
+|       spec_chain_to_map(old(chain)).dom().contains(old(key)) ✘
+|           function is uninterpreted
+|   spec_chain_to_map(old(chain)).dom().contains(old(key)) ==>
+|       remaining_and_deleted.1 ✔
++---
+spec_chain_keys_unique(old(chain)) ==>
+    spec_chain_keys_unique(remaining_and_deleted.0) ✔
+
+error: loop invariant not satisfied
+   --> src/Chap47/VecChainedHashTableStEph.rs:202:25
+    |
+193 | /                         existed ==> found_idx < bucket_len
+194 | |                             && original[found_idx as int].0 == key,
+    | |                                                                  -
+    | |                                                                  |
+    | |__________________________________________________________________failed this invariant
+    |                                                                    (hint: if this is not supposed to be true at the break, use 'invariant_except_break' for it instead of 'invariant', and use 'ensures' for what is true at the break)
+...
+202 |                           break;
+    |                           ^^^^^ at this loop exit
+
+error: precondition not satisfied
+   --> src/Chap47/VecChainedHashTableStEph.rs:303:29
+    |
+303 | / ...                   lemma_seq_pairs_last_key_gives_value::<Key, Value>(
+304 | | ...                       bv, *key, i as int);
+    | |_____________________________________________^
+    |
+   ::: src/Chap47/ChainedHashTable.rs:132:17
+    |
+132 |                   pairs[i].0 == key,
+    |                   ----------------- failed precondition
+
+note: 
+
+let tmp%% = 0;
+    let tmp%% = i;
+        let tmp%% = bv.len();
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✔
+bv.index(i).0 == key ✘
+forall |j|
+    let tmp%% = i in let tmp%% = j in let tmp%% = bv.len() in tmp%% < tmp%% && tmp%% < tmp%% ==>
+        !(bv.index(j).0 == key) ✔
+
+note: recommendation not met
+   --> src/Chap47/VecChainedHashTableStEph.rs:271:51
+    |
+271 |                 let ghost bv: Seq<(Key, Value)> = table.table@[index as int]@;
+    |                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap47/VecChainedHashTableStEph.rs:350:25
+    |
+350 |                         spec_seq_pairs_to_map(new_bucket@) =~= prefix_map.remove(*key),
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap47/VecChainedHashTableStEph.rs:353:25
+    |
+353 | /                         deleted ==> exists |j: int| 0 <= j < i as int
+354 | |                             && (#[trigger] original[j]).0 == *key,
+    | |_________________________________________________________________^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStPer.rs:2262:32
+     |
+2262 |                         assert(sorted.spec_index(j).0 == t);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+sorted.spec_index(j).0 == t 
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStPer.rs:2347:32
+     |
+2347 |                         assert(sorted.spec_index(j).0 == t);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+sorted.spec_index(j).0 == t 
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStPer.rs:2386:21
+     |
+2386 |                     found ==> TotalOrder::le(best->Some_0, *k) && best->Some_0@ != k@,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStPer.rs:2456:32
+     |
+2456 |                         assert(sorted.spec_index(j).0 == t);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+sorted.spec_index(j).0 == t 
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap43/OrderedTableStPer.rs:2495:21
+     |
+2495 |                     found ==> TotalOrder::le(*k, best->Some_0) && best->Some_0@ != k@,
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStPer.rs:2565:32
+     |
+2565 |                         assert(sorted.spec_index(j).0 == t);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+sorted.spec_index(j).0 == t 
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStPer.rs:2948:36
+     |
+2948 | ...                   assert(pair.0@ != k@);
+     |                              ^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStPer.rs:2987:36
+     |
+2987 | ...                   assert(pair.0@ != k@);
+     |                              ^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStPer.rs:2993:44
+     |
+2993 | ...                   assert(t == pair.0);
+     |                              ^^^^^^^^^^^ assertion failed
+
+note: 
+
+!(pair.0.view() == k.view()) 
+
+error: postcondition not satisfied
+   --> src/Chap55/SCCStEph.rs:95:13
+    |
+ 95 |             finish_order.spec_avltreeseqsteph_wf(),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+179 |         AVLTreeSeqStEphS::from_vec(reversed)
+    |         ------------------------------------ at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap55/SCCStEph.rs:179:9
+    |
+179 |         AVLTreeSeqStEphS::from_vec(reversed)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:319:17
+    |
+319 |                 obeys_feq_full::<T>(),
+    |                 --------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/vstdplus/feq.rs:70:13
+    |
+ 70 |         &&& obeys_feq_view_injective::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:319:17
+    |
+319 |                 obeys_feq_full::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+obeys_feq_full() ✘
+|   obeys_feq_properties() ✔
+|   obeys_feq_view() ✔
+|   obeys_feq_view_injective() ✘
+|       function is uninterpreted
+|   obeys_feq_clone() ✔
+|   obeys_feq_eq() ✔
++---
+reversed.view().len() < UnsignedMax.Exec(usize::BITS) ✔
+
+error: precondition not satisfied
+    --> src/Chap55/TopoSortStEph.rs:1017:25
+     |
+1017 |             let order = AVLTreeSeqStEphS::from_vec(reversed);
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStEph.rs:319:17
+     |
+ 319 |                 obeys_feq_full::<T>(),
+     |                 --------------------- failed precondition
+
+note: 
+
+obeys_feq_full() ✘
+|   obeys_feq_properties() ✔
+|   obeys_feq_view() ✔
+|   obeys_feq_view_injective() ✘
+|       function is uninterpreted
+|   obeys_feq_clone() ✔
+|   obeys_feq_eq() ✔
++---
+reversed.view().len() < UnsignedMax.Exec(usize::BITS) ✔
+
+error: precondition not satisfied
+  --> src/Chap61/EdgeContractionStEph.rs:72:35
+   |
+72 |         let mut vertex_to_block = HashMapWithViewPlus::<V, V>::new();
+   |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+  ::: src/vstdplus/hash_map_with_view_plus.rs:58:13
+   |
+58 |             forall|k1: Key, k2: Key| k1@ == k2@ ==> k1 == k2,
+   |             ------------------------------------------------ failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/hash_map_with_view_plus.rs:58:53
+   |
+58 |             forall|k1: Key, k2: Key| k1@ == k2@ ==> k1 == k2,
+   |                                                     ^^^^^^^^
+
+note: 
+
+obeys_key_model() ✔
+forall |k1, k2|
+    k1.view() == k2.view() ==>
+        k1 == k2 ✘
+
+error: precondition not satisfied
+  --> src/Chap61/VertexMatchingStEph.rs:97:30
+   |
+97 |         let mut edge_coins = HashMapWithViewPlus::<Edge<V>, bool>::new();
+   |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+  ::: src/vstdplus/hash_map_with_view_plus.rs:58:13
+   |
+58 |             forall|k1: Key, k2: Key| k1@ == k2@ ==> k1 == k2,
+   |             ------------------------------------------------ failed precondition
+
+note: 
+
+obeys_key_model() ✔
+forall |k1, k2|
+    k1.view() == k2.view() ==>
+        k1 == k2 ✘
+        |   k1.0 == k2.0 ✘
+        |   k1.1 == k2.1 ✘
+        +---
+
+error: precondition not satisfied
+  --> src/Chap62/StarPartitionStEph.rs:77:33
+   |
+77 |         let mut partition_map = HashMapWithViewPlus::<V, V>::new();
+   |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+  ::: src/vstdplus/hash_map_with_view_plus.rs:58:13
+   |
+58 |             forall|k1: Key, k2: Key| k1@ == k2@ ==> k1 == k2,
+   |             ------------------------------------------------ failed precondition
+
+note: 
+
+obeys_key_model() ✔
+forall |k1, k2|
+    k1.view() == k2.view() ==>
+        k1 == k2 ✘
+
+error: precondition not satisfied
+   --> src/Chap63/ConnectivityMtEph.rs:239:9
+    |
+239 |         star_contract_mt(graph, seed, &base, &expand, Ghost(|_r: (SetStEph<V>, HashMapWithViewPlus<V, V>)| true))
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap62/StarContractionMtEph.rs:191:9
+    |
+191 |         forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),
+    |         ------------------------------------------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap62/StarContractionMtEph.rs:191:69
+    |
+191 |         forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),
+    |                                                                     ^^^^^^^^^^^^^^^^^^^
+...
+195 |             ==> #[trigger] expand.requires((v, e, c, p, r)),
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_graphview_wf(graph.view()) ✔
+valid_key_type_Edge() ✔
+forall |s|
+    s.spec_setsteph_wf() ==>
+        ClosureReq(base, (s)) ✘
+forall |s, r|
+    s.spec_setsteph_wf() && ClosureEns(base, (s), r) ==>
+        tmp%(r) ✔
+forall |v, e, c, p, r|
+    v.spec_setsteph_wf() && e.spec_setsteph_wf() && c.spec_setsteph_wf() && tmp%(r) ==>
+        ClosureReq(expand, (v, e, c, p, r)) ✘
+forall |v, e, c, p, r, out|
+    ClosureEns(expand, (v, e, c, p, r), out) ==>
+        tmp%(out) ✔
+
+error: precondition not satisfied
+   --> src/Chap63/ConnectivityStEph.rs:241:9
+    |
+241 |         star_contract(graph, &base, &expand, Ghost(|r: (SetStEph<V>, HashMapWithViewPlus<V, V>)| true))
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap62/StarContractionStEph.rs:172:9
+    |
+172 |         forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),
+    |         ------------------------------------------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap62/StarContractionStEph.rs:172:69
+    |
+172 |         forall|s: &SetStEph<V>| s.spec_setsteph_wf() ==> #[trigger] base.requires((s,)),
+    |                                                                     ^^^^^^^^^^^^^^^^^^^
+...
+176 |             ==> #[trigger] expand.requires((v, e, c, p, r)),
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_graphview_wf(graph.view()) ✔
+valid_key_type_Edge() ✔
+forall |s|
+    s.spec_setsteph_wf() ==>
+        ClosureReq(base, (s)) ✘
+forall |s, r|
+    s.spec_setsteph_wf() && ClosureEns(base, (s), r) ==>
+        tmp%(r) ✔
+forall |v, e, c, p, r|
+    v.spec_setsteph_wf() && e.spec_setsteph_wf() && c.spec_setsteph_wf() && tmp%(r) ==>
+        ClosureReq(expand, (v, e, c, p, r)) ✘
+forall |v, e, c, p, r, out|
+    ClosureEns(expand, (v, e, c, p, r), out) ==>
+        tmp%(out) ✔
+
+error: precondition not satisfied
+   --> src/Chap62/StarPartitionMtEph.rs:110:35
+    |
+110 |         let mut vertex_to_index = HashMapWithViewPlus::<V, usize>::new();
+    |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/hash_map_with_view_plus.rs:58:13
+    |
+ 58 |             forall|k1: Key, k2: Key| k1@ == k2@ ==> k1 == k2,
+    |             ------------------------------------------------ failed precondition
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:142:36
+    |
+142 | ...                   assert(vertices_vec@[j as int] == vertices_vec@[i as int]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap62/StarPartitionMtEph.rs:178:30
+    |
+178 |         let mut coin_flips = HashMapWithViewPlus::<V, bool>::new();
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/hash_map_with_view_plus.rs:58:13
+    |
+ 58 |             forall|k1: Key, k2: Key| k1@ == k2@ ==> k1 == k2,
+    |             ------------------------------------------------ failed precondition
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:201:36
+    |
+201 | ...                   assert(vertices_vec@[jj as int] == vertices_vec@[j as int]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap62/StarPartitionMtEph.rs:556:33
+    |
+556 |         let mut partition_map = HashMapWithViewPlus::<V, V>::new();
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/hash_map_with_view_plus.rs:58:13
+    |
+ 58 |             forall|k1: Key, k2: Key| k1@ == k2@ ==> k1 == k2,
+    |             ------------------------------------------------ failed precondition
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:611:24
+    |
+611 |                 assert(partition_map@ == pre_pm.insert(qv, center));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+vertices_vec.view().index(j) == vertices_vec.view().index(i) 
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:367:53
+    |
+367 |                     assert(coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@));
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:339:69
+    |
+339 | ...                   assert(coin_flips@.contains_key(vertices_vec@[(pre_th[s].0 as usize) as int]@));
+    |                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:297:69
+    |
+297 | ...                   assert(coin_flips@.contains_key(vertices_vec@[(pre_th[s].0 as usize) as int]@));
+    |                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:548:53
+    |
+548 |                     assert(coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@));
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:386:49
+    |
+386 |                 assert(coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@));
+    |                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: precondition not satisfied
+   --> src/Chap66/BoruvkaStEph.rs:499:48
+    |
+499 |             Self::boruvka_mst(vertices, edges, SetStEph::empty(), seed)
+    |                                                ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap05/SetStEph.rs:149:22
+    |
+149 |             requires Self::spec_valid_key_type()
+    |                      --------------------------- failed precondition
+
+note: 
+
+spec_valid_key_type() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap65/UnionFindStEph.rs:1361:13
+     |
+1361 |             while i < self.elements.len()
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:131:17
+    |
+131 |                 assert forall|j: int| 0 <= j < i as int + 1 implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:132:51
+    |
+132 |                     vertex_to_index@.contains_key(vertices_vec@[j]@) &&
+    |                                                   ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:150:21
+    |
+150 |                     exists|j: int| 0 <= j < i as int + 1 && vertices_vec@[j]@ == v_view by {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:150:61
+    |
+150 |                     exists|j: int| 0 <= j < i as int + 1 && vertices_vec@[j]@ == v_view by {
+    |                                                             ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:124:21
+    |
+124 |                     exists|j: int| 0 <= j < i as int && vertices_vec@[j]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:124:57
+    |
+124 |                     exists|j: int| 0 <= j < i as int && vertices_vec@[j]@ == v_view,
+    |                                                         ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:192:17
+    |
+192 |                 assert forall|jj: int| 0 <= jj < j as int + 1 implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:193:46
+    |
+193 |                     coin_flips@.contains_key(vertices_vec@[jj]@) by {
+    |                                              ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:287:29
+    |
+287 | ...                   assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:288:34
+    |
+288 | ...                   (th_edges@[s].0 as usize) < nv &&
+    |                        ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:329:29
+    |
+329 | ...                   assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:330:34
+    |
+330 | ...                   (th_edges@[s].0 as usize) < nv &&
+    |                        ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:358:17
+    |
+358 |                 assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:359:22
+    |
+359 |                     (th_edges@[s].0 as usize) < nv &&
+    |                      ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:231:21
+    |
+231 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:231:60
+    |
+231 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                                                            ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:378:13
+    |
+378 |             assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |             ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:379:18
+    |
+379 |                 (th_edges@[s].0 as usize) < nv &&
+    |                  ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:400:17
+    |
+400 |                 forall|j2: int| 0 <= j2 < m as int ==> p_vec@[j2]@ == vertices_vec@[j2]@,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:400:56
+    |
+400 |                 forall|j2: int| 0 <= j2 < m as int ==> p_vec@[j2]@ == vertices_vec@[j2]@,
+    |                                                        ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:400:71
+    |
+400 |                 forall|j2: int| 0 <= j2 < m as int ==> p_vec@[j2]@ == vertices_vec@[j2]@,
+    |                                                                       ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:406:21
+    |
+406 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:406:60
+    |
+406 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                                                            ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:503:21
+    |
+503 |                     assert forall|j2: int| 0 <= j2 < nv as int implies
+    |                     ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:504:50
+    |
+504 |                         coin_flips@.contains_key(vertices_vec@[j2]@) &&
+    |                                                  ^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:506:26
+    |
+506 |                          p_vec@[j2]@ == vertices_vec@[j2]@) by {
+    |                          ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:513:21
+    |
+513 |                     assert forall|j2: int|
+    |                     ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:514:49
+    |
+514 |                         (0 <= j2 < nv as int && p_vec@[j2]@ != vertices_vec@[j2]@) implies
+    |                                                 ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:514:64
+    |
+514 |                         (0 <= j2 < nv as int && p_vec@[j2]@ != vertices_vec@[j2]@) implies
+    |                                                                ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:540:17
+    |
+540 |                 assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:541:22
+    |
+541 |                     (th_edges@[s].0 as usize) < nv &&
+    |                      ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:464:17
+    |
+464 | /                 forall|j2: int| 0 <= j2 < nv as int ==>
+465 | |                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+466 | |                     vertex_to_index@[vertices_vec@[j2]@] as usize == j2,
+    | |_______________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:465:51
+    |
+465 |                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+    |                                                   ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:468:21
+    |
+468 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:468:60
+    |
+468 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                                                            ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:615:17
+    |
+615 |                 assert forall|j2: int| 0 <= j2 < q as int implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:617:60
+    |
+617 |                     partition_map@[vertices_vec@[j2]@]@ == p_vec@[j2]@ by {
+    |                                                            ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:632:21
+    |
+632 |                     exists|j2: int| 0 <= j2 < q as int + 1 && vertices_vec@[j2]@ == v_view by {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:632:63
+    |
+632 |                     exists|j2: int| 0 <= j2 < q as int + 1 && vertices_vec@[j2]@ == v_view by {
+    |                                                               ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:653:21
+    |
+653 |                     assert forall|j2: int|
+    |                     ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:654:48
+    |
+654 |                         (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+    |                                                ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:654:63
+    |
+654 |                         (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+    |                                                               ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:667:21
+    |
+667 |                     assert forall|j2: int|
+    |                     ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:668:48
+    |
+668 |                         (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+    |                                                ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:668:63
+    |
+668 |                         (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+    |                                                               ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:583:17
+    |
+583 | /                 forall|j2: int| 0 <= j2 < nv as int ==>
+584 | |                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+585 | |                     vertex_to_index@[vertices_vec@[j2]@] as usize == j2,
+    | |_______________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:584:51
+    |
+584 |                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+    |                                                   ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:587:21
+    |
+587 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:587:60
+    |
+587 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                                                            ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:598:21
+    |
+598 |                     exists|j2: int| 0 <= j2 < q as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:598:59
+    |
+598 |                     exists|j2: int| 0 <= j2 < q as int && vertices_vec@[j2]@ == v_view,
+    |                                                           ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:695:25
+    |
+695 |                 let j = choose|j: int| 0 <= j < nv as int && vertices_vec@[j]@ == v_view;
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:695:62
+    |
+695 |                 let j = choose|j: int| 0 <= j < nv as int && vertices_vec@[j]@ == v_view;
+    |                                                              ^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap62/StarPartitionMtEph.rs:695:25
+    |
+695 |                 let j = choose|j: int| 0 <= j < nv as int && vertices_vec@[j]@ == v_view;
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 5364 verified, 60 errors
+error: aborting due to 77 previous errors
+
+Elapsed: 110s
+Sampled Memory Usage: peak rust_verify RSS: 9969MB, peak z3 RSS: 1325MB, min free: 11289MB
+Sampled CPU Usage: rust_verify: 217s, z3 children: 182s

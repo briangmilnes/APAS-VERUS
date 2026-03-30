@@ -1,9 +1,10 @@
 #!/bin/bash
-# Generate profile summary table from SUMMARY-*.txt files.
+# Generate profile summary tables from SUMMARY-*.txt files.
 # Usage: scripts/profile-table.sh
 #
-# Reads logs/profile/SUMMARY-Chap*.txt, extracts total instantiations
-# per chapter, and prints a markdown table sorted by instantiation count.
+# Prints two tables:
+# 1. Per-chapter totals sorted by instantiation count
+# 2. Top quantifiers across all chapters (user + vstd only, no prelude/internal)
 
 set -uo pipefail
 
@@ -15,19 +16,27 @@ if ! ls "$PROFILE_DIR"/SUMMARY-Chap*.txt >/dev/null 2>&1; then
     exit 1
 fi
 
+# Use only the latest summary per chapter.
+declare -A LATEST
+for f in "$PROFILE_DIR"/SUMMARY-Chap*.txt; do
+    chap=$(basename "$f" | sed 's/SUMMARY-//;s/-20.*//')
+    LATEST[$chap]="$f"
+done
+FILES=("${LATEST[@]}")
+
+# Table 1: Per-chapter totals.
+echo "## Per-Chapter Instantiation Totals"
+echo ""
 echo "| # | Chapter | Instantiations | Top Quantifier |"
 echo "|---|---------|---------------|----------------|"
 
-N=0
-for f in "$PROFILE_DIR"/SUMMARY-Chap*.txt; do
+for f in "${FILES[@]}"; do
     chap=$(basename "$f" | sed 's/SUMMARY-//;s/-20.*//')
 
-    # Total instantiations: sum the Per-module totals section.
     total=$(grep "^=== Per-module totals" -A 999 "$f" \
         | grep -E "^\s+[0-9]" \
         | awk '{s+=$1} END {print s+0}')
 
-    # Top user quantifier (skip prelude/internal/constructor).
     top=$(grep "^=== Grand top quantifiers" -A 999 "$f" \
         | grep -E "^\s+[0-9]" \
         | grep -v "prelude_\|constructor_\|internal_" \
@@ -37,6 +46,24 @@ for f in "$PROFILE_DIR"/SUMMARY-Chap*.txt; do
 
     [ -z "$top" ] && top="(prelude only)"
 
-    N=$((N + 1))
-    printf "| %d | %s | %s | %s |\n" "$N" "$chap" "$total" "$top"
-done | sort -t'|' -k4 -rn | awk -F'|' 'BEGIN{n=0} {n++; printf "| %d %s|%s|%s|%s|\n", n, "", $3, $4, $5}'
+    printf "| 0 | %s | %s | %s |\n" "$chap" "$total" "$top"
+done | sort -t'|' -k4 -rn | awk -F'|' 'BEGIN{n=0} {n++; printf "| %d |%s|%s|%s|\n", n, $3, $4, $5}'
+
+# Table 2: Top quantifiers across all chapters.
+echo ""
+echo "## Top Quantifiers Across All Chapters (user + vstd)"
+echo ""
+echo "Units: quantifier instantiation counts (number of times Z3 fired each quantifier)."
+echo ""
+echo "| # | Instantiations | Quantifier |"
+echo "|---|---------------|------------|"
+
+for f in "${FILES[@]}"; do
+    grep "^=== Grand top quantifiers" -A 999 "$f" \
+        | grep -E "^\s+[0-9]" \
+        | grep -v "prelude_\|constructor_\|internal_"
+done \
+    | awk '{counts[$2] += $1} END {for (n in counts) printf "%10d  %s\n", counts[n], n}' \
+    | sort -rn \
+    | head -40 \
+    | awk 'BEGIN{n=0} {n++; printf "| %d | %s | %s |\n", n, $1, $2}'
