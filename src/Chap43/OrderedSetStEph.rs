@@ -360,7 +360,9 @@ broadcast use {
                     v.cmp_spec(&t) == Less || v@ == t@;
         fn split(&mut self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
-            requires old(self).spec_orderedsetsteph_wf(),
+            requires
+                old(self).spec_orderedsetsteph_wf(),
+                old(self)@.len() + 1 < usize::MAX as nat,
             ensures
                 self@.finite(),
                 old(self)@.finite(),
@@ -379,10 +381,12 @@ broadcast use {
                 old(self).spec_orderedsetsteph_wf(),
                 other.spec_orderedsetsteph_wf(),
                 old(self)@.len() + other@.len() < usize::MAX as nat,
-            ensures self@ == old(self)@.union(other@), self.spec_orderedsetsteph_wf();
+            ensures self@ == old(self)@.union(other@), self@.finite(), self.spec_orderedsetsteph_wf();
         /// - APAS: Work Θ(log n + m), Span Θ(log n)
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
-            requires self.spec_orderedsetsteph_wf(),
+            requires
+                self.spec_orderedsetsteph_wf(),
+                self@.len() + 1 < usize::MAX as nat,
             ensures
                 self@.finite(),
                 range@.finite(),
@@ -403,7 +407,9 @@ broadcast use {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
-            requires old(self).spec_orderedsetsteph_wf(),
+            requires
+                old(self).spec_orderedsetsteph_wf(),
+                old(self)@.len() + 1 < usize::MAX as nat,
             ensures
                 self@.finite(),
                 old(self)@.finite(),
@@ -454,7 +460,9 @@ broadcast use {
         /// Iterative alternative to `split`.
         fn split_iter(&mut self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
-            requires old(self).spec_orderedsetsteph_wf(),
+            requires
+                old(self).spec_orderedsetsteph_wf(),
+                old(self)@.len() + 1 < usize::MAX as nat,
             ensures
                 self@.finite(),
                 old(self)@.finite(),
@@ -469,7 +477,9 @@ broadcast use {
                 forall|x| #[trigger] old(self)@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@;
         /// Iterative alternative to `get_range`.
         fn get_range_iter(&self, k1: &T, k2: &T) -> (range: Self)
-            requires self.spec_orderedsetsteph_wf(),
+            requires
+                self.spec_orderedsetsteph_wf(),
+                self@.len() + 1 < usize::MAX as nat,
             ensures
                 self@.finite(),
                 range@.finite(),
@@ -483,7 +493,9 @@ broadcast use {
         /// Iterative alternative to `split_rank`.
         fn split_rank_iter(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
-            requires old(self).spec_orderedsetsteph_wf(),
+            requires
+                old(self).spec_orderedsetsteph_wf(),
+                old(self)@.len() + 1 < usize::MAX as nat,
             ensures
                 self@.finite(),
                 old(self)@.finite(),

@@ -1,0 +1,28 @@
+error: precondition not satisfied
+   --> src/Chap43/AugOrderedTableMtEph.rs:659:13
+    |
+659 |             self.base_table.join_key(other.base_table);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableMtEph.rs:301:17
+    |
+301 |                 old(self)@.dom().len() + other@.dom().len() < usize::MAX,
+    |                 -------------------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableMtEph.rs:301:17
+    |
+301 |                 old(self)@.dom().len() + other@.dom().len() < usize::MAX,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.base_table.spec_orderedtablemteph_wf() ✔
+clip(nat, self.base_table.view().dom().len() + tmp%.view().dom().len()) < UnsignedMax.Exec(usize::BITS) ✘
+
+verification results:: 2588 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 28s
+Sampled Memory Usage: peak rust_verify RSS: 2398MB, peak z3 RSS: 279MB, min free: 18979MB
+Sampled CPU Usage: rust_verify: 42s, z3 children: 47s

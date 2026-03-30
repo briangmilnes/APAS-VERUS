@@ -105,6 +105,7 @@ pub mod OrderedSetMtEph {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- acquires read lock, delegates to StEph.size
         fn size(&self) -> (count: usize)
+            requires self.spec_orderedsetmteph_wf(),
             ensures count == self@.len(), self@.finite();
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- constructs empty StEph + RwLock
@@ -123,6 +124,7 @@ pub mod OrderedSetMtEph {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- acquires lock, delegates to StEph.find (BST search)
         fn find(&self, x: &T) -> (found: bool)
+            requires self.spec_orderedsetmteph_wf(),
             ensures found == self@.contains(x@);
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- acquires lock, delegates to StEph.insert (BST insert)
@@ -141,6 +143,7 @@ pub mod OrderedSetMtEph {
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
         )
             requires
+                old(self).spec_orderedsetmteph_wf(),
                 forall|t: &T| #[trigger] f.requires((t,)),
                 forall|x: T, keep: bool|
                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
@@ -148,20 +151,25 @@ pub mod OrderedSetMtEph {
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.intersection (sequential)
         fn intersection(&mut self, other: &Self)
+            requires old(self).spec_orderedsetmteph_wf(), other.spec_orderedsetmteph_wf(),
             ensures self@ == old(self)@.intersect(other@), self@.finite();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.union (sequential)
         fn union(&mut self, other: &Self)
             requires
+                old(self).spec_orderedsetmteph_wf(),
+                other.spec_orderedsetmteph_wf(),
                 old(self)@.len() + other@.len() < usize::MAX as nat,
             ensures self@ == old(self)@.union(other@), self@.finite();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.difference (sequential)
         fn difference(&mut self, other: &Self)
+            requires old(self).spec_orderedsetmteph_wf(), other.spec_orderedsetmteph_wf(),
             ensures self@ == old(self)@.difference(other@), self@.finite();
         /// - APAS: Work Θ(n), Span Θ(n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph.to_seq
         fn to_seq(&self) -> (seq: ArraySeqStPerS<T>)
+            requires self.spec_orderedsetmteph_wf(),
             ensures
                 self@.finite(),
                 seq@.to_set() =~= self@,
@@ -179,7 +187,7 @@ pub mod OrderedSetMtEph {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + first)
         fn first(&self) -> (first: Option<T>)
-
+            requires self.spec_orderedsetmteph_wf(),
             ensures
                 self@.finite(),
                 self@.len() == 0 <==> first matches None,
@@ -189,7 +197,7 @@ pub mod OrderedSetMtEph {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + last)
         fn last(&self) -> (last: Option<T>)
-
+            requires self.spec_orderedsetmteph_wf(),
             ensures
                 self@.finite(),
                 self@.len() == 0 <==> last matches None,
@@ -199,7 +207,7 @@ pub mod OrderedSetMtEph {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + scan)
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
-
+            requires self.spec_orderedsetmteph_wf(),
             ensures
                 self@.finite(),
                 predecessor matches Some(v) ==> self@.contains(v@),
@@ -210,7 +218,7 @@ pub mod OrderedSetMtEph {
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + scan)
         fn next(&self, k: &T) -> (successor: Option<T>)
-
+            requires self.spec_orderedsetmteph_wf(),
             ensures
                 self@.finite(),
                 successor matches Some(v) ==> self@.contains(v@),
@@ -222,28 +230,36 @@ pub mod OrderedSetMtEph {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + partition)
         fn split(&mut self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
+            requires
+                old(self).spec_orderedsetmteph_wf(),
+                old(self)@.len() + 1 < usize::MAX as nat,
             ensures self@.finite();
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
         /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.join (union)
         fn join(&mut self, other: Self)
             requires
+                old(self).spec_orderedsetmteph_wf(),
+                other.spec_orderedsetmteph_wf(),
                 old(self)@.len() + other@.len() < usize::MAX as nat,
             ensures self@.finite();
         /// - APAS: Work Θ(log n + m), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + filter)
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
+            requires
+                self.spec_orderedsetmteph_wf(),
+                self@.len() + 1 < usize::MAX as nat,
             ensures self@.finite();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + count)
         fn rank(&self, k: &T) -> (rank: usize)
-
+            requires self.spec_orderedsetmteph_wf(),
             ensures
                 self@.finite(),
                 rank <= self@.len();
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + index)
         fn select(&self, i: usize) -> (selected: Option<T>)
-
+            requires self.spec_orderedsetmteph_wf(),
             ensures
                 self@.finite(),
                 i >= self@.len() ==> selected matches None,
@@ -252,6 +268,9 @@ pub mod OrderedSetMtEph {
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + partition)
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
+            requires
+                old(self).spec_orderedsetmteph_wf(),
+                old(self)@.len() + 1 < usize::MAX as nat,
             ensures self@.finite();
     }
 
@@ -482,6 +501,7 @@ pub mod OrderedSetMtEph {
 
         fn split(&mut self, k: &T) -> (split: (Self, bool, Self)) {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
+            proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } // RWLOCK_GHOST
             let (left, found, right) = locked_val.split(k);
             // Release with empty to satisfy inv (empty is wf by construction).
             let empty_val = OrderedSetStEph::empty();
@@ -512,6 +532,7 @@ pub mod OrderedSetMtEph {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
+            proof { assume(inner@.len() + 1 < usize::MAX as nat); } // RWLOCK_GHOST
             let range = inner.get_range(k1, k2);
             read_handle.release_read();
             proof { assume(range.spec_orderedsetsteph_wf()); }
@@ -545,6 +566,7 @@ pub mod OrderedSetMtEph {
 
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self)) {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
+            proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } // RWLOCK_GHOST
             let (left, right) = locked_val.split_rank(i);
             // Release with empty to satisfy inv (empty is wf by construction).
             let empty_val = OrderedSetStEph::empty();
