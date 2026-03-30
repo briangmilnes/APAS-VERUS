@@ -117,11 +117,15 @@ broadcast use {
 
         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>)
             requires index < old(self)@.keys.len(), old(self).spec_obstmteph_wf(),
-            ensures self.spec_obstmteph_wf();
+            ensures
+                self@.keys =~= old(self)@.keys.update(index as int, key_prob),
+                self.spec_obstmteph_wf();
 
         fn update_prob(&mut self, index: usize, prob: Probability)
             requires index < old(self)@.keys.len(), old(self).spec_obstmteph_wf(),
-            ensures self.spec_obstmteph_wf();
+            ensures
+                self@.keys.len() == old(self)@.keys.len(),
+                self.spec_obstmteph_wf();
 
         fn num_keys(&self) -> (count: usize)
             requires self.spec_obstmteph_wf(),
@@ -286,6 +290,8 @@ broadcast use {
         }
 
         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>) {
+            let ghost kp = key_prob;
+            let ghost old_keys = self.ghost_keys@;
             {
                 let keys_arc = self.keys.clone();
                 let rwlock = arc_deref(&keys_arc);
@@ -299,6 +305,7 @@ broadcast use {
             let (mut memo, write_handle) = rwlock.acquire_write();
             memo.clear();
             write_handle.release_write(memo);
+            self.ghost_keys = Ghost(old_keys.update(index as int, kp));
         }
 
         fn update_prob(&mut self, index: usize, prob: Probability) {

@@ -174,11 +174,16 @@ broadcast use {
 
         fn set_dimension(&mut self, index: usize, dim: MatrixDim)
             requires index < old(self)@.dimensions.len(), old(self).spec_matrixchainmteph_wf(),
-            ensures self.spec_matrixchainmteph_wf();
+            ensures
+                self@.dimensions =~= old(self)@.dimensions.update(index as int, dim),
+                self.spec_matrixchainmteph_wf();
 
         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize)
             requires index < old(self)@.dimensions.len(), old(self).spec_matrixchainmteph_wf(),
-            ensures self.spec_matrixchainmteph_wf();
+            ensures
+                self@.dimensions =~= old(self)@.dimensions.update(
+                    index as int, MatrixDim { rows, cols }),
+                self.spec_matrixchainmteph_wf();
 
         fn num_matrices(&self) -> (n: usize)
             requires self.spec_matrixchainmteph_wf(),

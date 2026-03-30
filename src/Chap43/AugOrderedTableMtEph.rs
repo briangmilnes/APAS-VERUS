@@ -152,7 +152,7 @@ broadcast use {
                 spec_pair_key_determines_order::<K, V>(),
                 vstd::laws_cmp::obeys_cmp_spec::<K>(),
                 view_ord_consistent::<K>(),
-            ensures tree.spec_augorderedtablemteph_wf();
+            ensures tree.spec_augorderedtablemteph_wf(), tree@.dom().finite();
         /// - APAS: Work O(log n), Span O(log n)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- delegates to TableMtEph which uses linear scan
         fn find(&self, k: &K) -> (found: Option<V>)
@@ -412,7 +412,7 @@ broadcast use {
         }
 
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
-            ensures tree.spec_augorderedtablemteph_wf()
+            ensures tree.spec_augorderedtablemteph_wf(), tree@.dom().finite()
         {
                       assert(obeys_feq_full_trigger::<K>());
            assert(obeys_feq_full_trigger::<V>());
