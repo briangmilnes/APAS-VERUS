@@ -1,0 +1,171 @@
+error[E0425]: cannot find function `lemma_reveal_view_injective` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:197:29
+    |
+197 |                     proof { lemma_reveal_view_injective::<Key>(); assert(obeys_feq_full_trigger::<Key>()); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 17 +     use crate::vstdplus::feq::feq::lemma_reveal_view_injective;
+    |
+
+error[E0425]: cannot find function `lemma_reveal_view_injective` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:298:29
+    |
+298 |                     proof { lemma_reveal_view_injective::<Key>(); assert(obeys_feq_full_trigger::<Key>()); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 17 +     use crate::vstdplus::feq::feq::lemma_reveal_view_injective;
+    |
+
+error[E0425]: cannot find function `lemma_reveal_view_injective` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:359:29
+    |
+359 |                     proof { lemma_reveal_view_injective::<Key>(); assert(obeys_feq_full_trigger::<Key>()); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 17 +     use crate::vstdplus::feq::feq::lemma_reveal_view_injective;
+    |
+
+error[E0425]: cannot find function `lemma_reveal_view_injective` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:196:29
+    |
+196 |                     proof { lemma_reveal_view_injective::<Key>(); assert(obeys_feq_full_trigger::<Key>()); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 16 +     use crate::vstdplus::feq::feq::lemma_reveal_view_injective;
+    |
+
+error[E0425]: cannot find function `lemma_reveal_view_injective` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:296:29
+    |
+296 |                     proof { lemma_reveal_view_injective::<Key>(); assert(obeys_feq_full_trigger::<Key>()); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 16 +     use crate::vstdplus::feq::feq::lemma_reveal_view_injective;
+    |
+
+error[E0425]: cannot find function `lemma_reveal_view_injective` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:358:29
+    |
+358 |                     proof { lemma_reveal_view_injective::<Key>(); assert(obeys_feq_full_trigger::<Key>()); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 16 +     use crate::vstdplus::feq::feq::lemma_reveal_view_injective;
+    |
+
+error[E0425]: cannot find function `lemma_reveal_view_injective` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:243:33
+    |
+243 | ...                   lemma_reveal_view_injective::<Key>();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 16 +     use crate::vstdplus::feq::feq::lemma_reveal_view_injective;
+    |
+
+error[E0425]: cannot find function `lemma_reveal_view_injective` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:516:33
+    |
+516 | ...                   lemma_reveal_view_injective::<Key>();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 16 +     use crate::vstdplus::feq::feq::lemma_reveal_view_injective;
+    |
+
+error[E0425]: cannot find function `lemma_reveal_view_injective` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:629:33
+    |
+629 | ...                   lemma_reveal_view_injective::<Key>();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 16 +     use crate::vstdplus::feq::feq::lemma_reveal_view_injective;
+    |
+
+error[E0425]: cannot find function `lemma_reveal_view_injective` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:605:33
+    |
+605 | ...                   lemma_reveal_view_injective::<Key>();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 20 +     use crate::vstdplus::feq::feq::lemma_reveal_view_injective;
+    |
+
+error[E0425]: cannot find function `lemma_reveal_view_injective` in this scope
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:889:33
+    |
+889 | ...                   lemma_reveal_view_injective::<Key>();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 20 +     use crate::vstdplus::feq::feq::lemma_reveal_view_injective;
+    |
+
+error[E0425]: cannot find function `lemma_reveal_view_injective` in this scope
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1014:33
+     |
+1014 | ...                   lemma_reveal_view_injective::<Key>();
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  20 +     use crate::vstdplus::feq::feq::lemma_reveal_view_injective;
+     |
+
+error[E0425]: cannot find function `lemma_reveal_view_injective` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:289:33
+    |
+289 | ...                   lemma_reveal_view_injective::<Key>();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 17 +     use crate::vstdplus::feq::feq::lemma_reveal_view_injective;
+    |
+
+error[E0425]: cannot find function `lemma_reveal_view_injective` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:563:33
+    |
+563 | ...                   lemma_reveal_view_injective::<Key>();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 17 +     use crate::vstdplus::feq::feq::lemma_reveal_view_injective;
+    |
+
+error[E0425]: cannot find function `lemma_reveal_view_injective` in this scope
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:698:33
+    |
+698 | ...                   lemma_reveal_view_injective::<Key>();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 17 +     use crate::vstdplus::feq::feq::lemma_reveal_view_injective;
+    |
+
+error: aborting due to 15 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 16542MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

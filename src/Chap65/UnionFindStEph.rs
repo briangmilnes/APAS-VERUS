@@ -27,7 +27,7 @@ pub mod UnionFindStEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::obeys_feq_full;
+    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_view_injective};
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
     #[cfg(verus_keep_ghost)]
@@ -1245,7 +1245,7 @@ pub mod UnionFindStEph {
             requires
                 obeys_key_model::<V>(),
                 obeys_feq_full::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
             ensures
                 uf.spec_unionfindsteph_wf(),
                 uf@.parent =~= Map::<<V as View>::V, V>::empty(),

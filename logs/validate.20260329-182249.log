@@ -1,0 +1,156 @@
+error: precondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:198:29
+    |
+198 |                     proof { lemma_reveal_view_injective::<Key>(); assert(obeys_feq_full_trigger::<Key>()); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:98:18
+    |
+ 98 |         requires obeys_feq_view_injective::<T>(),
+    |                  ------------------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+obeys_feq_view_injective() 
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap47/StructChainedHashTable.rs:240:29
+    |
+240 |                     proof { lemma_reveal_view_injective::<Key>(); assert(obeys_feq_full_trigger::<Key>()); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:98:18
+    |
+ 98 |         requires obeys_feq_view_injective::<T>(),
+    |                  ------------------------------- failed precondition
+
+note: 
+
+obeys_feq_view_injective() 
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:196:29
+    |
+196 |                     proof { lemma_reveal_view_injective::<Key>(); assert(obeys_feq_full_trigger::<Key>()); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:98:18
+    |
+ 98 |         requires obeys_feq_view_injective::<T>(),
+    |                  ------------------------------- failed precondition
+
+note: 
+
+obeys_feq_view_injective() 
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:296:29
+    |
+296 |                     proof { lemma_reveal_view_injective::<Key>(); assert(obeys_feq_full_trigger::<Key>()); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:98:18
+    |
+ 98 |         requires obeys_feq_view_injective::<T>(),
+    |                  ------------------------------- failed precondition
+
+note: 
+
+obeys_feq_view_injective() 
+    function is uninterpreted
+
+note: recommendation not met
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:271:51
+    |
+271 |                 let ghost bv: Seq<(Key, Value)> = table.table@[index as int].seq@;
+    |                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: precondition not satisfied
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:358:29
+    |
+358 |                     proof { lemma_reveal_view_injective::<Key>(); assert(obeys_feq_full_trigger::<Key>()); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:98:18
+    |
+ 98 |         requires obeys_feq_view_injective::<T>(),
+    |                  ------------------------------- failed precondition
+
+note: 
+
+obeys_feq_view_injective() 
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap47/VecChainedHashTableStEph.rs:197:29
+    |
+197 |                     proof { lemma_reveal_view_injective::<Key>(); assert(obeys_feq_full_trigger::<Key>()); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:98:18
+    |
+ 98 |         requires obeys_feq_view_injective::<T>(),
+    |                  ------------------------------- failed precondition
+
+note: 
+
+obeys_feq_view_injective() 
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap47/VecChainedHashTableStEph.rs:298:29
+    |
+298 |                     proof { lemma_reveal_view_injective::<Key>(); assert(obeys_feq_full_trigger::<Key>()); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:98:18
+    |
+ 98 |         requires obeys_feq_view_injective::<T>(),
+    |                  ------------------------------- failed precondition
+
+note: 
+
+obeys_feq_view_injective() 
+    function is uninterpreted
+
+note: recommendation not met
+   --> src/Chap47/VecChainedHashTableStEph.rs:271:51
+    |
+271 |                 let ghost bv: Seq<(Key, Value)> = table.table@[index as int]@;
+    |                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: precondition not satisfied
+   --> src/Chap47/VecChainedHashTableStEph.rs:359:29
+    |
+359 |                     proof { lemma_reveal_view_injective::<Key>(); assert(obeys_feq_full_trigger::<Key>()); }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:98:18
+    |
+ 98 |         requires obeys_feq_view_injective::<T>(),
+    |                  ------------------------------- failed precondition
+
+note: 
+
+obeys_feq_view_injective() 
+    function is uninterpreted
+
+verification results:: 1143 verified, 8 errors
+error: aborting due to 8 previous errors
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 5444MB, peak z3 RSS: 666MB, min free: 15946MB
+Sampled CPU Usage: rust_verify: 188s, z3 children: 75s

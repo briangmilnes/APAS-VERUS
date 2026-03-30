@@ -1,0 +1,387 @@
+    Finished `release` profile [optimized] target(s) in 0.10s
+────────────
+ Nextest run ID 6f7cdab6-b16e-43fa-a34a-c02cca4745e9 with nextest profile: default
+    Starting 157 tests across 37 binaries
+        PASS [   3.844s] rust_verify_test::HashSetWithViewPlus hash_set_wvp_for_iter
+        PASS [   4.030s] rust_verify_test::HashSetWithViewPlus hash_set_wvp_loop_loop
+        PASS [   4.125s] rust_verify_test::HashMapWithViewPlus hash_map_wvp_for_iter
+        PASS [   4.128s] rust_verify_test::HashMapWithViewPlus hash_map_wvp_loop_loop
+        PASS [   4.394s] rust_verify_test::MappingStEph mapping_st_eph_loop_loop
+        PASS [   4.469s] rust_verify_test::MappingStEph mapping_st_eph_for_iter
+        FAIL [   2.697s] rust_verify_test::ProveArraySeq arrayseq_filter
+  stdout ───
+
+    running 1 test
+    test arrayseq_filter ... FAILED
+
+    failures:
+
+    failures:
+        arrayseq_filter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 9 filtered out; finished in 2.68s
+
+  stderr ───
+    error: precondition not satisfied
+      --> /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_filter/test.rs:28:20
+       |
+    28 |     let filtered = <ArraySeqS<u64> as ArraySeqTrait<u64>>::filter(&a, &pred, Ghost(spec_pred));
+       |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+       |
+      --> src/Chap18/ArraySeq.rs:399:14
+       |
+       = note: failed precondition
+
+
+    error: aborting due to 1 previous error
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_filter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_filter/test.rs
+
+
+    thread 'arrayseq_filter' (911166) panicked at tests/Chap18/ProveArraySeq.rs:234:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   3.460s] rust_verify_test::ProveAVLTreeSeq avltreeseq_for_borrow_iter
+        PASS [   3.178s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_for_borrow_into
+        PASS [   3.598s] rust_verify_test::ProveAVLTreeSeq avltreeseq_loop_borrow_iter
+        PASS [   3.337s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_loop_borrow_iter
+        PASS [   3.898s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_for_borrow_iter
+        FAIL [   2.465s] rust_verify_test::ProveArraySeq arrayseq_for_iter
+  stdout ───
+
+    running 1 test
+    test arrayseq_for_iter ... FAILED
+
+    failures:
+
+    failures:
+        arrayseq_for_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 9 filtered out; finished in 2.45s
+
+  stderr ───
+    error: precondition not satisfied
+      --> /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_for_iter/test.rs:19:29
+       |
+    19 |     let a: ArraySeqS<u64> = ArraySeqS::new(3, 99);
+       |                             ^^^^^^^^^^^^^^^^^^^^^
+       |
+      --> src/Chap18/ArraySeq.rs:322:14
+       |
+       = note: failed precondition
+
+
+    error: aborting due to 1 previous error
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_for_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_for_iter/test.rs
+
+
+    thread 'arrayseq_for_iter' (911391) panicked at tests/Chap18/ProveArraySeq.rs:53:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   2.749s] rust_verify_test::ProveArraySeq arrayseq_iterate_prefixes
+  stdout ───
+
+    running 1 test
+    test arrayseq_iterate_prefixes ... FAILED
+
+    failures:
+
+    failures:
+        arrayseq_iterate_prefixes
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 9 filtered out; finished in 2.74s
+
+  stderr ───
+    error: precondition not satisfied
+      --> /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_iterate_prefixes/test.rs:27:29
+       |
+    27 |     let (prefixes, total) = iterate_prefixes(&a, &f, Ghost(spec_f), 0u64);
+       |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+       |
+      --> src/Chap18/ArraySeq.rs:1375:12
+       |
+       = note: failed precondition
+
+
+    error: aborting due to 1 previous error
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_iterate_prefixes
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_iterate_prefixes/test.rs
+
+
+    thread 'arrayseq_iterate_prefixes' (911416) panicked at tests/Chap18/ProveArraySeq.rs:258:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   2.600s] rust_verify_test::ProveArraySeq arrayseq_loop_loop
+  stdout ───
+
+    running 1 test
+    test arrayseq_loop_loop ... FAILED
+
+    failures:
+
+    failures:
+        arrayseq_loop_loop
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 9 filtered out; finished in 2.59s
+
+  stderr ───
+    error: precondition not satisfied
+      --> /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_loop_loop/test.rs:19:29
+       |
+    19 |     let a: ArraySeqS<u64> = ArraySeqS::new(3, 42);
+       |                             ^^^^^^^^^^^^^^^^^^^^^
+       |
+      --> src/Chap18/ArraySeq.rs:322:14
+       |
+       = note: failed precondition
+
+
+    error: aborting due to 1 previous error
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_loop_loop
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_loop_loop/test.rs
+
+
+    thread 'arrayseq_loop_loop' (911464) panicked at tests/Chap18/ProveArraySeq.rs:16:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   3.210s] rust_verify_test::ProveArraySeq arrayseq_iterate
+        PASS [   3.250s] rust_verify_test::ProveArraySeq arrayseq_map
+        PASS [   3.531s] rust_verify_test::ProveArraySeq arrayseq_reduce
+        FAIL [   3.304s] rust_verify_test::ProveArraySeq arrayseq_scan
+  stdout ───
+
+    running 1 test
+    test arrayseq_scan ... FAILED
+
+    failures:
+
+    failures:
+        arrayseq_scan
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 9 filtered out; finished in 3.29s
+
+  stderr ───
+    error: precondition not satisfied
+      --> /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_scan/test.rs:45:28
+       |
+    45 |     let (scanned, total) = <ArraySeqS<u64> as ArraySeqTrait<u64>>::scan(&a, &f, Ghost(spec_f), 0u64);
+       |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+       |
+      --> src/Chap18/ArraySeq.rs:471:16
+       |
+       = note: failed precondition
+
+
+    error: aborting due to 1 previous error
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_scan
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_scan/test.rs
+
+
+    thread 'arrayseq_scan' (911709) panicked at tests/Chap18/ProveArraySeq.rs:151:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   2.836s] rust_verify_test::ProveArraySeq arrayseq_tabulate
+        FAIL [   3.066s] rust_verify_test::ProveArraySeq arrayseq_scan_inclusive
+  stdout ───
+
+    running 1 test
+    test arrayseq_scan_inclusive ... FAILED
+
+    failures:
+
+    failures:
+        arrayseq_scan_inclusive
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 9 filtered out; finished in 3.06s
+
+  stderr ───
+    error: precondition not satisfied
+      --> /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_scan_inclusive/test.rs:45:18
+       |
+    45 |     let result = <ArraySeqS<u64> as ArraySeqTrait<u64>>::scan_inclusive(&a, &f, Ghost(spec_f), 0u64);
+       |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+       |
+      --> src/Chap18/ArraySeq.rs:506:16
+       |
+       = note: failed precondition
+
+
+    error: aborting due to 1 previous error
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_scan_inclusive
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent1/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_scan_inclusive/test.rs
+
+
+    thread 'arrayseq_scan_inclusive' (911766) panicked at tests/Chap18/ProveArraySeq.rs:193:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   3.931s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_for_iter
+        PASS [   3.480s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_loop_loop
+        PASS [   3.286s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_for_iter
+        PASS [   3.284s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_borrow_into
+        PASS [   3.635s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_loop_loop
+        PASS [   3.526s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_borrow_iter
+        PASS [   3.375s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_borrow_into
+        PASS [   3.257s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_borrow_iter
+        PASS [   3.670s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_consume
+        PASS [   3.037s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_consume
+        PASS [   3.236s] rust_verify_test::ProveArraySeqStPer arrayseqstper_for_iter
+        PASS [   3.720s] rust_verify_test::ProveArraySeqStPer arrayseqstper_loop_loop
+        PASS [   2.913s] rust_verify_test::ProveBFSMtEph chap54_bfsmteph_top_down_loop
+        PASS [   2.944s] rust_verify_test::ProveBFSStEph chap54_bfssteph_bottom_up_loop
+        PASS [   3.422s] rust_verify_test::ProveBFSMtEph chap54_bfsmteph_bottom_up_loop
+        PASS [   3.344s] rust_verify_test::ProveBFSStEph chap54_bfssteph_top_down_loop
+        PASS [   3.716s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_inorder
+        PASS [   3.116s] rust_verify_test::ProveBalBinTreeStEph balbintree_inorder_spec_match
+        PASS [   3.995s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_postorder
+        PASS [   3.518s] rust_verify_test::ProveBalBinTreeStEph balbintree_leaf_iter_exhausted
+        PASS [   3.777s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_preorder
+        PASS [   3.137s] rust_verify_test::ProveBalBinTreeStEph balbintree_leaf_traversals_empty
+        PASS [   3.550s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_inorder
+        PASS [   3.527s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_postorder
+        PASS [   3.584s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_preorder
+        PASS [   3.219s] rust_verify_test::ProveBalBinTreeStEph balbintree_postorder_spec_match
+        PASS [   3.746s] rust_verify_test::ProveBalBinTreeStEph balbintree_preorder_spec_match
+        PASS [   3.403s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_borrow_into
+        PASS [   2.916s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_borrow_iter
+        PASS [   2.394s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_borrow_into
+        PASS [   2.729s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_consume
+        PASS [   2.751s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_borrow_iter
+        PASS [   2.296s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_consume
+        PASS [   1.887s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_for_borrow_into
+        PASS [   1.813s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_iter_over_subslice
+        PASS [   2.229s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_for_borrow_iter
+        PASS [   1.996s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_loop_borrow_iter
+        PASS [   1.973s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_borrow_into
+        PASS [   2.092s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_operations
+        PASS [   1.972s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_borrow_iter
+        PASS [   1.822s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_borrow_into
+        PASS [   1.718s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_borrow_iter
+        PASS [   2.118s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_consume
+        PASS [   1.931s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_consume
+        PASS [   1.995s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_borrow_into
+        PASS [   2.067s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_borrow_iter
+        PASS [   1.725s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_borrow_into
+        PASS [   1.770s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_borrow_iter
+        PASS [   2.073s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_consume
+        PASS [   1.770s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_consume
+        PASS [   1.881s] rust_verify_test::ProveKleeneStPer kleene_alphabet
+        PASS [   1.751s] rust_verify_test::ProveKleeneStPer kleene_mem_plus
+        PASS [   1.835s] rust_verify_test::ProveKleeneStPer kleene_mem_star
+        PASS [   1.623s] rust_verify_test::ProveLinkedListStEph linkedliststeph_loop_loop
+        PASS [   1.951s] rust_verify_test::ProveLinkedListStEph linkedliststeph_for_iter
+        PASS [   1.781s] rust_verify_test::ProveLinkedListStPer linkedliststper_for_iter
+        PASS [   1.658s] rust_verify_test::ProveLinkedListStPer linkedliststper_loop_loop
+        PASS [   1.991s] rust_verify_test::ProveMathSeq mathseq_for_borrow_into
+        PASS [   1.771s] rust_verify_test::ProveMathSeq mathseq_for_consume
+        PASS [   1.813s] rust_verify_test::ProveMathSeq mathseq_for_borrow_iter
+        PASS [   1.864s] rust_verify_test::ProveMathSeq mathseq_loop_borrow_into
+        PASS [   1.866s] rust_verify_test::ProveMathSeq mathseq_loop_borrow_iter
+        PASS [   1.875s] rust_verify_test::ProveMathSeq mathseq_loop_consume
+        PASS [   1.695s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_for_borrow_into
+        PASS [   1.634s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_loop_borrow_into
+        PASS [   1.755s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_for_borrow_iter
+        PASS [   2.012s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_loop_borrow_iter
+        PASS [   1.790s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_for_borrow_into
+        PASS [   2.171s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_for_borrow_iter
+        PASS [   1.791s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_loop_borrow_into
+        PASS [   1.790s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_loop_borrow_iter
+        PASS [   1.839s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_for_borrow_into
+        PASS [   1.794s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_loop_borrow_into
+        PASS [   2.050s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_for_borrow_iter
+        PASS [   1.760s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_borrow_into
+        PASS [   1.824s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_loop_borrow_iter
+        PASS [   1.629s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_borrow_iter
+        PASS [   1.690s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_consume
+        PASS [   1.622s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_borrow_iter
+        PASS [   1.813s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_borrow_into
+        PASS [   1.523s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_consume
+        PASS [   1.760s] rust_verify_test::ProveSetMtEph set_mt_eph_for_borrow_into
+        PASS [   1.765s] rust_verify_test::ProveSetMtEph set_mt_eph_for_borrow_iter
+        PASS [   1.625s] rust_verify_test::ProveSetMtEph set_mt_eph_loop_borrow_iter
+        PASS [   1.695s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_borrow_iter
+        PASS [   1.562s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_consume
+        PASS [   1.780s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_borrow_into
+        PASS [   1.735s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_borrow_into
+        PASS [   1.574s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_borrow_iter
+        PASS [   1.885s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_consume
+        PASS [   1.516s] rust_verify_test::Provedeep_view_standard deep_view_standard_simple
+        PASS [   1.533s] rust_verify_test::Proveiterators_standard iterators_standard_for_borrow_into
+        PASS [   1.537s] rust_verify_test::Proveiterators_standard iterators_standard_for_borrow_iter
+        PASS [   1.818s] rust_verify_test::Proveiterators_standard iterators_standard_for_consume
+        PASS [   1.655s] rust_verify_test::Proveiterators_standard iterators_standard_loop_borrow_into
+        PASS [   1.492s] rust_verify_test::Proveiterators_standard iterators_standard_loop_borrow_iter
+        PASS [   1.520s] rust_verify_test::Proveiterators_standard iterators_standard_loop_consume
+        PASS [   1.497s] rust_verify_test::Provemod_standard mod_standard_for_borrow_into
+        PASS [   1.821s] rust_verify_test::Provemod_standard mod_standard_for_borrow_iter
+        PASS [   1.518s] rust_verify_test::Provemod_standard mod_standard_for_consume
+        PASS [   1.545s] rust_verify_test::Provemod_standard mod_standard_loop_borrow_into
+        PASS [   1.858s] rust_verify_test::Provemod_standard mod_standard_loop_borrow_iter
+        PASS [   1.478s] rust_verify_test::Provemod_standard mod_standard_loop_consume
+        PASS [   1.613s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_borrow_into
+        PASS [   1.507s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_borrow_iter
+        PASS [   1.622s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_consume
+        PASS [   1.605s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_borrow_into
+        PASS [   1.597s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_borrow_iter
+        PASS [   1.579s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_consume
+        PASS [   1.493s] rust_verify_test::Proveusing_closures_standard closures_ghost_spec_fn
+        PASS [   1.590s] rust_verify_test::Proveusing_closures_standard closures_inline_requires_ensures
+        PASS [   1.427s] rust_verify_test::Proveusing_closures_standard closures_let_bind_ensures
+        PASS [   1.680s] rust_verify_test::Proveusing_closures_standard closures_map_apply
+        PASS [   1.543s] rust_verify_test::Proveview_standard view_standard_collection
+        PASS [   1.683s] rust_verify_test::Proveview_standard view_standard_for_borrow_into
+        PASS [   1.689s] rust_verify_test::Proveview_standard view_standard_for_borrow_iter
+        PASS [   1.630s] rust_verify_test::Proveview_standard view_standard_for_consume
+        PASS [   1.603s] rust_verify_test::Proveview_standard view_standard_loop_borrow_into
+        PASS [   1.627s] rust_verify_test::Proveview_standard view_standard_loop_borrow_iter
+        PASS [   1.623s] rust_verify_test::Proveview_standard view_standard_loop_consume
+        PASS [   1.608s] rust_verify_test::Proveview_standard view_standard_simple
+        PASS [   1.587s] rust_verify_test::Provewrapping_iterators_standard wrapping_for_borrow_into
+        PASS [   1.547s] rust_verify_test::Provewrapping_iterators_standard wrapping_for_borrow_iter
+        PASS [   1.545s] rust_verify_test::Provewrapping_iterators_standard wrapping_loop_borrow_into
+        PASS [   1.616s] rust_verify_test::Provewrapping_iterators_standard wrapping_loop_borrow_iter
+        PASS [   1.886s] rust_verify_test::RelationStEph relation_st_eph_for_iter
+        PASS [   1.673s] rust_verify_test::SetMtEph set_mt_eph_for_iter
+        PASS [   1.850s] rust_verify_test::RelationStEph relation_st_eph_loop_loop
+        PASS [   1.757s] rust_verify_test::SetMtEph set_mt_eph_from_vec
+        PASS [   1.581s] rust_verify_test::SetMtEph set_mt_eph_loop_loop
+        PASS [   1.732s] rust_verify_test::SetStEph set_st_eph_for_iter
+        PASS [   1.635s] rust_verify_test::SetStEph set_st_eph_from_vec
+        PASS [   1.622s] rust_verify_test::SetStEph set_st_eph_loop_loop
+        PASS [   1.496s] rust_verify_test::prove_MathSeq_iters mathseq_iter_consuming
+        PASS [   1.469s] rust_verify_test::prove_MathSeq_iters mathseq_iter_nested
+        PASS [   1.546s] rust_verify_test::prove_MathSeq_iters mathseq_iter_range
+────────────
+     Summary [  60.403s] 157 tests run: 151 passed, 6 failed, 0 skipped
+        FAIL [   2.697s] rust_verify_test::ProveArraySeq arrayseq_filter
+        FAIL [   2.465s] rust_verify_test::ProveArraySeq arrayseq_for_iter
+        FAIL [   2.749s] rust_verify_test::ProveArraySeq arrayseq_iterate_prefixes
+        FAIL [   2.600s] rust_verify_test::ProveArraySeq arrayseq_loop_loop
+        FAIL [   3.304s] rust_verify_test::ProveArraySeq arrayseq_scan
+        FAIL [   3.066s] rust_verify_test::ProveArraySeq arrayseq_scan_inclusive
+error: test run failed
+Elapsed: 171s

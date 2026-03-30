@@ -1014,6 +1014,7 @@ broadcast use {
                         implies reversed@.map_values(|t: usize| t@)[i] == reversed@[i] by {};
                 };
             }
+            proof { assert(crate::vstdplus::feq::feq::obeys_feq_full_trigger::<usize>()); }
             let order = AVLTreeSeqStEphS::from_vec(reversed);
             proof {
                 // order@ =~= reversed@ (from from_vec ensures + map_values identity).

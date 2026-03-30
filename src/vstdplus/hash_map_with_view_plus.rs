@@ -26,6 +26,8 @@ use core::hash::Hash;
 use vstd::std_specs::hash::obeys_key_model;
 #[cfg(verus_keep_ghost)]
 use vstd::std_specs::hash::HashMapAdditionalSpecFns;
+#[cfg(verus_keep_ghost)]
+use crate::vstdplus::feq::feq::obeys_feq_view_injective;
 
 verus! {
 
@@ -55,7 +57,7 @@ pub trait HashMapWithViewPlusTrait<Key: View + Eq + Hash, Value>: Sized + View<V
     fn new() -> (empty: Self)
         requires
             obeys_key_model::<Key>(),
-            forall|k1: Key, k2: Key| k1@ == k2@ ==> k1 == k2,
+            obeys_feq_view_injective::<Key>(),
         ensures
             empty@ == Map::<<Key as View>::V, Value>::empty();
 

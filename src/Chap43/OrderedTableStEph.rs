@@ -2665,6 +2665,7 @@ broadcast use {
             } else {
                 let mut min_key = sorted.nth(0).0.clone_plus();
                 proof {
+                    lemma_reveal_view_injective::<K>();
                     assert(obeys_feq_full_trigger::<K>());
                     K::reflexive(min_key);
                 }
@@ -2752,6 +2753,7 @@ broadcast use {
             } else {
                 let mut max_key = sorted.nth(0).0.clone_plus();
                 proof {
+                    lemma_reveal_view_injective::<K>();
                     assert(obeys_feq_full_trigger::<K>());
                     K::reflexive(max_key);
                 }
@@ -2827,7 +2829,7 @@ broadcast use {
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v),
         {
-            proof { lemma_pair_set_to_map_dom_finite(self.tree@); }
+            proof { lemma_reveal_view_injective::<K>(); lemma_pair_set_to_map_dom_finite(self.tree@); }
             let sorted = self.tree.in_order();
             let len = sorted.length();
             proof {
@@ -2865,6 +2867,7 @@ broadcast use {
                             found = true;
                             let k_clone = elem.0.clone_plus();
                             proof {
+                                lemma_reveal_view_injective::<K>();
                                 lemma_cloned_view_eq(elem.0, k_clone);
                                 assert(self.tree@.contains(sorted@[i as int]));
                                 lemma_pair_in_set_map_contains(self.tree@, sorted@[i as int].0, sorted@[i as int].1);
@@ -2878,6 +2881,7 @@ broadcast use {
                                 core::cmp::Ordering::Greater => {
                                     let k_clone = elem.0.clone_plus();
                                     proof {
+                                        lemma_reveal_view_injective::<K>();
                                         lemma_cloned_view_eq(elem.0, k_clone);
                                         assert(self.tree@.contains(sorted@[i as int]));
                                         lemma_pair_in_set_map_contains(self.tree@, sorted@[i as int].0, sorted@[i as int].1);
@@ -2942,7 +2946,7 @@ broadcast use {
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t),
         {
-            proof { lemma_pair_set_to_map_dom_finite(self.tree@); }
+            proof { lemma_reveal_view_injective::<K>(); lemma_pair_set_to_map_dom_finite(self.tree@); }
             let sorted = self.tree.in_order();
             let len = sorted.length();
             proof {
@@ -2980,6 +2984,7 @@ broadcast use {
                             found = true;
                             let k_clone = elem.0.clone_plus();
                             proof {
+                                lemma_reveal_view_injective::<K>();
                                 lemma_cloned_view_eq(elem.0, k_clone);
                                 assert(self.tree@.contains(sorted@[i as int]));
                                 lemma_pair_in_set_map_contains(self.tree@, sorted@[i as int].0, sorted@[i as int].1);
@@ -2993,6 +2998,7 @@ broadcast use {
                                 core::cmp::Ordering::Less => {
                                     let k_clone = elem.0.clone_plus();
                                     proof {
+                                        lemma_reveal_view_injective::<K>();
                                         lemma_cloned_view_eq(elem.0, k_clone);
                                         assert(self.tree@.contains(sorted@[i as int]));
                                         lemma_pair_in_set_map_contains(self.tree@, sorted@[i as int].0, sorted@[i as int].1);
@@ -3419,6 +3425,7 @@ broadcast use {
             where K: TotalOrder
         {
             proof {
+                lemma_reveal_view_injective::<K>();
                 assert(obeys_feq_full_trigger::<K>());
                 lemma_pair_set_to_map_dom_finite(self.tree@);
             }

@@ -18,6 +18,8 @@ pub mod BoruvkaMtEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_view_injective;
     use crate::{ParaPair, SetLit};
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
     #[cfg(verus_keep_ghost)]
@@ -106,7 +108,7 @@ pub mod BoruvkaMtEph {
                 start <= end, end <= edges@.len(),
                 spec_all_weights_finite_seq(edges@),
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
             ensures
                 forall|k: V::V| #[trigger] bridges@.contains_key(k) ==> bridges@[k].1.spec_is_finite();
 
@@ -120,7 +122,7 @@ pub mod BoruvkaMtEph {
         ) -> (partition: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>))
             requires
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
                 SetStEph::<V>::spec_valid_key_type(),
             ensures partition.0.spec_setsteph_wf();
 
@@ -135,7 +137,7 @@ pub mod BoruvkaMtEph {
         ) -> (mst: SetStEph<usize>)
             requires
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
                 mst_labels.spec_setsteph_wf(),
                 spec_all_weights_finite_seq(edges_vec@),
                 SetStEph::<V>::spec_valid_key_type(),
@@ -153,7 +155,7 @@ pub mod BoruvkaMtEph {
                 vertices.spec_setsteph_wf(),
                 edges.spec_setsteph_wf(),
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
                 SetStEph::<V>::spec_valid_key_type(),
                 SetStEph::<usize>::spec_valid_key_type(),
             ensures mst.spec_setsteph_wf();
@@ -197,7 +199,7 @@ pub mod BoruvkaMtEph {
         requires
             start <= end, end <= vertices@.len(),
             obeys_key_model::<V>(),
-            forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            obeys_feq_view_injective::<V>(),
         ensures
             start == end ==> flips@.len() == 0,
         decreases end - start,
@@ -221,7 +223,7 @@ pub mod BoruvkaMtEph {
             requires
                 start <= mid, mid <= v1@.len(),
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
         {
             hash_coin_flips_mt(v1, seed, round, start, mid)
         };
@@ -230,7 +232,7 @@ pub mod BoruvkaMtEph {
             requires
                 mid <= end, end <= v2@.len(),
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
         {
             hash_coin_flips_mt(v2, seed, round, mid, end)
         };
@@ -401,7 +403,7 @@ pub mod BoruvkaMtEph {
         requires
             start <= end, end <= vertices@.len(),
             obeys_key_model::<V>(),
-            forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            obeys_feq_view_injective::<V>(),
         ensures
             start == end ==> part_map@.len() == 0,
         decreases end - start,
@@ -432,7 +434,7 @@ pub mod BoruvkaMtEph {
             requires
                 start <= mid, mid <= v1@.len(),
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
         {
             build_partition_map_mt(v1, p1, start, mid)
         };
@@ -441,7 +443,7 @@ pub mod BoruvkaMtEph {
             requires
                 mid <= end, end <= v2@.len(),
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
         {
             build_partition_map_mt(v2, p2, mid, end)
         };
@@ -482,7 +484,7 @@ pub mod BoruvkaMtEph {
             start <= end, end <= edges@.len(),
             spec_all_weights_finite_seq(edges@),
             obeys_key_model::<V>(),
-            forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            obeys_feq_view_injective::<V>(),
         ensures
             forall|k: V::V| #[trigger] bridges@.contains_key(k) ==> bridges@[k].1.spec_is_finite(),
         decreases end - start,
@@ -512,7 +514,7 @@ pub mod BoruvkaMtEph {
                 start <= mid, mid <= edges1@.len(),
                 spec_all_weights_finite_seq(edges1@),
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
             ensures
                 forall|k: V::V| #[trigger] r@.contains_key(k) ==> r@[k].1.spec_is_finite(),
         {
@@ -524,7 +526,7 @@ pub mod BoruvkaMtEph {
                 mid <= end, end <= edges2@.len(),
                 spec_all_weights_finite_seq(edges2@),
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
             ensures
                 forall|k: V::V| #[trigger] r@.contains_key(k) ==> r@[k].1.spec_is_finite(),
         {
@@ -589,7 +591,7 @@ pub mod BoruvkaMtEph {
     ) -> (partition: (SetStEph<V>, HashMapWithViewPlus<V, (V, WrappedF64, usize)>))
         requires
             obeys_key_model::<V>(),
-            forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            obeys_feq_view_injective::<V>(),
             SetStEph::<V>::spec_valid_key_type(),
         ensures partition.0.spec_setsteph_wf(),
     {
@@ -657,7 +659,7 @@ pub mod BoruvkaMtEph {
         requires
             start <= end, end <= vertices@.len(),
             obeys_key_model::<V>(),
-            forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            obeys_feq_view_injective::<V>(),
         ensures
             start == end ==> filtered@.len() == 0,
         decreases end - start,
@@ -702,7 +704,7 @@ pub mod BoruvkaMtEph {
             requires
                 start <= mid, mid <= verts1@.len(),
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
         {
             filter_tail_to_head_mt(verts1, bridges1, flips1, start, mid)
         };
@@ -711,7 +713,7 @@ pub mod BoruvkaMtEph {
             requires
                 mid <= end, end <= verts2@.len(),
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
         {
             filter_tail_to_head_mt(verts2, bridges2, flips2, mid, end)
         };
@@ -754,7 +756,7 @@ pub mod BoruvkaMtEph {
     ) -> (mst: SetStEph<usize>)
         requires
             obeys_key_model::<V>(),
-            forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            obeys_feq_view_injective::<V>(),
             mst_labels.spec_setsteph_wf(),
             spec_all_weights_finite_seq(edges_vec@),
             SetStEph::<V>::spec_valid_key_type(),
@@ -768,7 +770,7 @@ pub mod BoruvkaMtEph {
         loop
             invariant
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
                 mst_labels.spec_setsteph_wf(),
                 spec_all_weights_finite_seq(edges_vec@),
                 SetStEph::<V>::spec_valid_key_type(),
@@ -893,7 +895,7 @@ pub mod BoruvkaMtEph {
             start <= end, end <= edges@.len(),
             spec_all_weights_finite_seq(edges@),
             obeys_key_model::<V>(),
-            forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            obeys_feq_view_injective::<V>(),
         ensures
             spec_all_weights_finite_seq(rerouted@),
         decreases end - start,
@@ -935,7 +937,7 @@ pub mod BoruvkaMtEph {
                 start <= mid, mid <= edges1@.len(),
                 spec_all_weights_finite_seq(edges1@),
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
             ensures
                 spec_all_weights_finite_seq(r@),
         {
@@ -947,7 +949,7 @@ pub mod BoruvkaMtEph {
                 mid <= end, end <= edges2@.len(),
                 spec_all_weights_finite_seq(edges2@),
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
             ensures
                 spec_all_weights_finite_seq(r@),
         {
@@ -986,7 +988,7 @@ pub mod BoruvkaMtEph {
             vertices.spec_setsteph_wf(),
             edges.spec_setsteph_wf(),
             obeys_key_model::<V>(),
-            forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            obeys_feq_view_injective::<V>(),
             SetStEph::<V>::spec_valid_key_type(),
             SetStEph::<usize>::spec_valid_key_type(),
         ensures mst.spec_setsteph_wf(),

@@ -253,7 +253,7 @@ pub mod MathSeq {
             fn multiset_range(&self) -> (range: Vec<(usize, T)>)
                 requires
                     valid_key_type::<T>(),
-                    forall|k1: T, k2: T| k1@ == k2@ ==> k1 == k2,
+                    obeys_feq_view_injective::<T>(),
                 ensures
                     range@.len() <= self.spec_seq().len();
 
@@ -481,6 +481,7 @@ pub mod MathSeq {
 
             fn multiset_range(&self) -> (range: Vec<(usize, T)>)
             {
+                proof { lemma_reveal_view_injective::<T>(); }
                 let mut counts: HashMapWithView<T, usize> = HashMapWithView::with_capacity(self.data.len());
                 let mut order: Vec<T> = Vec::new();
                 let mut i: usize = 0;
@@ -490,7 +491,7 @@ pub mod MathSeq {
                 while i < len
                     invariant
                         valid_key_type::<T>(),
-                        forall|k1: T, k2: T| k1@ == k2@ ==> k1 == k2,
+                        obeys_feq_view_injective::<T>(),
                         i <= len,
                         order@.len() <= i,
                         forall|idx: int| #![trigger order@[idx]@] 0 <= idx < order@.len() ==> counts@.contains_key(order@[idx]@),
@@ -543,7 +544,7 @@ pub mod MathSeq {
                 while j < order_len
                     invariant
                         valid_key_type::<T>(),
-                        forall|k1: T, k2: T| k1@ == k2@ ==> k1 == k2,
+                        obeys_feq_view_injective::<T>(),
                         j <= order_len,
                         range@.len() == j,
                         order_len <= len,

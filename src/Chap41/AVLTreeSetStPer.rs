@@ -33,7 +33,7 @@ pub mod AVLTreeSetStPer {
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap38::BSTParaStEph::BSTParaStEph::*;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, lemma_cloned_view_eq};
+    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, lemma_cloned_view_eq, lemma_reveal_view_injective};
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesWf;
@@ -146,6 +146,7 @@ broadcast use {
         ensures
             a =~= b,
     {
+        lemma_reveal_view_injective::<T>();
         assert(a.map_values(|t: T| t@).len() == a.len());
         assert(b.map_values(|t: T| t@).len() == b.len());
         assert(a.len() == b.len());

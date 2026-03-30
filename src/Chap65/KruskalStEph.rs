@@ -15,7 +15,7 @@ pub mod KruskalStEph {
     use std::hash::Hash;
     use crate::Chap65::UnionFindStEph::UnionFindStEph::*;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::obeys_feq_full;
+    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_view_injective};
     use crate::vstdplus::pervasives_plus::pervasives_plus::vec_swap;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
     use crate::SetLit;
@@ -316,7 +316,7 @@ pub mod KruskalStEph {
             spec_labgraphview_wf(graph@),
             obeys_key_model::<V>(),
             obeys_feq_full::<V>(),
-            forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            obeys_feq_view_injective::<V>(),
         ensures
             mst_edges.spec_setsteph_wf(),
     {

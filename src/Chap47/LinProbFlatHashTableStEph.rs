@@ -22,7 +22,7 @@ pub mod LinProbFlatHashTableStEph {
     use crate::Types::Types::*;
     use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger};
+    use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger, lemma_reveal_view_injective};
 
     verus! {
 
@@ -240,6 +240,7 @@ pub mod LinProbFlatHashTableStEph {
                             let ghost old_table_seq = table.table@;
                             table.table.set(slot, FlatEntry::Occupied(key, value));
                             proof {
+                                lemma_reveal_view_injective::<Key>();
                                 assert(spec_flat_has_key(old_table_seq[slot as int], key));
                                 // No other slot has key (old wf no-dup).
                                 assert forall |j: int| 0 <= j < old_table_seq.len() && j != slot as int
@@ -512,6 +513,7 @@ pub mod LinProbFlatHashTableStEph {
                         let eq = feq(&k, key);
                         if eq {
                             proof {
+                                lemma_reveal_view_injective::<Key>();
                                 assert(spec_flat_has_key(table.table@[slot as int], *key));
                                 // No other slot has this key: contradiction via wf no-dup multi-trigger.
                                 assert forall |j: int| 0 <= j < table.table@.len() && j != slot as int
@@ -624,6 +626,7 @@ pub mod LinProbFlatHashTableStEph {
                                 table.num_elements = table.num_elements - 1;
                             }
                             proof {
+                                lemma_reveal_view_injective::<Key>();
                                 assert(spec_flat_has_key(old_table_seq[slot as int], *key));
                                 // No other slot has *key (old wf no-dup).
                                 assert forall |j: int| 0 <= j < old_table_seq.len() && j != slot as int

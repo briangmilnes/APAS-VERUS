@@ -30,7 +30,7 @@ pub mod BoruvkaStEph {
     use crate::Types::Types::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::obeys_feq_full;
+    use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_view_injective, obeys_feq_full_trigger};
 
     use std::hash::Hash;
     #[cfg(verus_keep_ghost)]
@@ -44,6 +44,7 @@ pub mod BoruvkaStEph {
 
     broadcast use {
         vstd::set::group_set_axioms,
+        crate::vstdplus::feq::feq::group_feq_axioms,
         crate::vstdplus::float::float::group_float_finite_total_order,
     };
 
@@ -127,7 +128,7 @@ pub mod BoruvkaStEph {
             requires
                 edges.spec_setsteph_wf(),
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
                 spec_all_weights_finite(edges@);
 
         /// Bridge-based star partition.
@@ -141,7 +142,7 @@ pub mod BoruvkaStEph {
                 vertices.spec_setsteph_wf(),
                 obeys_key_model::<V>(),
                 obeys_feq_full::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2
+                obeys_feq_view_injective::<V>()
             ensures partition.0.spec_setsteph_wf();
 
         /// Borůvka's MST algorithm.
@@ -161,7 +162,7 @@ pub mod BoruvkaStEph {
                 obeys_feq_full::<V>(),
                 obeys_key_model::<LabeledEdge<V>>(),
                 obeys_feq_full::<LabeledEdge<V>>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2
+                obeys_feq_view_injective::<V>()
             ensures mst.spec_setsteph_wf();
 
         /// Borůvka's MST with random seed.
@@ -179,7 +180,7 @@ pub mod BoruvkaStEph {
                 obeys_feq_full::<V>(),
                 obeys_key_model::<LabeledEdge<V>>(),
                 obeys_feq_full::<LabeledEdge<V>>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2
+                obeys_feq_view_injective::<V>()
             ensures mst.spec_setsteph_wf();
 
         /// Compute total weight of MST.
@@ -226,7 +227,7 @@ pub mod BoruvkaStEph {
                     spec_all_weights_finite(edges@),
                     forall|k: V::V| #[trigger] bridges@.contains_key(k) ==> bridges@[k].1.spec_is_finite(),
                     obeys_key_model::<V>(),
-                    forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                    obeys_feq_view_injective::<V>(),
                 decreases iter_seq.len() - it@.0,
             {
                 if let Some(edge) = it.next() {
@@ -290,7 +291,7 @@ pub mod BoruvkaStEph {
                     iter_invariant(&vit),
                     vit_seq == vit@.1,
                     obeys_key_model::<V>(),
-                    forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                    obeys_feq_view_injective::<V>(),
                 decreases vit_seq.len() - vit@.0,
             {
                 if let Some(v) = vit.next() {
@@ -315,7 +316,7 @@ pub mod BoruvkaStEph {
                     iter_invariant(&vit2),
                     vit2_seq == vit2@.1,
                     obeys_key_model::<V>(),
-                    forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                    obeys_feq_view_injective::<V>(),
                 decreases vit2_seq.len() - vit2@.0,
             {
                 if let Some(u) = vit2.next() {
@@ -403,7 +404,7 @@ pub mod BoruvkaStEph {
                     pit_seq == pit@.1,
                     new_mst_labels.spec_setsteph_wf(),
                     obeys_key_model::<V>(),
-                    forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                    obeys_feq_view_injective::<V>(),
                 decreases pit_seq.len() - pit@.0,
             {
                 if let Some((tail, bridge_entry)) = pit.next() {
@@ -424,7 +425,7 @@ pub mod BoruvkaStEph {
                     iter_invariant(&rit),
                     rit_seq == rit@.1,
                     obeys_key_model::<V>(),
-                    forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                    obeys_feq_view_injective::<V>(),
                 decreases rit_seq.len() - rit@.0,
             {
                 if let Some(v) = rit.next() {
@@ -496,6 +497,7 @@ pub mod BoruvkaStEph {
             edges: &SetStEph<LabeledEdge<V>>,
             seed: u64,
         ) -> (mst: SetStEph<usize>) {
+            proof { assert(obeys_feq_full_trigger::<usize>()); }
             Self::boruvka_mst(vertices, edges, SetStEph::empty(), seed)
         }
 

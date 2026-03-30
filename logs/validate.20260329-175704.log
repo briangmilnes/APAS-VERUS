@@ -1,0 +1,23 @@
+error[E0401]: can't use generic parameters from outer item
+   --> src/vstdplus/feq.rs:101:43
+    |
+ 97 |     pub proof fn lemma_view_injective<T: Eq + View + Sized>()
+    |                                       - type parameter from outer item
+...
+101 |         reveal(obeys_feq_view_injective::<T>);
+    |         ------                            ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+101 |         reveal<T>(obeys_feq_view_injective::<T>);
+    |               +++
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0401`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 22720MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

@@ -321,6 +321,7 @@ assert forall |p: (V::V, i8)| (exists |w: i8| #![trigger wa_view.contains((p.0, 
                 match it.next() {
                     None => {
                         proof {
+                            lemma_reveal_view_injective::<LabEdge<V, i8>>();
                             lemma_signed_seq_fold_left_plus_is_weighted_seq_sum_i8::<LabEdge<V, i8>, V::V, V::V>(wa_seq);
                             lemma_signed_weighted_seq_fold_equals_set_fold_i8(wa_seq.map(|_i: int, e: LabEdge<V, i8>| e@));
                         }

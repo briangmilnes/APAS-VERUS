@@ -17,6 +17,8 @@ pub mod simple_hash_set_iter {
     use vstd::hash_set::HashSetWithView;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlus;
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::HashSetWithViewPlusTrait;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_view_injective;
     
     #[cfg(verus_keep_ghost)]
     use vstd::pervasive::ForLoopGhostIteratorNew;
@@ -52,7 +54,7 @@ pub mod simple_hash_set_iter {
         fn new() -> (result: Self)
             requires 
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
             ensures 
                 result@ == Set::<<V as View>::V>::empty();
         
@@ -63,7 +65,7 @@ pub mod simple_hash_set_iter {
         fn insert(&mut self, v: V) -> (inserted: bool)
             requires 
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
             ensures
                 self@ == old(self)@.insert(v@),
                 inserted == !old(self)@.contains(v@);
@@ -95,7 +97,7 @@ pub mod simple_hash_set_iter {
     pub fn simple_hash_set_copy_loop<V: Clone + View + std::cmp::Eq + std::hash::Hash>(s1: &SimpleHashSet<V>) -> (s2: SimpleHashSet<V>)
         requires
             obeys_key_model::<V>(),
-            forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            obeys_feq_view_injective::<V>(),
         ensures
             s2@ == s1@,
     {
@@ -107,7 +109,7 @@ pub mod simple_hash_set_iter {
         loop
             invariant
                 obeys_key_model::<V>(),
-                forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                obeys_feq_view_injective::<V>(),
                 it@.1 == s1_seq,
                 s1_seq.map(|i: int, k: V| k@).to_set() == s1@,
                 s2@ == s1_seq.take(it@.0).map(|i: int, k: V| k@).to_set(),
@@ -179,7 +181,7 @@ pub mod simple_hash_set_iter {
             (s1: SimpleHashSet<V>) -> (s2: SimpleHashSet<V>)
         requires 
             obeys_key_model::<V>(),
-            forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            obeys_feq_view_injective::<V>(),
         ensures
             s2@ == s1@
     {
@@ -191,7 +193,7 @@ pub mod simple_hash_set_iter {
 
         for elem in it: s1_iter
             invariant
-              obeys_key_model::<V>(), forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+              obeys_key_model::<V>(), obeys_feq_view_injective::<V>(),
               s1@ == old_s1@,
               s2@ <= old_s1@,
               it.elements == s1_iter_seq,
@@ -228,7 +230,7 @@ pub mod simple_hash_set_iter {
             (s1: &SimpleHashSet<V>) -> (s2: SimpleHashSet<V>)
         requires 
             obeys_key_model::<V>(),
-            forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+            obeys_feq_view_injective::<V>(),
         ensures
             s2@ == s1@,
     {
@@ -238,7 +240,7 @@ pub mod simple_hash_set_iter {
         for elem in it: s1.iter()
             invariant
                  obeys_key_model::<V>(),
-                 forall|k1: V, k2: V| k1@ == k2@ ==> k1 == k2,
+                 obeys_feq_view_injective::<V>(),
 
                  len == s1@.len(),
                  it.elements.map(|i: int, k: V| k@).to_set() == s1.elements@,
