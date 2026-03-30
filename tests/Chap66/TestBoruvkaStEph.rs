@@ -270,3 +270,57 @@ fn test_boruvka_mst_direct_empty() {
     // No edges = empty MST.
     assert_eq!(mst_labels.size(), 0);
 }
+
+#[test]
+fn test_boruvka_k5_complete() {
+    // Complete graph K5 with distinct weights.
+    let vertices = SetLit![1, 2, 3, 4, 5];
+    let edges = SetLit![
+        LabeledEdge(1, 2, OrderedFloat(1.0), 0),
+        LabeledEdge(1, 3, OrderedFloat(2.0), 1),
+        LabeledEdge(1, 4, OrderedFloat(3.0), 2),
+        LabeledEdge(1, 5, OrderedFloat(4.0), 3),
+        LabeledEdge(2, 3, OrderedFloat(5.0), 4),
+        LabeledEdge(2, 4, OrderedFloat(6.0), 5),
+        LabeledEdge(2, 5, OrderedFloat(7.0), 6),
+        LabeledEdge(3, 4, OrderedFloat(8.0), 7),
+        LabeledEdge(3, 5, OrderedFloat(9.0), 8),
+        LabeledEdge(4, 5, OrderedFloat(10.0), 9),
+    ];
+    let mst_labels = BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42);
+    let mst_w = BoruvkaStEph::mst_weight(&edges, &mst_labels);
+    assert_eq!(mst_labels.size(), 4);
+    assert_eq!(mst_w, OrderedFloat(10.0)); // 1+2+3+4 = 10
+}
+
+#[test]
+fn test_boruvka_equal_weights() {
+    // All edges have the same weight. MST still picks n-1 edges.
+    let vertices = SetLit![1, 2, 3, 4];
+    let edges = SetLit![
+        LabeledEdge(1, 2, OrderedFloat(5.0), 0),
+        LabeledEdge(2, 3, OrderedFloat(5.0), 1),
+        LabeledEdge(3, 4, OrderedFloat(5.0), 2),
+        LabeledEdge(4, 1, OrderedFloat(5.0), 3),
+        LabeledEdge(1, 3, OrderedFloat(5.0), 4),
+    ];
+    let mst_labels = BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42);
+    let mst_w = BoruvkaStEph::mst_weight(&edges, &mst_labels);
+    assert_eq!(mst_labels.size(), 3);
+    assert_eq!(mst_w, OrderedFloat(15.0));
+}
+
+#[test]
+fn test_boruvka_deterministic_across_seeds() {
+    // MST weight should be the same regardless of seed (same graph).
+    let vertices = SetLit![1, 2, 3, 4];
+    let edges = SetLit![
+        LabeledEdge(1, 2, OrderedFloat(1.0), 0),
+        LabeledEdge(2, 3, OrderedFloat(2.0), 1),
+        LabeledEdge(3, 4, OrderedFloat(3.0), 2),
+        LabeledEdge(4, 1, OrderedFloat(4.0), 3),
+    ];
+    let w1 = BoruvkaStEph::mst_weight(&edges, &BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 1));
+    let w2 = BoruvkaStEph::mst_weight(&edges, &BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 99));
+    assert_eq!(w1, w2);
+}

@@ -98,3 +98,25 @@ fn test_scan_contract_large() {
     assert_eq!(result.nth(50), &50);
     assert_eq!(result.nth(99), &99);
 }
+
+#[test]
+fn test_scan_contract_three_elements() {
+    let a = ArraySeqStEphS::tabulate(&|i| (i + 1) * 10, 3); // [10, 20, 30]
+    let result = ArraySeqStEphS::scan_contract(&a, &|x, y| x + y, Ghost::assume_new(), 0);
+    assert_eq!(result.length(), 3);
+    assert_eq!(result.nth(0), &0);
+    assert_eq!(result.nth(1), &10);
+    assert_eq!(result.nth(2), &30);
+}
+
+#[test]
+fn test_scan_contract_max() {
+    let a = ArraySeqStEphS::tabulate(&|i| vec![3, 1, 4, 1, 5][i], 5);
+    let result = ArraySeqStEphS::scan_contract(&a, &|x, y| if x > y { *x } else { *y }, Ghost::assume_new(), 0);
+    assert_eq!(result.length(), 5);
+    assert_eq!(result.nth(0), &0); // identity
+    assert_eq!(result.nth(1), &3); // max(0, 3)
+    assert_eq!(result.nth(2), &3); // max(0, 3, 1)
+    assert_eq!(result.nth(3), &4); // max(0, 3, 1, 4)
+    assert_eq!(result.nth(4), &4); // max(0, 3, 1, 4, 1)
+}

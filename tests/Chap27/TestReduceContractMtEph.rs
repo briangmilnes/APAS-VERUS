@@ -81,3 +81,22 @@ fn test_reduce_contract_parallel_large() {
     let result = ArraySeqMtEphS::reduce_contract_parallel(&a, Arc::new(|x: &usize, y: &usize| x + y), Ghost::assume_new(), 0);
     assert_eq!(result, 1000, "Sum of 1000 ones should be 1000");
 }
+
+#[test]
+fn test_reduce_contract_parallel_min() {
+    let a = ArraySeqMtEphS::tabulate(&|i| (i * 7 + 3) % 20, 15);
+    let result = ArraySeqMtEphS::reduce_contract_parallel(&a, Arc::new(|x: &usize, y: &usize| if x < y { *x } else { *y }), Ghost::assume_new(), usize::MAX);
+    let mut expected = usize::MAX;
+    for i in 0..15 {
+        let v = (i * 7 + 3) % 20;
+        if v < expected { expected = v; }
+    }
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn test_reduce_contract_parallel_three_elements() {
+    let a = ArraySeqMtEphS::tabulate(&|i| i + 10, 3);
+    let result = ArraySeqMtEphS::reduce_contract_parallel(&a, Arc::new(|x: &usize, y: &usize| x + y), Ghost::assume_new(), 0);
+    assert_eq!(result, 33);
+}

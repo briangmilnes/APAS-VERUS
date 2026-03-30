@@ -78,3 +78,22 @@ fn test_reduce_contract_large() {
     let result = ArraySeqStEphS::reduce_contract(&a, &|x, y| x + y, Ghost::assume_new(), 0);
     assert_eq!(result, 1000, "Sum of 1000 ones should be 1000");
 }
+
+#[test]
+fn test_reduce_contract_min() {
+    let a = ArraySeqStEphS::tabulate(&|i| (i * 7 + 3) % 20, 15);
+    let result = ArraySeqStEphS::reduce_contract(&a, &|x, y| if x < y { *x } else { *y }, Ghost::assume_new(), usize::MAX);
+    let mut expected = usize::MAX;
+    for i in 0..15 {
+        let v = (i * 7 + 3) % 20;
+        if v < expected { expected = v; }
+    }
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn test_reduce_contract_three_elements() {
+    let a = ArraySeqStEphS::tabulate(&|i| i + 10, 3); // [10, 11, 12]
+    let result = ArraySeqStEphS::reduce_contract(&a, &|x, y| x + y, Ghost::assume_new(), 0);
+    assert_eq!(result, 33);
+}

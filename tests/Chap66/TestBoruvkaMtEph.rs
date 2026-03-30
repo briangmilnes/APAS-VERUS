@@ -231,6 +231,58 @@ fn test_boruvka_mst_mt_direct() {
 }
 
 #[test]
+fn test_boruvka_mt_k5_complete() {
+    let vertices = SetLit![1, 2, 3, 4, 5];
+    let edges = SetLit![
+        LabeledEdge(1, 2, OrderedFloat(1.0), 0),
+        LabeledEdge(1, 3, OrderedFloat(2.0), 1),
+        LabeledEdge(1, 4, OrderedFloat(3.0), 2),
+        LabeledEdge(1, 5, OrderedFloat(4.0), 3),
+        LabeledEdge(2, 3, OrderedFloat(5.0), 4),
+        LabeledEdge(2, 4, OrderedFloat(6.0), 5),
+        LabeledEdge(2, 5, OrderedFloat(7.0), 6),
+        LabeledEdge(3, 4, OrderedFloat(8.0), 7),
+        LabeledEdge(3, 5, OrderedFloat(9.0), 8),
+        LabeledEdge(4, 5, OrderedFloat(10.0), 9),
+    ];
+    let mst_labels = boruvka_mst_mt_with_seed(&vertices, &edges, 42);
+    let mst_w = mst_weight(&edges, &mst_labels);
+    assert_eq!(mst_labels.size(), 4);
+    assert_eq!(mst_w, OrderedFloat(10.0));
+}
+
+#[test]
+fn test_boruvka_mt_equal_weights() {
+    let vertices = SetLit![1, 2, 3, 4];
+    let edges = SetLit![
+        LabeledEdge(1, 2, OrderedFloat(5.0), 0),
+        LabeledEdge(2, 3, OrderedFloat(5.0), 1),
+        LabeledEdge(3, 4, OrderedFloat(5.0), 2),
+        LabeledEdge(4, 1, OrderedFloat(5.0), 3),
+    ];
+    let mst_labels = boruvka_mst_mt_with_seed(&vertices, &edges, 42);
+    let mst_w = mst_weight(&edges, &mst_labels);
+    assert_eq!(mst_labels.size(), 3);
+    assert_eq!(mst_w, OrderedFloat(15.0));
+}
+
+#[test]
+fn test_boruvka_mt_st_agree() {
+    use apas_verus::Chap66::BoruvkaStEph::BoruvkaStEph;
+    let vertices = SetLit![1, 2, 3, 4, 5];
+    let edges = SetLit![
+        LabeledEdge(1, 2, OrderedFloat(1.0), 0),
+        LabeledEdge(2, 3, OrderedFloat(2.0), 1),
+        LabeledEdge(3, 4, OrderedFloat(3.0), 2),
+        LabeledEdge(4, 5, OrderedFloat(4.0), 3),
+        LabeledEdge(5, 1, OrderedFloat(10.0), 4),
+    ];
+    let w_st = BoruvkaStEph::mst_weight(&edges, &BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42));
+    let w_mt = mst_weight(&edges, &boruvka_mst_mt_with_seed(&vertices, &edges, 42));
+    assert_eq!(w_st, w_mt);
+}
+
+#[test]
 fn test_boruvka_mst_mt_empty() {
     let vertices: Vec<i32> = vec![];
     let edges: Vec<LabeledEdge<i32>> = vec![];

@@ -11,6 +11,7 @@ use apas_verus::Chap21::Exercise21_5::Exercise21_5::*;
 use apas_verus::Chap21::Exercise21_7::Exercise21_7::*;
 use apas_verus::Chap21::Exercise21_8::Exercise21_8::*;
 use apas_verus::Chap21::Problem21_1::Problem21_1::*;
+use apas_verus::Chap21::Problem21_3::Problem21_3::*;
 use apas_verus::Chap21::Problem21_4::Problem21_4::*;
 use apas_verus::Types::Types::*;
 
@@ -260,7 +261,45 @@ fn points2d_matches_tab_flat() {
     }
 }
 
-// Problem 21.3: commented out in lib.rs — no tests
+// Problem 21.3: Points in 3D (imperative)
+
+#[test]
+fn points3d_loops_n0() {
+    let result = points3d_loops(0);
+    assert_eq!(result.length(), 0);
+}
+
+#[test]
+fn points3d_loops_n1() {
+    let result = points3d_loops(1);
+    assert_eq!(result.length(), 1); // 1^3 = 1
+}
+
+#[test]
+fn points3d_loops_n3() {
+    let result = points3d_loops(3);
+    assert_eq!(result.length(), 27); // 3^3 = 27
+}
+
+#[test]
+fn points3d_loops_bounds() {
+    let result = points3d_loops(3);
+    for i in 0..result.length() {
+        let p = result.nth(i);
+        assert!(p.0 < 3);
+        assert!(1 <= p.1 .0 && p.1 .0 <= 3);
+        assert!(2 <= p.1 .1 && p.1 .1 <= 4);
+    }
+}
+
+#[test]
+fn points3d_loops_matches_tab_flat() {
+    for n in [0, 1, 3] {
+        let imp = points3d_loops(n);
+        let func = points3d_tab_flat(n);
+        assert_eq!(imp.length(), func.length(), "length mismatch at n={n}");
+    }
+}
 
 // Problem 21.4: Cartesian Product
 
@@ -303,4 +342,72 @@ fn cartesian_matches() {
         assert_eq!(r1.nth(i).0, r2.nth(i).0);
         assert_eq!(r1.nth(i).1, r2.nth(i).1);
     }
+}
+
+// Additional edge case tests
+
+#[test]
+fn points2d_tab_flat_n2() {
+    let result = points2d_tab_flat(2);
+    assert_eq!(result.length(), 2); // 2 * 1 = 2
+}
+
+#[test]
+fn prime_sieve_n100() {
+    let result = prime_sieve(100);
+    let sieved: Vec<usize> = (0..result.length()).map(|i| *result.nth(i)).collect();
+    assert_eq!(sieved.len(), 25); // There are 25 primes <= 100.
+    assert_eq!(sieved[0], 2);
+    assert_eq!(sieved[24], 97);
+}
+
+#[test]
+fn is_prime_boundary() {
+    assert!(!is_prime(0));
+    assert!(!is_prime(1));
+    assert!(is_prime(2));
+    assert!(is_prime(3));
+    assert!(!is_prime(4));
+}
+
+#[test]
+fn is_divisible_edge_cases() {
+    assert!(is_divisible(1, 1));
+    assert!(is_divisible(0, 7));
+    assert!(!is_divisible(7, 3));
+    assert!(is_divisible(100, 25));
+}
+
+#[test]
+fn cartesian_tab_flat_empty_both() {
+    use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+    let a = ArraySeqStPerS::<usize>::from_vec(Vec::new());
+    let b = ArraySeqStPerS::<usize>::from_vec(Vec::new());
+    let result = cartesian_tab_flat(&a, &b);
+    assert_eq!(result.length(), 0);
+}
+
+#[test]
+fn cartesian_loops_singleton() {
+    use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+    let a = ArraySeqStPerS::from_vec(vec![1]);
+    let b = ArraySeqStPerS::from_vec(vec![2]);
+    let result = cartesian_loops(&a, &b);
+    assert_eq!(result.length(), 1);
+    assert_eq!(result.nth(0).0, 1);
+    assert_eq!(result.nth(0).1, 2);
+}
+
+#[test]
+fn all_contiguous_subseqs_singleton() {
+    use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+    let a = ArraySeqStPerS::from_vec(vec![42usize]);
+    let result = all_contiguous_subseqs(&a);
+    assert_eq!(result.length(), 1); // Just [42]
+}
+
+#[test]
+fn points2d_n1() {
+    let result = points2d(1);
+    assert_eq!(result.length(), 0); // 1 * 0 = 0
 }
