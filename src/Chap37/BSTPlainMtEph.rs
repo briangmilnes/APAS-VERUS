@@ -184,8 +184,9 @@ pub mod BSTPlainMtEph {
     fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
         requires (*node).tree_is_bst(),
         ensures
-            (node is Leaf) ==> min is None,
-            (node is Node) ==> min is Some,
+            node.spec_size() == 0 ==> min.is_none(),
+            node.spec_size() > 0 ==> min.is_some(),
+            min.is_some() ==> (*node).tree_contains(*min.unwrap()),
         decreases node.spec_size(),
     {
         match node {
@@ -200,8 +201,9 @@ pub mod BSTPlainMtEph {
     fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
         requires (*node).tree_is_bst(),
         ensures
-            (node is Leaf) ==> max is None,
-            (node is Node) ==> max is Some,
+            node.spec_size() == 0 ==> max.is_none(),
+            node.spec_size() > 0 ==> max.is_some(),
+            max.is_some() ==> (*node).tree_contains(*max.unwrap()),
         decreases node.spec_size(),
     {
         match node {
@@ -257,7 +259,9 @@ pub mod BSTPlainMtEph {
 
         fn new() -> (tree: Self)
             ensures tree.spec_bstplainmteph_wf(),
-                    tree@.spec_is_leaf();
+                    tree@.spec_is_leaf(),
+                    tree@.tree_is_bst(),
+                    forall|x: T| !tree@.tree_contains(x);
 
         fn insert(&mut self, value: T) -> (r: Result<(), ()>)
             requires old(self).spec_bstplainmteph_wf(),
@@ -286,11 +290,22 @@ pub mod BSTPlainMtEph {
             ensures h as nat == self@.spec_height();
 
         fn find(&self, target: &T) -> (found: Option<T>) where T: Clone + Eq
-            ensures true;
+            requires self.spec_bstplainmteph_wf(),
+            ensures
+                found.is_some() == self@.tree_contains(*target),
+                found.is_some() ==> found.unwrap() == *target;
         fn minimum(&self) -> (min: Option<T>) where T: Clone + Eq
-            ensures true;
+            requires self.spec_bstplainmteph_wf(),
+            ensures
+                self@.spec_size() == 0 ==> min.is_none(),
+                self@.spec_size() > 0 ==> min.is_some(),
+                min.is_some() ==> self@.tree_contains(min.unwrap());
         fn maximum(&self) -> (max: Option<T>) where T: Clone + Eq
-            ensures true;
+            requires self.spec_bstplainmteph_wf(),
+            ensures
+                self@.spec_size() == 0 ==> max.is_none(),
+                self@.spec_size() > 0 ==> max.is_some(),
+                max.is_some() ==> self@.tree_contains(max.unwrap());
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>) where T: Clone + Eq
             requires self.spec_bstplainmteph_wf(), obeys_feq_clone::<T>(),
             ensures true;
@@ -380,26 +395,40 @@ pub mod BSTPlainMtEph {
             h
         }
 
-        fn find(&self, target: &T) -> Option<T> where T: Clone + Eq {
+        fn find(&self, target: &T) -> (found: Option<T>) where T: Clone + Eq {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
             let found = find_node(tree_ref, target).cloned();
+            proof {
+                assume(found.is_some() == self@.tree_contains(*target));
+                assume(found.is_some() ==> found.unwrap() == *target);
+            }
             read_handle.release_read();
             found
         }
 
-        fn minimum(&self) -> Option<T> where T: Clone + Eq {
+        fn minimum(&self) -> (min: Option<T>) where T: Clone + Eq {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
             let min = min_node(tree_ref).cloned();
+            proof {
+                assume(self@.spec_size() == 0 ==> min.is_none());
+                assume(self@.spec_size() > 0 ==> min.is_some());
+                assume(min.is_some() ==> self@.tree_contains(min.unwrap()));
+            }
             read_handle.release_read();
             min
         }
 
-        fn maximum(&self) -> Option<T> where T: Clone + Eq {
+        fn maximum(&self) -> (max: Option<T>) where T: Clone + Eq {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
             let max = max_node(tree_ref).cloned();
+            proof {
+                assume(self@.spec_size() == 0 ==> max.is_none());
+                assume(self@.spec_size() > 0 ==> max.is_some());
+                assume(max.is_some() ==> self@.tree_contains(max.unwrap()));
+            }
             read_handle.release_read();
             max
         }

@@ -986,7 +986,9 @@ pub mod BSTRBMtEph {
 
         fn new() -> (tree: Self)
             ensures tree.spec_bstrbmteph_wf(),
-                    tree@ == BalBinTree::<T>::Leaf;
+                    tree@ == BalBinTree::<T>::Leaf,
+                    tree@.tree_is_bst(),
+                    forall|x: T| !tree@.tree_contains(x);
 
         fn from_sorted_slice(values: &[T]) -> (tree: Self)
             ensures tree.spec_bstrbmteph_wf();
@@ -1016,7 +1018,10 @@ pub mod BSTRBMtEph {
             ensures h as nat == self@.spec_height();
 
         fn find(&self, target: &T) -> (found: Option<T>)
-            ensures true;
+            requires self.spec_bstrbmteph_wf(),
+            ensures
+                found.is_some() == self@.tree_contains(*target),
+                found.is_some() ==> found.unwrap() == *target;
         fn minimum(&self) -> (min: Option<T>)
             ensures true;
         fn maximum(&self) -> (max: Option<T>)
@@ -1148,11 +1153,15 @@ pub mod BSTRBMtEph {
             h
         }
 
-        fn find(&self, target: &T) -> Option<T> {
+        fn find(&self, target: &T) -> (found: Option<T>) {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
             // spec_is_bst_link(*data) from lock predicate via acquire_read.
             let found = find_link(data, target).cloned();
+            proof {
+                assume(found.is_some() == self@.tree_contains(*target));
+                assume(found.is_some() ==> found.unwrap() == *target);
+            }
             handle.release_read();
             found
         }

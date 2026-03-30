@@ -1,0 +1,22 @@
+error: precondition not satisfied
+   --> src/Chap37/AVLTreeSeqMtPer.rs:833:25
+    |
+249 |             requires self.spec_avltreeseqmtper_wf(),
+    |                      ------------------------------ failed precondition
+...
+833 |                 values: self.values_in_order(),
+    |                         ^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+self.spec_avltreeseqmtper_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 1795 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 1695MB, peak z3 RSS: 357MB, min free: 18982MB
+Sampled CPU Usage: rust_verify: 25s, z3 children: 21s

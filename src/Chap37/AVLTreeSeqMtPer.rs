@@ -231,12 +231,16 @@ pub mod AVLTreeSeqMtPer {
                 self.spec_avltreeseqmtper_wf(),
                 (index as int) < self.spec_seq().len(),
                 obeys_feq_clone::<T>(),
-            ;
+            ensures
+                outcome is Ok,
+                outcome.unwrap().spec_avltreeseqmtper_wf();
 
         fn subseq_copy(&self, start: usize, length: usize) -> (sub: Self)
-            requires self.spec_avltreeseqmtper_wf();
+            requires self.spec_avltreeseqmtper_wf(),
+            ensures sub.spec_avltreeseqmtper_wf();
 
         fn from_vec(values: Vec<T>) -> (tree: Self)
+            requires values@.len() < usize::MAX,
             ensures
                 tree.spec_avltreeseqmtper_wf(),
                 tree.spec_seq() =~= values@.map_values(|t: T| t@);

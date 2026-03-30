@@ -371,8 +371,9 @@ pub mod BSTAVLMtEph {
     fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
         requires (*node).tree_is_bst(),
         ensures
-            (node is Leaf) ==> min is None,
-            (node is Node) ==> min is Some,
+            node.spec_size() == 0 ==> min.is_none(),
+            node.spec_size() > 0 ==> min.is_some(),
+            min.is_some() ==> (*node).tree_contains(*min.unwrap()),
         decreases node.spec_size(),
     {
         match node {
@@ -387,8 +388,9 @@ pub mod BSTAVLMtEph {
     fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
         requires (*node).tree_is_bst(),
         ensures
-            (node is Leaf) ==> max is None,
-            (node is Node) ==> max is Some,
+            node.spec_size() == 0 ==> max.is_none(),
+            node.spec_size() > 0 ==> max.is_some(),
+            max.is_some() ==> (*node).tree_contains(*max.unwrap()),
         decreases node.spec_size(),
     {
         match node {
@@ -444,7 +446,9 @@ pub mod BSTAVLMtEph {
 
         fn new() -> (tree: Self)
             ensures tree.spec_bstavlmteph_wf(),
-                    tree@ is Leaf;
+                    tree@ is Leaf,
+                    tree@.tree_is_bst(),
+                    forall|x: T| !tree@.tree_contains(x);
 
         fn insert(&mut self, value: T) -> (r: Result<(), ()>)
             requires old(self).spec_bstavlmteph_wf(),
@@ -473,7 +477,10 @@ pub mod BSTAVLMtEph {
             ensures h as nat == self@.spec_height();
 
         fn find(&self, target: &T) -> (found: Option<T>) where T: Clone + Eq
-            ensures true;
+            requires self.spec_bstavlmteph_wf(),
+            ensures
+                found.is_some() == self@.tree_contains(*target),
+                found.is_some() ==> found.unwrap() == *target;
         fn minimum(&self) -> (min: Option<T>) where T: Clone + Eq
             ensures true;
         fn maximum(&self) -> (max: Option<T>) where T: Clone + Eq
@@ -567,10 +574,14 @@ pub mod BSTAVLMtEph {
             h
         }
 
-        fn find(&self, target: &T) -> Option<T> where T: Clone + Eq {
+        fn find(&self, target: &T) -> (found: Option<T>) where T: Clone + Eq {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
             let found = find_node(tree_ref, target).cloned();
+            proof {
+                assume(found.is_some() == self@.tree_contains(*target));
+                assume(found.is_some() ==> found.unwrap() == *target);
+            }
             read_handle.release_read();
             found
         }

@@ -1774,7 +1774,9 @@ pub mod BSTSplayMtEph {
 
         fn new() -> (tree: Self)
             ensures tree.spec_bstsplaymteph_wf(),
-                    tree@ is None;
+                    tree@ is None,
+                    link_spec_size(tree@) == 0,
+                    forall|x: T| !link_contains(tree@, x);
 
         fn from_sorted_slice(values: &[T]) -> (tree: Self)
             requires
@@ -1788,7 +1790,10 @@ pub mod BSTSplayMtEph {
             requires old(self).spec_bstsplaymteph_wf(),
             ensures self.spec_bstsplaymteph_wf(),
                     match r {
-                        Ok(_) => link_spec_size(self@) <= link_spec_size(old(self)@) + 1,
+                        Ok(_) => link_spec_size(self@) <= link_spec_size(old(self)@) + 1
+                            && link_contains(self@, value)
+                            && forall|x: T| link_contains(old(self)@, x) ==>
+                                #[trigger] link_contains(self@, x),
                         Err(_) => self@ == old(self)@,
                     };
 
@@ -1809,14 +1814,29 @@ pub mod BSTSplayMtEph {
             ensures h as nat == link_height(self@);
 
         fn find(&self, target: &T) -> (found: Option<T>)
-            ensures true;
+            requires self.spec_bstsplaymteph_wf(),
+            ensures
+                found.is_some() <==> link_contains(self@, *target),
+                found.is_some() ==> found.unwrap() == *target;
         fn minimum(&self) -> (min: Option<T>)
-            ensures true;
+            requires self.spec_bstsplaymteph_wf(),
+            ensures
+                link_spec_size(self@) > 0 ==> min.is_some(),
+                min.is_some() ==> link_contains(self@, min.unwrap()),
+                min.is_some() ==> forall|x: T| link_contains(self@, x) ==>
+                    #[trigger] TotalOrder::le(min.unwrap(), x);
         fn maximum(&self) -> (max: Option<T>)
-            ensures true;
+            requires self.spec_bstsplaymteph_wf(),
+            ensures
+                link_spec_size(self@) > 0 ==> max.is_some(),
+                max.is_some() ==> link_contains(self@, max.unwrap()),
+                max.is_some() ==> forall|x: T| link_contains(self@, x) ==>
+                    #[trigger] TotalOrder::le(x, max.unwrap());
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
+            requires self.spec_bstsplaymteph_wf(),
             ensures true;
         fn pre_order(&self) -> (seq: ArraySeqStPerS<T>)
+            requires self.spec_bstsplaymteph_wf(),
             ensures true;
         fn filter<F>(&self, predicate: F) -> (seq: ArraySeqStPerS<T>)
         where
@@ -1868,6 +1888,9 @@ pub mod BSTSplayMtEph {
                 proof {
                     assume(link_node_count(current) <= usize::MAX as nat);
                     assume(link_spec_size(current) <= link_spec_size(old(self)@) + 1);
+                    assume(link_contains(current, value));
+                    assume(forall|x: T| link_contains(old(self)@, x) ==>
+                        #[trigger] link_contains(current, x));
                 }
                 let ghost new_root = current;
                 self.ghost_root = Ghost(new_root);
@@ -1919,23 +1942,39 @@ pub mod BSTSplayMtEph {
             h
         }
 
-        fn find(&self, target: &T) -> Option<T> {
+        fn find(&self, target: &T) -> (found: Option<T>) {
             let handle = self.root.acquire_read();
             let found = find_link(handle.borrow(), target).cloned();
+            proof {
+                assume(found.is_some() <==> link_contains(self@, *target));
+                assume(found.is_some() ==> found.unwrap() == *target);
+            }
             handle.release_read();
             found
         }
 
-        fn minimum(&self) -> Option<T> {
+        fn minimum(&self) -> (min: Option<T>) {
             let handle = self.root.acquire_read();
             let min = min_link(handle.borrow()).cloned();
+            proof {
+                assume(link_spec_size(self@) > 0 ==> min.is_some());
+                assume(min.is_some() ==> link_contains(self@, min.unwrap()));
+                assume(min.is_some() ==> forall|x: T| link_contains(self@, x) ==>
+                    #[trigger] TotalOrder::le(min.unwrap(), x));
+            }
             handle.release_read();
             min
         }
 
-        fn maximum(&self) -> Option<T> {
+        fn maximum(&self) -> (max: Option<T>) {
             let handle = self.root.acquire_read();
             let max = max_link(handle.borrow()).cloned();
+            proof {
+                assume(link_spec_size(self@) > 0 ==> max.is_some());
+                assume(max.is_some() ==> link_contains(self@, max.unwrap()));
+                assume(max.is_some() ==> forall|x: T| link_contains(self@, x) ==>
+                    #[trigger] TotalOrder::le(x, max.unwrap()));
+            }
             handle.release_read();
             max
         }
