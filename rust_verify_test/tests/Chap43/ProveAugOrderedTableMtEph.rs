@@ -20,6 +20,7 @@ test_verify_one_file! {
         use apas_verus::Types::Types::*;
         use apas_verus::Chap43::AugOrderedTableMtEph::AugOrderedTableMtEph::*;
         use apas_verus::Chap43::OrderedTableMtEph::OrderedTableMtEph::{OrderedTableMtEphIter, iter_invariant};
+        use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
         use apas_verus::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
 
         fn test_loop_borrow_iter()
@@ -68,6 +69,7 @@ test_verify_one_file! {
         use apas_verus::Types::Types::*;
         use apas_verus::Chap43::AugOrderedTableMtEph::AugOrderedTableMtEph::*;
         use apas_verus::Chap43::OrderedTableMtEph::OrderedTableMtEph::{OrderedTableMtEphIter, iter_invariant};
+        use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
         use apas_verus::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
 
         fn test_loop_borrow_into()
@@ -116,6 +118,7 @@ test_verify_one_file! {
         use apas_verus::Types::Types::*;
         use apas_verus::Chap43::AugOrderedTableMtEph::AugOrderedTableMtEph::*;
         use apas_verus::Chap43::OrderedTableMtEph::OrderedTableMtEph::{OrderedTableMtEphIter, iter_invariant};
+        use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
         use apas_verus::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
 
         fn test_for_borrow_iter()
@@ -156,6 +159,7 @@ test_verify_one_file! {
         use apas_verus::Types::Types::*;
         use apas_verus::Chap43::AugOrderedTableMtEph::AugOrderedTableMtEph::*;
         use apas_verus::Chap43::OrderedTableMtEph::OrderedTableMtEph::{OrderedTableMtEphIter, iter_invariant};
+        use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
         use apas_verus::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
 
         fn test_for_borrow_into()

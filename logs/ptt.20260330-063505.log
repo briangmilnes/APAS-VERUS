@@ -1,0 +1,3232 @@
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:131:17
+    |
+131 |                 assert forall|j: int| 0 <= j < i as int + 1 implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:132:51
+    |
+132 |                     vertex_to_index@.contains_key(vertices_vec@[j]@) &&
+    |                                                   ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:150:21
+    |
+150 |                     exists|j: int| 0 <= j < i as int + 1 && vertices_vec@[j]@ == v_view by {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:150:61
+    |
+150 |                     exists|j: int| 0 <= j < i as int + 1 && vertices_vec@[j]@ == v_view by {
+    |                                                             ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:124:21
+    |
+124 |                     exists|j: int| 0 <= j < i as int && vertices_vec@[j]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:124:57
+    |
+124 |                     exists|j: int| 0 <= j < i as int && vertices_vec@[j]@ == v_view,
+    |                                                         ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:192:17
+    |
+192 |                 assert forall|jj: int| 0 <= jj < j as int + 1 implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:193:46
+    |
+193 |                     coin_flips@.contains_key(vertices_vec@[jj]@) by {
+    |                                              ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:287:29
+    |
+287 | ...                   assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:288:34
+    |
+288 | ...                   (th_edges@[s].0 as usize) < nv &&
+    |                        ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:329:29
+    |
+329 | ...                   assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:330:34
+    |
+330 | ...                   (th_edges@[s].0 as usize) < nv &&
+    |                        ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:358:17
+    |
+358 |                 assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:359:22
+    |
+359 |                     (th_edges@[s].0 as usize) < nv &&
+    |                      ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:231:21
+    |
+231 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:231:60
+    |
+231 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                                                            ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:378:13
+    |
+378 |             assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |             ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:379:18
+    |
+379 |                 (th_edges@[s].0 as usize) < nv &&
+    |                  ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:400:17
+    |
+400 |                 forall|j2: int| 0 <= j2 < m as int ==> p_vec@[j2]@ == vertices_vec@[j2]@,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:400:56
+    |
+400 |                 forall|j2: int| 0 <= j2 < m as int ==> p_vec@[j2]@ == vertices_vec@[j2]@,
+    |                                                        ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:400:71
+    |
+400 |                 forall|j2: int| 0 <= j2 < m as int ==> p_vec@[j2]@ == vertices_vec@[j2]@,
+    |                                                                       ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:406:21
+    |
+406 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:406:60
+    |
+406 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                                                            ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:503:21
+    |
+503 |                     assert forall|j2: int| 0 <= j2 < nv as int implies
+    |                     ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:504:50
+    |
+504 |                         coin_flips@.contains_key(vertices_vec@[j2]@) &&
+    |                                                  ^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:506:26
+    |
+506 |                          p_vec@[j2]@ == vertices_vec@[j2]@) by {
+    |                          ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:513:21
+    |
+513 |                     assert forall|j2: int|
+    |                     ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:514:49
+    |
+514 |                         (0 <= j2 < nv as int && p_vec@[j2]@ != vertices_vec@[j2]@) implies
+    |                                                 ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:514:64
+    |
+514 |                         (0 <= j2 < nv as int && p_vec@[j2]@ != vertices_vec@[j2]@) implies
+    |                                                                ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:540:17
+    |
+540 |                 assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:541:22
+    |
+541 |                     (th_edges@[s].0 as usize) < nv &&
+    |                      ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:464:17
+    |
+464 | /                 forall|j2: int| 0 <= j2 < nv as int ==>
+465 | |                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+466 | |                     vertex_to_index@[vertices_vec@[j2]@] as usize == j2,
+    | |_______________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:465:51
+    |
+465 |                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+    |                                                   ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:468:21
+    |
+468 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:468:60
+    |
+468 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                                                            ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:616:17
+    |
+616 |                 assert forall|j2: int| 0 <= j2 < q as int implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:618:60
+    |
+618 |                     partition_map@[vertices_vec@[j2]@]@ == p_vec@[j2]@ by {
+    |                                                            ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:632:21
+    |
+632 |                     exists|j2: int| 0 <= j2 < q as int + 1 && vertices_vec@[j2]@ == v_view by {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:632:63
+    |
+632 |                     exists|j2: int| 0 <= j2 < q as int + 1 && vertices_vec@[j2]@ == v_view by {
+    |                                                               ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:653:21
+    |
+653 |                     assert forall|j2: int|
+    |                     ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:654:48
+    |
+654 |                         (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+    |                                                ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:654:63
+    |
+654 |                         (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+    |                                                               ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:667:21
+    |
+667 |                     assert forall|j2: int|
+    |                     ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:668:48
+    |
+668 |                         (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+    |                                                ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:668:63
+    |
+668 |                         (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+    |                                                               ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:583:17
+    |
+583 | /                 forall|j2: int| 0 <= j2 < nv as int ==>
+584 | |                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+585 | |                     vertex_to_index@[vertices_vec@[j2]@] as usize == j2,
+    | |_______________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:584:51
+    |
+584 |                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+    |                                                   ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:587:21
+    |
+587 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:587:60
+    |
+587 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                                                            ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:598:21
+    |
+598 |                     exists|j2: int| 0 <= j2 < q as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:598:59
+    |
+598 |                     exists|j2: int| 0 <= j2 < q as int && vertices_vec@[j2]@ == v_view,
+    |                                                           ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:695:25
+    |
+695 |                 let j = choose|j: int| 0 <= j < nv as int && vertices_vec@[j]@ == v_view;
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:695:62
+    |
+695 |                 let j = choose|j: int| 0 <= j < nv as int && vertices_vec@[j]@ == v_view;
+    |                                                              ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap41/AVLTreeSetMtPer.rs:314:33
+    |
+314 |                         let j = choose|j: int| 0 <= j < n as int && vals@[j]@ == v;
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap41/AVLTreeSetMtPer.rs:314:69
+    |
+314 |                         let j = choose|j: int| 0 <= j < n as int && vals@[j]@ == v;
+    |                                                                     ^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap41/AVLTreeSetMtPer.rs:314:33
+    |
+314 |                         let j = choose|j: int| 0 <= j < n as int && vals@[j]@ == v;
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 5433 verified, 0 errors
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2/rust_verify_test)
+    Finished `release` profile [optimized] target(s) in 5.87s
+────────────
+ Nextest run ID 086cf6c3-01ed-43f3-8c49-ff039731d7f8 with nextest profile: default
+    Starting 246 tests across 51 binaries
+        PASS [   1.829s] rust_verify_test::HashSetWithViewPlus hash_set_wvp_for_iter
+        PASS [   1.886s] rust_verify_test::HashSetWithViewPlus hash_set_wvp_loop_loop
+        PASS [   1.944s] rust_verify_test::MappingStEph mapping_st_eph_loop_loop
+        PASS [   1.991s] rust_verify_test::HashMapWithViewPlus hash_map_wvp_for_iter
+        PASS [   2.046s] rust_verify_test::HashMapWithViewPlus hash_map_wvp_loop_loop
+        PASS [   2.102s] rust_verify_test::MappingStEph mapping_st_eph_for_iter
+        PASS [   1.838s] rust_verify_test::ProveAVLTreeSeq avltreeseq_for_borrow_iter
+        PASS [   1.942s] rust_verify_test::ProveAVLTreeSeq avltreeseq_loop_borrow_iter
+        PASS [   1.883s] rust_verify_test::ProveAVLTreeSeqMtPer avltreeseqmtper_loop_borrow_iter
+        PASS [   1.957s] rust_verify_test::ProveAVLTreeSeqMtPer avltreeseqmtper_loop_borrow_into
+        PASS [   2.026s] rust_verify_test::ProveAVLTreeSeqMtPer avltreeseqmtper_for_borrow_iter
+        PASS [   2.091s] rust_verify_test::ProveAVLTreeSeqMtPer avltreeseqmtper_for_borrow_into
+        PASS [   1.887s] rust_verify_test::ProveAVLTreeSeqStEph avltreeseqsteph_for_borrow_iter
+        PASS [   1.772s] rust_verify_test::ProveAVLTreeSeqStEph avltreeseqsteph_loop_borrow_into
+        PASS [   2.090s] rust_verify_test::ProveAVLTreeSeqStEph avltreeseqsteph_for_borrow_into
+        PASS [   1.842s] rust_verify_test::ProveAVLTreeSeqStPer avltreeseqstper_for_borrow_into
+        PASS [   1.908s] rust_verify_test::ProveAVLTreeSeqStPer avltreeseqstper_for_borrow_iter
+        PASS [   2.043s] rust_verify_test::ProveAVLTreeSeqStEph avltreeseqsteph_loop_borrow_iter
+        PASS [   1.790s] rust_verify_test::ProveAVLTreeSeqStPer avltreeseqstper_loop_borrow_iter
+        PASS [   2.000s] rust_verify_test::ProveAVLTreeSeqStPer avltreeseqstper_loop_borrow_into
+        PASS [   1.990s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_for_borrow_into
+        PASS [   1.909s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_for_borrow_iter
+        PASS [   1.867s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_loop_borrow_into
+        PASS [   1.929s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_loop_borrow_iter
+        FAIL [   1.366s] rust_verify_test::ProveArraySeq arrayseq_for_consume
+  stdout ───
+
+    running 1 test
+    test arrayseq_for_consume ... FAILED
+
+    failures:
+
+    failures:
+        arrayseq_for_consume
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 13 filtered out; finished in 1.36s
+
+  stderr ───
+    note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_for_consume/test.rs:18:1
+       |
+    18 | fn test_for_consume() {
+       | ^^^^^^^^^^^^^^^^^^^^^
+
+
+    error: precondition not satisfied
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_for_consume/test.rs:19:29
+       |
+    19 |     let a: ArraySeqS<u64> = ArraySeqS::new(3, 66);
+       |                             ^^^^^^^^^^^^^^^^^^^^^
+       |
+      --> src/Chap18/ArraySeq.rs:322:14
+       |
+       = note: failed precondition
+
+
+    error: assertion failed
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_for_consume/test.rs:26:12
+       |
+    26 |     assert(iter_seq == orig_seq);
+       |            ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+
+    error: invariant not satisfied before loop
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_for_consume/test.rs:28:20
+       |
+    28 |     for x in iter: it
+       |                    ^^ Automatically generated loop invariant failed. You can disable the automatic generation by adding #[verifier::no_auto_loop_invariant] to the loop. You might also try storing the loop expression in a variable outside the loop (e.g. `let e = 0..10; for x in e { ... }`).
+
+
+    error: aborting due to 3 previous errors
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_for_consume
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_for_consume/test.rs
+
+
+    thread 'arrayseq_for_consume' (2791452) panicked at tests/Chap18/ProveArraySeq.rs:447:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   1.564s] rust_verify_test::ProveArraySeq arrayseq_for_borrow_into
+  stdout ───
+
+    running 1 test
+    test arrayseq_for_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        arrayseq_for_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 13 filtered out; finished in 1.56s
+
+  stderr ───
+    note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_for_borrow_into/test.rs:18:1
+       |
+    18 | fn test_for_borrow_into() {
+       | ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+    error: precondition not satisfied
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_for_borrow_into/test.rs:19:29
+       |
+    19 |     let a: ArraySeqS<u64> = ArraySeqS::new(3, 77);
+       |                             ^^^^^^^^^^^^^^^^^^^^^
+       |
+      --> src/Chap18/ArraySeq.rs:322:14
+       |
+       = note: failed precondition
+
+
+    error: invariant not satisfied before loop
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_for_borrow_into/test.rs:25:20
+       |
+    25 |     for x in iter: it
+       |                    ^^ Automatically generated loop invariant failed. You can disable the automatic generation by adding #[verifier::no_auto_loop_invariant] to the loop. You might also try storing the loop expression in a variable outside the loop (e.g. `let e = 0..10; for x in e { ... }`).
+
+
+    error: invariant not satisfied before loop
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_for_borrow_into/test.rs:28:13
+       |
+    28 |             items =~= iter_seq.take(iter.pos),
+       |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+    error: aborting due to 3 previous errors
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_for_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_for_borrow_into/test.rs
+
+
+    thread 'arrayseq_for_borrow_into' (2791430) panicked at tests/Chap18/ProveArraySeq.rs:383:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   1.742s] rust_verify_test::ProveArraySeq arrayseq_filter
+        PASS [   1.580s] rust_verify_test::ProveArraySeq arrayseq_iterate
+        PASS [   1.769s] rust_verify_test::ProveArraySeq arrayseq_for_iter
+        PASS [   1.865s] rust_verify_test::ProveArraySeq arrayseq_iterate_prefixes
+        FAIL [   1.294s] rust_verify_test::ProveArraySeq arrayseq_loop_consume
+  stdout ───
+
+    running 1 test
+    test arrayseq_loop_consume ... FAILED
+
+    failures:
+
+    failures:
+        arrayseq_loop_consume
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 13 filtered out; finished in 1.29s
+
+  stderr ───
+    note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_loop_consume/test.rs:18:1
+       |
+    18 | fn test_loop_consume() {
+       | ^^^^^^^^^^^^^^^^^^^^^^
+
+
+    error: precondition not satisfied
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_loop_consume/test.rs:19:29
+       |
+    19 |     let a: ArraySeqS<u64> = ArraySeqS::new(3, 33);
+       |                             ^^^^^^^^^^^^^^^^^^^^^
+       |
+      --> src/Chap18/ArraySeq.rs:322:14
+       |
+       = note: failed precondition
+
+
+    error: assertion failed
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_loop_consume/test.rs:26:12
+       |
+    26 |     assert(iter_seq == orig_seq);
+       |            ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+
+    error: invariant not satisfied before loop
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_loop_consume/test.rs:31:13
+       |
+    31 |             items =~= iter_seq.take(it@.0 as int),
+       |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+    error: aborting due to 3 previous errors
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_loop_consume
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_loop_consume/test.rs
+
+
+    thread 'arrayseq_loop_consume' (2791699) panicked at tests/Chap18/ProveArraySeq.rs:410:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   1.527s] rust_verify_test::ProveArraySeq arrayseq_loop_borrow_into
+  stdout ───
+
+    running 1 test
+    test arrayseq_loop_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        arrayseq_loop_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 13 filtered out; finished in 1.52s
+
+  stderr ───
+    note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_loop_borrow_into/test.rs:18:1
+       |
+    18 | fn test_loop_borrow_into() {
+       | ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+    error: precondition not satisfied
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_loop_borrow_into/test.rs:19:29
+       |
+    19 |     let a: ArraySeqS<u64> = ArraySeqS::new(3, 55);
+       |                             ^^^^^^^^^^^^^^^^^^^^^
+       |
+      --> src/Chap18/ArraySeq.rs:322:14
+       |
+       = note: failed precondition
+
+
+    error: invariant not satisfied before loop
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_loop_borrow_into/test.rs:28:13
+       |
+    28 |             items =~= iter_seq.take(it@.0 as int),
+       |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+    error: invariant not satisfied before loop
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_loop_borrow_into/test.rs:29:13
+       |
+    29 |             iter_invariant(&it),
+       |             ^^^^^^^^^^^^^^^^^^^
+
+
+    error: aborting due to 3 previous errors
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_loop_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeq-dd7ec47887fc0ff6-arrayseq_loop_borrow_into/test.rs
+
+
+    thread 'arrayseq_loop_borrow_into' (2791675) panicked at tests/Chap18/ProveArraySeq.rs:348:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   1.786s] rust_verify_test::ProveArraySeq arrayseq_loop_loop
+        PASS [   1.743s] rust_verify_test::ProveArraySeq arrayseq_map
+        PASS [   1.842s] rust_verify_test::ProveArraySeq arrayseq_reduce
+        PASS [   1.852s] rust_verify_test::ProveArraySeq arrayseq_scan
+        PASS [   1.694s] rust_verify_test::ProveArraySeq arrayseq_tabulate
+        PASS [   1.920s] rust_verify_test::ProveArraySeq arrayseq_scan_inclusive
+        PASS [   1.858s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_for_borrow_into
+        PASS [   1.839s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_for_consume
+        PASS [   2.133s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_for_iter
+        PASS [   1.918s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_loop_borrow_into
+        PASS [   1.938s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_loop_consume
+        PASS [   2.005s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_loop_loop
+        PASS [   1.875s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_for_borrow_into
+        PASS [   1.971s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_for_consume
+        PASS [   1.901s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_for_iter
+        PASS [   2.019s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_loop_borrow_into
+        PASS [   1.811s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_loop_consume
+        PASS [   1.821s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_loop_loop
+        PASS [   1.931s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_borrow_into
+        PASS [   1.902s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_borrow_iter
+        PASS [   1.777s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_consume
+        PASS [   1.794s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_borrow_into
+        PASS [   1.805s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_borrow_iter
+        PASS [   1.868s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_consume
+        FAIL [   1.577s] rust_verify_test::ProveArraySeqStPer arrayseqstper_for_borrow_into
+  stdout ───
+
+    running 1 test
+    test arrayseqstper_for_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        arrayseqstper_for_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.57s
+
+  stderr ───
+    error: cannot use function `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::impl&%0::into_iter` which is ignored because it is either declared outside the verus! macro or it is marked as `external`.
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeqStPer-481757d5ccc6a033-arrayseqstper_for_borrow_into/test.rs:21:38
+       |
+    21 |     let it: ArraySeqStPerIter<u64> = (&a).into_iter();
+       |                                      ^^^^^^^^^^^^^^^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<&'a apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T> as std::iter::IntoIterator>::into_iter] (_0: &'a apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>) -> <&'a apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T> as std::iter::IntoIterator>::IntoIter;
+
+
+    error: aborting due to 1 previous error
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeqStPer-481757d5ccc6a033-arrayseqstper_for_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeqStPer-481757d5ccc6a033-arrayseqstper_for_borrow_into/test.rs
+
+
+    thread 'arrayseqstper_for_borrow_into' (2793111) panicked at tests/Chap18/ProveArraySeqStPer.rs:118:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   1.558s] rust_verify_test::ProveArraySeqStPer arrayseqstper_for_consume
+  stdout ───
+
+    running 1 test
+    test arrayseqstper_for_consume ... FAILED
+
+    failures:
+
+    failures:
+        arrayseqstper_for_consume
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.55s
+
+  stderr ───
+    error: cannot use function `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::impl&%1::into_iter` which is ignored because it is either declared outside the verus! macro or it is marked as `external`.
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeqStPer-481757d5ccc6a033-arrayseqstper_for_consume/test.rs:22:14
+       |
+    22 |     let it = a.into_iter();
+       |              ^^^^^^^^^^^^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<T> [<apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T> as std::iter::IntoIterator>::into_iter] (_0: apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>) -> <apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T> as std::iter::IntoIterator>::IntoIter;
+
+
+    error: aborting due to 1 previous error
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeqStPer-481757d5ccc6a033-arrayseqstper_for_consume
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeqStPer-481757d5ccc6a033-arrayseqstper_for_consume/test.rs
+
+
+    thread 'arrayseqstper_for_consume' (2793136) panicked at tests/Chap18/ProveArraySeqStPer.rs:182:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.133s] rust_verify_test::ProveAugOrderedTableMtEph chap43_augorderedtablemteph_for_borrow_into
+  stdout ───
+
+    running 1 test
+    test chap43_augorderedtablemteph_for_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        chap43_augorderedtablemteph_for_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.13s
+
+  stderr ───
+    error[E0425]: cannot find function `spec_pair_key_determines_order` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableMtEph-6218e53d29f2834a-chap43_augorderedtablemteph_for_borrow_into/test.rs:25:9
+       |
+    25 |         spec_pair_key_determines_order::<u64, u64>(),
+       |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing one of these functions
+       |
+    11 + use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
+       |
+    11 + use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::spec_pair_key_determines_order;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableMtEph-6218e53d29f2834a-chap43_augorderedtablemteph_for_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableMtEph-6218e53d29f2834a-chap43_augorderedtablemteph_for_borrow_into/test.rs
+
+
+    thread 'chap43_augorderedtablemteph_for_borrow_into' (2793468) panicked at tests/Chap43/ProveAugOrderedTableMtEph.rs:153:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.137s] rust_verify_test::ProveAugOrderedTableMtEph chap43_augorderedtablemteph_for_borrow_iter
+  stdout ───
+
+    running 1 test
+    test chap43_augorderedtablemteph_for_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        chap43_augorderedtablemteph_for_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.13s
+
+  stderr ───
+    error[E0425]: cannot find function `spec_pair_key_determines_order` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableMtEph-6218e53d29f2834a-chap43_augorderedtablemteph_for_borrow_iter/test.rs:25:9
+       |
+    25 |         spec_pair_key_determines_order::<u64, u64>(),
+       |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing one of these functions
+       |
+    11 + use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
+       |
+    11 + use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::spec_pair_key_determines_order;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableMtEph-6218e53d29f2834a-chap43_augorderedtablemteph_for_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableMtEph-6218e53d29f2834a-chap43_augorderedtablemteph_for_borrow_iter/test.rs
+
+
+    thread 'chap43_augorderedtablemteph_for_borrow_iter' (2793496) panicked at tests/Chap43/ProveAugOrderedTableMtEph.rs:113:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.146s] rust_verify_test::ProveAugOrderedTableMtEph chap43_augorderedtablemteph_loop_borrow_into
+  stdout ───
+
+    running 1 test
+    test chap43_augorderedtablemteph_loop_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        chap43_augorderedtablemteph_loop_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.14s
+
+  stderr ───
+    error[E0425]: cannot find function `spec_pair_key_determines_order` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableMtEph-6218e53d29f2834a-chap43_augorderedtablemteph_loop_borrow_into/test.rs:25:9
+       |
+    25 |         spec_pair_key_determines_order::<u64, u64>(),
+       |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing one of these functions
+       |
+    11 + use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
+       |
+    11 + use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::spec_pair_key_determines_order;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableMtEph-6218e53d29f2834a-chap43_augorderedtablemteph_loop_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableMtEph-6218e53d29f2834a-chap43_augorderedtablemteph_loop_borrow_into/test.rs
+
+
+    thread 'chap43_augorderedtablemteph_loop_borrow_into' (2793520) panicked at tests/Chap43/ProveAugOrderedTableMtEph.rs:65:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.130s] rust_verify_test::ProveAugOrderedTableMtEph chap43_augorderedtablemteph_loop_borrow_iter
+  stdout ───
+
+    running 1 test
+    test chap43_augorderedtablemteph_loop_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        chap43_augorderedtablemteph_loop_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.13s
+
+  stderr ───
+    error[E0425]: cannot find function `spec_pair_key_determines_order` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableMtEph-6218e53d29f2834a-chap43_augorderedtablemteph_loop_borrow_iter/test.rs:25:9
+       |
+    25 |         spec_pair_key_determines_order::<u64, u64>(),
+       |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing one of these functions
+       |
+    11 + use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
+       |
+    11 + use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::spec_pair_key_determines_order;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableMtEph-6218e53d29f2834a-chap43_augorderedtablemteph_loop_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableMtEph-6218e53d29f2834a-chap43_augorderedtablemteph_loop_borrow_iter/test.rs
+
+
+    thread 'chap43_augorderedtablemteph_loop_borrow_iter' (2793542) panicked at tests/Chap43/ProveAugOrderedTableMtEph.rs:17:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.130s] rust_verify_test::ProveAugOrderedTableStEph chap43_augorderedtablesteph_for_borrow_into
+  stdout ───
+
+    running 1 test
+    test chap43_augorderedtablesteph_for_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        chap43_augorderedtablesteph_for_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.12s
+
+  stderr ───
+    error[E0425]: cannot find function `spec_pair_key_determines_order` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStEph-2b8f7f395d117022-chap43_augorderedtablesteph_for_borrow_into/test.rs:27:9
+       |
+    27 |         spec_pair_key_determines_order::<u64, u64>(),
+       |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing one of these functions
+       |
+    11 + use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
+       |
+    11 + use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::spec_pair_key_determines_order;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStEph-2b8f7f395d117022-chap43_augorderedtablesteph_for_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStEph-2b8f7f395d117022-chap43_augorderedtablesteph_for_borrow_into/test.rs
+
+
+    thread 'chap43_augorderedtablesteph_for_borrow_into' (2793564) panicked at tests/Chap43/ProveAugOrderedTableStEph.rs:153:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.130s] rust_verify_test::ProveAugOrderedTableStEph chap43_augorderedtablesteph_for_borrow_iter
+  stdout ───
+
+    running 1 test
+    test chap43_augorderedtablesteph_for_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        chap43_augorderedtablesteph_for_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.12s
+
+  stderr ───
+    error[E0425]: cannot find function `spec_pair_key_determines_order` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStEph-2b8f7f395d117022-chap43_augorderedtablesteph_for_borrow_iter/test.rs:27:9
+       |
+    27 |         spec_pair_key_determines_order::<u64, u64>(),
+       |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing one of these functions
+       |
+    11 + use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
+       |
+    11 + use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::spec_pair_key_determines_order;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStEph-2b8f7f395d117022-chap43_augorderedtablesteph_for_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStEph-2b8f7f395d117022-chap43_augorderedtablesteph_for_borrow_iter/test.rs
+
+
+    thread 'chap43_augorderedtablesteph_for_borrow_iter' (2793586) panicked at tests/Chap43/ProveAugOrderedTableStEph.rs:113:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.137s] rust_verify_test::ProveAugOrderedTableStEph chap43_augorderedtablesteph_loop_borrow_into
+  stdout ───
+
+    running 1 test
+    test chap43_augorderedtablesteph_loop_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        chap43_augorderedtablesteph_loop_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.13s
+
+  stderr ───
+    error[E0425]: cannot find function `spec_pair_key_determines_order` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStEph-2b8f7f395d117022-chap43_augorderedtablesteph_loop_borrow_into/test.rs:27:9
+       |
+    27 |         spec_pair_key_determines_order::<u64, u64>(),
+       |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing one of these functions
+       |
+    11 + use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
+       |
+    11 + use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::spec_pair_key_determines_order;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStEph-2b8f7f395d117022-chap43_augorderedtablesteph_loop_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStEph-2b8f7f395d117022-chap43_augorderedtablesteph_loop_borrow_into/test.rs
+
+
+    thread 'chap43_augorderedtablesteph_loop_borrow_into' (2793608) panicked at tests/Chap43/ProveAugOrderedTableStEph.rs:65:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.130s] rust_verify_test::ProveAugOrderedTableStEph chap43_augorderedtablesteph_loop_borrow_iter
+  stdout ───
+
+    running 1 test
+    test chap43_augorderedtablesteph_loop_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        chap43_augorderedtablesteph_loop_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.12s
+
+  stderr ───
+    error[E0425]: cannot find function `spec_pair_key_determines_order` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStEph-2b8f7f395d117022-chap43_augorderedtablesteph_loop_borrow_iter/test.rs:27:9
+       |
+    27 |         spec_pair_key_determines_order::<u64, u64>(),
+       |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing one of these functions
+       |
+    11 + use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
+       |
+    11 + use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::spec_pair_key_determines_order;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStEph-2b8f7f395d117022-chap43_augorderedtablesteph_loop_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStEph-2b8f7f395d117022-chap43_augorderedtablesteph_loop_borrow_iter/test.rs
+
+
+    thread 'chap43_augorderedtablesteph_loop_borrow_iter' (2793630) panicked at tests/Chap43/ProveAugOrderedTableStEph.rs:17:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   1.518s] rust_verify_test::ProveArraySeqStPer arrayseqstper_loop_borrow_into
+  stdout ───
+
+    running 1 test
+    test arrayseqstper_loop_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        arrayseqstper_loop_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.51s
+
+  stderr ───
+    error: cannot use function `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::impl&%0::into_iter` which is ignored because it is either declared outside the verus! macro or it is marked as `external`.
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeqStPer-481757d5ccc6a033-arrayseqstper_loop_borrow_into/test.rs:21:42
+       |
+    21 |     let mut it: ArraySeqStPerIter<u64> = (&a).into_iter();
+       |                                          ^^^^^^^^^^^^^^^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<'a, T> [<&'a apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T> as std::iter::IntoIterator>::into_iter] (_0: &'a apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>) -> <&'a apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T> as std::iter::IntoIterator>::IntoIter;
+
+
+    error: aborting due to 1 previous error
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeqStPer-481757d5ccc6a033-arrayseqstper_loop_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeqStPer-481757d5ccc6a033-arrayseqstper_loop_borrow_into/test.rs
+
+
+    thread 'arrayseqstper_loop_borrow_into' (2793283) panicked at tests/Chap18/ProveArraySeqStPer.rs:83:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.137s] rust_verify_test::ProveAugOrderedTableStPer chap43_augorderedtablestper_for_borrow_into
+  stdout ───
+
+    running 1 test
+    test chap43_augorderedtablestper_for_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        chap43_augorderedtablestper_for_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.13s
+
+  stderr ───
+    error[E0425]: cannot find function `spec_pair_key_determines_order` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStPer-24d637e36114a951-chap43_augorderedtablestper_for_borrow_into/test.rs:29:9
+       |
+    29 |         spec_pair_key_determines_order::<u64, u64>(),
+       |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing one of these functions
+       |
+    11 + use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
+       |
+    11 + use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::spec_pair_key_determines_order;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStPer-24d637e36114a951-chap43_augorderedtablestper_for_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStPer-24d637e36114a951-chap43_augorderedtablestper_for_borrow_into/test.rs
+
+
+    thread 'chap43_augorderedtablestper_for_borrow_into' (2793652) panicked at tests/Chap43/ProveAugOrderedTableStPer.rs:159:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.124s] rust_verify_test::ProveAugOrderedTableStPer chap43_augorderedtablestper_for_borrow_iter
+  stdout ───
+
+    running 1 test
+    test chap43_augorderedtablestper_for_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        chap43_augorderedtablestper_for_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.12s
+
+  stderr ───
+    error[E0425]: cannot find function `spec_pair_key_determines_order` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStPer-24d637e36114a951-chap43_augorderedtablestper_for_borrow_iter/test.rs:29:9
+       |
+    29 |         spec_pair_key_determines_order::<u64, u64>(),
+       |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing one of these functions
+       |
+    11 + use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
+       |
+    11 + use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::spec_pair_key_determines_order;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStPer-24d637e36114a951-chap43_augorderedtablestper_for_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStPer-24d637e36114a951-chap43_augorderedtablestper_for_borrow_iter/test.rs
+
+
+    thread 'chap43_augorderedtablestper_for_borrow_iter' (2793674) panicked at tests/Chap43/ProveAugOrderedTableStPer.rs:117:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.124s] rust_verify_test::ProveAugOrderedTableStPer chap43_augorderedtablestper_loop_borrow_into
+  stdout ───
+
+    running 1 test
+    test chap43_augorderedtablestper_loop_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        chap43_augorderedtablestper_loop_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.12s
+
+  stderr ───
+    error[E0425]: cannot find function `spec_pair_key_determines_order` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStPer-24d637e36114a951-chap43_augorderedtablestper_loop_borrow_into/test.rs:29:9
+       |
+    29 |         spec_pair_key_determines_order::<u64, u64>(),
+       |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing one of these functions
+       |
+    11 + use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
+       |
+    11 + use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::spec_pair_key_determines_order;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStPer-24d637e36114a951-chap43_augorderedtablestper_loop_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStPer-24d637e36114a951-chap43_augorderedtablestper_loop_borrow_into/test.rs
+
+
+    thread 'chap43_augorderedtablestper_loop_borrow_into' (2793686) panicked at tests/Chap43/ProveAugOrderedTableStPer.rs:67:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   1.901s] rust_verify_test::ProveArraySeqStPer arrayseqstper_for_iter
+        FAIL [   0.121s] rust_verify_test::ProveAugOrderedTableStPer chap43_augorderedtablestper_loop_borrow_iter
+  stdout ───
+
+    running 1 test
+    test chap43_augorderedtablestper_loop_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        chap43_augorderedtablestper_loop_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.12s
+
+  stderr ───
+    error[E0425]: cannot find function `spec_pair_key_determines_order` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStPer-24d637e36114a951-chap43_augorderedtablestper_loop_borrow_iter/test.rs:29:9
+       |
+    29 |         spec_pair_key_determines_order::<u64, u64>(),
+       |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing one of these functions
+       |
+    11 + use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
+       |
+    11 + use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::spec_pair_key_determines_order;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStPer-24d637e36114a951-chap43_augorderedtablestper_loop_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveAugOrderedTableStPer-24d637e36114a951-chap43_augorderedtablestper_loop_borrow_iter/test.rs
+
+
+    thread 'chap43_augorderedtablestper_loop_borrow_iter' (2793718) panicked at tests/Chap43/ProveAugOrderedTableStPer.rs:17:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   1.746s] rust_verify_test::ProveArraySeqStPer arrayseqstper_loop_consume
+  stdout ───
+
+    running 1 test
+    test arrayseqstper_loop_consume ... FAILED
+
+    failures:
+
+    failures:
+        arrayseqstper_loop_consume
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.74s
+
+  stderr ───
+    error: cannot use function `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::impl&%1::into_iter` which is ignored because it is either declared outside the verus! macro or it is marked as `external`.
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeqStPer-481757d5ccc6a033-arrayseqstper_loop_consume/test.rs:22:18
+       |
+    22 |     let mut it = a.into_iter();
+       |                  ^^^^^^^^^^^^^
+       |
+       = help: The following declaration may resolve this error:
+               pub assume_specification<T> [<apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T> as std::iter::IntoIterator>::into_iter] (_0: apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>) -> <apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T> as std::iter::IntoIterator>::IntoIter;
+
+
+    error: aborting due to 1 previous error
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeqStPer-481757d5ccc6a033-arrayseqstper_loop_consume
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveArraySeqStPer-481757d5ccc6a033-arrayseqstper_loop_consume/test.rs
+
+
+    thread 'arrayseqstper_loop_consume' (2793334) panicked at tests/Chap18/ProveArraySeqStPer.rs:145:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.135s] rust_verify_test::ProveBSTSetAVLMtEph bstsetavlmteph_for_borrow_into
+  stdout ───
+
+    running 1 test
+    test bstsetavlmteph_for_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        bstsetavlmteph_for_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.13s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetAVLMtEph-3cca45027c38be06-bstsetavlmteph_for_borrow_into/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetAVLMtEph-3cca45027c38be06-bstsetavlmteph_for_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetAVLMtEph-3cca45027c38be06-bstsetavlmteph_for_borrow_into/test.rs
+
+
+    thread 'bstsetavlmteph_for_borrow_into' (2793923) panicked at tests/Chap37/ProveBSTSetAVLMtEph.rs:123:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.139s] rust_verify_test::ProveBSTSetAVLMtEph bstsetavlmteph_for_borrow_iter
+  stdout ───
+
+    running 1 test
+    test bstsetavlmteph_for_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        bstsetavlmteph_for_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.13s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetAVLMtEph-3cca45027c38be06-bstsetavlmteph_for_borrow_iter/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetAVLMtEph-3cca45027c38be06-bstsetavlmteph_for_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetAVLMtEph-3cca45027c38be06-bstsetavlmteph_for_borrow_iter/test.rs
+
+
+    thread 'bstsetavlmteph_for_borrow_iter' (2793945) panicked at tests/Chap37/ProveBSTSetAVLMtEph.rs:93:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.139s] rust_verify_test::ProveBSTSetAVLMtEph bstsetavlmteph_for_consume
+  stdout ───
+
+    running 1 test
+    test bstsetavlmteph_for_consume ... FAILED
+
+    failures:
+
+    failures:
+        bstsetavlmteph_for_consume
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.13s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetAVLMtEph-3cca45027c38be06-bstsetavlmteph_for_consume/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetAVLMtEph-3cca45027c38be06-bstsetavlmteph_for_consume
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetAVLMtEph-3cca45027c38be06-bstsetavlmteph_for_consume/test.rs
+
+
+    thread 'bstsetavlmteph_for_consume' (2793967) panicked at tests/Chap37/ProveBSTSetAVLMtEph.rs:191:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   1.938s] rust_verify_test::ProveArraySeqStPer arrayseqstper_loop_loop
+        FAIL [   0.133s] rust_verify_test::ProveBSTSetAVLMtEph bstsetavlmteph_loop_borrow_into
+  stdout ───
+
+    running 1 test
+    test bstsetavlmteph_loop_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        bstsetavlmteph_loop_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.13s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetAVLMtEph-3cca45027c38be06-bstsetavlmteph_loop_borrow_into/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetAVLMtEph-3cca45027c38be06-bstsetavlmteph_loop_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetAVLMtEph-3cca45027c38be06-bstsetavlmteph_loop_borrow_into/test.rs
+
+
+    thread 'bstsetavlmteph_loop_borrow_into' (2793992) panicked at tests/Chap37/ProveBSTSetAVLMtEph.rs:55:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.128s] rust_verify_test::ProveBSTSetAVLMtEph bstsetavlmteph_loop_borrow_iter
+  stdout ───
+
+    running 1 test
+    test bstsetavlmteph_loop_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        bstsetavlmteph_loop_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.12s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetAVLMtEph-3cca45027c38be06-bstsetavlmteph_loop_borrow_iter/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetAVLMtEph-3cca45027c38be06-bstsetavlmteph_loop_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetAVLMtEph-3cca45027c38be06-bstsetavlmteph_loop_borrow_iter/test.rs
+
+
+    thread 'bstsetavlmteph_loop_borrow_iter' (2794022) panicked at tests/Chap37/ProveBSTSetAVLMtEph.rs:17:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.123s] rust_verify_test::ProveBSTSetAVLMtEph bstsetavlmteph_loop_consume
+  stdout ───
+
+    running 1 test
+    test bstsetavlmteph_loop_consume ... FAILED
+
+    failures:
+
+    failures:
+        bstsetavlmteph_loop_consume
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.12s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetAVLMtEph-3cca45027c38be06-bstsetavlmteph_loop_consume/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetAVLMtEph-3cca45027c38be06-bstsetavlmteph_loop_consume
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetAVLMtEph-3cca45027c38be06-bstsetavlmteph_loop_consume/test.rs
+
+
+    thread 'bstsetavlmteph_loop_consume' (2794052) panicked at tests/Chap37/ProveBSTSetAVLMtEph.rs:153:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.131s] rust_verify_test::ProveBSTSetBBAlphaMtEph bstsetbbalphamteph_for_borrow_into
+  stdout ───
+
+    running 1 test
+    test bstsetbbalphamteph_for_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        bstsetbbalphamteph_for_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.13s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetBBAlphaMtEph-26897c67b33d9fd8-bstsetbbalphamteph_for_borrow_into/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetBBAlphaMtEph-26897c67b33d9fd8-bstsetbbalphamteph_for_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetBBAlphaMtEph-26897c67b33d9fd8-bstsetbbalphamteph_for_borrow_into/test.rs
+
+
+    thread 'bstsetbbalphamteph_for_borrow_into' (2794088) panicked at tests/Chap37/ProveBSTSetBBAlphaMtEph.rs:123:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.161s] rust_verify_test::ProveBSTSetBBAlphaMtEph bstsetbbalphamteph_for_borrow_iter
+  stdout ───
+
+    running 1 test
+    test bstsetbbalphamteph_for_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        bstsetbbalphamteph_for_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.16s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetBBAlphaMtEph-26897c67b33d9fd8-bstsetbbalphamteph_for_borrow_iter/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetBBAlphaMtEph-26897c67b33d9fd8-bstsetbbalphamteph_for_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetBBAlphaMtEph-26897c67b33d9fd8-bstsetbbalphamteph_for_borrow_iter/test.rs
+
+
+    thread 'bstsetbbalphamteph_for_borrow_iter' (2794140) panicked at tests/Chap37/ProveBSTSetBBAlphaMtEph.rs:93:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.136s] rust_verify_test::ProveBSTSetBBAlphaMtEph bstsetbbalphamteph_for_consume
+  stdout ───
+
+    running 1 test
+    test bstsetbbalphamteph_for_consume ... FAILED
+
+    failures:
+
+    failures:
+        bstsetbbalphamteph_for_consume
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.13s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetBBAlphaMtEph-26897c67b33d9fd8-bstsetbbalphamteph_for_consume/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetBBAlphaMtEph-26897c67b33d9fd8-bstsetbbalphamteph_for_consume
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetBBAlphaMtEph-26897c67b33d9fd8-bstsetbbalphamteph_for_consume/test.rs
+
+
+    thread 'bstsetbbalphamteph_for_consume' (2794230) panicked at tests/Chap37/ProveBSTSetBBAlphaMtEph.rs:191:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.133s] rust_verify_test::ProveBSTSetBBAlphaMtEph bstsetbbalphamteph_loop_borrow_into
+  stdout ───
+
+    running 1 test
+    test bstsetbbalphamteph_loop_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        bstsetbbalphamteph_loop_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.13s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetBBAlphaMtEph-26897c67b33d9fd8-bstsetbbalphamteph_loop_borrow_into/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetBBAlphaMtEph-26897c67b33d9fd8-bstsetbbalphamteph_loop_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetBBAlphaMtEph-26897c67b33d9fd8-bstsetbbalphamteph_loop_borrow_into/test.rs
+
+
+    thread 'bstsetbbalphamteph_loop_borrow_into' (2794328) panicked at tests/Chap37/ProveBSTSetBBAlphaMtEph.rs:55:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.160s] rust_verify_test::ProveBSTSetBBAlphaMtEph bstsetbbalphamteph_loop_borrow_iter
+  stdout ───
+
+    running 1 test
+    test bstsetbbalphamteph_loop_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        bstsetbbalphamteph_loop_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.16s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetBBAlphaMtEph-26897c67b33d9fd8-bstsetbbalphamteph_loop_borrow_iter/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetBBAlphaMtEph-26897c67b33d9fd8-bstsetbbalphamteph_loop_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetBBAlphaMtEph-26897c67b33d9fd8-bstsetbbalphamteph_loop_borrow_iter/test.rs
+
+
+    thread 'bstsetbbalphamteph_loop_borrow_iter' (2794405) panicked at tests/Chap37/ProveBSTSetBBAlphaMtEph.rs:17:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.120s] rust_verify_test::ProveBSTSetBBAlphaMtEph bstsetbbalphamteph_loop_consume
+  stdout ───
+
+    running 1 test
+    test bstsetbbalphamteph_loop_consume ... FAILED
+
+    failures:
+
+    failures:
+        bstsetbbalphamteph_loop_consume
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.12s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetBBAlphaMtEph-26897c67b33d9fd8-bstsetbbalphamteph_loop_consume/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetBBAlphaMtEph-26897c67b33d9fd8-bstsetbbalphamteph_loop_consume
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetBBAlphaMtEph-26897c67b33d9fd8-bstsetbbalphamteph_loop_consume/test.rs
+
+
+    thread 'bstsetbbalphamteph_loop_consume' (2794465) panicked at tests/Chap37/ProveBSTSetBBAlphaMtEph.rs:153:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.133s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_for_borrow_into
+  stdout ───
+
+    running 1 test
+    test bstsetplainmteph_for_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        bstsetplainmteph_for_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.13s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-14fe99385a5485c2-bstsetplainmteph_for_borrow_into/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-14fe99385a5485c2-bstsetplainmteph_for_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-14fe99385a5485c2-bstsetplainmteph_for_borrow_into/test.rs
+
+
+    thread 'bstsetplainmteph_for_borrow_into' (2794573) panicked at tests/Chap37/ProveBSTSetPlainMtEph.rs:123:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   1.769s] rust_verify_test::ProveBFSMtEph chap54_bfsmteph_bottom_up_loop
+        FAIL [   0.157s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_for_borrow_iter
+  stdout ───
+
+    running 1 test
+    test bstsetplainmteph_for_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        bstsetplainmteph_for_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.15s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-14fe99385a5485c2-bstsetplainmteph_for_borrow_iter/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-14fe99385a5485c2-bstsetplainmteph_for_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-14fe99385a5485c2-bstsetplainmteph_for_borrow_iter/test.rs
+
+
+    thread 'bstsetplainmteph_for_borrow_iter' (2794626) panicked at tests/Chap37/ProveBSTSetPlainMtEph.rs:93:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   1.769s] rust_verify_test::ProveBFSStEph chap54_bfssteph_top_down_loop
+        FAIL [   0.131s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_loop_borrow_into
+  stdout ───
+
+    running 1 test
+    test bstsetplainmteph_loop_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        bstsetplainmteph_loop_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.13s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-14fe99385a5485c2-bstsetplainmteph_loop_borrow_into/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-14fe99385a5485c2-bstsetplainmteph_loop_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-14fe99385a5485c2-bstsetplainmteph_loop_borrow_into/test.rs
+
+
+    thread 'bstsetplainmteph_loop_borrow_into' (2794717) panicked at tests/Chap37/ProveBSTSetPlainMtEph.rs:55:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.151s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_for_consume
+  stdout ───
+
+    running 1 test
+    test bstsetplainmteph_for_consume ... FAILED
+
+    failures:
+
+    failures:
+        bstsetplainmteph_for_consume
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.15s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-14fe99385a5485c2-bstsetplainmteph_for_consume/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-14fe99385a5485c2-bstsetplainmteph_for_consume
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-14fe99385a5485c2-bstsetplainmteph_for_consume/test.rs
+
+
+    thread 'bstsetplainmteph_for_consume' (2794694) panicked at tests/Chap37/ProveBSTSetPlainMtEph.rs:191:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   1.933s] rust_verify_test::ProveBFSMtEph chap54_bfsmteph_top_down_loop
+        FAIL [   0.127s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_loop_borrow_iter
+  stdout ───
+
+    running 1 test
+    test bstsetplainmteph_loop_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        bstsetplainmteph_loop_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.12s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-14fe99385a5485c2-bstsetplainmteph_loop_borrow_iter/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-14fe99385a5485c2-bstsetplainmteph_loop_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-14fe99385a5485c2-bstsetplainmteph_loop_borrow_iter/test.rs
+
+
+    thread 'bstsetplainmteph_loop_borrow_iter' (2794815) panicked at tests/Chap37/ProveBSTSetPlainMtEph.rs:17:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.130s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_loop_consume
+  stdout ───
+
+    running 1 test
+    test bstsetplainmteph_loop_consume ... FAILED
+
+    failures:
+
+    failures:
+        bstsetplainmteph_loop_consume
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.13s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-14fe99385a5485c2-bstsetplainmteph_loop_consume/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-14fe99385a5485c2-bstsetplainmteph_loop_consume
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetPlainMtEph-14fe99385a5485c2-bstsetplainmteph_loop_consume/test.rs
+
+
+    thread 'bstsetplainmteph_loop_consume' (2794834) panicked at tests/Chap37/ProveBSTSetPlainMtEph.rs:153:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.130s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_for_borrow_into
+  stdout ───
+
+    running 1 test
+    test bstsetrbmteph_for_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        bstsetrbmteph_for_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.12s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-12f114084b09843b-bstsetrbmteph_for_borrow_into/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-12f114084b09843b-bstsetrbmteph_for_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-12f114084b09843b-bstsetrbmteph_for_borrow_into/test.rs
+
+
+    thread 'bstsetrbmteph_for_borrow_into' (2794912) panicked at tests/Chap37/ProveBSTSetRBMtEph.rs:123:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.128s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_for_borrow_iter
+  stdout ───
+
+    running 1 test
+    test bstsetrbmteph_for_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        bstsetrbmteph_for_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.12s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-12f114084b09843b-bstsetrbmteph_for_borrow_iter/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-12f114084b09843b-bstsetrbmteph_for_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-12f114084b09843b-bstsetrbmteph_for_borrow_iter/test.rs
+
+
+    thread 'bstsetrbmteph_for_borrow_iter' (2794932) panicked at tests/Chap37/ProveBSTSetRBMtEph.rs:93:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.130s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_for_consume
+  stdout ───
+
+    running 1 test
+    test bstsetrbmteph_for_consume ... FAILED
+
+    failures:
+
+    failures:
+        bstsetrbmteph_for_consume
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.13s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-12f114084b09843b-bstsetrbmteph_for_consume/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-12f114084b09843b-bstsetrbmteph_for_consume
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-12f114084b09843b-bstsetrbmteph_for_consume/test.rs
+
+
+    thread 'bstsetrbmteph_for_consume' (2794992) panicked at tests/Chap37/ProveBSTSetRBMtEph.rs:191:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.129s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_loop_borrow_into
+  stdout ───
+
+    running 1 test
+    test bstsetrbmteph_loop_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        bstsetrbmteph_loop_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.12s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-12f114084b09843b-bstsetrbmteph_loop_borrow_into/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-12f114084b09843b-bstsetrbmteph_loop_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-12f114084b09843b-bstsetrbmteph_loop_borrow_into/test.rs
+
+
+    thread 'bstsetrbmteph_loop_borrow_into' (2795012) panicked at tests/Chap37/ProveBSTSetRBMtEph.rs:55:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   2.048s] rust_verify_test::ProveBFSStEph chap54_bfssteph_bottom_up_loop
+        FAIL [   0.136s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_loop_borrow_iter
+  stdout ───
+
+    running 1 test
+    test bstsetrbmteph_loop_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        bstsetrbmteph_loop_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.13s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-12f114084b09843b-bstsetrbmteph_loop_borrow_iter/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-12f114084b09843b-bstsetrbmteph_loop_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-12f114084b09843b-bstsetrbmteph_loop_borrow_iter/test.rs
+
+
+    thread 'bstsetrbmteph_loop_borrow_iter' (2795044) panicked at tests/Chap37/ProveBSTSetRBMtEph.rs:17:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.130s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_for_borrow_into
+  stdout ───
+
+    running 1 test
+    test bstsetsplaymteph_for_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        bstsetsplaymteph_for_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.12s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-64d0989eb36a81f7-bstsetsplaymteph_for_borrow_into/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-64d0989eb36a81f7-bstsetsplaymteph_for_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-64d0989eb36a81f7-bstsetsplaymteph_for_borrow_into/test.rs
+
+
+    thread 'bstsetsplaymteph_for_borrow_into' (2795156) panicked at tests/Chap37/ProveBSTSetSplayMtEph.rs:123:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.161s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_loop_consume
+  stdout ───
+
+    running 1 test
+    test bstsetrbmteph_loop_consume ... FAILED
+
+    failures:
+
+    failures:
+        bstsetrbmteph_loop_consume
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.16s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-12f114084b09843b-bstsetrbmteph_loop_consume/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-12f114084b09843b-bstsetrbmteph_loop_consume
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetRBMtEph-12f114084b09843b-bstsetrbmteph_loop_consume/test.rs
+
+
+    thread 'bstsetrbmteph_loop_consume' (2795135) panicked at tests/Chap37/ProveBSTSetRBMtEph.rs:153:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.123s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_for_borrow_iter
+  stdout ───
+
+    running 1 test
+    test bstsetsplaymteph_for_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        bstsetsplaymteph_for_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.12s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-64d0989eb36a81f7-bstsetsplaymteph_for_borrow_iter/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-64d0989eb36a81f7-bstsetsplaymteph_for_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-64d0989eb36a81f7-bstsetsplaymteph_for_borrow_iter/test.rs
+
+
+    thread 'bstsetsplaymteph_for_borrow_iter' (2795221) panicked at tests/Chap37/ProveBSTSetSplayMtEph.rs:93:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.123s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_loop_borrow_into
+  stdout ───
+
+    running 1 test
+    test bstsetsplaymteph_loop_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        bstsetsplaymteph_loop_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.12s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-64d0989eb36a81f7-bstsetsplaymteph_loop_borrow_into/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-64d0989eb36a81f7-bstsetsplaymteph_loop_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-64d0989eb36a81f7-bstsetsplaymteph_loop_borrow_into/test.rs
+
+
+    thread 'bstsetsplaymteph_loop_borrow_into' (2795265) panicked at tests/Chap37/ProveBSTSetSplayMtEph.rs:55:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.134s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_for_consume
+  stdout ───
+
+    running 1 test
+    test bstsetsplaymteph_for_consume ... FAILED
+
+    failures:
+
+    failures:
+        bstsetsplaymteph_for_consume
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.13s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-64d0989eb36a81f7-bstsetsplaymteph_for_consume/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-64d0989eb36a81f7-bstsetsplaymteph_for_consume
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-64d0989eb36a81f7-bstsetsplaymteph_for_consume/test.rs
+
+
+    thread 'bstsetsplaymteph_for_consume' (2795240) panicked at tests/Chap37/ProveBSTSetSplayMtEph.rs:191:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.138s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_loop_borrow_iter
+  stdout ───
+
+    running 1 test
+    test bstsetsplaymteph_loop_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        bstsetsplaymteph_loop_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.13s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-64d0989eb36a81f7-bstsetsplaymteph_loop_borrow_iter/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-64d0989eb36a81f7-bstsetsplaymteph_loop_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-64d0989eb36a81f7-bstsetsplaymteph_loop_borrow_iter/test.rs
+
+
+    thread 'bstsetsplaymteph_loop_borrow_iter' (2795310) panicked at tests/Chap37/ProveBSTSetSplayMtEph.rs:17:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.145s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_loop_consume
+  stdout ───
+
+    running 1 test
+    test bstsetsplaymteph_loop_consume ... FAILED
+
+    failures:
+
+    failures:
+        bstsetsplaymteph_loop_consume
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.14s
+
+  stderr ───
+    error[E0425]: cannot find function `obeys_feq_clone` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-64d0989eb36a81f7-bstsetsplaymteph_loop_consume/test.rs:20:14
+       |
+    20 |     requires obeys_feq_clone::<u64>()
+       |              ^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing this function
+       |
+    11 + use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-64d0989eb36a81f7-bstsetsplaymteph_loop_consume
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveBSTSetSplayMtEph-64d0989eb36a81f7-bstsetsplaymteph_loop_consume/test.rs
+
+
+    thread 'bstsetsplaymteph_loop_consume' (2795402) panicked at tests/Chap37/ProveBSTSetSplayMtEph.rs:153:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   1.836s] rust_verify_test::ProveBalBinTreeStEph balbintree_inorder_spec_match
+        PASS [   1.900s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_postorder
+        PASS [   1.946s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_inorder
+        PASS [   1.830s] rust_verify_test::ProveBalBinTreeStEph balbintree_leaf_traversals_empty
+        PASS [   1.985s] rust_verify_test::ProveBalBinTreeStEph balbintree_leaf_iter_exhausted
+        PASS [   2.033s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_preorder
+        PASS [   1.872s] rust_verify_test::ProveBalBinTreeStEph balbintree_postorder_spec_match
+        PASS [   2.063s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_inorder
+        PASS [   1.997s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_preorder
+        PASS [   2.096s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_postorder
+        PASS [   1.998s] rust_verify_test::ProveBalBinTreeStEph balbintree_preorder_spec_match
+        PASS [   2.036s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_borrow_into
+        PASS [   1.903s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_borrow_iter
+        PASS [   1.941s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_consume
+        PASS [   1.936s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_borrow_iter
+        PASS [   2.104s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_borrow_into
+        PASS [   2.064s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_consume
+        PASS [   2.052s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_for_borrow_into
+        PASS [   1.804s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_for_borrow_iter
+        PASS [   1.940s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_loop_borrow_iter
+        PASS [   2.023s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_iter_over_subslice
+        PASS [   2.006s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_borrow_iter
+        PASS [   2.103s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_borrow_into
+        PASS [   2.196s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_operations
+        PASS [   1.818s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_consume
+        PASS [   1.969s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_borrow_iter
+        PASS [   1.979s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_borrow_into
+        PASS [   1.828s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_consume
+        PASS [   1.967s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_borrow_into
+        PASS [   1.968s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_borrow_iter
+        PASS [   1.706s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_consume
+        PASS [   1.769s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_borrow_into
+        PASS [   1.889s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_borrow_iter
+        PASS [   1.835s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_consume
+        PASS [   1.782s] rust_verify_test::ProveKleeneStPer kleene_alphabet
+        PASS [   1.864s] rust_verify_test::ProveKleeneStPer kleene_mem_plus
+        PASS [   1.689s] rust_verify_test::ProveKleeneStPer kleene_mem_star
+        FAIL [   1.335s] rust_verify_test::ProveLinkedListStEph linkedliststeph_for_consume
+  stdout ───
+
+    running 1 test
+    test linkedliststeph_for_consume ... FAILED
+
+    failures:
+
+    failures:
+        linkedliststeph_for_consume
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.33s
+
+  stderr ───
+    note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStEph-6d38bc79cc811513-linkedliststeph_for_consume/test.rs:18:1
+       |
+    18 | fn test_for_consume() {
+       | ^^^^^^^^^^^^^^^^^^^^^
+
+
+    error: assertion failed
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStEph-6d38bc79cc811513-linkedliststeph_for_consume/test.rs:26:12
+       |
+    26 |     assert(iter_seq == orig_seq);
+       |            ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+
+    error: invariant not satisfied before loop
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStEph-6d38bc79cc811513-linkedliststeph_for_consume/test.rs:28:20
+       |
+    28 |     for x in iter: it
+       |                    ^^ Automatically generated loop invariant failed. You can disable the automatic generation by adding #[verifier::no_auto_loop_invariant] to the loop. You might also try storing the loop expression in a variable outside the loop (e.g. `let e = 0..10; for x in e { ... }`).
+
+
+    error: aborting due to 2 previous errors
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStEph-6d38bc79cc811513-linkedliststeph_for_consume
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStEph-6d38bc79cc811513-linkedliststeph_for_consume/test.rs
+
+
+    thread 'linkedliststeph_for_consume' (2798325) panicked at tests/Chap18/ProveLinkedListStEph.rs:182:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   1.185s] rust_verify_test::ProveLinkedListStEph linkedliststeph_loop_borrow_into
+  stdout ───
+
+    running 1 test
+    test linkedliststeph_loop_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        linkedliststeph_loop_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.18s
+
+  stderr ───
+    note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStEph-6d38bc79cc811513-linkedliststeph_loop_borrow_into/test.rs:18:1
+       |
+    18 | fn test_loop_borrow_into() {
+       | ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+    error: invariant not satisfied before loop
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStEph-6d38bc79cc811513-linkedliststeph_loop_borrow_into/test.rs:28:13
+       |
+    28 |             items =~= iter_seq.take(it@.0 as int),
+       |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+    error: invariant not satisfied before loop
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStEph-6d38bc79cc811513-linkedliststeph_loop_borrow_into/test.rs:29:13
+       |
+    29 |             iter_invariant(&it),
+       |             ^^^^^^^^^^^^^^^^^^^
+
+
+    error: aborting due to 2 previous errors
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStEph-6d38bc79cc811513-linkedliststeph_loop_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStEph-6d38bc79cc811513-linkedliststeph_loop_borrow_into/test.rs
+
+
+    thread 'linkedliststeph_loop_borrow_into' (2798369) panicked at tests/Chap18/ProveLinkedListStEph.rs:83:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   1.642s] rust_verify_test::ProveLinkedListStEph linkedliststeph_for_borrow_into
+  stdout ───
+
+    running 1 test
+    test linkedliststeph_for_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        linkedliststeph_for_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.64s
+
+  stderr ───
+    note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStEph-6d38bc79cc811513-linkedliststeph_for_borrow_into/test.rs:18:1
+       |
+    18 | fn test_for_borrow_into() {
+       | ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+    error: invariant not satisfied before loop
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStEph-6d38bc79cc811513-linkedliststeph_for_borrow_into/test.rs:25:20
+       |
+    25 |     for x in iter: it
+       |                    ^^ Automatically generated loop invariant failed. You can disable the automatic generation by adding #[verifier::no_auto_loop_invariant] to the loop. You might also try storing the loop expression in a variable outside the loop (e.g. `let e = 0..10; for x in e { ... }`).
+
+
+    error: invariant not satisfied before loop
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStEph-6d38bc79cc811513-linkedliststeph_for_borrow_into/test.rs:28:13
+       |
+    28 |             items =~= iter_seq.take(iter.pos),
+       |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+    error: aborting due to 2 previous errors
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStEph-6d38bc79cc811513-linkedliststeph_for_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStEph-6d38bc79cc811513-linkedliststeph_for_borrow_into/test.rs
+
+
+    thread 'linkedliststeph_for_borrow_into' (2798303) panicked at tests/Chap18/ProveLinkedListStEph.rs:118:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   1.203s] rust_verify_test::ProveLinkedListStEph linkedliststeph_loop_consume
+  stdout ───
+
+    running 1 test
+    test linkedliststeph_loop_consume ... FAILED
+
+    failures:
+
+    failures:
+        linkedliststeph_loop_consume
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.20s
+
+  stderr ───
+    note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStEph-6d38bc79cc811513-linkedliststeph_loop_consume/test.rs:18:1
+       |
+    18 | fn test_loop_consume() {
+       | ^^^^^^^^^^^^^^^^^^^^^^
+
+
+    error: assertion failed
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStEph-6d38bc79cc811513-linkedliststeph_loop_consume/test.rs:26:12
+       |
+    26 |     assert(iter_seq == orig_seq);
+       |            ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+
+    error: invariant not satisfied before loop
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStEph-6d38bc79cc811513-linkedliststeph_loop_consume/test.rs:31:13
+       |
+    31 |             items =~= iter_seq.take(it@.0 as int),
+       |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+    error: aborting due to 2 previous errors
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStEph-6d38bc79cc811513-linkedliststeph_loop_consume
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStEph-6d38bc79cc811513-linkedliststeph_loop_consume/test.rs
+
+
+    thread 'linkedliststeph_loop_consume' (2798395) panicked at tests/Chap18/ProveLinkedListStEph.rs:145:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   1.723s] rust_verify_test::ProveLinkedListStEph linkedliststeph_for_iter
+        FAIL [   1.223s] rust_verify_test::ProveLinkedListStPer linkedliststper_for_consume
+  stdout ───
+
+    running 1 test
+    test linkedliststper_for_consume ... FAILED
+
+    failures:
+
+    failures:
+        linkedliststper_for_consume
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.22s
+
+  stderr ───
+    note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStPer-dddb5e072cdec20e-linkedliststper_for_consume/test.rs:18:1
+       |
+    18 | fn test_for_consume() {
+       | ^^^^^^^^^^^^^^^^^^^^^
+
+
+    error: assertion failed
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStPer-dddb5e072cdec20e-linkedliststper_for_consume/test.rs:26:12
+       |
+    26 |     assert(iter_seq == orig_seq);
+       |            ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+
+    error: invariant not satisfied before loop
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStPer-dddb5e072cdec20e-linkedliststper_for_consume/test.rs:28:20
+       |
+    28 |     for x in iter: it
+       |                    ^^ Automatically generated loop invariant failed. You can disable the automatic generation by adding #[verifier::no_auto_loop_invariant] to the loop. You might also try storing the loop expression in a variable outside the loop (e.g. `let e = 0..10; for x in e { ... }`).
+
+
+    error: aborting due to 2 previous errors
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStPer-dddb5e072cdec20e-linkedliststper_for_consume
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStPer-dddb5e072cdec20e-linkedliststper_for_consume/test.rs
+
+
+    thread 'linkedliststper_for_consume' (2798590) panicked at tests/Chap18/ProveLinkedListStPer.rs:182:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   1.339s] rust_verify_test::ProveLinkedListStPer linkedliststper_for_borrow_into
+  stdout ───
+
+    running 1 test
+    test linkedliststper_for_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        linkedliststper_for_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.33s
+
+  stderr ───
+    note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStPer-dddb5e072cdec20e-linkedliststper_for_borrow_into/test.rs:18:1
+       |
+    18 | fn test_for_borrow_into() {
+       | ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+    error: invariant not satisfied before loop
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStPer-dddb5e072cdec20e-linkedliststper_for_borrow_into/test.rs:25:20
+       |
+    25 |     for x in iter: it
+       |                    ^^ Automatically generated loop invariant failed. You can disable the automatic generation by adding #[verifier::no_auto_loop_invariant] to the loop. You might also try storing the loop expression in a variable outside the loop (e.g. `let e = 0..10; for x in e { ... }`).
+
+
+    error: invariant not satisfied before loop
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStPer-dddb5e072cdec20e-linkedliststper_for_borrow_into/test.rs:28:13
+       |
+    28 |             items =~= iter_seq.take(iter.pos),
+       |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+    error: aborting due to 2 previous errors
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStPer-dddb5e072cdec20e-linkedliststper_for_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStPer-dddb5e072cdec20e-linkedliststper_for_borrow_into/test.rs
+
+
+    thread 'linkedliststper_for_borrow_into' (2798565) panicked at tests/Chap18/ProveLinkedListStPer.rs:118:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   1.269s] rust_verify_test::ProveLinkedListStPer linkedliststper_loop_borrow_into
+  stdout ───
+
+    running 1 test
+    test linkedliststper_loop_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        linkedliststper_loop_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.26s
+
+  stderr ───
+    note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStPer-dddb5e072cdec20e-linkedliststper_loop_borrow_into/test.rs:18:1
+       |
+    18 | fn test_loop_borrow_into() {
+       | ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+    error: invariant not satisfied before loop
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStPer-dddb5e072cdec20e-linkedliststper_loop_borrow_into/test.rs:28:13
+       |
+    28 |             items =~= iter_seq.take(it@.0 as int),
+       |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+    error: invariant not satisfied before loop
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStPer-dddb5e072cdec20e-linkedliststper_loop_borrow_into/test.rs:29:13
+       |
+    29 |             iter_invariant(&it),
+       |             ^^^^^^^^^^^^^^^^^^^
+
+
+    error: aborting due to 2 previous errors
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStPer-dddb5e072cdec20e-linkedliststper_loop_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStPer-dddb5e072cdec20e-linkedliststper_loop_borrow_into/test.rs
+
+
+    thread 'linkedliststper_loop_borrow_into' (2798660) panicked at tests/Chap18/ProveLinkedListStPer.rs:83:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   1.874s] rust_verify_test::ProveLinkedListStEph linkedliststeph_loop_loop
+        FAIL [   1.352s] rust_verify_test::ProveLinkedListStPer linkedliststper_loop_consume
+  stdout ───
+
+    running 1 test
+    test linkedliststper_loop_consume ... FAILED
+
+    failures:
+
+    failures:
+        linkedliststper_loop_consume
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 1.35s
+
+  stderr ───
+    note: function body check: not all errors may have been reported; rerun with a higher value for --multiple-errors to find other potential errors in this function
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStPer-dddb5e072cdec20e-linkedliststper_loop_consume/test.rs:18:1
+       |
+    18 | fn test_loop_consume() {
+       | ^^^^^^^^^^^^^^^^^^^^^^
+
+
+    error: assertion failed
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStPer-dddb5e072cdec20e-linkedliststper_loop_consume/test.rs:26:12
+       |
+    26 |     assert(iter_seq == orig_seq);
+       |            ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+
+    error: invariant not satisfied before loop
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStPer-dddb5e072cdec20e-linkedliststper_loop_consume/test.rs:31:13
+       |
+    31 |             items =~= iter_seq.take(it@.0 as int),
+       |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+    error: aborting due to 2 previous errors
+
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStPer-dddb5e072cdec20e-linkedliststper_loop_consume
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveLinkedListStPer-dddb5e072cdec20e-linkedliststper_loop_consume/test.rs
+
+
+    thread 'linkedliststper_loop_consume' (2798742) panicked at tests/Chap18/ProveLinkedListStPer.rs:145:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   1.798s] rust_verify_test::ProveLinkedListStPer linkedliststper_for_iter
+        PASS [   1.689s] rust_verify_test::ProveLinkedListStPer linkedliststper_loop_loop
+        PASS [   1.796s] rust_verify_test::ProveMathSeq mathseq_for_borrow_into
+        PASS [   1.840s] rust_verify_test::ProveMathSeq mathseq_for_consume
+        PASS [   1.682s] rust_verify_test::ProveMathSeq mathseq_loop_borrow_into
+        PASS [   2.146s] rust_verify_test::ProveMathSeq mathseq_for_borrow_iter
+        PASS [   1.808s] rust_verify_test::ProveMathSeq mathseq_loop_borrow_iter
+        PASS [   1.767s] rust_verify_test::ProveMathSeq mathseq_loop_consume
+        PASS [   1.860s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_for_borrow_into
+        FAIL [   0.151s] rust_verify_test::ProveOrderedTableMtEph chap43_orderedtablemteph_for_borrow_into
+  stdout ───
+
+    running 1 test
+    test chap43_orderedtablemteph_for_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        chap43_orderedtablemteph_for_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.15s
+
+  stderr ───
+    error[E0425]: cannot find function `spec_pair_key_determines_order` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableMtEph-1000b11fede24694-chap43_orderedtablemteph_for_borrow_into/test.rs:24:9
+       |
+    24 |         spec_pair_key_determines_order::<u64, u64>(),
+       |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing one of these functions
+       |
+    11 + use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
+       |
+    11 + use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::spec_pair_key_determines_order;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableMtEph-1000b11fede24694-chap43_orderedtablemteph_for_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableMtEph-1000b11fede24694-chap43_orderedtablemteph_for_borrow_into/test.rs
+
+
+    thread 'chap43_orderedtablemteph_for_borrow_into' (2799552) panicked at tests/Chap43/ProveOrderedTableMtEph.rs:139:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   1.777s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_for_borrow_iter
+        FAIL [   0.122s] rust_verify_test::ProveOrderedTableMtEph chap43_orderedtablemteph_for_borrow_iter
+  stdout ───
+
+    running 1 test
+    test chap43_orderedtablemteph_for_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        chap43_orderedtablemteph_for_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.12s
+
+  stderr ───
+    error[E0425]: cannot find function `spec_pair_key_determines_order` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableMtEph-1000b11fede24694-chap43_orderedtablemteph_for_borrow_iter/test.rs:24:9
+       |
+    24 |         spec_pair_key_determines_order::<u64, u64>(),
+       |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing one of these functions
+       |
+    11 + use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
+       |
+    11 + use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::spec_pair_key_determines_order;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableMtEph-1000b11fede24694-chap43_orderedtablemteph_for_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableMtEph-1000b11fede24694-chap43_orderedtablemteph_for_borrow_iter/test.rs
+
+
+    thread 'chap43_orderedtablemteph_for_borrow_iter' (2799577) panicked at tests/Chap43/ProveOrderedTableMtEph.rs:103:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   1.805s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_loop_borrow_into
+        FAIL [   0.134s] rust_verify_test::ProveOrderedTableMtEph chap43_orderedtablemteph_loop_borrow_into
+  stdout ───
+
+    running 1 test
+    test chap43_orderedtablemteph_loop_borrow_into ... FAILED
+
+    failures:
+
+    failures:
+        chap43_orderedtablemteph_loop_borrow_into
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.13s
+
+  stderr ───
+    error[E0425]: cannot find function `spec_pair_key_determines_order` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableMtEph-1000b11fede24694-chap43_orderedtablemteph_loop_borrow_into/test.rs:24:9
+       |
+    24 |         spec_pair_key_determines_order::<u64, u64>(),
+       |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing one of these functions
+       |
+    11 + use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
+       |
+    11 + use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::spec_pair_key_determines_order;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableMtEph-1000b11fede24694-chap43_orderedtablemteph_loop_borrow_into
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableMtEph-1000b11fede24694-chap43_orderedtablemteph_loop_borrow_into/test.rs
+
+
+    thread 'chap43_orderedtablemteph_loop_borrow_into' (2799589) panicked at tests/Chap43/ProveOrderedTableMtEph.rs:59:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        FAIL [   0.131s] rust_verify_test::ProveOrderedTableMtEph chap43_orderedtablemteph_loop_borrow_iter
+  stdout ───
+
+    running 1 test
+    test chap43_orderedtablemteph_loop_borrow_iter ... FAILED
+
+    failures:
+
+    failures:
+        chap43_orderedtablemteph_loop_borrow_iter
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.13s
+
+  stderr ───
+    error[E0425]: cannot find function `spec_pair_key_determines_order` in this scope
+      --> /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableMtEph-1000b11fede24694-chap43_orderedtablemteph_loop_borrow_iter/test.rs:24:9
+       |
+    24 |         spec_pair_key_determines_order::<u64, u64>(),
+       |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+       |
+    help: consider importing one of these functions
+       |
+    11 + use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::spec_pair_key_determines_order;
+       |
+    11 + use apas_verus::Chap43::OrderedTableStPer::OrderedTableStPer::spec_pair_key_determines_order;
+       |
+
+
+    error: aborting due to 1 previous error
+
+
+    For more information about this error, try `rustc --explain E0425`.
+
+    the input directory is /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableMtEph-1000b11fede24694-chap43_orderedtablemteph_loop_borrow_iter
+    rerun this test with:
+    verus --crate-type=lib  /home/milnes/projects/APAS-VERUS-agent2/rust_verify_test/target/release/test_inputs/ProveOrderedTableMtEph-1000b11fede24694-chap43_orderedtablemteph_loop_borrow_iter/test.rs
+
+
+    thread 'chap43_orderedtablemteph_loop_borrow_iter' (2799625) panicked at tests/Chap43/ProveOrderedTableMtEph.rs:15:1:
+    Err(_) does not match $result
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   1.859s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_loop_borrow_iter
+        PASS [   2.225s] rust_verify_test::ProveOrderedSetStPer chap43_orderedsetstper_for_borrow_iter
+        PASS [   1.647s] rust_verify_test::ProveOrderedSetStPer chap43_orderedsetstper_loop_borrow_iter
+        PASS [   1.827s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_for_borrow_into
+        PASS [   1.838s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_loop_borrow_into
+        PASS [   2.101s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_for_borrow_iter
+        PASS [   2.083s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_loop_borrow_iter
+        PASS [   1.926s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_for_borrow_into
+        PASS [   1.977s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_for_borrow_iter
+        PASS [   1.810s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_loop_borrow_into
+        PASS [   1.816s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_loop_borrow_iter
+        PASS [   1.880s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_borrow_into
+        PASS [   1.813s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_borrow_iter
+        PASS [   1.759s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_consume
+        PASS [   1.704s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_borrow_into
+        PASS [   1.706s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_borrow_iter
+        PASS [   1.662s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_consume
+        PASS [   1.888s] rust_verify_test::ProveSetMtEph set_mt_eph_for_borrow_into
+        PASS [   1.795s] rust_verify_test::ProveSetMtEph set_mt_eph_for_borrow_iter
+        PASS [   1.692s] rust_verify_test::ProveSetMtEph set_mt_eph_loop_borrow_iter
+        PASS [   1.849s] rust_verify_test::ProveSetStEph setsteph_for_borrow_into
+        PASS [   1.815s] rust_verify_test::ProveSetStEph setsteph_for_borrow_iter
+        PASS [   1.859s] rust_verify_test::ProveSetStEph setsteph_loop_borrow_into
+        PASS [   1.865s] rust_verify_test::ProveSetStEph setsteph_loop_borrow_iter
+        PASS [   1.674s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_borrow_iter
+        PASS [   2.139s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_borrow_into
+        PASS [   1.778s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_consume
+        PASS [   1.858s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_borrow_into
+        PASS [   1.923s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_borrow_iter
+        PASS [   1.850s] rust_verify_test::Provedeep_view_standard deep_view_standard_simple
+        PASS [   1.900s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_consume
+        PASS [   1.780s] rust_verify_test::Proveiterators_standard iterators_standard_for_borrow_into
+        PASS [   1.867s] rust_verify_test::Proveiterators_standard iterators_standard_for_borrow_iter
+        PASS [   1.649s] rust_verify_test::Proveiterators_standard iterators_standard_loop_borrow_into
+        PASS [   1.688s] rust_verify_test::Proveiterators_standard iterators_standard_loop_borrow_iter
+        PASS [   2.351s] rust_verify_test::Proveiterators_standard iterators_standard_for_consume
+        PASS [   1.880s] rust_verify_test::Proveiterators_standard iterators_standard_loop_consume
+        PASS [   1.827s] rust_verify_test::Provemod_standard mod_standard_for_borrow_into
+        PASS [   1.837s] rust_verify_test::Provemod_standard mod_standard_for_borrow_iter
+        PASS [   1.657s] rust_verify_test::Provemod_standard mod_standard_for_consume
+        PASS [   1.811s] rust_verify_test::Provemod_standard mod_standard_loop_borrow_into
+        PASS [   1.817s] rust_verify_test::Provemod_standard mod_standard_loop_consume
+        PASS [   2.016s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_borrow_into
+        PASS [   2.342s] rust_verify_test::Provemod_standard mod_standard_loop_borrow_iter
+        PASS [   1.941s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_borrow_iter
+        PASS [   1.804s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_consume
+        PASS [   1.937s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_borrow_into
+        PASS [   1.820s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_borrow_iter
+        PASS [   1.880s] rust_verify_test::Proveusing_closures_standard closures_ghost_spec_fn
+        PASS [   2.079s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_consume
+        PASS [   1.779s] rust_verify_test::Proveusing_closures_standard closures_inline_requires_ensures
+        PASS [   1.712s] rust_verify_test::Proveusing_closures_standard closures_let_bind_ensures
+        PASS [   1.812s] rust_verify_test::Proveusing_closures_standard closures_map_apply
+        PASS [   1.861s] rust_verify_test::Proveview_standard view_standard_collection
+        PASS [   1.711s] rust_verify_test::Proveview_standard view_standard_for_borrow_into
+        PASS [   1.905s] rust_verify_test::Proveview_standard view_standard_for_borrow_iter
+        PASS [   1.820s] rust_verify_test::Proveview_standard view_standard_loop_borrow_into
+        PASS [   2.049s] rust_verify_test::Proveview_standard view_standard_for_consume
+        PASS [   1.737s] rust_verify_test::Proveview_standard view_standard_loop_borrow_iter
+        PASS [   1.920s] rust_verify_test::Proveview_standard view_standard_loop_consume
+        PASS [   1.770s] rust_verify_test::Proveview_standard view_standard_simple
+        PASS [   1.882s] rust_verify_test::Provewrapping_iterators_standard wrapping_for_borrow_into
+        PASS [   1.938s] rust_verify_test::Provewrapping_iterators_standard wrapping_for_borrow_iter
+        PASS [   1.956s] rust_verify_test::Provewrapping_iterators_standard wrapping_loop_borrow_into
+        PASS [   1.816s] rust_verify_test::Provewrapping_iterators_standard wrapping_loop_borrow_iter
+        PASS [   1.876s] rust_verify_test::RelationStEph relation_st_eph_loop_loop
+        PASS [   2.266s] rust_verify_test::RelationStEph relation_st_eph_for_iter
+        PASS [   2.000s] rust_verify_test::SetMtEph set_mt_eph_for_iter
+        PASS [   1.918s] rust_verify_test::SetMtEph set_mt_eph_from_vec
+        PASS [   2.042s] rust_verify_test::SetMtEph set_mt_eph_loop_loop
+        PASS [   1.988s] rust_verify_test::SetStEph set_st_eph_for_iter
+        PASS [   1.815s] rust_verify_test::SetStEph set_st_eph_from_vec
+        PASS [   1.777s] rust_verify_test::SetStEph set_st_eph_loop_loop
+        PASS [   1.889s] rust_verify_test::prove_MathSeq_iters mathseq_iter_consuming
+        PASS [   1.705s] rust_verify_test::prove_MathSeq_iters mathseq_iter_nested
+        PASS [   1.650s] rust_verify_test::prove_MathSeq_iters mathseq_iter_range
+────────────
+     Summary [  63.134s] 246 tests run: 184 passed, 62 failed, 0 skipped
+        FAIL [   1.564s] rust_verify_test::ProveArraySeq arrayseq_for_borrow_into
+        FAIL [   1.366s] rust_verify_test::ProveArraySeq arrayseq_for_consume
+        FAIL [   1.527s] rust_verify_test::ProveArraySeq arrayseq_loop_borrow_into
+        FAIL [   1.294s] rust_verify_test::ProveArraySeq arrayseq_loop_consume
+        FAIL [   1.577s] rust_verify_test::ProveArraySeqStPer arrayseqstper_for_borrow_into
+        FAIL [   1.558s] rust_verify_test::ProveArraySeqStPer arrayseqstper_for_consume
+        FAIL [   1.518s] rust_verify_test::ProveArraySeqStPer arrayseqstper_loop_borrow_into
+        FAIL [   1.746s] rust_verify_test::ProveArraySeqStPer arrayseqstper_loop_consume
+        FAIL [   0.133s] rust_verify_test::ProveAugOrderedTableMtEph chap43_augorderedtablemteph_for_borrow_into
+        FAIL [   0.137s] rust_verify_test::ProveAugOrderedTableMtEph chap43_augorderedtablemteph_for_borrow_iter
+        FAIL [   0.146s] rust_verify_test::ProveAugOrderedTableMtEph chap43_augorderedtablemteph_loop_borrow_into
+        FAIL [   0.130s] rust_verify_test::ProveAugOrderedTableMtEph chap43_augorderedtablemteph_loop_borrow_iter
+        FAIL [   0.130s] rust_verify_test::ProveAugOrderedTableStEph chap43_augorderedtablesteph_for_borrow_into
+        FAIL [   0.130s] rust_verify_test::ProveAugOrderedTableStEph chap43_augorderedtablesteph_for_borrow_iter
+        FAIL [   0.137s] rust_verify_test::ProveAugOrderedTableStEph chap43_augorderedtablesteph_loop_borrow_into
+        FAIL [   0.130s] rust_verify_test::ProveAugOrderedTableStEph chap43_augorderedtablesteph_loop_borrow_iter
+        FAIL [   0.137s] rust_verify_test::ProveAugOrderedTableStPer chap43_augorderedtablestper_for_borrow_into
+        FAIL [   0.124s] rust_verify_test::ProveAugOrderedTableStPer chap43_augorderedtablestper_for_borrow_iter
+        FAIL [   0.124s] rust_verify_test::ProveAugOrderedTableStPer chap43_augorderedtablestper_loop_borrow_into
+        FAIL [   0.121s] rust_verify_test::ProveAugOrderedTableStPer chap43_augorderedtablestper_loop_borrow_iter
+        FAIL [   0.135s] rust_verify_test::ProveBSTSetAVLMtEph bstsetavlmteph_for_borrow_into
+        FAIL [   0.139s] rust_verify_test::ProveBSTSetAVLMtEph bstsetavlmteph_for_borrow_iter
+        FAIL [   0.139s] rust_verify_test::ProveBSTSetAVLMtEph bstsetavlmteph_for_consume
+        FAIL [   0.133s] rust_verify_test::ProveBSTSetAVLMtEph bstsetavlmteph_loop_borrow_into
+        FAIL [   0.128s] rust_verify_test::ProveBSTSetAVLMtEph bstsetavlmteph_loop_borrow_iter
+        FAIL [   0.123s] rust_verify_test::ProveBSTSetAVLMtEph bstsetavlmteph_loop_consume
+        FAIL [   0.131s] rust_verify_test::ProveBSTSetBBAlphaMtEph bstsetbbalphamteph_for_borrow_into
+        FAIL [   0.161s] rust_verify_test::ProveBSTSetBBAlphaMtEph bstsetbbalphamteph_for_borrow_iter
+        FAIL [   0.136s] rust_verify_test::ProveBSTSetBBAlphaMtEph bstsetbbalphamteph_for_consume
+        FAIL [   0.133s] rust_verify_test::ProveBSTSetBBAlphaMtEph bstsetbbalphamteph_loop_borrow_into
+        FAIL [   0.160s] rust_verify_test::ProveBSTSetBBAlphaMtEph bstsetbbalphamteph_loop_borrow_iter
+        FAIL [   0.120s] rust_verify_test::ProveBSTSetBBAlphaMtEph bstsetbbalphamteph_loop_consume
+        FAIL [   0.133s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_for_borrow_into
+        FAIL [   0.157s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_for_borrow_iter
+        FAIL [   0.151s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_for_consume
+        FAIL [   0.131s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_loop_borrow_into
+        FAIL [   0.127s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_loop_borrow_iter
+        FAIL [   0.130s] rust_verify_test::ProveBSTSetPlainMtEph bstsetplainmteph_loop_consume
+        FAIL [   0.130s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_for_borrow_into
+        FAIL [   0.128s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_for_borrow_iter
+        FAIL [   0.130s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_for_consume
+        FAIL [   0.129s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_loop_borrow_into
+        FAIL [   0.136s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_loop_borrow_iter
+        FAIL [   0.161s] rust_verify_test::ProveBSTSetRBMtEph bstsetrbmteph_loop_consume
+        FAIL [   0.130s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_for_borrow_into
+        FAIL [   0.123s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_for_borrow_iter
+        FAIL [   0.134s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_for_consume
+        FAIL [   0.123s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_loop_borrow_into
+        FAIL [   0.138s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_loop_borrow_iter
+        FAIL [   0.145s] rust_verify_test::ProveBSTSetSplayMtEph bstsetsplaymteph_loop_consume
+        FAIL [   1.642s] rust_verify_test::ProveLinkedListStEph linkedliststeph_for_borrow_into
+        FAIL [   1.335s] rust_verify_test::ProveLinkedListStEph linkedliststeph_for_consume
+        FAIL [   1.185s] rust_verify_test::ProveLinkedListStEph linkedliststeph_loop_borrow_into
+        FAIL [   1.203s] rust_verify_test::ProveLinkedListStEph linkedliststeph_loop_consume
+        FAIL [   1.339s] rust_verify_test::ProveLinkedListStPer linkedliststper_for_borrow_into
+        FAIL [   1.223s] rust_verify_test::ProveLinkedListStPer linkedliststper_for_consume
+        FAIL [   1.269s] rust_verify_test::ProveLinkedListStPer linkedliststper_loop_borrow_into
+        FAIL [   1.352s] rust_verify_test::ProveLinkedListStPer linkedliststper_loop_consume
+        FAIL [   0.151s] rust_verify_test::ProveOrderedTableMtEph chap43_orderedtablemteph_for_borrow_into
+        FAIL [   0.122s] rust_verify_test::ProveOrderedTableMtEph chap43_orderedtablemteph_for_borrow_iter
+        FAIL [   0.134s] rust_verify_test::ProveOrderedTableMtEph chap43_orderedtablemteph_loop_borrow_into
+        FAIL [   0.131s] rust_verify_test::ProveOrderedTableMtEph chap43_orderedtablemteph_loop_borrow_iter
+error: test run failed
+Elapsed: 211s

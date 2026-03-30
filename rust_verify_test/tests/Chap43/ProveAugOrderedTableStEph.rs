@@ -19,7 +19,7 @@ test_verify_one_file! {
         use vstd::prelude::*;
         use apas_verus::Types::Types::*;
         use apas_verus::Chap43::AugOrderedTableStEph::AugOrderedTableStEph::*;
-        use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::{OrderedTableStEphIter, iter_invariant};
+        use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::{OrderedTableStEphIter, iter_invariant, spec_pair_key_determines_order};
         use apas_verus::vstdplus::feq::feq::*;
         use apas_verus::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
 
@@ -67,7 +67,7 @@ test_verify_one_file! {
         use vstd::prelude::*;
         use apas_verus::Types::Types::*;
         use apas_verus::Chap43::AugOrderedTableStEph::AugOrderedTableStEph::*;
-        use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::{OrderedTableStEphIter, iter_invariant};
+        use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::{OrderedTableStEphIter, iter_invariant, spec_pair_key_determines_order};
         use apas_verus::vstdplus::feq::feq::*;
         use apas_verus::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
 
@@ -115,7 +115,7 @@ test_verify_one_file! {
         use vstd::prelude::*;
         use apas_verus::Types::Types::*;
         use apas_verus::Chap43::AugOrderedTableStEph::AugOrderedTableStEph::*;
-        use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::{OrderedTableStEphIter, iter_invariant};
+        use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::{OrderedTableStEphIter, iter_invariant, spec_pair_key_determines_order};
         use apas_verus::vstdplus::feq::feq::*;
         use apas_verus::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
 
@@ -155,7 +155,7 @@ test_verify_one_file! {
         use vstd::prelude::*;
         use apas_verus::Types::Types::*;
         use apas_verus::Chap43::AugOrderedTableStEph::AugOrderedTableStEph::*;
-        use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::{OrderedTableStEphIter, iter_invariant};
+        use apas_verus::Chap43::OrderedTableStEph::OrderedTableStEph::{OrderedTableStEphIter, iter_invariant, spec_pair_key_determines_order};
         use apas_verus::vstdplus::feq::feq::*;
         use apas_verus::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
 

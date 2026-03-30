@@ -19,6 +19,7 @@ test_verify_one_file! {
         use vstd::prelude::*;
         use apas_verus::Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::*;
         use apas_verus::BSTSetBBAlphaMtEphLit;
+        use apas_verus::vstdplus::feq::feq::*;
 
         fn test_loop_borrow_iter()
             requires obeys_feq_clone::<u64>()
@@ -57,6 +58,7 @@ test_verify_one_file! {
         use vstd::prelude::*;
         use apas_verus::Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::*;
         use apas_verus::BSTSetBBAlphaMtEphLit;
+        use apas_verus::vstdplus::feq::feq::*;
 
         fn test_loop_borrow_into()
             requires obeys_feq_clone::<u64>()
@@ -95,6 +97,7 @@ test_verify_one_file! {
         use vstd::prelude::*;
         use apas_verus::Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::*;
         use apas_verus::BSTSetBBAlphaMtEphLit;
+        use apas_verus::vstdplus::feq::feq::*;
 
         fn test_for_borrow_iter()
             requires obeys_feq_clone::<u64>()
@@ -125,6 +128,7 @@ test_verify_one_file! {
         use vstd::prelude::*;
         use apas_verus::Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::*;
         use apas_verus::BSTSetBBAlphaMtEphLit;
+        use apas_verus::vstdplus::feq::feq::*;
 
         fn test_for_borrow_into()
             requires obeys_feq_clone::<u64>()
@@ -155,6 +159,7 @@ test_verify_one_file! {
         use vstd::prelude::*;
         use apas_verus::Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::*;
         use apas_verus::BSTSetBBAlphaMtEphLit;
+        use apas_verus::vstdplus::feq::feq::*;
 
         fn test_loop_consume()
             requires obeys_feq_clone::<u64>()
@@ -193,6 +198,7 @@ test_verify_one_file! {
         use vstd::prelude::*;
         use apas_verus::Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::*;
         use apas_verus::BSTSetBBAlphaMtEphLit;
+        use apas_verus::vstdplus::feq::feq::*;
 
         fn test_for_consume()
             requires obeys_feq_clone::<u64>()
