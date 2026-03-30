@@ -219,3 +219,33 @@ fn test_all_unreachable() {
     assert!(!result.is_reachable(2));
     assert!(!result.is_reachable(3));
 }
+
+#[test]
+fn test_self_loop() {
+    let vertices = SetLit![0, 1];
+    let edges = SetLit![
+        WeightedEdge(0, 0, 5),
+        WeightedEdge(0, 1, 3)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = dijkstra(&graph, 0);
+    assert_eq!(result.get_distance(0), 0);
+    assert_eq!(result.get_distance(1), 3);
+}
+
+#[test]
+fn test_chain_10() {
+    let mut vertices = SetStEph::empty();
+    let mut edges = SetStEph::empty();
+    for i in 0..10 {
+        vertices.insert(i);
+    }
+    for i in 0..9 {
+        edges.insert(WeightedEdge(i, i + 1, 1));
+    }
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = dijkstra(&graph, 0);
+    for i in 0..10 {
+        assert_eq!(result.get_distance(i), i as i64);
+    }
+}

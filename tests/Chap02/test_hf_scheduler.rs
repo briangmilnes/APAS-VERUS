@@ -189,3 +189,29 @@ fn test_spawn_wait_chained() {
     let v2 = wait(h2);
     assert_eq!(v2, 20);
 }
+
+#[test]
+fn test_join_closures_capture() {
+    let x = 42;
+    let (a, b) = join(
+        move || x + 1,
+        move || x * 2,
+    );
+    assert_eq!(a, 43);
+    assert_eq!(b, 84);
+}
+
+#[test]
+fn test_spawn_wait_vec_result() {
+    let h = spawn(|| (0..50).collect::<Vec<i32>>());
+    let v = wait(h);
+    assert_eq!(v.len(), 50);
+    assert_eq!(v[49], 49);
+}
+
+#[test]
+fn test_spawn_join_zero_computation() {
+    let (a, b) = spawn_join(|| (), || ());
+    assert_eq!(a, ());
+    assert_eq!(b, ());
+}

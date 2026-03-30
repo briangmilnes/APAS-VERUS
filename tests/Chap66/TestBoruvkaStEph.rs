@@ -246,6 +246,26 @@ fn test_boruvka_equal_weights() {
 }
 
 #[test]
+fn test_boruvka_larger_8v() {
+    let vertices = SetLit![1, 2, 3, 4, 5, 6, 7, 8];
+    let edges = SetLit![
+        LabeledEdge(1, 2, w(1.0), 0),
+        LabeledEdge(2, 3, w(2.0), 1),
+        LabeledEdge(3, 4, w(3.0), 2),
+        LabeledEdge(4, 5, w(4.0), 3),
+        LabeledEdge(5, 6, w(5.0), 4),
+        LabeledEdge(6, 7, w(6.0), 5),
+        LabeledEdge(7, 8, w(7.0), 6),
+        LabeledEdge(8, 1, w(8.0), 7),
+        LabeledEdge(1, 5, w(9.0), 8),
+    ];
+    let mst_labels = BoruvkaStEph::boruvka_mst_with_seed(&vertices, &edges, 42);
+    let mst_w = BoruvkaStEph::mst_weight(&edges, &mst_labels);
+    assert_eq!(mst_labels.size(), 7);
+    assert!(mst_w.val < 35.0);
+}
+
+#[test]
 fn test_boruvka_deterministic_across_seeds() {
     let vertices = SetLit![1, 2, 3, 4];
     let edges = SetLit![

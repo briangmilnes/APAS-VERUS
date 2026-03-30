@@ -214,3 +214,31 @@ fn test_all_negative_edges_no_cycle() {
     assert_eq!(result.get_distance(1), -1);
     assert_eq!(result.get_distance(2), -3);
 }
+
+#[test]
+fn test_diamond_graph() {
+    let vertices = SetLit![0, 1, 2, 3];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 1),
+        WeightedEdge(0, 2, 4),
+        WeightedEdge(1, 3, 2),
+        WeightedEdge(2, 3, 1)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = bellman_ford(&graph, 0).unwrap();
+    assert_eq!(result.get_distance(3), 3); // via 0->1->3
+}
+
+#[test]
+fn test_longer_path_cheaper() {
+    // Direct: 0->2 costs 10. Indirect: 0->1->2 costs 3.
+    let vertices = SetLit![0, 1, 2];
+    let edges = SetLit![
+        WeightedEdge(0, 2, 10),
+        WeightedEdge(0, 1, 1),
+        WeightedEdge(1, 2, 2)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = bellman_ford(&graph, 0).unwrap();
+    assert_eq!(result.get_distance(2), 3);
+}
