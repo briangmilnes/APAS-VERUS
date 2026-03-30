@@ -1,5 +1,9 @@
 //! Proof tests for Chap54 BFSStEph BFS tree iterators
 //!
+//! Loop patterns tested:
+//!   - loop-borrow-iter:   `loop { ... td.iter() ... }` (top_down and bottom_up)
+//!   - for-borrow-iter:    `for x in iter: td.iter()` (top_down and bottom_up)
+//!
 //! Tests that BFS tree results can be iterated with verified loop invariants,
 //! confirming the spec contracts on top_down_order and bottom_up_order.
 
@@ -88,6 +92,79 @@ test_verify_one_file! {
                 } else {
                     break;
                 }
+            }
+
+            assert(count == iter_seq.len());
+        }
+    } => Ok(())
+}
+
+// for-borrow-iter on top_down_order
+test_verify_one_file! {
+    #[test] chap54_bfssteph_top_down_for verus_code! {
+        use vstd::prelude::*;
+        use apas_verus::Chap19::ArraySeqStEph::ArraySeqStEph::*;
+        use apas_verus::Chap54::BFSStEph::BFSStEph::*;
+
+        fn test_top_down_for(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, source: usize)
+            requires
+                source < graph.spec_len(),
+                graph.spec_len() > 0,
+                graph.spec_len() < usize::MAX,
+                spec_bfssteph_wf(graph),
+        {
+            let tree = BFSStEph::bfs_tree(graph, source);
+            let td = tree.top_down_order();
+
+            let it: ArraySeqStEphIter<usize> = td.iter();
+            let ghost iter_seq: Seq<usize> = it@.1;
+            let ghost mut count: int = 0;
+
+            for v in iter: it
+                invariant
+                    count == iter.pos,
+                    iter.elements == iter_seq,
+                    iter.pos <= iter_seq.len(),
+                    iter_seq.len() == tree.order.spec_len(),
+            {
+                proof { count = count + 1; }
+            }
+
+            assert(count == iter_seq.len());
+        }
+    } => Ok(())
+}
+
+// for-borrow-iter on bottom_up_order
+test_verify_one_file! {
+    #[test] chap54_bfssteph_bottom_up_for verus_code! {
+        use vstd::prelude::*;
+        use apas_verus::Chap19::ArraySeqStEph::ArraySeqStEph::*;
+        use apas_verus::Chap54::BFSStEph::BFSStEph::*;
+
+        fn test_bottom_up_for(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, source: usize)
+            requires
+                source < graph.spec_len(),
+                graph.spec_len() > 0,
+                graph.spec_len() < usize::MAX,
+                spec_bfssteph_wf(graph),
+        {
+            let tree = BFSStEph::bfs_tree(graph, source);
+            let _n = tree.order.length();
+            let bu = tree.bottom_up_order();
+
+            let it: ArraySeqStEphIter<usize> = bu.iter();
+            let ghost iter_seq: Seq<usize> = it@.1;
+            let ghost mut count: int = 0;
+
+            for v in iter: it
+                invariant
+                    count == iter.pos,
+                    iter.elements == iter_seq,
+                    iter.pos <= iter_seq.len(),
+                    iter_seq.len() == tree.order.spec_len(),
+            {
+                proof { count = count + 1; }
             }
 
             assert(count == iter_seq.len());
