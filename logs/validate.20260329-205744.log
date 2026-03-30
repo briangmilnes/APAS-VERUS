@@ -1,0 +1,20 @@
+error: assertion failed
+   --> src/Chap37/AVLTreeSeqMtPer.rs:513:24
+    |
+513 |                   assert(out_after_push.map_values(|t: T| t@) =~=
+    |  ________________________^
+514 | |                     out_pre.map_values(|t: T| t@) + spec_inorder(n.left) + seq![n.value@]);
+    | |_________________________________________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+out_after_push.map_values((|t| t.view())) =~= out_pre.map_values((|t| t.view())).add(spec_inorder(n.left)).add(empty().push(n.value.view())) 
+
+verification results:: 1795 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 4013MB, peak z3 RSS: 4988MB, min free: 13199MB
+Sampled CPU Usage: rust_verify: 67s, z3 children: 71s

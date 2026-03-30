@@ -1,0 +1,39 @@
+error: postcondition not satisfied
+   --> src/Chap37/AVLTreeSeqMtPer.rs:502:13
+    |
+502 |               out@.map_values(|t: T| t@) =~= old(out)@.map_values(|t: T| t@) + spec_inorder(*cur),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+505 | /         if let Some(n) = cur {
+506 | |             proof {
+...   |
+531 | |             inorder_collect(&n.right, out);
+532 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+out.view().map_values((|t| t.view())) =~= old(out).view().map_values((|t| t.view())).add(spec_inorder(old(cur))) 
+
+error: precondition not satisfied
+   --> src/Chap37/AVLTreeSeqMtPer.rs:844:25
+    |
+245 |             requires self.spec_avltreeseqmtper_wf(),
+    |                      ------------------------------ failed precondition
+...
+844 |                 values: self.values_in_order(),
+    |                         ^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_avltreeseqmtper_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 1794 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 3959MB, peak z3 RSS: 1359MB, min free: 17859MB
+Sampled CPU Usage: rust_verify: 67s, z3 children: 95s

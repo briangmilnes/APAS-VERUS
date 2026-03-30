@@ -286,7 +286,12 @@ broadcast use {
         /// - APAS: Work Θ(log n + m), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires read lock, delegates to StEph.get_key_range
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
-            ensures range@.dom().finite(), range.spec_orderedtablemteph_wf();
+            requires self.spec_orderedtablemteph_wf(),
+            ensures
+                range@.dom().finite(),
+                range@.dom().subset_of(self@.dom()),
+                forall|key| #[trigger] range@.dom().contains(key) ==> range@[key] == self@[key],
+                range.spec_orderedtablemteph_wf();
 
         /// - APAS: Work Θ(log n), Span Θ(log n)
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires read lock, delegates to StEph.rank_key
@@ -622,10 +627,11 @@ broadcast use {
            assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
-            let range = inner.get_key_range(k1, k2);
+            proof { assume(inner@ =~= self@); }
+            let st_range = inner.get_key_range(k1, k2);
             read_handle.release_read();
-            proof { assume(range.spec_orderedtablesteph_wf()); }
-            from_st(range)
+            proof { assume(st_range.spec_orderedtablesteph_wf()); }
+            from_st(st_range)
         }
 
         fn rank_key(&self, k: &K) -> (rank: usize)

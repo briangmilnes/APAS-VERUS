@@ -1,0 +1,52 @@
+error: postcondition not satisfied
+   --> src/Chap37/AVLTreeSeqMtPer.rs:501:13
+    |
+501 | /             forall|i: int| 0 <= i < spec_inorder(*cur).len() ==>
+502 | |                 #[trigger] out@[old(out)@.len() as int + i]@ == spec_inorder(*cur)[i],
+    | |_____________________________________________________________________________________^ failed this postcondition
+...
+505 | /         if let Some(n) = cur {
+506 | |             let ghost out_pre = out@;
+507 | |             inorder_collect(&n.left, out);
+508 | |             out.push(n.value.clone());
+509 | |             inorder_collect(&n.right, out);
+510 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/AVLTreeSeqMtPer.rs:502:17
+    |
+502 |                 #[trigger] out@[old(out)@.len() as int + i]@ == spec_inorder(*cur)[i],
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+out.view().len() == clip(nat, old(out).view().len() + spec_inorder(old(cur)).len()) ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = old(out).view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        out.view().index(i) == old(out).view().index(i) ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = spec_inorder(old(cur)).len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        out.view().index(old(out).view().len() + i).view() == spec_inorder(old(cur)).index(i) ✘
+
+error: postcondition not satisfied
+   --> src/Chap37/AVLTreeSeqMtPer.rs:245:21
+    |
+245 |             ensures values@.map_values(|t: T| t@) =~= self.spec_seq();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+687 |             out
+    |             --- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+%return.view().map_values((|t| t.view())) =~= old(self).spec_seq() 
+
+verification results:: 1794 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 1238MB, peak z3 RSS: 323MB, min free: 20727MB
+Sampled CPU Usage: rust_verify: 15s, z3 children: 16s

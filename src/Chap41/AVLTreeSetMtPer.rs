@@ -33,6 +33,11 @@ pub mod AVLTreeSetMtPer {
     use vstd::rwlock::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::{obeys_feq_full_trigger, lemma_cloned_view_eq};
+    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    #[cfg(verus_keep_ghost)]
+    use vstd::pervasive::strictly_cloned;
 
     use crate::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::*;
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
@@ -117,9 +122,12 @@ broadcast use {
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(log n), Parallelism Θ(n)
         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
             requires
+                seq@.len() <= usize::MAX - 2,
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
-            ensures constructed.spec_avltreesetmtper_wf();
+            ensures
+                constructed@ =~= seq@.to_set(),
+                constructed.spec_avltreesetmtper_wf();
         /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
         /// - claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
         fn filter<F: Pred<T> + Clone>(
@@ -240,14 +248,19 @@ broadcast use {
             let vals = seq.values_in_order();
             let n = vals.len();
             let mut st = AVLTreeSetStPer::empty();
+            proof {
+                // vals@.map_values preserves length, and =~= seq@ implies same length.
+                assert(vals@.len() == seq@.len());
+            }
             if n > usize::MAX - 2 {
-                // Capacity guard: AVLTreeSetStPer::insert requires st@.len() + 1 < usize::MAX.
+                proof { assert(false); } // Unreachable: seq@.len() <= usize::MAX - 2.
                 assert(AVLTreeSetMtPerInv.inv(st));
                 return AVLTreeSetMtPer {
                     locked_set: new_arc_rwlock(st, Ghost(AVLTreeSetMtPerInv)),
                     ghost_set_view: Ghost(st@),
                 };
             }
+            let ghost seq_view = seq@;
             let mut i: usize = 0;
             while i < n
                 invariant
@@ -258,10 +271,57 @@ broadcast use {
                     st@.len() <= i as nat,
                     vstd::laws_cmp::obeys_cmp_spec::<T>(),
                     view_ord_consistent::<T>(),
+                    vals@.map_values(|t: T| t@) =~= seq_view,
+                    forall|j: int| 0 <= j < i as int ==> #[trigger] st@.contains(vals@[j]@),
+                    forall|v: T::V| st@.contains(v) ==>
+                        exists|j: int| 0 <= j < i as int && #[trigger] vals@[j]@ == v,
                 decreases n - i,
             {
-                st = st.insert(vals[i].clone());
+                let ghost old_st = st@;
+                let elem = &vals[i];
+                let cloned = elem.clone_plus();
+                proof {
+                    assert(obeys_feq_full_trigger::<T>());
+                    lemma_cloned_view_eq::<T>(*elem, cloned);
+                    assert(cloned@ == vals@[i as int]@);
+                }
+                st = st.insert(cloned);
+                proof {
+                    // st@ == old_st.insert(cloned@) == old_st.insert(vals@[i]@)
+                    assert forall|j: int| 0 <= j < i as int implies
+                        #[trigger] st@.contains(vals@[j]@)
+                    by {
+                        assert(old_st.contains(vals@[j]@));
+                    };
+                    assert(st@.contains(vals@[i as int]@));
+                    assert forall|v: T::V| st@.contains(v) implies
+                        exists|j: int| 0 <= j < i + 1 && #[trigger] vals@[j]@ == v
+                    by {
+                        if v == cloned@ {
+                            assert(vals@[i as int]@ == v);
+                        } else {
+                            assert(old_st.contains(v));
+                        }
+                    };
+                }
                 i += 1;
+            }
+            proof {
+                // st@ contains exactly {vals[0]@, ..., vals[n-1]@} == seq@.to_set()
+                assert forall|v: T::V| st@.contains(v) <==> seq_view.to_set().contains(v)
+                by {
+                    if st@.contains(v) {
+                        let j = choose|j: int| 0 <= j < n as int && vals@[j]@ == v;
+                        assert(seq_view[j] == vals@[j]@);
+                        assert(seq_view.to_set().contains(v));
+                    }
+                    if seq_view.to_set().contains(v) {
+                        let j = choose|j: int| 0 <= j < seq_view.len() && seq_view[j] == v;
+                        assert(vals@[j]@ == seq_view[j]);
+                        assert(st@.contains(vals@[j]@));
+                    }
+                };
+                assert(st@ =~= seq_view.to_set());
             }
             assert(AVLTreeSetMtPerInv.inv(st));
             let constructed = AVLTreeSetMtPer {

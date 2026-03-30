@@ -1,0 +1,62 @@
+error: postcondition not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:128:17
+    |
+128 |                   constructed@ =~= seq@.to_set(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+253 | /                 return AVLTreeSetMtPer {
+254 | |                     locked_set: new_arc_rwlock(st, Ghost(AVLTreeSetMtPerInv)),
+255 | |                     ghost_set_view: Ghost(st@),
+256 | |                 };
+    | |_________________- at this exit
+
+error: assertion failed
+   --> src/Chap41/AVLTreeSetMtPer.rs:280:28
+    |
+280 |                     assert(strictly_cloned(*elem, cloned));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+strictly_cloned(elem, cloned)
+|   ClosureEns(Fun(Path(Some("core"), ["clone" :: "Clone" :: "clone"])), (elem), cloned) 
++---
+
+note: automatically chose triggers for this expression:
+   --> src/Chap41/AVLTreeSetMtPer.rs:310:33
+    |
+310 |                         let j = choose|j: int| 0 <= j < n as int && vals@[j]@ == v;
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap41/AVLTreeSetMtPer.rs:310:69
+    |
+310 |                         let j = choose|j: int| 0 <= j < n as int && vals@[j]@ == v;
+    |                                                                     ^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap41/AVLTreeSetMtPer.rs:310:33
+    |
+310 |                         let j = choose|j: int| 0 <= j < n as int && vals@[j]@ == v;
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 2034 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 15s
+Sampled Memory Usage: peak rust_verify RSS: 4227MB, peak z3 RSS: 3766MB, min free: 14518MB
+Sampled CPU Usage: rust_verify: 66s, z3 children: 76s

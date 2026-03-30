@@ -21,20 +21,20 @@ Table of Contents:
 =================================================================
 
 ⚠ MathSeq.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap17/MathSeq.rs:717: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       713 |         fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap17/MathSeq.rs:718: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       714 |         fn clone(&self) -> (cloned: Self)
             ...
-       715 |         {
-       716 |             let cloned = MathSeqS { data: self.data.clone() };
-       718 |             cloned
-       719 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap17/MathSeq.rs:729: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       725 |         fn eq(&self, other: &Self) -> (equal: bool)
+       716 |         {
+       717 |             let cloned = MathSeqS { data: self.data.clone() };
+       719 |             cloned
+       720 |         }
+/home/milnes/projects/APAS-VERUS-agent2/src/Chap17/MathSeq.rs:730: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       726 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       727 |         {
-       728 |             let equal = self.data == other.data;
-       730 |             equal
-       731 |         }
+       728 |         {
+       729 |             let equal = self.data == other.data;
+       731 |             equal
+       732 |         }
 
 =================================================================
 2. Depends Upon
@@ -86,9 +86,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-29 15:37:08 -07:00
-Ended:     2026-03-29 15:37:08 -07:00
+Started:   2026-03-29 20:52:59 -07:00
+Ended:     2026-03-29 20:52:59 -07:00
 Duration:  8ms
 
 Full output: src/Chap17/analyses/veracity-review-verus-proof-holes.log
-lyses/veracity-review-verus-proof-holes.log
+Full output: src/Chap17/analyses/veracity-review-verus-proof-holes.log
