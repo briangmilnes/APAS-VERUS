@@ -119,3 +119,74 @@ fn test_single_vertex() {
     assert!(centers.mem(&0));
     assert_eq!(partition_map.get(&0), Some(&0));
 }
+
+#[test]
+fn test_two_vertices_connected() {
+    let vertices = SetLit![0, 1];
+    let edges = SetLit![Edge(0, 1)];
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+
+    let (centers, partition_map) = sequential_star_partition(&graph);
+
+    // One of the two must be center, other maps to it.
+    assert!(centers.size() >= 1 && centers.size() <= 2);
+    assert_eq!(partition_map.len(), 2);
+}
+
+#[test]
+fn test_two_vertices_disconnected() {
+    let vertices = SetLit![0, 1];
+    let edges: SetStEph<Edge<usize>> = SetLit![];
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+
+    let (centers, partition_map) = sequential_star_partition(&graph);
+
+    // Both isolated vertices become their own centers.
+    assert_eq!(centers.size(), 2);
+    assert_eq!(partition_map.get(&0), Some(&0));
+    assert_eq!(partition_map.get(&1), Some(&1));
+}
+
+#[test]
+fn test_complete_graph() {
+    let mut vertices = SetLit![];
+    for i in 0..5usize {
+        let _ = vertices.insert(i);
+    }
+    let mut edges = SetLit![];
+    for i in 0..5usize {
+        for j in (i + 1)..5 {
+            let _ = edges.insert(Edge(i, j));
+        }
+    }
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let (centers, partition_map) = sequential_star_partition(&graph);
+
+    // All 5 vertices covered.
+    assert_eq!(partition_map.len(), 5);
+    for v in 0..5 {
+        let center = partition_map.get(&v).unwrap();
+        assert!(centers.mem(center));
+    }
+}
+
+#[test]
+fn test_path_graph() {
+    // Path: 0-1-2-3-4-5-6-7
+    let mut vertices = SetLit![];
+    for i in 0..8usize {
+        let _ = vertices.insert(i);
+    }
+    let mut edges = SetLit![];
+    for i in 0..7usize {
+        let _ = edges.insert(Edge(i, i + 1));
+    }
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let (centers, partition_map) = sequential_star_partition(&graph);
+
+    assert_eq!(partition_map.len(), 8);
+    // Every vertex maps to some center.
+    for v in 0..8 {
+        assert!(partition_map.contains_key(&v));
+    }
+}

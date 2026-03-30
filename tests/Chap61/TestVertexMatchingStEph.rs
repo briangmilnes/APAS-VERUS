@@ -131,3 +131,78 @@ fn test_matching_properties() {
         }
     }
 }
+
+#[test]
+fn test_greedy_matching_empty_graph() {
+    let vertices: SetStEph<usize> = SetLit![];
+    let edges: SetStEph<Edge<usize>> = SetLit![];
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let matching = greedy_matching(&graph);
+    assert_eq!(matching.size(), 0);
+}
+
+#[test]
+fn test_greedy_matching_single_edge() {
+    let vertices = SetLit![0, 1];
+    let edges = SetLit![Edge(0, 1)];
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let matching = greedy_matching(&graph);
+    assert_eq!(matching.size(), 1);
+}
+
+#[test]
+fn test_greedy_matching_path() {
+    // Path: 0-1-2-3-4
+    let mut vertices = SetLit![];
+    for i in 0..5usize {
+        let _ = vertices.insert(i);
+    }
+    let mut edges = SetLit![];
+    for i in 0..4usize {
+        let _ = edges.insert(Edge(i, i + 1));
+    }
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let matching = greedy_matching(&graph);
+
+    // At least 2 edges in a path of 5 vertices.
+    assert!(matching.size() >= 2);
+}
+
+#[test]
+fn test_parallel_matching_st_empty() {
+    let vertices: SetStEph<usize> = SetLit![];
+    let edges: SetStEph<Edge<usize>> = SetLit![];
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let matching = parallel_matching_st(&graph, 42);
+    assert_eq!(matching.size(), 0);
+}
+
+#[test]
+fn test_parallel_matching_st_single_edge() {
+    let vertices = SetLit![0, 1];
+    let edges = SetLit![Edge(0, 1)];
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let matching = parallel_matching_st(&graph, 42);
+    // With one edge, matching may have 0 or 1 edges depending on the coin flip.
+    assert!(matching.size() <= 1);
+}
+
+#[test]
+fn test_greedy_matching_complete_graph() {
+    // K6: 6 vertices, 15 edges.
+    let mut vertices = SetLit![];
+    for i in 0..6usize {
+        let _ = vertices.insert(i);
+    }
+    let mut edges = SetLit![];
+    for i in 0..6usize {
+        for j in (i + 1)..6 {
+            let _ = edges.insert(Edge(i, j));
+        }
+    }
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let matching = greedy_matching(&graph);
+
+    // Perfect matching: 3 edges in K6.
+    assert_eq!(matching.size(), 3);
+}

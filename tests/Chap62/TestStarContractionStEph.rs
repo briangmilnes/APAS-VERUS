@@ -71,3 +71,55 @@ fn test_single_edge_contraction() {
     assert!(result.size() >= 1);
     assert!(result.size() <= 2);
 }
+
+#[test]
+fn test_path_contraction() {
+    let mut vertices = SetLit![];
+    for i in 0..8usize {
+        let _ = vertices.insert(i);
+    }
+    let mut edges = SetLit![];
+    for i in 0..7usize {
+        let _ = edges.insert(Edge(i, i + 1));
+    }
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let result = contract_to_vertices(&graph);
+
+    assert!(result.size() > 0);
+    assert!(result.size() <= 8);
+}
+
+#[test]
+fn test_star_graph_contraction() {
+    let mut vertices = SetLit![0];
+    for i in 1..6usize {
+        let _ = vertices.insert(i);
+    }
+    let mut edges = SetLit![];
+    for i in 1..6usize {
+        let _ = edges.insert(Edge(0, i));
+    }
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let result = contract_to_vertices(&graph);
+
+    assert!(result.size() > 0);
+    assert!(result.size() <= 6);
+}
+
+#[test]
+fn test_complete_graph_contraction() {
+    let mut vertices = SetLit![];
+    for i in 0..4usize {
+        let _ = vertices.insert(i);
+    }
+    let mut edges = SetLit![];
+    for i in 0..4usize {
+        for j in (i + 1)..4 {
+            let _ = edges.insert(Edge(i, j));
+        }
+    }
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let result = contract_to_vertices(&graph);
+
+    assert!(result.size() > 0);
+}

@@ -78,3 +78,76 @@ fn test_contract_round_cycle() {
     assert!(contracted.sizeV() < graph.sizeV());
     assert!(contracted.sizeE() <= graph.sizeE());
 }
+
+#[test]
+fn test_edge_contract_empty_matching() {
+    let graph = create_cycle_graph(5);
+    let empty_matching: SetStEph<Edge<usize>> = SetLit![];
+    let contracted = edge_contract(&graph, &empty_matching);
+
+    // No contraction — same graph.
+    assert_eq!(contracted.sizeV(), graph.sizeV());
+    assert_eq!(contracted.sizeE(), graph.sizeE());
+}
+
+#[test]
+fn test_edge_contract_single_edge_graph() {
+    let vertices = SetLit![0, 1];
+    let edges = SetLit![Edge(0, 1)];
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+
+    let matching = SetLit![Edge(0, 1)];
+    let contracted = edge_contract(&graph, &matching);
+
+    // Two vertices merged into one, no edges remain.
+    assert_eq!(contracted.sizeV(), 1);
+    assert_eq!(contracted.sizeE(), 0);
+}
+
+#[test]
+fn test_edge_contract_path_graph() {
+    // Path: 0-1-2-3-4
+    let mut vertices = SetLit![];
+    for i in 0..5usize {
+        let _ = vertices.insert(i);
+    }
+    let mut edges = SetLit![];
+    for i in 0..4usize {
+        let _ = edges.insert(Edge(i, i + 1));
+    }
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+
+    // Match non-adjacent edges: (0,1) and (2,3)
+    let matching = SetLit![Edge(0, 1), Edge(2, 3)];
+    let contracted = edge_contract(&graph, &matching);
+
+    // 3 super-vertices: {0,1}, {2,3}, {4}
+    assert_eq!(contracted.sizeV(), 3);
+}
+
+#[test]
+fn test_contract_round_star() {
+    let graph = create_star_graph(6);
+    let contracted = contract_round(&graph);
+
+    assert!(contracted.sizeV() < graph.sizeV());
+}
+
+#[test]
+fn test_contract_round_small_complete() {
+    // K4: 4 vertices, 6 edges
+    let mut vertices = SetLit![];
+    for i in 0..4usize {
+        let _ = vertices.insert(i);
+    }
+    let mut edges = SetLit![];
+    for i in 0..4usize {
+        for j in (i + 1)..4 {
+            let _ = edges.insert(Edge(i, j));
+        }
+    }
+    let graph = <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edges);
+    let contracted = contract_round(&graph);
+
+    assert!(contracted.sizeV() < 4);
+}
