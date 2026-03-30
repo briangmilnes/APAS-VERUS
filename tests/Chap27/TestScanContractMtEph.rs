@@ -100,3 +100,23 @@ fn test_scan_contract_parallel_large() {
     assert_eq!(*result.nth(50), 50);
     assert_eq!(*result.nth(99), 99);
 }
+
+#[test]
+fn test_scan_contract_parallel_three_elements() {
+    let a = ArraySeqMtEphS::tabulate(&|i| i + 1, 3); // [1, 2, 3]
+    let result = ArraySeqMtEphS::scan_contract_parallel(&a, Arc::new(|x: &usize, y: &usize| x + y), Ghost::assume_new(), 0);
+    assert_eq!(result.length(), 3);
+    assert_eq!(*result.nth(0), 0);
+    assert_eq!(*result.nth(1), 1);
+    assert_eq!(*result.nth(2), 3);
+}
+
+#[test]
+fn test_scan_contract_parallel_all_same() {
+    let a = ArraySeqMtEphS::tabulate(&|_| 5usize, 6);
+    let result = ArraySeqMtEphS::scan_contract_parallel(&a, Arc::new(|x: &usize, y: &usize| x + y), Ghost::assume_new(), 0);
+    assert_eq!(result.length(), 6);
+    for i in 0..6 {
+        assert_eq!(*result.nth(i), i * 5);
+    }
+}

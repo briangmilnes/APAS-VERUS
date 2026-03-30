@@ -11,6 +11,7 @@ use apas_verus::Chap21::Exercise21_5::Exercise21_5::*;
 use apas_verus::Chap21::Exercise21_7::Exercise21_7::*;
 use apas_verus::Chap21::Exercise21_8::Exercise21_8::*;
 use apas_verus::Chap21::Problem21_1::Problem21_1::*;
+use apas_verus::Chap21::Problem21_3::Problem21_3::*;
 use apas_verus::Chap21::Problem21_4::Problem21_4::*;
 use apas_verus::Types::Types::*;
 
@@ -303,4 +304,96 @@ fn cartesian_matches() {
         assert_eq!(r1.nth(i).0, r2.nth(i).0);
         assert_eq!(r1.nth(i).1, r2.nth(i).1);
     }
+}
+
+// Problem 21.3: Points in 3D (imperative)
+
+#[test]
+fn points3d_loops_n0() {
+    let result = points3d_loops(0);
+    assert_eq!(result.length(), 0);
+}
+
+#[test]
+fn points3d_loops_n1() {
+    let result = points3d_loops(1);
+    assert_eq!(result.length(), 1); // 1^3 = 1
+}
+
+#[test]
+fn points3d_loops_n3() {
+    let result = points3d_loops(3);
+    assert_eq!(result.length(), 27); // 3^3 = 27
+    for i in 0..result.length() {
+        let p = result.nth(i);
+        assert!(p.0 < 3);
+        assert!(1 <= p.1.0 && p.1.0 <= 3);
+        assert!(2 <= p.1.1 && p.1.1 <= 4);
+    }
+}
+
+#[test]
+fn points3d_loops_matches_tab_flat() {
+    for n in [0, 1, 3] {
+        let imp = points3d_loops(n);
+        let func = points3d_tab_flat(n);
+        assert_eq!(imp.length(), func.length(), "length mismatch at n={n}");
+    }
+}
+
+// Algorithm 21.5/21.6: Prime sieve larger inputs
+
+#[test]
+fn prime_sieve_n100() {
+    let result = prime_sieve(100);
+    let sieved: Vec<usize> = (0..result.length()).map(|i| *result.nth(i)).collect();
+    assert_eq!(sieved.len(), 25); // 25 primes up to 100
+    assert_eq!(*sieved.first().unwrap(), 2);
+    assert_eq!(*sieved.last().unwrap(), 97);
+}
+
+#[test]
+fn primes_bf_n100() {
+    let result = primes_bf(101);
+    let primes: Vec<usize> = (0..result.length()).map(|i| *result.nth(i)).collect();
+    assert_eq!(primes.len(), 25);
+}
+
+// Algorithm 21.1: More 2D points boundary tests
+
+#[test]
+fn points2d_tab_flat_n10() {
+    let result = points2d_tab_flat(10);
+    assert_eq!(result.length(), 90); // 10 * 9 = 90
+}
+
+// Exercise 21.5: More contiguous subseqs
+
+#[test]
+fn all_contiguous_subseqs_singleton() {
+    use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+    let a = ArraySeqStPerS::from_vec(vec![42usize]);
+    let result = all_contiguous_subseqs(&a);
+    assert_eq!(result.length(), 1);
+}
+
+// Exercise 21.8: More prime tests
+
+#[test]
+fn is_prime_large_prime() {
+    assert!(is_prime(997));
+    assert!(!is_prime(1000));
+}
+
+// Problem 21.4: More cartesian product tests
+
+#[test]
+fn cartesian_both_singleton() {
+    use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+    let a = ArraySeqStPerS::from_vec(vec![1usize]);
+    let b = ArraySeqStPerS::from_vec(vec![2usize]);
+    let result = cartesian_loops(&a, &b);
+    assert_eq!(result.length(), 1);
+    assert_eq!(result.nth(0).0, 1);
+    assert_eq!(result.nth(0).1, 2);
 }

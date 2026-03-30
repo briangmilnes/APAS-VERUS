@@ -98,3 +98,23 @@ fn test_scan_contract_large() {
     assert_eq!(result.nth(50), &50);
     assert_eq!(result.nth(99), &99);
 }
+
+#[test]
+fn test_scan_contract_three_elements() {
+    let a = ArraySeqStEphS::tabulate(&|i| i + 1, 3); // [1, 2, 3]
+    let result = ArraySeqStEphS::scan_contract(&a, &|x, y| x + y, Ghost::assume_new(), 0);
+    assert_eq!(result.length(), 3);
+    assert_eq!(result.nth(0), &0); // exclusive: nothing before 0
+    assert_eq!(result.nth(1), &1); // 0+1
+    assert_eq!(result.nth(2), &3); // 0+1+2
+}
+
+#[test]
+fn test_scan_contract_all_same() {
+    let a = ArraySeqStEphS::tabulate(&|_| 5usize, 6);
+    let result = ArraySeqStEphS::scan_contract(&a, &|x, y| x + y, Ghost::assume_new(), 0);
+    assert_eq!(result.length(), 6);
+    for i in 0..6 {
+        assert_eq!(result.nth(i), &(i * 5));
+    }
+}

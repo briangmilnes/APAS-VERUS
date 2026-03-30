@@ -448,3 +448,43 @@ fn test_algorithmic_costs_verification() {
     let and_not_duration = start.elapsed();
     assert!(and_not_duration.as_millis() < 10); // Should be very fast
 }
+
+#[test]
+fn test_empty_index_operations() {
+    let empty = DocumentIndex::empty();
+    assert_eq!(empty.word_count(), 0);
+    let result = empty.find(&"test".to_string());
+    assert_eq!(DocumentIndex::size(&result), 0);
+}
+
+#[test]
+fn test_clone_eq() {
+    let docs = create_test_documents();
+    let index = DocumentIndex::make_index(&docs);
+    let cloned = index.clone();
+    assert_eq!(index, cloned);
+}
+
+#[test]
+fn test_display() {
+    let docs = DocumentCollectionLit!["doc1" => "hello world"];
+    let index = DocumentIndex::make_index(&docs);
+    let s = format!("{}", index);
+    assert!(!s.is_empty());
+}
+
+#[test]
+fn test_tokens_numbers_and_special() {
+    let tokens_result = tokens(&"hello123 world456 test".to_string());
+    assert!(tokens_result.length() >= 2);
+}
+
+#[test]
+fn test_query_and_not_all_excluded() {
+    let docs = create_test_documents();
+    let index = DocumentIndex::make_index(&docs);
+    let programming_docs = index.find(&"programming".to_string());
+    // AND NOT with itself should give empty.
+    let result = DocumentIndex::query_and_not(&programming_docs, &programming_docs);
+    assert_eq!(DocumentIndex::size(&result), 0);
+}
