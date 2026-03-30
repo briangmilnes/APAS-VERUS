@@ -96,20 +96,22 @@ verus! {
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
-        fn empty() -> (g: UnDirGraphStEph<V>)
+        fn empty() -> (g: Self)
             requires valid_key_type_Edge::<V>()
             ensures
+                g.spec_undirgraphsteph_wf(),
                 spec_graphview_wf(g@),
                 g@.V =~= Set::<<V as View>::V>::empty(),
                 g@.A =~= Set::<(<V as View>::V, <V as View>::V)>::empty();
 
         /// - APAS: Work Θ(|V| + |E|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(|V| + |E|) -- sequential
-        fn from_sets(vertices: SetStEph<V>, edges: SetStEph<Edge<V>>) -> (g: UnDirGraphStEph<V>)
+        fn from_sets(vertices: SetStEph<V>, edges: SetStEph<Edge<V>>) -> (g: Self)
             requires
                 forall |u: V::V, w: V::V|
                     #[trigger] edges@.contains((u, w)) ==> vertices@.contains(u) && vertices@.contains(w),
             ensures
+                g.spec_undirgraphsteph_wf(),
                 spec_graphview_wf(g@),
                 g@.V =~= vertices@,
                 g@.A =~= edges@;
