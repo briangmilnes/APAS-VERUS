@@ -7,6 +7,7 @@ use apas_verus::Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128::*;
 use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
 use apas_verus::Chap56::SSSPResultStEphI64::SSSPResultStEphI64::*;
 use apas_verus::Chap57::DijkstraStEphU64::DijkstraStEphU64::*;
+use apas_verus::SetLit;
 use apas_verus::Types::Types::*;
 
 #[test]
@@ -168,4 +169,68 @@ fn test_larger_graph() {
     assert_eq!(result.get_distance(0), 0);
     assert_eq!(result.get_distance(5), 3); // via shortcut 0->5
     assert_eq!(result.get_distance(9), 7); // via shortcut 0->5, then 5->6->7->8->9
+}
+
+#[test]
+fn test_is_reachable() {
+    let vertices = SetLit![0, 1, 2];
+    let edges = SetLit![WeightedEdge(0, 1, 3)];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = dijkstra(&graph, 0);
+
+    assert!(result.is_reachable(0));
+    assert!(result.is_reachable(1));
+    assert!(!result.is_reachable(2));
+}
+
+#[test]
+fn test_get_predecessor() {
+    let vertices = SetLit![0, 1, 2, 3];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 1),
+        WeightedEdge(1, 2, 2),
+        WeightedEdge(2, 3, 3)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = dijkstra(&graph, 0);
+
+    assert_eq!(result.get_predecessor(0), None);
+    assert_eq!(result.get_predecessor(1), Some(0));
+    assert_eq!(result.get_predecessor(2), Some(1));
+    assert_eq!(result.get_predecessor(3), Some(2));
+}
+
+#[test]
+fn test_diamond_graph() {
+    // Diamond: 0->{1,2}, 1->3, 2->3.
+    let vertices = SetLit![0, 1, 2, 3];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 1),
+        WeightedEdge(0, 2, 4),
+        WeightedEdge(1, 3, 6),
+        WeightedEdge(2, 3, 1)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = dijkstra(&graph, 0);
+
+    assert_eq!(result.get_distance(3), 5); // 0->2->3 = 4+1=5 < 0->1->3 = 1+6=7
+}
+
+#[test]
+fn test_star_graph() {
+    let vertices = SetLit![0, 1, 2, 3, 4, 5];
+    let edges = SetLit![
+        WeightedEdge(0, 1, 2),
+        WeightedEdge(0, 2, 4),
+        WeightedEdge(0, 3, 6),
+        WeightedEdge(0, 4, 8),
+        WeightedEdge(0, 5, 10)
+    ];
+    let graph = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
+    let result = dijkstra(&graph, 0);
+
+    for i in 0..6 {
+        assert!(result.is_reachable(i));
+    }
+    assert_eq!(result.get_distance(5), 10);
 }

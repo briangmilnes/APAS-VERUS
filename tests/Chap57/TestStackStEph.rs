@@ -145,3 +145,41 @@ fn test_clone() {
     assert_eq!(stack1.peek(), Some(&99));
     assert_eq!(stack2.peek(), Some(&2));
 }
+
+#[test]
+fn test_large_stack() {
+    let mut stack = StackStEph::new();
+    for i in 0..200 {
+        stack.push(i);
+    }
+    assert_eq!(stack.size(), 200);
+    assert_eq!(stack.peek(), Some(&199));
+
+    for i in (0..200).rev() {
+        assert_eq!(stack.pop(), Some(i));
+    }
+    assert!(stack.is_empty());
+}
+
+#[test]
+fn test_push_pop_interleave() {
+    let mut stack = StackStEph::new();
+    stack.push(1);
+    stack.push(2);
+    assert_eq!(stack.pop(), Some(2));
+    stack.push(3);
+    stack.push(4);
+    assert_eq!(stack.pop(), Some(4));
+    assert_eq!(stack.pop(), Some(3));
+    assert_eq!(stack.pop(), Some(1));
+    assert_eq!(stack.pop(), None);
+}
+
+#[test]
+fn test_display() {
+    let mut stack = StackStEph::new();
+    stack.push(1);
+    stack.push(2);
+    let s = format!("{:?}", stack);
+    assert!(!s.is_empty());
+}
