@@ -336,30 +336,27 @@ scripts/ptt.sh               # compile PTT library + run proof time tests
 scripts/rtt.sh               # run time tests (cargo nextest)
 ```
 
-- **All three scripts log to `logs/`** with timestamped filenames:
+- **All scripts log to `logs/`** with timestamped filenames:
   `logs/validate.YYYYMMDD-HHMMSS.log`, `logs/rtt.YYYYMMDD-HHMMSS.log`,
-  `logs/ptt.YYYYMMDD-HHMMSS.log`. Output goes to both stdout and the log file (via tee).
-  Log files are git-ignored. To review the most recent run:
-  ```bash
-  ls -t logs/validate.*.log | head -1 | xargs cat   # last validate
-  ls -t logs/rtt.*.log | head -1 | xargs cat         # last RTT
-  ls -t logs/ptt.*.log | head -1 | xargs cat         # last PTT
-  ```
-  When diagnosing failures, **read the log file** rather than re-running the suite. The log
-  contains the complete output including all errors, warnings, and test results.
+  `logs/ptt.YYYYMMDD-HHMMSS.log`, `logs/profile-ChapNN-YYYYMMDD-HHMMSS.log`.
+  Profile summaries go to `logs/profile/SUMMARY-ChapNN-YYYYMMDD-HHMMSS.txt`.
+  Output goes to both stdout and the log file (via tee).
 - Verus includes its own vstd. Do not pass `-L dependency` or `--extern vstd`.
 - **Never pipe, grep, sed, or tail the output of `scripts/validate.sh`**. The verification
   output contains the error messages you need to read to fix proofs. If the output is large,
   you may use `head -20` to see the first errors, but never filter or discard output.
 - **Read the verification output.** If you don't read the error, you can't fix the proof.
-- **Reading logs instead of re-running.** All three scripts log to `logs/` with timestamped
-  filenames. If validate.sh (or rtt.sh, ptt.sh) just ran, read the log instead of re-running:
+- **NEVER re-run validate, rtt, ptt, or profile to check results you already have.**
+  Every script logs to `logs/`. If it just ran, READ THE LOG. Do not re-run.
   ```bash
   ls -t logs/validate.*.log | head -1 | xargs cat   # last validate
   ls -t logs/rtt.*.log | head -1 | xargs cat         # last RTT
   ls -t logs/ptt.*.log | head -1 | xargs cat         # last PTT
+  ls -t logs/profile-*.log | head -1 | xargs cat     # last profile console
+  ls -t logs/profile/SUMMARY-*.txt | head -1 | xargs cat  # last profile summary
   ```
-  This avoids burning another 2+ minutes of CPU and RAM on a redundant run.
+  Re-running burns 2-10 minutes of CPU and RAM per run. The log has everything.
+  Only re-run after you have made changes that require a new verification pass.
 - Always show full output in response text as a markdown code block.
 - **Run validate, rtt, and ptt sequentially, not in parallel.** They compete for CPU and
   memory. Verus holds large dependency graphs in memory; running concurrent builds can

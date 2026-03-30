@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap65/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap65/UnionFindStEph.rs
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,46 +20,30 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ KruskalStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/KruskalStEph.rs:40: error: opaque - #[verifier::opaque]
-        41 |         pub open spec fn uf_wf_opaque<V: HashOrd>(uf: &UnionFindStEph<V>) -> bool {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/KruskalStEph.rs:49: error: external_body - #[verifier::external_body]
-        50 |         pub fn kruskal_process_edge<V: HashOrd>(
-   Holes: 2 total
-      1 × external_body
-      1 × opaque
-   Proof functions: 1 total (1 clean, 0 holed)
-⚠ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/PrimStEph.rs:457: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       453 |         fn clone(&self) -> (cloned: Self)
-            ...
-       455 |         {
-       456 |             let cloned = PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() };
-       458 |             cloned
-       459 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/PrimStEph.rs:217: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
 ❌ UnionFindStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:1087: error: external_body - #[verifier::external_body]
-      1088 |     fn union_merge<V: StT + Hash>(
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:1315: error: external_body - #[verifier::external_body]
-      1316 |         fn union(&mut self, u: &V, v: &V) {
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:914: error: fn_missing_wf_requires - fn union_merge_exec — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
-       890 |     proof fn lemma_union_wf_frame<V: StT + Hash>(
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1167: error: external_body - #[verifier::external_body]
+      1168 |     fn union_merge<V: StT + Hash>(
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1404: error: external_body [blocked_by: union_merge] - #[verifier::external_body]
+      1405 |         fn union(&mut self, u: &V, v: &V) {
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:918: error: fn_missing_wf_requires - fn union_merge_exec — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
+       894 |     proof fn lemma_union_wf_frame<V: StT + Hash>(
             ...
-       912 |     /// the quantified wf proof, keeping Z3 under 4 GB.
-       913 |     #[verifier::rlimit(30)]
-       915 |         uf: &mut UnionFindStEph<V>,
-       916 |         root_u: V,
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:1088: error: fn_missing_wf_requires - fn union_merge — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
-      1014 |     proof fn lemma_union_merge_wf<V: StT + Hash>(
+       916 |     /// the quantified wf proof, keeping Z3 under 4 GB.
+       917 |     #[verifier::rlimit(30)]
+       919 |         uf: &mut UnionFindStEph<V>,
+       920 |         root_u: V,
+/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1168: error: fn_missing_wf_requires - fn union_merge — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
+      1106 |     proof fn lemma_union_ensures_bridge<V: StT + Hash>(
             ...
-      1086 |     /// lemma_union_merge_wf to keep &mut encoding out of the proof context.
-      1087 |     #[verifier::external_body]
-      1089 |         uf: &mut UnionFindStEph<V>,
-      1090 |         root_u: V,
+      1166 |     /// lemma_union_merge_wf to keep &mut encoding out of the proof context.
+      1167 |     #[verifier::external_body]
+      1169 |         uf: &mut UnionFindStEph<V>,
+      1170 |         root_u: V,
    Holes: 2 total
       2 × external_body
-   Proof functions: 13 total (13 clean, 0 holed)
+         1 × root cause
+         1 × downstream (blocked by root causes)
+   Proof functions: 15 total (15 clean, 0 holed)
 
 =================================================================
 2. Depends Upon
@@ -69,16 +53,12 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
-KruskalStEph  depends upon only clean modules
-PrimStEph  depends upon only clean modules
 UnionFindStEph  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
-KruskalStEph.rs  depends upon only clean modules
-PrimStEph.rs  depends upon only clean modules
 UnionFindStEph.rs  depends upon only clean modules
 
 =================================================================
@@ -86,42 +66,38 @@ UnionFindStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   1 clean (no holes, no errors; 33%)
-   2 holed (holes or errors, 66%)
-   3 total
+   0 clean (no holes, no errors; 0%)
+   1 holed (holes or errors, 100%)
+   1 total
 
 Proof Functions:
-   18 clean (100%)
+   15 clean (100%)
    0 holed (0%)
-   18 total
+   15 total
 
 Function Specs:
-   29 exec fns with complete spec (requires+ensures) (38%)
-   2 exec fns missing spec (2%)
-   44 proof/spec fns clean (58%)
+   15 exec fns with complete spec (requires+ensures) (30%)
+   0 exec fns missing spec (0%)
+   35 proof/spec fns clean (70%)
    0 proof/spec fns with holes (0%)
-   75 total fns
+   50 total fns
 
 
-Holes Found: 4 (actionable)
-   3 × external_body (75%)
-   1 × opaque (25%)
-Real Proof Targets: 4 (all actionable)
+Holes Found: 2 (actionable)
+   2 × external_body (100%)
+      1 × root cause
+      1 × downstream (blocked by root causes)
+Real Proof Targets: 2 (all actionable)
 
-Warnings: 3 total
+Warnings: 2 total
    2 × fn_missing_wf_requires
-   1 × assume_eq_clone_workaround
-
-Structural (info only): 1
-   1 × OPAQUE_EXTERNAL
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-29 15:37:10 -07:00
-Ended:     2026-03-29 15:37:10 -07:00
-Duration:  22ms
+Started:   2026-03-29 19:41:03 -07:00
+Ended:     2026-03-29 19:41:03 -07:00
+Duration:  14ms
 
-Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
