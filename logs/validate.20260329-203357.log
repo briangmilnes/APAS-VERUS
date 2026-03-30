@@ -1,0 +1,19 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:471:11
+    |
+471 |       proof fn lemma_union_wf_parent<V: StT + Hash>(
+    |  ___________^
+472 | |         uf: &UnionFindStEph<V>,
+473 | |         mid: &UnionFindStEph<V>,
+474 | |         winner_val: V,
+...   |
+478 | |         loser_view: <V as View>::V,
+479 | |     )
+    | |_____^
+
+verification results:: 2412 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 99s
+Sampled Memory Usage: peak rust_verify RSS: 2787MB, peak z3 RSS: 6544MB, min free: 11897MB
+Sampled CPU Usage: rust_verify: 48s, z3 children: 122s
