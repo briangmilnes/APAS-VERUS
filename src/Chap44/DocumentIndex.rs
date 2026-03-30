@@ -554,6 +554,7 @@ pub mod DocumentIndex {
     /// Tokenization: splits content into lowercase ASCII words.
     /// - APAS: (no cost stated — tokens is a helper assumed O(m) where m = string length)
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential character iteration
+    // veracity: no_requires
     pub fn tokens(content: &Contents) -> (words: ArraySeqStPerS<Word>)
         ensures words.spec_arrayseqstper_wf()
     {

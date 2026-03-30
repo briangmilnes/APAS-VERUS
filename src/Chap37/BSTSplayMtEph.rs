@@ -1485,6 +1485,7 @@ pub mod BSTSplayMtEph {
     }
 
     /// Recursive deep clone of a Link, bypassing derived Clone for Box/Option.
+    // veracity: no_requires
     fn clone_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (c: Link<T>)
         ensures c == *link,
         decreases *link,

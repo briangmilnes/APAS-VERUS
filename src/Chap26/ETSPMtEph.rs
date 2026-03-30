@@ -626,6 +626,7 @@ pub mod ETSPMtEph {
         fn distance(&self, other: &Point) -> (d: f64);
     }
 
+    // veracity: no_requires
     fn point_distance(a: &Point, b: &Point) -> (d: f64)
         ensures d == spec_point_distance(*a, *b),
     {
