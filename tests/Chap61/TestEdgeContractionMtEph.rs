@@ -72,3 +72,49 @@ fn test_contract_round_mt_correctness() {
     assert!(contracted.sizeV() <= graph.sizeV());
     assert!(contracted.sizeE() <= graph.sizeE());
 }
+
+#[test]
+fn test_edge_contract_mt_empty_matching() {
+    let graph = create_cycle_graph(5);
+    let empty_matching: SetStEph<Edge<usize>> = SetLit![];
+    let contracted = edge_contract_mt(&graph, &empty_matching);
+    assert_eq!(contracted.sizeV(), graph.sizeV());
+}
+
+#[test]
+fn test_edge_contract_mt_single_edge() {
+    let mut vertices: SetStEph<usize> = SetLit![];
+    let _ = vertices.insert(0);
+    let _ = vertices.insert(1);
+    let edges = SetLit![Edge(0, 1)];
+    let graph = <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edges);
+
+    let matching = SetLit![Edge(0, 1)];
+    let contracted = edge_contract_mt(&graph, &matching);
+    assert_eq!(contracted.sizeV(), 1);
+    assert_eq!(contracted.sizeE(), 0);
+}
+
+#[test]
+fn test_contract_round_mt_reduces_vertices() {
+    let graph = create_star_graph(8);
+    let contracted = contract_round_mt(&graph, 42);
+    assert!(contracted.sizeV() < graph.sizeV());
+}
+
+#[test]
+fn test_contract_round_mt_complete_graph() {
+    let mut vertices: SetStEph<usize> = SetLit![];
+    for i in 0..6usize {
+        let _ = vertices.insert(i);
+    }
+    let mut edges: SetStEph<Edge<usize>> = SetLit![];
+    for i in 0..6usize {
+        for j in (i + 1)..6 {
+            let _ = edges.insert(Edge(i, j));
+        }
+    }
+    let graph = <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edges);
+    let contracted = contract_round_mt(&graph, 123);
+    assert!(contracted.sizeV() < 6);
+}

@@ -67,3 +67,37 @@ fn test_empty_graph_contraction_mt() {
 
     assert_eq!(result.size(), 0);
 }
+
+#[test]
+fn test_single_edge_mt() {
+    let vertices = SetLit![0, 1];
+    let edges = SetLit![Edge(0, 1)];
+    let graph = <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edges);
+    let result = contract_to_vertices_mt(&graph, 42);
+    assert!(result.size() >= 1 && result.size() <= 2);
+}
+
+#[test]
+fn test_large_cycle_mt() {
+    let graph = create_cycle_graph(50);
+    let result = contract_to_vertices_mt(&graph, 42);
+    assert!(result.size() > 0);
+    assert!(result.size() <= 50);
+}
+
+#[test]
+fn test_complete_graph_mt() {
+    let mut vertices = SetLit![];
+    for i in 0..5usize {
+        let _ = vertices.insert(i);
+    }
+    let mut edges = SetLit![];
+    for i in 0..5usize {
+        for j in (i + 1)..5 {
+            let _ = edges.insert(Edge(i, j));
+        }
+    }
+    let graph = <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edges);
+    let result = contract_to_vertices_mt(&graph, 123);
+    assert!(result.size() > 0);
+}

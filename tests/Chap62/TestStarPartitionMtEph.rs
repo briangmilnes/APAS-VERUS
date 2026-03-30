@@ -104,3 +104,41 @@ fn test_partition_validity() {
         assert!(centers.mem(center));
     }
 }
+
+#[test]
+fn test_empty_graph_mt() {
+    let graph = <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::empty();
+    let (centers, partition_map) = parallel_star_partition(&graph, 42);
+    assert_eq!(centers.size(), 0);
+    assert_eq!(partition_map.len(), 0);
+}
+
+#[test]
+fn test_single_vertex_mt() {
+    let vertices = SetLit![0];
+    let edges: SetStEph<Edge<usize>> = SetLit![];
+    let graph = <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edges);
+    let (centers, partition_map) = parallel_star_partition(&graph, 42);
+    assert_eq!(centers.size(), 1);
+    assert_eq!(partition_map.get(&0), Some(&0));
+}
+
+#[test]
+fn test_complete_graph_mt() {
+    let mut vertices = SetLit![];
+    for i in 0..6usize {
+        let _ = vertices.insert(i);
+    }
+    let mut edges = SetLit![];
+    for i in 0..6usize {
+        for j in (i + 1)..6 {
+            let _ = edges.insert(Edge(i, j));
+        }
+    }
+    let graph = <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edges);
+    let (centers, partition_map) = parallel_star_partition(&graph, 42);
+    assert_eq!(partition_map.len(), 6);
+    for v in 0..6 {
+        assert!(centers.mem(partition_map.get(&v).unwrap()));
+    }
+}

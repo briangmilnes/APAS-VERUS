@@ -93,3 +93,38 @@ fn test_parallel_matching_mt_correctness() {
         }
     }
 }
+
+#[test]
+fn test_parallel_matching_mt_empty() {
+    let vertices: SetStEph<usize> = SetLit![];
+    let edges: SetStEph<Edge<usize>> = SetLit![];
+    let graph = <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edges);
+    let matching = parallel_matching_mt(&graph, 42);
+    assert_eq!(matching.size(), 0);
+}
+
+#[test]
+fn test_parallel_matching_mt_single_edge() {
+    let vertices = SetLit![0, 1];
+    let edges = SetLit![Edge(0, 1)];
+    let graph = <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edges);
+    let matching = parallel_matching_mt(&graph, 42);
+    assert!(matching.size() <= 1);
+}
+
+#[test]
+fn test_parallel_matching_mt_different_seeds() {
+    let graph = create_cycle_graph(20);
+    // Different seeds should all produce valid matchings.
+    for seed in [1, 42, 100, 999, 12345] {
+        let matching = parallel_matching_mt(&graph, seed);
+        let mut matched_vertices: SetStEph<usize> = SetLit![];
+        for edge in matching.iter() {
+            let Edge(u, v) = edge;
+            assert!(!matched_vertices.mem(u), "Duplicate vertex {u} with seed {seed}");
+            assert!(!matched_vertices.mem(v), "Duplicate vertex {v} with seed {seed}");
+            let _ = matched_vertices.insert(*u);
+            let _ = matched_vertices.insert(*v);
+        }
+    }
+}

@@ -262,3 +262,116 @@ fn test_macro_list() {
     assert_eq!(*seq.nth(0), 1);
     assert_eq!(*seq.nth(4), 5);
 }
+
+#[test]
+fn test_clone() {
+    let original = MathSeqSLit![10, 20, 30];
+    let cloned = original.clone();
+    assert_eq!(cloned.length(), 3);
+    assert_eq!(*cloned.nth(0), 10);
+    assert_eq!(*cloned.nth(1), 20);
+    assert_eq!(*cloned.nth(2), 30);
+    assert_eq!(original, cloned);
+}
+
+#[test]
+fn test_set_out_of_bounds() {
+    let mut seq = MathSeqSLit![10, 20, 30];
+    assert!(!seq.set(5, 99));
+    assert!(!seq.set(100, 99));
+    // Original values unchanged.
+    assert_eq!(*seq.nth(0), 10);
+}
+
+#[test]
+fn test_set_all_elements() {
+    let mut seq = MathSeqS::new(5, 0);
+    for i in 0..5 {
+        assert!(seq.set(i, (i + 1) as i32 * 10));
+    }
+    for i in 0..5 {
+        assert_eq!(*seq.nth(i), (i + 1) as i32 * 10);
+    }
+}
+
+#[test]
+fn test_add_last_then_delete_last_roundtrip() {
+    let mut seq: MathSeqS<i32> = MathSeqS::empty();
+    for i in 0..100 {
+        seq.add_last(i);
+    }
+    assert_eq!(seq.length(), 100);
+    for i in (0..100).rev() {
+        assert_eq!(seq.delete_last(), Some(i));
+    }
+    assert!(seq.is_empty());
+}
+
+#[test]
+fn test_subseq_edge_cases() {
+    let seq = MathSeqSLit![10, 20, 30, 40, 50];
+    // Full subseq.
+    let full = seq.subseq(0, 5);
+    assert_eq!(full.len(), 5);
+    // Zero-length subseq.
+    let empty = seq.subseq(2, 0);
+    assert_eq!(empty.len(), 0);
+    // Start at end.
+    let tail = seq.subseq(4, 10);
+    assert_eq!(tail.len(), 1);
+    assert_eq!(tail[0], 50);
+}
+
+#[test]
+fn test_large_sequence() {
+    let n = 500;
+    let seq = MathSeqS::new(n, 42i32);
+    assert_eq!(seq.length(), n);
+    for i in 0..n {
+        assert_eq!(*seq.nth(i), 42);
+    }
+}
+
+#[test]
+fn test_partial_eq_different_lengths() {
+    let a = MathSeqSLit![1, 2, 3];
+    let b = MathSeqSLit![1, 2, 3, 4];
+    assert_ne!(a, b);
+}
+
+#[test]
+fn test_partial_eq_empty() {
+    let a: MathSeqS<i32> = MathSeqS::empty();
+    let b: MathSeqS<i32> = MathSeqS::empty();
+    assert_eq!(a, b);
+}
+
+#[test]
+fn test_for_loop_borrow() {
+    let seq = MathSeqSLit![1, 2, 3, 4, 5];
+    let mut sum = 0;
+    for x in &seq {
+        sum += x;
+    }
+    assert_eq!(sum, 15);
+}
+
+#[test]
+fn test_domain_empty() {
+    let seq: MathSeqS<i32> = MathSeqS::empty();
+    assert!(seq.domain().is_empty());
+}
+
+#[test]
+fn test_range_empty() {
+    let seq: MathSeqS<i32> = MathSeqS::empty();
+    assert!(seq.range().is_empty());
+}
+
+#[test]
+fn test_range_all_same() {
+    let seq = MathSeqSLit![7, 7, 7, 7];
+    let range = seq.range();
+    assert_eq!(range.len(), 1);
+    assert_eq!(range[0], 7);
+}
