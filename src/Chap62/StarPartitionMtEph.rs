@@ -692,7 +692,7 @@ pub mod StarPartitionMtEph {
             assert forall|v_view: V::V| #[trigger] partition_map@.contains_key(v_view) implies
                 centers@.contains(partition_map@[v_view]@) by {
                 // Any partition_map key came from vertices_vec (loop 6 domain invariant).
-                let j = choose|j: int| 0 <= j < nv as int && vertices_vec@[j]@ == v_view;
+                let j = choose|j: int| 0 <= j < nv as int && #[trigger] vertices_vec@[j]@ == v_view;
                 // partition_map@[v_view]@ == p_vec@[j]@ (loop 6 prefix).
                 let ghost h = p_vec@[j]@;
                 assert(partition_map@[vertices_vec@[j]@]@ == h);
