@@ -210,41 +210,34 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap37/BSTSetSplayMtEph.rs:542: info: accept()
    Info: 1 total
 ⚠ BSTSplayMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1488: error: fn_missing_requires - fn clone_link — exec fn should have requires
-      1478 |     fn pre_order_parallel<T: StTInMtT + Ord + TotalOrder + 'static>(link: &Link<T>) -> (elements: Vec<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1496: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1489 |     fn clone_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (c: Link<T>)
             ...
-      1486 | 
-      1487 |     /// Recursive deep clone of a Link, bypassing derived Clone for Box/Option.
-      1489 |         ensures c == *link,
-      1490 |         decreases *link,
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1495: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1488 |     fn clone_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (c: Link<T>)
+      1494 |             None => {
+      1495 |                 let c: Link<T> = None;
+      1497 |                 c
+      1498 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1508: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1489 |     fn clone_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (c: Link<T>)
             ...
-      1493 |             None => {
-      1494 |                 let c: Link<T> = None;
-      1496 |                 c
-      1497 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1507: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1488 |     fn clone_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (c: Link<T>)
+      1506 |                     right,
+      1507 |                 }));
+      1509 |                 c
+      1510 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:2000: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1989 |         fn clone(&self) -> (r: Self)
             ...
-      1505 |                     right,
-      1506 |                 }));
-      1508 |                 c
-      1509 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1999: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1988 |         fn clone(&self) -> (r: Self)
-            ...
-      1997 |                 right,
-      1998 |             };
-      2000 |             r
-      2001 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1863: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == current); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1868: info: structural_false_positive RWLOCK_GHOST insert — assume(link_node_count(current) <= usize::MAX as nat); [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1869: info: structural_false_positive RWLOCK_GHOST insert — assume(link_spec_size(current) <= link_spec_size(old(self)@) [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1885: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == link_contains(self@, *target)); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1894: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == link_spec_size(self@)); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1903: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is None)); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1916: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == link_height(self@)); } [medium]
+      1998 |                 right,
+      1999 |             };
+      2001 |             r
+      2002 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1864: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == current); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1869: info: structural_false_positive RWLOCK_GHOST insert — assume(link_node_count(current) <= usize::MAX as nat); [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1870: info: structural_false_positive RWLOCK_GHOST insert — assume(link_spec_size(current) <= link_spec_size(old(self)@) [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1886: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == link_contains(self@, *target)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1895: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == link_spec_size(self@)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1904: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is None)); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap37/BSTSplayMtEph.rs:1917: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == link_height(self@)); } [medium]
 ✓ BSTSplayStEph.rs
    1 clean proof function
 
@@ -305,8 +298,8 @@ BSTSplayStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   17 clean (no holes, no errors; 89%)
-   2 holed (holes or errors, 10%)
+   18 clean (no holes, no errors; 94%)
+   1 holed (holes or errors, 5%)
    19 total
 
 Proof Functions:
@@ -326,8 +319,7 @@ Holes Found: 1 (actionable)
    1 × assume() [algorithmic] (100%)
 Real Proof Targets: 1 (all actionable)
 
-Warnings: 20 total
-   1 × fn_missing_requires
+Warnings: 19 total
    19 × assume_eq_clone_workaround
 
 Accepted (reviewed): 5 total
@@ -342,12 +334,15 @@ Structural (info only): 35
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-29 21:37:27 -07:00
-Ended:     2026-03-29 21:37:27 -07:00
-Duration:  170ms
+Started:   2026-03-30 06:01:58 -07:00
+Ended:     2026-03-30 06:01:58 -07:00
+Duration:  169ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
-37:27 -07:00
-Duration:  170ms
+================
+
+Started:   2026-03-30 06:01:58 -07:00
+Ended:     2026-03-30 06:01:58 -07:00
+Duration:  169ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log

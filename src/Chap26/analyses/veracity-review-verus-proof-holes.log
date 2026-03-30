@@ -23,16 +23,11 @@ Table of Contents:
 ✓ DivConReduceMtPer.rs
    3 clean proof functions
 ✓ DivConReduceStPer.rs
-⚠ ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:629: error: fn_missing_requires - fn point_distance — exec fn should have requires
-       626 |         fn distance(&self, other: &Point) -> (d: f64);
-            ...
-       627 |     }
-       628 | 
-       630 |         ensures d == spec_point_distance(*a, *b),
-       631 |     {
+ℹ ETSPMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:194: info: structural_false_positive OPAQUE_EXTERNAL lemma_combined_cycle — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:647: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:648: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
+   Info: 2 × structural_false_positive
+   4 clean proof functions
 ✓ ETSPStEph.rs
    4 clean proof functions
 ✓ MergeSortMtPer.rs
@@ -79,8 +74,8 @@ ScanDCStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   7 clean (no holes, no errors; 87%)
-   1 holed (holes or errors, 12%)
+   8 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    8 total
 
 Proof Functions:
@@ -99,21 +94,18 @@ Function Specs:
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
-Warnings: 1 total
-   1 × fn_missing_requires
-
 Structural (info only): 2
    2 × OPAQUE_EXTERNAL
 
-No proof holes found! All proofs are complete.
+No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-29 21:37:26 -07:00
-Ended:     2026-03-29 21:37:26 -07:00
-Duration:  35ms
+Started:   2026-03-30 06:01:58 -07:00
+Ended:     2026-03-30 06:01:58 -07:00
+Duration:  39ms
 
 Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
-c/Chap26/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap26/analyses/veracity-review-verus-proof-holes.log

@@ -50,13 +50,6 @@ Table of Contents:
        917 |     #[verifier::rlimit(30)]
        919 |         uf: &mut UnionFindStEph<V>,
        920 |         root_u: V,
-/home/milnes/projects/APAS-VERUS/src/Chap65/UnionFindStEph.rs:1168: error: fn_missing_wf_requires - fn union_merge — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
-      1106 |     proof fn lemma_union_ensures_bridge<V: StT + Hash>(
-            ...
-      1166 |     /// lemma_union_merge_wf to keep &mut encoding out of the proof context.
-      1167 |     #[verifier::external_body]
-      1169 |         uf: &mut UnionFindStEph<V>,
-      1170 |         root_u: V,
    Holes: 2 total
       2 × external_body
          1 × root cause
@@ -112,8 +105,8 @@ Holes Found: 4 (actionable)
    1 × opaque (25%)
 Real Proof Targets: 4 (all actionable)
 
-Warnings: 3 total
-   2 × fn_missing_wf_requires
+Warnings: 2 total
+   1 × fn_missing_wf_requires
    1 × assume_eq_clone_workaround
 
 Structural (info only): 1
@@ -123,15 +116,9 @@ Structural (info only): 1
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-29 21:37:28 -07:00
-Ended:     2026-03-29 21:37:28 -07:00
-Duration:  22ms
+Started:   2026-03-30 06:01:59 -07:00
+Ended:     2026-03-30 06:01:59 -07:00
+Duration:  26ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-===================================
-
-Started:   2026-03-29 21:37:28 -07:00
-Ended:     2026-03-29 21:37:28 -07:00
-Duration:  22ms
-
-Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
